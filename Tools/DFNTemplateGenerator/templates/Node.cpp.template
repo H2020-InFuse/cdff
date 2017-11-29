@@ -1,0 +1,23 @@
+#include "{{ node["name"] }}.hpp"
+
+namespace dfn_ci {
+
+{{ node["name"] }}::{{ node["name"] }}r()
+{
+}
+
+{{ node["name"] }}::~{{ node["name"] }}()
+{
+}
+
+void {{ node["name"] }}::configure() 
+{
+// Fill in configure functionality here
+}
+
+
+void {{ node["name"] }}::process() {
+// Fill in process functionality here
+}
+
+}

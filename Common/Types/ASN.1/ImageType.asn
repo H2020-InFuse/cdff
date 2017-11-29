@@ -1,0 +1,65 @@
+/* --------------------------------------------------------------------------
+*
+* (C) Copyright …
+*
+* ---------------------------------------------------------------------------
+*/
+
+/*!
+ * @file ImageType.asn
+ * @date 15/11/2017
+ * @author Alessandro Bianco
+ */
+
+/*!
+ * @addtogroup BaseTypes
+ * 
+ * Specification of ImageType.
+ * 
+ * 
+ * @{
+ */
+ImageTypeNS DEFINITIONS ::=
+BEGIN
+
+ImageMode ::= ENUMERATED 
+	{
+	mode-undefined, 
+	mode-grayscale, 
+	mode-rgb, 
+	mode-uyvy, 
+	mode-bgr, 
+	mode-rgb32, 
+	raw-modes, 
+	mode-bayer, 
+	mode-bayer-rggb, 
+	mode-bayer-grbg, 
+	mode-bayer-bggr, 
+	mode-bayer-gbrg, 
+	compressed-modes, 
+	mode-pjpg, 
+	mode-jpeg, 
+	mode-png 
+	}
+
+-- 1024(width) x 768(height) x 3(bytes-per-pixel)
+frameMaxBytes            INTEGER ::= 2359296
+frameMaxRows             INTEGER ::= 768
+frameMaxCols             INTEGER ::= 1024
+frameMaxAttributes       INTEGER ::= 5
+
+
+ImageType ::= SEQUENCE
+	{
+	image-time			INTEGER,
+	frame-identifier		T61String,
+	data				OCTET STRING (SIZE(0..frameMaxBytes)),
+	width				INTEGER,
+	height				INTEGER,
+	row-size			INTEGER,
+	image-mode			ImageMode
+	}
+
+END
+
+/** @} */

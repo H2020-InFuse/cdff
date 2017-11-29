@@ -1,0 +1,43 @@
+# distutils: language = c++
+cimport _dfn_ci_{{ node["name"].lower() }}
+cimport dfn_ci_{{ node["name"].lower() }}
+from cython.operator cimport dereference as deref
+cimport basetypes
+cimport _basetypes
+from libcpp cimport bool 
+
+
+cdef class {{ node["name"] }}:
+    def __cinit__(self):
+        if type(self) is {{ node["name"] }}:
+            self.thisptr = NULL
+            self.delete_thisptr = False
+
+    def __dealloc__(self):
+        if self.delete_thisptr and self.thisptr != NULL:
+            del self.thisptr
+
+    def __init__(self):
+        self.thisptr = new _dfn_ci_{{ node["name"].lower() }}.{{ node["name"] }}()
+        self.delete_thisptr = True
+
+    def process(self):
+        self.thisptr.process()
+
+    def configure(self):
+        self.thisptr.configure()
+{{ break }}
+    {%- for input_port in node["input_ports"] %}
+    def {{ input_port["name"] }}Input(self, {{ type_registry.get_info(input_port["type"]).python_type() }} data):
+        cdef {{ type_registry.get_info(input_port["type"]).cython_type() }} * cpp_data = data.thisptr
+        self.thisptr.{{ input_port["name"] }}Input(deref(cpp_data))
+{{ break }}
+    {%- endfor %}
+
+    {%- for output_port in node["output_ports"] %}
+    def {{ output_port["name"] }}Output(self):
+        cdef {{ type_registry.get_info(output_port["type"]).python_type() }} out = {{ type_registry.get_info(output_port["type"]).python_type() }}()
+        out.thisptr[0] = self.thisptr.{{ output_port["name"] }}Output()
+        return out
+{{ break }}
+    {%- endfor %}

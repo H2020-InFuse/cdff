@@ -1,0 +1,33 @@
+/* --------------------------------------------------------------------------
+*
+* (C) Copyright …
+*
+* ---------------------------------------------------------------------------
+*/
+
+/*!
+ * @file Geometry.asn
+ * @date 17/11/2017
+ * @author Alessandro Bianco
+ */
+
+/*!
+ * @addtogroup BaseTypes
+ * 
+ * Specification of some common Geometric types.
+ * 
+ * 
+ * @{
+ */
+GeometryNS DEFINITIONS ::=
+BEGIN
+
+Point2D ::= SEQUENCE
+	{
+	x	REAL,
+	y	REAL
+	}
+
+END
+
+/** @} */
