@@ -1,0 +1,42 @@
+image: nexus.spaceapplications.com/repository/infuse/infuse:latest
+
+stages: 
+  - autogeneration
+  - build
+  - test
+  - deploy
+  
+autogeneration:
+  stage : autogeneration
+  script:
+      - cd Tools/ASNtoCGenerator
+      - ./GeneratorScript.sh
+  artifacts:
+    paths:
+      - Common/Types/C/
+
+build:
+  stage: build
+  script:
+      - mkdir build
+      - cd build
+      - cmake -DCMAKE_INSTALL_PREFIX=./ ..
+      - make
+  artifacts:
+    paths:
+      - build/
+
+test:
+  stage: test
+  script:
+      - cd build/tests
+      - ./HarrisDetector2DTest
+      - ./MatImageTypeConvertersTest
+      - ./MatVisualPointFeatureVector2DConvertersTest
+      
+deploy_staging:
+  stage: deploy
+  script: 
+  - echo "Deploy to staging server"
+  only:
+  - master

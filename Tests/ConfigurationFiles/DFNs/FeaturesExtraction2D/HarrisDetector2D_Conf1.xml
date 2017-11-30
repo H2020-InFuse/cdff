@@ -1,0 +1,16 @@
+<HarrisDetector2D>
+
+	<General>
+		<ApertureSize> 3 </ApertureSize>
+		<BlockSize> 3 </BlockSize>
+		<ParameterK> 0.5 </ParameterK>
+		<DetectionThreshold> 45 </DetectionThreshold>
+		<UseGaussianBlur>true</UseGaussianBlur>
+	</General>
+
+	<GaussianBlur>
+		<KernelWidth> 3 </KernelWidth>
+		<KernelHeight> 3 </KernelHeight>
+	</GaussianBlur>
+
+</HarrisDetector2D>

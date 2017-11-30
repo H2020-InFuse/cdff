@@ -1,0 +1,39 @@
+#ifndef {{ node["name"].upper() }}_INTERFACE_HPP
+#define {{ node["name"].upper() }}_INTERFACE_HPP
+#include "DFNCommonInterface.hpp"
+{%- for include in includes %}
+#include <{{ include }}>
+{%- endfor %}
+
+namespace dfn_ci {
+    class {{ node["name"] }}Interface : public DFNCommonInterface
+    {
+        public:
+            {{ node["name"] }}Interface();
+            virtual ~{{ node["name"] }}Interface();
+            {%- for input_port in node["input_ports"] %}
+            /**
+            * Send value to input port {{ input_port["name"] }}
+            * @param {{ input_port["name"] }}, {{ input_port["doc"] }}
+            */
+            virtual void {{ input_port["name"] }}Input(const {{ input_port["type"] }}& data);
+            {%- endfor %}
+{{ space }}
+            {%- for output_port in node["output_ports"] %}
+            /**
+            * Receive value from output port {{ output_port["name"] }}
+            * @param {{ output_port["name"] }}, {{ output_port["doc"] }}
+            */
+            virtual {{ output_port["type"] }} {{ output_port["name"] }}Output();
+            {%- endfor %}
+
+        protected:
+        {%- for input_port in node["input_ports"] %}
+            {{ input_port["type"] }} in{{ input_port["name"].lower() }};
+        {%- endfor %}
+        {%- for output_port in node["output_ports"] %}
+            {{ output_port["type"] }} out{{ output_port["name"].lower() }};
+        {%- endfor %}
+    };
+}
+#endif
