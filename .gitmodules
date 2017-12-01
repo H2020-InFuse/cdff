@@ -10,3 +10,7 @@
 	path = External/pcl
 	url = https://github.com/PointCloudLibrary/pcl.git
 	branch = master
+[submodule "External/eigen"]
+	path = External/eigen
+	url = https://github.com/RLovelett/eigen.git
+	branch = master
