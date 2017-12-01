@@ -6,3 +6,7 @@
 	path = External/opencv3
 	url = https://github.com/opencv/opencv.git
 	branch = master
+[submodule "External/pcl"]
+	path = External/pcl
+	url = https://github.com/PointCloudLibrary/pcl.git
+	branch = master

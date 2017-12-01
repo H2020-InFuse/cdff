@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file MatToVisualPointFeatureVector2DConverter.cpp
- * @date 20/11/2017
+ * @file MatToVisualPointFeatureVector3DConverter.cpp
+ * @date 01/12/2017
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup Types
+ * @addtogroup Converters
  * 
- * Implementation of the Harris Detector 2D class.
+ * Implementation of MatToVisualPointFeatureVector3DConverter class.
  * 
  * 
  * @{
@@ -27,11 +27,11 @@
  * --------------------------------------------------------------------------
  */
 
-#include "MatToVisualPointFeatureVector2DConverter.hpp"
+#include "MatToVisualPointFeatureVector3DConverter.hpp"
 #include <Errors/Assert.hpp>
 
 
-namespace Types {
+namespace Converters {
 
 /* --------------------------------------------------------------------------
  *
@@ -39,24 +39,24 @@ namespace Types {
  *
  * --------------------------------------------------------------------------
  */
-VisualPointFeatureVector2D* MatToVisualPointFeatureVector2DConverter::Convert(cv::Mat featuresMatrix)
+VisualPointFeatureVector3D* MatToVisualPointFeatureVector3DConverter::Convert(cv::Mat featuresMatrix)
 	{
-	ASSERT( featuresMatrix.type() == CV_16UC1, "MatToVisualPointFeatureVector2DConverter: unsopported cv::mat type in input");
-	ASSERT( featuresMatrix.cols == 2, "MatToVisualPointFeatureVector2DConverter: unexpected numbers of rows");
+	ASSERT( featuresMatrix.type() == CV_32FC1, "MatToVisualPointFeatureVector3DConverter: unsopported cv::mat type in input");
+	ASSERT( featuresMatrix.cols == 3, "MatToVisualPointFeatureVector3DConverter: unexpected numbers of rows");
 
-	VisualPointFeatureVector2D* conversion = new VisualPointFeatureVector2D();
+	VisualPointFeatureVector3D* conversion = new VisualPointFeatureVector3D();
 
 	for(unsigned rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
 		{
-		VisualPointFeature2D* featureVector = new VisualPointFeature2D();
-		featureVector->point.x = featuresMatrix.at<uint16_t>(rowIndex, 0);
-		featureVector->point.y = featuresMatrix.at<uint16_t>(rowIndex, 1);	
+		VisualPointFeature3D* featureVector = new VisualPointFeature3D();
+		featureVector->point.x = featuresMatrix.at<float>(rowIndex, 0);
+		featureVector->point.y = featuresMatrix.at<float>(rowIndex, 1);	
+		featureVector->point.z = featuresMatrix.at<float>(rowIndex, 2);	
 
 		int error = ASN_SEQUENCE_ADD(&(conversion->list), featureVector);
 		ASSERT(error == 0, "MatToVisualPointFeatureVector2DConverter, conversion failed");
 		} 
 	
-	PRINT_TO_LOG("2", conversion->list.count);
 	return conversion;
 	}
 

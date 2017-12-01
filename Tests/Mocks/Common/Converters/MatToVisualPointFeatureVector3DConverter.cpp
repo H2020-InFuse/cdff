@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file MatToVisualPointFeatureVector2DConverter.cpp
- * @date 21/11/2017
+ * @file MatToVisualPointFeatureVector3DConverter.cpp
+ * @date 01/12/2017
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup Mocks
  * 
- * Implementation of the MatToVisualPointFeatureVector2DConverter class.
+ * Implementation of the MatToVisualPointFeatureVector3DConverter class.
  * 
  * 
  * @{
@@ -27,12 +27,11 @@
  *
  * --------------------------------------------------------------------------
  */
-#include "MatToVisualPointFeatureVector2DConverter.hpp"
+#include "MatToVisualPointFeatureVector3DConverter.hpp"
 #include <Errors/Assert.hpp>
 #include "Mocks/MockMacro.hpp"
 
 namespace Mocks {
-
 
 /* --------------------------------------------------------------------------
  *
@@ -40,9 +39,8 @@ namespace Mocks {
  *
  * --------------------------------------------------------------------------
  */
-VisualPointFeatureVector2D* MatToVisualPointFeatureVector2DConverter::Convert(cv::Mat featuresVector)
-	MOCK_METHOD(Types::MatToVisualPointFeatureVector2DConverter, Convert, VisualPointFeatureVector2D*, (featuresVector) )
-
+VisualPointFeatureVector3D* MatToVisualPointFeatureVector3DConverter::Convert(cv::Mat featuresVector)
+	MOCK_METHOD(Converters::MatToVisualPointFeatureVector3DConverter, Convert, VisualPointFeatureVector3D*, (featuresVector) )
 
 }
 

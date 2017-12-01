@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file MatToVisualPointFeatureVector2DConverter.cpp
- * @date 21/11/2017
+ * @file PointCloud3DToPclPointCloudConverter.cpp
+ * @date 01/11/2017
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup Mocks
  * 
- * Implementation of the MatToVisualPointFeatureVector2DConverter class.
+ * Implementation of PointCloud3DToPclPointCloudConverter.
  * 
  * 
  * @{
@@ -27,12 +27,12 @@
  *
  * --------------------------------------------------------------------------
  */
-#include "MatToVisualPointFeatureVector2DConverter.hpp"
+
+#include "PointCloud3DToPclPointCloudConverter.hpp"
 #include <Errors/Assert.hpp>
-#include "Mocks/MockMacro.hpp"
+#include <Mocks/MockMacro.hpp>
 
 namespace Mocks {
-
 
 /* --------------------------------------------------------------------------
  *
@@ -40,10 +40,9 @@ namespace Mocks {
  *
  * --------------------------------------------------------------------------
  */
-VisualPointFeatureVector2D* MatToVisualPointFeatureVector2DConverter::Convert(cv::Mat featuresVector)
-	MOCK_METHOD(Types::MatToVisualPointFeatureVector2DConverter, Convert, VisualPointFeatureVector2D*, (featuresVector) )
+pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud3DToPclPointCloudConverter::Convert(const PointCloud3D* pointcloud)
+	MOCK_METHOD(Converters::PointCloud3DToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::Ptr, (pointcloud) )
 
 
 }
-
 /** @} */

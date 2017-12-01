@@ -1,0 +1,38 @@
+/* --------------------------------------------------------------------------
+*
+* (C) Copyright …
+*
+* ---------------------------------------------------------------------------
+*/
+
+/*!
+ * @file VisualPointFeatureVector2D.asn
+ * @date 15/11/2017
+ * @author Alessandro Bianco
+ */
+
+/*!
+ * @addtogroup BaseTypes
+ * 
+ * Specification of the VisualPointFeatureVector class.
+ * 
+ * 
+ * @{
+ */
+VisualPointFeature2DNS DEFINITIONS ::=
+BEGIN
+
+IMPORTS
+Point2D FROM GeometryNS;
+
+VisualPointFeature2D ::= SEQUENCE
+	{
+	point		Point2D,
+	descriptor	SEQUENCE OF REAL
+	}
+
+VisualPointFeatureVector2D ::= SEQUENCE OF VisualPointFeature2D
+
+END
+
+/** @} */

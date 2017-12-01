@@ -6,32 +6,32 @@
 */
 
 /*!
- * @file VisualPointFeatureVector.asn
- * @date 15/11/2017
+ * @file VisualPointFeatureVector3D.asn
+ * @date 01/12/2017
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup BaseTypes
  * 
- * Specification of the VisualPointFeatureVector class.
+ * Specification of the VisualPointFeatureVector3D class.
  * 
  * 
  * @{
  */
-VisualPointFeature2DNS DEFINITIONS ::=
+VisualPointFeature3DNS DEFINITIONS ::=
 BEGIN
 
 IMPORTS
-Point2D FROM GeometryNS;
+Point3D FROM GeometryNS;
 
-VisualPointFeature2D ::= SEQUENCE
+VisualPointFeature3D ::= SEQUENCE
 	{
-	point		Point2D,
+	point		Point3D,
 	descriptor	SEQUENCE OF REAL
 	}
 
-VisualPointFeatureVector2D ::= SEQUENCE OF VisualPointFeature2D
+VisualPointFeatureVector3D ::= SEQUENCE OF VisualPointFeature3D
 
 END
 
