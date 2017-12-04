@@ -86,7 +86,7 @@ TEST_CASE( "Call to configure", "[configure]" )
 	{
 	HarrisDetector2D harris;
 	harris.setConfigurationFile(
-	    "../../Tests/ConfigurationFiles/DFNs/FeaturesExtraction2D/HarrisDetector2D_Conf1.xml");
+	    TEST_CONFIGURATIONS "/DFNs/FeaturesExtraction2D/HarrisDetector2D_Conf1.xml");
 	harris.configure();	
 	}
 

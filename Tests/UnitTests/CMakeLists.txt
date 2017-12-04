@@ -1,3 +1,6 @@
+add_definitions(-DTEST_CONFIGURATIONS="${TEST_CONFIGURATIONS}")
+add_definitions(-DTEST_DATA="${TEST_DATA}")
+
 add_executable(
     StubFeaturesExtraction2DTest
     DFNs/FeaturesExtraction2D/StubFeaturesExtraction2D.cpp
