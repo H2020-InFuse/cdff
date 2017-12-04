@@ -26,9 +26,3 @@ link_directories(
 add_subdirectory(Common)
 add_subdirectory(DFNs)
 add_subdirectory(Tests)
-
-#Moving configurations
-FILE(COPY Tests/ConfigurationFiles/
-     DESTINATION ${CMAKE_BINARY_DIR}/Tests/ConfigurationFiles/)
-FILE(COPY Tests/Data/
-     DESTINATION ${CMAKE_BINARY_DIR}/Tests/Data/)
