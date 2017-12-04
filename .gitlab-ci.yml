@@ -29,10 +29,8 @@ build:
 test:
   stage: test
   script:
-      - cd build/tests
-      - ./HarrisDetector2DTest
-      - ./MatImageTypeConvertersTest
-      - ./MatVisualPointFeatureVector2DConvertersTest
+      - cd build
+      - make test
       
 deploy_staging:
   stage: deploy

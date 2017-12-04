@@ -21,7 +21,26 @@ and the build system will use those.
 The External folder is composed by submodules, 
 On first project pull, 
 
-use "git submodule update --depth 1" or you might die from openCV overwhelmingly big repository. 
+use "git submodule update --depth 1" or you might die from openCV overwhelmingly big repository.
+
+## Building
+
+Build all dependencies first: in each subfolder of External/, execute
+
+    mkdir build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=.. ..
+    make
+
+Build CDFF with
+
+    mkdir build
+    cmake -DCMAKE_INSTALL_PREFIX=./ ..
+    make install
+
+Now you can run the tests
+
+    make test
 
 ## Contributing
 
