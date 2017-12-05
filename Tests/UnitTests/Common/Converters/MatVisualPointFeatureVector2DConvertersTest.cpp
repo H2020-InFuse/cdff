@@ -38,7 +38,7 @@
  */
 #include <VisualPointFeatureVector2DToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <VisualPointFeatureVector2D.h>
+#include <Types/C/VisualPointFeatureVector.h>
 #include <Catch/catch.h>
 #include <Errors/Assert.hpp>
 
@@ -92,10 +92,10 @@ TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMa
 	cv::Mat intermediateMatrix = secondConverter.Convert(asnVector);
 	VisualPointFeatureVector2D* outputVector = firstConverter.Convert(intermediateMatrix);	
 
-	REQUIRE(asnVector->list.count == outputVector->list.count);
-	for(int rowIndex = 0; rowIndex < asnVector->list.count; rowIndex++)
+	REQUIRE(asnVector->nCount == outputVector->nCount);
+	for(int rowIndex = 0; rowIndex < asnVector->nCount; rowIndex++)
 		{
-		REQUIRE(asnVector->list.array[rowIndex]->point.x == outputVector->list.array[rowIndex]->point.x);
-		REQUIRE(asnVector->list.array[rowIndex]->point.y == outputVector->list.array[rowIndex]->point.y);
+		REQUIRE(asnVector->arr[rowIndex].point.x == outputVector->arr[rowIndex].point.x);
+		REQUIRE(asnVector->arr[rowIndex].point.y == outputVector->arr[rowIndex].point.y);
 		}
 	}

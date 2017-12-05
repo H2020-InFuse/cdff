@@ -45,17 +45,15 @@ VisualPointFeatureVector2D* MatToVisualPointFeatureVector2DConverter::Convert(cv
 	ASSERT( featuresMatrix.cols == 2, "MatToVisualPointFeatureVector2DConverter: unexpected numbers of rows");
 
 	VisualPointFeatureVector2D* conversion = new VisualPointFeatureVector2D();
-
+	ASSERT( featuresMatrix.rows <= conversion->nCount , "MatToVisualPointFeatureVector2DConverter: Cannot store this many features");
 	for(unsigned rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
 		{
-		VisualPointFeature2D* featureVector = new VisualPointFeature2D();
-		featureVector->point.x = featuresMatrix.at<uint16_t>(rowIndex, 0);
-		featureVector->point.y = featuresMatrix.at<uint16_t>(rowIndex, 1);	
-
-		int error = ASN_SEQUENCE_ADD(&(conversion->list), featureVector);
-		ASSERT(error == 0, "MatToVisualPointFeatureVector2DConverter, conversion failed");
+		VisualPointFeature2D featureVector = VisualPointFeature2D();
+		featureVector.point.x = featuresMatrix.at<uint16_t>(rowIndex, 0);
+		featureVector.point.y = featuresMatrix.at<uint16_t>(rowIndex, 1);
+		conversion->arr[rowIndex] = featureVector;
+		conversion->nCount += 1;
 		} 
-	
 	return conversion;
 	}
 

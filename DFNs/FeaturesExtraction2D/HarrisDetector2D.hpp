@@ -31,7 +31,7 @@
  */
 #include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
 #include <ImageType.h>
-#include <VisualPointFeatureVector2D.h>
+#include <Types/C/VisualPointFeatureVector.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 

@@ -41,12 +41,12 @@ namespace Types {
  */
 cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(VisualPointFeatureVector2D* vector)
 	{	
-	cv::Mat conversion(vector->list.count, 2, CV_16UC1, cv::Scalar(0));
+	cv::Mat conversion(vector->nCount, 2, CV_16UC1, cv::Scalar(0));
 	for(unsigned rowIndex = 0; rowIndex < conversion.rows; rowIndex++)
 		{
-		VisualPointFeature2D* feature = vector->list.array[rowIndex];
-		conversion.at<uint16_t>(rowIndex, 0) = feature->point.x;
-		conversion.at<uint16_t>(rowIndex, 1) = feature->point.y;
+		VisualPointFeature2D feature = vector->arr[rowIndex];
+		conversion.at<uint16_t>(rowIndex, 0) = feature.point.x;
+		conversion.at<uint16_t>(rowIndex, 1) = feature.point.y;
 		}
 	
 	return conversion;

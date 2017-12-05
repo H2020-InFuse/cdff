@@ -47,8 +47,8 @@ ImageType* MatToImageTypeConverter::Convert(const cv::Mat image)
 	asnImage->height = image.rows;
 	asnImage->width = image.cols;
 	asnImage->image_mode = ImageMode_mode_rgb;
-	asnImage->data.size = (int) (image.rows * image.cols * 3);
-	asnImage->data.buf = new uint8_t[asnImage->data.size];
+	asnImage->data.nCount = (int) (image.rows * image.cols * 3);
+	//asnImage->data.arr = &(new T_UInt8[asnImage->data.nCount]);
 
 	for(int rowIndex = 0; rowIndex < image.rows; rowIndex++)
 		{
@@ -56,9 +56,9 @@ ImageType* MatToImageTypeConverter::Convert(const cv::Mat image)
 			{
 			int dataIndex = rowIndex * image.cols + columnIndex;
 			cv::Vec3b pixel = image.at<cv::Vec3b>(rowIndex, columnIndex);
-			asnImage->data.buf[3*dataIndex] = (uint8_t) pixel[0];
-			asnImage->data.buf[3*dataIndex+1] = (uint8_t) pixel[1];
-			asnImage->data.buf[3*dataIndex+2] = (uint8_t) pixel[2];
+			asnImage->data.arr[3*dataIndex] = (uint8_t) pixel[0];
+			asnImage->data.arr[3*dataIndex+1] = (uint8_t) pixel[1];
+			asnImage->data.arr[3*dataIndex+2] = (uint8_t) pixel[2];
 			}
 		}
 	
