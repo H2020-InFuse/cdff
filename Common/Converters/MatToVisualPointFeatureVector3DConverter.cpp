@@ -46,7 +46,7 @@ VisualPointFeatureVector3D* MatToVisualPointFeatureVector3DConverter::Convert(cv
 
 	VisualPointFeatureVector3D* conversion = new VisualPointFeatureVector3D();
 
-	for(unsigned rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
+	for(int rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
 		{
 		VisualPointFeature3D* featureVector = new VisualPointFeature3D();
 		featureVector->point.x = featuresMatrix.at<float>(rowIndex, 0);

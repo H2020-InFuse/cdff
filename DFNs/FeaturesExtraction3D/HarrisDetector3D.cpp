@@ -31,15 +31,13 @@
 #include <PointCloud3DToPclPointCloudConverter.hpp>
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
-#include <tinyxml2.h>
-#include <XmlHelper/XmlHelper.hpp>
+
 
 #include <stdlib.h>
 #include <fstream>
 
 
 using namespace Common;
-using namespace tinyxml2;
 using namespace Converters;
 
 namespace dfn_ci {
@@ -68,34 +66,21 @@ HarrisDetector3D::~HarrisDetector3D()
 
 	}
 
-void HarrisDetector3D::configure() 
+void HarrisDetector3D::configure()
 	{
-    	XMLDocument configuration;
-	PRINT_TO_LOG("CONGF: ", configurationFilePath);
-    	XMLError error = configuration.LoadFile( configurationFilePath.c_str() );
-	ASSERT(error == XML_SUCCESS, "HarrisDetector3D Configuration file could not be loaded");
-
-	XMLElement* root = configuration.FirstChildElement("HarrisDetector3D");
-	ASSERT(root != NULL, "Error in configuration file, no root element HarrisDetector3d");
-
-	XMLElement* generalGroupElement = root->FirstChildElement("General");
-	VERIFY(generalGroupElement != NULL, "Warning in Harris Detector 3D Configuration: no general parameters, default ones will be used");
-	if (generalGroupElement != NULL)
+	try
 		{
-		/* XmlHelper::ExtractTYPE(A, B, C, D): 
-		* it looks for name B in element A and populates variable C with the value found, if the value is not of the right type message D is written to log. */ 
-		XmlHelper::ExtractFloat(generalGroupElement, "Radius", parameters.radius, "HarrisDetector2D Configuration error, Radius is not a float");
-		XmlHelper::ExtractBool(generalGroupElement, "NonMaxSuppression", parameters.nonMaxSuppression, "HarrisDetector3D Configuration error, Non Max Suppression is not a bool");
-		XmlHelper::ExtractFloat(generalGroupElement, "DetectionThreshold", parameters.detectionThreshold, "HarrisDetector2D Configuration error, Detection Threshold is not a float");
-		XmlHelper::ExtractBool(generalGroupElement, "EnableRefinement", parameters.enableRefinement, "HarrisDetector3D Configuration error, Enable Refinement is not a bool");
-		XmlHelper::ExtractInt(generalGroupElement, "NumberOfThreads", parameters.numberOfThreads, "HarrisDetector3D Configuration error, Number Of Threads is not an integer");
-
-		std::string harrisMethod;
-		XmlHelper::ExtractString(generalGroupElement, "HarrisMethod", harrisMethod, "HarrisDetector3D Configuration error, Harris Method is not a string");
-		parameters.method = ConvertToMethod(harrisMethod);
+		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
+		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
+			{
+			YAML::Node configurationNode = configuration[configuationIndex];
+			Configure(configurationNode);
+			}
+		} 
+	catch(YAML::ParserException& e) 
+		{
+    		ASSERT(false, e.what() );
 		}
-
-	ValidateParameters();
 	}
 
 
@@ -125,7 +110,7 @@ cv::Mat HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::Pt
     	detector.compute(*keypoints); 
 	
 	cv::Mat featuresVector(keypoints->points.size(), 3, CV_32FC1, cv::Scalar(0));
-	for(int pointIndex = 0; pointIndex < keypoints->points.size(); pointIndex++)
+	for(unsigned pointIndex = 0; pointIndex < keypoints->points.size(); pointIndex++)
 		{
 		featuresVector.at<float>(pointIndex, 0) = keypoints->points.at(pointIndex).x;
 		featuresVector.at<float>(pointIndex, 1) = keypoints->points.at(pointIndex).y;
@@ -172,6 +157,22 @@ void HarrisDetector3D::ValidateParameters()
 void HarrisDetector3D::ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud)
 	{
 
+	}
+
+
+void HarrisDetector3D::Configure(const YAML::Node& configurationNode)
+	{
+	std::string nodeName = configurationNode["Name"].as<std::string>();
+	if ( nodeName == "GeneralParameters")
+		{
+		parameters.radius = configurationNode["Radius"].as<float>();
+		parameters.nonMaxSuppression = configurationNode["NonMaxSuppression"].as<bool>();
+		parameters.detectionThreshold = configurationNode["DetectionThreshold"].as<float>();
+		parameters.enableRefinement = configurationNode["EnableRefinement"].as<bool>();
+		parameters.numberOfThreads = configurationNode["NumberOfThreads"].as<int>();
+		parameters.method = ConvertToMethod( configurationNode["HarrisMethod"].as<std::string>() );
+		}
+	//Ignore everything else
 	}
 
 

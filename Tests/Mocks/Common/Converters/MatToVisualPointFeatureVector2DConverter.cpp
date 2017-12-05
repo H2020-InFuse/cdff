@@ -40,6 +40,11 @@ namespace Mocks {
  *
  * --------------------------------------------------------------------------
  */
+MatToVisualPointFeatureVector2DConverter::~MatToVisualPointFeatureVector2DConverter()
+	{
+
+	}
+
 VisualPointFeatureVector2D* MatToVisualPointFeatureVector2DConverter::Convert(cv::Mat featuresVector)
 	MOCK_METHOD(Types::MatToVisualPointFeatureVector2DConverter, Convert, VisualPointFeatureVector2D*, (featuresVector) )
 

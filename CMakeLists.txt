@@ -6,15 +6,20 @@ include(FindPkgConfig)
 #This compiles in testing mode
 add_definitions(-DTESTING)
 
+#C11
+if(UNIX)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
+endif()
+
 #This policy disable warning for the use of relative libraries path
 cmake_policy(SET CMP0015 NEW)
 
 #Reference directories
 include_directories(
-    DFNs Common Tests Tools Common/Types/C/ASNCommon Common/Types/C Common/Converters External/opencv3/include External/tinyxml2/include External/pcl/include/pcl-1.8/ External/eigen3/include/eigen3/
+    DFNs Common Tests Tools Common/Types/C/ASNCommon Common/Types/C Common/Converters External/opencv3/include External/pcl/include/pcl-1.8/ External/eigen3/include/eigen3/ External/vtk8/include/vtk-8.0/ External/yamlcpp/include/ External/boost/include External/qhull/include External/flann/include
 )
 link_directories(
-	 External/opencv3/lib External/tinyxml2/lib External/pcl/lib
+	 External/opencv3/lib External/pcl/lib External/vtk8/lib External/yamlcpp/lib External/boost/lib External/flann/lib Extenal/boost/lib
 )
 
 
@@ -23,16 +28,16 @@ add_library(Common Common/Loggers/Logger.cpp Common/Loggers/StandardOutputLogger
 Common/Converters/VisualPointFeatureVector3DToMatConverter.cpp Common/Converters/MatToVisualPointFeatureVector3DConverter.cpp Common/Converters/PclPointCloudToPointCloud3DConverter.cpp Common/Converters/PointCloud3DToPclPointCloudConverter.cpp Common/Types/C/PointCloud3D.c Common/Types/C/VisualPointFeatureVector3D.c Common/Types/C/VisualPointFeature3D.c Common/Types/C/Point3D.c)
 set_target_properties(Common PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ./lib)
 
-add_library(FeaturesExtraction2D DFNs/FeaturesExtraction2D/FeaturesExtraction2DInterface.cpp DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp Common/XmlHelper/XmlHelper.cpp)
+add_library(FeaturesExtraction2D DFNs/FeaturesExtraction2D/FeaturesExtraction2DInterface.cpp DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp)
 set_target_properties(FeaturesExtraction2D PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ./lib)
 target_link_libraries(
-	FeaturesExtraction2D Common tinyxml2
+	FeaturesExtraction2D Common tinyxml2 yaml-cpp
 )
 
-add_library(FeaturesExtraction3D DFNs/FeaturesExtraction3D/FeaturesExtraction3DInterface.cpp Common/XmlHelper/XmlHelper.cpp DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp)
+add_library(FeaturesExtraction3D DFNs/FeaturesExtraction3D/FeaturesExtraction3DInterface.cpp DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp)
 set_target_properties(FeaturesExtraction3D PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ./lib)
 target_link_libraries(
-	FeaturesExtraction3D Common tinyxml2
+	FeaturesExtraction3D Common tinyxml2 yaml-cpp
 )
 
 
@@ -43,22 +48,16 @@ target_link_libraries(
 	StubFeaturesExtraction2D Common
 )
 
-add_executable(StubFeaturesExtraction2DTest Tests/UnitTests/DFNs/FeaturesExtraction2D/StubFeaturesExtraction2D.cpp)
-set_target_properties(StubFeaturesExtraction2DTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-	StubFeaturesExtraction2DTest Common StubFeaturesExtraction2D opencv_core opencv_imgproc opencv_imgcodecs
-)
-
-add_executable(HarrisDetector2DTest Tests/UnitTests/DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp Tests/Mocks/Common/Converters/ImageTypeToMatConverter.cpp Tests/Mocks/Mock.cpp Tests/Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.cpp DFNs/FeaturesExtraction2D/FeaturesExtraction2DInterface.cpp DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp Common/XmlHelper/XmlHelper.cpp)
+add_executable(HarrisDetector2DTest Tests/UnitTests/DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp Tests/Mocks/Common/Converters/ImageTypeToMatConverter.cpp Tests/Mocks/Mock.cpp Tests/Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.cpp DFNs/FeaturesExtraction2D/FeaturesExtraction2DInterface.cpp DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp)
 set_target_properties(HarrisDetector2DTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	HarrisDetector2DTest Common opencv_core opencv_imgproc opencv_imgcodecs tinyxml2
+	HarrisDetector2DTest Common opencv_core opencv_imgproc opencv_imgcodecs yaml-cpp
 )
 
-add_executable(HarrisDetector2DGuiTest Tests/GuiTests/DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp Tests/Mocks/Common/Converters/ImageTypeToMatConverter.cpp Tests/Mocks/Mock.cpp Tests/Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.cpp DFNs/FeaturesExtraction2D/FeaturesExtraction2DInterface.cpp DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp Common/XmlHelper/XmlHelper.cpp Tests/GuiTests/ParametersInterface.cpp Tests/GuiTests/ButtonsInterface.cpp Tests/GuiTests/MainInterface.cpp Tests/GuiTests/DFNs/DFNTestInterface.cpp)
+add_executable(HarrisDetector2DGuiTest Tests/GuiTests/DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp Tests/Mocks/Common/Converters/ImageTypeToMatConverter.cpp Tests/Mocks/Mock.cpp Tests/Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.cpp DFNs/FeaturesExtraction2D/FeaturesExtraction2DInterface.cpp DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp Tests/GuiTests/ParametersInterface.cpp Tests/GuiTests/ButtonsInterface.cpp Tests/GuiTests/MainInterface.cpp Tests/GuiTests/DFNs/DFNTestInterface.cpp)
 set_target_properties(HarrisDetector2DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	HarrisDetector2DGuiTest Common opencv_core opencv_imgproc opencv_imgcodecs tinyxml2 opencv_highgui
+	HarrisDetector2DGuiTest Common opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp
 )
 
 add_executable(MatImageTypeConvertersTest Tests/UnitTests/Common/Converters/MatImageTypeConvertersTest.cpp )
@@ -85,11 +84,17 @@ target_link_libraries(
 	MatVisualPointFeatureVector3DConvertersTest Common opencv_core opencv_imgproc opencv_imgcodecs
 )
 
-add_executable(HarrisDetector3DTest Tests/UnitTests/DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp Tests/Mocks/Common/Converters/PointCloud3DToPclPointCloudConverter.cpp Tests/Mocks/Mock.cpp Tests/Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.cpp DFNs/FeaturesExtraction3D/FeaturesExtraction3DInterface.cpp DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp Common/XmlHelper/XmlHelper.cpp)
+add_executable(HarrisDetector3DTest Tests/UnitTests/DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp Tests/Mocks/Common/Converters/PointCloud3DToPclPointCloudConverter.cpp Tests/Mocks/Mock.cpp Tests/Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.cpp DFNs/FeaturesExtraction3D/FeaturesExtraction3DInterface.cpp DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp)
 set_target_properties(HarrisDetector3DTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	HarrisDetector3DTest Common opencv_core opencv_imgproc opencv_imgcodecs tinyxml2 pcl_common pcl_features pcl_search pcl_filters
+	HarrisDetector3DTest Common opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters yaml-cpp
 )
+
+#add_executable(HarrisDetector3DGuiTest Tests/GuiTests/DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp Tests/Mocks/Common/Converters/PointCloud3DToPclPointCloudConverter.cpp Tests/Mocks/Mock.cpp Tests/Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.cpp DFNs/FeaturesExtraction3D/FeaturesExtraction3DInterface.cpp DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp Tests/GuiTests/ParametersInterface.cpp Tests/GuiTests/ButtonsInterface.cpp Tests/GuiTests/MainInterface.cpp Tests/GuiTests/DFNs/DFNTestInterface.cpp)
+#set_target_properties(HarrisDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+#target_link_libraries(
+#	HarrisDetector3DGuiTest Common opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io vtksys vtkCommon boost_system vtkIO vtkViews vtkCharts vtkalglib vtkParallel vtkGeovis vtkRendering vtkInfovis vtkImaging yaml-cpp vtkGraphics vtkGenericFiltering vtkVolumeRendering
+#)
 
 #Moving configurations
 FILE (COPY Tests/ConfigurationFiles/ DESTINATION ./tests/ConfigurationFiles/)

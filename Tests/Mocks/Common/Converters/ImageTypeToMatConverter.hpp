@@ -47,6 +47,7 @@ class ImageTypeToMatConverter : public Mock, public Types::ImageTypeToMatConvert
 	 * --------------------------------------------------------------------
 	 */
 	public:
+		virtual ~ImageTypeToMatConverter();
 		cv::Mat Convert(const ImageType* image);
 
 	/* --------------------------------------------------------------------

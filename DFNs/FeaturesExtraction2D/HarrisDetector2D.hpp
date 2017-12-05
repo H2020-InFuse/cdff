@@ -34,6 +34,7 @@
 #include <VisualPointFeatureVector2D.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <yaml-cpp/yaml.h>
 
 
 namespace dfn_ci {
@@ -93,6 +94,8 @@ namespace dfn_ci {
 
 		void ValidateParameters();
 		void ValidateInputs(cv::Mat inputImage);
+
+		void Configure(const YAML::Node& configurationNode);
     };
 }
 #endif

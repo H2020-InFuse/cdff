@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <string>
 #include <pcl/keypoints/harris_3d.h>
+#include <yaml-cpp/yaml.h>
 
 
 namespace dfn_ci {
@@ -90,6 +91,8 @@ namespace dfn_ci {
 
 		void ValidateParameters();
 		void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud);
+
+		void Configure(const YAML::Node& configurationNode);
     };
 }
 #endif

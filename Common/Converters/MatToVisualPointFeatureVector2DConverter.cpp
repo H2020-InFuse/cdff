@@ -46,7 +46,7 @@ VisualPointFeatureVector2D* MatToVisualPointFeatureVector2DConverter::Convert(cv
 
 	VisualPointFeatureVector2D* conversion = new VisualPointFeatureVector2D();
 
-	for(unsigned rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
+	for(int rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
 		{
 		VisualPointFeature2D* featureVector = new VisualPointFeature2D();
 		featureVector->point.x = featuresMatrix.at<uint16_t>(rowIndex, 0);

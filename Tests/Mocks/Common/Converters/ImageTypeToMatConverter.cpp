@@ -40,6 +40,11 @@ namespace Mocks {
  *
  * --------------------------------------------------------------------------
  */
+ImageTypeToMatConverter::~ImageTypeToMatConverter()
+	{
+
+	}
+
 cv::Mat ImageTypeToMatConverter::Convert(const ImageType* image)
 	MOCK_METHOD(Types::ImageTypeToMatConverter, Convert, cv::Mat, (image) )
 

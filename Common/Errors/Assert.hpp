@@ -67,7 +67,7 @@ class AssertException: public std::exception
 	{ \
 	if( !(condition) ) \
 		{ \
-		LoggerFactory::GetLogger()->AddEntry(#message); \
+		LoggerFactory::GetLogger()->AddEntry(message); \
 		LoggerFactory::GetLogger()->Print(); \
 		ABORT_PROGRAM() \
 		} \
@@ -78,7 +78,7 @@ class AssertException: public std::exception
 	if ( (expression1) != (expression2) ) \
 		{ \
 		std::stringstream stream; \
-		stream << #expression1 <<" evaluates to "<<(expression1)<<", "<<#expression2<<" evaluates to "<<(expression2)<<", message: "<<#message;\
+		stream << #expression1 <<" evaluates to "<<(expression1)<<", "<<#expression2<<" evaluates to "<<(expression2)<<", message: "<<message;\
 		LoggerFactory::GetLogger()->AddEntry(stream.str()); \
 		LoggerFactory::GetLogger()->Print(); \
 		ABORT_PROGRAM() \
@@ -88,7 +88,7 @@ class AssertException: public std::exception
 #define WRITE_TO_LOG(message, value) \
 	{ \
 	std::stringstream stream; \
-	stream << #message << " " << (value); \
+	stream << message << " " << (value); \
 	LoggerFactory::GetLogger()->AddEntry(stream.str()); \
 	}
 
@@ -108,7 +108,7 @@ class AssertException: public std::exception
 	{ \
 	if( !(condition) ) \
 		{ \
-		LoggerFactory::GetLogger()->AddEntry(#message); \
+		LoggerFactory::GetLogger()->AddEntry(message); \
 		LoggerFactory::GetLogger()->Print(); \
 		LoggerFactory::GetLogger()->Clear(); \
 		} \

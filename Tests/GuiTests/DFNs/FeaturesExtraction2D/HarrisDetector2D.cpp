@@ -113,11 +113,11 @@ void HarrisDetector2DTestInterface::SetupMocksAndStubs()
 
 void HarrisDetector2DTestInterface::SetupParameters()
 	{
-	AddParameter("General", "ApertureSize", 5, 7);
-	AddParameter("General", "BlockSize", 2, 50);
-	AddParameter("General", "ParameterK", 0.04, 1.00, 0.01);
-	AddParameter("General", "DetectionThreshold", 200, 255);
-	AddParameter("General", "UseGaussianBlur", 0, 1);
+	AddParameter("GeneralParameters", "ApertureSize", 5, 7);
+	AddParameter("GeneralParameters", "BlockSize", 2, 50);
+	AddParameter("GeneralParameters", "ParameterK", 0.04, 1.00, 0.01);
+	AddParameter("GeneralParameters", "DetectionThreshold", 200, 255);
+	AddParameter("GeneralParameters", "UseGaussianBlur", 0, 1);
 	AddParameter("GaussianBlur", "KernelWidth", 3, 99);
 	AddParameter("GaussianBlur", "KernelHeight", 3, 99);
 	AddParameter("GaussianBlur", "WidthStandardDeviation", 0.00, 1.00, 0.01);

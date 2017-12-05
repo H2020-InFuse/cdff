@@ -42,7 +42,7 @@ namespace Converters {
 cv::Mat VisualPointFeatureVector3DToMatConverter::Convert(VisualPointFeatureVector3D* featuresVector)
 	{	
 	cv::Mat conversion(featuresVector->list.count, 3, CV_32FC1, cv::Scalar(0));
-	for(unsigned rowIndex = 0; rowIndex < conversion.rows; rowIndex++)
+	for(int rowIndex = 0; rowIndex < conversion.rows; rowIndex++)
 		{
 		VisualPointFeature3D* feature = featuresVector->list.array[rowIndex];
 		conversion.at<float>(rowIndex, 0) = feature->point.x;

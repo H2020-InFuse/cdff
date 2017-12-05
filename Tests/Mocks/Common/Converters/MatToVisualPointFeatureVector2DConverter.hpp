@@ -49,6 +49,7 @@ class MatToVisualPointFeatureVector2DConverter : public Mock, public Types::MatT
 	 * --------------------------------------------------------------------
 	 */
 	public:
+		virtual ~MatToVisualPointFeatureVector2DConverter();
 		VisualPointFeatureVector2D* Convert(cv::Mat featuresVector);
 
 	/* --------------------------------------------------------------------

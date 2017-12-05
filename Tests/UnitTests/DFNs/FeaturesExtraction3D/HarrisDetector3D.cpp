@@ -98,7 +98,7 @@ TEST_CASE( "Call to process", "[process]" )
 TEST_CASE( "Call to configure", "[configure]" )
 	{
 	HarrisDetector3D harris;
-	harris.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesExtraction3D/HarrisDetector3D_Conf1.xml");
+	harris.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesExtraction3D/HarrisDetector3D_Conf1.yaml");
 	harris.configure();	
 	}
 

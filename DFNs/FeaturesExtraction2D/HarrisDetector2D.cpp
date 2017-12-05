@@ -31,15 +31,12 @@
 #include <ImageTypeToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
-#include <tinyxml2.h>
-#include <XmlHelper/XmlHelper.hpp>
 
 #include <stdlib.h>
 #include <fstream>
 
 using namespace Types;
 using namespace Common;
-using namespace tinyxml2;
 
 namespace dfn_ci {
 
@@ -71,39 +68,25 @@ HarrisDetector2D::~HarrisDetector2D()
 
 	}
 
-void HarrisDetector2D::configure() 
+void HarrisDetector2D::configure()
 	{
-    	XMLDocument configuration;
-    	XMLError error = configuration.LoadFile( configurationFilePath.c_str() );
-	ASSERT(error == XML_SUCCESS, "HarrisDetector2D Configuration file could not be loaded");
-
-	XMLElement* root = configuration.FirstChildElement("HarrisDetector2D");
-	ASSERT(root != NULL, "Error in configuration file, no root element HarrisDetector2d");
-
-	XMLElement* generalGroupElement = root->FirstChildElement("General");
-	VERIFY(generalGroupElement != NULL, "Warning in Harris Detector 2D Configuration: no general parameters, default ones will be used");
-	if (generalGroupElement != NULL)
+	try
 		{
-		/* XmlHelper::ExtractTYPE(A, B, C, D): 
-		* it looks for name B in element A and populates variable C with the value found, if the value is not of the right type message D is written to log. */ 
-		XmlHelper::ExtractInt(generalGroupElement, "ApertureSize", parameters.apertureSize, "HarrisDetector2D Configuration error, Aperture Size is not an integer");
-		XmlHelper::ExtractInt(generalGroupElement, "BlockSize", parameters.blockSize, "HarrisDetector2D Configuration error, Block Size is not an integer");
-		XmlHelper::ExtractFloat(generalGroupElement, "ParameterK", parameters.parameterK, "HarrisDetector2D Configuration error, Parameter K is not a float");
-		XmlHelper::ExtractInt(generalGroupElement, "DetectionThreshold", parameters.detectionThreshold, "HarrisDetector2D Configuration error, Detection Threshold is not an integer");
-		XmlHelper::ExtractBool(generalGroupElement, "UseGaussianBlur", parameters.useGaussianBlur, "HarrisDetector2D Configuration error, Use Gaussian Blur is not a bool");
-		}
-
-	XMLElement* gaussianBlurGroupElement = root->FirstChildElement("GaussianBlur");
-	VERIFY(!parameters.useGaussianBlur || gaussianBlurGroupElement != NULL, "Warning in Harris Detector 2D Configuration: no gaussian blur parameters");
-	if (parameters.useGaussianBlur && gaussianBlurGroupElement != NULL)
+		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
+		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
+			{
+			YAML::Node configurationNode = configuration[configuationIndex];
+			Configure(configurationNode);
+			}
+		} 
+	catch(YAML::ParserException& e) 
 		{
-		XmlHelper::ExtractInt(gaussianBlurGroupElement, "KernelWidth", gaussianBlurParameters.kernelWidth, "HarrisDetector2D Kernel Width is not an integer");
-		XmlHelper::ExtractInt(gaussianBlurGroupElement, "KernelHeight", gaussianBlurParameters.kernelHeight, "HarrisDetector2D Kernel Height is not an integer");
-		XmlHelper::ExtractFloat(gaussianBlurGroupElement, "WidthStandardDeviation", gaussianBlurParameters.widthStandardDeviation, "HarrisDetector2D Width Standard Deviation is not a float");
-		XmlHelper::ExtractFloat(gaussianBlurGroupElement, "HeightStandardDeviation", gaussianBlurParameters.heightStandardDeviation, "HarrisDetector2D Height Standard Deviation is not a float");
+    		ASSERT(false, e.what() );
 		}
-
-	ValidateParameters();
+	catch(YAML::RepresentationException& e)
+		{
+		ASSERT(false, e.what() );
+		}
 	}
 
 
@@ -191,6 +174,27 @@ void HarrisDetector2D::ValidateInputs(cv::Mat inputImage)
 
 	}
 
+
+void HarrisDetector2D::Configure(const YAML::Node& configurationNode)
+	{
+	std::string nodeName = configurationNode["Name"].as<std::string>();
+	if ( nodeName == "GeneralParameters")
+		{
+		parameters.apertureSize = configurationNode["ApertureSize"].as<int>();
+		parameters.blockSize = configurationNode["BlockSize"].as<int>();
+		parameters.parameterK = configurationNode["ParameterK"].as<float>();
+		parameters.detectionThreshold = configurationNode["DetectionThreshold"].as<int>();
+		parameters.useGaussianBlur = configurationNode["UseGaussianBlur"].as<bool>();
+		}
+	else if (nodeName == "GaussianBlur")
+		{
+		gaussianBlurParameters.kernelWidth = configurationNode["KernelWidth"].as<int>();
+		gaussianBlurParameters.kernelHeight = configurationNode["KernelHeight"].as<int>();
+		gaussianBlurParameters.widthStandardDeviation = configurationNode["WidthStandardDeviation"].as<float>();
+		gaussianBlurParameters.heightStandardDeviation = configurationNode["HeightStandardDeviation"].as<float>();
+		}
+	//Ignore everything else
+	}
 
 }
 

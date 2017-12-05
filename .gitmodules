@@ -14,3 +14,23 @@
 	path = External/eigen
 	url = https://github.com/RLovelett/eigen.git
 	branch = master
+[submodule "External/boost"]
+	path = External/boost
+	url = https://github.com/boostorg/boost.git
+	branch = master
+[submodule "External/qhull"]
+	path = External/qhull
+	url = https://github.com/qhull/qhull.git
+	branch = master
+[submodule "External/flann"]
+	path = External/flann
+	url = https://github.com/mariusmuja/flann.git
+	branch = master
+[submodule "External/vtk"]
+	path = External/vtk
+	url = https://github.com/Kitware/VTK.git
+	branch = master
+[submodule "External/yamlcpp"]
+	path = External/yamlcpp
+	url = https://github.com/jbeder/yaml-cpp.git
+	branch = master

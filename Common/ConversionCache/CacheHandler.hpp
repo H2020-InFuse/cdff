@@ -54,7 +54,7 @@ class CacheHandler
 
 			}
 
-		~CacheHandler()
+		virtual ~CacheHandler()
 			{
 
 			}

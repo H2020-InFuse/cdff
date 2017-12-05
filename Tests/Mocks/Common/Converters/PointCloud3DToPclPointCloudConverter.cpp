@@ -40,6 +40,12 @@ namespace Mocks {
  *
  * --------------------------------------------------------------------------
  */
+
+PointCloud3DToPclPointCloudConverter::~PointCloud3DToPclPointCloudConverter()
+	{
+
+	}
+
 pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud3DToPclPointCloudConverter::Convert(const PointCloud3D* pointcloud)
 	MOCK_METHOD(Converters::PointCloud3DToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::Ptr, (pointcloud) )
 

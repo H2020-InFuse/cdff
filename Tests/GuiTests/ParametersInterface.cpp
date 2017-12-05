@@ -29,6 +29,10 @@
  */
 #include "ParametersInterface.hpp"
 #include <Errors/Assert.hpp>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
 
 
 /* --------------------------------------------------------------------------
@@ -88,7 +92,7 @@ void ParametersInterface::CreateTrackbars()
 		}
 	}
 
-void ParametersInterface::SaveToXml(std::string filePath)
+/*void ParametersInterface::SaveToYaml(std::string filePath)
 	{
 	XMLDocument document;
 	XMLElement* root = document.NewElement(applicationName.c_str());
@@ -114,8 +118,38 @@ void ParametersInterface::SaveToXml(std::string filePath)
 		}
 	XMLError error =  document.SaveFile(filePath.c_str());
 	ASSERT(error == XML_SUCCESS, "Error saving configuration file");
-	}
+	}*/
 
+void ParametersInterface::SaveToYaml(std::string filePath)
+	{
+	std::ofstream yamlFile( filePath.c_str() );
+
+	std::string carryString = "";
+	for(std::map<std::string, std::vector<Parameter> >::iterator mapEntry = parameterGroupsMap.begin(); mapEntry != parameterGroupsMap.end(); mapEntry++)
+		{
+		std::string groupName = mapEntry->first;
+		std::vector<Parameter>& parametersList = mapEntry->second;
+		yamlFile<<carryString;
+		yamlFile<<"-  Name: "<<groupName;
+
+		for(std::vector<Parameter>::iterator parameter = parametersList.begin(); parameter != parametersList.end(); parameter++)
+			{
+			yamlFile<<std::endl;
+			yamlFile<<"   "<<parameter->name<<": ";
+			switch(parameter->type)
+				{
+				case BOOL_TYPE: yamlFile << ( (parameter->value == 1) || (parameter->maxValue == 0) ? "true" : "false"); break;
+				case INT_TYPE: yamlFile << parameter->value; break;
+				case FLOAT_TYPE: yamlFile << std::setprecision(7) << (float)(parameter->value) * (float)(parameter->resolution); break;
+				case DOUBLE_TYPE: yamlFile << std::setprecision(13) << (double)(parameter->value) * (double)(parameter->resolution); break;
+				}
+			}
+
+		carryString = "\n";
+		}
+	
+	yamlFile.close();
+	}
 
 /* --------------------------------------------------------------------------
  *

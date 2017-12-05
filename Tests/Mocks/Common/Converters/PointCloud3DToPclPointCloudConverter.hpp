@@ -47,6 +47,7 @@ class PointCloud3DToPclPointCloudConverter : public Mock, public Converters::Poi
 	 * --------------------------------------------------------------------
 	 */
 	public:
+		virtual ~PointCloud3DToPclPointCloudConverter();
 		pcl::PointCloud<pcl::PointXYZ>::Ptr Convert(const PointCloud3D* pointcloud);
 
 	/* --------------------------------------------------------------------
