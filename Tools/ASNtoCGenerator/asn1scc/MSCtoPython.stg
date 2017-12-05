@@ -1,0 +1,198 @@
+/*
+                                                   +----------------+
+   +------------+         +--------------+         |  MscDocument   |
+   | MscASTRoot |         |   MscFile    |         |----------------|
+   |------------|-------->|--------------|-------->| Name           |
+   | files      |         | mscDocuments |         | mscDefinitions |
+   +------------+         +--------------+         +----------------+
+                                                            |
+                  +---------------------------+             v
+                  |        MscInstance        |     +---------------+
+                  |---------------------------|     | MscDefinition |
+                  | Name                      |     |---------------|
+                  | CleanName (computed)      |<----| Name          |
+                  | events                    |     | instances     |
+                  | conditions (computed)     |     +---------------+
+                  | incomingEvents (computed) |
+                  +---------------------------+
+                                |
+                                v
+                  +---------------------------+
+                  |         MscEvent          |
+                  |---------------------------|--------.
+             .----| uniqueEventData           |        |
+             |    | (computed: 0xDE,0xAD,...) |        |
+             |    +---------------------------+        |
+             |                  |                      v
+             v                  |     +---------------------------------+
+     +--------------+           |     |        MscOutgoingEvent         |
+     | MscCondition |           |     |---------------------------------|
+     |--------------|           |     | nameOfPI (router_put_tc)        |
+     | bShared      |           |     | variableValue (tc TC-T ::= ...) |
+     | Name         |           |     | nameOrEnv (mygui_GUI)           |
+     +--------------+           |     | lineNo (in .msc)                |
+                                |     | typeName (TC_T)                 |
+                                |     +---------------------------------+
+                                v
+               +---------------------------------+
+               |        MscIncomingEvent         |
+               |---------------------------------|
+               | nameOfPI (gui_send_tc)          |
+               | variableValue (tm TM_T ::= ...) |
+               | nameOrEnv (mygui_GUI)           |
+               | lineNo (msc)                    |
+               | typeName (TM_T)                 |
+               +---------------------------------+
+*/
+
+group MSCtoPython;
+
+main(files) ::= <<
+#!/usr/bin/env python
+#
+# Automatically generated Python sequence chart (MSC) implementation
+
+import os
+import sys
+import signal
+import Queue
+
+taste_inst = os.popen('taste-config --prefix').readlines()[0].strip()
+sys.path.append(taste_inst+'/share/asn1-editor')
+
+from asn1_value_editor.Scenario import Scenario, PollerThread
+from PySide.QtCore import QCoreApplication, Qt
+from asn1_value_editor.udpcontroller import tasteUDP
+
+<files:{file|<PrintFile(file)>}; separator="\n">
+
+>>
+
+PrintFile(file) ::= <<
+# Generated due to "<file.filename>"
+<file.mscDocuments:{doc|<PrintMscDocument(doc)>}; separator="\n">
+>>
+
+PrintMscDocument(doc) ::= <<
+# From the section: MSCDOCUMENT <doc.name>
+
+<doc.mscDefinitions:{msc|<PrintMscDefinition(msc)>}>
+>>
+
+PrintMscDefinition(msc) ::= <<
+<msc.instances:{inst|
+<inst.conditions:{cnd|
+g_<cnd.Name>_synchronize = <inst.conditions.Count> 
+
+def WaitFor_<cnd.Name>():
+    pass
+    #g_lockSynchronize.acquire()
+    #global g_<cnd.Name>_synchronize
+    #g_<cnd.Name>_synchronize -= 1
+    #g_lockSynchronize.release()
+    #while g_<cnd.Name>_synchronize != 0:
+    #    time.sleep(1)
+}>
+
+<PrintMscInstance(inst)>}; separator="\n">
+
+<msc.instances:{inst|
+def runScenario(pipe_in=None, pipe_out=None, udpController=None):
+    # Queue for getting scenario status
+    log = Queue.Queue()
+    if udpController:
+        <inst.CleanName> = Exercise_<inst.CleanName>(log, name='Scenario')
+        udpController.slots.append(<inst.CleanName>.msq_q)
+        <inst.CleanName>.wait()
+        udpController.slots.remove(<inst.CleanName>.msg_q)
+        return 0 # <inst.CleanName>.status
+    else:
+    # Use old-style message queue
+        poller = PollerThread()
+        <inst.CleanName> = Exercise_<inst.CleanName>(log, name='Scenario')
+        poller.slots.append(<inst.CleanName>.msg_q)
+        poller.start()
+        <inst.CleanName>.start()
+        # Wait and log messages from both scenarii
+        while True:
+            try:
+                scenario, severity, msg = log.get(block=False)
+            except Queue.Empty:
+                pass
+            else:
+                log.task_done()
+                try:
+                    # If called from the GUI, send log through pipe
+                    pipe_out.send((scenario, severity, msg))
+                except AttributeError:
+                    print('[{level}] {name} - {msg}'.format
+                        (level=severity, name=scenario, msg=msg))
+                if severity == 'ERROR' or msg == 'END':
+                    # Stop execution on first error or completed scenario
+                    try:
+                        pipe_out.send(('All', 'COMMAND', 'END'))
+                    except AttributeError:
+                        <inst.CleanName>.stop()
+                        poller.stop()
+                        return
+                try:
+                    if pipe_out.poll():
+                        cmd = pipe_out.recv()
+                        if cmd == 'STOP':
+                            <inst.CleanName>.stop()
+                            poller.stop()
+                            return
+                except AttributeError:
+                    pass
+}>
+
+if __name__ == "__main__":
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+    udpController = None
+    if '--udp' in sys.argv:
+        # Create UDP Controller with default IP/Port values (127.0.0.1:7755:7756)
+        udpController = tasteUDP()
+    QCoreApplication(sys.argv)
+    sys.exit(runScenario(udpController))
+>>
+
+PrintExecutions(file) ::= <<
+<file.mscDocuments:{doc|
+<doc.mscDefinitions:{msc|
+<msc.instances:{inst|<inst.CleanName> = Exercise_<inst.CleanName>()
+poller.slots.append(<inst.CleanName>.msg_q)}>}>}>
+>>
+
+PrintMscInstance(inst) ::= <<
+@Scenario
+def Exercise_<inst.CleanName>(queue):
+    '''<inst.CleanName> processing'''
+    <inst.events:{evt|<PrintEvent(evt)>}; separator="\n">
+    return 0
+>>
+
+EventMap ::= [
+    "MscCondition":"PrintCondition",
+    "MscIncomingEvent":"PrintIncoming",
+    "MscOutgoingEvent":"PrintOutgoing"
+]
+
+
+PrintEvent(evt) ::= <<
+<(EventMap.(evt.EventKind))(evt=evt)>
+>>
+
+PrintCondition(evt) ::= <<
+WaitFor_<evt.Name>()
+>>
+
+PrintIncoming(evt) ::= <<
+try:
+    queue.expectMsg('<evt.nameOfPI>', '<evt.variableValue>', lineNo=<evt.lineNo>, ignoreOther=False)
+except TypeError as err:
+    raise
+>>
+
+PrintOutgoing(evt) ::= <<
+queue.sendMsg('<evt.nameOfPI>', '<evt.variableValue>', lineNo=<evt.lineNo>)
+>>

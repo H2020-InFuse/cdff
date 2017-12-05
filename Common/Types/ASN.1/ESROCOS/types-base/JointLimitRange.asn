@@ -1,0 +1,36 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+JointLimitRange-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+JointState FROM JointState-Types;
+
+
+
+---  Definition JOINTLIMITRANGE Starts 
+JointLimitRange   ::= 
+SEQUENCE
+{
+    min						JointState,
+    max						JointState
+}
+
+---  Definition JOINTLIMITRANGE Ends 
+
+
+---  Definition OUTOFBOUNDS Starts 
+OutOfBounds   ::= 
+SEQUENCE
+{
+    error-name				T-String,
+    min						T-Double,
+    max						T-Double,
+    value					T-Double
+}
+
+---  Definition OUTOFBOUNDS Ends 
+END

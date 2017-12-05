@@ -1,0 +1,36 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+RigidBodyState-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+Matrix3d FROM Eigen-Types 
+Vector3d FROM Eigen-Types 
+Time FROM Time-Types 
+Orientation FROM Pose-Types 
+Position FROM Pose-Types;
+
+
+
+---  Definition RIGIDBODYSTATE Starts 
+RigidBodyState   ::= 
+SEQUENCE
+{
+    timestamp				Time,
+    sourceFrame				T-String,
+    targetFrame				T-String,
+    pos     				Position,
+    cov-position			Matrix3d,
+    orient      			Orientation,
+    cov-orientation			Matrix3d,
+    velocity				Vector3d,
+    cov-velocity			Matrix3d,
+    angular-velocity		Vector3d,
+    cov-angular-velocity	Matrix3d
+}
+
+---  Definition RIGIDBODYSTATE Ends 
+END

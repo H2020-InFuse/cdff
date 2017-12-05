@@ -1,0 +1,37 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+DistanceImage-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+Time FROM Time-Types;
+
+
+
+---  Definition DISTANCEIMAGE Starts 
+
+---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+
+---- END of typedefs defined in this module 
+
+--- Size of the DistanceImage data
+maxDistanceImageSize T-UInt32 ::= 60
+
+DistanceImage   ::= 
+SEQUENCE
+{
+    ref-time				Time,
+    width					T-UInt16,
+    height					T-UInt16,
+    scale-x					T-Float,
+    scale-y					T-Float,
+    center-x				T-Float,
+    center-y				T-Float,
+    data					SEQUENCE (SIZE(1..maxDistanceImageSize)) OF T-Float
+}
+
+---  Definition DISTANCEIMAGE Ends 
+END

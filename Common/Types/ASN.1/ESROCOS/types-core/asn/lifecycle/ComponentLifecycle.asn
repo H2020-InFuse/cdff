@@ -1,0 +1,133 @@
+-- =====================================================================
+--  FILE:  $URL$
+-- =====================================================================
+--  PROJECT:             :  SARGON
+--  VERSION              :  $Revision$
+--  LANGUAGE             :  ASN.1
+--  AUTHOR               :  $LastChangedBy$ 
+--  COPYRIGHT            :  AVOS - GMV,S.A.
+--  COMPILER             :  asn2aadlPlus
+--  CREATED              :  $CreationDate$
+--  CLASS                :  -
+--  LAST MODIFIED        :  $LastChangedDate$
+--  GENERATED FROM MODEL :  -
+--  ORIGINAL MODEL AUTHOR:  -
+-- ---------------------------------------------------------------------
+--  ASN.1 types for the robotic component lifecycle in SARGON.
+-- ---------------------------------------------------------------------
+--  HISTORY
+--  $History$
+-- =====================================================================
+
+ComponentLifecycle-Types DEFINITIONS ::=
+BEGIN
+
+IMPORTS 
+T-Boolean FROM TASTE-BasicTypes
+LC-Code FROM ApplicationCodes-Types;
+
+-- The type LC-Code must be defines in Application-Codes
+--
+-- This type defines the internal status and error codes of the 
+-- Behaviour function (application-specific).
+--
+-- The type shall be as follows:
+--
+--   LC-Code  ::= ENUMERATED {
+--      -- Mandatory values that must always be defined
+--      unknown,            -- Default value
+--      invalid-command,    -- Indicates that an invalid transition has been requested
+--   
+--      -- Generic component status codes; should be particularized for each system, e.g.:
+--      componentA-mode1,
+--      componentA-mode2,
+--      componentA-exception1,
+--      componentB-nominal,
+--      componentB-error1,
+--      componentB-fatalError1,
+--      ...
+--   }
+
+
+-- Return types of the lifecycle transitions hooks
+LC-ConfigureStatus ::= ENUMERATED { configure-ok, configure-fail, configure-exception }
+LC-StartStatus     ::= ENUMERATED { start-ok, start-fail, start-exception }
+LC-UpdateStatus    ::= ENUMERATED { update-ok, update-error, update-exception }
+LC-ErrorStatus     ::= ENUMERATED { error-recover, error-continue, error-exception }
+LC-StopStatus      ::= ENUMERATED { stop-ok, stop-exception }
+LC-CleanupStatus   ::= ENUMERATED { cleanup-ok, cleanup-exception }
+LC-ExceptionStatus ::= ENUMERATED { exception-recover, exception-fatal }
+
+
+-- Result type for configureHook
+LC-ConfigureResult ::= SEQUENCE
+{
+    status LC-ConfigureStatus,  -- Call result
+    code LC-Code                -- Internal component state
+}
+
+-- Result type for startHook
+LC-StartResult ::= SEQUENCE
+{
+    status LC-StartStatus,      -- Call result
+    code LC-Code                -- Internal component state
+}
+
+-- Result type for updateHook
+LC-UpdateResult ::= SEQUENCE
+{
+    status LC-UpdateStatus,     -- Call result
+    code LC-Code                -- Internal component state
+}
+
+-- Result type for errorHook
+LC-ErrorResult ::= SEQUENCE
+{
+    status LC-ErrorStatus,      -- Call result
+    code LC-Code                -- Internal component state
+}
+
+-- Result type for stopHook
+LC-StopResult ::= SEQUENCE
+{
+    status LC-StopStatus,       -- Call result
+    code LC-Code                -- Internal component state
+}
+
+-- Result type for cleanupHook
+LC-CleanupResult ::= SEQUENCE
+{
+    status LC-CleanupStatus,    -- Call result
+    code LC-Code                -- Internal component state
+}
+
+-- Result type for exceptionHook
+LC-ExceptionResult ::= SEQUENCE
+{
+    status LC-ExceptionStatus,  -- Call result
+    code LC-Code                -- Internal component state
+}
+
+-- Lifecycle request accepted by executeCommand
+LC-Request ::= ENUMERATED { configureCmd, startCmd, stopCmd, cleanupCmd, reportCmd }
+
+-- Component states for reporting
+LC-State ::= ENUMERATED 
+{ 
+    preoperationalState,        -- Initial state of the component
+    stoppedState,               -- Nominal, stopped
+    runningState,               -- Nominal operation, accepts periodic update
+    runtimeErrorState,          -- Recoverable error, accepts periodic update
+    exceptionState,             -- Transient state, immediatelly calls exceptionHook
+    fatalErrorState             -- Non-recoverable error, cannot exit this state
+}
+
+-- Lifecycle report for reportState
+LC-Report ::= SEQUENCE
+{
+    lcState   LC-State,         -- Current component state
+    code      LC-Code           -- Last internal status code received from the Behaviour function
+}
+
+END
+

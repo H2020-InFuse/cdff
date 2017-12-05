@@ -1,0 +1,45 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+CompressedFrame-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+Time FROM Time-Types 
+Frame-size-t FROM Frame-Types 
+Frame-attrib-t FROM Frame-Types 
+Frame-status-t FROM Frame-Types;
+
+
+--- Definition of enum frame_compressed_mode_t follows 
+
+Frame-compressed-mode-t ::= ENUMERATED { 	 mode-compressed-undefined, mode-pjpg }
+
+--- End Definition of enum frame_compressed_mode_t
+---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+
+---- END of typedefs defined in this module 
+
+
+--- Sizes of the CompresedFrame data
+maxCompressedFrameImageSize T-UInt32 ::= 262144
+maxCompressedFrameImageAttributes T-UInt32 ::= 10
+
+
+---  Definition COMPRESSEDFRAME Starts 
+CompressedFrame   ::= 
+SEQUENCE
+{
+    ref-time				Time,
+    received-time			Time,
+    image					SEQUENCE (SIZE(1..maxCompressedFrameImageSize)) OF T-UInt8,
+    attributes				SEQUENCE (SIZE(1..maxCompressedFrameImageAttributes)) OF Frame-attrib-t,
+    datasize				Frame-size-t,
+    frame-mode				Frame-compressed-mode-t,
+    frame-status			Frame-status-t
+}
+
+---  Definition COMPRESSEDFRAME Ends 
+END

@@ -1,0 +1,47 @@
+/* --------------------------------------------------------------------------
+*
+* (C) Copyright …
+*
+* ---------------------------------------------------------------------------
+*/
+
+/*!
+ * @file VisualPointFeatureVector.asn
+ * @date 15/11/2017
+ * @author Alessandro Bianco
+ * @changes 5/12/2017- xma - fixed sizes sequences per new compiler obligation
+ * eol and eof must match for compiler
+ */
+
+/*!
+ * @addtogroup BaseTypes
+ * 
+ * Specification of the VisualPointFeatureVector class.
+ * 
+ * 
+ * @{
+ */
+VisualPointFeature2DNS DEFINITIONS ::=
+BEGIN
+
+IMPORTS
+Point2D FROM GeometryNS
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes
+Point FROM Point-Types;
+
+-- Max. number of features
+featuresElementsMax T-UInt32 ::= 30
+
+-- Max. name size
+descriptorNameLength T-UInt32 ::= 30
+
+VisualPointFeature2D ::= SEQUENCE
+	{
+	point		Point2D,
+	descriptor	SEQUENCE (SIZE(0..descriptorNameLength)) OF REAL
+	}
+
+VisualPointFeatureVector2D ::= SEQUENCE (SIZE(0..featuresElementsMax)) OF VisualPointFeature2D
+
+END

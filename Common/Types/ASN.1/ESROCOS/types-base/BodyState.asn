@@ -1,0 +1,40 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+BodyState-Types DEFINITIONS ::=
+BEGIN
+IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+TwistWithCovariance FROM TwistWithCovariance-Types 
+Time FROM Time-Types 
+TransformWithCovariance FROM TransformWithCovariance-Types;
+
+
+
+---  Definition BODYSTATE Starts
+--! Representation of the state of a rigid body
+--!
+--! Given a source and target frame, this structure expresses the _frame
+--! change_ between these two frames. In effect, it represents the state of
+--! the source frame expressed in the target frame.
+--!
+--! For instance, if sourceFrame is "body" and targetFrame is "world", then
+--! the BodyState object is the state of body in the world frame.
+---
+BodyState   ::= 
+SEQUENCE
+{
+    --- Time-stamp
+    ref-time				Time,
+    --- Body pose: rotation in radians and translation in meters
+    pose					TransformWithCovariance,
+    --- TwistWithCovariance: Linear[m/s] and Angular[rad/s] Velocity of the Body 
+    --! It is assumed here that velocity is the derivative of a delta pose for
+    --! a given interval. When such interval tends to zero, one could talk
+    --! of instantaneous velocity 
+    velocity				TwistWithCovariance
+}
+
+---  Definition BODYSTATE Ends 
+END

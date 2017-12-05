@@ -4,17 +4,23 @@
 
 #exit immediately if a simple command exits with a nonzero exit value.
 set -e
+dir="../../Common/Types"
+ASN1SCC=asn1scc
 
 # Clean the output directory #TBD
-rm -rf ../../Common/Types/C/*
-mkdir -p ../../Common/Types/C
+rm -rf $dir/C/*
+mkdir -p $dir/C
 
-# Calling the compiler, add new .asn files here
-./bin/asn1c ../../Common/Types/ASN.1/*.asn 
+# binary can be compiled from https://github.com/ttsiodras/asn1scc
+# or downloaded from https://download.tuxfamily.org/taste/ASN1SCC/
+if [ ! -d "$ASN1SCC" ]; then
+	wget https://download.tuxfamily.org/taste/ASN1SCC/ASN1SCC-latest.tgz
+	tar -xvf ASN1SCC-latest.tgz
+	rm ASN1SCC-latest.tgz
+fi
 
-# copy stuff
-cp -r *.h *.c ../../Common/Types/C/
-rm -rf *.h *.c
-
-#Removing this generated file we do not want to use
-rm -rf Makefile.am.sample
+#Compile ASN files To C
+# has to be a oneliner, else the compiler misses definitions
+asnFiles=`find $dir/ASN.1 -name '*.asn'`
+#echo $asnFiles
+mono ./asn1scc/asn1.exe $asnFiles -c -o $dir/C/

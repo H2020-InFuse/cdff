@@ -1,0 +1,25 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+TransformWithCovariance-Types DEFINITIONS ::=
+BEGIN
+IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes Matrix4d FROM Eigen-Types Quaterniond FROM Eigen-Types Position FROM Pose-Types Covariance FROM Covariance-Types;
+
+
+
+---  Definition TRANSFORMWITHCOVARIANCE Starts 
+
+---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+
+---- END of typedefs defined in this module 
+TransformWithCovariance   ::= 
+SEQUENCE
+{
+translation				Position,
+orientation				Quaterniond,
+cov						Covariance
+}
+
+---  Definition TRANSFORMWITHCOVARIANCE Ends 
+END

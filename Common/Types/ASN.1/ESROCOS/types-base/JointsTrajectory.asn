@@ -1,0 +1,46 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+JointsTrajectory-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+JointState FROM JointState-Types 
+Time FROM Time-Types;
+
+--- Data sizes
+maxJointTrajectorySize T-UInt32 ::= 60
+maxJointsTrajectorySize T-UInt32 ::= 60
+
+
+---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+
+---- Type: JointTrajectory defined as std::vector translated according to configuration
+JointTrajectory ::= SEQUENCE (SIZE(1..maxJointTrajectorySize)) OF JointState
+
+---- END of typedefs defined in this module 
+
+
+---  Definition JOINTSTRAJECTORY Starts 
+JointsTrajectory   ::= 
+SEQUENCE
+{
+    vector-name             T-String,
+    timetags				SEQUENCE (SIZE(1..maxJointsTrajectorySize)) OF Time,
+    trajectory              SEQUENCE (SIZE(1..maxJointsTrajectorySize)) OF JointTrajectory
+}
+
+---  Definition JOINTSTRAJECTORY Ends 
+
+
+---  Definition INVALIDTIMESTEP Starts 
+InvalidTimeStep   ::= 
+SEQUENCE
+{
+    time-step				T-UInt32
+}
+
+---  Definition INVALIDTIMESTEP Ends 
+END

@@ -1,0 +1,34 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+Sonar-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+Angle FROM Angle-Types 
+Time FROM Time-Types;
+
+
+--- Sonar data size
+maxSonarSize T-UInt32 ::= 60
+
+---  Definition SONAR Starts 
+Sonar   ::= 
+SEQUENCE
+{
+ref-time				Time,
+timestamps				SEQUENCE (SIZE(1..maxSonarSize)) OF Time,
+bin-duration			Time,
+beam-width				Angle,
+beam-height				Angle,
+bearings				SEQUENCE (SIZE(1..maxSonarSize)) OF Angle,
+speed-of-sound			T-Float,
+bin-count				T-UInt32,
+beam-count				T-UInt32,
+bins					SEQUENCE (SIZE(1..maxSonarSize)) OF T-Float
+}
+
+---  Definition SONAR Ends 
+END
