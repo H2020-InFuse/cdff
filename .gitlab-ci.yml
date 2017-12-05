@@ -1,4 +1,4 @@
-image: nexus.spaceapplications.com/repository/infuse/infuse:version1.1
+image: nexus.spaceapplications.com/repository/infuse/infuse:version1.2
 
 stages: 
   - autogeneration
