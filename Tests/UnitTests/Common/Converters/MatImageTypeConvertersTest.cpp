@@ -78,7 +78,7 @@ TEST_CASE( "Mat to ImageType and Back Square Matrix", "[MatToImageTypeSquare]" )
 			}
 		}
 
-	delete [] (asnImage->data.arr);
+	//delete [] (asnImage->data.arr);
 	delete(asnImage);	
 	} 
 
@@ -116,7 +116,7 @@ TEST_CASE( "Mat to ImageType and Back Non-Square Matrix", "[MatToImageTypeNonSqu
 			}
 		}
 
-	delete [] (asnImage->data.arr);	
+	//delete [] (asnImage->data.arr);	
 	delete(asnImage);	
 	} 
 
@@ -157,7 +157,7 @@ TEST_CASE( "Multiple conversions", "[MultipleConversions]" )
 				}
 			}
 		
-		delete [] (asnImage->data.arr);
+		//delete [] (asnImage->data.arr);
 		delete(asnImage);
 		}
 	}
