@@ -93,7 +93,7 @@ HarrisDetector2DTestInterface::~HarrisDetector2DTestInterface()
 	delete(stubOutputCache);
 	delete(mockOutputConverter);
 	delete(harris);
-	delete [] (inputImage->data.buf);
+	//delete [] (inputImage->data.arr); //array is static
 	delete(inputImage);
 	}
 
@@ -130,10 +130,10 @@ void HarrisDetector2DTestInterface::DisplayResult()
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
 	cv::Mat outputImage = cvImage.clone();
 
-	for(int featureIndex = 0; featureIndex < featuresVector->list.count; featureIndex++)
+	for(int featureIndex = 0; featureIndex < featuresVector->nCount; featureIndex++)
 		{
-		VisualPointFeature2D* feature = featuresVector->list.array[featureIndex];
-		cv::Point drawPoint(feature->point.x, feature->point.y );
+		VisualPointFeature2D feature = featuresVector->arr[featureIndex];
+		cv::Point drawPoint(feature.point.x, feature.point.y );
 		cv::circle(outputImage, drawPoint, 5, cv::Scalar(0, 0, 255), 2, 8, 0);
 		}
 
@@ -142,7 +142,8 @@ void HarrisDetector2DTestInterface::DisplayResult()
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
 
 	//The cache should handle this cancellation, but we only have a stub cache at the moment 
-	asn_sequence_empty( &(featuresVector->list) );
+	// #XMA : not supported anymore
+	//asn_sequence_empty( &(featuresVector->arr) );
 	delete(featuresVector);
 	}
 

@@ -28,7 +28,7 @@
  */
 #include "XmlHelper.hpp"
 
-
+using namespace tinyxml2;
 namespace Common {
 
 /* --------------------------------------------------------------------------

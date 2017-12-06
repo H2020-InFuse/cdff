@@ -48,7 +48,7 @@ VisualPointFeatureVector2D* MatToVisualPointFeatureVector2DConverter::Convert(cv
 	ASSERT( featuresMatrix.rows <= conversion->nCount , "MatToVisualPointFeatureVector2DConverter: Cannot store this many features");
 	for(unsigned rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
 		{
-		VisualPointFeature2D featureVector = VisualPointFeature2D();
+		VisualPointFeature2D featureVector; 
 		featureVector.point.x = featuresMatrix.at<uint16_t>(rowIndex, 0);
 		featureVector.point.y = featuresMatrix.at<uint16_t>(rowIndex, 1);
 		conversion->arr[rowIndex] = featureVector;
