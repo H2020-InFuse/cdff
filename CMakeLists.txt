@@ -2,6 +2,7 @@ project(infuse_dev)
 cmake_minimum_required(VERSION 2.6)
 
 include(FindPkgConfig)
+find_package(OpenCV 3.0.0 REQUIRED)
 
 enable_testing()
 

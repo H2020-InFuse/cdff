@@ -5,7 +5,8 @@ add_library(
     MatToVisualPointFeatureVector2DConverter.cpp
     VisualPointFeatureVector2DToMatConverter.cpp
 )
-target_link_libraries(converters_opencv opencv_core)
+target_link_libraries(converters_opencv opencv_core cdff_types)
+
 install(
     TARGETS converters_opencv
     DESTINATION lib

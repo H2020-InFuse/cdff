@@ -1,6 +1,6 @@
 file(GLOB_RECURSE source_list
- "C/*.c"
- "C/*.h"
+ "*/*.c"
+ "*/*.h"
 )
 
 add_library(

@@ -8,7 +8,7 @@
 /*!
  * @file MatToImageTypeConverter.cpp
  * @date 27/11/2017
- * @author Alessandro Bianco
+ * @authors Alessandro Bianco, Xavier Martinez
  */
 
 /*!
@@ -41,15 +41,16 @@ namespace Types {
  */
 ImageType* MatToImageTypeConverter::Convert(const cv::Mat image)
 	{
-	ASSERT(image.type() ==  CV_8UC3, "MatToImageTypeConverter: image type not supported yet");
+	ASSERT(image.type() ==  CV_8UC3, "MatToImageTypeConverter: Only CV_8UC3 type is supported for this conversion");
 
 	ImageType* asnImage = new ImageType();
+	ImageType_Initialize(asnImage);
 	asnImage->height = image.rows;
 	asnImage->width = image.cols;
 	asnImage->image_mode = ImageMode_mode_rgb;
+	
+	ImageType_data_Initialize(&(asnImage->data));
 	asnImage->data.nCount = (int) (image.rows * image.cols * 3);
-	//asnImage->data.arr = &(new T_UInt8[asnImage->data.nCount]);
-
 	for(int rowIndex = 0; rowIndex < image.rows; rowIndex++)
 		{
 		for(int columnIndex = 0; columnIndex < image.cols; columnIndex++)

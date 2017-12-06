@@ -45,7 +45,7 @@
 using namespace Types;
 
 TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2D]" )
-	{
+{
 	MatToVisualPointFeatureVector2DConverter firstConverter;
 	VisualPointFeatureVector2DToMatConverter secondConverter;
 
@@ -65,17 +65,18 @@ TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2
 	REQUIRE(outputMatrix.cols == inputMatrix.cols);
 	REQUIRE(outputMatrix.type() == inputMatrix.type());
 	for(int rowIndex = 0; rowIndex < inputMatrix.rows; rowIndex++)
-		{
+	{
 		for(int columnIndex = 0; columnIndex < inputMatrix.cols; columnIndex++)
-			{
+		{
 			REQUIRE(outputMatrix.at<uint16_t>(rowIndex, columnIndex) == inputMatrix.at<uint16_t>(rowIndex, columnIndex));		 		 
-			}
-		}		
-	} 
+		}
+	}
+	delete asnVector;
+}
 
 
 TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMat]" )
-	{
+{
 	MatToVisualPointFeatureVector2DConverter firstConverter;
 	VisualPointFeatureVector2DToMatConverter secondConverter;
 
@@ -93,9 +94,12 @@ TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMa
 	VisualPointFeatureVector2D* outputVector = firstConverter.Convert(intermediateMatrix);	
 
 	REQUIRE(asnVector->nCount == outputVector->nCount);
-	for(int rowIndex = 0; rowIndex < asnVector->nCount; rowIndex++)
-		{
+	for(int rowIndex = 0; rowIndex < asnVector->nCount; rowIndex++)	
+	{
 		REQUIRE(asnVector->arr[rowIndex].point.x == outputVector->arr[rowIndex].point.x);
 		REQUIRE(asnVector->arr[rowIndex].point.y == outputVector->arr[rowIndex].point.y);
-		}
 	}
+
+	delete asnVector;
+	delete outputVector;
+}

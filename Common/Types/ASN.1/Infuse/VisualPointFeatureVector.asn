@@ -31,10 +31,10 @@ T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedType
 Point FROM Point-Types;
 
 -- Max. number of features
-featuresElementsMax T-UInt32 ::= 30
+featuresElementsMax T-UInt32 ::= 1024
 
 -- Max. name size
-descriptorNameLength T-UInt32 ::= 30
+descriptorNameLength T-UInt32 ::= 128
 
 VisualPointFeature2D ::= SEQUENCE
 	{
