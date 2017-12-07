@@ -26,7 +26,7 @@ fi
 
 #get latest files
 echo "Fetching latest Artifacts containing C generated files from ASN description."  
-curl -o generatedFiles.gz -LOk -X GET --header "PRIVATE-TOKEN: X-2vkSkeB7zGCCT7pz8V" https://gitlab.spaceapplications.com/InFuse/CDFF/-/jobs/artifacts/master/download?job=autogeneration
+curl -o generatedFiles.gz -LOk -X GET --header "PRIVATE-TOKEN: pVUF6xEhoz2kgWAUyyCr" https://gitlab.spaceapplications.com/InFuse/CDFF/-/jobs/artifacts/master/download?job=autogeneration
 echo "Done." 
 
 echo "Unzipping to $OUTPUT_DIR" 
