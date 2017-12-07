@@ -1,4 +1,4 @@
-image: nexus.spaceapplications.com/repository/infuse/infuse:version1.2
+image: nexus.spaceapplications.com/repository/infuse/infuse:version1.3
 
 stages: 
   - autogeneration
@@ -9,7 +9,7 @@ stages:
 autogeneration:
   stage : autogeneration
   script:
-      - cd Tools/ASNtoCGenerator
+      - cd Tools/ASNtoC
       - ./GeneratorScript.sh
   artifacts:
     paths:
