@@ -42,6 +42,12 @@ use "git submodule update --depth 1" or you might die from openCV overwhelmingly
 
     make test
 
+### ASN.1 Datatypes
+On first build, Cmake will run /Tools/ASNToC/FetcherScript.sh. 
+This will download generated files from the server.  
+
+If you want to develop new Types, you will need to compile them. See /Tools/ASNToC/Readme.md
+
 ## Contributing
 
 Excellent code depends on rigorous review. In Infuse, every change is reviewed using this flow:
