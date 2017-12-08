@@ -63,9 +63,9 @@ TEST_CASE( "Call to process", "[process]" )
 	Mocks::PointCloud3DToPclPointCloudConverter* mockInputConverter = new Mocks::PointCloud3DToPclPointCloudConverter();
 	ConversionCache<PointCloud3D*, pcl::PointCloud<pcl::PointXYZ>::Ptr, PointCloud3DToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
-	Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3D* >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3D*>();
+	Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr>();
 	Mocks::MatToVisualPointFeatureVector3DConverter* mockOutputConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector3D*, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
+	ConversionCache<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 
 	//Create a sample sphere
 	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud =  pcl::PointCloud<pcl::PointXYZ>::Ptr( new  pcl::PointCloud<pcl::PointXYZ>() );
@@ -82,17 +82,15 @@ TEST_CASE( "Call to process", "[process]" )
 		}
 	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputCloud) );
 
-	VisualPointFeatureVector3D* featuresVector = new VisualPointFeatureVector3D();
+	CppTypes::VisualPointFeatureVector3D::ConstPtr featuresVector = CppTypes::VisualPointFeatureVector3D::ConstPtr( new CppTypes::VisualPointFeatureVector3D() );
 	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
 
 	HarrisDetector3D harris;
 	harris.process();
 
-	VisualPointFeatureVector3D* output = harris.featuresSetOutput();
+	CppTypes::VisualPointFeatureVector3D::ConstPtr output = harris.featuresSetOutput();
 
-	REQUIRE(output->list.size == featuresVector->list.size);
-	//No need to delete StubCacheHandler, MockImageTypeToMatConverter, StubCacheHandler, MockMatToVisualPointFeatureVector2DConverter
-	//ConversionCache destructor takes care of that.
+	REQUIRE(output->GetNumberOfPoints() == featuresVector->GetNumberOfPoints());
 	}
 
 TEST_CASE( "Call to configure", "[configure]" )

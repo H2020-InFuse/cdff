@@ -39,8 +39,13 @@ namespace Mocks {
  *
  * --------------------------------------------------------------------------
  */
-VisualPointFeatureVector3D* MatToVisualPointFeatureVector3DConverter::Convert(cv::Mat featuresVector)
-	MOCK_METHOD(Converters::MatToVisualPointFeatureVector3DConverter, Convert, VisualPointFeatureVector3D*, (featuresVector) )
+MatToVisualPointFeatureVector3DConverter::~MatToVisualPointFeatureVector3DConverter()
+	{
+
+	}
+
+CppTypes::VisualPointFeatureVector3D::ConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat featuresVector)
+	MOCK_METHOD(Converters::MatToVisualPointFeatureVector3DConverter, Convert, CppTypes::VisualPointFeatureVector3D::ConstPtr, (featuresVector) )
 
 }
 

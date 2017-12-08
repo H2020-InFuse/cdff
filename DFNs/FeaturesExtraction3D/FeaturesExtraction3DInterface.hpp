@@ -29,7 +29,7 @@
  */
 #include <DFNCommonInterface.hpp>
 #include <PointCloud3D.h>
-#include <VisualPointFeatureVector3D.h>
+#include <VisualPointFeatureVector3D.hpp>
 #include <PointCloud3DToPclPointCloudConverter.hpp>
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
 
@@ -62,7 +62,7 @@ namespace dfn_ci {
             * Receive value from output port featuresSet
             * @param featuresSet, This is the set of the points extracted from the point cloud, no descriptor is provided yet
             */
-            virtual VisualPointFeatureVector3D* featuresSetOutput();
+            virtual CppTypes::VisualPointFeatureVector3D::ConstPtr featuresSetOutput();
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -70,7 +70,7 @@ namespace dfn_ci {
 	 */
         protected:
             PointCloud3D* inPointCloud;
-            VisualPointFeatureVector3D* outFeaturesSet;
+            CppTypes::VisualPointFeatureVector3D::ConstPtr outFeaturesSet;
 
 	/* --------------------------------------------------------------------
 	 * Private

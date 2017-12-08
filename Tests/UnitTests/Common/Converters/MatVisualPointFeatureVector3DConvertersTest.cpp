@@ -38,7 +38,7 @@
  */
 #include <VisualPointFeatureVector3DToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
-#include <VisualPointFeatureVector3D.h>
+#include <VisualPointFeatureVector3D.hpp>
 #include <Catch/catch.h>
 #include <Errors/Assert.hpp>
 
@@ -58,7 +58,7 @@ TEST_CASE( "Mat to VisualPointFeatureVector3D", "[MatToVisualPointFeatureVector3
 			}
 		}
 
-	VisualPointFeatureVector3D* asnVector = firstConverter.Convert(inputMatrix);
+	CppTypes::VisualPointFeatureVector3D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnVector);
 
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
@@ -88,15 +88,15 @@ TEST_CASE( "VisualPointFeatureVector3D to Mat", "[VisualPointFeatureVector3DToMa
 			}
 		}
 
-	VisualPointFeatureVector3D* asnVector = firstConverter.Convert(inputMatrix);
+	CppTypes::VisualPointFeatureVector3D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
 	cv::Mat intermediateMatrix = secondConverter.Convert(asnVector);
-	VisualPointFeatureVector3D* outputVector = firstConverter.Convert(intermediateMatrix);	
+	CppTypes::VisualPointFeatureVector3D::ConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
 
-	REQUIRE(asnVector->list.count == outputVector->list.count);
-	for(int rowIndex = 0; rowIndex < asnVector->list.count; rowIndex++)
+	REQUIRE(asnVector.GetNumberOfPoints() == outputVector.GetNumberOfPoints());
+	for(int pointIndex = 0; pointIndex < asnVector.GetNumberOfPoints(); pointIndex++)
 		{
-		REQUIRE(asnVector->list.array[rowIndex]->point.x == outputVector->list.array[rowIndex]->point.x);
-		REQUIRE(asnVector->list.array[rowIndex]->point.y == outputVector->list.array[rowIndex]->point.y);
-		REQUIRE(asnVector->list.array[rowIndex]->point.z == outputVector->list.array[rowIndex]->point.z);
+		REQUIRE(asnVector.GetXCoordinate(pointIndex) == outputVector.GetXCoordinate(pointIndex) );
+		REQUIRE(asnVector.GetYCoordinate(pointIndex) == outputVector.GetYCoordinate(pointIndex) );
+		REQUIRE(asnVector.GetZCoordinate(pointIndex) == outputVector.GetZCoordinate(pointIndex) );
 		}
 	}

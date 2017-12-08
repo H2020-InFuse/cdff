@@ -39,22 +39,16 @@ namespace Converters {
  *
  * --------------------------------------------------------------------------
  */
-VisualPointFeatureVector3D* MatToVisualPointFeatureVector3DConverter::Convert(cv::Mat featuresMatrix)
+CppTypes::VisualPointFeatureVector3D::ConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat featuresMatrix)
 	{
 	ASSERT( featuresMatrix.type() == CV_32FC1, "MatToVisualPointFeatureVector3DConverter: unsopported cv::mat type in input");
 	ASSERT( featuresMatrix.cols == 3, "MatToVisualPointFeatureVector3DConverter: unexpected numbers of rows");
 
-	VisualPointFeatureVector3D* conversion = new VisualPointFeatureVector3D();
+	CppTypes::VisualPointFeatureVector3D::Ptr conversion = CppTypes::VisualPointFeatureVector3D::Ptr( new CppTypes::VisualPointFeatureVector3D() );
 
 	for(int rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
 		{
-		VisualPointFeature3D* featureVector = new VisualPointFeature3D();
-		featureVector->point.x = featuresMatrix.at<float>(rowIndex, 0);
-		featureVector->point.y = featuresMatrix.at<float>(rowIndex, 1);	
-		featureVector->point.z = featuresMatrix.at<float>(rowIndex, 2);	
-
-		int error = ASN_SEQUENCE_ADD(&(conversion->list), featureVector);
-		ASSERT(error == 0, "MatToVisualPointFeatureVector2DConverter, conversion failed");
+		conversion->AddPoint(featuresMatrix.at<float>(rowIndex, 0), featuresMatrix.at<float>(rowIndex, 1), featuresMatrix.at<float>(rowIndex, 2) );
 		} 
 	
 	return conversion;

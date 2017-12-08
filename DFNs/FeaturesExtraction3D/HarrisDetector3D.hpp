@@ -31,7 +31,7 @@
  */
 #include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
 #include <PointCloud3D.h>
-#include <VisualPointFeatureVector3D.h>
+#include <VisualPointFeatureVector3D.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <stdlib.h>

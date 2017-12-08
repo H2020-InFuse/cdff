@@ -40,22 +40,22 @@ namespace CppTypes
  *
  * --------------------------------------------------------------------------
  */
-const FrameMode Frame::MODE_UNDEFINED = CTypes::mode_undefined;
-const FrameMode Frame::MODE_GRAYSCALE = CTypes::mode_grayscale;
-const FrameMode Frame::MODE_RGB = CTypes::mode_rgb;
-const FrameMode Frame::MODE_UYVY = CTypes::mode_uyvy;
-const FrameMode Frame::MODE_BGR = CTypes::mode_bgr;
-const FrameMode Frame::MODE_RGB32 = CTypes::mode_rgb32;
-const FrameMode Frame::RAW_MODES = CTypes::raw_modes;
-const FrameMode Frame::MODE_BAYER = CTypes::mode_bayer;
-const FrameMode Frame::MODE_BAYER_RGGB = CTypes::mode_bayer_rggb;
-const FrameMode Frame::MODE_BAYER_GRBG = CTypes::mode_bayer_grbg;
-const FrameMode Frame::MODE_BAYER_BGGR = CTypes::mode_bayer_bggr;
-const FrameMode Frame::MODE_BAYER_GBRG = CTypes::mode_bayer_gbrg;
-const FrameMode Frame::COMPRESSED_MODES = CTypes::compressed_modes;
+const FrameMode Frame::MODE_UNDEFINED = CTypes::Frame_mode_t_mode_undefined;
+const FrameMode Frame::MODE_GRAYSCALE = CTypes::Frame_mode_t_mode_grayscale;
+const FrameMode Frame::MODE_RGB = CTypes::Frame_mode_t_mode_rgb;
+const FrameMode Frame::MODE_UYVY = CTypes::Frame_mode_t_mode_uyvy;
+const FrameMode Frame::MODE_BGR = CTypes::Frame_mode_t_mode_bgr;
+const FrameMode Frame::MODE_RGB32 = CTypes::Frame_mode_t_mode_rgb32;
+const FrameMode Frame::RAW_MODES = CTypes::Frame_mode_t_raw_modes;
+const FrameMode Frame::MODE_BAYER = CTypes::Frame_mode_t_mode_bayer;
+const FrameMode Frame::MODE_BAYER_RGGB = CTypes::Frame_mode_t_mode_bayer_rggb;
+const FrameMode Frame::MODE_BAYER_GRBG = CTypes::Frame_mode_t_mode_bayer_grbg;
+const FrameMode Frame::MODE_BAYER_BGGR = CTypes::Frame_mode_t_mode_bayer_bggr;
+const FrameMode Frame::MODE_BAYER_GBRG = CTypes::Frame_mode_t_mode_bayer_gbrg;
+const FrameMode Frame::COMPRESSED_MODES = CTypes::Frame_mode_t_compressed_modes;
 const FrameMode Frame::MODE_PJPG = CTypes::Frame_mode_t_mode_pjpg;
-const FrameMode Frame::MODE_JPEG = CTypes::mode_jpeg;
-const FrameMode Frame::MODE_PNG = CTypes::mode_png;
+const FrameMode Frame::MODE_JPEG = CTypes::Frame_mode_t_mode_jpeg;
+const FrameMode Frame::MODE_PNG = CTypes::Frame_mode_t_mode_png;
 
 const FrameStatus Frame::STATUS_EMPTY = CTypes::status_empty;
 const FrameStatus Frame::STATUS_VALID = CTypes::status_valid;
@@ -244,8 +244,8 @@ int Frame::GetNumberOfDataBytes() const
  *
  * --------------------------------------------------------------------------
  */
-const int Frame::MAX_FRAME_ATTRIBUTES = 5;
-const int Frame::MAX_DATA_BYTE_SIZE = 2359296;
+const int Frame::MAX_FRAME_ATTRIBUTES = CTypes::frameMaxAttributes;
+const int Frame::MAX_DATA_BYTE_SIZE = CTypes::frameMaxBytes;
 
 
 }

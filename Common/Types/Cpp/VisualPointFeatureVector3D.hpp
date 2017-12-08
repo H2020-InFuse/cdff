@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file VisualPointFeatureVector2D.hpp
+ * @file VisualPointFeatureVector3D.hpp
  * @date 08/12/2017
  * @author Alessandro Bianco
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup CppTypes
  * 
- * C++ wrapper for the VisualPointFeatureVector2D
+ * C++ wrapper for the VisualPointFeatureVector3D
  * 
  * 
  * @{
@@ -29,7 +29,7 @@
  * --------------------------------------------------------------------------
  */
 namespace CTypes {
-#include <VisualPointFeatureVector2D.h>
+#include <VisualPointFeatureVector3D.h>
 }
 #include "BaseTypes.hpp"
 #include <stdlib.h>
@@ -37,8 +37,8 @@ namespace CTypes {
 
 
 
-#ifndef VISUAL_POINT_FEATURE_VECTOR_HPP
-#define VISUAL_POINT_FEATURE_VECTOR_HPP
+#ifndef VISUAL_POINT_FEATURE_VECTOR_3D_HPP
+#define VISUAL_POINT_FEATURE_VECTOR_3D_HPP
 
 namespace CppTypes 
 {
@@ -49,8 +49,8 @@ namespace CppTypes
  * --------------------------------------------------------------------------
  */
 
-typedef CTypes::VisualPointFeature2D VisualPointFeature2D;
-typedef CTypes::VisualPointFeature2D_descriptor VisualPointDescriptor2D;
+typedef CTypes::VisualPointFeature3D VisualPointFeature3D;
+typedef CTypes::VisualPointFeature3D_descriptor VisualPointDescriptor3D;
 
 
 
@@ -60,7 +60,7 @@ typedef CTypes::VisualPointFeature2D_descriptor VisualPointDescriptor2D;
  *
  * --------------------------------------------------------------------------
  */
-class VisualPointFeatureVector2D
+class VisualPointFeatureVector3D
 	{
 	/* --------------------------------------------------------------------
 	 * Public
@@ -68,17 +68,18 @@ class VisualPointFeatureVector2D
 	 */
 	public:
 
-		typedef std::shared_ptr<VisualPointFeatureVector2D> Ptr;
-		typedef std::shared_ptr<const VisualPointFeatureVector2D> ConstPtr;
+		typedef std::shared_ptr<VisualPointFeatureVector3D> Ptr;
+		typedef std::shared_ptr<const VisualPointFeatureVector3D> ConstPtr;
 
-		VisualPointFeatureVector2D();
-		~VisualPointFeatureVector2D();
+		VisualPointFeatureVector3D();
+		~VisualPointFeatureVector3D();
 
-		void AddPoint(uint16_t x, uint16_t y);
+		void AddPoint(float x, float y, float z);
 		void ClearPoints();
 		int GetNumberOfPoints() const;
-		int GetXCoordinate(int pointIndex) const;
-		int GetYCoordinate(int pointIndex) const;
+		float GetXCoordinate(int pointIndex) const;
+		float GetYCoordinate(int pointIndex) const;
+		float GetZCoordinate(int pointIndex) const;
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -92,10 +93,10 @@ class VisualPointFeatureVector2D
 	 */
 	private:
 
-		static const T_UInt32 MAX_FEATURE_POINTS;
-		static const T_UInt32 MAX_DESCRIPTOR_LENGTH;
+		static const T_UInt32 MAX_FEATURE_3D_POINTS;
+		static const T_UInt32 MAX_DESCRIPTOR_3D_LENGTH;
 
-		CTypes::VisualPointFeatureVector2D featuresVector;
+		CTypes::VisualPointFeatureVector3D featuresVector;
 		
 
 	};
@@ -105,5 +106,5 @@ class VisualPointFeatureVector2D
 }
 #endif
 
-/* VisualPointFeatureVector2D.hpp */
+/* VisualPointFeatureVector3D.hpp */
 /** @} */

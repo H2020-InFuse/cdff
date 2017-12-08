@@ -30,7 +30,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <VisualPointFeatureVector3D.h>
+#include <VisualPointFeatureVector3D.hpp>
 #include <opencv2/core/core.hpp>
 
 
@@ -49,7 +49,7 @@ class MatToVisualPointFeatureVector3DConverter
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual VisualPointFeatureVector3D* Convert(cv::Mat featuresMatrix);
+		virtual CppTypes::VisualPointFeatureVector3D::ConstPtr Convert(const cv::Mat featuresMatrix);
 
 	/* --------------------------------------------------------------------
 	 * Protected

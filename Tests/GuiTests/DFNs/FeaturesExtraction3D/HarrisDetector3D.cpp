@@ -60,13 +60,12 @@ class HarrisDetector3DTestInterface : public DFNTestInterface
 	private:
 		Stubs::CacheHandler<PointCloud3D*, pcl::PointCloud<pcl::PointXYZ>::Ptr >* stubInputCache;
 		Mocks::PointCloud3DToPclPointCloudConverter* mockInputConverter;
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3D*>* stubOutputCache;
+		Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr>* stubOutputCache;
 		Mocks::MatToVisualPointFeatureVector3DConverter* mockOutputConverter;
 		HarrisDetector3D* harris;
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud;
 		PointCloud3D* inputCloud;
-		VisualPointFeatureVector3D featuresVector;
 		std::string outputWindowName;
 
 		void SetupMocksAndStubs();
@@ -106,9 +105,9 @@ void HarrisDetector3DTestInterface::SetupMocksAndStubs()
 	mockInputConverter = new Mocks::PointCloud3DToPclPointCloudConverter();
 	ConversionCache<PointCloud3D*, pcl::PointCloud<pcl::PointXYZ>::Ptr, PointCloud3DToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
-	stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3D*>();
+	stubOutputCache = new Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr>();
 	mockOutputConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector3D*, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
+	ConversionCache<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 
 	
 	mockInputConverter->AddBehaviour("Convert", "Always", (void*) (&pclCloud) );
@@ -127,16 +126,15 @@ void HarrisDetector3DTestInterface::SetupParameters()
 
 void HarrisDetector3DTestInterface::DisplayResult()
 	{
-	VisualPointFeatureVector3D* featuresVector= harris->featuresSetOutput();
+	CppTypes::VisualPointFeatureVector3D::ConstPtr featuresVector= harris->featuresSetOutput();
 
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr featuresCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr (new pcl::PointCloud<pcl::PointXYZ>() );
-	for(int pointIndex = 0; pointIndex < featuresVector->list.count; pointIndex++)
+	for(int pointIndex = 0; pointIndex < featuresVector->GetNumberOfPoints(); pointIndex++)
 		{
-		VisualPointFeature3D* feature = featuresVector->list.array[pointIndex];
-		pcl::PointXYZ newPoint(feature->point.x, feature->point.y, feature->point.z);
+		pcl::PointXYZ newPoint(featuresVector->GetXCoordinate(pointIndex), featuresVector->GetYCoordinate(pointIndex), featuresVector->GetZCoordinate(pointIndex) );
 		featuresCloud->points.push_back(newPoint);
 		}
 
@@ -152,9 +150,7 @@ void HarrisDetector3DTestInterface::DisplayResult()
         	pcl_sleep (0.01);
     		} 
 
-	//The cache should handle this cancellation, but we only have a stub cache at the moment 
-	asn_sequence_empty( &(featuresVector->list) );
-	delete(featuresVector);
+	featuresVector.reset();
 	}
 
 

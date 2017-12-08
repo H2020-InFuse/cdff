@@ -51,7 +51,7 @@ void FeaturesExtraction3DInterface::pointCloudInput(PointCloud3D* data)
     	inPointCloud = data;
 	}
 
-VisualPointFeatureVector3D* FeaturesExtraction3DInterface::featuresSetOutput() 
+CppTypes::VisualPointFeatureVector3D::ConstPtr FeaturesExtraction3DInterface::featuresSetOutput() 
 	{
     	return outFeaturesSet;
 	}

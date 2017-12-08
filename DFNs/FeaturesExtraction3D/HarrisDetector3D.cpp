@@ -89,7 +89,7 @@ void HarrisDetector3D::process()
 	pcl::PointCloud<pcl::PointXYZ>::Ptr inputPointCloud = ConversionCache<PointCloud3D*, pcl::PointCloud<pcl::PointXYZ>::Ptr, PointCloud3DToPclPointCloudConverter>::Convert(inPointCloud);
 	ValidateInputs(inputPointCloud);
 	cv::Mat harrisPoints = ComputeHarrisPoints(inputPointCloud);
-	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector3D*, MatToVisualPointFeatureVector3DConverter>::Convert(harrisPoints);
+	outFeaturesSet = ConversionCache<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Convert(harrisPoints);
 	}
 
 

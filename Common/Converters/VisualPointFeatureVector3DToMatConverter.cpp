@@ -39,15 +39,14 @@ namespace Converters {
  *
  * --------------------------------------------------------------------------
  */
-cv::Mat VisualPointFeatureVector3DToMatConverter::Convert(VisualPointFeatureVector3D* featuresVector)
+const cv::Mat VisualPointFeatureVector3DToMatConverter::Convert(CppTypes::VisualPointFeatureVector3D::ConstPtr featuresVector)
 	{	
-	cv::Mat conversion(featuresVector->list.count, 3, CV_32FC1, cv::Scalar(0));
-	for(int rowIndex = 0; rowIndex < conversion.rows; rowIndex++)
+	cv::Mat conversion(featuresVector->GetNumberOfPoints(), 3, CV_32FC1, cv::Scalar(0));
+	for(int pointIndex = 0; pointIndex < featuresVector->GetNumberOfPoints(); pointIndex++)
 		{
-		VisualPointFeature3D* feature = featuresVector->list.array[rowIndex];
-		conversion.at<float>(rowIndex, 0) = feature->point.x;
-		conversion.at<float>(rowIndex, 1) = feature->point.y;
-		conversion.at<float>(rowIndex, 2) = feature->point.z;
+		conversion.at<float>(pointIndex, 0) = featuresVector->GetXCoordinate(pointIndex);
+		conversion.at<float>(pointIndex, 1) = featuresVector->GetYCoordinate(pointIndex);
+		conversion.at<float>(pointIndex, 2) = featuresVector->GetZCoordinate(pointIndex);
 		}
 	
 	return conversion;
