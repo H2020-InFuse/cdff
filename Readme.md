@@ -25,20 +25,20 @@ use "git submodule update --depth 1" or you might die from openCV overwhelmingly
 
 ## Building
 
-Build all dependencies first: in each subfolder of External/, execute
+### Build all dependencies first: in each subfolder of External/, execute
 
     mkdir build
     cd build
     cmake -DCMAKE_INSTALL_PREFIX=.. ..
     make
 
-Build CDFF with
+### Build CDFF with
 
     mkdir build
     cmake -DCMAKE_INSTALL_PREFIX=./ ..
     make install
 
-Now you can run the tests
+### Now you can run the tests
 
     make test
 
