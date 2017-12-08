@@ -5,12 +5,12 @@ automatically. These are located in /Common/Types/C/.
 
 ## Generating C Code from ASN files
 Run GeneratorScript.sh, it will compile all .asn files withing the /Common/Types/ASN.1 folder into /Common/Types/C.
-* note [pre-requisite] mono needs to be installed. 
+* [pre-requisite] mono needs to be installed. 
 
 The script uses the ASN.1 [asn1scc](https://github.com/ttsiodras/asn1scc) compiler to generate C code from asn files.
 A Binary can be downloaded from https://download.tuxfamily.org/taste/ASN1SCC/
 
 ## Fetching latest C code
 Run FetcherScript.sh to get latest C generated build files from master. 
-*note : This will override your /Common/Types/C folder. 
+* note : This will override your /Common/Types/C folder. 
 
