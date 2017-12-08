@@ -8,7 +8,7 @@ Run GeneratorScript.sh, it will compile all .asn files withing the /Common/Types
 * [pre-requisite] mono needs to be installed. 
 
 The script uses the ASN.1 [asn1scc](https://github.com/ttsiodras/asn1scc) compiler to generate C code from asn files.
-A Binary can be downloaded from https://download.tuxfamily.org/taste/ASN1SCC/
+The scrip downloads a binary from https://download.tuxfamily.org/taste/ASN1SCC/ and runs it from /Tools/ASNToC/asn1scc. 
 
 ## Fetching latest C code
 Run FetcherScript.sh to get latest C generated build files from master. 
