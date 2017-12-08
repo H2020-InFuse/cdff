@@ -40,15 +40,16 @@
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
-#include <ImageTypeToMatConverter.hpp>
+#include <FrameToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/ImageTypeToMatConverter.hpp>
+#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Errors/Assert.hpp>
 
 using namespace dfn_ci;
 using namespace Types;
 using namespace Common;
+using namespace Converters;
 
 /* --------------------------------------------------------------------------
  *
@@ -58,9 +59,9 @@ using namespace Common;
  */
 TEST_CASE( "Call to process", "[process]" ) 
 	{
-	Stubs::CacheHandler<ImageType*, cv::Mat>* stubInputCache = new Stubs::CacheHandler<ImageType*, cv::Mat>();
-	Mocks::ImageTypeToMatConverter* mockInputConverter = new Mocks::ImageTypeToMatConverter();
-	ConversionCache<ImageType*, cv::Mat, ImageTypeToMatConverter>::Instance(stubInputCache, mockInputConverter);
+	Stubs::CacheHandler<CppTypes::Frame::ConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<CppTypes::Frame::ConstPtr, cv::Mat>();
+	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
+	ConversionCache<CppTypes::Frame::ConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
 
 	Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2D* >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2D*>();
 	Mocks::MatToVisualPointFeatureVector2DConverter* mockOutputConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
@@ -75,7 +76,7 @@ TEST_CASE( "Call to process", "[process]" )
 	HarrisDetector2D harris;
 	harris.process();
 
-	VisualPointFeatureVector2D* output = harris.featuresSetOutput();
+	const VisualPointFeatureVector2D* output = harris.featuresSetOutput();
 
 	REQUIRE(output->list.size == featuresVector->list.size);
 	//No need to delete StubCacheHandler, MockImageTypeToMatConverter, StubCacheHandler, MockMatToVisualPointFeatureVector2DConverter

@@ -32,10 +32,10 @@
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
-#include <ImageTypeToMatConverter.hpp>
-#include <MatToImageTypeConverter.hpp>
+#include <FrameToMatConverter.hpp>
+#include <MatToFrameConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/ImageTypeToMatConverter.hpp>
+#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
@@ -46,6 +46,7 @@
 using namespace dfn_ci;
 using namespace Types;
 using namespace Common;
+using namespace Converters;
 
 
 class HarrisDetector2DTestInterface : public DFNTestInterface
@@ -56,14 +57,14 @@ class HarrisDetector2DTestInterface : public DFNTestInterface
 	protected:
 
 	private:
-		Stubs::CacheHandler<ImageType*, cv::Mat>* stubInputCache;
-		Mocks::ImageTypeToMatConverter* mockInputConverter;
+		Stubs::CacheHandler<CppTypes::Frame::ConstPtr, cv::Mat>* stubInputCache;
+		Mocks::FrameToMatConverter* mockInputConverter;
 		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2D*>* stubOutputCache;
 		Mocks::MatToVisualPointFeatureVector2DConverter* mockOutputConverter;
 		HarrisDetector2D* harris;
 
 		cv::Mat cvImage;
-		ImageType* inputImage;
+		CppTypes::Frame::ConstPtr inputImage;
 		VisualPointFeatureVector2D featuresVector;
 		std::string outputWindowName;
 
@@ -73,12 +74,12 @@ class HarrisDetector2DTestInterface : public DFNTestInterface
 	};
 
 HarrisDetector2DTestInterface::HarrisDetector2DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
+	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
 	{
 	harris = new HarrisDetector2D();
 	SetDFN(harris);
 
-	MatToImageTypeConverter converter;
+	MatToFrameConverter converter;
 	cvImage = cv::imread("../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
 	inputImage = converter.Convert(cvImage);
 	harris->imageInput(inputImage);
@@ -93,15 +94,14 @@ HarrisDetector2DTestInterface::~HarrisDetector2DTestInterface()
 	delete(stubOutputCache);
 	delete(mockOutputConverter);
 	delete(harris);
-	delete [] (inputImage->data.buf);
-	delete(inputImage);
+	inputImage.reset();
 	}
 
 void HarrisDetector2DTestInterface::SetupMocksAndStubs()
 	{
-	stubInputCache = new Stubs::CacheHandler<ImageType*, cv::Mat>();
-	mockInputConverter = new Mocks::ImageTypeToMatConverter();
-	ConversionCache<ImageType*, cv::Mat, ImageTypeToMatConverter>::Instance(stubInputCache, mockInputConverter);
+	stubInputCache = new Stubs::CacheHandler<CppTypes::Frame::ConstPtr, cv::Mat>();
+	mockInputConverter = new Mocks::FrameToMatConverter();
+	ConversionCache<CppTypes::Frame::ConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
 
 	stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2D*>();
 	mockOutputConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
@@ -126,7 +126,7 @@ void HarrisDetector2DTestInterface::SetupParameters()
 
 void HarrisDetector2DTestInterface::DisplayResult()
 	{
-	VisualPointFeatureVector2D* featuresVector= harris->featuresSetOutput();
+	const VisualPointFeatureVector2D* featuresVector= harris->featuresSetOutput();
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
 	cv::Mat outputImage = cvImage.clone();
 
@@ -142,7 +142,7 @@ void HarrisDetector2DTestInterface::DisplayResult()
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
 
 	//The cache should handle this cancellation, but we only have a stub cache at the moment 
-	asn_sequence_empty( &(featuresVector->list) );
+	//asn_sequence_empty( &(featuresVector->list) );
 	delete(featuresVector);
 	}
 

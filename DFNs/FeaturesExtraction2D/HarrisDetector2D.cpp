@@ -28,7 +28,7 @@
  */
 #include "HarrisDetector2D.hpp"
 #include <Errors/Assert.hpp>
-#include <ImageTypeToMatConverter.hpp>
+#include <FrameToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 
@@ -36,6 +36,7 @@
 #include <fstream>
 
 using namespace Types;
+using namespace Converters;
 using namespace Common;
 
 namespace dfn_ci {
@@ -92,7 +93,7 @@ void HarrisDetector2D::configure()
 
 void HarrisDetector2D::process() 
 	{
-	cv::Mat inputImage = ConversionCache<ImageType*, cv::Mat, ImageTypeToMatConverter>::Convert(inImage);
+	cv::Mat inputImage = ConversionCache<CppTypes::Frame::ConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
 	ValidateInputs(inputImage);
 	cv::Mat harrisImage = ComputeHarrisImage(inputImage);
 	cv::Mat harrisPoints = ExtractHarrisPoints(harrisImage);
