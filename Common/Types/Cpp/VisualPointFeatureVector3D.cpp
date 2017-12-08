@@ -53,7 +53,7 @@ VisualPointFeatureVector3D::~VisualPointFeatureVector3D()
 
 void VisualPointFeatureVector3D::AddPoint(float x, float y, float z)
 	{
-	ASSERT(featuresVector.nCount < MAX_FEATURE_POINTS, "Features descriptor vector maximum capacity has been reached");
+	ASSERT(featuresVector.nCount < MAX_FEATURE_3D_POINTS, "Features descriptor vector maximum capacity has been reached");
 	int currentIndex = featuresVector.nCount;
 	featuresVector.arr[currentIndex].point.x = x;
 	featuresVector.arr[currentIndex].point.y = y;	

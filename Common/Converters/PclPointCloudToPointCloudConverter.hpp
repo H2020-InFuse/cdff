@@ -2,26 +2,27 @@
 *
 * (C) Copyright …
 *
-* ---------------------------------------------------------------------------
+* --------------------------------------------------------------------------
 */
 
 /*!
- * @file PointCloud3DToPclPointCloudConverter.hpp
+ * @file PclPointCloudToPointCloudConverter.hpp
  * @date 01/12/2017
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup Mocks
+ * @addtogroup Converters
  * 
- * This is a mock for the converter from PointCloud3D to pcl point cloud
- * 
- * 
+ *  This is the class for type conversion from Pcl Point Cloud to InFuse PointCloud.
+ *  
+ *
  * @{
  */
 
-#ifndef MOCKS_POINT_CLOUD_3D_TO_PCL_POINT_CLOUD_CONVERTER_HPP
-#define MOCKS_POINT_CLOUD_3D_TO_PCL_POINT_CLOUD_CONVERTER_HPP
+#ifndef PCL_POINT_CLOUD_TO_POINT_CLOUD_CONVERTER_HPP
+#define PCL_POINT_CLOUD_TO_POINT_CLOUD_CONVERTER_HPP
+
 
 /* --------------------------------------------------------------------------
  *
@@ -29,10 +30,11 @@
  *
  * --------------------------------------------------------------------------
  */
-#include "Mocks/Mock.hpp"
-#include <PointCloud3DToPclPointCloudConverter.hpp>
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <PointCloud.hpp>
 
-namespace Mocks {
+namespace Converters {
 
 /* --------------------------------------------------------------------------
  *
@@ -40,15 +42,14 @@ namespace Mocks {
  *
  * --------------------------------------------------------------------------
  */
-class PointCloud3DToPclPointCloudConverter : public Mock, public Converters::PointCloud3DToPclPointCloudConverter
+class PclPointCloudToPointCloudConverter
 	{
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual ~PointCloud3DToPclPointCloudConverter();
-		pcl::PointCloud<pcl::PointXYZ>::Ptr Convert(const PointCloud3D* pointcloud);
+		virtual CppTypes::PointCloud::ConstPtr Convert(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -59,15 +60,13 @@ class PointCloud3DToPclPointCloudConverter : public Mock, public Converters::Poi
 	/* --------------------------------------------------------------------
 	 * Private
 	 * --------------------------------------------------------------------
-	 */
+	 */	
 	private:
-
 	};
-
 
 }
 
 #endif
 
-/* PointCloud3DToPclPointCloudConverter.hpp */
+/* PclPointCloudToPointCloudConverter.hpp */
 /** @} */

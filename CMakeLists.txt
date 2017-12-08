@@ -24,9 +24,9 @@ link_directories(
 
 
 #Main Libraries
-add_library(Common Common/Loggers/Logger.cpp Common/Loggers/StandardOutputLogger.cpp Common/Loggers/LoggerFactory.cpp Common/Types/C/VisualPointFeatureVector2D.c Common/Converters/MatToVisualPointFeatureVector2DConverter.cpp Common/Types/C/asn_SEQUENCE_OF.c Common/Types/C/asn_SET_OF.c Common/Converters/VisualPointFeatureVector2DToMatConverter.cpp Common/Types/C/OCTET_STRING.c Common/Types/C/per_opentype.c Common/Types/C/asn_codecs_prim.c Common/Types/C/per_support.c Common/Types/C/NativeReal.c Common/Types/C/NativeInteger.c Common/Types/C/NativeEnumerated.c Common/Types/C/xer_decoder.c Common/Types/C/xer_decoder.c Common/Types/C/ber_tlv_tag.c Common/Types/C/ber_decoder.c Common/Types/C/ber_tlv_length.c Common/Types/C/constraints.c Common/Types/C/BIT_STRING.c Common/Types/C/der_encoder.c Common/Types/C/per_encoder.c Common/Types/C/per_decoder.c Common/Types/C/constr_SEQUENCE_OF.c Common/Types/C/constr_SET_OF.c Common/Types/C/constr_TYPE.c Common/Types/C/constr_SEQUENCE.c Common/Types/C/xer_support.c Common/Types/C/Geometry.c
-Common/Converters/VisualPointFeatureVector3DToMatConverter.cpp Common/Converters/MatToVisualPointFeatureVector3DConverter.cpp Common/Converters/PclPointCloudToPointCloud3DConverter.cpp Common/Converters/PointCloud3DToPclPointCloudConverter.cpp Common/Types/C/PointCloud3D.c Common/Types/C/VisualPointFeatureVector3D.c Common/Types/C/VisualPointFeature3D.c Common/Types/C/Point3D.c
-Common/Types/C/Frame.c Common/Types/C/Time.c Common/Types/C/asn1crt.c Common/Types/C/taste-types.c Common/Types/C/taste-extended.c Common/Types/Cpp/Frame.cpp Common/Converters/FrameToMatConverter.cpp Common/Converters/MatToFrameConverter.cpp Common/Types/Cpp/VisualPointFeatureVector2D.cpp)
+add_library(Common Common/Loggers/Logger.cpp Common/Loggers/StandardOutputLogger.cpp Common/Loggers/LoggerFactory.cpp Common/Types/C/VisualPointFeatureVector2D.c Common/Converters/MatToVisualPointFeatureVector2DConverter.cpp Common/Types/C/asn_SEQUENCE_OF.c Common/Types/C/asn_SET_OF.c Common/Converters/VisualPointFeatureVector2DToMatConverter.cpp Common/Types/C/OCTET_STRING.c Common/Types/C/per_opentype.c Common/Types/C/asn_codecs_prim.c Common/Types/C/per_support.c Common/Types/C/NativeReal.c Common/Types/C/NativeInteger.c Common/Types/C/NativeEnumerated.c Common/Types/C/xer_decoder.c Common/Types/C/xer_decoder.c Common/Types/C/ber_tlv_tag.c Common/Types/C/ber_decoder.c Common/Types/C/ber_tlv_length.c Common/Types/C/constraints.c Common/Types/C/BIT_STRING.c Common/Types/C/der_encoder.c Common/Types/C/per_encoder.c Common/Types/C/per_decoder.c Common/Types/C/constr_SEQUENCE_OF.c Common/Types/C/constr_SET_OF.c Common/Types/C/constr_TYPE.c Common/Types/C/constr_SEQUENCE.c Common/Types/C/xer_support.c Common/Types/C/Geometry.c Common/Types/C/Point.c Common/Types/C/Eigen.c
+Common/Converters/VisualPointFeatureVector3DToMatConverter.cpp Common/Converters/MatToVisualPointFeatureVector3DConverter.cpp Common/Converters/PclPointCloudToPointCloudConverter.cpp Common/Converters/PointCloudToPclPointCloudConverter.cpp Common/Types/C/Pointcloud.c Common/Types/C/VisualPointFeatureVector3D.c Common/Types/C/VisualPointFeature3D.c Common/Types/C/Point3D.c
+Common/Types/C/Frame.c Common/Types/C/Time.c Common/Types/C/asn1crt.c Common/Types/C/taste-types.c Common/Types/C/taste-extended.c Common/Types/Cpp/Frame.cpp Common/Converters/FrameToMatConverter.cpp Common/Converters/MatToFrameConverter.cpp Common/Types/Cpp/VisualPointFeatureVector2D.cpp Common/Types/Cpp/PointCloud.cpp Common/Types/Cpp/VisualPointFeatureVector3D.cpp)
 set_target_properties(Common PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ./lib)
 
 add_library(FeaturesExtraction2D DFNs/FeaturesExtraction2D/FeaturesExtraction2DInterface.cpp DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp)
@@ -73,10 +73,10 @@ target_link_libraries(
 	MatVisualPointFeatureVector2DConvertersTest Common opencv_core opencv_imgproc opencv_imgcodecs
 )
 
-add_executable(PointCloud3DPclPointCloudConvertersTest Tests/UnitTests/Common/Converters/PointCloud3DPclPointCloudConvertersTest.cpp )
-set_target_properties(PointCloud3DPclPointCloudConvertersTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+add_executable(PointCloudPclPointCloudConvertersTest Tests/UnitTests/Common/Converters/PointCloudPclPointCloudConvertersTest.cpp )
+set_target_properties(PointCloudPclPointCloudConvertersTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	PointCloud3DPclPointCloudConvertersTest Common opencv_core opencv_imgproc opencv_imgcodecs
+	PointCloudPclPointCloudConvertersTest Common opencv_core opencv_imgproc opencv_imgcodecs
 )
 
 add_executable(MatVisualPointFeatureVector3DConvertersTest Tests/UnitTests/Common/Converters/MatVisualPointFeatureVector3DConvertersTest.cpp )
@@ -85,13 +85,13 @@ target_link_libraries(
 	MatVisualPointFeatureVector3DConvertersTest Common opencv_core opencv_imgproc opencv_imgcodecs
 )
 
-add_executable(HarrisDetector3DTest Tests/UnitTests/DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp Tests/Mocks/Common/Converters/PointCloud3DToPclPointCloudConverter.cpp Tests/Mocks/Mock.cpp Tests/Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.cpp DFNs/FeaturesExtraction3D/FeaturesExtraction3DInterface.cpp DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp)
+add_executable(HarrisDetector3DTest Tests/UnitTests/DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp Tests/Mocks/Common/Converters/PointCloudToPclPointCloudConverter.cpp Tests/Mocks/Mock.cpp Tests/Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.cpp DFNs/FeaturesExtraction3D/FeaturesExtraction3DInterface.cpp DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp)
 set_target_properties(HarrisDetector3DTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
 	HarrisDetector3DTest Common opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters yaml-cpp
 )
 
-#add_executable(HarrisDetector3DGuiTest Tests/GuiTests/DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp Tests/Mocks/Common/Converters/PointCloud3DToPclPointCloudConverter.cpp Tests/Mocks/Mock.cpp Tests/Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.cpp DFNs/FeaturesExtraction3D/FeaturesExtraction3DInterface.cpp DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp Tests/GuiTests/ParametersInterface.cpp Tests/GuiTests/ButtonsInterface.cpp Tests/GuiTests/MainInterface.cpp Tests/GuiTests/DFNs/DFNTestInterface.cpp)
+#add_executable(HarrisDetector3DGuiTest Tests/GuiTests/DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp Tests/Mocks/Common/Converters/PointCloudToPclPointCloudConverter.cpp Tests/Mocks/Mock.cpp Tests/Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.cpp DFNs/FeaturesExtraction3D/FeaturesExtraction3DInterface.cpp DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp Tests/GuiTests/ParametersInterface.cpp Tests/GuiTests/ButtonsInterface.cpp Tests/GuiTests/MainInterface.cpp Tests/GuiTests/DFNs/DFNTestInterface.cpp)
 #set_target_properties(HarrisDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 #target_link_libraries(
 #	HarrisDetector3DGuiTest Common opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree #pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo vtksys vtkCommon boost_system vtkIO vtkViews vtkCharts vtkalglib vtkParallel vtkGeovis vtkRendering vtkInfovis vtkImaging yaml-cpp vtkGraphics vtkGenericFiltering vtkVolumeRendering vtkftgl

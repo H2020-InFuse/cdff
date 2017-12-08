@@ -2,27 +2,26 @@
 *
 * (C) Copyright …
 *
-* --------------------------------------------------------------------------
+* ---------------------------------------------------------------------------
 */
 
 /*!
- * @file MatToImageTypeConverter.hpp
- * @date 27/11/2017
+ * @file PointCloudToPclPointCloudConverter.hpp
+ * @date 01/12/2017
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup Types
+ * @addtogroup Mocks
  * 
- *  This is the class for type conversion from Mat to Image Type.
- *  
- *
+ * This is a mock for the converter from PointCloud to pcl point cloud
+ * 
+ * 
  * @{
  */
 
-#ifndef MAT_TO_IMAGE_TYPE_CONVERTER_HPP
-#define  MAT_TO_IMAGE_TYPE_CONVERTER_HPP
-
+#ifndef MOCKS_POINT_CLOUD_TO_PCL_POINT_CLOUD_CONVERTER_HPP
+#define MOCKS_POINT_CLOUD_TO_PCL_POINT_CLOUD_CONVERTER_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -30,10 +29,10 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <ImageType.h>
-#include <opencv2/core/core.hpp>
+#include "Mocks/Mock.hpp"
+#include <PointCloudToPclPointCloudConverter.hpp>
 
-namespace Types {
+namespace Mocks {
 
 /* --------------------------------------------------------------------------
  *
@@ -41,14 +40,15 @@ namespace Types {
  *
  * --------------------------------------------------------------------------
  */
-class MatToImageTypeConverter
+class PointCloudToPclPointCloudConverter : public Mock, public Converters::PointCloudToPclPointCloudConverter
 	{
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual ImageType* Convert(const cv::Mat image);
+		virtual ~PointCloudToPclPointCloudConverter();
+		pcl::PointCloud<pcl::PointXYZ>::ConstPtr Convert(CppTypes::PointCloud::ConstPtr pointcloud);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -59,13 +59,15 @@ class MatToImageTypeConverter
 	/* --------------------------------------------------------------------
 	 * Private
 	 * --------------------------------------------------------------------
-	 */	
+	 */
 	private:
+
 	};
+
 
 }
 
 #endif
 
-/* MatToImageTypeConverter.hpp */
+/* PointCloudToPclPointCloudConverter.hpp */
 /** @} */

@@ -28,7 +28,7 @@
  */
 #include "HarrisDetector3D.hpp"
 #include <Errors/Assert.hpp>
-#include <PointCloud3DToPclPointCloudConverter.hpp>
+#include <PointCloudToPclPointCloudConverter.hpp>
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 
@@ -86,14 +86,15 @@ void HarrisDetector3D::configure()
 
 void HarrisDetector3D::process() 
 	{
-	pcl::PointCloud<pcl::PointXYZ>::Ptr inputPointCloud = ConversionCache<PointCloud3D*, pcl::PointCloud<pcl::PointXYZ>::Ptr, PointCloud3DToPclPointCloudConverter>::Convert(inPointCloud);
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputPointCloud = 
+		ConversionCache<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inPointCloud);
 	ValidateInputs(inputPointCloud);
 	cv::Mat harrisPoints = ComputeHarrisPoints(inputPointCloud);
 	outFeaturesSet = ConversionCache<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Convert(harrisPoints);
 	}
 
 
-cv::Mat HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud)
+cv::Mat HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
 	{
 	pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI> detector; 
     	detector.setNonMaxSupression (parameters.nonMaxSuppression);
@@ -154,7 +155,7 @@ void HarrisDetector3D::ValidateParameters()
 	VERIFY( parameters.nonMaxSuppression || parameters.detectionThreshold < std::numeric_limits<float>::epsilon(), "Warning HarrisDetector3D: ineffective threshold when non max suppression is false");
 	}
 
-void HarrisDetector3D::ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud)
+void HarrisDetector3D::ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
 	{
 
 	}

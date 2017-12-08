@@ -92,11 +92,11 @@ TEST_CASE( "VisualPointFeatureVector3D to Mat", "[VisualPointFeatureVector3DToMa
 	cv::Mat intermediateMatrix = secondConverter.Convert(asnVector);
 	CppTypes::VisualPointFeatureVector3D::ConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
 
-	REQUIRE(asnVector.GetNumberOfPoints() == outputVector.GetNumberOfPoints());
-	for(int pointIndex = 0; pointIndex < asnVector.GetNumberOfPoints(); pointIndex++)
+	REQUIRE(asnVector->GetNumberOfPoints() == outputVector->GetNumberOfPoints());
+	for(int pointIndex = 0; pointIndex < asnVector->GetNumberOfPoints(); pointIndex++)
 		{
-		REQUIRE(asnVector.GetXCoordinate(pointIndex) == outputVector.GetXCoordinate(pointIndex) );
-		REQUIRE(asnVector.GetYCoordinate(pointIndex) == outputVector.GetYCoordinate(pointIndex) );
-		REQUIRE(asnVector.GetZCoordinate(pointIndex) == outputVector.GetZCoordinate(pointIndex) );
+		REQUIRE(asnVector->GetXCoordinate(pointIndex) == outputVector->GetXCoordinate(pointIndex) );
+		REQUIRE(asnVector->GetYCoordinate(pointIndex) == outputVector->GetYCoordinate(pointIndex) );
+		REQUIRE(asnVector->GetZCoordinate(pointIndex) == outputVector->GetZCoordinate(pointIndex) );
 		}
 	}

@@ -53,7 +53,7 @@ VisualPointFeatureVector2D::~VisualPointFeatureVector2D()
 
 void VisualPointFeatureVector2D::AddPoint(uint16_t x, uint16_t y)
 	{
-	ASSERT(featuresVector.nCount < MAX_FEATURE_POINTS, "Features descriptor vector maximum capacity has been reached");
+	ASSERT(featuresVector.nCount < MAX_FEATURE_2D_POINTS, "Features descriptor vector maximum capacity has been reached");
 	int currentIndex = featuresVector.nCount;
 	featuresVector.arr[currentIndex].point.x = x;
 	featuresVector.arr[currentIndex].point.y = y;	
@@ -89,8 +89,8 @@ int VisualPointFeatureVector2D::GetYCoordinate(int pointIndex) const
  *
  * --------------------------------------------------------------------------
  */
-const T_UInt32 VisualPointFeatureVector2D::MAX_FEATURE_POINTS = CTypes::features2DElementsMax;
-const T_UInt32 VisualPointFeatureVector2D::MAX_DESCRIPTOR_LENGTH = CTypes::descriptor2DNameLength;
+const T_UInt32 VisualPointFeatureVector2D::MAX_FEATURE_2D_POINTS = CTypes::features2DElementsMax;
+const T_UInt32 VisualPointFeatureVector2D::MAX_DESCRIPTOR_2D_LENGTH = CTypes::descriptor2DNameLength;
 
 
 }

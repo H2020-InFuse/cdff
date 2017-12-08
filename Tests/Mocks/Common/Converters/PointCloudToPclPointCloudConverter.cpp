@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file PointCloud3DToPclPointCloudConverter.cpp
+ * @file PointCloudToPclPointCloudConverter.cpp
  * @date 01/11/2017
  * @author Alessandro Bianco
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup Mocks
  * 
- * Implementation of PointCloud3DToPclPointCloudConverter.
+ * Implementation of PointCloudToPclPointCloudConverter.
  * 
  * 
  * @{
@@ -28,7 +28,7 @@
  * --------------------------------------------------------------------------
  */
 
-#include "PointCloud3DToPclPointCloudConverter.hpp"
+#include "PointCloudToPclPointCloudConverter.hpp"
 #include <Errors/Assert.hpp>
 #include <Mocks/MockMacro.hpp>
 
@@ -41,13 +41,13 @@ namespace Mocks {
  * --------------------------------------------------------------------------
  */
 
-PointCloud3DToPclPointCloudConverter::~PointCloud3DToPclPointCloudConverter()
+PointCloudToPclPointCloudConverter::~PointCloudToPclPointCloudConverter()
 	{
 
 	}
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud3DToPclPointCloudConverter::Convert(const PointCloud3D* pointcloud)
-	MOCK_METHOD(Converters::PointCloud3DToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::Ptr, (pointcloud) )
+pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(CppTypes::PointCloud::ConstPtr pointcloud)
+	MOCK_METHOD(Converters::PointCloudToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, (pointcloud) )
 
 
 }

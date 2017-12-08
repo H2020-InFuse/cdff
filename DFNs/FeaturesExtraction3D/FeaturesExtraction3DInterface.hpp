@@ -28,9 +28,9 @@
  * --------------------------------------------------------------------------
  */
 #include <DFNCommonInterface.hpp>
-#include <PointCloud3D.h>
+#include <PointCloud.hpp>
 #include <VisualPointFeatureVector3D.hpp>
-#include <PointCloud3DToPclPointCloudConverter.hpp>
+#include <PointCloudToPclPointCloudConverter.hpp>
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
 
 
@@ -56,7 +56,7 @@ namespace dfn_ci {
             * Send value to input port image
             * @param pointCloud, a 3D point cloud taken from a 3D sensor or from 3D reconstruction algorithms
             */
-            virtual void pointCloudInput(PointCloud3D* data);
+            virtual void pointCloudInput(CppTypes::PointCloud::ConstPtr data);
 
             /**
             * Receive value from output port featuresSet
@@ -69,7 +69,7 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */
         protected:
-            PointCloud3D* inPointCloud;
+            CppTypes::PointCloud::ConstPtr inPointCloud;
             CppTypes::VisualPointFeatureVector3D::ConstPtr outFeaturesSet;
 
 	/* --------------------------------------------------------------------

@@ -32,10 +32,10 @@
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
-#include <PointCloud3DToPclPointCloudConverter.hpp>
+#include <PointCloudToPclPointCloudConverter.hpp>
 #include <PclPointCloudToPointCloud3DConverter.hpp>
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
-#include <Mocks/Common/Converters/PointCloud3DToPclPointCloudConverter.hpp>
+#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
@@ -58,8 +58,8 @@ class HarrisDetector3DTestInterface : public DFNTestInterface
 	protected:
 
 	private:
-		Stubs::CacheHandler<PointCloud3D*, pcl::PointCloud<pcl::PointXYZ>::Ptr >* stubInputCache;
-		Mocks::PointCloud3DToPclPointCloudConverter* mockInputConverter;
+		Stubs::CacheHandler<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr >* stubInputCache;
+		Mocks::PointCloudToPclPointCloudConverter* mockInputConverter;
 		Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr>* stubOutputCache;
 		Mocks::MatToVisualPointFeatureVector3DConverter* mockOutputConverter;
 		HarrisDetector3D* harris;
@@ -79,7 +79,7 @@ HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(std::string dfnName
 	harris = new HarrisDetector3D();
 	SetDFN(harris);
 
-	PclPointCloudToPointCloud3DConverter converter;
+	PclPointCloudToPointCloudConverter converter;
 	pclCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr (new pcl::PointCloud<pcl::PointXYZ>() );
 	pcl::io::loadPLYFile("", *pclCloud);
 	inputCloud = converter.Convert(pclCloud);
@@ -101,9 +101,9 @@ HarrisDetector3DTestInterface::~HarrisDetector3DTestInterface()
 
 void HarrisDetector3DTestInterface::SetupMocksAndStubs()
 	{
-	stubInputCache = new Stubs::CacheHandler<PointCloud3D*, pcl::PointCloud<pcl::PointXYZ>::Ptr>();
-	mockInputConverter = new Mocks::PointCloud3DToPclPointCloudConverter();
-	ConversionCache<PointCloud3D*, pcl::PointCloud<pcl::PointXYZ>::Ptr, PointCloud3DToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
+	stubInputCache = new Stubs::CacheHandler<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
+	mockInputConverter = new Mocks::PointCloudToPclPointCloudConverter();
+	ConversionCache<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::Ptr, PointCloud3DToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
 	stubOutputCache = new Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr>();
 	mockOutputConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();

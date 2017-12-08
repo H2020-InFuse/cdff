@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file Point3DPclPointCloudConvertersTest.cpp
+ * @file PointCloudPclPointCloudConvertersTest.cpp
  * @date 01/12/2017
  * @author Alessandro Bianco
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup CommonTests
  * 
- * Testing conversion from Point3D to PclPointCloud and viceversa.
+ * Testing conversion from PointCloud to PclPointCloud and viceversa.
  * 
  * 
  * @{
@@ -36,30 +36,30 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <PointCloud3DToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloud3DConverter.hpp>
-#include <PointCloud3D.h>
+#include <PointCloudToPclPointCloudConverter.hpp>
+#include <PclPointCloudToPointCloudConverter.hpp>
+#include <PointCloud.hpp>
 #include <Catch/catch.h>
 #include <Errors/Assert.hpp>
 
 using namespace Converters;
 
-TEST_CASE( "PclPointCloud to PointCloud3D and Back", "[PclPointCloudToPointCloud3D]" )
+TEST_CASE( "PclPointCloud to PointCloud and Back", "[PclPointCloudToPointCloud]" )
 	{
-	PclPointCloudToPointCloud3DConverter firstConverter;
-	PointCloud3DToPclPointCloudConverter secondConverter;
+	PclPointCloudToPointCloudConverter firstConverter;
+	PointCloudToPclPointCloudConverter secondConverter;
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr( new pcl::PointCloud<pcl::PointXYZ>() );
-	for(int pointIndex = 0; pointIndex < 100; pointIndex++)
+	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		inputCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
 		}
 
-	PointCloud3D* asnPointCloud = firstConverter.Convert(inputCloud);
-	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud = secondConverter.Convert(asnPointCloud);
+	CppTypes::PointCloud::ConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr outputCloud = secondConverter.Convert(asnPointCloud);
 
 	REQUIRE(outputCloud->points.size() == inputCloud->points.size() );
-	for(int pointIndex = 0; pointIndex < 100; pointIndex++)
+	for(unsigned pointIndex = 0; pointIndex < outputCloud->points.size(); pointIndex++)
 		{
 		pcl::PointXYZ inputPoint = inputCloud->points.at(pointIndex);
 		pcl::PointXYZ outputPoint = outputCloud->points.at(pointIndex);
@@ -68,35 +68,33 @@ TEST_CASE( "PclPointCloud to PointCloud3D and Back", "[PclPointCloudToPointCloud
 		REQUIRE(inputPoint.z == outputPoint.z);			
 		}
 
-	asn_sequence_empty( &(asnPointCloud->data.list) );
-	delete(asnPointCloud);	
+	asnPointCloud.reset();
 	} 
 
 TEST_CASE( "PointCloud3D to PclPointCloud and Back", "[PointCloud3DToPclPointCloud]" )
 	{
-	PclPointCloudToPointCloud3DConverter firstConverter;
-	PointCloud3DToPclPointCloudConverter secondConverter;
+	PclPointCloudToPointCloudConverter firstConverter;
+	PointCloudToPclPointCloudConverter secondConverter;
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr( new pcl::PointCloud<pcl::PointXYZ>() );
-	for(int pointIndex = 0; pointIndex < 100; pointIndex++)
+	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		inputCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
 		}
 
-	PointCloud3D* asnPointCloud = firstConverter.Convert(inputCloud);
-	pcl::PointCloud<pcl::PointXYZ>::Ptr intermediateCloud = secondConverter.Convert(asnPointCloud);
-	PointCloud3D* outputCloud = firstConverter.Convert(intermediateCloud);
+	CppTypes::PointCloud::ConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr intermediateCloud = secondConverter.Convert(asnPointCloud);
+	CppTypes::PointCloud::ConstPtr outputCloud = firstConverter.Convert(intermediateCloud);
 
-	REQUIRE(outputCloud->size == asnPointCloud->size);
-	REQUIRE(outputCloud->size == 300);
-	for(int pointIndex = 0; pointIndex < 300; pointIndex++)
+	REQUIRE(outputCloud->GetNumberOfPoints() == asnPointCloud->GetNumberOfPoints());
+	for(int pointIndex = 0; pointIndex < outputCloud->GetNumberOfPoints(); pointIndex++)
 		{
-		REQUIRE( *(asnPointCloud->data.list.array[pointIndex]) == *(outputCloud->data.list.array[pointIndex])  );
+		REQUIRE( outputCloud->GetXCoordinate(pointIndex) == asnPointCloud->GetXCoordinate(pointIndex) );
+		REQUIRE( outputCloud->GetYCoordinate(pointIndex) == asnPointCloud->GetYCoordinate(pointIndex) );
+		REQUIRE( outputCloud->GetZCoordinate(pointIndex) == asnPointCloud->GetZCoordinate(pointIndex) );
 		}
 
 
-	asn_sequence_empty( &(asnPointCloud->data.list) );
-	delete(asnPointCloud);	
-	asn_sequence_empty( &(outputCloud->data.list) );
-	delete(outputCloud);	
+	asnPointCloud.reset();
+	outputCloud.reset();
 	} 

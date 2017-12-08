@@ -6,22 +6,22 @@
 */
 
 /*!
- * @file ImageTypeToMatConverter.hpp
- * @date 20/11/2017
+ * @file PointCloudToPclPointCloudConverter.hpp
+ * @date 01/12/2017
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup Types
+ * @addtogroup Converters
  * 
- *  This is the class for type conversion from Image Type to Mat.
+ *  This is the class for type conversion from Point Cloud Type to PCL Point Cloud.
  *  
  *
  * @{
  */
 
-#ifndef IMAGE_TYPE_TO_MAT_CONVERTER_HPP
-#define IMAGE_TYPE_TO_MAT_CONVERTER_HPP
+#ifndef POINT_CLOUD_TO_PCL_POINT_CLOUD_CONVERTER_HPP
+#define POINT_CLOUD_TO_PCL_POINT_CLOUD_CONVERTER_HPP
 
 
 /* --------------------------------------------------------------------------
@@ -30,10 +30,11 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <ImageType.h>
-#include <opencv2/core/core.hpp>
+#include <PointCloud.hpp>
+#include <pcl/point_types.h>
+#include <pcl/point_cloud.h>
 
-namespace Types {
+namespace Converters {
 
 /* --------------------------------------------------------------------------
  *
@@ -41,14 +42,14 @@ namespace Types {
  *
  * --------------------------------------------------------------------------
  */
-class ImageTypeToMatConverter
+class PointCloudToPclPointCloudConverter
 	{
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual cv::Mat Convert(const ImageType* image);
+		virtual  pcl::PointCloud<pcl::PointXYZ>::ConstPtr Convert(CppTypes::PointCloud::ConstPtr pointCloud);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -67,5 +68,5 @@ class ImageTypeToMatConverter
 
 #endif
 
-/* ImageTypeToMatConverter.hpp */
+/* PointCloudToPclPointCloudConverter.hpp */
 /** @} */

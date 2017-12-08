@@ -30,7 +30,7 @@
  * --------------------------------------------------------------------------
  */
 #include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
-#include <PointCloud3D.h>
+#include <PointCloud.hpp>
 #include <VisualPointFeatureVector3D.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -86,11 +86,11 @@ namespace dfn_ci {
 
 		HarryOptionsSet parameters;
 
-		cv::Mat ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud);
+		cv::Mat ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 		HarrisMethod ConvertToMethod(std::string method);
 
 		void ValidateParameters();
-		void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud);
+		void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 
 		void Configure(const YAML::Node& configurationNode);
     };

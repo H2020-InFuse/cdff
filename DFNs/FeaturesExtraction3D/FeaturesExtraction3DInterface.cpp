@@ -46,7 +46,7 @@ FeaturesExtraction3DInterface::~FeaturesExtraction3DInterface()
 	{
 	}
 
-void FeaturesExtraction3DInterface::pointCloudInput(PointCloud3D* data) 
+void FeaturesExtraction3DInterface::pointCloudInput(CppTypes::PointCloud::ConstPtr data) 
 	{
     	inPointCloud = data;
 	}
