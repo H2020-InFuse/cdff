@@ -29,8 +29,8 @@
  */
 #include <DFNCommonInterface.hpp>
 #include <Frame.hpp>
-#include <VisualPointFeatureVector2D.h>
-#include <ImageTypeToMatConverter.hpp>
+#include <VisualPointFeatureVector2D.hpp>
+#include <FrameToMatConverter.hpp>
 
 
 namespace dfn_ci {
@@ -61,7 +61,7 @@ namespace dfn_ci {
             * Receive value from output port featuresSet
             * @param featuresSet, This is the set of the points extracted from the image, no descriptor is provided yet
             */
-            virtual const VisualPointFeatureVector2D* featuresSetOutput();
+            virtual CppTypes::VisualPointFeatureVector2D::ConstPtr featuresSetOutput();
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -69,7 +69,7 @@ namespace dfn_ci {
 	 */
         protected:
             CppTypes::Frame::ConstPtr inImage;
-            const VisualPointFeatureVector2D* outFeaturesSet;
+            CppTypes::VisualPointFeatureVector2D::ConstPtr outFeaturesSet;
 
 	/* --------------------------------------------------------------------
 	 * Private

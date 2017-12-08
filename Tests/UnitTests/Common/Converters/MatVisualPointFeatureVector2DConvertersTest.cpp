@@ -38,11 +38,11 @@
  */
 #include <VisualPointFeatureVector2DToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <VisualPointFeatureVector2D.h>
+#include <VisualPointFeatureVector2D.hpp>
 #include <Catch/catch.h>
 #include <Errors/Assert.hpp>
 
-using namespace Types;
+using namespace Converters;
 
 TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2D]" )
 	{
@@ -58,7 +58,7 @@ TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2
 			}
 		}
 
-	VisualPointFeatureVector2D* asnVector = firstConverter.Convert(inputMatrix);
+	CppTypes::VisualPointFeatureVector2D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnVector);
 
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
@@ -70,7 +70,9 @@ TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2
 			{
 			REQUIRE(outputMatrix.at<uint16_t>(rowIndex, columnIndex) == inputMatrix.at<uint16_t>(rowIndex, columnIndex));		 		 
 			}
-		}		
+		}	
+
+	asnVector.reset();	
 	} 
 
 
@@ -88,14 +90,16 @@ TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMa
 			}
 		}
 
-	VisualPointFeatureVector2D* asnVector = firstConverter.Convert(inputMatrix);
+	CppTypes::VisualPointFeatureVector2D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
 	cv::Mat intermediateMatrix = secondConverter.Convert(asnVector);
-	VisualPointFeatureVector2D* outputVector = firstConverter.Convert(intermediateMatrix);	
+	CppTypes::VisualPointFeatureVector2D::ConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
 
-	REQUIRE(asnVector->list.count == outputVector->list.count);
-	for(int rowIndex = 0; rowIndex < asnVector->list.count; rowIndex++)
+	REQUIRE(asnVector->GetNumberOfPoints() == outputVector->GetNumberOfPoints());
+	for(int pointIndex = 0; pointIndex < asnVector->GetNumberOfPoints(); pointIndex++)
 		{
-		REQUIRE(asnVector->list.array[rowIndex]->point.x == outputVector->list.array[rowIndex]->point.x);
-		REQUIRE(asnVector->list.array[rowIndex]->point.y == outputVector->list.array[rowIndex]->point.y);
+		REQUIRE(asnVector->GetXCoordinate(pointIndex) == outputVector->GetXCoordinate(pointIndex) );
+		REQUIRE(asnVector->GetYCoordinate(pointIndex) == outputVector->GetYCoordinate(pointIndex) );
 		}
+
+	asnVector.reset();
 	}

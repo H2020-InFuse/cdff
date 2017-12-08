@@ -35,7 +35,6 @@
 #include <stdlib.h>
 #include <fstream>
 
-using namespace Types;
 using namespace Converters;
 using namespace Common;
 
@@ -97,7 +96,7 @@ void HarrisDetector2D::process()
 	ValidateInputs(inputImage);
 	cv::Mat harrisImage = ComputeHarrisImage(inputImage);
 	cv::Mat harrisPoints = ExtractHarrisPoints(harrisImage);
-	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector2D*, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
+	outFeaturesSet = ConversionCache<cv::Mat, CppTypes::VisualPointFeatureVector2D::ConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
 	}
 
 

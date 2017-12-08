@@ -44,7 +44,6 @@
 
 
 using namespace dfn_ci;
-using namespace Types;
 using namespace Common;
 using namespace Converters;
 
@@ -59,13 +58,12 @@ class HarrisDetector2DTestInterface : public DFNTestInterface
 	private:
 		Stubs::CacheHandler<CppTypes::Frame::ConstPtr, cv::Mat>* stubInputCache;
 		Mocks::FrameToMatConverter* mockInputConverter;
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2D*>* stubOutputCache;
+		Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector2D::ConstPtr>* stubOutputCache;
 		Mocks::MatToVisualPointFeatureVector2DConverter* mockOutputConverter;
 		HarrisDetector2D* harris;
 
 		cv::Mat cvImage;
 		CppTypes::Frame::ConstPtr inputImage;
-		VisualPointFeatureVector2D featuresVector;
 		std::string outputWindowName;
 
 		void SetupMocksAndStubs();
@@ -103,9 +101,9 @@ void HarrisDetector2DTestInterface::SetupMocksAndStubs()
 	mockInputConverter = new Mocks::FrameToMatConverter();
 	ConversionCache<CppTypes::Frame::ConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
 
-	stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2D*>();
+	stubOutputCache = new Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector2D::ConstPtr>();
 	mockOutputConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector2D*, MatToVisualPointFeatureVector2DConverter>::Instance(stubOutputCache, mockOutputConverter);
+	ConversionCache<cv::Mat, CppTypes::VisualPointFeatureVector2D::ConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubOutputCache, mockOutputConverter);
 
 	//mockInputConverter->AddBehaviour("Convert", "Always", (void*) (&cvImage) );
 	//mockOutputConverter->AddBehaviour("Convert", "Always", (void*) (&featuresVector) );
@@ -126,14 +124,13 @@ void HarrisDetector2DTestInterface::SetupParameters()
 
 void HarrisDetector2DTestInterface::DisplayResult()
 	{
-	const VisualPointFeatureVector2D* featuresVector= harris->featuresSetOutput();
+	CppTypes::VisualPointFeatureVector2D::ConstPtr featuresVector= harris->featuresSetOutput();
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
 	cv::Mat outputImage = cvImage.clone();
 
-	for(int featureIndex = 0; featureIndex < featuresVector->list.count; featureIndex++)
+	for(int featureIndex = 0; featureIndex < featuresVector->GetNumberOfPoints(); featureIndex++)
 		{
-		VisualPointFeature2D* feature = featuresVector->list.array[featureIndex];
-		cv::Point drawPoint(feature->point.x, feature->point.y );
+		cv::Point drawPoint(featuresVector->GetXCoordinate(featureIndex), featuresVector->GetYCoordinate(featureIndex) );
 		cv::circle(outputImage, drawPoint, 5, cv::Scalar(0, 0, 255), 2, 8, 0);
 		}
 
@@ -141,9 +138,7 @@ void HarrisDetector2DTestInterface::DisplayResult()
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
 
-	//The cache should handle this cancellation, but we only have a stub cache at the moment 
-	//asn_sequence_empty( &(featuresVector->list) );
-	delete(featuresVector);
+	featuresVector.reset();
 	}
 
 

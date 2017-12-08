@@ -31,7 +31,7 @@
 #include <Errors/Assert.hpp>
 
 
-namespace Types {
+namespace Converters {
 
 /* --------------------------------------------------------------------------
  *
@@ -39,14 +39,13 @@ namespace Types {
  *
  * --------------------------------------------------------------------------
  */
-cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(VisualPointFeatureVector2D* vector)
+const cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(CppTypes::VisualPointFeatureVector2D::ConstPtr featuresVector)
 	{	
-	cv::Mat conversion(vector->list.count, 2, CV_16UC1, cv::Scalar(0));
-	for(int rowIndex = 0; rowIndex < conversion.rows; rowIndex++)
+	cv::Mat conversion(featuresVector->GetNumberOfPoints(), 2, CV_16UC1, cv::Scalar(0));
+	for(int pointIndex = 0; pointIndex < featuresVector->GetNumberOfPoints(); pointIndex++)
 		{
-		VisualPointFeature2D* feature = vector->list.array[rowIndex];
-		conversion.at<uint16_t>(rowIndex, 0) = feature->point.x;
-		conversion.at<uint16_t>(rowIndex, 1) = feature->point.y;
+		conversion.at<uint16_t>(pointIndex, 0) = featuresVector->GetXCoordinate(pointIndex);
+		conversion.at<uint16_t>(pointIndex, 1) = featuresVector->GetYCoordinate(pointIndex);
 		}
 	
 	return conversion;

@@ -42,7 +42,7 @@ namespace Mocks {
  *
  * --------------------------------------------------------------------------
  */
-class MatToVisualPointFeatureVector2DConverter : public Mock, public Types::MatToVisualPointFeatureVector2DConverter
+class MatToVisualPointFeatureVector2DConverter : public Mock, public Converters::MatToVisualPointFeatureVector2DConverter
 	{
 	/* --------------------------------------------------------------------
 	 * Public
@@ -50,7 +50,7 @@ class MatToVisualPointFeatureVector2DConverter : public Mock, public Types::MatT
 	 */
 	public:
 		virtual ~MatToVisualPointFeatureVector2DConverter();
-		VisualPointFeatureVector2D* Convert(cv::Mat featuresVector);
+		CppTypes::VisualPointFeatureVector2D::ConstPtr Convert(const cv::Mat featuresVector);
 
 	/* --------------------------------------------------------------------
 	 * Protected

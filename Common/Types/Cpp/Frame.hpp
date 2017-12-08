@@ -35,8 +35,8 @@ namespace CTypes {
 #include <stdlib.h>
 #include <memory>
 
-#ifndef FRAME_CPP
-#define FRAME_CPP
+#ifndef FRAME_HPP
+#define FRAME_HPP
 
 namespace CppTypes 
 {

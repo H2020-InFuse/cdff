@@ -51,7 +51,7 @@ void FeaturesExtraction2DInterface::imageInput(CppTypes::Frame::ConstPtr data)
     	inImage = data;
 	}
 
-const VisualPointFeatureVector2D* FeaturesExtraction2DInterface::featuresSetOutput() 
+CppTypes::VisualPointFeatureVector2D::ConstPtr FeaturesExtraction2DInterface::featuresSetOutput() 
 	{
     	return outFeaturesSet;
 	}

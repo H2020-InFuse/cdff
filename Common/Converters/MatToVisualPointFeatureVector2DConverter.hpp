@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup Types
+ * @addtogroup Converters
  * 
  *  This is the class for type conversion from Mat to VisualPointFeatureVector2D.
  *  
@@ -30,11 +30,11 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <VisualPointFeatureVector2D.h>
+#include <VisualPointFeatureVector2D.hpp>
 #include <opencv2/core/core.hpp>
 
 
-namespace Types {
+namespace Converters {
 
 /* --------------------------------------------------------------------------
  *
@@ -49,7 +49,7 @@ class MatToVisualPointFeatureVector2DConverter
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual VisualPointFeatureVector2D* Convert(cv::Mat image);
+		virtual CppTypes::VisualPointFeatureVector2D::ConstPtr Convert(const cv::Mat featuresMatrix);
 
 	/* --------------------------------------------------------------------
 	 * Protected
