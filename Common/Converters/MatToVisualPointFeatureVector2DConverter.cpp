@@ -41,14 +41,20 @@ namespace Converters {
  */
 CppTypes::VisualPointFeatureVector2D::ConstPtr MatToVisualPointFeatureVector2DConverter::Convert(const cv::Mat featuresMatrix)
 	{
-	ASSERT( featuresMatrix.type() == CV_16UC1, "MatToVisualPointFeatureVector2DConverter: unsopported cv::mat type in input");
-	ASSERT( featuresMatrix.cols == 2, "MatToVisualPointFeatureVector2DConverter: unexpected numbers of rows");
-
 	CppTypes::VisualPointFeatureVector2D::Ptr conversion = CppTypes::VisualPointFeatureVector2D::Ptr( new CppTypes::VisualPointFeatureVector2D() );
+	if (featuresMatrix.cols == 0 && featuresMatrix.rows == 0)
+		return conversion;
+
+	ASSERT( featuresMatrix.type() == CV_32FC1, "MatToVisualPointFeatureVector2DConverter: unsopported cv::mat type in input");
+	ASSERT( featuresMatrix.cols >= 2, "MatToVisualPointFeatureVector2DConverter: unexpected numbers of rows");
 
 	for(int rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
 		{
-		conversion->AddPoint( featuresMatrix.at<uint16_t>(rowIndex, 0), featuresMatrix.at<uint16_t>(rowIndex, 1) );
+		conversion->AddPoint( featuresMatrix.at<float>(rowIndex, 0), featuresMatrix.at<float>(rowIndex, 1) );
+		for(int columnIndex = 2; columnIndex < featuresMatrix.cols; columnIndex++)
+			{
+			conversion->AddDescriptorComponent(rowIndex, featuresMatrix.at<float>(rowIndex, columnIndex) );
+			}
 		} 
 
 	return conversion;

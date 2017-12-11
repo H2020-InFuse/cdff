@@ -77,10 +77,38 @@ int VisualPointFeatureVector2D::GetXCoordinate(int pointIndex) const
 	return featuresVector.arr[pointIndex].point.x;
 	}
 
-int VisualPointFeatureVector2D::GetYCoordinate(int pointIndex) const
+int VisualPointFeatureVector2D::VisualPointFeatureVector2D::GetYCoordinate(int pointIndex) const
 	{
 	ASSERT(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
 	return featuresVector.arr[pointIndex].point.y;
+	}
+
+void VisualPointFeatureVector2D::AddDescriptorComponent(int pointIndex, float component)
+	{
+	ASSERT(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
+	ASSERT(featuresVector.arr[pointIndex].descriptor.nCount < MAX_DESCRIPTOR_2D_LENGTH, "Descriptor maximum capacity has been reached");
+	int currentIndex = featuresVector.arr[pointIndex].descriptor.nCount;
+	featuresVector.arr[pointIndex].descriptor.arr[currentIndex] = component;
+	featuresVector.arr[pointIndex].descriptor.nCount++;
+	}
+
+void VisualPointFeatureVector2D::ClearDescriptor(int pointIndex)
+	{
+	ASSERT(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
+	featuresVector.arr[pointIndex].descriptor.nCount = 0;
+	}
+
+int VisualPointFeatureVector2D::GetNumberOfDescriptorComponents(int pointIndex) const
+	{
+	ASSERT(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
+	return featuresVector.arr[pointIndex].descriptor.nCount;
+	}
+
+float VisualPointFeatureVector2D::GetDescriptorComponent(int pointIndex, int componentIndex) const
+	{
+	ASSERT(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
+	ASSERT(componentIndex < featuresVector.arr[pointIndex].descriptor.nCount, "A missing descriptor component was requested from a features vector 2D");
+	return featuresVector.arr[pointIndex].descriptor.arr[componentIndex];
 	}
 
 /* --------------------------------------------------------------------------

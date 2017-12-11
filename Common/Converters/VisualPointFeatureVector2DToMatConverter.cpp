@@ -40,12 +40,20 @@ namespace Converters {
  * --------------------------------------------------------------------------
  */
 const cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(CppTypes::VisualPointFeatureVector2D::ConstPtr featuresVector)
-	{	
-	cv::Mat conversion(featuresVector->GetNumberOfPoints(), 2, CV_16UC1, cv::Scalar(0));
+	{
+	if (featuresVector->GetNumberOfPoints() == 0)
+		return cv::Mat();
+
+	int descriptorSize = featuresVector->GetNumberOfDescriptorComponents(0);	
+	cv::Mat conversion(featuresVector->GetNumberOfPoints(), 2 + descriptorSize, CV_32FC1, cv::Scalar(0));
 	for(int pointIndex = 0; pointIndex < featuresVector->GetNumberOfPoints(); pointIndex++)
 		{
-		conversion.at<uint16_t>(pointIndex, 0) = featuresVector->GetXCoordinate(pointIndex);
-		conversion.at<uint16_t>(pointIndex, 1) = featuresVector->GetYCoordinate(pointIndex);
+		conversion.at<float>(pointIndex, 0) = featuresVector->GetXCoordinate(pointIndex);
+		conversion.at<float>(pointIndex, 1) = featuresVector->GetYCoordinate(pointIndex);
+
+		ASSERT(descriptorSize == featuresVector->GetNumberOfDescriptorComponents(pointIndex), "Descriptors do not have the same size in VisualPointFeatureVector2D");
+		for(int componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
+			conversion.at<float>(pointIndex, componentIndex + 2) = featuresVector->GetDescriptorComponent(pointIndex, componentIndex);
 		}
 	
 	return conversion;

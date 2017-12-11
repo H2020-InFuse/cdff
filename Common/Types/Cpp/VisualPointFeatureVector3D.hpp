@@ -81,6 +81,11 @@ class VisualPointFeatureVector3D
 		float GetYCoordinate(int pointIndex) const;
 		float GetZCoordinate(int pointIndex) const;
 
+		void AddDescriptorComponent(int pointIndex, float component);
+		void ClearDescriptor(int pointIndex);
+		int GetNumberOfDescriptorComponents(int pointIndex) const;
+		float GetDescriptorComponent(int pointIndex, int componentIndex) const;
+
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------

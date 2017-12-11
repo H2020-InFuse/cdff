@@ -135,16 +135,20 @@ cv::Mat HarrisDetector2D::ExtractHarrisPoints(cv::Mat harrisImage)
 	{
 	int numberOfPoints = cv::countNonZero(harrisImage > parameters.detectionThreshold);
 
-	cv::Mat harrisPointsList(numberOfPoints, 2, CV_16UC1, cv::Scalar(0));
+	cv::Mat harrisPointsList(numberOfPoints, 2, CV_32FC1, cv::Scalar(0));
 	unsigned pointIndex = 0;
 
 	for(int rowIndex = 0; rowIndex < harrisImage.rows; rowIndex++)
-	for(int columnIndex = 0; columnIndex < harrisImage.cols; columnIndex++)
-	if (harrisImage.at<uint8_t>(rowIndex, columnIndex) > parameters.detectionThreshold)
 		{
-		harrisPointsList.at<uint16_t>(pointIndex, 1) = (uint16_t)rowIndex;
-		harrisPointsList.at<uint16_t>(pointIndex, 0) = (uint16_t)columnIndex;
-		pointIndex++;
+		for(int columnIndex = 0; columnIndex < harrisImage.cols; columnIndex++)
+			{
+			if (harrisImage.at<uint8_t>(rowIndex, columnIndex) > parameters.detectionThreshold)
+				{
+				harrisPointsList.at<float>(pointIndex, 1) = (float)rowIndex;
+				harrisPointsList.at<float>(pointIndex, 0) = (float)columnIndex;
+				pointIndex++;
+				}
+			}
 		}		
 
 	return harrisPointsList;

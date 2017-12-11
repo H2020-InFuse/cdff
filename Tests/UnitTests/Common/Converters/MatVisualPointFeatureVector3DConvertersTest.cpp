@@ -49,7 +49,7 @@ TEST_CASE( "Mat to VisualPointFeatureVector3D", "[MatToVisualPointFeatureVector3
 	MatToVisualPointFeatureVector3DConverter firstConverter;
 	VisualPointFeatureVector3DToMatConverter secondConverter;
 
-	cv::Mat inputMatrix(100, 3, CV_32FC1, cv::Scalar(0));
+	cv::Mat inputMatrix(100, 5, CV_32FC1, cv::Scalar(0));
 	for(int rowIndex = 0; rowIndex < inputMatrix.rows; rowIndex++)
 		{
 		for(int columnIndex = 0; columnIndex < inputMatrix.cols; columnIndex++)
@@ -79,7 +79,7 @@ TEST_CASE( "VisualPointFeatureVector3D to Mat", "[VisualPointFeatureVector3DToMa
 	MatToVisualPointFeatureVector3DConverter firstConverter;
 	VisualPointFeatureVector3DToMatConverter secondConverter;
 
-	cv::Mat inputMatrix(100, 3, CV_32FC1, cv::Scalar(0));
+	cv::Mat inputMatrix(100, 5, CV_32FC1, cv::Scalar(0));
 	for(int rowIndex = 0; rowIndex < inputMatrix.rows; rowIndex++)
 		{
 		for(int columnIndex = 0; columnIndex < inputMatrix.cols; columnIndex++)
@@ -93,10 +93,19 @@ TEST_CASE( "VisualPointFeatureVector3D to Mat", "[VisualPointFeatureVector3DToMa
 	CppTypes::VisualPointFeatureVector3D::ConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
 
 	REQUIRE(asnVector->GetNumberOfPoints() == outputVector->GetNumberOfPoints());
+	REQUIRE(asnVector->GetNumberOfPoints() > 0);
+	int descriptorSize = asnVector->GetNumberOfDescriptorComponents(0);
 	for(int pointIndex = 0; pointIndex < asnVector->GetNumberOfPoints(); pointIndex++)
 		{
 		REQUIRE(asnVector->GetXCoordinate(pointIndex) == outputVector->GetXCoordinate(pointIndex) );
 		REQUIRE(asnVector->GetYCoordinate(pointIndex) == outputVector->GetYCoordinate(pointIndex) );
 		REQUIRE(asnVector->GetZCoordinate(pointIndex) == outputVector->GetZCoordinate(pointIndex) );
+		REQUIRE(asnVector->GetNumberOfDescriptorComponents(pointIndex) == descriptorSize );
+		REQUIRE(outputVector->GetNumberOfDescriptorComponents(pointIndex) == descriptorSize );
+
+		for(int componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
+			{
+			REQUIRE(asnVector->GetDescriptorComponent(pointIndex, componentIndex) == outputVector->GetDescriptorComponent(pointIndex, componentIndex) );
+			}
 		}
 	}

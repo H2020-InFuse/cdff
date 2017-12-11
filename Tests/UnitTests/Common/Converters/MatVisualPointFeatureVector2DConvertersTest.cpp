@@ -49,12 +49,12 @@ TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2
 	MatToVisualPointFeatureVector2DConverter firstConverter;
 	VisualPointFeatureVector2DToMatConverter secondConverter;
 
-	cv::Mat inputMatrix(100, 2, CV_16UC1, cv::Scalar(0));
+	cv::Mat inputMatrix(100, 4, CV_32FC1, cv::Scalar(0));
 	for(int rowIndex = 0; rowIndex < inputMatrix.rows; rowIndex++)
 		{
 		for(int columnIndex = 0; columnIndex < inputMatrix.cols; columnIndex++)
 			{
-			inputMatrix.at<uint16_t>(rowIndex, columnIndex) = (uint16_t) (rowIndex + columnIndex);
+			inputMatrix.at<float>(rowIndex, columnIndex) = (float) (rowIndex + columnIndex);
 			}
 		}
 
@@ -68,7 +68,7 @@ TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2
 		{
 		for(int columnIndex = 0; columnIndex < inputMatrix.cols; columnIndex++)
 			{
-			REQUIRE(outputMatrix.at<uint16_t>(rowIndex, columnIndex) == inputMatrix.at<uint16_t>(rowIndex, columnIndex));		 		 
+			REQUIRE(outputMatrix.at<float>(rowIndex, columnIndex) == inputMatrix.at<float>(rowIndex, columnIndex));		 		 
 			}
 		}	
 
@@ -81,12 +81,12 @@ TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMa
 	MatToVisualPointFeatureVector2DConverter firstConverter;
 	VisualPointFeatureVector2DToMatConverter secondConverter;
 
-	cv::Mat inputMatrix(100, 2, CV_16UC1, cv::Scalar(0));
+	cv::Mat inputMatrix(100, 4, CV_32FC1, cv::Scalar(0));
 	for(int rowIndex = 0; rowIndex < inputMatrix.rows; rowIndex++)
 		{
 		for(int columnIndex = 0; columnIndex < inputMatrix.cols; columnIndex++)
 			{
-			inputMatrix.at<uint16_t>(rowIndex, columnIndex) = (uint16_t) (rowIndex + columnIndex);
+			inputMatrix.at<float>(rowIndex, columnIndex) = (float) (rowIndex + columnIndex);
 			}
 		}
 
@@ -95,10 +95,19 @@ TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMa
 	CppTypes::VisualPointFeatureVector2D::ConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
 
 	REQUIRE(asnVector->GetNumberOfPoints() == outputVector->GetNumberOfPoints());
+	REQUIRE(asnVector->GetNumberOfPoints() > 0);
+	int descriptorSize = asnVector->GetNumberOfDescriptorComponents(0);
 	for(int pointIndex = 0; pointIndex < asnVector->GetNumberOfPoints(); pointIndex++)
 		{
 		REQUIRE(asnVector->GetXCoordinate(pointIndex) == outputVector->GetXCoordinate(pointIndex) );
 		REQUIRE(asnVector->GetYCoordinate(pointIndex) == outputVector->GetYCoordinate(pointIndex) );
+		REQUIRE(asnVector->GetNumberOfDescriptorComponents(pointIndex) == descriptorSize );
+		REQUIRE(outputVector->GetNumberOfDescriptorComponents(pointIndex) == descriptorSize );
+		
+		for(int componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
+			{
+			REQUIRE(asnVector->GetDescriptorComponent(pointIndex, componentIndex) == outputVector->GetDescriptorComponent(pointIndex, componentIndex) );
+			}
 		}
 
 	asnVector.reset();
