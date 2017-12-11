@@ -25,22 +25,28 @@ use "git submodule update --depth 1" or you might die from openCV overwhelmingly
 
 ## Building
 
-Build all dependencies first: in each subfolder of External/, execute
+### Build all dependencies first: in each subfolder of External/, execute
 
     mkdir build
     cd build
     cmake -DCMAKE_INSTALL_PREFIX=.. ..
     make
 
-Build CDFF with
+### Build CDFF with
 
     mkdir build
     cmake -DCMAKE_INSTALL_PREFIX=./ ..
     make install
 
-Now you can run the tests
+### Now you can run the tests
 
     make test
+
+### ASN.1 Datatypes
+On first build, Cmake will run /Tools/ASNToC/FetcherScript.sh. 
+This will download generated files from the server.  
+
+If you want to develop new Types, you will need to compile them. See /Tools/ASNToC/Readme.md
 
 ## Contributing
 

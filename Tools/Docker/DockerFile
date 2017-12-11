@@ -1,0 +1,27 @@
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y build-essential \
+apt-utils \
+cmake \
+git 
+
+RUN apt-get install -y libtinyxml2-dev \
+cppcheck
+
+#install openCV latest
+RUN git clone https://github.com/opencv/opencv.git \
+&& cd opencv \
+&& git checkout tags/3.3.1 \
+&& mkdir release \
+&& cd release \
+&& cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local .. \
+&& make \
+&& make install \
+&& rm -rf /opencv \
+&& ldconfig
+
+#install mono to be able to run asn1
+RUN apt-get install -y mono-devel \
+wget
+
+RUN apt-get install -y unzip

@@ -1,0 +1,37 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+SonarScan-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+Angle FROM Angle-Types 
+Time FROM Time-Types;
+
+--- Size of the SonarScan data
+maxSonarScanDataSize T-UInt32 ::= 60
+
+
+---  Definition SONARSCAN Starts 
+SonarScan   ::= 
+SEQUENCE
+{
+    ref-time				Time,
+    data					SEQUENCE (SIZE(1..maxSonarScanDataSize)) OF T-UInt8,
+    time-beams				SEQUENCE (SIZE(1..maxSonarScanDataSize)) OF Time,
+    number-of-beams			T-UInt16,
+    number-of-bins			T-UInt16,
+    start-bearing			Angle,
+    angular-resolution		Angle,
+    sampling-interval		T-Double,
+    speed-of-sound			T-Float,
+    beamwidth-horizontal	Angle,
+    beamwidth-vertical		Angle,
+    memory-layout-column	T-Boolean,
+    polar-coordinates		T-Boolean
+}
+
+---  Definition SONARSCAN Ends 
+END

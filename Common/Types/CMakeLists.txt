@@ -1,31 +1,23 @@
+# If C folder does not exist, execute FetcherScript. 
+#xma@spaceapplications.com 
+if(NOT EXISTS C)
+set(MAKE_CMD "${CMAKE_SOURCE_DIR}/Tools/ASNtoC/FetcherScript.sh" )
+MESSAGE("COMMAND: ${MAKE_CMD}")
+execute_process(COMMAND ${MAKE_CMD} RESULT_VARIABLE CMD_ERROR
+      OUTPUT_FILE CMD_OUTPUT)
+MESSAGE( STATUS "CMD_ERROR:" ${CMD_ERROR})
+MESSAGE( STATUS "CMD_OUTPUT:" ${CMD_OUTPUT})
+endif()
+
+#compile everything from subfolders
+file(GLOB_RECURSE source_list
+ "*/*.c"
+ "*/*.h"
+)
+
 add_library(
     cdff_types
-    C/ImageType.c
-    C/VisualPointFeatureVector2D.c
-    C/asn_SEQUENCE_OF.c
-    C/asn_SET_OF.c
-    C/OCTET_STRING.c
-    C/per_opentype.c
-    C/asn_codecs_prim.c
-    C/per_support.c
-    C/NativeReal.c
-    C/NativeInteger.c
-    C/NativeEnumerated.c
-    C/xer_decoder.c
-    C/xer_decoder.c
-    C/ber_tlv_tag.c
-    C/ber_decoder.c
-    C/ber_tlv_length.c
-    C/constraints.c
-    C/BIT_STRING.c
-    C/der_encoder.c
-    C/per_encoder.c
-    C/per_decoder.c
-    C/constr_SEQUENCE_OF.c
-    C/constr_SET_OF.c
-    C/constr_TYPE.c
-    C/constr_SEQUENCE.c
-    C/xer_support.c
+    ${source_list}
 )
 install(
     TARGETS cdff_types

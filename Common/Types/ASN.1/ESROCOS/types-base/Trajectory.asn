@@ -1,0 +1,30 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+Trajectory-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes
+Point FROM Point-Types;
+
+--- Maximum number of points for a trajectory
+maxTrajectoryPoints T-UInt32 ::= 50
+
+---  Definition TRAJECTORY Starts 
+Trajectory   ::= 
+SEQUENCE
+{
+    speed					T-Double,
+
+    --- In Rock the trajectory is defined with a spline of order 3 and uses the SISL library
+    --- for the implementation.
+    --- In SARGON we define the trajectory as a sequence of points. 
+    ---
+    --- MalteW:  We should define different types of trajectory: Splinetrajectory, Waypoints3D, Waypointd6D, ...
+    points                  SEQUENCE (SIZE (1..maxTrajectoryPoints)) OF Point
+}
+
+---  Definition TRAJECTORY Ends 
+END

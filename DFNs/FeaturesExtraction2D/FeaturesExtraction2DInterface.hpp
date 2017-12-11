@@ -29,7 +29,7 @@
  */
 #include <DFNCommonInterface.hpp>
 #include <ImageType.h>
-#include <VisualPointFeatureVector2D.h>
+#include <Types/C/VisualPointFeatureVector.h>
 #include <ImageTypeToMatConverter.hpp>
 
 

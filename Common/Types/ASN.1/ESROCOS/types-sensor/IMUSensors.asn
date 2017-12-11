@@ -1,0 +1,26 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+IMUSensors-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+Vector3d FROM Eigen-Types 
+Time FROM Time-Types;
+
+
+
+---  Definition IMUSENSORS Starts 
+IMUSensors   ::= 
+SEQUENCE
+{
+    timestamp				Time,
+    acc						Vector3d,
+    gyro					Vector3d,
+    mag						Vector3d
+}
+
+---  Definition IMUSENSORS Ends 
+END

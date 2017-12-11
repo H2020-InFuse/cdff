@@ -30,7 +30,7 @@
  */
 #include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
 #include <ImageType.h>
-#include <VisualPointFeatureVector2D.h>
+#include <Types/C/VisualPointFeatureVector.h>
 
 
 namespace dfn_ci {

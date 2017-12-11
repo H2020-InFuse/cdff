@@ -1,0 +1,43 @@
+-- =====================================================================
+--  FILE:  $URL$
+-- =====================================================================
+--  PROJECT:             :  SARGON
+--  VERSION              :  $Revision$
+--  LANGUAGE             :  ASN.1
+--  AUTHOR               :  $LastChangedBy$ 
+--  COPYRIGHT            :  AVOS - GMV,S.A.
+--  COMPILER             :  asn2aadlPlus
+--  CREATED              :  $CreationDate$
+--  CLASS                :  -
+--  LAST MODIFIED        :  $LastChangedDate$
+--  GENERATED FROM MODEL :  -
+--  ORIGINAL MODEL AUTHOR:  -
+-- ---------------------------------------------------------------------
+--  ASN.1 type definitions for the SARGON Logger function.
+-- ---------------------------------------------------------------------
+--  HISTORY
+--  $History$
+-- =====================================================================
+
+Logger-Types DEFINITIONS ::=
+BEGIN
+
+IMPORTS 
+T-UInt32 FROM TASTE-BasicTypes 
+T-UInt64 FROM TASTE-ExtendedTypes;
+
+LoggerFunctionID  ::= T-UInt32
+LoggerTimestamp   ::= T-UInt64
+LoggerCriticality ::= ENUMERATED { informative, warning, error, fatal }
+LoggerText        ::= OCTET STRING (SIZE(0..255))
+LoggerFile        ::= IA5String (SIZE (0..255))
+
+LoggerMessage     ::= SEQUENCE {
+    source       LoggerFunctionID,
+    timestamp    LoggerTimestamp,
+    criticality  LoggerCriticality,
+    message      LoggerText
+}
+
+END
+

@@ -38,14 +38,14 @@
  */
 #include <VisualPointFeatureVector2DToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <VisualPointFeatureVector2D.h>
+#include <Types/C/VisualPointFeatureVector.h>
 #include <Catch/catch.h>
 #include <Errors/Assert.hpp>
 
 using namespace Types;
 
 TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2D]" )
-	{
+{
 	MatToVisualPointFeatureVector2DConverter firstConverter;
 	VisualPointFeatureVector2DToMatConverter secondConverter;
 
@@ -65,17 +65,18 @@ TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2
 	REQUIRE(outputMatrix.cols == inputMatrix.cols);
 	REQUIRE(outputMatrix.type() == inputMatrix.type());
 	for(int rowIndex = 0; rowIndex < inputMatrix.rows; rowIndex++)
-		{
+	{
 		for(int columnIndex = 0; columnIndex < inputMatrix.cols; columnIndex++)
-			{
+		{
 			REQUIRE(outputMatrix.at<uint16_t>(rowIndex, columnIndex) == inputMatrix.at<uint16_t>(rowIndex, columnIndex));		 		 
-			}
-		}		
-	} 
+		}
+	}
+	delete asnVector;
+}
 
 
 TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMat]" )
-	{
+{
 	MatToVisualPointFeatureVector2DConverter firstConverter;
 	VisualPointFeatureVector2DToMatConverter secondConverter;
 
@@ -92,10 +93,13 @@ TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMa
 	cv::Mat intermediateMatrix = secondConverter.Convert(asnVector);
 	VisualPointFeatureVector2D* outputVector = firstConverter.Convert(intermediateMatrix);	
 
-	REQUIRE(asnVector->list.count == outputVector->list.count);
-	for(int rowIndex = 0; rowIndex < asnVector->list.count; rowIndex++)
-		{
-		REQUIRE(asnVector->list.array[rowIndex]->point.x == outputVector->list.array[rowIndex]->point.x);
-		REQUIRE(asnVector->list.array[rowIndex]->point.y == outputVector->list.array[rowIndex]->point.y);
-		}
+	REQUIRE(asnVector->nCount == outputVector->nCount);
+	for(int rowIndex = 0; rowIndex < asnVector->nCount; rowIndex++)	
+	{
+		REQUIRE(asnVector->arr[rowIndex].point.x == outputVector->arr[rowIndex].point.x);
+		REQUIRE(asnVector->arr[rowIndex].point.y == outputVector->arr[rowIndex].point.y);
 	}
+
+	delete asnVector;
+	delete outputVector;
+}

@@ -1,0 +1,44 @@
+-- =====================================================================
+--  FILE:  $URL$
+-- =====================================================================
+--  PROJECT:             :  SARGON
+--  VERSION              :  $Revision$
+--  LANGUAGE             :  ASN.1
+--  AUTHOR               :  $LastChangedBy$ 
+--  COPYRIGHT            :  AVOS - GMV,S.A.
+--  COMPILER             :  asn2aadlPlus
+--  CREATED              :  $CreationDate$
+--  CLASS                :  -
+--  LAST MODIFIED        :  $LastChangedDate$
+--  GENERATED FROM MODEL :  -
+--  ORIGINAL MODEL AUTHOR:  -
+-- ---------------------------------------------------------------------
+--  Dummy ASN.1 type for component status in the robotic component 
+--  lifecycle.
+-- ---------------------------------------------------------------------
+--  HISTORY
+--  $History$
+-- =====================================================================
+
+ApplicationCodes-Types DEFINITIONS ::=
+BEGIN
+
+-- LC-Code type definition for lifecycle template model
+
+-- Behaviour internal status and error codes
+LC-Code  ::= ENUMERATED {
+    -- Values that must always be defined
+    unknown,                -- Default value
+    invalid-command,        -- Indicates that an invalid transition has been requested
+    unmanaged-exception,    -- An unmanaged exception was raised by the C++ code
+    
+    -- Generic component status codes; should be particularized for each system
+    component-preoperational,
+    component-stopped,
+    component-running,
+    component-runtimeError,
+    component-exception,
+    component-fatalError
+}
+
+END

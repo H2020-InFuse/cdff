@@ -8,7 +8,7 @@
 /*!
  * @file MatToVisualPointFeatureVector2DConverter.cpp
  * @date 20/11/2017
- * @author Alessandro Bianco
+ * @authors Alessandro Bianco, Xavier Martinez
  */
 
 /*!
@@ -41,25 +41,26 @@ namespace Types {
  */
 VisualPointFeatureVector2D* MatToVisualPointFeatureVector2DConverter::Convert(cv::Mat featuresMatrix)
 	{
-	ASSERT( featuresMatrix.type() == CV_16UC1, "MatToVisualPointFeatureVector2DConverter: unsopported cv::mat type in input");
-	ASSERT( featuresMatrix.cols == 2, "MatToVisualPointFeatureVector2DConverter: unexpected numbers of rows");
-
-	VisualPointFeatureVector2D* conversion = new VisualPointFeatureVector2D();
-
-	for(unsigned rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
-		{
-		VisualPointFeature2D* featureVector = new VisualPointFeature2D();
-		featureVector->point.x = featuresMatrix.at<uint16_t>(rowIndex, 0);
-		featureVector->point.y = featuresMatrix.at<uint16_t>(rowIndex, 1);	
-
-		int error = ASN_SEQUENCE_ADD(&(conversion->list), featureVector);
-		ASSERT(error == 0, "MatToVisualPointFeatureVector2DConverter, conversion failed");
-		} 
+	ASSERT( featuresMatrix.type() == CV_16UC1, "MatToVisualPointFeatureVector2DConverter: Only CV_16UC1 type is supported for this conversion.");
+	ASSERT( featuresMatrix.cols == 2, "MatToVisualPointFeatureVector2DConverter: Only 2 rows matrixes are supported by this converter.");
+	ASSERT( featuresMatrix.rows * featuresMatrix.cols <= featuresElementsMax, "MatToVisualPointFeatureVector2DConverter: VisualPointFeature2D does not handle as many features. It is limited to " +featuresElementsMax+" items" );
 	
+	VisualPointFeatureVector2D* conversion = new VisualPointFeatureVector2D();
+	VisualPointFeatureVector2D_Initialize(conversion);
+	for(signed int rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
+		{
+		  VisualPointFeature2D featureVector;
+		  VisualPointFeature2D_Initialize(&featureVector);		  
+		  VisualPointFeature2D_descriptor descriptor;
+		  VisualPointFeature2D_descriptor_Initialize(&descriptor);
+		  
+		  featureVector.point.x = featuresMatrix.at<uint16_t>(rowIndex, 0);
+		  featureVector.point.y = featuresMatrix.at<uint16_t>(rowIndex, 1);
+		  conversion->arr[rowIndex] = featureVector;
+		  conversion->nCount +=1;
+		} 
 	return conversion;
 	}
-
-
 }
 
 /** @} */

@@ -1,0 +1,34 @@
+-- =====================================================================
+--  FILE:  $URL$
+-- =====================================================================
+--  PROJECT:             :  SARGON
+--  VERSION              :  $Revision$
+--  LANGUAGE             :  ASN.1
+--  AUTHOR               :  $LastChangedBy$ 
+--  COPYRIGHT            :  AVOS - GMV,S.A.
+--  COMPILER             :  asn2aadlPlus
+--  CREATED              :  $CreationDate$
+--  CLASS                :  -
+--  LAST MODIFIED        :  $LastChangedDate$
+--  GENERATED FROM MODEL :  -
+--  ORIGINAL MODEL AUTHOR:  -
+-- ---------------------------------------------------------------------
+--  ASN.1 type definitions for the TASTE Mars functions.
+-- ---------------------------------------------------------------------
+--  HISTORY
+--  $History$
+-- =====================================================================
+
+Mars-Types DEFINITIONS ::=
+BEGIN
+
+IMPORTS 
+T-UInt32 FROM TASTE-BasicTypes;
+
+-- String sizes
+marsPathMaxSize T-UInt32 ::= 255
+
+-- File path, used for configuration files
+MarsFilePath ::= IA5String (SIZE (0..marsPathMaxSize))
+
+END

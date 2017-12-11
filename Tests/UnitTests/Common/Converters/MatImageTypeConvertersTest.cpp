@@ -77,8 +77,6 @@ TEST_CASE( "Mat to ImageType and Back Square Matrix", "[MatToImageTypeSquare]" )
 			REQUIRE(inputPixel[2] == outputPixel[2]);			 		 
 			}
 		}
-
-	delete [] (asnImage->data.buf);
 	delete(asnImage);	
 	} 
 
@@ -116,7 +114,6 @@ TEST_CASE( "Mat to ImageType and Back Non-Square Matrix", "[MatToImageTypeNonSqu
 			}
 		}
 
-	delete [] (asnImage->data.buf);	
 	delete(asnImage);	
 	} 
 
@@ -155,9 +152,7 @@ TEST_CASE( "Multiple conversions", "[MultipleConversions]" )
 				REQUIRE(inputPixel[1] == outputPixel[1]);			 
 				REQUIRE(inputPixel[2] == outputPixel[2]);			 		 
 				}
-			}
-		
-		delete [] (asnImage->data.buf);
+			}		
 		delete(asnImage);
 		}
 	}

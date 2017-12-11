@@ -77,7 +77,7 @@ TEST_CASE( "Call to process", "[process]" )
 
 	VisualPointFeatureVector2D* output = harris.featuresSetOutput();
 
-	REQUIRE(output->list.size == featuresVector->list.size);
+	REQUIRE(output->nCount == featuresVector->nCount);
 	//No need to delete StubCacheHandler, MockImageTypeToMatConverter, StubCacheHandler, MockMatToVisualPointFeatureVector2DConverter
 	//ConversionCache destructor takes care of that.
 	}

@@ -1,0 +1,28 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+Pointcloud-Types DEFINITIONS ::=
+BEGIN
+IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes Vector3d FROM Eigen-Types Time FROM Time-Types Vector4d FROM Eigen-Types Point FROM Point-Types;
+
+
+---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+
+---- END of typedefs defined in this module 
+
+
+--- Size of the Pointcloud data
+maxPointcloudSize T-UInt32 ::= 60
+
+---  Definition POINTCLOUD Starts 
+Pointcloud   ::= 
+SEQUENCE
+{
+    ref-time				Time,
+    points					SEQUENCE (SIZE(1..maxPointcloudSize)) OF Point,
+    colors					SEQUENCE (SIZE(1..maxPointcloudSize)) OF Vector4d
+}
+
+---  Definition POINTCLOUD Ends 
+END
