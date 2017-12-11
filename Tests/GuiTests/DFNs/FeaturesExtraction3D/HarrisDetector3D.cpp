@@ -33,7 +33,7 @@
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloud3DConverter.hpp>
+#include <PclPointCloudToPointCloudConverter.hpp>
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
@@ -65,7 +65,7 @@ class HarrisDetector3DTestInterface : public DFNTestInterface
 		HarrisDetector3D* harris;
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud;
-		PointCloud3D* inputCloud;
+		CppTypes::PointCloud::ConstPtr inputCloud;
 		std::string outputWindowName;
 
 		void SetupMocksAndStubs();
@@ -81,7 +81,7 @@ HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(std::string dfnName
 
 	PclPointCloudToPointCloudConverter converter;
 	pclCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr (new pcl::PointCloud<pcl::PointXYZ>() );
-	pcl::io::loadPLYFile("", *pclCloud);
+	pcl::io::loadPLYFile("../tests/Data/PointClouds/bunny0.ply", *pclCloud);
 	inputCloud = converter.Convert(pclCloud);
 	harris->pointCloudInput(inputCloud);
 
@@ -95,23 +95,18 @@ HarrisDetector3DTestInterface::~HarrisDetector3DTestInterface()
 	delete(stubOutputCache);
 	delete(mockOutputConverter);
 	delete(harris);
-
-	delete(inputCloud);
+	inputCloud.reset();
 	}
 
 void HarrisDetector3DTestInterface::SetupMocksAndStubs()
 	{
 	stubInputCache = new Stubs::CacheHandler<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
 	mockInputConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::Ptr, PointCloud3DToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
+	ConversionCache<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
 	stubOutputCache = new Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr>();
 	mockOutputConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
 	ConversionCache<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
-
-	
-	mockInputConverter->AddBehaviour("Convert", "Always", (void*) (&pclCloud) );
-	//mockOutputConverter->AddBehaviour("Convert", "Always", (void*) (&featuresVector) );
 	}
 
 void HarrisDetector3DTestInterface::SetupParameters()

@@ -104,9 +104,6 @@ void HarrisDetector2DTestInterface::SetupMocksAndStubs()
 	stubOutputCache = new Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector2D::ConstPtr>();
 	mockOutputConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
 	ConversionCache<cv::Mat, CppTypes::VisualPointFeatureVector2D::ConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubOutputCache, mockOutputConverter);
-
-	//mockInputConverter->AddBehaviour("Convert", "Always", (void*) (&cvImage) );
-	//mockOutputConverter->AddBehaviour("Convert", "Always", (void*) (&featuresVector) );
 	}
 
 void HarrisDetector2DTestInterface::SetupParameters()
