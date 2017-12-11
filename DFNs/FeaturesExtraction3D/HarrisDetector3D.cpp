@@ -39,6 +39,7 @@
 
 using namespace Common;
 using namespace Converters;
+using namespace CppTypes;
 
 namespace dfn_ci {
 
@@ -87,10 +88,10 @@ void HarrisDetector3D::configure()
 void HarrisDetector3D::process() 
 	{
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputPointCloud = 
-		ConversionCache<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inPointCloud);
+		ConversionCache<PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inPointCloud);
 	ValidateInputs(inputPointCloud);
 	cv::Mat harrisPoints = ComputeHarrisPoints(inputPointCloud);
-	outFeaturesSet = ConversionCache<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Convert(harrisPoints);
+	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Convert(harrisPoints);
 	}
 
 

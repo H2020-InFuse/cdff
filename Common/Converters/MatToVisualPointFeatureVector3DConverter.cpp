@@ -33,20 +33,22 @@
 
 namespace Converters {
 
+using namespace CppTypes;
+
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions
  *
  * --------------------------------------------------------------------------
  */
-CppTypes::VisualPointFeatureVector3D::ConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat featuresMatrix)
+VisualPointFeatureVector3D::ConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat featuresMatrix)
 	{
-	CppTypes::VisualPointFeatureVector3D::Ptr conversion = CppTypes::VisualPointFeatureVector3D::Ptr( new CppTypes::VisualPointFeatureVector3D() );
+	VisualPointFeatureVector3D::Ptr conversion = VisualPointFeatureVector3D::Ptr( new VisualPointFeatureVector3D() );
 	if (featuresMatrix.cols == 0 && featuresMatrix.rows == 0)
 		return conversion;
 
-	ASSERT( featuresMatrix.type() == CV_32FC1, "MatToVisualPointFeatureVector3DConverter: unsopported cv::mat type in input");
-	ASSERT( featuresMatrix.cols >= 3, "MatToVisualPointFeatureVector3DConverter: unexpected numbers of rows");
+	ASSERT( featuresMatrix.type() == CV_32FC1, "MatToVisualPointFeatureVector3DConverter: Only CV_32FC1 type is supported for this conversion for now");
+	ASSERT( featuresMatrix.cols >= 3, "MatToVisualPointFeatureVector3DConverter: At least 3 rows matrixes are needed by this converter.");
 
 	for(int rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
 		{

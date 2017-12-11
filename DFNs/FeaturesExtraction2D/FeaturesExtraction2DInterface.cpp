@@ -31,6 +31,7 @@
 
 namespace dfn_ci {
 
+using namespace CppTypes;
 
 /* --------------------------------------------------------------------------
  *
@@ -46,12 +47,12 @@ FeaturesExtraction2DInterface::~FeaturesExtraction2DInterface()
 	{
 	}
 
-void FeaturesExtraction2DInterface::imageInput(CppTypes::Frame::ConstPtr data) 
+void FeaturesExtraction2DInterface::imageInput(Frame::ConstPtr data) 
 	{
     	inImage = data;
 	}
 
-CppTypes::VisualPointFeatureVector2D::ConstPtr FeaturesExtraction2DInterface::featuresSetOutput() 
+VisualPointFeatureVector2D::ConstPtr FeaturesExtraction2DInterface::featuresSetOutput() 
 	{
     	return outFeaturesSet;
 	}

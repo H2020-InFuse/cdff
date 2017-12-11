@@ -1,0 +1,44 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+LaserScan-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+Time FROM Time-Types;
+
+
+--- Definition of enum LASER_RANGE_ERRORS follows 
+
+LASER-RANGE-ERRORS ::= ENUMERATED { 	 too-far, too-near, measurement-error, other-range-errors, max-range-error, end-laser-range-errors }
+
+--- End Definition of enum LASER_RANGE_ERRORS
+---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+
+---- END of typedefs defined in this module 
+
+--- Size of the LaserScan data
+maxLaserScanSize T-UInt32 ::= 60
+
+---  Definition LASERSCAN Starts 
+
+---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+
+---- END of typedefs defined in this module 
+LaserScan   ::= 
+SEQUENCE
+{
+    ref-time				Time,
+    start-angle				T-Double,
+    angular-resolution		T-Double,
+    speed					T-Double,
+    ranges					SEQUENCE (SIZE(1..maxLaserScanSize)) OF T-Int32,
+    minRange				T-UInt32,
+    maxRange				T-UInt32,
+    remission				SEQUENCE (SIZE(1..maxLaserScanSize)) OF T-Float
+}
+
+---  Definition LASERSCAN Ends 
+END

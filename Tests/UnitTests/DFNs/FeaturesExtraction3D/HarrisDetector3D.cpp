@@ -49,6 +49,7 @@
 using namespace dfn_ci;
 using namespace Converters;
 using namespace Common;
+using namespace CppTypes;
 
 /* --------------------------------------------------------------------------
  *
@@ -59,14 +60,14 @@ using namespace Common;
 
 TEST_CASE( "Call to process", "[process]" ) 
 	{
-	Stubs::CacheHandler<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInputCache = 
-		new Stubs::CacheHandler<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
+	Stubs::CacheHandler<PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInputCache = 
+		new Stubs::CacheHandler<PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
 	Mocks::PointCloudToPclPointCloudConverter* mockInputConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
+	ConversionCache<PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
-	Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr>();
+	Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3D::ConstPtr >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3D::ConstPtr>();
 	Mocks::MatToVisualPointFeatureVector3DConverter* mockOutputConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
-	ConversionCache<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
+	ConversionCache<cv::Mat, VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 
 	//Create a sample sphere
 	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud =  pcl::PointCloud<pcl::PointXYZ>::Ptr( new  pcl::PointCloud<pcl::PointXYZ>() );
@@ -83,13 +84,13 @@ TEST_CASE( "Call to process", "[process]" )
 		}
 	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputCloud) );
 
-	CppTypes::VisualPointFeatureVector3D::ConstPtr featuresVector = CppTypes::VisualPointFeatureVector3D::ConstPtr( new CppTypes::VisualPointFeatureVector3D() );
+	VisualPointFeatureVector3D::ConstPtr featuresVector = VisualPointFeatureVector3D::ConstPtr( new VisualPointFeatureVector3D() );
 	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
 
 	HarrisDetector3D harris;
 	harris.process();
 
-	CppTypes::VisualPointFeatureVector3D::ConstPtr output = harris.featuresSetOutput();
+	VisualPointFeatureVector3D::ConstPtr output = harris.featuresSetOutput();
 
 	REQUIRE(output->GetNumberOfPoints() == featuresVector->GetNumberOfPoints());
 	}

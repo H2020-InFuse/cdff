@@ -34,15 +34,17 @@
 
 namespace Converters {
 
+using namespace CppTypes;
+
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions
  *
  * --------------------------------------------------------------------------
  */
-CppTypes::PointCloud::ConstPtr PclPointCloudToPointCloudConverter::Convert(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
+PointCloud::ConstPtr PclPointCloudToPointCloudConverter::Convert(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
 	{
-	CppTypes::PointCloud::Ptr asnPointCloud = CppTypes::PointCloud::Ptr( new CppTypes::PointCloud() );
+	PointCloud::Ptr asnPointCloud = PointCloud::Ptr( new PointCloud() );
 	
 	for(unsigned pointIndex = 0; pointIndex < pointCloud->points.size(); pointIndex++)
 		{

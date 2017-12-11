@@ -43,6 +43,7 @@
 #include <Errors/Assert.hpp>
 
 using namespace Converters;
+using namespace CppTypes;
 
 TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2D]" )
 	{
@@ -58,14 +59,14 @@ TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2
 			}
 		}
 
-	CppTypes::VisualPointFeatureVector2D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
+	VisualPointFeatureVector2D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnVector);
 
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
 	REQUIRE(outputMatrix.cols == inputMatrix.cols);
 	REQUIRE(outputMatrix.type() == inputMatrix.type());
 	for(int rowIndex = 0; rowIndex < inputMatrix.rows; rowIndex++)
-		{
+	{
 		for(int columnIndex = 0; columnIndex < inputMatrix.cols; columnIndex++)
 			{
 			REQUIRE(outputMatrix.at<float>(rowIndex, columnIndex) == inputMatrix.at<float>(rowIndex, columnIndex));		 		 
@@ -90,9 +91,9 @@ TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMa
 			}
 		}
 
-	CppTypes::VisualPointFeatureVector2D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
+	VisualPointFeatureVector2D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
 	cv::Mat intermediateMatrix = secondConverter.Convert(asnVector);
-	CppTypes::VisualPointFeatureVector2D::ConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
+	VisualPointFeatureVector2D::ConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
 
 	REQUIRE(asnVector->GetNumberOfPoints() == outputVector->GetNumberOfPoints());
 	REQUIRE(asnVector->GetNumberOfPoints() > 0);
@@ -111,4 +112,5 @@ TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMa
 		}
 
 	asnVector.reset();
+	outputVector.reset();
 	}

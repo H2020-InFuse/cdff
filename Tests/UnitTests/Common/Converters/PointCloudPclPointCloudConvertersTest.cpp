@@ -43,6 +43,7 @@
 #include <Errors/Assert.hpp>
 
 using namespace Converters;
+using namespace CppTypes;
 
 TEST_CASE( "PclPointCloud to PointCloud and Back", "[PclPointCloudToPointCloud]" )
 	{
@@ -55,7 +56,7 @@ TEST_CASE( "PclPointCloud to PointCloud and Back", "[PclPointCloudToPointCloud]"
 		inputCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
 		}
 
-	CppTypes::PointCloud::ConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
+	PointCloud::ConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr outputCloud = secondConverter.Convert(asnPointCloud);
 
 	REQUIRE(outputCloud->points.size() == inputCloud->points.size() );
@@ -82,9 +83,9 @@ TEST_CASE( "PointCloud3D to PclPointCloud and Back", "[PointCloud3DToPclPointClo
 		inputCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
 		}
 
-	CppTypes::PointCloud::ConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
+	PointCloud::ConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr intermediateCloud = secondConverter.Convert(asnPointCloud);
-	CppTypes::PointCloud::ConstPtr outputCloud = firstConverter.Convert(intermediateCloud);
+	PointCloud::ConstPtr outputCloud = firstConverter.Convert(intermediateCloud);
 
 	REQUIRE(outputCloud->GetNumberOfPoints() == asnPointCloud->GetNumberOfPoints());
 	for(int pointIndex = 0; pointIndex < outputCloud->GetNumberOfPoints(); pointIndex++)

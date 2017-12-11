@@ -53,7 +53,7 @@ VisualPointFeatureVector2D::~VisualPointFeatureVector2D()
 
 void VisualPointFeatureVector2D::AddPoint(uint16_t x, uint16_t y)
 	{
-	ASSERT(featuresVector.nCount < MAX_FEATURE_2D_POINTS, "Features descriptor vector maximum capacity has been reached");
+	ASSERT(featuresVector.nCount < static_cast<int>(MAX_FEATURE_2D_POINTS), "Features descriptor vector maximum capacity has been reached");
 	int currentIndex = featuresVector.nCount;
 	featuresVector.arr[currentIndex].point.x = x;
 	featuresVector.arr[currentIndex].point.y = y;	
@@ -86,7 +86,7 @@ int VisualPointFeatureVector2D::VisualPointFeatureVector2D::GetYCoordinate(int p
 void VisualPointFeatureVector2D::AddDescriptorComponent(int pointIndex, float component)
 	{
 	ASSERT(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
-	ASSERT(featuresVector.arr[pointIndex].descriptor.nCount < MAX_DESCRIPTOR_2D_LENGTH, "Descriptor maximum capacity has been reached");
+	ASSERT(featuresVector.arr[pointIndex].descriptor.nCount < static_cast<int>(MAX_DESCRIPTOR_2D_LENGTH), "Descriptor maximum capacity has been reached");
 	int currentIndex = featuresVector.arr[pointIndex].descriptor.nCount;
 	featuresVector.arr[pointIndex].descriptor.arr[currentIndex] = component;
 	featuresVector.arr[pointIndex].descriptor.nCount++;

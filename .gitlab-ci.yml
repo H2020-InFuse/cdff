@@ -1,4 +1,4 @@
-image: nexus.spaceapplications.com/repository/infuse/infuse:latest
+image: nexus.spaceapplications.com/repository/infuse/infuse:version1.3
 
 stages: 
   - autogeneration
@@ -9,7 +9,7 @@ stages:
 autogeneration:
   stage : autogeneration
   script:
-      - cd Tools/ASNtoCGenerator
+      - cd Tools/ASNtoC
       - ./GeneratorScript.sh
   artifacts:
     paths:
@@ -29,10 +29,8 @@ build:
 test:
   stage: test
   script:
-      - cd build/tests
-      - ./HarrisDetector2DTest
-      - ./MatImageTypeConvertersTest
-      - ./MatVisualPointFeatureVector2DConvertersTest
+      - cd build
+      - make test
       
 deploy_staging:
   stage: deploy

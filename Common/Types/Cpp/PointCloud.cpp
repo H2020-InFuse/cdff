@@ -54,7 +54,7 @@ PointCloud::~PointCloud()
 
 void PointCloud::AddPoint(T_Double x, T_Double y, T_Double z)
 	{
-	ASSERT(pointCloud.points.nCount < MAX_CLOUD_SIZE, "Point Cloud maximum capacity has been reached");
+	ASSERT(pointCloud.points.nCount < static_cast<int>(MAX_CLOUD_SIZE), "Point Cloud maximum capacity has been reached");
 	int currentIndex = pointCloud.points.nCount;
 	pointCloud.points.arr[currentIndex].arr[0] = x;
 	pointCloud.points.arr[currentIndex].arr[1] = y;

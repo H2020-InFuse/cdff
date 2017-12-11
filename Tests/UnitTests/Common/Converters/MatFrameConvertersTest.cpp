@@ -43,6 +43,7 @@
 #include <Errors/Assert.hpp>
 
 using namespace Converters;
+using namespace CppTypes;
 
 TEST_CASE( "Mat to Frame and Back Square Matrix", "[MatToFrameSquare]" )
 	{
@@ -60,7 +61,7 @@ TEST_CASE( "Mat to Frame and Back Square Matrix", "[MatToFrameSquare]" )
 			}
 		}
 
-	CppTypes::Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
+	Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
 
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
@@ -97,7 +98,7 @@ TEST_CASE( "Mat to Frame and Back Non-Square Matrix", "[MatToFrameNonSquare]" )
 			}
 		}
 
-	CppTypes::Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
+	Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
 
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
@@ -137,7 +138,7 @@ TEST_CASE( "Multiple conversions", "[MultipleConversions]" )
 
 	for(int i=0; i<5; i++)
 		{
-		CppTypes::Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
+		Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
 		cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
 
 		REQUIRE(outputMatrix.rows == inputMatrix.rows);
@@ -176,9 +177,9 @@ TEST_CASE( "Frame to Mat conversion", "[FrameToMatConversion]")
 			}
 		}
 
-	CppTypes::Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
+	Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
-	CppTypes::Frame::ConstPtr outputFrame = firstConverter.Convert(outputMatrix);
+	Frame::ConstPtr outputFrame = firstConverter.Convert(outputMatrix);
 
 	REQUIRE(outputFrame->GetFrameWidth() == asnFrame->GetFrameWidth());
 	REQUIRE(outputFrame->GetFrameHeight() == asnFrame->GetFrameHeight());

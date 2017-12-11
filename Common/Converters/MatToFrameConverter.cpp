@@ -6,9 +6,9 @@
 */
 
 /*!
- * @file MatToFrameConverter.cpp
- * @date 08/12/2017
- * @author Alessandro Bianco
+ * @file MatToImageTypeConverter.cpp
+ * @date 27/11/2017
+ * @authors Alessandro Bianco, Xavier Martinez
  */
 
 /*!
@@ -30,9 +30,9 @@
 #include "MatToFrameConverter.hpp"
 #include <Errors/Assert.hpp>
 
-using namespace CppTypes;
-
 namespace Converters {
+
+using namespace CppTypes;
 
 /* --------------------------------------------------------------------------
  *
@@ -40,11 +40,11 @@ namespace Converters {
  *
  * --------------------------------------------------------------------------
  */
-CppTypes::Frame::ConstPtr MatToFrameConverter::Convert(const cv::Mat image)
+Frame::ConstPtr MatToFrameConverter::Convert(const cv::Mat image)
 	{
-	ASSERT(image.type() ==  CV_8UC3, "MatToFrameConverter: image type not supported yet");
+	ASSERT(image.type() ==  CV_8UC3, "MatToFrameConverter: Only CV_8UC3 type is supported for this conversion at the moment");
 
-	CppTypes::Frame::Ptr frame = CppTypes::Frame::Ptr( new Frame() );
+	Frame::Ptr frame = Frame::Ptr( new Frame() );
 	frame->SetFrameSize(image.cols, image.rows);
 	frame->SetFrameMode(Frame::MODE_RGB);
 

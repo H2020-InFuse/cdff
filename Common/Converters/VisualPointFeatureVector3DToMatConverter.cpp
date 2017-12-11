@@ -33,13 +33,15 @@
 
 namespace Converters {
 
+using namespace CppTypes;
+
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions
  *
  * --------------------------------------------------------------------------
  */
-const cv::Mat VisualPointFeatureVector3DToMatConverter::Convert(CppTypes::VisualPointFeatureVector3D::ConstPtr featuresVector)
+const cv::Mat VisualPointFeatureVector3DToMatConverter::Convert(VisualPointFeatureVector3D::ConstPtr featuresVector)
 	{	
 	if (featuresVector->GetNumberOfPoints() == 0)
 		return cv::Mat();
@@ -52,7 +54,7 @@ const cv::Mat VisualPointFeatureVector3DToMatConverter::Convert(CppTypes::Visual
 		conversion.at<float>(pointIndex, 1) = featuresVector->GetYCoordinate(pointIndex);
 		conversion.at<float>(pointIndex, 2) = featuresVector->GetZCoordinate(pointIndex);
 
-		ASSERT(descriptorSize == featuresVector->GetNumberOfDescriptorComponents(pointIndex), "Descriptors do not have the same size in VisualPointFeatureVector3D");
+		ASSERT(descriptorSize == featuresVector->GetNumberOfDescriptorComponents(pointIndex), "VisualPointFeatureVector3DToMatConverter: Descriptors do not have the same size.");
 		for(int componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
 			conversion.at<float>(pointIndex, componentIndex + 3) = featuresVector->GetDescriptorComponent(pointIndex, componentIndex);
 		}

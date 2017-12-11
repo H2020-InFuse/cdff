@@ -48,7 +48,7 @@
 using namespace dfn_ci;
 using namespace Converters;
 using namespace Common;
-
+using namespace CppTypes;
 
 class HarrisDetector3DTestInterface : public DFNTestInterface
 	{
@@ -58,14 +58,14 @@ class HarrisDetector3DTestInterface : public DFNTestInterface
 	protected:
 
 	private:
-		Stubs::CacheHandler<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr >* stubInputCache;
+		Stubs::CacheHandler<PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr >* stubInputCache;
 		Mocks::PointCloudToPclPointCloudConverter* mockInputConverter;
-		Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr>* stubOutputCache;
+		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3D::ConstPtr>* stubOutputCache;
 		Mocks::MatToVisualPointFeatureVector3DConverter* mockOutputConverter;
 		HarrisDetector3D* harris;
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud;
-		CppTypes::PointCloud::ConstPtr inputCloud;
+		PointCloud::ConstPtr inputCloud;
 		std::string outputWindowName;
 
 		void SetupMocksAndStubs();
@@ -100,13 +100,13 @@ HarrisDetector3DTestInterface::~HarrisDetector3DTestInterface()
 
 void HarrisDetector3DTestInterface::SetupMocksAndStubs()
 	{
-	stubInputCache = new Stubs::CacheHandler<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
+	stubInputCache = new Stubs::CacheHandler<PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
 	mockInputConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<CppTypes::PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
+	ConversionCache<PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
-	stubOutputCache = new Stubs::CacheHandler<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr>();
+	stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3D::ConstPtr>();
 	mockOutputConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
-	ConversionCache<cv::Mat, CppTypes::VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
+	ConversionCache<cv::Mat, VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 	}
 
 void HarrisDetector3DTestInterface::SetupParameters()
@@ -121,7 +121,7 @@ void HarrisDetector3DTestInterface::SetupParameters()
 
 void HarrisDetector3DTestInterface::DisplayResult()
 	{
-	CppTypes::VisualPointFeatureVector3D::ConstPtr featuresVector= harris->featuresSetOutput();
+	VisualPointFeatureVector3D::ConstPtr featuresVector= harris->featuresSetOutput();
 
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );

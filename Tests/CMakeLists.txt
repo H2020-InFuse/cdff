@@ -1,0 +1,7 @@
+set(TEST_CONFIGURATIONS ${CMAKE_CURRENT_SOURCE_DIR}/ConfigurationFiles/)
+set(TEST_DATA ${CMAKE_CURRENT_SOURCE_DIR}/Data/)
+
+add_subdirectory(Stubs)
+add_subdirectory(Mocks)
+add_subdirectory(UnitTests)
+add_subdirectory(GuiTests)

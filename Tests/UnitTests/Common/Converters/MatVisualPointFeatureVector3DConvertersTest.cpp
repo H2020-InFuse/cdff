@@ -43,6 +43,7 @@
 #include <Errors/Assert.hpp>
 
 using namespace Converters;
+using namespace CppTypes;
 
 TEST_CASE( "Mat to VisualPointFeatureVector3D", "[MatToVisualPointFeatureVector3D]" )
 	{
@@ -58,7 +59,7 @@ TEST_CASE( "Mat to VisualPointFeatureVector3D", "[MatToVisualPointFeatureVector3
 			}
 		}
 
-	CppTypes::VisualPointFeatureVector3D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
+	VisualPointFeatureVector3D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnVector);
 
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
@@ -88,9 +89,9 @@ TEST_CASE( "VisualPointFeatureVector3D to Mat", "[VisualPointFeatureVector3DToMa
 			}
 		}
 
-	CppTypes::VisualPointFeatureVector3D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
+	VisualPointFeatureVector3D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
 	cv::Mat intermediateMatrix = secondConverter.Convert(asnVector);
-	CppTypes::VisualPointFeatureVector3D::ConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
+	VisualPointFeatureVector3D::ConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
 
 	REQUIRE(asnVector->GetNumberOfPoints() == outputVector->GetNumberOfPoints());
 	REQUIRE(asnVector->GetNumberOfPoints() > 0);

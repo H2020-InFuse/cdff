@@ -1,0 +1,71 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+DepthMap-Types DEFINITIONS ::=
+BEGIN
+IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+Time FROM Time-Types;
+
+
+--- Definition of enum UNIT_AXIS follows 
+
+UNIT-AXIS ::= ENUMERATED { 	 unit-x, unit-y, unit-z }
+
+--- End Definition of enum UNIT_AXIS
+--- Definition of enum DEPTH_MEASUREMENT_STATE follows 
+
+DEPTH-MEASUREMENT-STATE ::= ENUMERATED { 	 valid-measurement, too-far, too-near, measurement-error }
+
+--- End Definition of enum DEPTH_MEASUREMENT_STATE
+--- Definition of enum PROJECTION_TYPE follows 
+
+PROJECTION-TYPE ::= ENUMERATED { 	 polar, planar }
+
+--- End Definition of enum PROJECTION_TYPE
+
+---  Definition DEPTHMAP Starts 
+
+---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+
+---- END of typedefs defined in this module 
+
+--- Maximum size constant for DepthMap
+maxDepthMapSize T-UInt32 ::= 60
+
+DepthMap   ::= 
+SEQUENCE
+{
+    ref-time				Time,
+    timestamps				SEQUENCE (SIZE(1..maxDepthMapSize)) OF Time,
+    vertical-projection		PROJECTION-TYPE,
+    horizontal-projection	PROJECTION-TYPE,
+    vertical-interval		SEQUENCE (SIZE(1..maxDepthMapSize)) OF T-Double,
+    horizontal-interval		SEQUENCE (SIZE(1..maxDepthMapSize)) OF T-Double,
+    vertical-size			T-UInt32,
+    horizontal-size			T-UInt32,
+    distances				SEQUENCE (SIZE(1..maxDepthMapSize)) OF T-Float,
+    remissions				SEQUENCE (SIZE(1..maxDepthMapSize)) OF T-Float
+}
+
+---  Definition DEPTHMAP Ends 
+
+
+---  Rock's DepthMap implementation type provides a look-up table type.
+---  This type is not mapped to ASN.1, as it is an implementation detail
+---  rather than an interface one.
+--- ---  Definition ROTATIONLUT Starts 
+--- RotationLUT   ::= 
+--- SEQUENCE
+--- {
+---     resolution				T-UInt32,
+---     rad2deg					T-Double,
+---     deg2rad					T-Double,
+---     -- FIXED: This attribute is defined as a template without conversion: please fix it+ manually...
+---     -- Vector<,,Affine>>
+---     transformations  T-Int32	
+--- }
+--- ---  Definition ROTATIONLUT Ends 
+
+END

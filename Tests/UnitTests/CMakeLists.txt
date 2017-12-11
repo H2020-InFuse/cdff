@@ -1,0 +1,60 @@
+add_definitions(-DTEST_CONFIGURATIONS="${TEST_CONFIGURATIONS}")
+add_definitions(-DTEST_DATA="${TEST_DATA}")
+
+add_executable(
+    HarrisDetector2DTest
+    DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
+)
+target_link_libraries(
+	HarrisDetector2DTest
+	mock cdff_logger harris_detector_2d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs
+)
+add_test(HarrisDetector2DTest HarrisDetector2DTest)
+
+add_executable(
+    HarrisDetector3DTest
+    DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
+)
+target_link_libraries(
+	HarrisDetector3DTest
+	mock cdff_logger harris_detector_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
+)
+add_test(HarrisDetector3DTest HarrisDetector3DTest)
+
+add_executable(
+    MatFrameConvertersTest
+    Common/Converters/MatFrameConvertersTest.cpp
+)
+target_link_libraries(
+	MatFrameConvertersTest converters_opencv cdff_logger opencv_core opencv_imgproc opencv_imgcodecs
+)
+add_test(MatFrameConvertersTest MatFrameConvertersTest)
+
+add_executable(
+    MatVisualPointFeatureVector2DConvertersTest
+    Common/Converters/MatVisualPointFeatureVector2DConvertersTest.cpp
+)
+target_link_libraries(
+	MatVisualPointFeatureVector2DConvertersTest converters_opencv cdff_logger cdff_types opencv_core opencv_imgproc opencv_imgcodecs
+)
+add_test(MatVisualPointFeatureVector2DConvertersTest
+         MatVisualPointFeatureVector2DConvertersTest)
+
+add_executable(
+    MatVisualPointFeatureVector3DConvertersTest
+    Common/Converters/MatVisualPointFeatureVector3DConvertersTest.cpp
+)
+target_link_libraries(
+	MatVisualPointFeatureVector3DConvertersTest converters_opencv cdff_logger cdff_types opencv_core opencv_imgproc opencv_imgcodecs
+)
+add_test(MatVisualPointFeatureVector3DConvertersTest
+         MatVisualPointFeatureVector3DConvertersTest)
+
+add_executable(
+    PointCloudPclPointCloudConvertersTest
+    Common/Converters/PointCloudPclPointCloudConvertersTest.cpp
+)
+target_link_libraries(
+	PointCloudPclPointCloudConvertersTest converters_opencv cdff_logger opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
+)
+add_test(PointCloudPclPointCloudConvertersTest PointCloudPclPointCloudConvertersTest)

@@ -8,7 +8,7 @@
 /*!
  * @file MatToVisualPointFeatureVector2DConverter.cpp
  * @date 20/11/2017
- * @author Alessandro Bianco
+ * @authors Alessandro Bianco, Xavier Martinez
  */
 
 /*!
@@ -33,20 +33,22 @@
 
 namespace Converters {
 
+using namespace CppTypes;
+
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions
  *
  * --------------------------------------------------------------------------
  */
-CppTypes::VisualPointFeatureVector2D::ConstPtr MatToVisualPointFeatureVector2DConverter::Convert(const cv::Mat featuresMatrix)
+VisualPointFeatureVector2D::ConstPtr MatToVisualPointFeatureVector2DConverter::Convert(const cv::Mat featuresMatrix)
 	{
-	CppTypes::VisualPointFeatureVector2D::Ptr conversion = CppTypes::VisualPointFeatureVector2D::Ptr( new CppTypes::VisualPointFeatureVector2D() );
+	VisualPointFeatureVector2D::Ptr conversion = VisualPointFeatureVector2D::Ptr( new VisualPointFeatureVector2D() );
 	if (featuresMatrix.cols == 0 && featuresMatrix.rows == 0)
 		return conversion;
 
-	ASSERT( featuresMatrix.type() == CV_32FC1, "MatToVisualPointFeatureVector2DConverter: unsopported cv::mat type in input");
-	ASSERT( featuresMatrix.cols >= 2, "MatToVisualPointFeatureVector2DConverter: unexpected numbers of rows");
+	ASSERT( featuresMatrix.type() == CV_32FC1, "MatToVisualPointFeatureVector2DConverter: Only CV_32FC1 type is supported for this conversion for now");
+	ASSERT( featuresMatrix.cols >= 2, "MatToVisualPointFeatureVector2DConverter: At least 2 rows matrixes are needed by this converter.");
 
 	for(int rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
 		{
@@ -59,8 +61,6 @@ CppTypes::VisualPointFeatureVector2D::ConstPtr MatToVisualPointFeatureVector2DCo
 
 	return conversion;
 	}
-
-
 }
 
 /** @} */

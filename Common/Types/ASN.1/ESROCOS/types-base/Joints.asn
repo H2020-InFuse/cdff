@@ -1,0 +1,31 @@
+----------------------------------------------------------------
+--!  ASN file updated manually (original type uses inheritance,
+--!  not supported by rock2taste)
+----------------------------------------------------------------
+Joints-Types DEFINITIONS ::=
+BEGIN
+
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes
+Time FROM Time-Types
+JointState FROM JointState-Types;
+
+-- Max. name size
+jointsNameLength T-UInt32 ::= 30
+
+-- Max. number of joints
+jointsElementsMax T-UInt32 ::= 30
+
+
+---  Definition JOINTS Starts 
+Joints   ::= 
+SEQUENCE
+{
+    timestamp   Time,
+    names       SEQUENCE (SIZE(0..jointsElementsMax)) OF T-String,
+    elements    SEQUENCE (SIZE(0..jointsElementsMax)) OF JointState
+}
+
+---  Definition JOINTS Ends 
+END

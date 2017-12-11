@@ -1,0 +1,37 @@
+----------------------------------------------------------------
+--!   ASN file generated automatically by the SARGON ASN.1 generator -
+--!  Date/time of generation: 2016/06/01 12:39:26
+----------------------------------------------------------------
+SonarBeam-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+Angle FROM Angle-Types 
+Time FROM Time-Types;
+
+
+
+---  Definition SONARBEAM Starts 
+
+---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+
+---- END of typedefs defined in this module 
+
+--- Size of the SonarBeam data
+maxSonarBeamSize T-UInt32 ::= 60
+
+SonarBeam   ::= 
+SEQUENCE
+{
+    ref-time				Time,
+    bearing					Angle,
+    sampling-interval		T-Double,
+    speed-of-sound			T-Float,
+    beamwidth-horizontal	T-Float,
+    beamwidth-vertical		T-Float,
+    beam					SEQUENCE (SIZE(1..maxSonarBeamSize)) OF T-UInt8
+}
+
+---  Definition SONARBEAM Ends 
+END
