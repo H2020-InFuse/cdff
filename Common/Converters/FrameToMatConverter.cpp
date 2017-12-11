@@ -43,7 +43,7 @@ namespace Converters {
 const cv::Mat FrameToMatConverter::Convert(CppTypes::Frame::ConstPtr frame)
 	{
 	ASSERT(frame->GetFrameMode() == Frame::MODE_RGB, "FrameToMatConverter: image type not supported yet");
-	ASSERT( (int) (frame->GetFrameHeight() * frame->GetFrameWidth() * 3) == frame->GetNumberOfDataBytes(), "FrameToMatConverter: input image data is invalid");
+	ASSERT( static_cast<int>(frame->GetFrameHeight() * frame->GetFrameWidth() * 3) == frame->GetNumberOfDataBytes(), "FrameToMatConverter: image data size does not match image dimensions.");
 
 	cv::Mat cvImage( frame->GetFrameHeight(), frame->GetFrameWidth(), CV_8UC3, cv::Scalar(0,0,0) );
 	for(int rowIndex = 0; rowIndex < cvImage.rows; rowIndex++)
