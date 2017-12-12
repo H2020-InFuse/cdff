@@ -68,6 +68,7 @@ class CacheHandler
 		virtual void Insert(const FromType& from, const ToType& to)
 			{
 			ASSERT(false, "Insert method of cache handler was not implemented");
+			ASSERT(false, "Write a test to make sure that a this method creates a copy of the shared pointers, otherwise the objects will be eventually deleted");
 			}
 
 	/* --------------------------------------------------------------------

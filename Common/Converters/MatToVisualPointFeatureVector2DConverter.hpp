@@ -49,7 +49,7 @@ class MatToVisualPointFeatureVector2DConverter
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual CppTypes::VisualPointFeatureVector2D::ConstPtr Convert(const cv::Mat featuresMatrix);
+		virtual CppTypes::VisualPointFeatureVector2D::ConstPtr Convert(const cv::Mat& featuresMatrix);
 
 	/* --------------------------------------------------------------------
 	 * Protected

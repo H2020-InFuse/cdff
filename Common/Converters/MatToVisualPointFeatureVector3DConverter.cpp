@@ -41,9 +41,9 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
-VisualPointFeatureVector3D::ConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat featuresMatrix)
+VisualPointFeatureVector3D::ConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat& featuresMatrix)
 	{
-	VisualPointFeatureVector3D::Ptr conversion = VisualPointFeatureVector3D::Ptr( new VisualPointFeatureVector3D() );
+	VisualPointFeatureVector3D::Ptr conversion =  std::make_shared<VisualPointFeatureVector3D>();
 	if (featuresMatrix.cols == 0 && featuresMatrix.rows == 0)
 		return conversion;
 

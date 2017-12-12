@@ -50,7 +50,7 @@ class MatToVisualPointFeatureVector2DConverter : public Mock, public Converters:
 	 */
 	public:
 		virtual ~MatToVisualPointFeatureVector2DConverter();
-		CppTypes::VisualPointFeatureVector2D::ConstPtr Convert(const cv::Mat featuresVector);
+		CppTypes::VisualPointFeatureVector2D::ConstPtr Convert(const cv::Mat& featuresVector);
 
 	/* --------------------------------------------------------------------
 	 * Protected

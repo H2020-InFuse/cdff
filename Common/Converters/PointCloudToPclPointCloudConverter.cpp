@@ -43,7 +43,7 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
- pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(PointCloud::ConstPtr pointCloud)
+ pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const PointCloud::ConstPtr& pointCloud)
 	{
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr( new pcl::PointCloud<pcl::PointXYZ>() );
 	for(int pointIndex = 0; pointIndex < pointCloud->GetNumberOfPoints(); pointIndex++)

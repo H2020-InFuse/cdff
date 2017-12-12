@@ -42,9 +42,9 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
-PointCloud::ConstPtr PclPointCloudToPointCloudConverter::Convert(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
+PointCloud::ConstPtr PclPointCloudToPointCloudConverter::Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pointCloud)
 	{
-	PointCloud::Ptr asnPointCloud = PointCloud::Ptr( new PointCloud() );
+	PointCloud::Ptr asnPointCloud =  std::make_shared<PointCloud>();
 	
 	for(unsigned pointIndex = 0; pointIndex < pointCloud->points.size(); pointIndex++)
 		{

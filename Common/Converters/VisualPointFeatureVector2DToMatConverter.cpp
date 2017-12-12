@@ -42,7 +42,7 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
-const cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(VisualPointFeatureVector2D::ConstPtr featuresVector)
+const cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(const VisualPointFeatureVector2D::ConstPtr& featuresVector)
 	{
 	if (featuresVector->GetNumberOfPoints() == 0)
 		return cv::Mat();

@@ -40,11 +40,11 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
-Frame::ConstPtr MatToFrameConverter::Convert(const cv::Mat image)
+Frame::ConstPtr MatToFrameConverter::Convert(const cv::Mat& image)
 	{
 	ASSERT(image.type() ==  CV_8UC3, "MatToFrameConverter: Only CV_8UC3 type is supported for this conversion at the moment");
 
-	Frame::Ptr frame = Frame::Ptr( new Frame() );
+	Frame::Ptr frame = std::make_shared<Frame>();
 	frame->SetFrameSize(image.cols, image.rows);
 	frame->SetFrameMode(Frame::MODE_RGB);
 

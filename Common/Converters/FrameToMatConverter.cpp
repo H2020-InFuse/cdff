@@ -40,7 +40,7 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
-const cv::Mat FrameToMatConverter::Convert(Frame::ConstPtr frame)
+const cv::Mat FrameToMatConverter::Convert(const Frame::ConstPtr& frame)
 	{
 	ASSERT(frame->GetFrameMode() == Frame::MODE_RGB, "FrameToMatConverter: Only RGB images are currently supported");
 	ASSERT( static_cast<int>(frame->GetFrameHeight() * frame->GetFrameWidth() * 3) == frame->GetNumberOfDataBytes(), "FrameToMatConverter: image data size does not match image dimensions.");

@@ -49,7 +49,7 @@ class MatToFrameConverter
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual CppTypes::Frame::ConstPtr Convert(const cv::Mat image);
+		virtual CppTypes::Frame::ConstPtr Convert(const cv::Mat& image);
 
 	/* --------------------------------------------------------------------
 	 * Protected

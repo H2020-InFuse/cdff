@@ -49,7 +49,7 @@ class PointCloudToPclPointCloudConverter
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual  pcl::PointCloud<pcl::PointXYZ>::ConstPtr Convert(CppTypes::PointCloud::ConstPtr pointCloud);
+		virtual  pcl::PointCloud<pcl::PointXYZ>::ConstPtr Convert(const CppTypes::PointCloud::ConstPtr& pointCloud);
 
 	/* --------------------------------------------------------------------
 	 * Protected

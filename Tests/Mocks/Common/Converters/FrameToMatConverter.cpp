@@ -45,7 +45,7 @@ FrameToMatConverter::~FrameToMatConverter()
 
 	}
 
-const cv::Mat FrameToMatConverter::Convert(CppTypes::Frame::ConstPtr frame)
+const cv::Mat FrameToMatConverter::Convert(const CppTypes::Frame::ConstPtr& frame)
 	MOCK_METHOD(Converters::FrameToMatConverter, Convert, cv::Mat, (frame) )
 
 
