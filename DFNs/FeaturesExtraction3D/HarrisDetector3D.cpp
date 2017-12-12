@@ -108,7 +108,7 @@ cv::Mat HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::Co
 	//detector.setSearchSurface(pointCloud);
     	detector.setInputCloud(pointCloud);
 
-    	pcl::PointCloud<pcl::PointXYZI>::Ptr keypoints(new pcl::PointCloud<pcl::PointXYZI>());
+    	pcl::PointCloud<pcl::PointXYZI>::Ptr keypoints = boost::make_shared<pcl::PointCloud<pcl::PointXYZI> >();
     	detector.compute(*keypoints); 
 	
 	cv::Mat featuresVector(keypoints->points.size(), 3, CV_32FC1, cv::Scalar(0));

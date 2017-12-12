@@ -50,7 +50,7 @@ TEST_CASE( "PclPointCloud to PointCloud and Back", "[PclPointCloudToPointCloud]"
 	PclPointCloudToPointCloudConverter firstConverter;
 	PointCloudToPclPointCloudConverter secondConverter;
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr( new pcl::PointCloud<pcl::PointXYZ>() );
+	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		inputCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
@@ -77,7 +77,7 @@ TEST_CASE( "PointCloud3D to PclPointCloud and Back", "[PointCloud3DToPclPointClo
 	PclPointCloudToPointCloudConverter firstConverter;
 	PointCloudToPclPointCloudConverter secondConverter;
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr( new pcl::PointCloud<pcl::PointXYZ>() );
+	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		inputCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );

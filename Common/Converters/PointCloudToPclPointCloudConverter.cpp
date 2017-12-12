@@ -31,6 +31,7 @@
 #include <Errors/Assert.hpp>
 #include <stdio.h>
 #include <math.h>
+#include <boost/smart_ptr.hpp>
 
 
 namespace Converters {
@@ -45,7 +46,7 @@ using namespace CppTypes;
  */
  pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const PointCloud::ConstPtr& pointCloud)
 	{
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr( new pcl::PointCloud<pcl::PointXYZ>() );
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(int pointIndex = 0; pointIndex < pointCloud->GetNumberOfPoints(); pointIndex++)
 		{
 		pcl::PointXYZ point;

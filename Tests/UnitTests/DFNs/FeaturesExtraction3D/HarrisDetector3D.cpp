@@ -70,7 +70,7 @@ TEST_CASE( "Call to process", "[process]" )
 	ConversionCache<cv::Mat, VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 
 	//Create a sample sphere
-	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud =  pcl::PointCloud<pcl::PointXYZ>::Ptr( new  pcl::PointCloud<pcl::PointXYZ>() );
+	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud =  boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(float alpha = 0; alpha < 2 * M_PI; alpha += 0.1)
 		{
 		for(float beta = 0; beta < 2*M_PI; beta += 0.1)
