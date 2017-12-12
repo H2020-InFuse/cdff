@@ -92,7 +92,7 @@ class PointCloud
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		static const T_UInt32 MAX_CLOUD_SIZE;
+		static const int MAX_CLOUD_SIZE;
 
 		CTypes::Pointcloud pointCloud;
 		bool isColored;

@@ -98,8 +98,8 @@ class VisualPointFeatureVector3D
 	 */
 	private:
 
-		static const T_UInt32 MAX_FEATURE_3D_POINTS;
-		static const T_UInt32 MAX_DESCRIPTOR_3D_LENGTH;
+		static const int MAX_FEATURE_3D_POINTS;
+		static const int MAX_DESCRIPTOR_3D_LENGTH;
 
 		CTypes::VisualPointFeatureVector3D featuresVector;
 		

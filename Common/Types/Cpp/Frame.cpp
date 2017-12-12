@@ -180,7 +180,7 @@ FrameSize Frame::GetFrameSize() const
 		
 void Frame::AddAttribute(T_String data, T_String name)
 	{
-	ASSERT(frame.attributes.nCount < MAX_FRAME_ATTRIBUTES, "Adding more Frame attributes than allowed");
+	ASSERT_ON_TEST(frame.attributes.nCount < MAX_FRAME_ATTRIBUTES, "Adding more Frame attributes than allowed");
 	int currentIndex = frame.attributes.nCount;	
 	frame.attributes.arr[currentIndex].data = data;
 	frame.attributes.arr[currentIndex].att_name = name;
@@ -194,7 +194,7 @@ void Frame::ClearAttributes()
 
 void Frame::RemoveAttribute(int index)
 	{
-	ASSERT(index < frame.attributes.nCount, "Requesting a missing attribute from a Frame");
+	ASSERT_ON_TEST(index < frame.attributes.nCount, "Requesting a missing attribute from a Frame");
 	for(int iteratorIndex = index; iteratorIndex <  frame.attributes.nCount - 1; iteratorIndex++)
 		{
 		frame.attributes.arr[iteratorIndex] = frame.attributes.arr[iteratorIndex+1];
@@ -204,7 +204,7 @@ void Frame::RemoveAttribute(int index)
 
 FrameAttribute Frame::GetAttribute(int index) const
 	{
-	ASSERT(index < frame.attributes.nCount, "Requesting a missing attribute from a Frame");
+	ASSERT_ON_TEST(index < frame.attributes.nCount, "Requesting a missing attribute from a Frame");
 	return frame.attributes.arr[index];
 	}
 
@@ -215,7 +215,7 @@ unsigned Frame::GetNumberOfAttributes() const
 	
 void Frame::AddDataByte(byte data)
 	{
-	ASSERT(frame.image.nCount < MAX_DATA_BYTE_SIZE, "Image data exceeds limits");
+	ASSERT_ON_TEST(frame.image.nCount < MAX_DATA_BYTE_SIZE, "Image data exceeds limits");
 	int currentIndex = frame.image.nCount;
 	frame.image.arr[currentIndex] = data;
 	frame.image.nCount++;
@@ -228,7 +228,7 @@ void Frame::ClearData()
 
 byte Frame::GetDataByte(int index) const
 	{
-	ASSERT(index < frame.image.nCount, "Requesting missing image data");
+	ASSERT_ON_TEST(index < frame.image.nCount, "Requesting missing image data");
 	return frame.image.arr[index];
 	}
 

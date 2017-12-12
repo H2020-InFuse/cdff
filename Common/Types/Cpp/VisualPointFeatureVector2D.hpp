@@ -97,8 +97,8 @@ class VisualPointFeatureVector2D
 	 */
 	private:
 
-		static const T_UInt32 MAX_FEATURE_2D_POINTS;
-		static const T_UInt32 MAX_DESCRIPTOR_2D_LENGTH;
+		static const int MAX_FEATURE_2D_POINTS;
+		static const int MAX_DESCRIPTOR_2D_LENGTH;
 
 		CTypes::VisualPointFeatureVector2D featuresVector;
 		
