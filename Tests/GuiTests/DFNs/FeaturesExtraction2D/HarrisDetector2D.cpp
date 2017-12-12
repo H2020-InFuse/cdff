@@ -93,12 +93,7 @@ HarrisDetector2DTestInterface::~HarrisDetector2DTestInterface()
 	delete(stubOutputCache);
 	delete(mockOutputConverter);
 	delete(harris);
-<<<<<<< HEAD
 	inputImage.reset();
-=======
-	//delete [] (inputImage->data.arr); //array is static
-	delete(inputImage);
->>>>>>> master
 	}
 
 void HarrisDetector2DTestInterface::SetupMocksAndStubs()
