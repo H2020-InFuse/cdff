@@ -176,7 +176,8 @@ void HarrisDetector2D::ValidateParameters()
 
 void HarrisDetector2D::ValidateInputs(cv::Mat inputImage)
 	{
-
+	ASSERT(inputImage.type() == CV_8UC3 || inputImage.type() == CV_8UC1, "HarrisDetector2D error: input image is not of type CV_8UC3 or CV_8UC1");
+	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "HarrisDetector2D error: input image is empty");
 	}
 
 

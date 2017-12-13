@@ -41,6 +41,7 @@
 #include <PointCloud.hpp>
 #include <Catch/catch.h>
 #include <Errors/Assert.hpp>
+#include <boost/smart_ptr.hpp>
 
 using namespace Converters;
 using namespace CppTypes;
@@ -57,8 +58,15 @@ TEST_CASE( "PclPointCloud to PointCloud and Back", "[PclPointCloudToPointCloud]"
 		}
 
 	PointCloud::ConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
-	pcl::PointCloud<pcl::PointXYZ>::ConstPtr outputCloud = secondConverter.Convert(asnPointCloud);
+	REQUIRE(asnPointCloud->GetNumberOfPoints() == inputCloud->points.size() );
+	for(int pointIndex = 0; pointIndex < static_cast<int>( inputCloud->points.size() ); pointIndex++)
+		{
+		REQUIRE( asnPointCloud->GetXCoordinate(pointIndex) == inputCloud->points.at(pointIndex).x );
+		REQUIRE( asnPointCloud->GetYCoordinate(pointIndex) == inputCloud->points.at(pointIndex).y );
+		REQUIRE( asnPointCloud->GetZCoordinate(pointIndex) == inputCloud->points.at(pointIndex).z );
+		}
 
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr outputCloud = secondConverter.Convert(asnPointCloud);
 	REQUIRE(outputCloud->points.size() == inputCloud->points.size() );
 	for(unsigned pointIndex = 0; pointIndex < outputCloud->points.size(); pointIndex++)
 		{
@@ -99,3 +107,18 @@ TEST_CASE( "PointCloud3D to PclPointCloud and Back", "[PointCloud3DToPclPointClo
 	asnPointCloud.reset();
 	outputCloud.reset();
 	} 
+
+TEST_CASE("Empty Point Cloud conversion", "[EmptyPointCloud]")
+	{
+	PclPointCloudToPointCloudConverter firstConverter;
+	PointCloudToPclPointCloudConverter secondConverter;
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	PointCloud::ConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr intermediateCloud = secondConverter.Convert(asnPointCloud);
+	PointCloud::ConstPtr outputCloud = firstConverter.Convert(intermediateCloud);
+
+	REQUIRE(asnPointCloud->GetNumberOfPoints() == 0);
+	REQUIRE(intermediateCloud->points.size() == 0);
+	REQUIRE(outputCloud->GetNumberOfPoints() == 0);
+	}

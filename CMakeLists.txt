@@ -26,7 +26,7 @@ include_directories(
     External/eigen3/include/eigen3
     External/yamlcpp/include
     External/pcl/include/pcl-1.8
-    External/vtk8/include
+    External/vtk8/include/vtk8.0
     External/boost/include
     External/flann/include
     External/qhull/include
