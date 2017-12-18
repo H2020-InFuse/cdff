@@ -18,6 +18,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 # directory where the files will be build and installed
 BUILD_DIR=$DIR"/build"
 INSTALL_DIR=$DIR"/install"
+PKG_DIR=$DIR"/package"
 
 if [ $# -eq 0 ]
   then
@@ -43,18 +44,23 @@ cd $BUILD_DIR
 
 function install_function {
 if (command -v checkinstall); then
-   checkinstall -y
+   checkinstall -y --pakdir $PKG_DIR
 else
    make install
+fi
 }  
 
 #install cmake 
-wget https://cmake.org/files/v3.10/cmake-3.10.1.tar.gz
-tar xf cmake-3.10.1.tar.gz
-cd cmake-3.10.1
-./configure -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR
-make
-install_function
+if [ ! -d "$INSTALL_DIR/cmake" ]; then
+	echo "Installing Cmake"
+	wget https://cmake.org/files/v3.10/cmake-3.10.1.tar.gz
+	tar xf cmake-3.10.1.tar.gz
+	cd cmake-3.10.1
+	./configure --prefix=$INSTALL_DIR/cmake
+	make
+	install_function
+	echo "Done."
+fi
 
 #install boost, mostly headers
 mkdir -p $BUILD_DIR/boost
