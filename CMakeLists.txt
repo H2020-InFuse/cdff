@@ -22,22 +22,21 @@ include_directories(
     Common/Types/C/ASNCommon
     Common/Types/C Common/Converters
     Common/Types/Cpp
-    External/opencv3/include
-    External/eigen3/include/eigen3
-    External/yamlcpp/include
-    External/pcl/include/pcl-1.8
-    External/vtk8/include/vtk8.0
-    External/boost/include
-    External/flann/include
-    External/qhull/include
+    External/install/include
+    External/install/include/boost
+    External/install/include/eigen3
+    External/install/include/flann
+    External/install/include/libqhull
+    External/install/include/libqhullcpp
+    External/install/include/libqhull_r
+    External/install/include/opencv
+    External/install/include/opencv2
+    External/install/include/pcl-1.8
+    External/install/include/vtk-9.0
+    External/install/include/yaml-cpp
 )
 link_directories(
-	 External/opencv3/lib
-	 External/yamlcpp/lib
-	 External/pcl/lib
-	 External/vtk8/lib
-	 External/boost/lib
-	 External/flann/lib
+	 External/install/lib
 )
 
 add_subdirectory(Common)

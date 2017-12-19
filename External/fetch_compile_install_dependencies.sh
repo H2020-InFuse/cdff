@@ -39,6 +39,8 @@ fi
 #update submodules
 #git submodule update --remote --recursive --depth 1
 
+# if exist remove previous packages
+
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 
@@ -50,7 +52,7 @@ else
 fi
 }  
 
-#install cmake 
+function install_cmake {
 if [ ! -d "$INSTALL_DIR" ]; then # should test for 3.10 version > installed
 	echo "Installing Cmake"
 	wget https://cmake.org/files/v3.10/cmake-3.10.1.tar.gz
@@ -61,22 +63,25 @@ if [ ! -d "$INSTALL_DIR" ]; then # should test for 3.10 version > installed
 	install_function
 	echo "Done."
 fi
+}
 
-#install boost, mostly headers
+function install_boost {
 if [[ ! -d "$INSTALL_DIR/include/boost" ]]; then 
 	$DIR/boost/bootstrap.sh --prefix=$INSTALL_DIR 
 	./b2 install 
 fi
+}
 
-#install eigen, mostly headers
+function install_eigen {
 if [[ ! -n $(find $DIR/package/ -name 'eigen*') ]]; then
 	mkdir -p $BUILD_DIR/eigen
 	cd $BUILD_DIR/eigen 
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/eigen 
 	install_function
 fi
+}
 
-#install flann
+function install_flann {
 if [[ ! -n $(find $DIR/package/ -name 'flann*') ]]; then
 	mkdir -p $BUILD_DIR/flann
 	cd $BUILD_DIR/flann 
@@ -84,17 +89,19 @@ if [[ ! -n $(find $DIR/package/ -name 'flann*') ]]; then
 	make
 	install_function
 fi
+}
 
-#install openCV
+function install_opencv {
 if [[ ! -n $(find $DIR/package/ -name 'opencv*') ]]; then
 	mkdir -p $BUILD_DIR/opencv3
 	cd $BUILD_DIR/opencv3
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D WITH_FFMPEG=OFF -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/opencv 
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D WITH_FFMPEG=OFF -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/opencv -D BUILD_DOCS=OFF -D BUILD_EXAMPLES=OFF -D BUILD_TESTS=OFF -D ENABLE_CXX11=ON -D ENABLE_FAST_MATH=ON
 	make
 	install_function
 fi
+}
 
-#install pcl
+function install_pcl {
 if [[ ! -n $(find $DIR/package/ -name 'pcl*') ]]; then
 	mkdir -p $BUILD_DIR/pcl
 	cd $BUILD_DIR/pcl 
@@ -102,8 +109,9 @@ if [[ ! -n $(find $DIR/package/ -name 'pcl*') ]]; then
 	make
 	install_function
 fi
+}
 
-#install qhull
+function install_qhull {
 if [[ ! -n $(find $DIR/package/ -name 'qhull*') ]]; then
 	mkdir -p $BUILD_DIR/qhull
 	cd $BUILD_DIR/qhull 
@@ -111,25 +119,28 @@ if [[ ! -n $(find $DIR/package/ -name 'qhull*') ]]; then
 	make
 	install_function
 fi
+}
 
-#install tinyxml2
+function install_tinyxml2 {
 if [[ ! -n $(find $DIR/package/ -name 'tinyxml2*') ]]; then
 	mkdir -p $BUILD_DIR/tinyxml2
 	cd $BUILD_DIR/tinyxml2 
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/tinyxml2 
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/tinyxml2 -D BUILD_TESTING=OFF -D BUILD_TESTS=OFF
 	install_function
 fi
+}
 
-#install vtk
+function install_vtk {
 if [[ ! -n $(find $DIR/package/ -name 'vtk*') ]]; then
 	mkdir -p $BUILD_DIR/vtk
 	cd $BUILD_DIR/vtk 
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/vtk 
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/vtk -D BUILD_TESTING=OFF
 	make
 	install_function
 fi
+}
 
-#install yamlcpp
+function install_yamlcpp {
 if [[ ! -n $(find $DIR/package/ -name 'yamlcpp*') ]]; then
 	mkdir -p $BUILD_DIR/yamlcpp
 	cd $BUILD_DIR/yamlcpp 
@@ -137,6 +148,22 @@ if [[ ! -n $(find $DIR/package/ -name 'yamlcpp*') ]]; then
 	make
 	install_function
 fi
+}
+
+# execute in this order to fix dependencies
+ install_cmake
+ install_boost
+ install_eigen
+ install_flann
+ install_qhull
+ install_tinyxml2
+ install_yamlcpp
+ install_vtk
+ install_opencv
+ install_pcl
+
+
+
 
 
 

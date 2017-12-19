@@ -1,6 +1,7 @@
 # If C folder does not exist, execute FetcherScript. 
 #xma@spaceapplications.com 
-if(NOT EXISTS C)
+message("test if exist = ${CMAKE_CURRENT_SOURCE_DIR}/C")
+IF(NOT IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/C)
 set(MAKE_CMD "${CMAKE_SOURCE_DIR}/Tools/ASNtoC/FetcherScript.sh" )
 MESSAGE("COMMAND: ${MAKE_CMD}")
 execute_process(COMMAND ${MAKE_CMD} RESULT_VARIABLE CMD_ERROR
@@ -11,9 +12,8 @@ endif()
 
 #compile everything from subfolders
 file(GLOB_RECURSE source_list
- "*/*.c"
- "*/*.h"
- "*/*.cpp"
+ "Cpp/*.cpp"
+ "C/*.c"
 )
 
 add_library(
@@ -24,3 +24,4 @@ install(
     TARGETS cdff_types
     DESTINATION lib
 )
+
