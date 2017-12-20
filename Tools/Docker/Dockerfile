@@ -13,18 +13,24 @@ mono-devel \
 wget \
 unzip 
 
-# install all dependencies from repo
-ADD ~/.ssh/id_rsa ~/.ssh/id_rsa \
-&& eval "$(ssh-agent)" && ssh-agent -s \
-&& chmod 0600 ~/.ssh/id_rsa \
-&& ssh-add ~/.ssh/id_rsa 
+RUN apt-get install -y net-tools \
+iputils-ping
 
-# # Git protocol replacement
-#RUN git config --global url."https://".insteadOf git://
+# add ssh key for git 
+#ADD /.ssh/id_rsa /root/.ssh/id_rsa
+#ADD do-ssh.sh CDFF/do-ssh.sh
+#RUN /CDFF/do-ssh.sh
 
-#RUN git clone --depth 1 https://gitlab-ci-token:pVUF6xEhoz2kgWAUyyCr@gitlab.spaceapplications.com:InFuse/Infuse/CDFF.git
+#RUN cp /etc/resolv.conf /etc/resolv.conf.bak 
+#RUN sed -i "s|8.8.8.8|10.1.0.181|g" /etc/resolv.conf.bak 
+#CMD cp /etc/resolv.conf.bak /etc/resolv.conf
 
-#RUN cd Infuse/CDFF/External \
+RUN git config --global http.sslVerify false
+RUN git clone --depth 1 https://gitlab-ci-token:pVUF6xEhoz2kgWAUyyCr@10.2.0.137/InFuse/CDFF.git -b feature/Repository_Structure  
+
+#RUN git clone --depth 1 https://gitlab-ci-token:pVUF6xEhoz2kgWAUyyCr@gitlab.spaceapplications.com/InFuse/CDFF.git -b feature/Repository_Structure  
+
+#RUN cd External \
 #&& fetch_compile_install_dependencies.sh \
 #&& ldconfig
 
