@@ -31,7 +31,7 @@ RUN git clone --depth 1 https://gitlab-ci-token:pVUF6xEhoz2kgWAUyyCr@10.2.0.137/
 #RUN git clone --depth 1 https://gitlab-ci-token:pVUF6xEhoz2kgWAUyyCr@gitlab.spaceapplications.com/InFuse/CDFF.git -b feature/Repository_Structure  
 
 RUN cd CDFF/External \
-&& fetch_compile_install_dependencies.sh \
+&& ./fetch_compile_install_dependencies.sh \
 && ldconfig
 
 
