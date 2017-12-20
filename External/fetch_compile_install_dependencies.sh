@@ -46,7 +46,7 @@ cd $BUILD_DIR
 
 function install_function {
 if (command -v checkinstall); then
-   checkinstall -y --pakdir $PKG_DIR --nodoc 
+   sudo checkinstall -y --pakdir $PKG_DIR --nodoc 
 else
    make install
 fi
