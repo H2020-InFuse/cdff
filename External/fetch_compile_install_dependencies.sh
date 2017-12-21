@@ -46,7 +46,7 @@ cd $BUILD_DIR
 
 function install_function {
 if (command -v checkinstall); then
-   sudo checkinstall -y --pakdir $PKG_DIR --nodoc 
+   sudo checkinstall -y --pakdir $PKG_DIR --nodoc
 else
    make install
 fi
@@ -58,7 +58,7 @@ if [ ! -d "$INSTALL_DIR" ]; then # should test for 3.10 version > installed
 	wget https://cmake.org/files/v3.10/cmake-3.10.1.tar.gz
 	tar xf cmake-3.10.1.tar.gz
 	cd cmake-3.10.1
-	./configure --prefix=$INSTALL_DIR
+	./bootstrap --prefix=$INSTALL_DIR 
 	make
 	install_function
 	echo "Done."
@@ -66,9 +66,13 @@ fi
 }
 
 function install_boost {
-if [[ ! -d "$INSTALL_DIR/include/boost" ]]; then 
-	$DIR/boost/bootstrap.sh --prefix=$INSTALL_DIR 
+if [[ ! -d "$INSTALL_DIR/include/boost" ]]; then
+	mkdir -p $BUILD_DIR/boost
+	cd $DIR/boost 
+	./bootstrap.sh --prefix=$INSTALL_DIR 
+	./b2 --build-dir=$BUILD_DIR/boost 
 	./b2 install 
+	./b2 --clean-all	
 fi
 }
 
@@ -162,7 +166,7 @@ fi
  install_opencv
  install_pcl
 
-
+# delete but install directory 
 
 
 
