@@ -58,8 +58,8 @@ RUN apt-get install -y freeglut3-dev
 RUN cd CDFF/External \
 && ./fetch_compile_install_dependencies.sh -s vtk
 
-RUN cd CDFF/External \
-&& ./fetch_compile_install_dependencies.sh -s opencv
+#RUN cd CDFF/External \
+#&& ./fetch_compile_install_dependencies.sh -s opencv
 
-RUN cd CDFF/External \
-&& ./fetch_compile_install_dependencies.sh -s pcl
+#RUN cd CDFF/External \
+#&& ./fetch_compile_install_dependencies.sh -s pcl
