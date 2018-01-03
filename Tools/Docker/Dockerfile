@@ -53,7 +53,7 @@ RUN cd CDFF/External \
 RUN cd CDFF/External \
 && ./fetch_compile_install_dependencies.sh -s yamlcpp
 
-#RUN apt-get install -y freeglut3-dev
+RUN apt-get install -y freeglut3-dev
 
 RUN cd CDFF/External \
 && ./fetch_compile_install_dependencies.sh -s vtk
