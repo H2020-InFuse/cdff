@@ -91,6 +91,7 @@ fi
 function build {
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
+export PKG_CONFIG_PATH=$INSTALL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH
 
 if ( $cmake ); then
 	install_cmake
@@ -124,14 +125,9 @@ if ( $pcl ); then
 fi
 }
 
-#update submodules
-#git submodule update --remote --recursive --depth 1
-
-# if exist remove previous packages
-
 function install_function {
 if (command -v checkinstall); then
-   checkinstall -y --pakdir $PKG_DIR --nodoc
+   checkinstall -y --pakdir $PKG_DIR --nodoc --pkgversion="$1"
 else
    make install
 fi
@@ -145,33 +141,36 @@ if [ ! -d "$INSTALL_DIR" ]; then # should test for 3.10 version > installed
 	cd cmake-3.10.1
 	./bootstrap --prefix=$INSTALL_DIR 
 	make
-	install_function
+	install_function 3.10.1
 	echo "CMake installation Done."
 fi
 }
 
 function install_boost {
 if [[ ! -d "$INSTALL_DIR/include/boost" ]]; then
-	echo "Installing boost"        
+	echo "Installing boost"   
 	mkdir -p $BUILD_DIR/boost
+	git  -C $DIR/boost checkout boost-1.66.0
 	cd $DIR/boost 
 	echo "boost boostrap"
 	./bootstrap.sh --prefix=$INSTALL_DIR 
 	echo "b2 install"
 	./b2 --build-dir=$BUILD_DIR/boost --prefix=$INSTALL_DIR --NO_COMPRESSION --without-python install
-	echo "clean-all"
-	./b2 --clean-all
+	./b2 headers
+	#echo "clean-all"
+	#./b2 --clean-all
 	echo "boost installation Done."
 fi
 }
 
 function install_eigen {
 if [[ ! -n $(find $DIR/package/ -name 'eigen*') ]]; then
+	git  -C $DIR/eigen checkout 3.3.4
 	echo "Installing eigen"
 	mkdir -p $BUILD_DIR/eigen
 	cd $BUILD_DIR/eigen 
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/eigen 
-	install_function
+	install_function 3.3.4
 	echo "eigen installation Done."
 fi
 }
@@ -179,11 +178,12 @@ fi
 function install_flann {
 if [[ ! -n $(find $DIR/package/ -name 'flann*') ]]; then
 	echo "Installing flann"
+	git  -C $DIR/flann checkout 1.9.1
 	mkdir -p $BUILD_DIR/flann
 	cd $BUILD_DIR/flann 
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_TESTS=OFF -D BUILD_EXAMPLES=OFF $DIR/flann
 	make
-	install_function
+	install_function 1.9.1
 	echo "flann installation Done."
 fi
 }
@@ -191,11 +191,12 @@ fi
 function install_opencv {
 if [[ ! -n $(find $DIR/package/ -name 'opencv*') ]]; then
 	echo "Installing opencv"
+	git  -C $DIR/opencv3 checkout 3.4.0
 	mkdir -p $BUILD_DIR/opencv3
 	cd $BUILD_DIR/opencv3
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D WITH_FFMPEG=OFF -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_DOCS=OFF -D BUILD_EXAMPLES=OFF -D BUILD_TESTS=OFF -D ENABLE_CXX11=ON -D ENABLE_FAST_MATH=ON -D WITH_IPP=OFF $DIR/opencv3
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D WITH_FFMPEG=OFF -D WITH_VTK=OFF -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_DOCS=OFF -D BUILD_EXAMPLES=OFF -D BUILD_TESTS=OFF -D ENABLE_CXX11=ON -D ENABLE_FAST_MATH=ON -D WITH_IPP=OFF $DIR/opencv3
 	make
-	install_function
+	install_function 3.4.0
 	echo "opencv installation Done."
 fi
 }
@@ -203,11 +204,12 @@ fi
 function install_pcl {
 if [[ ! -n $(find $DIR/package/ -name 'pcl*') ]]; then
 	echo "Installing pcl"
+ 	git  -C $DIR/pcl checkout pcl-1.8.1
 	mkdir -p $BUILD_DIR/pcl
 	cd $BUILD_DIR/pcl 
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/pcl 
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D BOOST_ROOT=$DIR/boost -D VTK_DIR=$DIR/vtk -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/pcl 
 	make
-	install_function
+	install_function 1.8.1
 	echo "pcl installation Done."
 fi
 }
@@ -227,10 +229,11 @@ fi
 function install_tinyxml2 {
 if [[ ! -n $(find $DIR/package/ -name 'tinyxml2*') ]]; then
 	echo "Installing tinyxml2"
+ 	git  -C $DIR/tinyxml2 checkout 6.0.0
 	mkdir -p $BUILD_DIR/tinyxml2
 	cd $BUILD_DIR/tinyxml2 
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_TESTING=OFF -D BUILD_TESTS=OFF $DIR/tinyxml2
-	install_function
+	install_function 6.0.0
 	echo "tinyxml2 installation Done."
 fi
 }
@@ -238,11 +241,12 @@ fi
 function install_vtk {
 if [[ ! -n $(find $DIR/package/ -name 'vtk*') ]]; then
 	echo "Installing vtk"
+ 	git  -C $DIR/vtk checkout v8.1.0
 	mkdir -p $BUILD_DIR/vtk
 	cd $BUILD_DIR/vtk 
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_TESTING=OFF -D BUILD_EXAMPLES=OFF -D BUILD_DOCUMENTATION=OFF -D VTK_Group_Rendering=OFF $DIR/vtk
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_TESTING=OFF -D BUILD_EXAMPLES=OFF -D BUILD_DOCUMENTATION=OFF $DIR/vtk
 	make
-	install_function
+	install_function 8.1.0
 	echo "vtk installation Done."
 fi
 }
@@ -250,14 +254,20 @@ fi
 function install_yamlcpp {
 if [[ ! -n $(find $DIR/package/ -name 'yamlcpp*') ]]; then
 	echo "Installing yamlcpp"
+ 	git  -C $DIR/yamlcpp checkout release-0.5.3
 	mkdir -p $BUILD_DIR/yamlcpp
 	cd $BUILD_DIR/yamlcpp 
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/yamlcpp 
 	make
-	install_function
+	install_function 0.5.3
 	echo "yamlcpp installation Done."
 fi
 }
+
+function fetch_dependencies {
+ git submodule update --init --recursive #--depth 1
+}
+
 
 BUILD_ALL=true
 
@@ -321,6 +331,7 @@ done
 shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 show_configuration
+fetch_dependencies
 build
 
 
