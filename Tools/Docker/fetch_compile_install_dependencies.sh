@@ -91,7 +91,13 @@ fi
 function build {
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
-export PKG_CONFIG_PATH=$INSTALL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH
+
+# add package config path if not present
+[[ ":$PKG_CONFIG_PATH:" != *":$INSTALL_DIR/lib/pkgconfig:"* ]] && PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:$INSTALL_DIR/lib/pkgconfig"
+# add bin install dir to path if not present
+[[ ":$PATH:" != *"$INSTALL_DIR/bin"* ]] && PATH="${PATH}:$INSTALL_DIR/bin"
+export PKG_CONFIG_PATH
+export PATH
 
 if ( $cmake ); then
 	install_cmake
@@ -112,13 +118,13 @@ if ( $tinyxml2 ); then
 	install_tinyxml2
 fi
 if ( $yamlcpp ); then
-	install_yamlcpp
-fi
-if ( $vtk ); then
-	install_vtk
+	install_yaml-cpp
 fi
 if ( $opencv ); then
 	install_opencv
+fi
+if ( $vtk ); then
+	install_vtk
 fi
 if ( $pcl ); then
 	install_pcl
@@ -133,15 +139,32 @@ else
 fi
 }  
 
+function fetchsource_function {
+	echo "Installing $1"
+	git -C $DIR clone --depth 1 --single-branch -b $2 $3
+	mkdir -p $BUILD_DIR/$1
+	cd $BUILD_DIR/$1 
+}  
+
+function clean_function {
+	#rm -rf $DIR/$1
+	#rm -rf $BUILD_DIR/$1
+	echo "$1 installation Done."
+}  
+
 function install_cmake {
 if [ ! -d "$INSTALL_DIR" ]; then # should test for 3.10 version > installed
 	echo "Installing CMake"
+	mkdir -p $BUILD_DIR/cmake
+	cd $BUILD_DIR/cmake
 	wget https://cmake.org/files/v3.10/cmake-3.10.1.tar.gz
 	tar xf cmake-3.10.1.tar.gz
+	rm cmake-3.10.1.tar.gz
 	cd cmake-3.10.1
 	./bootstrap --prefix=$INSTALL_DIR 
 	make
 	install_function 3.10.1
+	rm -rf $BUILD_DIR/cmake
 	echo "CMake installation Done."
 fi
 }
@@ -150,124 +173,95 @@ function install_boost {
 if [[ ! -d "$INSTALL_DIR/include/boost" ]]; then
 	echo "Installing boost"   
 	mkdir -p $BUILD_DIR/boost
-	git  -C $DIR/boost checkout boost-1.66.0
-	cd $DIR/boost 
+	cd $BUILD_DIR/boost
+	git clone --depth 1 --recursive --single-branch -b boost-1.66.0 https://github.com/boostorg/boost.git
+	cd boost 
 	echo "boost boostrap"
-	./bootstrap.sh --prefix=$INSTALL_DIR 
-	echo "b2 install"
-	./b2 --build-dir=$BUILD_DIR/boost --prefix=$INSTALL_DIR --NO_COMPRESSION --without-python install
+	./bootstrap.sh --prefix=$INSTALL_DIR  --show-libraries
+	./b2 --prefix=$INSTALL_DIR --NO_COMPRESSION --without-python --stagedir=$INSTALL_DIR stage
 	./b2 headers
-	#echo "clean-all"
-	#./b2 --clean-all
+	rm -rf $BUILD_DIR/boost
 	echo "boost installation Done."
 fi
 }
 
 function install_eigen {
 if [[ ! -n $(find $DIR/package/ -name 'eigen*') ]]; then
-	git  -C $DIR/eigen checkout 3.3.4
-	echo "Installing eigen"
-	mkdir -p $BUILD_DIR/eigen
-	cd $BUILD_DIR/eigen 
+	fetchsource_function eigen 3.3.4 https://github.com/RLovelett/eigen.git
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/eigen 
 	install_function 3.3.4
-	echo "eigen installation Done."
+	clean_function eigen
 fi
 }
 
 function install_flann {
 if [[ ! -n $(find $DIR/package/ -name 'flann*') ]]; then
-	echo "Installing flann"
-	git  -C $DIR/flann checkout 1.9.1
-	mkdir -p $BUILD_DIR/flann
-	cd $BUILD_DIR/flann 
+	fetchsource_function flann 1.9.1 https://github.com/mariusmuja/flann.git
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_TESTS=OFF -D BUILD_EXAMPLES=OFF $DIR/flann
 	make
 	install_function 1.9.1
-	echo "flann installation Done."
-fi
-}
-
-function install_opencv {
-if [[ ! -n $(find $DIR/package/ -name 'opencv*') ]]; then
-	echo "Installing opencv"
-	git  -C $DIR/opencv3 checkout 3.4.0
-	mkdir -p $BUILD_DIR/opencv3
-	cd $BUILD_DIR/opencv3
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D WITH_FFMPEG=OFF -D WITH_VTK=OFF -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_DOCS=OFF -D BUILD_EXAMPLES=OFF -D BUILD_TESTS=OFF -D ENABLE_CXX11=ON -D ENABLE_FAST_MATH=ON -D WITH_IPP=OFF $DIR/opencv3
-	make
-	install_function 3.4.0
-	echo "opencv installation Done."
-fi
-}
-
-function install_pcl {
-if [[ ! -n $(find $DIR/package/ -name 'pcl*') ]]; then
-	echo "Installing pcl"
- 	git  -C $DIR/pcl checkout pcl-1.8.1
-	mkdir -p $BUILD_DIR/pcl
-	cd $BUILD_DIR/pcl 
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D BOOST_ROOT=$DIR/boost -D VTK_DIR=$DIR/vtk -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/pcl 
-	make
-	install_function 1.8.1
-	echo "pcl installation Done."
+	clean_function flann
 fi
 }
 
 function install_qhull {
 if [[ ! -n $(find $DIR/package/ -name 'qhull*') ]]; then
-	echo "Installing qhull"
-	mkdir -p $BUILD_DIR/qhull
-	cd $BUILD_DIR/qhull 
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/qhull 
+	fetchsource_function qhull master https://github.com/qhull/qhull.git
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/qhull $DIR/qhull
 	make
-	install_function
-	echo "qhull installation Done."
+	install_function 1.0
+	clean_function qhull
 fi
 }
 
 function install_tinyxml2 {
 if [[ ! -n $(find $DIR/package/ -name 'tinyxml2*') ]]; then
-	echo "Installing tinyxml2"
- 	git  -C $DIR/tinyxml2 checkout 6.0.0
-	mkdir -p $BUILD_DIR/tinyxml2
-	cd $BUILD_DIR/tinyxml2 
+	fetchsource_function tinyxml2 6.0.0 https://github.com/leethomason/tinyxml2.git
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_TESTING=OFF -D BUILD_TESTS=OFF $DIR/tinyxml2
 	install_function 6.0.0
-	echo "tinyxml2 installation Done."
+	clean_function tinyxml2
+fi
+}
+
+function install_yaml-cpp {
+if [[ ! -n $(find $DIR/package/ -name 'yaml-cpp*') ]]; then
+	fetchsource_function yaml-cpp release-0.5.3 https://github.com/jbeder/yaml-cpp.git
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D BOOST_ROOT=$DIR/install -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/yaml-cpp
+	make
+	install_function 0.5.3
+	clean_function yaml-cpp
 fi
 }
 
 function install_vtk {
 if [[ ! -n $(find $DIR/package/ -name 'vtk*') ]]; then
-	echo "Installing vtk"
- 	git  -C $DIR/vtk checkout v8.1.0
-	mkdir -p $BUILD_DIR/vtk
-	cd $BUILD_DIR/vtk 
+	fetchsource_function vtk v8.1.0 https://github.com/Kitware/VTK.git
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_TESTING=OFF -D BUILD_EXAMPLES=OFF -D BUILD_DOCUMENTATION=OFF $DIR/vtk
 	make
 	install_function 8.1.0
-	echo "vtk installation Done."
+	clean_function vtk
 fi
 }
 
-function install_yamlcpp {
-if [[ ! -n $(find $DIR/package/ -name 'yamlcpp*') ]]; then
-	echo "Installing yamlcpp"
- 	git  -C $DIR/yamlcpp checkout release-0.5.3
-	mkdir -p $BUILD_DIR/yamlcpp
-	cd $BUILD_DIR/yamlcpp 
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/yamlcpp 
+function install_opencv {
+if [[ ! -n $(find $DIR/package/ -name 'opencv*') ]]; then
+	fetchsource_function opencv 3.4.0 https://github.com/opencv/opencv.git
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D WITH_FFMPEG=OFF -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_DOCS=OFF -D BUILD_EXAMPLES=OFF -D BUILD_TESTS=OFF -D ENABLE_CXX11=ON -D ENABLE_FAST_MATH=ON -D WITH_IPP=OFF $DIR/opencv
 	make
-	install_function 0.5.3
-	echo "yamlcpp installation Done."
+	install_function 3.4.0
+	clean_function opencv
 fi
 }
 
-function fetch_dependencies {
- git submodule update --init --recursive #--depth 1
+function install_pcl {
+if [[ ! -n $(find $DIR/package/ -name 'pcl*') ]]; then
+	fetchsource_function opencv pcl-1.8.1 https://github.com/PointCloudLibrary/pcl.git
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D BUILD_visualization=OFF -D BOOST_ROOT=$DIR/install -D VTK_DIR=$DIR/install -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/pcl
+	make
+	install_function 1.8.1
+	clean_function pcl
+fi
 }
-
 
 BUILD_ALL=true
 
@@ -331,7 +325,6 @@ done
 shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 show_configuration
-fetch_dependencies
 build
 
 

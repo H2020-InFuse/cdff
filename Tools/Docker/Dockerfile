@@ -14,18 +14,16 @@ wget \
 unzip \
 checkinstall
 
-RUN git config --global http.sslVerify false
-#RUN git clone --depth 1 https://gitlab-ci-token:pVUF6xEhoz2kgWAUyyCr@10.2.0.137/InFuse/CDFF.git -b feature/Repository_Structure  
+ENV PATH="/CDFF/External/install/bin:${PATH}"
+ENV PKG_CONFIG_PATH="/CDFF/External/install/lib/pkgconfig:${PKG_CONFIG_PATH}"
+RUN echo "$PATH" >> /root/.bashrc 
+RUN echo "export PATH" >> /root/.bashrc 
+RUN echo "$PKG_CONFIG_PATH" >> /root/.bashrc 
+RUN echo "export PKG_CONFIG_PATH" >> /root/.bashrc 
 
-RUN git clone --depth 1 https://gitlab-ci-token:pVUF6xEhoz2kgWAUyyCr@gitlab.spaceapplications.com/InFuse/CDFF.git -b feature/Repository_Structure 
-
+RUN mkdir -p CDFF/External
 ADD fetch_compile_install_dependencies.sh CDFF/External
 RUN chmod +rwx CDFF/External/fetch_compile_install_dependencies.sh
-
-#ADD build path
-RUN echo "PATH=$PATH:/CDFF/External/install/bin" >> /root/.bashrc 
-RUN echo "export PATH" >> /root/.bashrc 
-ENV PATH="/CDFF/External/install/bin:${PATH}"
 
 RUN cd CDFF/External \
 && ./fetch_compile_install_dependencies.sh -s cmake
@@ -34,15 +32,19 @@ RUN apt-get install -y libbz2-dev python-dev
 
 RUN cd CDFF/External \
 && ./fetch_compile_install_dependencies.sh -s boost
+ENV BOOST_ROOT="/CDFF/External/install"
 
 RUN cd CDFF/External \
 && ./fetch_compile_install_dependencies.sh -s eigen
+ENV EIGEN_ROOT="/CDFF/External/install"
 
 RUN cd CDFF/External \
 && ./fetch_compile_install_dependencies.sh -s flann
+ENV FLANN_ROOT="/CDFF/External/install"
 
 RUN cd CDFF/External \
 && ./fetch_compile_install_dependencies.sh -s qhull
+ENV QHULL_ROOT="/CDFF/External/install"
 
 RUN cd CDFF/External \
 && ./fetch_compile_install_dependencies.sh -s tinyxml2
@@ -53,10 +55,12 @@ RUN cd CDFF/External \
 RUN apt-get install -y freeglut3-dev
 
 RUN cd CDFF/External \
-&& ./fetch_compile_install_dependencies.sh -s vtk
+&& ./fetch_compile_install_dependencies.sh -s opencv
+ENV OPENCV_ROOT="/CDFF/External/install"
 
 RUN cd CDFF/External \
-&& ./fetch_compile_install_dependencies.sh -s opencv
+&& ./fetch_compile_install_dependencies.sh -s vtk
+ENV VTK_ROOT="/CDFF/External/install"
 
 RUN cd CDFF/External \
 && ./fetch_compile_install_dependencies.sh -s pcl
