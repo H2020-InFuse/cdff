@@ -164,7 +164,7 @@ if [ ! -d "$INSTALL_DIR" ]; then # should test for 3.10 version > installed
 	./bootstrap --prefix=$INSTALL_DIR 
 	make
 	install_function 3.10.1
-	rm -rf $BUILD_DIR/cmake
+	clean_function cmake
 	echo "CMake installation Done."
 fi
 }
@@ -174,13 +174,13 @@ if [[ ! -d "$INSTALL_DIR/include/boost" ]]; then
 	echo "Installing boost"   
 	mkdir -p $BUILD_DIR/boost
 	cd $BUILD_DIR/boost
-	git clone --depth 1 --recursive --single-branch -b boost-1.66.0 https://github.com/boostorg/boost.git
+	git clone --depth 1 --recursive --single-branch -b boost-1.61.0 https://github.com/boostorg/boost.git
 	cd boost 
 	echo "boost boostrap"
 	./bootstrap.sh --prefix=$INSTALL_DIR  --show-libraries
-	./b2 --prefix=$INSTALL_DIR --NO_COMPRESSION --without-python --stagedir=$INSTALL_DIR stage
+	./b2 install --prefix=$INSTALL_DIR --NO_COMPRESSION --without-python --stagedir=$INSTALL_DIR 
 	./b2 headers
-	rm -rf $BUILD_DIR/boost
+	clean_function boost
 	echo "boost installation Done."
 fi
 }
