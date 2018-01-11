@@ -16,8 +16,8 @@ checkinstall
 
 ENV PATH="/CDFF/External/install/bin:${PATH}"
 ENV PKG_CONFIG_PATH="/CDFF/External/install/lib/pkgconfig:${PKG_CONFIG_PATH}"
-RUN echo "export PATH=$PATH" >> /root/.profile 
-RUN echo "export PKG_CONFIG_PATH=$PKG_CONFIG_PATH" >> /root/.profile 
+RUN echo "export PATH=$PATH:"'$PATH' >> /root/.profile 
+RUN echo "export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:"'$PKG_CONFIG_PATH' >> /root/.profile 
 
 RUN mkdir -p CDFF/External
 ADD fetch_compile_install_dependencies.sh CDFF/External
