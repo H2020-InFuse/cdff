@@ -7,26 +7,29 @@ It does not rely anymore on the ubuntu packages."
 
 RUN apt-get update && apt-get install -y build-essential \
 apt-utils \
-git \ 
+git \
 cppcheck \
-mono-devel \ 
+mono-devel \
 wget \
 unzip \
 checkinstall
 
-ENV PATH="/CDFF/External/install/bin:${PATH}"
-ENV PKG_CONFIG_PATH="/CDFF/External/install/lib/pkgconfig:${PKG_CONFIG_PATH}"
-RUN echo "export PATH=$PATH:"'$PATH' >> /root/.profile 
-RUN echo "export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:"'$PKG_CONFIG_PATH' >> /root/.profile 
 
-RUN mkdir -p CDFF/External
+ADD installers/infuse_environnement.sh CDFF/External/installers
+RUN chmod +rwx CDFF/External/fetch_compile_install_dependencies.sh
+RUN installers/infuse_environnement.sh
+
+RUN echo "export PATH=$PATH:"'$PATH' >> /root/.profile
+RUN echo "export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:"'$PKG_CONFIG_PATH' >> /root/.profile
+
+
 ADD fetch_compile_install_dependencies.sh CDFF/External
 RUN chmod +rwx CDFF/External/fetch_compile_install_dependencies.sh
 
 RUN cd CDFF/External \
 && ./fetch_compile_install_dependencies.sh -s cmake
 
-RUN apt-get install -y libbz2-dev python-dev 
+RUN apt-get install -y libbz2-dev python-dev
 
 #RUN cd CDFF/External \
 #&& ./fetch_compile_install_dependencies.sh -s boost
