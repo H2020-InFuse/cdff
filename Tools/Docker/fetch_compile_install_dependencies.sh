@@ -1,7 +1,7 @@
 #!/bin/bash
 #xma@spaceapplications.com
 #This file fetches the dependencies in /Externals, builds and installs them.
-# Version 1.0
+# Version 1.3
 
 #exit immediately if a simple command exits with a nonzero exit value.
 set -e
@@ -131,16 +131,32 @@ fi
 }
 
 function fetchsource_function {
-	echo "Installing $1"
-	git -C $DIR clone --depth 1 --single-branch -b $2 $3
-	mkdir -p $BUILD_DIR/$1
-	cd $BUILD_DIR/$1
+	echo "Fetching $1"
+  mkdir -p $BUILD_DIR/$1
+  cd $BUILD_DIR/$1
+	wget $3$2
+  if [ ${2: -7} == ".tar.gz" ];then
+	 tar xf $2
+   rm $2
+   cd ${2%.tar.gz}
+  fi
+  echo "Done. Fetching $1"
 }
 
+function fetchgit_function {
+	echo "Checking out $1"
+	git -C $DIR clone --depth 1 --single-branch --recursive -b $2 $3
+	mkdir -p $BUILD_DIR/$1
+	cd $BUILD_DIR/$1
+  echo "Done. $1 Checked out."
+}
+
+
 function clean_function {
+  echo "Cleaning $1."
 	#rm -rf $DIR/$1
 	#rm -rf $BUILD_DIR/$1
-	echo "$1 installation Done."
+	echo "$1 cleanup done."
 }
 
 ###### MAIN PROGRAMM
@@ -148,7 +164,7 @@ function clean_function {
 InstallersToRUN=()
 find_installers
 # get options
-while getopts ":a:b:i:p:s:c" opt; do
+while getopts ":b:i:p:s:c" opt; do
     case "$opt" in
     h|\?)
         show_help
