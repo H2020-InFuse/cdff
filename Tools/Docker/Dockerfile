@@ -14,49 +14,39 @@ wget \
 unzip \
 checkinstall
 
+# master
 ADD installers/infuse_environnement.env CDFF/External/installers/
 ADD fetch_compile_install_dependencies.sh CDFF/External
-RUN chmod +rwx CDFF/External/fetch_compile_install_dependencies.sh
+
+# dependencies
+RUN apt-get install -y libbz2-dev python-dev
+COPY installers/boost.sh CDFF/External/installers
+RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s boost
 
 COPY installers/cmake.sh CDFF/External/installers
-RUN chmod +rwx CDFF/External/installers/cmake.sh
-RUN CDFF/External/fetch_compile_install_dependencies.sh -s cmake
+RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s cmake
 
-ADD installers/eigen.sh CDFF/External/installers
-RUN chmod +rwx CDFF/External/installers/eigen.sh
-RUN CDFF/External/fetch_compile_install_dependencies.sh -s eigen
+COPY installers/eigen.sh CDFF/External/installers
+RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s eigen
 
-ADD installers/flann.sh CDFF/External/installers
-RUN chmod +rwx CDFF/External/installers/flann.sh
-RUN CDFF/External/fetch_compile_install_dependencies.sh -s flann
+COPY installers/flann.sh CDFF/External/installers
+RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s flann
 
-ADD installers/qhull.sh CDFF/External/installers
-RUN chmod +rwx CDFF/External/installers/qhull.sh
-RUN CDFF/External/fetch_compile_install_dependencies.sh -s qhull
+COPY installers/qhull.sh CDFF/External/installers
+RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s qhull
 
-RUN apt-get install -y libbz2-dev python-dev
+COPY installers/tinyxml2.sh CDFF/External/installers
+RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s tinyxml2
 
-#RUN cd CDFF/External \
-#&& ./fetch_compile_install_dependencies.sh -s boost
-#ENV BOOST_ROOT="/CDFF/External/install"
+COPY installers/yamlcpp.sh CDFF/External/installers
+RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s yamlcpp
 
+RUN apt-get install -y freeglut3-dev
+COPY installers/opencv.sh CDFF/External/installers
+RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s opencv
 
+COPY installers/vtk.sh CDFF/External/installers
+RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s vtk
 
-#RUN cd CDFF/External \
-#&& ./fetch_compile_install_dependencies.sh -s tinyxml2
-
-#RUN cd CDFF/External \
-#&& ./fetch_compile_install_dependencies.sh -s yamlcpp
-
-#RUN apt-get install -y freeglut3-dev
-
-#RUN cd CDFF/External \
-#&& ./fetch_compile_install_dependencies.sh -s opencv
-#ENV OPENCV_ROOT="/CDFF/External/install"
-
-#RUN cd CDFF/External \
-#&& ./fetch_compile_install_dependencies.sh -s vtk
-#ENV VTK_ROOT="/CDFF/External/install"
-
-#RUN cd CDFF/External \
-#&& ./fetch_compile_install_dependencies.sh -s pcl
+COPY installers/pcl.sh CDFF/External/installers
+RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s pcl

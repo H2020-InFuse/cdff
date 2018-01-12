@@ -5,7 +5,7 @@
 
 function install4infuse_qhull {
 if [[ ! -n $(find $DIR/package/ -name 'qhull*') ]]; then
-	fetchsource_function qhull master https://github.com/qhull/qhull.git
+	fetchgit_function qhull master https://github.com/qhull/qhull.git
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $DIR/qhull $DIR/qhull
 	make
 	install_function 1.0
