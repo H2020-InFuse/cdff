@@ -14,20 +14,25 @@ wget \
 unzip \
 checkinstall
 
-
-ADD installers/infuse_environnement.sh CDFF/External/installers
-RUN chmod +rwx CDFF/External/fetch_compile_install_dependencies.sh
-RUN installers/infuse_environnement.sh
-
-RUN echo "export PATH=$PATH:"'$PATH' >> /root/.profile
-RUN echo "export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:"'$PKG_CONFIG_PATH' >> /root/.profile
-
-
+ADD installers/infuse_environnement.env CDFF/External/installers/
 ADD fetch_compile_install_dependencies.sh CDFF/External
 RUN chmod +rwx CDFF/External/fetch_compile_install_dependencies.sh
 
-RUN cd CDFF/External \
-&& ./fetch_compile_install_dependencies.sh -s cmake
+COPY installers/cmake.sh CDFF/External/installers
+RUN chmod +rwx CDFF/External/installers/cmake.sh
+RUN CDFF/External/fetch_compile_install_dependencies.sh -s cmake
+
+ADD installers/eigen.sh CDFF/External/installers
+RUN chmod +rwx CDFF/External/installers/eigen.sh
+RUN CDFF/External/fetch_compile_install_dependencies.sh -s eigen
+
+ADD installers/flann.sh CDFF/External/installers
+RUN chmod +rwx CDFF/External/installers/flann.sh
+RUN CDFF/External/fetch_compile_install_dependencies.sh -s flann
+
+ADD installers/qhull.sh CDFF/External/installers
+RUN chmod +rwx CDFF/External/installers/qhull.sh
+RUN CDFF/External/fetch_compile_install_dependencies.sh -s qhull
 
 RUN apt-get install -y libbz2-dev python-dev
 
@@ -35,17 +40,7 @@ RUN apt-get install -y libbz2-dev python-dev
 #&& ./fetch_compile_install_dependencies.sh -s boost
 #ENV BOOST_ROOT="/CDFF/External/install"
 
-#RUN cd CDFF/External \
-#&& ./fetch_compile_install_dependencies.sh -s eigen
-#ENV EIGEN_ROOT="/CDFF/External/install"
 
-#RUN cd CDFF/External \
-#&& ./fetch_compile_install_dependencies.sh -s flann
-#ENV FLANN_ROOT="/CDFF/External/install"
-
-#RUN cd CDFF/External \
-#&& ./fetch_compile_install_dependencies.sh -s qhull
-#ENV QHULL_ROOT="/CDFF/External/install"
 
 #RUN cd CDFF/External \
 #&& ./fetch_compile_install_dependencies.sh -s tinyxml2

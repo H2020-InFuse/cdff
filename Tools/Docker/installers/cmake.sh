@@ -6,7 +6,7 @@
 depends_cmake=boost;
 
 function install4infuse_cmake {
-if [ ! -d "$INSTALL_DIR" ]; then # should test for 3.10 version > installed
+if [ ! -f "$INSTALL_DIR/bin/cmake" ]; then # should test for 3.10 version > installed
 	echo "Installing CMake"
 	mkdir -p $BUILD_DIR/cmake
 	cd $BUILD_DIR/cmake

@@ -70,12 +70,12 @@ function show_configuration {
 
 # imports all functions present in all scripts in "/dependencies" folder
 function find_installers {
-  if [ ! -d installers ]; then
-    echo "/installers directory missing"
+  if [ ! -d $DIR/installers ]; then
+    echo "$DIR/installers directory missing"
     exit
   fi
 
-  for i in `find installers/ -name "*.sh"`
+  for i in `find $DIR/installers/ -name "*.sh"`
   do
      source $i
   done
@@ -95,26 +95,28 @@ function find_installers {
 }
 
 function set_environnement {
-  envfile=installers/infuse_environnement.sh
+  envfile=$DIR/installers/infuse_environnement.env
   if [ ! -f "$envfile" ]; then
-    echo "installers/infuse_environnement.sh missing, cannot set INFUSE ENV."
+    echo "$envfile missing, cannot set INFUSE ENV."
     exit
   fi
-  source installers/infuse_environnement.sh
+  source $envfile
 }
 
 function run_installers {
   set_environnement
 
   mkdir -p $BUILD_DIR
+  mkdir -p $INSTALL_DIR
+  mkdir -p $PKG_DIR
+
   cd $BUILD_DIR
   for i in "${InstallersToRUN[@]}"
   do
     if [[ ${infuse_dependencies_map[$i]} ]] ;  then
       # RUN the actual function
-      scripttorun=${infuse_dependencies_map[$i]}
       echo "Running INFUSE $i installer"
-    #  scripttorun
+      eval ${infuse_dependencies_map[$i]}
       echo "INFUSE $i installer Done."
   fi
   done
@@ -153,7 +155,7 @@ while getopts ":a:b:i:p:s:c" opt; do
         exit 0
         ;;
     c)
-    show_configuration
+      show_configuration
     exit 0
             ;;
     b)
