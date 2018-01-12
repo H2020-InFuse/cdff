@@ -2,7 +2,7 @@ project(infuse_dev)
 cmake_minimum_required(VERSION 2.6)
 
 include(FindPkgConfig)
-find_package(OpenCV 3.0.0 REQUIRED)
+#find_package(OpenCV 3.0.0 REQUIRED)
 
 enable_testing()
 
@@ -23,10 +23,10 @@ include_directories(
     Common/Types/C Common/Converters
     Common/Types/Cpp
     External/opencv3/include
-    External/eigen3/include/eigen3
+    External/eigen/include/eigen3
     External/yamlcpp/include
     External/pcl/include/pcl-1.8
-    External/vtk8/include/vtk8.0
+    External/vtk/include/vtk-8.0
     External/boost/include
     External/flann/include
     External/qhull/include
@@ -35,7 +35,7 @@ link_directories(
 	 External/opencv3/lib
 	 External/yamlcpp/lib
 	 External/pcl/lib
-	 External/vtk8/lib
+	 External/vtk/lib
 	 External/boost/lib
 	 External/flann/lib
 )

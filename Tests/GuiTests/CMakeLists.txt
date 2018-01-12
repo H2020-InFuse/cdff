@@ -23,5 +23,7 @@ add_executable(
 set_target_properties(HarrisDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
 	HarrisDetector3DGuiTest
-	mock cdff_logger harris_detector_2d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo vtksys vtkCommon boost_system vtkIO vtkViews vtkCharts vtkalglib vtkParallel vtkGeovis vtkRendering vtkInfovis vtkImaging yaml-cpp vtkGraphics vtkGenericFiltering vtkVolumeRendering vtkftgl
+	harris_detector_3d mock cdff_logger harris_detector_2d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo vtksys-8.0  boost_system  vtkalglib-8.0 vtkRenderingCore-8.0 vtkCommonDataModel-8.0 vtkCommonMath-8.0 vtkCommonCore-8.0
 )
+
+#vtkCommon-8.0 vtkIO-8.0 vtkViews-8.0 vtkCharts-8.0 vtkParallel-8.0 vtkGeovis-8.0 vtkRendering-8.0 vtkInfovis-8.0 vtkImaging-8.0 yaml-cpp vtkGraphics-8.0 vtkGenericFiltering-8.0 vtkVolumeRendering-8.0 vtkftgl-8.0 vtklz-8.0
