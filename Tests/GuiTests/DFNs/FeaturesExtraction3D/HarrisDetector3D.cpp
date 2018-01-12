@@ -81,10 +81,9 @@ HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(std::string dfnName
 
 	PclPointCloudToPointCloudConverter converter;
 	pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::io::loadPLYFile("../tests/Data/PointClouds/bunny0.ply", *pclCloud);
+	pcl::io::loadPLYFile("../../tests/Data/PointClouds/bunny0.ply", *pclCloud);
 	inputCloud = converter.Convert(pclCloud);
 	harris->pointCloudInput(inputCloud);
-
 	outputWindowName = "Harris Detector 3D Result";
 	}
 
@@ -125,6 +124,7 @@ void HarrisDetector3DTestInterface::DisplayResult()
 
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
+	PRINT_TO_LOG("Number of feature points: ", featuresVector->GetNumberOfPoints() );
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr featuresCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(int pointIndex = 0; pointIndex < featuresVector->GetNumberOfPoints(); pointIndex++)

@@ -124,23 +124,23 @@ cv::Mat HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::Co
 
 HarrisDetector3D::HarrisMethod HarrisDetector3D::ConvertToMethod(std::string method)
 	{
-	if (method == "Harris")
+	if (method == "Harris" || method == "0")
 		{
 		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS;
 		}
-	else if (method == "Noble")
+	else if (method == "Noble" || method == "1")
 		{
 		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::NOBLE;
 		}
-	else if (method == "Lowe")
+	else if (method == "Lowe" || method == "2")
 		{
 		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::LOWE;
 		}
-	else if (method == "Tomasi")
+	else if (method == "Tomasi" || method == "3")
 		{
 		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::TOMASI;
 		}
-	else if (method == "Curvature")
+	else if (method == "Curvature" || method == "4")
 		{
 		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::CURVATURE;
 		}
