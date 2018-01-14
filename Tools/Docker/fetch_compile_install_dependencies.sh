@@ -15,17 +15,11 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-# directory where the files will be build and installed
-INFUSE_INSTALLER_PREFIX="install4infuse_"
-declare -A infuse_dependencies_map
 
+# directory where the files will be build and installed
 BUILD_DIR=$DIR"/build"
 INSTALL_DIR=$DIR"/install"
 PKG_DIR=$DIR"/package"
-
-
-# A POSIX variable
-OPTIND=1         # Reset in case getopts has been used previously in the shell.
 
 function show_help {
 
@@ -54,7 +48,6 @@ EOF
 }
 
 function show_configuration {
-
   echo "Dependencies that will be BUILT : "
   for i in "${InstallersToRUN[@]}"
   do
@@ -68,7 +61,10 @@ function show_configuration {
 	echo "Packages directory = ${PKG_DIR}"
 }
 
-# imports all functions present in all scripts in "/dependencies" folder
+# imports all functions present in all scripts in "/installers" folder
+InstallersToRUN=()
+INFUSE_INSTALLER_PREFIX="install4infuse_"
+declare -A infuse_dependencies_map
 function find_installers {
   if [ ! -d $DIR/installers ]; then
     echo "$DIR/installers directory missing"
@@ -151,18 +147,18 @@ function fetchgit_function {
   echo "Done. $1 Checked out."
 }
 
-
 function clean_function {
   echo "Cleaning $1."
-	#rm -rf $DIR/$1
-	#rm -rf $BUILD_DIR/$1
+	rm -rf $DIR/$1
+	rm -rf $BUILD_DIR/$1
 	echo "$1 cleanup done."
 }
 
 ###### MAIN PROGRAMM
-
-InstallersToRUN=()
 find_installers
+
+# A POSIX variable
+OPTIND=1         # Reset in case getopts has been used previously in the shell.
 # get options
 while getopts ":b:i:p:s:c" opt; do
     case "$opt" in

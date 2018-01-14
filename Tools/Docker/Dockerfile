@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-LABEL version="1.5"
+LABEL version="1.6.1"
 LABEL maintainer "xma@spaceapplications.com"
 LABEL description="This container compiles dependencies from CDFF\external\ \
 It does not rely anymore on the ubuntu packages."
@@ -44,7 +44,7 @@ COPY installers/tinyxml2.sh CDFF/External/installers
 RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s tinyxml2
 
 COPY installers/yamlcpp.sh CDFF/External/installers
-RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s yamlcpp
+RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s yaml-cpp
 
 RUN apt-get install -y freeglut3-dev
 COPY installers/opencv.sh CDFF/External/installers
