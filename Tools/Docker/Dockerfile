@@ -14,6 +14,11 @@ wget \
 unzip \
 checkinstall
 
+# add install directory
+#RUN echo "PATH=$PATH:/CDFF/External/install/bin" >> /root/.bashrc
+#RUN echo "export PATH" >> /root/.bashrc
+ENV PATH="/CDFF/External/install/bin:${PATH}"
+
 # master
 ADD installers/infuse_environnement.env CDFF/External/installers/
 ADD fetch_compile_install_dependencies.sh CDFF/External
@@ -47,6 +52,6 @@ RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s opencv
 
 COPY installers/vtk.sh CDFF/External/installers
 RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s vtk
-
+#
 COPY installers/pcl.sh CDFF/External/installers
 RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s pcl

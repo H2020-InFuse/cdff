@@ -104,7 +104,7 @@ function set_environnement {
 }
 
 function run_installers {
-  set_environnement
+#  set_environnement
 
   mkdir -p $BUILD_DIR
   mkdir -p $INSTALL_DIR
