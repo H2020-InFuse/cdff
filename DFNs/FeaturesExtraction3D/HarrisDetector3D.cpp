@@ -112,12 +112,23 @@ cv::Mat HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::Co
     	pcl::PointCloud<pcl::PointXYZI>::Ptr keypoints = boost::make_shared<pcl::PointCloud<pcl::PointXYZI> >();
     	detector.compute(*keypoints); 
 	
-	cv::Mat featuresVector(keypoints->points.size(), 3, CV_32FC1, cv::Scalar(0));
+	std::vector<unsigned> validIndicesVector;
 	for(unsigned pointIndex = 0; pointIndex < keypoints->points.size(); pointIndex++)
 		{
-		featuresVector.at<float>(pointIndex, 0) = keypoints->points.at(pointIndex).x;
-		featuresVector.at<float>(pointIndex, 1) = keypoints->points.at(pointIndex).y;
-		featuresVector.at<float>(pointIndex, 2) = keypoints->points.at(pointIndex).z;
+		bool validPoint = keypoints->points.at(pointIndex).x == keypoints->points.at(pointIndex).x &&
+				  keypoints->points.at(pointIndex).y == keypoints->points.at(pointIndex).y &&
+				  keypoints->points.at(pointIndex).z == keypoints->points.at(pointIndex).z;
+		if (validPoint)
+			validIndicesVector.push_back(pointIndex);
+		}	
+	
+	cv::Mat featuresVector(validIndicesVector.size(), 3, CV_32FC1, cv::Scalar(0));
+	for(unsigned indexPosition = 0; indexPosition < validIndicesVector.size(); indexPosition++)
+		{
+		unsigned validIndex = validIndicesVector.at(indexPosition);
+		featuresVector.at<float>(indexPosition, 0) = keypoints->points.at(validIndex).x;
+		featuresVector.at<float>(indexPosition, 1) = keypoints->points.at(validIndex).y;
+		featuresVector.at<float>(indexPosition, 2) = keypoints->points.at(validIndex).z;
 		}
 
 	return featuresVector;
