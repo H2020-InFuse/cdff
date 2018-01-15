@@ -11,29 +11,18 @@ See https://docs.google.com/document/d/1ppECSp_fz4f23C0t9v5XJkrxQOHpKud0CJxJu4E5
 
 See https://docs.google.com/document/d/1jQ8I3lRKLel6BT5Fac5twtjzZ0SiQrc9rK23v-3NOLM
 
-## Externals 
-Two options : 
-1. You grab the dependencies for your platform (eg apt-get install opencv) 
-and the build system will use those.
-
-2. You fetch the git repositories present in /External, configure, make make install for each of them and the build system will use those. 
-
-The External folder is composed by submodules, 
-On first project pull, 
-
-use "git submodule update --depth 1" or you might die from openCV overwhelmingly big repository.
+## Externals (aka 3rd party dependencies)
+See [Third party readme] (/External/Readme.md)
 
 ## Building
 
-### Build all dependencies first: in each subfolder of External/, execute
+### Get all dependencies first: 
 
-    mkdir build
-    cd build
-    cmake -DCMAKE_INSTALL_PREFIX=.. ..
-    make
-
+    cd External/
+    ./fetch_compile_install_dependencies.sh
+  
 ### Build CDFF with
-
+   
     mkdir build
     cmake -DCMAKE_INSTALL_PREFIX=./ ..
     make install

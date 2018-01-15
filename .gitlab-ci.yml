@@ -1,11 +1,11 @@
-image: nexus.spaceapplications.com/repository/infuse/infuse:version1.3
+image: nexus.spaceapplications.com/repository/infuse/infuse:1.6.3
 
-stages: 
+stages:
   - autogeneration
   - build
   - test
   - deploy
-  
+
 autogeneration:
   stage : autogeneration
   script:
@@ -18,6 +18,8 @@ autogeneration:
 build:
   stage: build
   script:
+      - pwd
+      - cp -rf /CDFF/External/install ./External/install
       - mkdir build
       - cd build
       - cmake -DCMAKE_INSTALL_PREFIX=./ ..
@@ -29,12 +31,13 @@ build:
 test:
   stage: test
   script:
+      - cp -rf /CDFF/External/install ./External/install
       - cd build
       - make test
-      
+
 deploy_staging:
   stage: deploy
-  script: 
+  script:
   - echo "Deploy to staging server"
   only:
   - master

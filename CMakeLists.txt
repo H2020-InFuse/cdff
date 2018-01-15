@@ -2,7 +2,15 @@ project(infuse_dev)
 cmake_minimum_required(VERSION 2.6)
 
 include(FindPkgConfig)
-#find_package(OpenCV 3.0.0 REQUIRED)
+find_package( Boost 1.61 REQUIRED )
+find_package( Eigen3 3.3.4 REQUIRED )
+find_package( OpenCV 3.4.0 REQUIRED )
+find_package( VTK 8.1.0 REQUIRED )
+
+#find_package( Flann 1.9.1 REQUIRED )
+#find_package( pcl 1.8.1 REQUIRED )
+#find_package( QHull REQUIRED )
+#find_package( yaml-cpp 0.5.3 REQUIRED )
 
 enable_testing()
 
@@ -22,22 +30,21 @@ include_directories(
     Common/Types/C/ASNCommon
     Common/Types/C Common/Converters
     Common/Types/Cpp
-    External/opencv3/include
-    External/eigen/include/eigen3
-    External/yamlcpp/include
-    External/pcl/include/pcl-1.8
-    External/vtk/include/vtk-8.0
-    External/boost/include
-    External/flann/include
-    External/qhull/include
+    External/install/include
+    External/install/include/boost
+    External/install/include/eigen3
+    External/install/include/flann
+    External/install/include/libqhull
+    External/install/include/libqhullcpp
+    External/install/include/libqhull_r
+    External/install/include/opencv
+    External/install/include/opencv2
+    External/install/include/pcl-1.8
+    External/install/include/vtk-8.1
+    External/install/include/yaml-cpp
 )
 link_directories(
-	 External/opencv3/lib
-	 External/yamlcpp/lib
-	 External/pcl/lib
-	 External/vtk/lib
-	 External/boost/lib
-	 External/flann/lib
+	 External/install/lib
 )
 
 add_subdirectory(Common)
