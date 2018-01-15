@@ -19,7 +19,7 @@ build:
   stage: build
   script:
       - pwd
-      - cp -rf /CDFF/External ./External
+      - cp -rf /CDFF/External/install ./External/install
       - mkdir build
       - cd build
       - cmake -DCMAKE_INSTALL_PREFIX=./ ..
@@ -31,7 +31,7 @@ build:
 test:
   stage: test
   script:
-      - cp -rf /CDFF/External ./External
+      - cp -rf /CDFF/External/install ./External/install
       - cd build
       - make test
 
