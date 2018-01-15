@@ -1,11 +1,11 @@
-image: nexus.spaceapplications.com/repository/infuse/infuse:1.6.2
+image: nexus.spaceapplications.com/repository/infuse/infuse:1.6.3
 
-stages: 
+stages:
   - autogeneration
   - build
   - test
   - deploy
-  
+
 autogeneration:
   stage : autogeneration
   script:
@@ -31,10 +31,10 @@ test:
   script:
       - cd build
       - make test
-      
+
 deploy_staging:
   stage: deploy
-  script: 
+  script:
   - echo "Deploy to staging server"
   only:
   - master
