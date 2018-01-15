@@ -54,6 +54,6 @@ fi
 echo "Compiling $ASN_DIR to $C_DIR"
 asnFiles=`find $ASN_DIR -name '*.asn'`
 #echo $asnFiles
-mono ./asn1scc/asn1.exe $asnFiles -c -o $C_DIR
+mono ./asn1scc/asn1.exe $asnFiles -c -uPER -o $C_DIR
 echo "Done."
 
