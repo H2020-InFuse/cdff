@@ -43,7 +43,7 @@
 #include <Errors/Assert.hpp>
 
 using namespace Converters;
-using namespace CppTypes;
+using namespace FrameWrapper;
 
 TEST_CASE( "Mat to Frame and Back Square Matrix", "[MatToFrameSquare]" )
 	{
@@ -61,18 +61,18 @@ TEST_CASE( "Mat to Frame and Back Square Matrix", "[MatToFrameSquare]" )
 			}
 		}
 
-	Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
-	REQUIRE(asnFrame->GetFrameWidth() == static_cast<int>(inputMatrix.cols) );
-	REQUIRE(asnFrame->GetFrameHeight() == static_cast<int>(inputMatrix.rows) );
-	REQUIRE(asnFrame->GetFrameMode() == Frame::MODE_RGB );
-	REQUIRE(asnFrame->GetNumberOfDataBytes() == inputMatrix.cols * inputMatrix.rows * 3);
-	for(int byteIndex = 0; byteIndex < asnFrame->GetNumberOfDataBytes(); byteIndex += 3)
+	FrameConstPtr asnFrame = firstConverter.Convert(inputMatrix);
+	REQUIRE(GetFrameWidth(*asnFrame) == static_cast<int>(inputMatrix.cols) );
+	REQUIRE(GetFrameHeight(*asnFrame) == static_cast<int>(inputMatrix.rows) );
+	REQUIRE(GetFrameMode(*asnFrame) == FrameWrapper::MODE_RGB );
+	REQUIRE(GetNumberOfDataBytes(*asnFrame) == inputMatrix.cols * inputMatrix.rows * 3);
+	for(int byteIndex = 0; byteIndex < GetNumberOfDataBytes(*asnFrame); byteIndex += 3)
 		{
 		int rowIndex = (byteIndex / 3) / inputMatrix.cols;
 		int columnIndex = (byteIndex / 3) % inputMatrix.cols;
-		REQUIRE(asnFrame->GetDataByte(byteIndex) == inputMatrix.at<cv::Vec3b>(rowIndex, columnIndex)[0] );
-		REQUIRE(asnFrame->GetDataByte(byteIndex+1) == inputMatrix.at<cv::Vec3b>(rowIndex, columnIndex)[1] );				 		 
-		REQUIRE(asnFrame->GetDataByte(byteIndex+2) == inputMatrix.at<cv::Vec3b>(rowIndex, columnIndex)[2] );
+		REQUIRE(GetDataByte(*asnFrame, byteIndex) == inputMatrix.at<cv::Vec3b>(rowIndex, columnIndex)[0] );
+		REQUIRE(GetDataByte(*asnFrame, byteIndex+1) == inputMatrix.at<cv::Vec3b>(rowIndex, columnIndex)[1] );				 		 
+		REQUIRE(GetDataByte(*asnFrame, byteIndex+2) == inputMatrix.at<cv::Vec3b>(rowIndex, columnIndex)[2] );
 		}
 
 	cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
@@ -110,7 +110,7 @@ TEST_CASE( "Mat to Frame and Back Non-Square Matrix", "[MatToFrameNonSquare]" )
 			}
 		}
 
-	Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
+	FrameConstPtr asnFrame = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
 
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
@@ -150,7 +150,7 @@ TEST_CASE( "Multiple conversions", "[MultipleConversions]" )
 
 	for(int i=0; i<5; i++)
 		{
-		Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
+		FrameConstPtr asnFrame = firstConverter.Convert(inputMatrix);
 		cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
 
 		REQUIRE(outputMatrix.rows == inputMatrix.rows);
@@ -189,17 +189,17 @@ TEST_CASE( "Frame to Mat conversion", "[FrameToMatConversion]")
 			}
 		}
 
-	Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
+	FrameConstPtr asnFrame = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
-	Frame::ConstPtr outputFrame = firstConverter.Convert(outputMatrix);
+	FrameConstPtr outputFrame = firstConverter.Convert(outputMatrix);
 
-	REQUIRE(outputFrame->GetFrameWidth() == asnFrame->GetFrameWidth());
-	REQUIRE(outputFrame->GetFrameHeight() == asnFrame->GetFrameHeight());
-	REQUIRE(outputFrame->GetFrameMode() == asnFrame->GetFrameMode());
-	REQUIRE(outputFrame->GetNumberOfDataBytes() == asnFrame->GetNumberOfDataBytes());
-	for(int byteIndex = 0; byteIndex < asnFrame->GetNumberOfDataBytes(); byteIndex++)
+	REQUIRE(GetFrameWidth(*outputFrame) == GetFrameWidth(*asnFrame));
+	REQUIRE(GetFrameHeight(*outputFrame) == GetFrameHeight(*asnFrame));
+	REQUIRE(GetFrameMode(*outputFrame) == GetFrameMode(*asnFrame));
+	REQUIRE(GetNumberOfDataBytes(*outputFrame) == GetNumberOfDataBytes(*asnFrame));
+	for(int byteIndex = 0; byteIndex < GetNumberOfDataBytes(*asnFrame); byteIndex++)
 		{
-		REQUIRE(outputFrame->GetDataByte(byteIndex) == asnFrame->GetDataByte(byteIndex));				 		 
+		REQUIRE(GetDataByte(*outputFrame, byteIndex) == GetDataByte(*asnFrame, byteIndex));				 		 
 		}
 
 	asnFrame.reset();
@@ -213,12 +213,12 @@ TEST_CASE( "Empty Matrix Conversion", "[EmptyMatrix]" )
 
 	cv::Mat inputMatrix;
 
-	Frame::ConstPtr asnFrame = firstConverter.Convert(inputMatrix);
+	FrameConstPtr asnFrame = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
-	Frame::ConstPtr outputFrame = firstConverter.Convert(outputMatrix);
+	FrameConstPtr outputFrame = firstConverter.Convert(outputMatrix);
 
 	REQUIRE(outputMatrix.cols == 0);
 	REQUIRE(outputMatrix.rows == 0);
-	REQUIRE(asnFrame->GetNumberOfDataBytes() == 0);
-	REQUIRE(outputFrame->GetNumberOfDataBytes() == 0);	
+	REQUIRE(GetNumberOfDataBytes(*asnFrame) == 0);
+	REQUIRE(GetNumberOfDataBytes(*outputFrame) == 0);	
 	}

@@ -7,14 +7,14 @@
 
 /*!
  * @file VisualPointFeatureVector2D.hpp
- * @date 08/12/2017
+ * @date 15/01/2018
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup CppTypes
+ * @addtogroup VisualPointFeatureVector2DWrapper
  * 
- * C++ wrapper for the VisualPointFeatureVector2D
+ * VisualPointFeatureVector2D wrapper for the VisualPointFeatureVector2D type
  * 
  * 
  * @{
@@ -40,7 +40,7 @@ namespace CTypes {
 #ifndef VISUAL_POINT_FEATURE_VECTOR_HPP
 #define VISUAL_POINT_FEATURE_VECTOR_HPP
 
-namespace CppTypes 
+namespace VisualPointFeatureVector2DWrapper 
 {
 /* --------------------------------------------------------------------------
  *
@@ -49,63 +49,47 @@ namespace CppTypes
  * --------------------------------------------------------------------------
  */
 
-typedef CTypes::VisualPointFeature2D VisualPointFeature2D;
 typedef CTypes::VisualPointFeature2D_descriptor VisualPointDescriptor2D;
-
+typedef CTypes::VisualPointFeature2D VisualPointFeature2D;
+typedef CTypes::VisualPointFeatureVector2D VisualPointFeatureVector2D;
 
 
 /* --------------------------------------------------------------------------
  *
- * Class definition
+ * Constants
  *
  * --------------------------------------------------------------------------
  */
-class VisualPointFeatureVector2D
-	{
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
-	public:
-
-		typedef std::shared_ptr<VisualPointFeatureVector2D> Ptr;
-		typedef std::shared_ptr<const VisualPointFeatureVector2D> ConstPtr;
-
-		VisualPointFeatureVector2D();
-		~VisualPointFeatureVector2D();
-
-		void AddPoint(uint16_t x, uint16_t y);
-		void ClearPoints();
-		int GetNumberOfPoints() const;
-		int GetXCoordinate(int pointIndex) const;
-		int GetYCoordinate(int pointIndex) const;
-
-		void AddDescriptorComponent(int pointIndex, float component);
-		void ClearDescriptor(int pointIndex);
-		int GetNumberOfDescriptorComponents(int pointIndex) const;
-		float GetDescriptorComponent(int pointIndex, int componentIndex) const;
-
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-	protected:
-
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
-
-		static const int MAX_FEATURE_2D_POINTS;
-		static const int MAX_DESCRIPTOR_2D_LENGTH;
-
-		CTypes::VisualPointFeatureVector2D featuresVector;
-		
-
-	};
+const int MAX_FEATURE_2D_POINTS = static_cast<int>(CTypes::features2DElementsMax);
+const int MAX_DESCRIPTOR_2D_LENGTH = static_cast<int>(CTypes::descriptor2DNameLength);
 
 
+/* --------------------------------------------------------------------------
+ *
+ * Shared Pointers definition
+ *
+ * --------------------------------------------------------------------------
+ */
+typedef std::shared_ptr<VisualPointFeatureVector2D> VisualPointFeatureVector2DPtr;
+typedef std::shared_ptr<const VisualPointFeatureVector2D> VisualPointFeatureVector2DConstPtr;
+
+
+/* --------------------------------------------------------------------------
+ *
+ * Access Functions definition
+ *
+ * --------------------------------------------------------------------------
+ */
+void AddPoint(VisualPointFeatureVector2D& featuresVector, uint16_t x, uint16_t y);
+void ClearPoints(VisualPointFeatureVector2D& featuresVector);
+int GetNumberOfPoints(const VisualPointFeatureVector2D& featuresVector);
+int GetXCoordinate(const VisualPointFeatureVector2D& featuresVector, int pointIndex);
+int GetYCoordinate(const VisualPointFeatureVector2D& featuresVector, int pointIndex);
+
+void AddDescriptorComponent(VisualPointFeatureVector2D& featuresVector, int pointIndex, float component);
+void ClearDescriptor(VisualPointFeatureVector2D& featuresVector, int pointIndex);
+int GetNumberOfDescriptorComponents(const VisualPointFeatureVector2D& featuresVector, int pointIndex);
+float GetDescriptorComponent(const VisualPointFeatureVector2D& featuresVector, int pointIndex, int componentIndex);
 
 }
 #endif

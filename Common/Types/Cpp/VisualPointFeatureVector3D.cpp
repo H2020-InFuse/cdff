@@ -7,14 +7,14 @@
 
 /*!
  * @file VisualPointFeatureVector3D.cpp
- * @date 08/12/2017
+ * @date 15/01/2018
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup CppTypes
+ * @addtogroup VisualPointFeatureVector3DWrapper
  * 
- * Implementation of VisualPointFeatureVector3D class.
+ * Implementation of VisualPointFeatureVector3DWrapper functions.
  * 
  * 
  * @{
@@ -30,28 +30,18 @@
 #include "VisualPointFeatureVector3D.hpp"
 #include <Errors/Assert.hpp>
 
-namespace CppTypes
+namespace VisualPointFeatureVector3DWrapper
 {
 
 
 /* --------------------------------------------------------------------------
  *
- * Public Member Functions
+ * Functions
  *
  * --------------------------------------------------------------------------
  */
 
-VisualPointFeatureVector3D::VisualPointFeatureVector3D()
-	{
-	ClearPoints();
-	}
-
-VisualPointFeatureVector3D::~VisualPointFeatureVector3D()
-	{
-
-	}
-
-void VisualPointFeatureVector3D::AddPoint(float x, float y, float z)
+void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, float z)
 	{
 	ASSERT_ON_TEST(featuresVector.nCount < MAX_FEATURE_3D_POINTS, "Features descriptor vector maximum capacity has been reached");
 	int currentIndex = featuresVector.nCount;
@@ -62,35 +52,35 @@ void VisualPointFeatureVector3D::AddPoint(float x, float y, float z)
 	featuresVector.nCount++;
 	}
 
-void VisualPointFeatureVector3D::ClearPoints()
+void ClearPoints(VisualPointFeatureVector3D& featuresVector)
 	{
 	featuresVector.nCount = 0;
 	}
 
-int VisualPointFeatureVector3D::GetNumberOfPoints() const
+int GetNumberOfPoints(const VisualPointFeatureVector3D& featuresVector)
 	{
 	return featuresVector.nCount;
 	}
 
-float VisualPointFeatureVector3D::GetXCoordinate(int pointIndex) const
+float GetXCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
 	return featuresVector.arr[pointIndex].point.x;
 	}
 
-float VisualPointFeatureVector3D::GetYCoordinate(int pointIndex) const
+float GetYCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
 	return featuresVector.arr[pointIndex].point.y;
 	}
 
-float VisualPointFeatureVector3D::GetZCoordinate(int pointIndex) const
+float GetZCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
 	return featuresVector.arr[pointIndex].point.z;
 	}
 
-void VisualPointFeatureVector3D::AddDescriptorComponent(int pointIndex, float component)
+void AddDescriptorComponent(VisualPointFeatureVector3D& featuresVector, int pointIndex, float component)
 	{
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
 	ASSERT_ON_TEST(featuresVector.arr[pointIndex].descriptor.nCount < MAX_DESCRIPTOR_3D_LENGTH, "Descriptor maximum capacity has been reached");
@@ -99,34 +89,24 @@ void VisualPointFeatureVector3D::AddDescriptorComponent(int pointIndex, float co
 	featuresVector.arr[pointIndex].descriptor.nCount++;
 	}
 
-void VisualPointFeatureVector3D::ClearDescriptor(int pointIndex)
+void ClearDescriptor(VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
 	featuresVector.arr[pointIndex].descriptor.nCount = 0;
 	}
 
-int VisualPointFeatureVector3D::GetNumberOfDescriptorComponents(int pointIndex) const
+int GetNumberOfDescriptorComponents(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
 	return featuresVector.arr[pointIndex].descriptor.nCount;
 	}
 
-float VisualPointFeatureVector3D::GetDescriptorComponent(int pointIndex, int componentIndex) const
+float GetDescriptorComponent(const VisualPointFeatureVector3D& featuresVector, int pointIndex, int componentIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
 	ASSERT_ON_TEST(componentIndex < featuresVector.arr[pointIndex].descriptor.nCount, "A missing descriptor component was requested from a features vector 2D");
 	return featuresVector.arr[pointIndex].descriptor.arr[componentIndex];
 	}
-
-/* --------------------------------------------------------------------------
- *
- * Private Member Variables
- *
- * --------------------------------------------------------------------------
- */
-const int VisualPointFeatureVector3D::MAX_FEATURE_3D_POINTS = static_cast<int>(CTypes::features3DElementsMax);
-const int VisualPointFeatureVector3D::MAX_DESCRIPTOR_3D_LENGTH = static_cast<int>(CTypes::descriptor3DNameLength);
-
 
 }
 

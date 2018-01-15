@@ -40,7 +40,8 @@ using namespace Common;
 
 namespace dfn_ci {
 
-using namespace CppTypes;
+using namespace VisualPointFeatureVector2DWrapper;
+using namespace FrameWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -93,11 +94,11 @@ void HarrisDetector2D::configure()
 
 void HarrisDetector2D::process() 
 	{
-	cv::Mat inputImage = ConversionCache<Frame::ConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
+	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
 	ValidateInputs(inputImage);
 	cv::Mat harrisImage = ComputeHarrisImage(inputImage);
 	cv::Mat harrisPoints = ExtractHarrisPoints(harrisImage);
-	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector2D::ConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
+	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
 	}
 
 

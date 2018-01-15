@@ -33,7 +33,7 @@
 
 namespace Converters {
 
-using namespace CppTypes;
+using namespace VisualPointFeatureVector3DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -41,22 +41,22 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
-const cv::Mat VisualPointFeatureVector3DToMatConverter::Convert(const VisualPointFeatureVector3D::ConstPtr& featuresVector)
+const cv::Mat VisualPointFeatureVector3DToMatConverter::Convert(const VisualPointFeatureVector3DConstPtr& featuresVector)
 	{	
-	if (featuresVector->GetNumberOfPoints() == 0)
+	if (GetNumberOfPoints(*featuresVector) == 0)
 		return cv::Mat();
 
-	int descriptorSize = featuresVector->GetNumberOfDescriptorComponents(0);
-	cv::Mat conversion(featuresVector->GetNumberOfPoints(), 3 + descriptorSize, CV_32FC1, cv::Scalar(0));
-	for(int pointIndex = 0; pointIndex < featuresVector->GetNumberOfPoints(); pointIndex++)
+	int descriptorSize = GetNumberOfDescriptorComponents(*featuresVector, 0);
+	cv::Mat conversion(GetNumberOfPoints(*featuresVector), 3 + descriptorSize, CV_32FC1, cv::Scalar(0));
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
 		{
-		conversion.at<float>(pointIndex, 0) = featuresVector->GetXCoordinate(pointIndex);
-		conversion.at<float>(pointIndex, 1) = featuresVector->GetYCoordinate(pointIndex);
-		conversion.at<float>(pointIndex, 2) = featuresVector->GetZCoordinate(pointIndex);
+		conversion.at<float>(pointIndex, 0) = GetXCoordinate(*featuresVector, pointIndex);
+		conversion.at<float>(pointIndex, 1) = GetYCoordinate(*featuresVector, pointIndex);
+		conversion.at<float>(pointIndex, 2) = GetZCoordinate(*featuresVector, pointIndex);
 
-		ASSERT(descriptorSize == featuresVector->GetNumberOfDescriptorComponents(pointIndex), "VisualPointFeatureVector3DToMatConverter: Descriptors do not have the same size.");
+		ASSERT(descriptorSize == GetNumberOfDescriptorComponents(*featuresVector, pointIndex), "VisualPointFeatureVector3DToMatConverter: Descriptors do not have the same size.");
 		for(int componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
-			conversion.at<float>(pointIndex, componentIndex + 3) = featuresVector->GetDescriptorComponent(pointIndex, componentIndex);
+			conversion.at<float>(pointIndex, componentIndex + 3) = GetDescriptorComponent(*featuresVector, pointIndex, componentIndex);
 		}
 	
 	return conversion;

@@ -7,14 +7,14 @@
 
 /*!
  * @file Frame.cpp
- * @date 05/12/2017
+ * @date 12/01/2018
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup CppTypes
+ * @addtogroup FrameWrapper
  * 
- * Implementation of Frame class.
+ * Implementation of FrameWrapper functions.
  * 
  * 
  * @{
@@ -30,155 +30,118 @@
 #include "Frame.hpp"
 #include <Errors/Assert.hpp>
 
-namespace CppTypes
+using namespace BaseTypesWrapper;
+
+namespace FrameWrapper
 {
 
-
 /* --------------------------------------------------------------------------
  *
- * Public Member Variables
+ * Functions
  *
  * --------------------------------------------------------------------------
  */
-const FrameMode Frame::MODE_UNDEFINED = CTypes::mode_undefined;
-const FrameMode Frame::MODE_GRAYSCALE = CTypes::mode_grayscale;
-const FrameMode Frame::MODE_RGB = CTypes::mode_rgb;
-const FrameMode Frame::MODE_UYVY = CTypes::mode_uyvy;
-const FrameMode Frame::MODE_BGR = CTypes::mode_bgr;
-const FrameMode Frame::MODE_RGB32 = CTypes::mode_rgb32;
-const FrameMode Frame::RAW_MODES = CTypes::raw_modes;
-const FrameMode Frame::MODE_BAYER = CTypes::mode_bayer;
-const FrameMode Frame::MODE_BAYER_RGGB = CTypes::mode_bayer_rggb;
-const FrameMode Frame::MODE_BAYER_GRBG = CTypes::mode_bayer_grbg;
-const FrameMode Frame::MODE_BAYER_BGGR = CTypes::mode_bayer_bggr;
-const FrameMode Frame::MODE_BAYER_GBRG = CTypes::mode_bayer_gbrg;
-const FrameMode Frame::COMPRESSED_MODES = CTypes::compressed_modes;
-const FrameMode Frame::MODE_PJPG = CTypes::Frame_mode_t_mode_pjpg;
-const FrameMode Frame::MODE_JPEG = CTypes::mode_jpeg;
-const FrameMode Frame::MODE_PNG = CTypes::mode_png;
 
-const FrameStatus Frame::STATUS_EMPTY = CTypes::status_empty;
-const FrameStatus Frame::STATUS_VALID = CTypes::status_valid;
-const FrameStatus Frame::STATUS_INVALID = CTypes::status_invalid;
-
-
-/* --------------------------------------------------------------------------
- *
- * Public Member Functions
- *
- * --------------------------------------------------------------------------
- */
-Frame::Frame()
-	{
-	ClearAttributes();
-	ClearData();
-	}
-
-Frame::~Frame()
-	{
-
-	}
-
-void Frame::SetFrameTime(T_Int64 time)
+void SetFrameTime(Frame& frame, T_Int64 time)
 	{
 	frame.frame_time.microseconds = time;
 	frame.frame_time.usecPerSec = 1;
 	}
 
-T_Int64 Frame::GetFrameTime() const
+T_Int64 GetFrameTime(const Frame& frame)
 	{
 	return frame.frame_time.microseconds;
 	}
 
-void Frame::SetReceivedTime(T_Int64 time)
+void SetReceivedTime(Frame& frame, T_Int64 time)
 	{
 	frame.received_time.microseconds = time;
 	frame.received_time.usecPerSec = 1;
 	}
 
-T_Int64 Frame::GetReceivedTime() const
+T_Int64 GetReceivedTime(const Frame& frame)
 	{
 	return frame.received_time.microseconds;
 	}
 
-void Frame::SetDataDepth(T_UInt32 dataDepth)
+void SetDataDepth(Frame& frame, T_UInt32 dataDepth)
 	{
 	frame.data_depth = dataDepth;
 	}
 
-T_UInt32 Frame::GetDataDepth() const
+T_UInt32 GetDataDepth(const Frame& frame)
 	{
 	return frame.data_depth;
 	}
 
-void Frame::SetPixelSize( T_UInt32 pixelSize)
+void SetPixelSize(Frame& frame, T_UInt32 pixelSize)
 	{
 	frame.pixel_size = pixelSize;
 	}
 
-T_UInt32 Frame::GetPixelSize() const
+T_UInt32 GetPixelSize(const Frame& frame)
 	{
 	return frame.pixel_size;
 	}
 
-void Frame::SetRowSize(T_UInt32 rowSize)
+void SetRowSize(Frame& frame, T_UInt32 rowSize)
 	{
 	frame.row_size = rowSize;
 	}
 
-T_UInt32 Frame::GetRowSize() const
+T_UInt32 GetRowSize(const Frame& frame)
 	{
 	return frame.row_size;
 	}
 
-void Frame::SetFrameMode(FrameMode frameMode)
+void SetFrameMode(Frame& frame, FrameMode frameMode)
 	{
 	frame.frame_mode = frameMode;
 	}
 
-FrameMode Frame::GetFrameMode() const
+FrameMode GetFrameMode(const Frame& frame)
 	{
 	return frame.frame_mode;
 	}
 		
-void Frame::SetFrameStatus(FrameStatus frameStatus)
+void SetFrameStatus(Frame& frame, FrameStatus frameStatus)
 	{
 	frame.frame_status = frameStatus;
 	}
 
-FrameStatus Frame::GetFrameStatus() const
+FrameStatus GetFrameStatus(const Frame& frame)
 	{
 	return frame.frame_status;
 	}
 
-void Frame::SetFrameSize(T_UInt16 width, T_UInt16 height)
+void SetFrameSize(Frame& frame, T_UInt16 width, T_UInt16 height)
 	{
 	frame.datasize.width = width;
 	frame.datasize.height = height;
 	}
 
-void Frame::SetFrameSize(FrameSize frameSize)
+void SetFrameSize(Frame& frame, FrameSize frameSize)
 	{
 	frame.datasize.width = frameSize.width;
 	frame.datasize.height = frameSize.height;
 	}
 
-T_UInt16 Frame::GetFrameWidth() const
+T_UInt16 GetFrameWidth(const Frame& frame)
 	{
 	return frame.datasize.width;
 	}
 
-T_UInt16 Frame::GetFrameHeight() const
+T_UInt16 GetFrameHeight(const Frame& frame)
 	{
 	return frame.datasize.height;
 	}
 
-FrameSize Frame::GetFrameSize() const
+FrameSize GetFrameSize(const Frame& frame)
 	{
 	return frame.datasize;
 	}
 		
-void Frame::AddAttribute(T_String data, T_String name)
+void AddAttribute(Frame& frame, T_String data, T_String name)
 	{
 	ASSERT_ON_TEST(frame.attributes.nCount < MAX_FRAME_ATTRIBUTES, "Adding more Frame attributes than allowed");
 	int currentIndex = frame.attributes.nCount;	
@@ -187,12 +150,12 @@ void Frame::AddAttribute(T_String data, T_String name)
 	frame.attributes.nCount++;
 	}
 
-void Frame::ClearAttributes()
+void ClearAttributes(Frame& frame)
 	{
 	frame.attributes.nCount = 0;
 	}
 
-void Frame::RemoveAttribute(int index)
+void RemoveAttribute(Frame& frame, int index)
 	{
 	ASSERT_ON_TEST(index < frame.attributes.nCount, "Requesting a missing attribute from a Frame");
 	for(int iteratorIndex = index; iteratorIndex <  frame.attributes.nCount - 1; iteratorIndex++)
@@ -202,18 +165,18 @@ void Frame::RemoveAttribute(int index)
 	frame.attributes.nCount--;
 	}
 
-FrameAttribute Frame::GetAttribute(int index) const
+FrameAttribute GetAttribute(const Frame& frame, int index)
 	{
 	ASSERT_ON_TEST(index < frame.attributes.nCount, "Requesting a missing attribute from a Frame");
 	return frame.attributes.arr[index];
 	}
 
-unsigned Frame::GetNumberOfAttributes() const
+unsigned GetNumberOfAttributes(const Frame& frame)
 	{
 	return frame.attributes.nCount;
 	}
 	
-void Frame::AddDataByte(byte data)
+void AddDataByte(Frame& frame, byte data)
 	{
 	ASSERT_ON_TEST(frame.image.nCount < MAX_DATA_BYTE_SIZE, "Image data exceeds limits");
 	int currentIndex = frame.image.nCount;
@@ -221,31 +184,22 @@ void Frame::AddDataByte(byte data)
 	frame.image.nCount++;
 	}
 
-void Frame::ClearData()
+void ClearData(Frame& frame)
 	{
 	frame.image.nCount = 0;
 	}
 
-byte Frame::GetDataByte(int index) const
+byte GetDataByte(const Frame& frame, int index)
 	{
 	ASSERT_ON_TEST(index < frame.image.nCount, "Requesting missing image data");
 	return frame.image.arr[index];
 	}
 
-int Frame::GetNumberOfDataBytes() const
+int GetNumberOfDataBytes(const Frame& frame)
 	{
 	return frame.image.nCount;
 	}
 
-
-/* --------------------------------------------------------------------------
- *
- * Private Member Variables
- *
- * --------------------------------------------------------------------------
- */
-const int Frame::MAX_FRAME_ATTRIBUTES = CTypes::frameMaxAttributes;
-const int Frame::MAX_DATA_BYTE_SIZE = CTypes::frameMaxBytes;
 
 
 }

@@ -32,7 +32,7 @@
 
 namespace Converters {
 
-using namespace CppTypes;
+using namespace FrameWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -40,20 +40,20 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
-const cv::Mat FrameToMatConverter::Convert(const Frame::ConstPtr& frame)
+const cv::Mat FrameToMatConverter::Convert(const FrameWrapper::FrameConstPtr& frame)
 	{
-	ASSERT(frame->GetFrameMode() == Frame::MODE_RGB, "FrameToMatConverter: Only RGB images are currently supported");
-	ASSERT( static_cast<int>(frame->GetFrameHeight() * frame->GetFrameWidth() * 3) == frame->GetNumberOfDataBytes(), "FrameToMatConverter: image data size does not match image dimensions.");
+	ASSERT( GetFrameMode(*frame) == MODE_RGB, "FrameToMatConverter: Only RGB images are currently supported");
+	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame) * 3) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image data size does not match image dimensions.");
 
-	cv::Mat cvImage( frame->GetFrameHeight(), frame->GetFrameWidth(), CV_8UC3, cv::Scalar(0,0,0) );
+	cv::Mat cvImage( GetFrameHeight(*frame), GetFrameWidth(*frame), CV_8UC3, cv::Scalar(0,0,0) );
 	for(int rowIndex = 0; rowIndex < cvImage.rows; rowIndex++)
 		{
 		for(int columnIndex = 0; columnIndex < cvImage.cols; columnIndex++)
 			{
 			int dataIndex = rowIndex * cvImage.cols + columnIndex;
-			cvImage.at<cv::Vec3b>( rowIndex, columnIndex )[0] = frame->GetDataByte(3*dataIndex + 0);
-			cvImage.at<cv::Vec3b>( rowIndex, columnIndex )[1] = frame->GetDataByte(3*dataIndex + 1);
-			cvImage.at<cv::Vec3b>( rowIndex, columnIndex )[2] = frame->GetDataByte(3*dataIndex + 2);
+			cvImage.at<cv::Vec3b>( rowIndex, columnIndex )[0] = GetDataByte(*frame, 3*dataIndex + 0);
+			cvImage.at<cv::Vec3b>( rowIndex, columnIndex )[1] = GetDataByte(*frame, 3*dataIndex + 1);
+			cvImage.at<cv::Vec3b>( rowIndex, columnIndex )[2] = GetDataByte(*frame, 3*dataIndex + 2);
 			}
 		}	
 

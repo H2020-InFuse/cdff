@@ -49,7 +49,8 @@
 using namespace dfn_ci;
 using namespace Common;
 using namespace Converters;
-using namespace CppTypes;
+using namespace FrameWrapper;
+using namespace VisualPointFeatureVector2DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -59,26 +60,26 @@ using namespace CppTypes;
  */
 TEST_CASE( "Call to process", "[process]" ) 
 	{
-	Stubs::CacheHandler<Frame::ConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<Frame::ConstPtr, cv::Mat>();
+	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
 	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<Frame::ConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
+	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
 
-	Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2D::ConstPtr >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2D::ConstPtr>();
+	Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
 	Mocks::MatToVisualPointFeatureVector2DConverter* mockOutputConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector2D::ConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubOutputCache, mockOutputConverter);
+	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubOutputCache, mockOutputConverter);
 
 	cv::Mat inputImage(500, 500, CV_8UC3, cv::Scalar(100, 100, 100));	
 	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputImage) );
 
-	VisualPointFeatureVector2D::ConstPtr featuresVector = VisualPointFeatureVector2D::ConstPtr( new VisualPointFeatureVector2D() );
+	VisualPointFeatureVector2DConstPtr featuresVector = VisualPointFeatureVector2DConstPtr( new VisualPointFeatureVector2D() );
 	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
 
 	HarrisDetector2D harris;
 	harris.process();
 
-	VisualPointFeatureVector2D::ConstPtr output = harris.featuresSetOutput();
+	VisualPointFeatureVector2DConstPtr output = harris.featuresSetOutput();
 
-	REQUIRE(output->GetNumberOfPoints() == featuresVector->GetNumberOfPoints());
+	REQUIRE(GetNumberOfPoints(*output) == GetNumberOfPoints(*featuresVector));
 	}
 
 TEST_CASE( "Call to configure", "[configure]" )

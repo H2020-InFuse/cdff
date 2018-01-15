@@ -33,7 +33,7 @@
 
 namespace Converters {
 
-using namespace CppTypes;
+using namespace VisualPointFeatureVector3DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -41,9 +41,9 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
-VisualPointFeatureVector3D::ConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat& featuresMatrix)
+VisualPointFeatureVector3DConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat& featuresMatrix)
 	{
-	VisualPointFeatureVector3D::Ptr conversion =  std::make_shared<VisualPointFeatureVector3D>();
+	VisualPointFeatureVector3DPtr conversion =  std::make_shared<VisualPointFeatureVector3D>();
 	if (featuresMatrix.cols == 0 && featuresMatrix.rows == 0)
 		return conversion;
 
@@ -52,10 +52,10 @@ VisualPointFeatureVector3D::ConstPtr MatToVisualPointFeatureVector3DConverter::C
 
 	for(int rowIndex = 0; rowIndex < featuresMatrix.rows; rowIndex++)
 		{
-		conversion->AddPoint(featuresMatrix.at<float>(rowIndex, 0), featuresMatrix.at<float>(rowIndex, 1), featuresMatrix.at<float>(rowIndex, 2) );
+		AddPoint(*conversion, featuresMatrix.at<float>(rowIndex, 0), featuresMatrix.at<float>(rowIndex, 1), featuresMatrix.at<float>(rowIndex, 2) );
 		for(int columnIndex = 3; columnIndex < featuresMatrix.cols; columnIndex++)
 			{
-			conversion->AddDescriptorComponent(rowIndex, featuresMatrix.at<float>(rowIndex, columnIndex) );
+			AddDescriptorComponent(*conversion, rowIndex, featuresMatrix.at<float>(rowIndex, columnIndex) );
 			}
 		} 
 	

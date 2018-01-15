@@ -36,7 +36,7 @@
 
 namespace Converters {
 
-using namespace CppTypes;
+using namespace PointCloudWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -44,15 +44,15 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
- pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const PointCloud::ConstPtr& pointCloud)
+ pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const  PointCloudWrapper::PointCloudConstPtr& pointCloud)
 	{
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	for(int pointIndex = 0; pointIndex < pointCloud->GetNumberOfPoints(); pointIndex++)
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*pointCloud); pointIndex++)
 		{
 		pcl::PointXYZ point;
-		point.x = pointCloud->GetXCoordinate(pointIndex);
-		point.y = pointCloud->GetYCoordinate(pointIndex);
-		point.z = pointCloud->GetZCoordinate(pointIndex); 	
+		point.x = GetXCoordinate(*pointCloud, pointIndex);
+		point.y = GetYCoordinate(*pointCloud, pointIndex);
+		point.z = GetZCoordinate(*pointCloud, pointIndex); 	
 		pclPointCloud->points.push_back(point);	
 		}	
 
