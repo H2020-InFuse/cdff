@@ -44,7 +44,7 @@ include_directories(
     External/install/include/yaml-cpp
 )
 link_directories(
-	 /CDFF/External/install/lib
+	 External/install/lib
 )
 
 add_subdirectory(Common)
