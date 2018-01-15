@@ -16,15 +16,13 @@ See [Third party readme] (/External/Readme.md)
 
 ## Building
 
-### Build all dependencies first: in each subfolder of External/, execute
+### Get all dependencies first: 
 
-    mkdir build
-    cd build
-    cmake -DCMAKE_INSTALL_PREFIX=.. ..
-    make
-
+    cd External/
+    ./fetch_compile_install_dependencies.sh
+  
 ### Build CDFF with
-
+   
     mkdir build
     cmake -DCMAKE_INSTALL_PREFIX=./ ..
     make install
