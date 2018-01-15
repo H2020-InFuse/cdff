@@ -3,8 +3,14 @@ image: nexus.spaceapplications.com/repository/infuse/infuse:1.6.3
 stages:
   - autogeneration
   - build
+  - dependencies
   - test
   - deploy
+
+dependencies:
+  stage : dependencies
+  script:
+      - cp -rf /CDFF/External ./External
 
 autogeneration:
   stage : autogeneration
