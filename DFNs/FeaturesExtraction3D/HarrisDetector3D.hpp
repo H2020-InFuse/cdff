@@ -78,6 +78,7 @@ namespace dfn_ci {
 			{
 			bool nonMaxSuppression;
 			float radius;
+			float searchRadius;
 			float detectionThreshold;
 			bool enableRefinement;
 			int numberOfThreads;

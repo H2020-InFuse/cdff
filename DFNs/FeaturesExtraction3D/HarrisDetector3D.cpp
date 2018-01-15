@@ -54,7 +54,8 @@ namespace dfn_ci {
 HarrisDetector3D::HarrisDetector3D()
 	{
 	parameters.nonMaxSuppression = true;
-	parameters.radius = 0.1;
+	parameters.radius = 0.01;
+	parameters.searchRadius = 0.01;
 	parameters.detectionThreshold = 0;
 	parameters.enableRefinement = false;
 	parameters.numberOfThreads = 0;
@@ -101,6 +102,7 @@ cv::Mat HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::Co
 	pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI> detector; 
     	detector.setNonMaxSupression (parameters.nonMaxSuppression);
     	detector.setRadius (parameters.radius);
+    	detector.setRadiusSearch (parameters.searchRadius);
 	detector.setMethod (parameters.method);
 	detector.setThreshold(parameters.detectionThreshold);
 	detector.setRefine(parameters.enableRefinement);
@@ -180,6 +182,7 @@ void HarrisDetector3D::Configure(const YAML::Node& configurationNode)
 	if ( nodeName == "GeneralParameters")
 		{
 		parameters.radius = configurationNode["Radius"].as<float>();
+		parameters.searchRadius = configurationNode["SearchRadius"].as<float>();
 		parameters.nonMaxSuppression = configurationNode["NonMaxSuppression"].as<bool>();
 		parameters.detectionThreshold = configurationNode["DetectionThreshold"].as<float>();
 		parameters.enableRefinement = configurationNode["EnableRefinement"].as<bool>();

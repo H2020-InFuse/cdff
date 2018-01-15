@@ -111,10 +111,11 @@ void HarrisDetector3DTestInterface::SetupMocksAndStubs()
 
 void HarrisDetector3DTestInterface::SetupParameters()
 	{
-	AddParameter("GeneralParameters", "NonMaxSuppression", 0, 1);
-	AddParameter("GeneralParameters", "Radius", 0.01, 1.00, 0.01);
+	AddParameter("GeneralParameters", "NonMaxSuppression", 1, 1);
+	AddParameter("GeneralParameters", "Radius", 0.010, 0.100, 0.001);
+	AddParameter("GeneralParameters", "SearchRadius", 0.010, 0.100, 0.001);
 	AddParameter("GeneralParameters", "EnableRefinement", 0, 1);
-	AddParameter("GeneralParameters", "DetectionThreshold", 0.50, 1.00, 0.01);
+	AddParameter("GeneralParameters", "DetectionThreshold", 0.0010, 0.0100, 0.0001);
 	AddParameter("GeneralParameters", "NumberOfThreads", 0, 10);
 	AddParameter("GeneralParameters", "HarrisMethod", 0, 4);
 	}
