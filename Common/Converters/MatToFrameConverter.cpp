@@ -42,11 +42,13 @@ using namespace FrameWrapper;
  */
 FrameWrapper::FrameConstPtr MatToFrameConverter::Convert(const cv::Mat& image)
 	{
-	ASSERT(image.type() ==  CV_8UC3, "MatToFrameConverter: Only CV_8UC3 type is supported for this conversion at the moment");
-
 	FrameWrapper::FramePtr frame = std::make_shared<Frame>();
 	SetFrameSize(*frame, image.cols, image.rows);
 	SetFrameMode(*frame, MODE_RGB);
+
+	if (image.rows == 0 && image.cols == 0)
+		return frame;		
+	ASSERT(image.type() ==  CV_8UC3, "MatToFrameConverter: Only CV_8UC3 type is supported for this conversion at the moment");
 
 	for(int rowIndex = 0; rowIndex < image.rows; rowIndex++)
 		{
