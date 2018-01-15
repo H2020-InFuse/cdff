@@ -18,6 +18,7 @@ autogeneration:
 build:
   stage: build
   script:
+      - pwd
       - cp -rf /CDFF/External ./External
       - mkdir build
       - cd build
