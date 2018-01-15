@@ -1,8 +1,16 @@
 project(infuse_dev)
 cmake_minimum_required(VERSION 2.6)
 
-include(FindPkgConfig)
-find_package(OpenCV 3.0.0 REQUIRED)
+#include(FindPkgConfig) //uncomment if you want to use your system libs instead
+#find_package( Boost 1.61 REQUIRED )
+#find_package( Eigen3 3.3.4 REQUIRED )
+#find_package( flann 1.9.1 REQUIRED )
+#find_package( OpenCV 3.4.0 REQUIRED )
+#find_package( pcl 1.8.1 REQUIRED )
+#find_package( QHull REQUIRED )
+#find_package( vtk 8.1.0 REQUIRED )
+#find_package( yaml-cpp 0.5.3 REQUIRED )
+#find_package( Eigen3 3.3.4 REQUIRED )
 
 enable_testing()
 
@@ -32,7 +40,7 @@ include_directories(
     External/install/include/opencv
     External/install/include/opencv2
     External/install/include/pcl-1.8
-    External/install/include/vtk-9.0
+    External/install/include/vtk-8.1
     External/install/include/yaml-cpp
 )
 link_directories(
