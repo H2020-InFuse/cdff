@@ -1,7 +1,8 @@
 - Name: GeneralParameters
-  Radius: 0.1
+  Radius: 0.01
+  SearchRadius: 0.01
   NonMaxSuppression: true
-  DetectionThreshold: 0.5
+  DetectionThreshold: 0.01
   EnableRefinement: false
   NumberOfThreads: 0
   HarrisMethod: Harris
