@@ -7,14 +7,14 @@
 
 /*!
  * @file VisualPointFeatureVector3D.hpp
- * @date 08/12/2017
+ * @date 15/01/2018
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup CppTypes
+ * @addtogroup VisualPointFeatureVector3DWrapper
  * 
- * C++ wrapper for the VisualPointFeatureVector3D
+ * VisualPointFeatureVector3D wrapper for the VisualPointFeatureVector2D type
  * 
  * 
  * @{
@@ -40,7 +40,7 @@ namespace CTypes {
 #ifndef VISUAL_POINT_FEATURE_VECTOR_3D_HPP
 #define VISUAL_POINT_FEATURE_VECTOR_3D_HPP
 
-namespace CppTypes 
+namespace VisualPointFeatureVector3DWrapper 
 {
 /* --------------------------------------------------------------------------
  *
@@ -49,64 +49,49 @@ namespace CppTypes
  * --------------------------------------------------------------------------
  */
 
-typedef CTypes::VisualPointFeature3D VisualPointFeature3D;
 typedef CTypes::VisualPointFeature3D_descriptor VisualPointDescriptor3D;
+typedef CTypes::VisualPointFeature3D VisualPointFeature3D;
+typedef CTypes::VisualPointFeatureVector3D VisualPointFeatureVector3D;
+
+
+/* --------------------------------------------------------------------------
+ *
+ * Constants
+ *
+ * --------------------------------------------------------------------------
+ */
+const int MAX_FEATURE_3D_POINTS = static_cast<int>(CTypes::features3DElementsMax);
+const int MAX_DESCRIPTOR_3D_LENGTH = static_cast<int>(CTypes::descriptor3DNameLength);
 
 
 
 /* --------------------------------------------------------------------------
  *
- * Class definition
+ * Shared Pointers definition
  *
  * --------------------------------------------------------------------------
  */
-class VisualPointFeatureVector3D
-	{
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
-	public:
-
-		typedef std::shared_ptr<VisualPointFeatureVector3D> Ptr;
-		typedef std::shared_ptr<const VisualPointFeatureVector3D> ConstPtr;
-
-		VisualPointFeatureVector3D();
-		~VisualPointFeatureVector3D();
-
-		void AddPoint(float x, float y, float z);
-		void ClearPoints();
-		int GetNumberOfPoints() const;
-		float GetXCoordinate(int pointIndex) const;
-		float GetYCoordinate(int pointIndex) const;
-		float GetZCoordinate(int pointIndex) const;
-
-		void AddDescriptorComponent(int pointIndex, float component);
-		void ClearDescriptor(int pointIndex);
-		int GetNumberOfDescriptorComponents(int pointIndex) const;
-		float GetDescriptorComponent(int pointIndex, int componentIndex) const;
-
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-	protected:
-
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
-
-		static const int MAX_FEATURE_3D_POINTS;
-		static const int MAX_DESCRIPTOR_3D_LENGTH;
-
-		CTypes::VisualPointFeatureVector3D featuresVector;
-		
-
-	};
+typedef std::shared_ptr<VisualPointFeatureVector3D> VisualPointFeatureVector3DPtr;
+typedef std::shared_ptr<const VisualPointFeatureVector3D> VisualPointFeatureVector3DConstPtr;
 
 
+/* --------------------------------------------------------------------------
+ *
+ * Access Functions definition
+ *
+ * --------------------------------------------------------------------------
+ */
+void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, float z);
+void ClearPoints(VisualPointFeatureVector3D& featuresVector);
+int GetNumberOfPoints(const VisualPointFeatureVector3D& featuresVector);
+float GetXCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex);
+float GetYCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex);
+float GetZCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex);
+
+void AddDescriptorComponent(VisualPointFeatureVector3D& featuresVector, int pointIndex, float component);
+void ClearDescriptor(VisualPointFeatureVector3D& featuresVector, int pointIndex);
+int GetNumberOfDescriptorComponents(const VisualPointFeatureVector3D& featuresVector, int pointIndex);
+float GetDescriptorComponent(const VisualPointFeatureVector3D& featuresVector, int pointIndex, int componentIndex);
 
 }
 #endif

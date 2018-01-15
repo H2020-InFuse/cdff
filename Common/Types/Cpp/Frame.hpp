@@ -7,19 +7,18 @@
 
 /*!
  * @file Frame.hpp
- * @date 05/12/2017
+ * @date 12/01/2018
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup CppTypes
+ * @addtogroup FrameWrapper
  * 
- * C++ wrapper for the Frame ASN.1 type
+ * Frame namespace wrapper for Frame type
  * 
  * 
  * @{
  */
-
 
 
 /* --------------------------------------------------------------------------
@@ -38,13 +37,19 @@ namespace CTypes {
 #ifndef FRAME_HPP
 #define FRAME_HPP
 
-namespace CppTypes 
-{
-
 
 /* --------------------------------------------------------------------------
  *
- * Cpp typedef definition
+ * Frame namespace
+ *
+ * --------------------------------------------------------------------------
+ */
+namespace FrameWrapper
+{
+
+/* --------------------------------------------------------------------------
+ *
+ * Types definition
  *
  * --------------------------------------------------------------------------
  */
@@ -53,111 +58,100 @@ typedef CTypes::Frame_status_t FrameStatus;
 typedef CTypes::Frame_size_t FrameSize;
 typedef CTypes::Frame_attrib_t FrameAttribute;
 typedef CTypes::Frame_image FrameImage;
+typedef CTypes::Frame_attributes FrameAttributesList;
+typedef CTypes::Frame Frame;
+typedef CTypes::FramePair FramePair;
+
+
+/* --------------------------------------------------------------------------
+ *
+ * Constants definition
+ *
+ * --------------------------------------------------------------------------
+ */
+const FrameMode MODE_UNDEFINED = CTypes::mode_undefined;
+const FrameMode MODE_GRAYSCALE = CTypes::mode_grayscale;
+const FrameMode MODE_RGB = CTypes::mode_rgb;
+const FrameMode MODE_UYVY = CTypes::mode_uyvy;
+const FrameMode MODE_BGR = CTypes::mode_bgr;
+const FrameMode MODE_RGB32 = CTypes::mode_rgb32;
+const FrameMode RAW_MODES = CTypes::raw_modes;
+const FrameMode MODE_BAYER = CTypes::mode_bayer;
+const FrameMode MODE_BAYER_RGGB = CTypes::mode_bayer_rggb;
+const FrameMode MODE_BAYER_GRBG = CTypes::mode_bayer_grbg;
+const FrameMode MODE_BAYER_BGGR = CTypes::mode_bayer_bggr;
+const FrameMode MODE_BAYER_GBRG = CTypes::mode_bayer_gbrg;
+const FrameMode COMPRESSED_MODES = CTypes::compressed_modes;
+const FrameMode MODE_PJPG = CTypes::Frame_mode_t_mode_pjpg;
+const FrameMode MODE_JPEG = CTypes::mode_jpeg;
+const FrameMode MODE_PNG = CTypes::mode_png;
+
+const FrameStatus STATUS_EMPTY = CTypes::status_empty;
+const FrameStatus STATUS_VALID = CTypes::status_valid;
+const FrameStatus STATUS_INVALID = CTypes::status_invalid;
+
+const int MAX_FRAME_ATTRIBUTES = CTypes::frameMaxAttributes;
+const int MAX_DATA_BYTE_SIZE = CTypes::frameMaxBytes;
+
+
+/* --------------------------------------------------------------------------
+ *
+ * Shared Pointers definition
+ *
+ * --------------------------------------------------------------------------
+ */
+typedef std::shared_ptr<Frame> FramePtr;
+typedef std::shared_ptr<const Frame> FrameConstPtr;
 
 
 
 /* --------------------------------------------------------------------------
  *
- * Class definition
+ * Access Functions definition
  *
  * --------------------------------------------------------------------------
  */
-class Frame
-	{
+void SetFrameTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
+BaseTypesWrapper::T_Int64 GetFrameTime(const Frame& frame);
 
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
-	public:
-		typedef std::shared_ptr<Frame> Ptr;
-		typedef std::shared_ptr<const Frame> ConstPtr;
+void SetReceivedTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
+BaseTypesWrapper::T_Int64 GetReceivedTime(const Frame& frame);
 
-		static const FrameMode MODE_UNDEFINED;
-    		static const FrameMode MODE_GRAYSCALE;
-    	   	static const FrameMode MODE_RGB;
-   		static const FrameMode MODE_UYVY;
-		static const FrameMode MODE_BGR;
-		static const FrameMode MODE_RGB32;
-		static const FrameMode RAW_MODES;
-		static const FrameMode MODE_BAYER;
-		static const FrameMode MODE_BAYER_RGGB;
-		static const FrameMode MODE_BAYER_GRBG;
-		static const FrameMode MODE_BAYER_BGGR;
-		static const FrameMode MODE_BAYER_GBRG;
-		static const FrameMode COMPRESSED_MODES;
-		static const FrameMode MODE_PJPG;
-		static const FrameMode MODE_JPEG;
-		static const FrameMode MODE_PNG;
+void SetDataDepth(Frame& frame, BaseTypesWrapper::T_UInt32 dataDepth);
+BaseTypesWrapper::T_UInt32 GetDataDepth(const Frame& frame);
 
-		static const FrameStatus STATUS_EMPTY;
-		static const FrameStatus STATUS_VALID;
-		static const FrameStatus STATUS_INVALID;
+void SetPixelSize(Frame& frame, BaseTypesWrapper::T_UInt32 pizelSize);
+BaseTypesWrapper::T_UInt32 GetPixelSize(const Frame& frame);
 
+void SetRowSize(Frame& frame, BaseTypesWrapper::T_UInt32 rowSize);
+BaseTypesWrapper::T_UInt32 GetRowSize(const Frame& frame);
 
-		Frame();
-		~Frame();
-
-		void SetFrameTime(T_Int64 time);
-		T_Int64 GetFrameTime() const;
-
-		void SetReceivedTime(T_Int64 time);
-		T_Int64 GetReceivedTime() const;
-
-		void SetDataDepth(T_UInt32 dataDepth);
-		T_UInt32 GetDataDepth() const;
-
-		void SetPixelSize( T_UInt32 pizelSize);
-		T_UInt32 GetPixelSize() const;
-
-		void SetRowSize(T_UInt32 rowSize);
-		T_UInt32 GetRowSize() const;
-
-		void SetFrameMode(FrameMode frameMode);
-		FrameMode GetFrameMode() const;
+void SetFrameMode(Frame& frame, FrameMode frameMode);
+FrameMode GetFrameMode(const Frame& frame);
 		
-		void SetFrameStatus(FrameStatus frameStatus);
-		FrameStatus GetFrameStatus() const;
+void SetFrameStatus(Frame& frame, FrameStatus frameStatus);
+FrameStatus GetFrameStatus(const Frame& frame);
 
-		void SetFrameSize(T_UInt16 width, T_UInt16 height);
-		void SetFrameSize(FrameSize frameSize);
-		T_UInt16 GetFrameWidth() const;
-		T_UInt16 GetFrameHeight() const;
-		FrameSize GetFrameSize() const;
+void SetFrameSize(Frame& frame, BaseTypesWrapper::T_UInt16 width, BaseTypesWrapper::T_UInt16 height);
+void SetFrameSize(Frame& frame, FrameSize frameSize);
+BaseTypesWrapper::T_UInt16 GetFrameWidth(const Frame& frame);
+BaseTypesWrapper::T_UInt16 GetFrameHeight(const Frame& frame);
+FrameSize GetFrameSize(const Frame& frame);
 		
-		void AddAttribute(T_String data, T_String name);
-		void ClearAttributes();
-		void RemoveAttribute(int index);
-		FrameAttribute GetAttribute(int index) const;
-		unsigned GetNumberOfAttributes() const;
+void AddAttribute(Frame& frame, BaseTypesWrapper::T_String data, BaseTypesWrapper::T_String name);
+void ClearAttributes(Frame& frame);
+void RemoveAttribute(Frame& frame, int index);
+FrameAttribute GetAttribute(const Frame& frame, int index);
+unsigned GetNumberOfAttributes(const Frame& frame);
 	
-		void AddDataByte(byte data);
-		void ClearData();
-		byte GetDataByte(int index) const;
-		int GetNumberOfDataBytes() const;
-		
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-	protected:
-
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
-		static const int MAX_FRAME_ATTRIBUTES;
-		static const int MAX_DATA_BYTE_SIZE;
-
-		CTypes::Frame frame;
-
-	};
-
-
+void AddDataByte(Frame& frame, BaseTypesWrapper::byte data);
+void ClearData(Frame& frame);
+BaseTypesWrapper::byte GetDataByte(const Frame& frame, int index);
+int GetNumberOfDataBytes(const Frame& frame);
 
 }
+
 #endif
 
-/* Frame.hpp */
+/* Frame.h */
 /** @} */

@@ -55,21 +55,21 @@ namespace dfn_ci {
             * Send value to input port image
             * @param image, a 2D image taken from a camera
             */
-            virtual void imageInput(CppTypes::Frame::ConstPtr data);
+            virtual void imageInput(FrameWrapper::FrameConstPtr data);
 
             /**
             * Receive value from output port featuresSet
             * @param featuresSet, This is the set of the points extracted from the image, no descriptor is provided yet
             */
-            virtual CppTypes::VisualPointFeatureVector2D::ConstPtr featuresSetOutput();
+            virtual VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featuresSetOutput();
 
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
 	 */
         protected:
-            CppTypes::Frame::ConstPtr inImage;
-            CppTypes::VisualPointFeatureVector2D::ConstPtr outFeaturesSet;
+            FrameWrapper::FrameConstPtr inImage;
+            VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr outFeaturesSet;
 
 	/* --------------------------------------------------------------------
 	 * Private

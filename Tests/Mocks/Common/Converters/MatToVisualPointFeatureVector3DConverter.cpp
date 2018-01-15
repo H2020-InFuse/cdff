@@ -44,8 +44,8 @@ MatToVisualPointFeatureVector3DConverter::~MatToVisualPointFeatureVector3DConver
 
 	}
 
-CppTypes::VisualPointFeatureVector3D::ConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat& featuresVector)
-	MOCK_METHOD(Converters::MatToVisualPointFeatureVector3DConverter, Convert, CppTypes::VisualPointFeatureVector3D::ConstPtr, (featuresVector) )
+VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat& featuresVector)
+	MOCK_METHOD(Converters::MatToVisualPointFeatureVector3DConverter, Convert, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr, (featuresVector) )
 
 }
 

@@ -49,7 +49,7 @@ class VisualPointFeatureVector3DToMatConverter
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual const cv::Mat Convert(const CppTypes::VisualPointFeatureVector3D::ConstPtr& featuresVector);
+		virtual const cv::Mat Convert(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& featuresVector);
 
 	/* --------------------------------------------------------------------
 	 * Protected

@@ -31,7 +31,8 @@
 
 namespace dfn_ci {
 
-using namespace CppTypes;
+using namespace PointCloudWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -47,12 +48,12 @@ FeaturesExtraction3DInterface::~FeaturesExtraction3DInterface()
 	{
 	}
 
-void FeaturesExtraction3DInterface::pointCloudInput(PointCloud::ConstPtr data) 
+void FeaturesExtraction3DInterface::pointCloudInput(PointCloudConstPtr data) 
 	{
     	inPointCloud = data;
 	}
 
-VisualPointFeatureVector3D::ConstPtr FeaturesExtraction3DInterface::featuresSetOutput() 
+VisualPointFeatureVector3DConstPtr FeaturesExtraction3DInterface::featuresSetOutput() 
 	{
     	return outFeaturesSet;
 	}

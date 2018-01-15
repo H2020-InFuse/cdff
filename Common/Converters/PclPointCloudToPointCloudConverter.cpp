@@ -34,7 +34,7 @@
 
 namespace Converters {
 
-using namespace CppTypes;
+using namespace PointCloudWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -42,13 +42,13 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
-PointCloud::ConstPtr PclPointCloudToPointCloudConverter::Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pointCloud)
+PointCloudConstPtr PclPointCloudToPointCloudConverter::Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pointCloud)
 	{
-	PointCloud::Ptr asnPointCloud =  std::make_shared<PointCloud>();
+	PointCloudPtr asnPointCloud =  std::make_shared<PointCloud>();
 	
 	for(unsigned pointIndex = 0; pointIndex < pointCloud->points.size(); pointIndex++)
 		{
-		asnPointCloud->AddPoint(pointCloud->points.at(pointIndex).x, pointCloud->points.at(pointIndex).y, pointCloud->points.at(pointIndex).z);
+		AddPoint(*asnPointCloud, pointCloud->points.at(pointIndex).x, pointCloud->points.at(pointIndex).y, pointCloud->points.at(pointIndex).z);
 		}
 
 	return asnPointCloud;

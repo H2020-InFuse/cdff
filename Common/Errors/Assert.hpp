@@ -74,9 +74,9 @@ class AssertException: public std::exception
 	}
 
 #ifndef TESTING
-	#define ASSERT_ON_TEST(condition, message) ASSERT(condition, message)
+	#define ASSERT_ON_TEST(condition, message) 
 #else
-	#define ASSERT_ON_TEST(condition, message)
+	#define ASSERT_ON_TEST(condition, message) ASSERT(condition, message)
 #endif
 
 #define ASSERT_EQUAL(expression1, expression2, message) \

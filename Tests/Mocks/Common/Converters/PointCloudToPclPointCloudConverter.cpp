@@ -46,7 +46,7 @@ PointCloudToPclPointCloudConverter::~PointCloudToPclPointCloudConverter()
 
 	}
 
-pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const CppTypes::PointCloud::ConstPtr& pointcloud)
+pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const PointCloudWrapper::PointCloudConstPtr& pointcloud)
 	MOCK_METHOD(Converters::PointCloudToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, (pointcloud) )
 
 

@@ -7,14 +7,14 @@
 
 /*!
  * @file PointCloud.cpp
- * @date 08/12/2017
+ * @date 12/01/2018
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup CppTypes
+ * @addtogroup PointCloudWrapper
  * 
- * Implementation of PointCloud class.
+ * Implementation of PointCloud wrapper functions.
  * 
  * 
  * @{
@@ -30,29 +30,20 @@
 #include "PointCloud.hpp"
 #include <Errors/Assert.hpp>
 
-namespace CppTypes
+using namespace BaseTypesWrapper;
+
+namespace PointCloudWrapper
 {
 
 
 /* --------------------------------------------------------------------------
  *
- * Public Member Functions
+ * Functions
  *
  * --------------------------------------------------------------------------
  */
 
-PointCloud::PointCloud()
-	{
-	isColored = false;
-	ClearPoints();
-	}
-
-PointCloud::~PointCloud()
-	{
-
-	}
-
-void PointCloud::AddPoint(T_Double x, T_Double y, T_Double z)
+void AddPoint(PointCloud& pointCloud, T_Double x, T_Double y, T_Double z)
 	{
 	ASSERT_ON_TEST(pointCloud.points.nCount < MAX_CLOUD_SIZE, "Point Cloud maximum capacity has been reached");
 	int currentIndex = pointCloud.points.nCount;
@@ -62,44 +53,34 @@ void PointCloud::AddPoint(T_Double x, T_Double y, T_Double z)
 	pointCloud.points.nCount++;
 	}
 
-void PointCloud::ClearPoints()
+void ClearPoints(PointCloud& pointCloud)
 	{
 	pointCloud.points.nCount = 0;
 	pointCloud.colors.nCount = 0;
-	isColored = false;
 	}
 
-int PointCloud::GetNumberOfPoints() const
+int GetNumberOfPoints(const PointCloud& pointCloud)
 	{
 	return pointCloud.points.nCount;
 	}
 
-T_Double PointCloud::GetXCoordinate(int pointIndex) const
+T_Double GetXCoordinate(const PointCloud& pointCloud, int pointIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < pointCloud.points.nCount, "A missing point was requested from a features vector 2D");
 	return pointCloud.points.arr[pointIndex].arr[0];
 	}
 
-T_Double PointCloud::GetYCoordinate(int pointIndex) const
+T_Double GetYCoordinate(const PointCloud& pointCloud, int pointIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < pointCloud.points.nCount, "A missing point was requested from a features vector 2D");
 	return pointCloud.points.arr[pointIndex].arr[1];
 	}
 
-T_Double PointCloud::GetZCoordinate(int pointIndex) const
+T_Double GetZCoordinate(const PointCloud& pointCloud, int pointIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < pointCloud.points.nCount, "A missing point was requested from a features vector 2D");
 	return pointCloud.points.arr[pointIndex].arr[2];
 	}
-
-/* --------------------------------------------------------------------------
- *
- * Private Member Variables
- *
- * --------------------------------------------------------------------------
- */
-const int PointCloud::MAX_CLOUD_SIZE = static_cast<int>(CTypes::maxPointcloudSize);
-
 
 }
 

@@ -7,14 +7,14 @@
 
 /*!
  * @file BaseTypes.hpp
- * @date 08/12/2017
+ * @date 12/01/2018
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup CppTypes
+ * @addtogroup BaseTypesWrapper
  * 
- * C++ typedefs for the ASN.1 base types
+ * Wrapper for ASN.1 base types
  * 
  * 
  * @{
@@ -45,7 +45,7 @@ namespace CTypes {
 #ifndef BASE_TYPES_HPP
 #define BASE_TYPES_HPP
 
-namespace CppTypes 
+namespace BaseTypesWrapper 
 {
 
 

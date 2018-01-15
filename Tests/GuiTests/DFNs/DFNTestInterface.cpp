@@ -112,7 +112,7 @@ int DFNTestInterface::GetTotalVirtualMemoryUsedKB()
  * --------------------------------------------------------------------------
  */
 
-const std::string DFNTestInterface::filePath = "../tests/ConfigurationFiles/DFNs/FeaturesExtraction2D/Conf.yaml";
+const std::string DFNTestInterface::filePath = "../../tests/ConfigurationFiles/TemporaryGuiTest/Conf.yaml";
 
 
 /* --------------------------------------------------------------------------

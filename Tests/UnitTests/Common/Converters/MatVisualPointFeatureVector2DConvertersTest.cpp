@@ -43,7 +43,7 @@
 #include <Errors/Assert.hpp>
 
 using namespace Converters;
-using namespace CppTypes;
+using namespace VisualPointFeatureVector2DWrapper;
 
 TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2D]" )
 	{
@@ -59,18 +59,18 @@ TEST_CASE( "Mat to VisualPointFeatureVector2D", "[MatToVisualPointFeatureVector2
 			}
 		}
 
-	VisualPointFeatureVector2D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
-	REQUIRE(asnVector->GetNumberOfPoints() == inputMatrix.rows);
-	int descriptorSize = asnVector->GetNumberOfDescriptorComponents(0);
+	VisualPointFeatureVector2DConstPtr asnVector = firstConverter.Convert(inputMatrix);
+	REQUIRE(GetNumberOfPoints(*asnVector) == inputMatrix.rows);
+	int descriptorSize = GetNumberOfDescriptorComponents(*asnVector, 0);
 	REQUIRE(descriptorSize == inputMatrix.cols - 2);
 	for(int rowIndex = 0; rowIndex < inputMatrix.rows; rowIndex++)
 		{
-		REQUIRE(asnVector->GetXCoordinate(rowIndex) == inputMatrix.at<float>(rowIndex, 0) );
-		REQUIRE(asnVector->GetYCoordinate(rowIndex) == inputMatrix.at<float>(rowIndex, 1) );
-		REQUIRE(descriptorSize == asnVector->GetNumberOfDescriptorComponents(rowIndex) );
+		REQUIRE(GetXCoordinate(*asnVector, rowIndex) == inputMatrix.at<float>(rowIndex, 0) );
+		REQUIRE(GetYCoordinate(*asnVector, rowIndex) == inputMatrix.at<float>(rowIndex, 1) );
+		REQUIRE(descriptorSize == GetNumberOfDescriptorComponents(*asnVector, rowIndex) );
 		for(int columnIndex = 2; columnIndex < inputMatrix.cols; columnIndex++)
 			{
-			REQUIRE(asnVector->GetDescriptorComponent(rowIndex, columnIndex-2) == inputMatrix.at<float>(rowIndex, columnIndex) );
+			REQUIRE(GetDescriptorComponent(*asnVector, rowIndex, columnIndex-2) == inputMatrix.at<float>(rowIndex, columnIndex) );
 			}		
 		}
 
@@ -104,23 +104,23 @@ TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMa
 			}
 		}
 
-	VisualPointFeatureVector2D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
+	VisualPointFeatureVector2DConstPtr asnVector = firstConverter.Convert(inputMatrix);
 	cv::Mat intermediateMatrix = secondConverter.Convert(asnVector);
-	VisualPointFeatureVector2D::ConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
+	VisualPointFeatureVector2DConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
 
-	REQUIRE(asnVector->GetNumberOfPoints() == outputVector->GetNumberOfPoints());
-	REQUIRE(asnVector->GetNumberOfPoints() > 0);
-	int descriptorSize = asnVector->GetNumberOfDescriptorComponents(0);
-	for(int pointIndex = 0; pointIndex < asnVector->GetNumberOfPoints(); pointIndex++)
+	REQUIRE(GetNumberOfPoints(*asnVector) == GetNumberOfPoints(*outputVector));
+	REQUIRE(GetNumberOfPoints(*asnVector) > 0);
+	int descriptorSize = GetNumberOfDescriptorComponents(*asnVector, 0);
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*asnVector); pointIndex++)
 		{
-		REQUIRE(asnVector->GetXCoordinate(pointIndex) == outputVector->GetXCoordinate(pointIndex) );
-		REQUIRE(asnVector->GetYCoordinate(pointIndex) == outputVector->GetYCoordinate(pointIndex) );
-		REQUIRE(asnVector->GetNumberOfDescriptorComponents(pointIndex) == descriptorSize );
-		REQUIRE(outputVector->GetNumberOfDescriptorComponents(pointIndex) == descriptorSize );
+		REQUIRE(GetXCoordinate(*asnVector, pointIndex) == GetXCoordinate(*outputVector, pointIndex) );
+		REQUIRE(GetYCoordinate(*asnVector, pointIndex) == GetYCoordinate(*outputVector, pointIndex) );
+		REQUIRE(GetNumberOfDescriptorComponents(*asnVector, pointIndex) == descriptorSize );
+		REQUIRE(GetNumberOfDescriptorComponents(*outputVector, pointIndex) == descriptorSize );
 		
 		for(int componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
 			{
-			REQUIRE(asnVector->GetDescriptorComponent(pointIndex, componentIndex) == outputVector->GetDescriptorComponent(pointIndex, componentIndex) );
+			REQUIRE(GetDescriptorComponent(*asnVector, pointIndex, componentIndex) == GetDescriptorComponent(*outputVector, pointIndex, componentIndex) );
 			}
 		}
 
@@ -130,14 +130,14 @@ TEST_CASE( "VisualPointFeatureVector2D to Mat", "[VisualPointFeatureVector2DToMa
 
 TEST_CASE( "Attempt conversion of a Bad VisualPointFeatureVector2D", "[BadVisualPointFeatureVector2D]")
 	{
-	VisualPointFeatureVector2D::Ptr asnVector = std::make_shared<VisualPointFeatureVector2D>();
+	VisualPointFeatureVector2DPtr asnVector = std::make_shared<VisualPointFeatureVector2D>();
 	
-	asnVector->AddPoint(0, 0);
-	asnVector->AddDescriptorComponent(0, 0);
+	AddPoint(*asnVector, 0, 0);
+	AddDescriptorComponent(*asnVector, 0, 0);
 
-	asnVector->AddPoint(1, 1);
-	asnVector->AddDescriptorComponent(1, 1);
-	asnVector->AddDescriptorComponent(1, 2);
+	AddPoint(*asnVector, 1, 1);
+	AddDescriptorComponent(*asnVector, 1, 1);
+	AddDescriptorComponent(*asnVector, 1, 2);
 
 	VisualPointFeatureVector2DToMatConverter converter;
 	REQUIRE_THROWS_AS( converter.Convert(asnVector), AssertException);	
@@ -159,7 +159,7 @@ TEST_CASE( "Points with empty descriptors", "[EmptyDescriptors2D]")
 			}
 		}
 
-	VisualPointFeatureVector2D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
+	VisualPointFeatureVector2DConstPtr asnVector = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnVector);
 
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
@@ -182,7 +182,7 @@ TEST_CASE("Empty Features Vector 2D", "[EmptyFeaturesVector2D]")
 	VisualPointFeatureVector2DToMatConverter secondConverter;
 
 	cv::Mat inputMatrix;
-	VisualPointFeatureVector2D::ConstPtr asnVector = firstConverter.Convert(inputMatrix);
+	VisualPointFeatureVector2DConstPtr asnVector = firstConverter.Convert(inputMatrix);
 	cv::Mat outputMatrix = secondConverter.Convert(asnVector);
 
 	REQUIRE(outputMatrix.cols == 0);

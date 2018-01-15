@@ -25,3 +25,5 @@ target_link_libraries(
 	HarrisDetector3DGuiTest
 	 harris_detector_3d mock cdff_logger harris_detector_2d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
 )
+
+#vtkCommon-8.0 vtkIO-8.0 vtkViews-8.0 vtkCharts-8.0 vtkParallel-8.0 vtkGeovis-8.0 vtkRendering-8.0 vtkInfovis-8.0 vtkImaging-8.0 yaml-cpp vtkGraphics-8.0 vtkGenericFiltering-8.0 vtkVolumeRendering-8.0 vtkftgl-8.0 vtklz-8.0

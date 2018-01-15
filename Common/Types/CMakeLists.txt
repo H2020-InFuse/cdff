@@ -24,4 +24,6 @@ install(
     TARGETS cdff_types
     DESTINATION lib
 )
-
+target_link_libraries(
+    cdff_types cdff_logger
+)

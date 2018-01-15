@@ -44,7 +44,7 @@
 #include <boost/smart_ptr.hpp>
 
 using namespace Converters;
-using namespace CppTypes;
+using namespace PointCloudWrapper;
 
 TEST_CASE( "PclPointCloud to PointCloud and Back", "[PclPointCloudToPointCloud]" )
 	{
@@ -57,13 +57,13 @@ TEST_CASE( "PclPointCloud to PointCloud and Back", "[PclPointCloudToPointCloud]"
 		inputCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
 		}
 
-	PointCloud::ConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
-	REQUIRE(asnPointCloud->GetNumberOfPoints() == inputCloud->points.size() );
+	PointCloudConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
+	REQUIRE(GetNumberOfPoints(*asnPointCloud) == inputCloud->points.size() );
 	for(int pointIndex = 0; pointIndex < static_cast<int>( inputCloud->points.size() ); pointIndex++)
 		{
-		REQUIRE( asnPointCloud->GetXCoordinate(pointIndex) == inputCloud->points.at(pointIndex).x );
-		REQUIRE( asnPointCloud->GetYCoordinate(pointIndex) == inputCloud->points.at(pointIndex).y );
-		REQUIRE( asnPointCloud->GetZCoordinate(pointIndex) == inputCloud->points.at(pointIndex).z );
+		REQUIRE( GetXCoordinate(*asnPointCloud, pointIndex) == inputCloud->points.at(pointIndex).x );
+		REQUIRE( GetYCoordinate(*asnPointCloud, pointIndex) == inputCloud->points.at(pointIndex).y );
+		REQUIRE( GetZCoordinate(*asnPointCloud, pointIndex) == inputCloud->points.at(pointIndex).z );
 		}
 
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr outputCloud = secondConverter.Convert(asnPointCloud);
@@ -91,16 +91,16 @@ TEST_CASE( "PointCloud3D to PclPointCloud and Back", "[PointCloud3DToPclPointClo
 		inputCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
 		}
 
-	PointCloud::ConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
+	PointCloudConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr intermediateCloud = secondConverter.Convert(asnPointCloud);
-	PointCloud::ConstPtr outputCloud = firstConverter.Convert(intermediateCloud);
+	PointCloudConstPtr outputCloud = firstConverter.Convert(intermediateCloud);
 
-	REQUIRE(outputCloud->GetNumberOfPoints() == asnPointCloud->GetNumberOfPoints());
-	for(int pointIndex = 0; pointIndex < outputCloud->GetNumberOfPoints(); pointIndex++)
+	REQUIRE(GetNumberOfPoints(*outputCloud) == GetNumberOfPoints(*asnPointCloud));
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*outputCloud); pointIndex++)
 		{
-		REQUIRE( outputCloud->GetXCoordinate(pointIndex) == asnPointCloud->GetXCoordinate(pointIndex) );
-		REQUIRE( outputCloud->GetYCoordinate(pointIndex) == asnPointCloud->GetYCoordinate(pointIndex) );
-		REQUIRE( outputCloud->GetZCoordinate(pointIndex) == asnPointCloud->GetZCoordinate(pointIndex) );
+		REQUIRE( GetXCoordinate(*outputCloud, pointIndex) == GetXCoordinate(*asnPointCloud, pointIndex) );
+		REQUIRE( GetYCoordinate(*outputCloud, pointIndex) == GetYCoordinate(*asnPointCloud, pointIndex) );
+		REQUIRE( GetZCoordinate(*outputCloud, pointIndex) == GetZCoordinate(*asnPointCloud, pointIndex) );
 		}
 
 
@@ -114,11 +114,11 @@ TEST_CASE("Empty Point Cloud conversion", "[EmptyPointCloud]")
 	PointCloudToPclPointCloudConverter secondConverter;
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	PointCloud::ConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
+	PointCloudConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr intermediateCloud = secondConverter.Convert(asnPointCloud);
-	PointCloud::ConstPtr outputCloud = firstConverter.Convert(intermediateCloud);
+	PointCloudConstPtr outputCloud = firstConverter.Convert(intermediateCloud);
 
-	REQUIRE(asnPointCloud->GetNumberOfPoints() == 0);
+	REQUIRE(GetNumberOfPoints(*asnPointCloud) == 0);
 	REQUIRE(intermediateCloud->points.size() == 0);
-	REQUIRE(outputCloud->GetNumberOfPoints() == 0);
+	REQUIRE(GetNumberOfPoints(*outputCloud) == 0);
 	}

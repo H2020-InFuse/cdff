@@ -48,7 +48,8 @@
 using namespace dfn_ci;
 using namespace Converters;
 using namespace Common;
-using namespace CppTypes;
+using namespace VisualPointFeatureVector3DWrapper;
+using namespace PointCloudWrapper;
 
 class HarrisDetector3DTestInterface : public DFNTestInterface
 	{
@@ -58,14 +59,14 @@ class HarrisDetector3DTestInterface : public DFNTestInterface
 	protected:
 
 	private:
-		Stubs::CacheHandler<PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr >* stubInputCache;
+		Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr >* stubInputCache;
 		Mocks::PointCloudToPclPointCloudConverter* mockInputConverter;
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3D::ConstPtr>* stubOutputCache;
+		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>* stubOutputCache;
 		Mocks::MatToVisualPointFeatureVector3DConverter* mockOutputConverter;
 		HarrisDetector3D* harris;
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud;
-		PointCloud::ConstPtr inputCloud;
+		PointCloudConstPtr inputCloud;
 		std::string outputWindowName;
 
 		void SetupMocksAndStubs();
@@ -81,10 +82,9 @@ HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(std::string dfnName
 
 	PclPointCloudToPointCloudConverter converter;
 	pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::io::loadPLYFile("../tests/Data/PointClouds/bunny0.ply", *pclCloud);
+	pcl::io::loadPLYFile("../../tests/Data/PointClouds/bunny0.ply", *pclCloud);
 	inputCloud = converter.Convert(pclCloud);
 	harris->pointCloudInput(inputCloud);
-
 	outputWindowName = "Harris Detector 3D Result";
 	}
 
@@ -100,36 +100,38 @@ HarrisDetector3DTestInterface::~HarrisDetector3DTestInterface()
 
 void HarrisDetector3DTestInterface::SetupMocksAndStubs()
 	{
-	stubInputCache = new Stubs::CacheHandler<PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
+	stubInputCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
 	mockInputConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<PointCloud::ConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
+	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
-	stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3D::ConstPtr>();
+	stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>();
 	mockOutputConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector3D::ConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
+	ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 	}
 
 void HarrisDetector3DTestInterface::SetupParameters()
 	{
 	AddParameter("GeneralParameters", "NonMaxSuppression", 1, 1);
-	AddParameter("GeneralParameters", "Radius", 0.02, 1.00, 0.01);
+	AddParameter("GeneralParameters", "Radius", 0.010, 0.100, 0.001);
+	AddParameter("GeneralParameters", "SearchRadius", 0.010, 0.100, 0.001);
 	AddParameter("GeneralParameters", "EnableRefinement", 0, 1);
-	AddParameter("GeneralParameters", "DetectionThreshold", 0.50, 1.00, 0.01);
+	AddParameter("GeneralParameters", "DetectionThreshold", 0.0010, 0.0100, 0.0001);
 	AddParameter("GeneralParameters", "NumberOfThreads", 0, 10);
 	AddParameter("GeneralParameters", "HarrisMethod", 0, 4);
 	}
 
 void HarrisDetector3DTestInterface::DisplayResult()
 	{
-	VisualPointFeatureVector3D::ConstPtr featuresVector= harris->featuresSetOutput();
+	VisualPointFeatureVector3DConstPtr featuresVector= harris->featuresSetOutput();
 
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
+	PRINT_TO_LOG("Number of feature points: ", GetNumberOfPoints(*featuresVector) );
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr featuresCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	for(int pointIndex = 0; pointIndex < featuresVector->GetNumberOfPoints(); pointIndex++)
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
 		{
-		pcl::PointXYZ newPoint(featuresVector->GetXCoordinate(pointIndex), featuresVector->GetYCoordinate(pointIndex), featuresVector->GetZCoordinate(pointIndex) );
+		pcl::PointXYZ newPoint(GetXCoordinate(*featuresVector, pointIndex), GetYCoordinate(*featuresVector, pointIndex), GetZCoordinate(*featuresVector, pointIndex) );
 		featuresCloud->points.push_back(newPoint);
 		}
 

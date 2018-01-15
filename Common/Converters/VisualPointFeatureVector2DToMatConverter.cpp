@@ -34,7 +34,7 @@
 
 namespace Converters {
 
-using namespace CppTypes;
+using namespace VisualPointFeatureVector2DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -42,21 +42,21 @@ using namespace CppTypes;
  *
  * --------------------------------------------------------------------------
  */
-const cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(const VisualPointFeatureVector2D::ConstPtr& featuresVector)
+const cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(const VisualPointFeatureVector2DConstPtr& featuresVector)
 	{
-	if (featuresVector->GetNumberOfPoints() == 0)
+	if (GetNumberOfPoints(*featuresVector) == 0)
 		return cv::Mat();
 
-	int descriptorSize = featuresVector->GetNumberOfDescriptorComponents(0);	
-	cv::Mat conversion(featuresVector->GetNumberOfPoints(), 2 + descriptorSize, CV_32FC1, cv::Scalar(0));
-	for(int pointIndex = 0; pointIndex < featuresVector->GetNumberOfPoints(); pointIndex++)
+	int descriptorSize = GetNumberOfDescriptorComponents(*featuresVector, 0);	
+	cv::Mat conversion(GetNumberOfPoints(*featuresVector), 2 + descriptorSize, CV_32FC1, cv::Scalar(0));
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
 		{
-		conversion.at<float>(pointIndex, 0) = featuresVector->GetXCoordinate(pointIndex);
-		conversion.at<float>(pointIndex, 1) = featuresVector->GetYCoordinate(pointIndex);
+		conversion.at<float>(pointIndex, 0) = GetXCoordinate(*featuresVector, pointIndex);
+		conversion.at<float>(pointIndex, 1) = GetYCoordinate(*featuresVector, pointIndex);
 
-		ASSERT(descriptorSize == featuresVector->GetNumberOfDescriptorComponents(pointIndex), "VisualPointFeatureVector2DToMatConverter: Descriptors do not have the same size.");
+		ASSERT(descriptorSize == GetNumberOfDescriptorComponents(*featuresVector, pointIndex), "VisualPointFeatureVector2DToMatConverter: Descriptors do not have the same size.");
 		for(int componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
-			conversion.at<float>(pointIndex, componentIndex + 2) = featuresVector->GetDescriptorComponent(pointIndex, componentIndex);
+			conversion.at<float>(pointIndex, componentIndex + 2) = GetDescriptorComponent(*featuresVector, pointIndex, componentIndex);
 		}
 	
 	return conversion;
