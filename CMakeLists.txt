@@ -1,7 +1,7 @@
 project(infuse_dev)
 cmake_minimum_required(VERSION 2.6)
 
-include(FindPkgConfig) //uncomment if you want to use your system libs instead
+include(FindPkgConfig) #uncomment if you want to use your system libs instead
 find_package( Boost 1.61 REQUIRED )
 find_package( Eigen3 3.3.4 REQUIRED )
 find_package( flann 1.9.1 REQUIRED )
