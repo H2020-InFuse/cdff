@@ -2,7 +2,6 @@ image: nexus.spaceapplications.com/repository/infuse/infuse:1.6.3
 
 stages:
   - autogeneration
-  - dependencies
   - build
   - test
   - deploy
