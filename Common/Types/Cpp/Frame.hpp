@@ -100,8 +100,10 @@ const int MAX_DATA_BYTE_SIZE = CTypes::frameMaxBytes;
  *
  * --------------------------------------------------------------------------
  */
-typedef std::shared_ptr<Frame> FramePtr;
-typedef std::shared_ptr<const Frame> FrameConstPtr;
+typedef std::shared_ptr<Frame> FrameSharedPtr;
+typedef std::shared_ptr<const Frame> FrameSharedConstPtr;
+typedef Frame* FramePtr;
+typedef Frame const* FrameConstPtr;
 
 
 

@@ -49,8 +49,7 @@ class FrameToMatConverter
 	 */
 	public:
 		virtual const cv::Mat Convert(const FrameWrapper::FrameConstPtr& frame);
-		virtual const cv::Mat Convert(const FrameWrapper::Frame& frame);
-		virtual void Convert(const FrameWrapper::Frame& frame, cv::Mat& conversion);
+		const cv::Mat ConvertShared(const FrameWrapper::FrameSharedConstPtr& frame);
 
 	/* --------------------------------------------------------------------
 	 * Protected

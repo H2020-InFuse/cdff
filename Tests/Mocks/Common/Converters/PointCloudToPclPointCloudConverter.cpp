@@ -34,6 +34,8 @@
 
 namespace Mocks {
 
+using namespace PointCloudWrapper;
+
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions
@@ -46,14 +48,8 @@ PointCloudToPclPointCloudConverter::~PointCloudToPclPointCloudConverter()
 
 	}
 
-pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const PointCloudWrapper::PointCloudConstPtr& pointCloud)
+pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const PointCloudConstPtr& pointCloud)
 	MOCK_METHOD(Converters::PointCloudToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, (pointCloud) )
-
-pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const PointCloudWrapper::PointCloud& pointCloud)
-	MOCK_METHOD(Converters::PointCloudToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, (pointCloud) )
-
-void PointCloudToPclPointCloudConverter::Convert(const PointCloudWrapper::PointCloud& pointCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr& conversion)
-	MOCK_VOID_METHOD(Converters::PointCloudToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, (pointCloud), (conversion) )
 
 }
 /** @} */

@@ -71,14 +71,14 @@ TEST_CASE( "Call to process", "[process]" )
 	cv::Mat inputImage(500, 500, CV_8UC3, cv::Scalar(100, 100, 100));	
 	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputImage) );
 
-	VisualPointFeatureVector2DConstPtr featuresVector = VisualPointFeatureVector2DConstPtr( new VisualPointFeatureVector2D() );
+	VisualPointFeatureVector2DConstPtr featuresVector = new VisualPointFeatureVector2D();
 	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
 
 	HarrisDetector2D harris;
 	harris.imageInput(new Frame());
 	harris.process();
 
-	VisualPointFeatureVector2D* output = harris.featuresSetOutput();
+	VisualPointFeatureVector2DConstPtr output = harris.featuresSetOutput();
 	
 	REQUIRE(GetNumberOfPoints(*output) == GetNumberOfPoints(*featuresVector));
 	delete(output);

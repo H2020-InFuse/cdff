@@ -59,7 +59,7 @@ TEST_CASE( "Mat to VisualPointFeatureVector3D", "[MatToVisualPointFeatureVector3
 			}
 		}
 
-	VisualPointFeatureVector3DConstPtr asnVector = firstConverter.Convert(inputMatrix);
+	VisualPointFeatureVector3DSharedConstPtr asnVector = firstConverter.ConvertShared(inputMatrix);
 	REQUIRE(GetNumberOfPoints(*asnVector) == inputMatrix.rows);
 	int descriptorSize = GetNumberOfDescriptorComponents(*asnVector, 0);
 	REQUIRE(descriptorSize == inputMatrix.cols - 3);
@@ -75,7 +75,7 @@ TEST_CASE( "Mat to VisualPointFeatureVector3D", "[MatToVisualPointFeatureVector3
 			}		
 		}
 
-	cv::Mat outputMatrix = secondConverter.Convert(asnVector);
+	cv::Mat outputMatrix = secondConverter.ConvertShared(asnVector);
 
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
 	REQUIRE(outputMatrix.cols == inputMatrix.cols);
@@ -106,9 +106,9 @@ TEST_CASE( "VisualPointFeatureVector3D to Mat", "[VisualPointFeatureVector3DToMa
 			}
 		}
 
-	VisualPointFeatureVector3DConstPtr asnVector = firstConverter.Convert(inputMatrix);
-	cv::Mat intermediateMatrix = secondConverter.Convert(asnVector);
-	VisualPointFeatureVector3DConstPtr outputVector = firstConverter.Convert(intermediateMatrix);	
+	VisualPointFeatureVector3DSharedConstPtr asnVector = firstConverter.ConvertShared(inputMatrix);
+	cv::Mat intermediateMatrix = secondConverter.ConvertShared(asnVector);
+	VisualPointFeatureVector3DSharedConstPtr outputVector = firstConverter.ConvertShared(intermediateMatrix);	
 
 	REQUIRE(GetNumberOfPoints(*asnVector) == GetNumberOfPoints(*outputVector));
 	REQUIRE(GetNumberOfPoints(*asnVector) > 0);
@@ -134,7 +134,7 @@ TEST_CASE( "VisualPointFeatureVector3D to Mat", "[VisualPointFeatureVector3DToMa
 
 TEST_CASE( "Attempt conversion of a Bad VisualPointFeatureVector3D", "[BadVisualPointFeatureVector3D]")
 	{
-	VisualPointFeatureVector3DPtr asnVector = std::make_shared<VisualPointFeatureVector3D>();
+	VisualPointFeatureVector3DSharedPtr asnVector = std::make_shared<VisualPointFeatureVector3D>();
 	
 	AddPoint(*asnVector, 0, 0, 0);
 	AddDescriptorComponent(*asnVector, 0, 0);
@@ -144,7 +144,7 @@ TEST_CASE( "Attempt conversion of a Bad VisualPointFeatureVector3D", "[BadVisual
 	AddDescriptorComponent(*asnVector, 1, 2);
 
 	VisualPointFeatureVector3DToMatConverter converter;
-	REQUIRE_THROWS_AS( converter.Convert(asnVector), AssertException);	
+	REQUIRE_THROWS_AS( converter.ConvertShared(asnVector), AssertException);	
 
 	asnVector.reset();		
 	}
@@ -163,8 +163,8 @@ TEST_CASE( "Points with empty descriptors", "[EmptyDescriptors3D]")
 			}
 		}
 
-	VisualPointFeatureVector3DConstPtr asnVector = firstConverter.Convert(inputMatrix);
-	cv::Mat outputMatrix = secondConverter.Convert(asnVector);
+	VisualPointFeatureVector3DSharedConstPtr asnVector = firstConverter.ConvertShared(inputMatrix);
+	cv::Mat outputMatrix = secondConverter.ConvertShared(asnVector);
 
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
 	REQUIRE(outputMatrix.cols == inputMatrix.cols);
@@ -186,8 +186,8 @@ TEST_CASE("Empty Features Vector 3D", "[EmptyFeaturesVector3D]")
 	VisualPointFeatureVector3DToMatConverter secondConverter;
 
 	cv::Mat inputMatrix;
-	VisualPointFeatureVector3DConstPtr asnVector = firstConverter.Convert(inputMatrix);
-	cv::Mat outputMatrix = secondConverter.Convert(asnVector);
+	VisualPointFeatureVector3DSharedConstPtr asnVector = firstConverter.ConvertShared(inputMatrix);
+	cv::Mat outputMatrix = secondConverter.ConvertShared(asnVector);
 
 	REQUIRE(outputMatrix.cols == 0);
 	REQUIRE(outputMatrix.rows == 0);

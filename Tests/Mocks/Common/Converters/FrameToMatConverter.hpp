@@ -49,8 +49,6 @@ class FrameToMatConverter : public Mock, public Converters::FrameToMatConverter
 	public:
 		virtual ~FrameToMatConverter();
 		const cv::Mat Convert(const FrameWrapper::FrameConstPtr& frame);
-		const cv::Mat Convert(const FrameWrapper::Frame& frame);
-		void Convert(const FrameWrapper::Frame& frame, cv::Mat& conversion);
 
 	/* --------------------------------------------------------------------
 	 * Protected

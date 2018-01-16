@@ -57,7 +57,7 @@ TEST_CASE( "PclPointCloud to PointCloud and Back", "[PclPointCloudToPointCloud]"
 		inputCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
 		}
 
-	PointCloudConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
+	PointCloudSharedConstPtr asnPointCloud = firstConverter.ConvertShared(inputCloud);
 	REQUIRE(GetNumberOfPoints(*asnPointCloud) == inputCloud->points.size() );
 	for(int pointIndex = 0; pointIndex < static_cast<int>( inputCloud->points.size() ); pointIndex++)
 		{
@@ -66,7 +66,7 @@ TEST_CASE( "PclPointCloud to PointCloud and Back", "[PclPointCloudToPointCloud]"
 		REQUIRE( GetZCoordinate(*asnPointCloud, pointIndex) == inputCloud->points.at(pointIndex).z );
 		}
 
-	pcl::PointCloud<pcl::PointXYZ>::ConstPtr outputCloud = secondConverter.Convert(asnPointCloud);
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr outputCloud = secondConverter.ConvertShared(asnPointCloud);
 	REQUIRE(outputCloud->points.size() == inputCloud->points.size() );
 	for(unsigned pointIndex = 0; pointIndex < outputCloud->points.size(); pointIndex++)
 		{
@@ -91,9 +91,9 @@ TEST_CASE( "PointCloud3D to PclPointCloud and Back", "[PointCloud3DToPclPointClo
 		inputCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
 		}
 
-	PointCloudConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
-	pcl::PointCloud<pcl::PointXYZ>::ConstPtr intermediateCloud = secondConverter.Convert(asnPointCloud);
-	PointCloudConstPtr outputCloud = firstConverter.Convert(intermediateCloud);
+	PointCloudSharedConstPtr asnPointCloud = firstConverter.ConvertShared(inputCloud);
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr intermediateCloud = secondConverter.ConvertShared(asnPointCloud);
+	PointCloudSharedConstPtr outputCloud = firstConverter.ConvertShared(intermediateCloud);
 
 	REQUIRE(GetNumberOfPoints(*outputCloud) == GetNumberOfPoints(*asnPointCloud));
 	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*outputCloud); pointIndex++)
@@ -114,9 +114,9 @@ TEST_CASE("Empty Point Cloud conversion", "[EmptyPointCloud]")
 	PointCloudToPclPointCloudConverter secondConverter;
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	PointCloudConstPtr asnPointCloud = firstConverter.Convert(inputCloud);
-	pcl::PointCloud<pcl::PointXYZ>::ConstPtr intermediateCloud = secondConverter.Convert(asnPointCloud);
-	PointCloudConstPtr outputCloud = firstConverter.Convert(intermediateCloud);
+	PointCloudSharedConstPtr asnPointCloud = firstConverter.ConvertShared(inputCloud);
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr intermediateCloud = secondConverter.ConvertShared(asnPointCloud);
+	PointCloudSharedConstPtr outputCloud = firstConverter.ConvertShared(intermediateCloud);
 
 	REQUIRE(GetNumberOfPoints(*asnPointCloud) == 0);
 	REQUIRE(intermediateCloud->points.size() == 0);

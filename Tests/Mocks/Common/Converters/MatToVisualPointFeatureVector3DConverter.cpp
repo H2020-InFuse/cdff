@@ -33,6 +33,8 @@
 
 namespace Mocks {
 
+using namespace VisualPointFeatureVector3DWrapper;
+
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions
@@ -44,11 +46,8 @@ MatToVisualPointFeatureVector3DConverter::~MatToVisualPointFeatureVector3DConver
 
 	}
 
-VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat& featuresVector)
-	MOCK_METHOD(Converters::MatToVisualPointFeatureVector3DConverter, Convert, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr, (featuresVector) )
-
-void MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat& featuresVector, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& conversion)
-	MOCK_VOID_METHOD(Converters::MatToVisualPointFeatureVector3DConverter, Convert, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D, (featuresVector), (conversion) )	
+VisualPointFeatureVector3DConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat& featuresVector)
+	MOCK_METHOD(Converters::MatToVisualPointFeatureVector3DConverter, Convert, VisualPointFeatureVector3DConstPtr, (featuresVector) )	
 
 }
 

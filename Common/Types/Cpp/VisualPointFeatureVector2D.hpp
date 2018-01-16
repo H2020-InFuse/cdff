@@ -70,8 +70,10 @@ const int MAX_DESCRIPTOR_2D_LENGTH = static_cast<int>(CTypes::descriptor2DNameLe
  *
  * --------------------------------------------------------------------------
  */
-typedef std::shared_ptr<VisualPointFeatureVector2D> VisualPointFeatureVector2DPtr;
-typedef std::shared_ptr<const VisualPointFeatureVector2D> VisualPointFeatureVector2DConstPtr;
+typedef std::shared_ptr<VisualPointFeatureVector2D> VisualPointFeatureVector2DSharedPtr;
+typedef std::shared_ptr<const VisualPointFeatureVector2D> VisualPointFeatureVector2DSharedConstPtr;
+typedef VisualPointFeatureVector2D* VisualPointFeatureVector2DPtr;
+typedef VisualPointFeatureVector2D const* VisualPointFeatureVector2DConstPtr;
 
 
 /* --------------------------------------------------------------------------

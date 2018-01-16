@@ -44,31 +44,26 @@ using namespace VisualPointFeatureVector2DWrapper;
  */
 const cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(const VisualPointFeatureVector2DConstPtr& featuresVector)
 	{
-	return Convert(*featuresVector);
-	}
-
-const cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& featuresVector)
-	{
-	if (GetNumberOfPoints(featuresVector) == 0)
+	if (GetNumberOfPoints(*featuresVector) == 0)
 		return cv::Mat();
 
-	int descriptorSize = GetNumberOfDescriptorComponents(featuresVector, 0);	
-	cv::Mat conversion(GetNumberOfPoints(featuresVector), 2 + descriptorSize, CV_32FC1, cv::Scalar(0));
-	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(featuresVector); pointIndex++)
+	int descriptorSize = GetNumberOfDescriptorComponents(*featuresVector, 0);	
+	cv::Mat conversion(GetNumberOfPoints(*featuresVector), 2 + descriptorSize, CV_32FC1, cv::Scalar(0));
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
 		{
-		conversion.at<float>(pointIndex, 0) = GetXCoordinate(featuresVector, pointIndex);
-		conversion.at<float>(pointIndex, 1) = GetYCoordinate(featuresVector, pointIndex);
+		conversion.at<float>(pointIndex, 0) = GetXCoordinate(*featuresVector, pointIndex);
+		conversion.at<float>(pointIndex, 1) = GetYCoordinate(*featuresVector, pointIndex);
 
-		ASSERT(descriptorSize == GetNumberOfDescriptorComponents(featuresVector, pointIndex), "VisualPointFeatureVector2DToMatConverter: Descriptors do not have the same size.");
+		ASSERT(descriptorSize == GetNumberOfDescriptorComponents(*featuresVector, pointIndex), "VisualPointFeatureVector2DToMatConverter: Descriptors do not have the same size.");
 		for(int componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
-			conversion.at<float>(pointIndex, componentIndex + 2) = GetDescriptorComponent(featuresVector, pointIndex, componentIndex);
+			conversion.at<float>(pointIndex, componentIndex + 2) = GetDescriptorComponent(*featuresVector, pointIndex, componentIndex);
 		}
 	return conversion;
 	}
 
-void VisualPointFeatureVector2DToMatConverter::Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& featuresVector, cv::Mat& conversion)
+const cv::Mat VisualPointFeatureVector2DToMatConverter::ConvertShared(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DSharedConstPtr& featuresVector)
 	{
-	conversion = Convert(featuresVector);
+	return Convert(featuresVector.get());
 	}
 
 }

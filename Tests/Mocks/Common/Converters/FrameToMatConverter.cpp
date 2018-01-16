@@ -34,6 +34,8 @@
 
 namespace Mocks {
 
+using namespace FrameWrapper;
+
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions
@@ -45,13 +47,8 @@ FrameToMatConverter::~FrameToMatConverter()
 
 	}
 
-const cv::Mat FrameToMatConverter::Convert(const FrameWrapper::FrameConstPtr& frame)
+const cv::Mat FrameToMatConverter::Convert(const FrameConstPtr& frame)
 	MOCK_METHOD(Converters::FrameToMatConverter, Convert, cv::Mat, (frame) )
-
-const cv::Mat FrameToMatConverter::Convert(const FrameWrapper::Frame& frame)
-	MOCK_METHOD(Converters::FrameToMatConverter, Convert, cv::Mat, (frame) )
-
-void FrameToMatConverter::Convert(const FrameWrapper::Frame& frame, cv::Mat& conversion)
-	MOCK_VOID_METHOD(Converters::FrameToMatConverter, Convert, cv::Mat, (frame), (conversion) )	
+	
 }
 /** @} */

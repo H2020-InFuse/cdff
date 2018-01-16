@@ -85,14 +85,14 @@ TEST_CASE( "Call to process", "[process]" )
 		}
 	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputCloud) );
 
-	VisualPointFeatureVector3DConstPtr featuresVector = VisualPointFeatureVector3DConstPtr( new VisualPointFeatureVector3D() );
+	VisualPointFeatureVector3DConstPtr featuresVector = new VisualPointFeatureVector3D();
 	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
 
 	HarrisDetector3D harris;
 	harris.pointCloudInput(new PointCloud());
 	harris.process();
 
-	VisualPointFeatureVector3D* output = harris.featuresSetOutput();
+	VisualPointFeatureVector3DConstPtr output = harris.featuresSetOutput();
 
 	REQUIRE(GetNumberOfPoints(*output) == GetNumberOfPoints(*featuresVector));
 	delete(output);

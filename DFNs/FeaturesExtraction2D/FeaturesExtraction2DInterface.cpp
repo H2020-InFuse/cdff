@@ -50,12 +50,12 @@ FeaturesExtraction2DInterface::~FeaturesExtraction2DInterface()
 
 	}
 
-void FeaturesExtraction2DInterface::imageInput(Frame* data) 
+void FeaturesExtraction2DInterface::imageInput(FrameConstPtr data) 
 	{
     	inImage = data;
 	}
 
-VisualPointFeatureVector2D* FeaturesExtraction2DInterface::featuresSetOutput() 
+VisualPointFeatureVector2DConstPtr FeaturesExtraction2DInterface::featuresSetOutput() 
 	{
     	return outFeaturesSet;
 	}

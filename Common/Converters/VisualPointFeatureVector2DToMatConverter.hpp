@@ -50,8 +50,7 @@ class VisualPointFeatureVector2DToMatConverter
 	 */
 	public:
 		virtual const cv::Mat Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& vector);
-		virtual const cv::Mat Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& vector);
-		virtual void Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& vector, cv::Mat& conversion);
+		const cv::Mat ConvertShared(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DSharedConstPtr& vector);
 
 	/* --------------------------------------------------------------------
 	 * Protected

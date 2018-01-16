@@ -61,7 +61,7 @@ TEST_CASE( "Mat to Frame and Back Square Matrix", "[MatToFrameSquare]" )
 			}
 		}
 
-	FrameConstPtr asnFrame = firstConverter.Convert(inputMatrix);
+	FrameSharedConstPtr asnFrame = firstConverter.ConvertShared(inputMatrix);
 	REQUIRE(GetFrameWidth(*asnFrame) == static_cast<int>(inputMatrix.cols) );
 	REQUIRE(GetFrameHeight(*asnFrame) == static_cast<int>(inputMatrix.rows) );
 	REQUIRE(GetFrameMode(*asnFrame) == FrameWrapper::MODE_RGB );
@@ -75,7 +75,7 @@ TEST_CASE( "Mat to Frame and Back Square Matrix", "[MatToFrameSquare]" )
 		REQUIRE(GetDataByte(*asnFrame, byteIndex+2) == inputMatrix.at<cv::Vec3b>(rowIndex, columnIndex)[2] );
 		}
 
-	cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
+	cv::Mat outputMatrix = secondConverter.ConvertShared(asnFrame);
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
 	REQUIRE(outputMatrix.cols == inputMatrix.cols);
 	REQUIRE(outputMatrix.type() == inputMatrix.type());
@@ -110,8 +110,8 @@ TEST_CASE( "Mat to Frame and Back Non-Square Matrix", "[MatToFrameNonSquare]" )
 			}
 		}
 
-	FrameConstPtr asnFrame = firstConverter.Convert(inputMatrix);
-	cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
+	FrameSharedConstPtr asnFrame = firstConverter.ConvertShared(inputMatrix);
+	cv::Mat outputMatrix = secondConverter.ConvertShared(asnFrame);
 
 	REQUIRE(outputMatrix.rows == inputMatrix.rows);
 	REQUIRE(outputMatrix.cols == inputMatrix.cols);
@@ -150,8 +150,8 @@ TEST_CASE( "Multiple conversions", "[MultipleConversions]" )
 
 	for(int i=0; i<5; i++)
 		{
-		FrameConstPtr asnFrame = firstConverter.Convert(inputMatrix);
-		cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
+		FrameSharedConstPtr asnFrame = firstConverter.ConvertShared(inputMatrix);
+		cv::Mat outputMatrix = secondConverter.ConvertShared(asnFrame);
 
 		REQUIRE(outputMatrix.rows == inputMatrix.rows);
 		REQUIRE(outputMatrix.cols == inputMatrix.cols);
@@ -189,9 +189,9 @@ TEST_CASE( "Frame to Mat conversion", "[FrameToMatConversion]")
 			}
 		}
 
-	FrameConstPtr asnFrame = firstConverter.Convert(inputMatrix);
-	cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
-	FrameConstPtr outputFrame = firstConverter.Convert(outputMatrix);
+	FrameSharedConstPtr asnFrame = firstConverter.ConvertShared(inputMatrix);
+	cv::Mat outputMatrix = secondConverter.ConvertShared(asnFrame);
+	FrameSharedConstPtr outputFrame = firstConverter.ConvertShared(outputMatrix);
 
 	REQUIRE(GetFrameWidth(*outputFrame) == GetFrameWidth(*asnFrame));
 	REQUIRE(GetFrameHeight(*outputFrame) == GetFrameHeight(*asnFrame));
@@ -213,9 +213,9 @@ TEST_CASE( "Empty Matrix Conversion", "[EmptyMatrix]" )
 
 	cv::Mat inputMatrix;
 
-	FrameConstPtr asnFrame = firstConverter.Convert(inputMatrix);
-	cv::Mat outputMatrix = secondConverter.Convert(asnFrame);
-	FrameConstPtr outputFrame = firstConverter.Convert(outputMatrix);
+	FrameSharedConstPtr asnFrame = firstConverter.ConvertShared(inputMatrix);
+	cv::Mat outputMatrix = secondConverter.ConvertShared(asnFrame);
+	FrameSharedConstPtr outputFrame = firstConverter.ConvertShared(outputMatrix);
 
 	REQUIRE(outputMatrix.cols == 0);
 	REQUIRE(outputMatrix.rows == 0);

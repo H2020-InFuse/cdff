@@ -68,8 +68,10 @@ const int MAX_CLOUD_SIZE = static_cast<int>(CTypes::maxPointcloudSize);
  *
  * --------------------------------------------------------------------------
  */
-typedef std::shared_ptr<PointCloud> PointCloudPtr;
-typedef std::shared_ptr<const PointCloud> PointCloudConstPtr;
+typedef std::shared_ptr<PointCloud> PointCloudSharedPtr;
+typedef std::shared_ptr<const PointCloud> PointCloudSharedConstPtr;
+typedef PointCloud* PointCloudPtr;
+typedef PointCloud const* PointCloudConstPtr;
 
 
 /* --------------------------------------------------------------------------

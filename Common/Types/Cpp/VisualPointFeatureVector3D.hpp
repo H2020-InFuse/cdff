@@ -71,9 +71,10 @@ const int MAX_DESCRIPTOR_3D_LENGTH = static_cast<int>(CTypes::descriptor3DNameLe
  *
  * --------------------------------------------------------------------------
  */
-typedef std::shared_ptr<VisualPointFeatureVector3D> VisualPointFeatureVector3DPtr;
-typedef std::shared_ptr<const VisualPointFeatureVector3D> VisualPointFeatureVector3DConstPtr;
-
+typedef std::shared_ptr<VisualPointFeatureVector3D> VisualPointFeatureVector3DSharedPtr;
+typedef std::shared_ptr<const VisualPointFeatureVector3D> VisualPointFeatureVector3DSharedConstPtr;
+typedef VisualPointFeatureVector3D* VisualPointFeatureVector3DPtr;
+typedef VisualPointFeatureVector3D const* VisualPointFeatureVector3DConstPtr;
 
 /* --------------------------------------------------------------------------
  *

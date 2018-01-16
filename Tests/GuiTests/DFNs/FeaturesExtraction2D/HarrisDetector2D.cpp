@@ -65,7 +65,7 @@ class HarrisDetector2DTestInterface : public DFNTestInterface
 		HarrisDetector2D* harris;
 
 		cv::Mat cvImage;
-		Frame* inputImage;
+		FrameConstPtr inputImage;
 		std::string outputWindowName;
 
 		void SetupMocksAndStubs();
@@ -81,9 +81,7 @@ HarrisDetector2DTestInterface::HarrisDetector2DTestInterface(std::string dfnName
 
 	MatToFrameConverter converter;
 	cvImage = cv::imread("../../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
-	FrameConstPtr inputImagePtr = converter.Convert(cvImage);
-	inputImage = new Frame();
-	Copy(*inputImagePtr, *inputImage);
+	inputImage = converter.Convert(cvImage);
 	harris->imageInput(inputImage);
 	outputWindowName = "Harris Detector 2D Result";
 	}
@@ -124,7 +122,7 @@ void HarrisDetector2DTestInterface::SetupParameters()
 
 void HarrisDetector2DTestInterface::DisplayResult()
 	{
-	VisualPointFeatureVector2D* featuresVector= harris->featuresSetOutput();
+	VisualPointFeatureVector2DConstPtr featuresVector= harris->featuresSetOutput();
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
 	cv::Mat outputImage = cvImage.clone();
 

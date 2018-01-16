@@ -94,15 +94,11 @@ void HarrisDetector2D::configure()
 
 void HarrisDetector2D::process() 
 	{
-	FramePtr inImagePtr = FramePtr(new Frame);
-	Copy(*inImage, *inImagePtr);
-	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImagePtr);
+	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
 	ValidateInputs(inputImage);
 	cv::Mat harrisImage = ComputeHarrisImage(inputImage);
 	cv::Mat harrisPoints = ExtractHarrisPoints(harrisImage);
-	VisualPointFeatureVector2DConstPtr outFeaturesSetPtr = ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
-	outFeaturesSet = new VisualPointFeatureVector2D;
-	Copy(*outFeaturesSetPtr, *outFeaturesSet);
+	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
 	}
 
 
