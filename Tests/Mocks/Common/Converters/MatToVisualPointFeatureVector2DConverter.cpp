@@ -48,6 +48,8 @@ MatToVisualPointFeatureVector2DConverter::~MatToVisualPointFeatureVector2DConver
 VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr MatToVisualPointFeatureVector2DConverter::Convert(const cv::Mat& featuresVector)
 	MOCK_METHOD(Converters::MatToVisualPointFeatureVector2DConverter, Convert, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr, (featuresVector) )
 
+void MatToVisualPointFeatureVector2DConverter::Convert(const cv::Mat& featuresVector, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& conversion)
+	MOCK_VOID_METHOD(Converters::MatToVisualPointFeatureVector2DConverter, Convert, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D, (featuresVector), (conversion) )	
 
 }
 

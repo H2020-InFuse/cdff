@@ -46,9 +46,14 @@ PointCloudToPclPointCloudConverter::~PointCloudToPclPointCloudConverter()
 
 	}
 
-pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const PointCloudWrapper::PointCloudConstPtr& pointcloud)
-	MOCK_METHOD(Converters::PointCloudToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, (pointcloud) )
+pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const PointCloudWrapper::PointCloudConstPtr& pointCloud)
+	MOCK_METHOD(Converters::PointCloudToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, (pointCloud) )
 
+pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const PointCloudWrapper::PointCloud& pointCloud)
+	MOCK_METHOD(Converters::PointCloudToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, (pointCloud) )
+
+void PointCloudToPclPointCloudConverter::Convert(const PointCloudWrapper::PointCloud& pointCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr& conversion)
+	MOCK_VOID_METHOD(Converters::PointCloudToPclPointCloudConverter, Convert, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, (pointCloud), (conversion) )
 
 }
 /** @} */

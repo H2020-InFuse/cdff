@@ -46,17 +46,27 @@ using namespace PointCloudWrapper;
  */
  pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const  PointCloudWrapper::PointCloudConstPtr& pointCloud)
 	{
+	return Convert(*pointCloud);
+	}
+
+pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const PointCloudWrapper::PointCloud& pointCloud)
+	{
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*pointCloud); pointIndex++)
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(pointCloud); pointIndex++)
 		{
 		pcl::PointXYZ point;
-		point.x = GetXCoordinate(*pointCloud, pointIndex);
-		point.y = GetYCoordinate(*pointCloud, pointIndex);
-		point.z = GetZCoordinate(*pointCloud, pointIndex); 	
+		point.x = GetXCoordinate(pointCloud, pointIndex);
+		point.y = GetYCoordinate(pointCloud, pointIndex);
+		point.z = GetZCoordinate(pointCloud, pointIndex); 	
 		pclPointCloud->points.push_back(point);	
 		}	
 
 	return pclPointCloud;
+	}
+
+void PointCloudToPclPointCloudConverter::Convert(const PointCloudWrapper::PointCloud& pointCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr& conversion)
+	{
+	conversion = Convert(pointCloud);
 	}
 
 }

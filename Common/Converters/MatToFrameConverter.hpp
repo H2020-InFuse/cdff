@@ -50,6 +50,7 @@ class MatToFrameConverter
 	 */
 	public:
 		virtual FrameWrapper::FrameConstPtr Convert(const cv::Mat& image);
+		virtual void Convert(const cv::Mat& image, FrameWrapper::Frame& conversion);
 
 	/* --------------------------------------------------------------------
 	 * Protected

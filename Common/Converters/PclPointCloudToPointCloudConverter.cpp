@@ -45,13 +45,16 @@ using namespace PointCloudWrapper;
 PointCloudConstPtr PclPointCloudToPointCloudConverter::Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pointCloud)
 	{
 	PointCloudPtr asnPointCloud =  std::make_shared<PointCloud>();
-	
+	Convert(pointCloud, *asnPointCloud);
+	return asnPointCloud;
+	}
+
+void PclPointCloudToPointCloudConverter::Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pointCloud, PointCloudWrapper::PointCloud& asnPointCloud)
+	{
 	for(unsigned pointIndex = 0; pointIndex < pointCloud->points.size(); pointIndex++)
 		{
-		AddPoint(*asnPointCloud, pointCloud->points.at(pointIndex).x, pointCloud->points.at(pointIndex).y, pointCloud->points.at(pointIndex).z);
+		AddPoint(asnPointCloud, pointCloud->points.at(pointIndex).x, pointCloud->points.at(pointIndex).y, pointCloud->points.at(pointIndex).z);
 		}
-
-	return asnPointCloud;
 	}
 
 }
