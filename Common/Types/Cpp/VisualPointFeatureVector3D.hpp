@@ -81,6 +81,8 @@ typedef std::shared_ptr<const VisualPointFeatureVector3D> VisualPointFeatureVect
  *
  * --------------------------------------------------------------------------
  */
+void Copy(const VisualPointFeatureVector3D& source, VisualPointFeatureVector3D& destination);
+
 void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, float z);
 void ClearPoints(VisualPointFeatureVector3D& featuresVector);
 int GetNumberOfPoints(const VisualPointFeatureVector3D& featuresVector);

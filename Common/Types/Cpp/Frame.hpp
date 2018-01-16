@@ -111,6 +111,8 @@ typedef std::shared_ptr<const Frame> FrameConstPtr;
  *
  * --------------------------------------------------------------------------
  */
+void Copy(const Frame& source, Frame& destination);
+
 void SetFrameTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
 BaseTypesWrapper::T_Int64 GetFrameTime(const Frame& frame);
 
@@ -139,6 +141,7 @@ BaseTypesWrapper::T_UInt16 GetFrameHeight(const Frame& frame);
 FrameSize GetFrameSize(const Frame& frame);
 		
 void AddAttribute(Frame& frame, BaseTypesWrapper::T_String data, BaseTypesWrapper::T_String name);
+void AddAttribute(Frame& frame, FrameAttribute attribute);
 void ClearAttributes(Frame& frame);
 void RemoveAttribute(Frame& frame, int index);
 FrameAttribute GetAttribute(const Frame& frame, int index);

@@ -94,11 +94,15 @@ void HarrisDetector2D::configure()
 
 void HarrisDetector2D::process() 
 	{
-	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
+	FramePtr inImagePtr = FramePtr(new Frame);
+	Copy(*inImage, *inImagePtr);
+	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImagePtr);
 	ValidateInputs(inputImage);
 	cv::Mat harrisImage = ComputeHarrisImage(inputImage);
 	cv::Mat harrisPoints = ExtractHarrisPoints(harrisImage);
-	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
+	VisualPointFeatureVector2DConstPtr outFeaturesSetPtr = ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
+	outFeaturesSet = new VisualPointFeatureVector2D;
+	Copy(*outFeaturesSetPtr, *outFeaturesSet);
 	}
 
 
@@ -109,6 +113,7 @@ cv::Mat HarrisDetector2D::ComputeHarrisImage(cv::Mat inputImage)
 
 	cv::Mat blurredImage;
 	if(parameters.useGaussianBlur)
+		{
 		cv::GaussianBlur
 			(
 			grayImage, 
@@ -117,9 +122,12 @@ cv::Mat HarrisDetector2D::ComputeHarrisImage(cv::Mat inputImage)
 			gaussianBlurParameters.widthStandardDeviation, 
 			gaussianBlurParameters.heightStandardDeviation
 			);
+		}
 	else
+		{
 		blurredImage = grayImage;
- 
+ 		}
+
 	cv::Mat harrisMatrix = cv::Mat(inputImage.size(), CV_32FC1);
 	cv::cornerHarris(blurredImage, harrisMatrix, parameters.blockSize, parameters.apertureSize, parameters.parameterK, cv::BORDER_DEFAULT );
 

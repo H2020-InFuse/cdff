@@ -65,7 +65,7 @@ class HarrisDetector2DTestInterface : public DFNTestInterface
 		HarrisDetector2D* harris;
 
 		cv::Mat cvImage;
-		FrameConstPtr inputImage;
+		Frame* inputImage;
 		std::string outputWindowName;
 
 		void SetupMocksAndStubs();
@@ -81,9 +81,10 @@ HarrisDetector2DTestInterface::HarrisDetector2DTestInterface(std::string dfnName
 
 	MatToFrameConverter converter;
 	cvImage = cv::imread("../../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
-	inputImage = converter.Convert(cvImage);
+	FrameConstPtr inputImagePtr = converter.Convert(cvImage);
+	inputImage = new Frame();
+	Copy(*inputImagePtr, *inputImage);
 	harris->imageInput(inputImage);
-
 	outputWindowName = "Harris Detector 2D Result";
 	}
 
@@ -94,7 +95,7 @@ HarrisDetector2DTestInterface::~HarrisDetector2DTestInterface()
 	delete(stubOutputCache);
 	delete(mockOutputConverter);
 	delete(harris);
-	inputImage.reset();
+	delete(inputImage);
 	}
 
 void HarrisDetector2DTestInterface::SetupMocksAndStubs()
@@ -123,7 +124,7 @@ void HarrisDetector2DTestInterface::SetupParameters()
 
 void HarrisDetector2DTestInterface::DisplayResult()
 	{
-	VisualPointFeatureVector2DConstPtr featuresVector= harris->featuresSetOutput();
+	VisualPointFeatureVector2D* featuresVector= harris->featuresSetOutput();
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
 	cv::Mat outputImage = cvImage.clone();
 
@@ -137,7 +138,7 @@ void HarrisDetector2DTestInterface::DisplayResult()
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
 
-	featuresVector.reset();
+	delete(featuresVector);
 	}
 
 

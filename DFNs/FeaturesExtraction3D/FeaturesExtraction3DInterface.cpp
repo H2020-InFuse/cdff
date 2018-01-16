@@ -48,12 +48,12 @@ FeaturesExtraction3DInterface::~FeaturesExtraction3DInterface()
 	{
 	}
 
-void FeaturesExtraction3DInterface::pointCloudInput(PointCloudConstPtr data) 
+void FeaturesExtraction3DInterface::pointCloudInput(PointCloud* data) 
 	{
     	inPointCloud = data;
 	}
 
-VisualPointFeatureVector3DConstPtr FeaturesExtraction3DInterface::featuresSetOutput() 
+VisualPointFeatureVector3D* FeaturesExtraction3DInterface::featuresSetOutput() 
 	{
     	return outFeaturesSet;
 	}

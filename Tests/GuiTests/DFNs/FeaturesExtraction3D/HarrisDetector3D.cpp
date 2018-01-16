@@ -66,7 +66,7 @@ class HarrisDetector3DTestInterface : public DFNTestInterface
 		HarrisDetector3D* harris;
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud;
-		PointCloudConstPtr inputCloud;
+		PointCloud* inputCloud;
 		std::string outputWindowName;
 
 		void SetupMocksAndStubs();
@@ -83,7 +83,9 @@ HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(std::string dfnName
 	PclPointCloudToPointCloudConverter converter;
 	pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile("../../tests/Data/PointClouds/bunny0.ply", *pclCloud);
-	inputCloud = converter.Convert(pclCloud);
+	PointCloudConstPtr inputCloudPtr = converter.Convert(pclCloud);
+	inputCloud = new PointCloud();
+	Copy(*inputCloudPtr, *inputCloud);
 	harris->pointCloudInput(inputCloud);
 	outputWindowName = "Harris Detector 3D Result";
 	}
@@ -95,7 +97,7 @@ HarrisDetector3DTestInterface::~HarrisDetector3DTestInterface()
 	delete(stubOutputCache);
 	delete(mockOutputConverter);
 	delete(harris);
-	inputCloud.reset();
+	delete(inputCloud);
 	}
 
 void HarrisDetector3DTestInterface::SetupMocksAndStubs()
@@ -122,7 +124,7 @@ void HarrisDetector3DTestInterface::SetupParameters()
 
 void HarrisDetector3DTestInterface::DisplayResult()
 	{
-	VisualPointFeatureVector3DConstPtr featuresVector= harris->featuresSetOutput();
+	VisualPointFeatureVector3D* featuresVector= harris->featuresSetOutput();
 
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
@@ -147,7 +149,7 @@ void HarrisDetector3DTestInterface::DisplayResult()
         	pcl_sleep (0.01);
     		} 
 
-	featuresVector.reset();
+	delete(featuresVector);
 	}
 
 

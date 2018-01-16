@@ -75,11 +75,13 @@ TEST_CASE( "Call to process", "[process]" )
 	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
 
 	HarrisDetector2D harris;
+	harris.imageInput(new Frame());
 	harris.process();
 
-	VisualPointFeatureVector2DConstPtr output = harris.featuresSetOutput();
-
+	VisualPointFeatureVector2D* output = harris.featuresSetOutput();
+	
 	REQUIRE(GetNumberOfPoints(*output) == GetNumberOfPoints(*featuresVector));
+	delete(output);
 	}
 
 TEST_CASE( "Call to configure", "[configure]" )

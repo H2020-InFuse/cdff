@@ -41,6 +41,20 @@ namespace VisualPointFeatureVector2DWrapper
  * --------------------------------------------------------------------------
  */
 
+void Copy(const VisualPointFeatureVector2D& source, VisualPointFeatureVector2D& destination)
+	{
+	ClearPoints(destination);
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(source); pointIndex++)
+		{
+		AddPoint(destination, GetXCoordinate(source, pointIndex), GetYCoordinate(source, pointIndex) );
+		ClearDescriptor(destination, pointIndex);
+		for(int componentIndex = 0; componentIndex < GetNumberOfDescriptorComponents(source, pointIndex); componentIndex++)
+			{
+			AddDescriptorComponent(destination, pointIndex, GetDescriptorComponent(source, pointIndex, componentIndex) );
+			}
+		}
+	}
+
 void AddPoint(VisualPointFeatureVector2D& featuresVector, uint16_t x, uint16_t y)
 	{
 	ASSERT_ON_TEST(featuresVector.nCount < MAX_FEATURE_2D_POINTS, "Features descriptor vector maximum capacity has been reached");

@@ -78,6 +78,8 @@ typedef std::shared_ptr<const PointCloud> PointCloudConstPtr;
  *
  * --------------------------------------------------------------------------
  */
+void Copy(const PointCloud& source, PointCloud& destination);
+
 void AddPoint(PointCloud& pointCloud, BaseTypesWrapper::T_Double x, BaseTypesWrapper::T_Double y, BaseTypesWrapper::T_Double z);
 void ClearPoints(PointCloud& pointCloud);
 int GetNumberOfPoints(const PointCloud& pointCloud);

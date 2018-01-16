@@ -56,21 +56,21 @@ namespace dfn_ci {
             * Send value to input port image
             * @param pointCloud, a 3D point cloud taken from a 3D sensor or from 3D reconstruction algorithms
             */
-            virtual void pointCloudInput(PointCloudWrapper::PointCloudConstPtr data);
+            virtual void pointCloudInput(PointCloudWrapper::PointCloud* data);
 
             /**
             * Receive value from output port featuresSet
             * @param featuresSet, This is the set of the points extracted from the point cloud, no descriptor is provided yet
             */
-            virtual VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr featuresSetOutput();
+            virtual VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D* featuresSetOutput();
 
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
 	 */
         protected:
-            PointCloudWrapper::PointCloudConstPtr inPointCloud;
-            VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr outFeaturesSet;
+            PointCloudWrapper::PointCloud* inPointCloud;
+            VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D* outFeaturesSet;
 
 	/* --------------------------------------------------------------------
 	 * Private

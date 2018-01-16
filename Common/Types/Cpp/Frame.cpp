@@ -41,6 +41,27 @@ namespace FrameWrapper
  *
  * --------------------------------------------------------------------------
  */
+void Copy(const Frame& source, Frame& destination)
+	{
+	SetFrameTime(destination, GetFrameTime(source) );
+	SetReceivedTime(destination, GetReceivedTime(source) );
+	SetDataDepth(destination, GetDataDepth(source) );
+	SetPixelSize(destination, GetPixelSize(source) );
+	SetRowSize(destination, GetRowSize(source) );
+	SetFrameMode(destination, GetFrameMode(source) );
+	SetFrameStatus(destination, GetFrameStatus(source) );
+	SetFrameSize(destination, GetFrameSize(source) );
+	ClearAttributes(destination);
+	for(unsigned attributeIndex = 0; attributeIndex < GetNumberOfAttributes(source); attributeIndex++)
+		{
+		AddAttribute(destination, GetAttribute(source, attributeIndex) );
+		}
+	ClearData(destination);
+	for(int dataByteIndex = 0; dataByteIndex < GetNumberOfDataBytes(source); dataByteIndex++)
+		{
+		AddDataByte(destination, GetDataByte(source, dataByteIndex) );
+		}
+	}
 
 void SetFrameTime(Frame& frame, T_Int64 time)
 	{
@@ -147,6 +168,15 @@ void AddAttribute(Frame& frame, T_String data, T_String name)
 	int currentIndex = frame.attributes.nCount;	
 	frame.attributes.arr[currentIndex].data = data;
 	frame.attributes.arr[currentIndex].att_name = name;
+	frame.attributes.nCount++;
+	}
+
+void AddAttribute(Frame& frame, FrameAttribute attribute)
+	{
+	ASSERT_ON_TEST(frame.attributes.nCount < MAX_FRAME_ATTRIBUTES, "Adding more Frame attributes than allowed");
+	int currentIndex = frame.attributes.nCount;	
+	frame.attributes.arr[currentIndex].data = attribute.data;
+	frame.attributes.arr[currentIndex].att_name = attribute.att_name;
 	frame.attributes.nCount++;
 	}
 

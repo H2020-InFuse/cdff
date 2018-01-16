@@ -40,6 +40,19 @@ namespace VisualPointFeatureVector3DWrapper
  *
  * --------------------------------------------------------------------------
  */
+void Copy(const VisualPointFeatureVector3D& source, VisualPointFeatureVector3D& destination)
+	{
+	ClearPoints(destination);
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(source); pointIndex++)
+		{
+		AddPoint(destination, GetXCoordinate(source, pointIndex), GetYCoordinate(source, pointIndex), GetZCoordinate(source, pointIndex));
+		ClearDescriptor(destination, pointIndex);
+		for(int componentIndex = 0; componentIndex < GetNumberOfDescriptorComponents(source, pointIndex); componentIndex++)
+			{
+			AddDescriptorComponent(destination, pointIndex, GetDescriptorComponent(source, pointIndex, componentIndex) );
+			}
+		}
+	}
 
 void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, float z)
 	{

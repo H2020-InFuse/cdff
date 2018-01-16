@@ -42,6 +42,14 @@ namespace PointCloudWrapper
  *
  * --------------------------------------------------------------------------
  */
+void Copy(const PointCloud& source, PointCloud& destination)
+	{
+	ClearPoints(destination);
+	for(int pointIndex; pointIndex < GetNumberOfPoints(source); pointIndex++)
+		{
+		AddPoint(destination, GetXCoordinate(source, pointIndex), GetYCoordinate(source, pointIndex), GetZCoordinate(source, pointIndex) );
+		}
+	}
 
 void AddPoint(PointCloud& pointCloud, T_Double x, T_Double y, T_Double z)
 	{
