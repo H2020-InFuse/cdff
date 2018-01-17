@@ -21,6 +21,7 @@ add_definitions(-DTESTING)
 if(UNIX)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
 endif()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 
 #This policy disable warning for the use of relative libraries path
 cmake_policy(SET CMP0015 NEW)
@@ -40,7 +41,7 @@ include_directories(
     External/install/include/opencv
     External/install/include/opencv2
     External/install/include/pcl-1.8
-    External/install/include/vtk-8.1
+    External/install/include/vtk-8.0
     External/install/include/yaml-cpp
 )
 link_directories(
