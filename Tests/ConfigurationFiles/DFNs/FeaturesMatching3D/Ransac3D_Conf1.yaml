@@ -1,0 +1,4 @@
+- Name: GeneralParameters
+  MaxIterationsNumber: 1000
+  OutliersFreeProbability: 0.99
+  DistanceThreshold: 0.01

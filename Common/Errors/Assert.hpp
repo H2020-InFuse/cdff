@@ -120,6 +120,26 @@ class AssertException: public std::exception
 		} \
 	}
 
+/*
+* VIEW_POINT_CLOUD is meant for debugging purposes. 
+* When you use thid function, you should:
+* 1) Include the following file: #include <pcl/visualization/pcl_visualizer.h>
+* 2) Link the following libraries: pcl_visualization vtkRenderingCore-8.0 vtkCommonDataModel-8.0 vtkCommonMath-8.0 vtkCommonCore-8.0 boost_system
+*/
+
+#define VIEW_POINT_CLOUD(pointType, pointCloud) \
+	{ \
+	pcl::visualization::PCLVisualizer viewer ("test view"); \
+    	pcl::visualization::PointCloudColorHandlerCustom< pointType > pclCloudColor(pointCloud, 255, 255, 255); \
+    	viewer.addPointCloud(pointCloud,pclCloudColor,"input"); \
+	\
+    	while (!viewer.wasStopped ()) \
+    		{ \
+        	viewer.spinOnce(); \
+        	pcl_sleep (0.01); \
+    		} \
+	}
+
 #endif
 
 /* Assert.hpp */
