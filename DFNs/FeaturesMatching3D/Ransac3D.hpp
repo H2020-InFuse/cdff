@@ -77,6 +77,7 @@ namespace dfn_ci {
 			int maxIterationsNumber;
 			float outliersFreeProbability;
 			float distanceThreshold;
+			float samplesMaxDistance;
 			};
 
 		RansacOptionsSet parameters;

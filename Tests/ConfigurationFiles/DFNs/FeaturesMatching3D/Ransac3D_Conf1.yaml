@@ -2,3 +2,4 @@
   MaxIterationsNumber: 1000
   OutliersFreeProbability: 0.99
   DistanceThreshold: 0.01
+  SamplesMaxDistance: 0.00
