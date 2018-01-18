@@ -35,6 +35,7 @@
 #include <pcl/registration/sample_consensus_prerejective.h>
 #include <pcl/search/search.h>
 #include <pcl/sample_consensus/sac_model_plane.h>
+#include <pcl/kdtree/impl/kdtree_flann.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -42,8 +43,8 @@
 
 using namespace Common;
 using namespace Converters;
-using namespace CorrespondenceMap3DWrapper;
-using namespace PointCloudWrapper;
+using namespace PoseWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
 
 namespace dfn_ci {
 
@@ -89,51 +90,98 @@ void Ransac3D::configure()
 
 void Ransac3D::process() 
 	{
-	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputSourceCloud = 
-		ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inSourceCloud);
-	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputSinkCloud = 
-		ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inSinkCloud);
-	ValidateInputs(inputSourceCloud, inputSinkCloud);
-	outCorrespondenceMap = ComputeCorrespondences(inputSourceCloud, inputSinkCloud);
+	//pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputSourceCloud = 
+	//	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inSourceCloud);
+	//pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputSinkCloud = 
+	//	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inSinkCloud);
+	ValidateInputs(inSourceFeaturesVector, inSinkFeaturesVector);
+	outTransform = ComputeTransform(inSourceFeaturesVector, inSinkFeaturesVector);
 	//outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Convert(harrisPoints);
 	}
 
 
-CorrespondenceMap3DConstPtr Ransac3D::ComputeCorrespondences(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud)
+Transform3DConstPtr Ransac3D::ComputeTransform(VisualPointFeatureVector3DConstPtr sourceFeaturesVector, VisualPointFeatureVector3DConstPtr sinkFeaturesVector)
 	{
-	CorrespondenceMap3DPtr correspondenceMap = new CorrespondenceMap3D();
-
-	pcl::search::KdTree<pcl::PointXYZ>::Ptr searchTreePtr(new pcl::search::KdTree<pcl::PointXYZ>);
-	searchTreePtr->setInputCloud(sinkCloud);
-	searchTreePtr->setEpsilon(std::numeric_limits<double>::epsilon());
-	pcl::SampleConsensusModelRegistration<pcl::PointXYZ>::Ptr model(new pcl::SampleConsensusModelRegistration<pcl::PointXYZ>(sourceCloud));
-	model->setInputTarget(sinkCloud); 
-	model->setSamplesMaxDist(parameters.samplesMaxDistance, searchTreePtr);
-
-	pcl::RandomSampleConsensus<pcl::PointXYZ>::Ptr ransac(new pcl::RandomSampleConsensus<pcl::PointXYZ>(model));
-	ransac->setMaxIterations(parameters.maxIterationsNumber);
-	ransac->setProbability(parameters.outliersFreeProbability);
-	ransac->setDistanceThreshold(parameters.distanceThreshold);
-
-	std::vector<int> inliersSet;
-	ransac->computeModel();
-	ransac->getInliers(inliersSet);
-
-	for(unsigned inlierIndex = 0; inlierIndex < inliersSet.size(); inlierIndex++)
-		{	
-		pcl::PointXYZ sourcePoint = sinkCloud->points.at(inliersSet.at(inlierIndex));
-		BaseTypesWrapper::Point3D sourcePoint3D;
-		sourcePoint3D.x = sourcePoint.x;
-		sourcePoint3D.y = sourcePoint.y;
-		sourcePoint3D.z = sourcePoint.z;
-		BaseTypesWrapper::Point3D sinkPoint3D;
-		sinkPoint3D.x = sourcePoint.x;
-		sinkPoint3D.y = sourcePoint.y;
-		sinkPoint3D.z = sourcePoint.z;
-		AddCorrespondence(*correspondenceMap, sourcePoint3D, sinkPoint3D, 1.0);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr sourceCloud(new pcl::PointCloud<pcl::PointXYZ>());
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*sourceFeaturesVector); pointIndex++)
+		{
+		pcl::PointXYZ sourcePoint( GetXCoordinate(*sourceFeaturesVector, pointIndex), GetYCoordinate(*sourceFeaturesVector, pointIndex), GetZCoordinate(*sourceFeaturesVector, pointIndex) );
+		sourceCloud->points.push_back(sourcePoint);
+		}
+	pcl::PointCloud<pcl::PointXYZ>::Ptr sinkCloud(new pcl::PointCloud<pcl::PointXYZ>());
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*sinkFeaturesVector); pointIndex++)
+		{
+		pcl::PointXYZ sinkPoint( GetXCoordinate(*sinkFeaturesVector, pointIndex), GetYCoordinate(*sinkFeaturesVector, pointIndex), GetZCoordinate(*sinkFeaturesVector, pointIndex) );
+		sinkCloud->points.push_back(sinkPoint);
 		}
 
-	return correspondenceMap;
+	const unsigned MAX_FEATURES_SIZE = 10;
+	typedef pcl::Histogram<MAX_FEATURES_SIZE> FeatureT;	
+	pcl::PointCloud<FeatureT>::Ptr sourceFeaturesCloud(new pcl::PointCloud<FeatureT>() );
+	for(unsigned pointIndex = 0; pointIndex < GetNumberOfPoints(*sourceFeaturesVector); pointIndex++)
+		{
+		FeatureT feature;
+		for(unsigned componentIndex = 0; componentIndex < MAX_FEATURES_SIZE; componentIndex++)
+			{
+			if (componentIndex < GetNumberOfDescriptorComponents(*sourceFeaturesVector, pointIndex) )
+				{
+				feature.histogram[componentIndex] = GetDescriptorComponent(*sourceFeaturesVector, pointIndex, componentIndex);
+				}
+			else
+				{
+				feature.histogram[componentIndex] = 0;
+				}
+			}
+		sourceFeaturesCloud->points.push_back(feature);
+		}
+	pcl::PointCloud<FeatureT>::Ptr sinkFeaturesCloud(new pcl::PointCloud<FeatureT>() );
+	for(unsigned pointIndex = 0; pointIndex < GetNumberOfPoints(*sinkFeaturesVector); pointIndex++)
+		{
+		FeatureT feature;
+		for(unsigned componentIndex = 0; componentIndex < MAX_FEATURES_SIZE; componentIndex++)
+			{
+			if (componentIndex < GetNumberOfDescriptorComponents(*sinkFeaturesVector, pointIndex) )
+				{
+				feature.histogram[componentIndex] = GetDescriptorComponent(*sinkFeaturesVector, pointIndex, componentIndex);
+				}
+			else
+				{
+				feature.histogram[componentIndex] = 0;
+				}
+			}
+		sinkFeaturesCloud->points.push_back(feature);
+		}
+
+
+	pcl::SampleConsensusPrerejective<pcl::PointXYZ, pcl::PointXYZ, FeatureT>::Ptr ransac(new pcl::SampleConsensusPrerejective<pcl::PointXYZ, pcl::PointXYZ, FeatureT>);
+	ransac->setSourceFeatures(sourceFeaturesCloud);
+	ransac->setTargetFeatures(sinkFeaturesCloud);
+	ransac->setInputSource(sourceCloud);
+	ransac->setInputTarget(sinkCloud);	
+	ransac->setSimilarityThreshold(0.01);
+	ransac->setInlierFraction(0.50);
+	ransac->setCorrespondenceRandomness(3);
+	ransac->setNumberOfSamples(10);
+	ransac->setMaximumIterations(1000);
+	ransac->setRANSACIterations(1000);
+	ransac->setRANSACOutlierRejectionThreshold(0.99);
+	ransac->setMaxCorrespondenceDistance(0.1);
+	ransac->setTransformationEpsilon(0.01);
+	ransac->setEuclideanFitnessEpsilon(0.01);
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud(new pcl::PointCloud<pcl::PointXYZ>);
+	ransac->align(*outputCloud);
+	Eigen::Matrix4f eigenTransform = ransac->getFinalTransformation();
+
+	Transform3DPtr transform = new Transform3D();
+	SetPosition(*transform, eigenTransform(0, 3), eigenTransform(1, 3), eigenTransform(2, 3) );
+	float quaternionW = std::sqrt(1.0 + eigenTransform(0, 0) + eigenTransform(1, 1) + eigenTransform(2, 2)) / 2.0;
+	float quaternionX = (eigenTransform(2, 1) - eigenTransform(1, 2)) / (4 * quaternionW);
+	float quaternionY = (eigenTransform(0, 2) - eigenTransform(2, 0)) / (4 * quaternionW);
+	float quaternionZ = (eigenTransform(1, 0) - eigenTransform(0, 1)) / (4 * quaternionW);
+	SetOrientation(*transform, quaternionX, quaternionY, quaternionZ, quaternionW);
+
+	return transform;
 	}
 
 
@@ -145,19 +193,19 @@ void Ransac3D::ValidateParameters()
 	ASSERT( parameters.samplesMaxDistance >= 0, "Ransac3D Configuration error, samples max distance is negative");
 	}
 
-void Ransac3D::ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud)
+void Ransac3D::ValidateInputs(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr source, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sink)
 	{
-	for(unsigned pointIndex = 0; pointIndex < sourceCloud->size(); pointIndex++)
+	for(unsigned pointIndex = 0; pointIndex < GetNumberOfPoints(*source); pointIndex++)
 		{
-		ASSERT(sourceCloud->points.at(pointIndex).x == sourceCloud->points.at(pointIndex).x, "Ransac 3D Error, Source Cloud contains an NaN point");
-		ASSERT(sourceCloud->points.at(pointIndex).y == sourceCloud->points.at(pointIndex).y, "Ransac 3D Error, Source Cloud contains an NaN point");
-		ASSERT(sourceCloud->points.at(pointIndex).z == sourceCloud->points.at(pointIndex).z, "Ransac 3D Error, Source Cloud contains an NaN point");
+		ASSERT(GetXCoordinate(*source, pointIndex) == GetXCoordinate(*source, pointIndex), "Ransac 3D Error, Source Cloud contains an NaN point");
+		ASSERT(GetYCoordinate(*source, pointIndex) == GetYCoordinate(*source, pointIndex), "Ransac 3D Error, Source Cloud contains an NaN point");
+		ASSERT(GetZCoordinate(*source, pointIndex) == GetZCoordinate(*source, pointIndex), "Ransac 3D Error, Source Cloud contains an NaN point");
 		}
-	for(unsigned pointIndex = 0; pointIndex < sinkCloud->size(); pointIndex++)
+	for(unsigned pointIndex = 0; pointIndex < GetNumberOfPoints(*sink); pointIndex++)
 		{
-		ASSERT(sinkCloud->points.at(pointIndex).x == sinkCloud->points.at(pointIndex).x, "Ransac 3D Error, Sink Cloud contains an NaN point");
-		ASSERT(sinkCloud->points.at(pointIndex).y == sinkCloud->points.at(pointIndex).y, "Ransac 3D Error, Sink Cloud contains an NaN point");
-		ASSERT(sinkCloud->points.at(pointIndex).z == sinkCloud->points.at(pointIndex).z, "Ransac 3D Error, Sink Cloud contains an NaN point");
+		ASSERT(GetXCoordinate(*sink, pointIndex) == GetXCoordinate(*sink, pointIndex), "Ransac 3D Error, Sink Cloud contains an NaN point");
+		ASSERT(GetYCoordinate(*sink, pointIndex) == GetYCoordinate(*sink, pointIndex), "Ransac 3D Error, Sink Cloud contains an NaN point");
+		ASSERT(GetZCoordinate(*sink, pointIndex) == GetZCoordinate(*sink, pointIndex), "Ransac 3D Error, Sink Cloud contains an NaN point");
 		}
 	}
 

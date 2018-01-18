@@ -1,13 +1,13 @@
 name: FeaturesMatching3D
 input_ports:
-    - name: sourceCloud
-      type: PointCloud3D
-      doc: this is the 3D point cloud model we would like to discover in the other point cloud.
-    - name: sinkCloud
-      type: PointCloud3D
-      doc: this is the 3D point cloud we are looking for the model into.
+    - name: sourceFeaturesVector
+      type: VisualPointFeatureVector3D
+      doc: these are the extracted features of the 3D point cloud model we would like to discover in the other point cloud.
+    - name: sinkFeaturesVector
+      type: VisualPointFeatureVector3D
+      doc: these are the extracted features of the 3D point cloud into which we are looking for the model.
 output_ports:
-    - name: correspondenceMap
-      type: CorrespondeceMap3D
-      doc: This is the best correspondence Map that matches sourceCloud points to sinkCloud points. A probability measure is attached to each possible correspondence.
+    - name: transform
+      type: Transform3D
+      doc: This is the best 3D trasform correspondence that matches source features to sink features.
 

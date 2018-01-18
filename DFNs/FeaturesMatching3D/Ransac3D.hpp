@@ -30,8 +30,8 @@
  * --------------------------------------------------------------------------
  */
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
-#include <PointCloud.hpp>
-#include <CorrespondenceMap3D.hpp>
+#include <VisualPointFeatureVector3D.hpp>
+#include <Pose.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <stdlib.h>
@@ -82,10 +82,14 @@ namespace dfn_ci {
 
 		RansacOptionsSet parameters;
 
-		CorrespondenceMap3DWrapper::CorrespondenceMap3DConstPtr ComputeCorrespondences(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
+		PoseWrapper::Transform3DConstPtr ComputeTransform
+			(
+			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sourceFeaturesVector, 
+			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sinkFeaturesVector
+			);
 
 		void ValidateParameters();
-		void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
+		void ValidateInputs(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sourceCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sinkCloud);
 
 		void Configure(const YAML::Node& configurationNode);
     };

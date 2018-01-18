@@ -47,8 +47,8 @@
 using namespace dfn_ci;
 using namespace Converters;
 using namespace Common;
-using namespace CorrespondenceMap3DWrapper;
-using namespace PointCloudWrapper;
+using namespace PoseWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -59,18 +59,18 @@ using namespace PointCloudWrapper;
 
 TEST_CASE( "Call to process", "[process]" ) 
 	{
-	Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInputCache = 
-		new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
-	Mocks::PointCloudToPclPointCloudConverter* mockInputConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
+	//Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInputCache = 
+	//	new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
+	//Mocks::PointCloudToPclPointCloudConverter* mockInputConverter = new Mocks::PointCloudToPclPointCloudConverter();
+	//ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
 	//Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>();
 	//Mocks::MatToVisualPointFeatureVector3DConverter* mockOutputConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
 	//ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 
 	//Create a sample sphere
-	pcl::PointCloud<pcl::PointXYZ>::Ptr sourceCloud =  boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::PointCloud<pcl::PointXYZ>::Ptr sinkCloud =  boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	VisualPointFeatureVector3DPtr sourceSet =  new VisualPointFeatureVector3D();
+	VisualPointFeatureVector3DPtr sinkSet =  new VisualPointFeatureVector3D();
 	unsigned numberOfPoints = 0;
 	for(float alpha = 0; alpha < 2 * M_PI; alpha += 0.1)
 		{
@@ -80,25 +80,27 @@ TEST_CASE( "Call to process", "[process]" )
 			spherePoint.x = std::cos(alpha) * std::cos(beta);
 			spherePoint.y = std::sin(alpha);
 			spherePoint.z = std::sin(beta);
-			sourceCloud->points.push_back(spherePoint);
-			sinkCloud->points.push_back(pcl::PointXYZ(spherePoint));
+			AddPoint(*sourceSet, spherePoint.x, spherePoint.y, spherePoint.z);
+			AddPoint(*sinkSet, spherePoint.x, spherePoint.y, spherePoint.z);
+			AddDescriptorComponent(*sourceSet, numberOfPoints, numberOfPoints);
+			AddDescriptorComponent(*sinkSet, numberOfPoints, numberOfPoints);
 			numberOfPoints++;
 			}
 		}
-	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&sourceCloud) );
-	mockInputConverter->AddBehaviour("Convert", "2", (void*) (&sinkCloud) );
+	//mockInputConverter->AddBehaviour("Convert", "1", (void*) (&sourceCloud) );
+	//mockInputConverter->AddBehaviour("Convert", "2", (void*) (&sinkCloud) );
 
 	//VisualPointFeatureVector3DConstPtr featuresVector = new VisualPointFeatureVector3D();
 	//mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
 
 	Ransac3D ransac;
-	ransac.sourceCloudInput(new PointCloud());
-	ransac.sinkCloudInput(new PointCloud());
+	ransac.sourceFeaturesVectorInput(sourceSet);
+	ransac.sinkFeaturesVectorInput(sinkSet);
 	ransac.process();
 
-	CorrespondenceMap3DConstPtr output = ransac.correspondenceMapOutput();
+	Transform3DConstPtr output = ransac.transformOutput();
 
-	REQUIRE(GetNumberOfCorrespondences(*output) == numberOfPoints);
+	//REQUIRE(GetNumberOfCorrespondences(*output) == numberOfPoints);
 	delete(output);
 	}
 

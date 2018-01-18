@@ -31,8 +31,8 @@
 
 namespace dfn_ci {
 
-using namespace PointCloudWrapper;
-using namespace CorrespondenceMap3DWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
+using namespace PoseWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -48,19 +48,19 @@ FeaturesMatching3DInterface::~FeaturesMatching3DInterface()
 	{
 	}
 
-void FeaturesMatching3DInterface::sourceCloudInput(PointCloudConstPtr data) 
+void FeaturesMatching3DInterface::sourceFeaturesVectorInput(VisualPointFeatureVector3DConstPtr data) 
 	{
-    	inSourceCloud = data;
+    	inSourceFeaturesVector = data;
 	}
 
-void FeaturesMatching3DInterface::sinkCloudInput(PointCloudConstPtr data) 
+void FeaturesMatching3DInterface::sinkFeaturesVectorInput(VisualPointFeatureVector3DConstPtr data) 
 	{
-    	inSinkCloud = data;
+    	inSinkFeaturesVector = data;
 	}
 
-CorrespondenceMap3DConstPtr FeaturesMatching3DInterface::correspondenceMapOutput() 
+Transform3DConstPtr FeaturesMatching3DInterface::transformOutput() 
 	{
-    	return outCorrespondenceMap;
+    	return outTransform;
 	}
 
 

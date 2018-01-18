@@ -28,8 +28,8 @@
  * --------------------------------------------------------------------------
  */
 #include <DFNCommonInterface.hpp>
-#include <PointCloud.hpp>
-#include <CorrespondenceMap3D.hpp>
+#include <VisualPointFeatureVector3D.hpp>
+#include <Pose.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
 
 
@@ -52,31 +52,31 @@ namespace dfn_ci {
             FeaturesMatching3DInterface();
             virtual ~FeaturesMatching3DInterface();
             /**
-            * Send value to input port image
-            * @param pointCloud, a 3D point cloud taken from a 3D sensor or from 3D reconstruction algorithms
+            * Send value to input port sourceFeaturesVector
+            * @param sourceFeaturesVector, these are the extracted features of the 3D point cloud model we would like to discover in the other point cloud.
             */
-            virtual void sourceCloudInput(PointCloudWrapper::PointCloudConstPtr data);
+            virtual void sourceFeaturesVectorInput(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr data);
 
             /**
-            * Send value to input port image
-            * @param pointCloud, a 3D point cloud taken from a 3D sensor or from 3D reconstruction algorithms
+            * Send value to input port sinkFeaturesVector
+            * @param sinkFeaturesVector, these are the extracted features of the 3D point cloud into which we are looking for the model.
             */
-            virtual void sinkCloudInput(PointCloudWrapper::PointCloudConstPtr data);
+            virtual void sinkFeaturesVectorInput(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr data);
 
             /**
-            * Receive value from output port featuresSet
-            * @param featuresSet, This is the set of the points extracted from the point cloud, no descriptor is provided yet
+            * Receive value from output port transform
+            * @param transform, This is the best 3D trasform correspondence that matches source features to sink features.
             */
-            virtual CorrespondenceMap3DWrapper::CorrespondenceMap3DConstPtr correspondenceMapOutput();
+            virtual PoseWrapper::Transform3DConstPtr transformOutput();
 
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
 	 */
         protected:
-            PointCloudWrapper::PointCloudConstPtr inSourceCloud;
-            PointCloudWrapper::PointCloudConstPtr inSinkCloud;
-            CorrespondenceMap3DWrapper::CorrespondenceMap3DConstPtr outCorrespondenceMap;
+            VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inSourceFeaturesVector;
+            VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inSinkFeaturesVector;
+            PoseWrapper::Transform3DConstPtr outTransform;
 
 	/* --------------------------------------------------------------------
 	 * Private

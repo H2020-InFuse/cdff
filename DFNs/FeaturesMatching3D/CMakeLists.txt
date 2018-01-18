@@ -9,5 +9,5 @@ add_library(
 )
 target_link_libraries(
     ransac_3d
-    feature_matching_3d cdff_types yaml-cpp 
+    feature_matching_3d cdff_types yaml-cpp flann_cpp
 )
