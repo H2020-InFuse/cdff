@@ -38,7 +38,7 @@
 #include <string>
 #include <pcl/keypoints/harris_3d.h>
 #include <yaml-cpp/yaml.h>
-
+#include <SupportTypes.hpp>
 
 namespace dfn_ci {
 
@@ -74,22 +74,25 @@ namespace dfn_ci {
 
 		struct RansacOptionsSet
 			{
-			int maxIterationsNumber;
-			float outliersFreeProbability;
-			float distanceThreshold;
-			float samplesMaxDistance;
+			float similarityThreshold;
+			float inlierFraction;
+			int correspondenceRandomness;
+			int numberOfSamples;
+			int maximumIterations;
+			float maxCorrespondenceDistance;
+
+			int ransacIterations;
+			float ransacOutlierRejectionThreshold;
+			double transformationEpsilon;
+			double euclideanFitnessEpsilon;
 			};
 
 		RansacOptionsSet parameters;
 
-		PoseWrapper::Transform3DConstPtr ComputeTransform
-			(
-			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sourceFeaturesVector, 
-			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sinkFeaturesVector
-			);
+		PoseWrapper::Transform3DConstPtr ComputeTransform(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
 
 		void ValidateParameters();
-		void ValidateInputs(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sourceCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sinkCloud);
+		void ValidateInputs(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
 
 		void Configure(const YAML::Node& configurationNode);
     };

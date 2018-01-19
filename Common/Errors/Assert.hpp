@@ -131,7 +131,24 @@ class AssertException: public std::exception
 	{ \
 	pcl::visualization::PCLVisualizer viewer ("test view"); \
     	pcl::visualization::PointCloudColorHandlerCustom< pointType > pclCloudColor(pointCloud, 255, 255, 255); \
-    	viewer.addPointCloud(pointCloud,pclCloudColor,"input"); \
+    	viewer.addPointCloud(pointCloud, pclCloudColor, "input"); \
+	\
+    	while (!viewer.wasStopped ()) \
+    		{ \
+        	viewer.spinOnce(); \
+        	pcl_sleep (0.01); \
+    		} \
+	}
+
+#define VIEW_3_POINT_CLOUDS(pointType, pointCloud1, pointCloud2, pointCloud3) \
+	{ \
+	pcl::visualization::PCLVisualizer viewer ("test view"); \
+    	pcl::visualization::PointCloudColorHandlerCustom< pointType > pclCloudColor1(pointCloud1, 255, 255, 255); \
+    	pcl::visualization::PointCloudColorHandlerCustom< pointType > pclCloudColor2(pointCloud2, 255, 255, 0); \
+    	pcl::visualization::PointCloudColorHandlerCustom< pointType > pclCloudColor3(pointCloud3, 255, 0, 0); \
+    	viewer.addPointCloud(pointCloud1, pclCloudColor1, "input1"); \
+    	viewer.addPointCloud(pointCloud2, pclCloudColor2, "input2"); \
+    	viewer.addPointCloud(pointCloud3, pclCloudColor3, "input3"); \
 	\
     	while (!viewer.wasStopped ()) \
     		{ \

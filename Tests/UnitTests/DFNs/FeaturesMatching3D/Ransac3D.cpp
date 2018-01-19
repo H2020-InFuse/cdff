@@ -40,8 +40,8 @@
 #include <FeaturesMatching3D/Ransac3D.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 
 using namespace dfn_ci;
@@ -49,6 +49,7 @@ using namespace Converters;
 using namespace Common;
 using namespace PoseWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
+using namespace SupportTypes;
 
 /* --------------------------------------------------------------------------
  *
@@ -59,40 +60,46 @@ using namespace VisualPointFeatureVector3DWrapper;
 
 TEST_CASE( "Call to process", "[process]" ) 
 	{
-	//Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInputCache = 
-	//	new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
-	//Mocks::PointCloudToPclPointCloudConverter* mockInputConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	//ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
+	Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>* stubInputCache = 
+		new Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>();
+	Mocks::VisualPointFeatureVector3DToPclPointCloudConverter* mockInputConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
+	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
 	//Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>();
 	//Mocks::MatToVisualPointFeatureVector3DConverter* mockOutputConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
 	//ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 
-	//Create a sample sphere
-	VisualPointFeatureVector3DPtr sourceSet =  new VisualPointFeatureVector3D();
-	VisualPointFeatureVector3DPtr sinkSet =  new VisualPointFeatureVector3D();
-	unsigned numberOfPoints = 0;
-	for(float alpha = 0; alpha < 2 * M_PI; alpha += 0.1)
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<FeatureType>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<FeatureType> >();
+	for(unsigned pointIndex = 0; pointIndex < 10; pointIndex++)
 		{
-		for(float beta = 0; beta < 2*M_PI; beta += 0.1)
+		pointCloud->points.push_back(pcl::PointXYZ(0.1*pointIndex, -0.1*pointIndex, 0));
+		FeatureType feature;
+		feature.histogram[0] = 0.001*pointIndex;
+		feature.histogram[1] = 0.002*pointIndex;
+		for(int componentIndex = 0; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
 			{
-			pcl::PointXYZ spherePoint;
-			spherePoint.x = std::cos(alpha) * std::cos(beta);
-			spherePoint.y = std::sin(alpha);
-			spherePoint.z = std::sin(beta);
-			AddPoint(*sourceSet, spherePoint.x, spherePoint.y, spherePoint.z);
-			AddPoint(*sinkSet, spherePoint.x, spherePoint.y, spherePoint.z);
-			AddDescriptorComponent(*sourceSet, numberOfPoints, numberOfPoints);
-			AddDescriptorComponent(*sinkSet, numberOfPoints, numberOfPoints);
-			numberOfPoints++;
+			feature.histogram[componentIndex] = 0;
 			}
+		featureCloud->points.push_back(feature);
 		}
-	//mockInputConverter->AddBehaviour("Convert", "1", (void*) (&sourceCloud) );
-	//mockInputConverter->AddBehaviour("Convert", "2", (void*) (&sinkCloud) );
+
+	PointCloudWithFeatures sourceCloud;
+	PointCloudWithFeatures sinkCloud;
+	sourceCloud.pointCloud = pointCloud;
+	sinkCloud.pointCloud = pointCloud;
+	sourceCloud.featureCloud = featureCloud;
+	sinkCloud.featureCloud = featureCloud;
+	sourceCloud.descriptorSize = 2;
+	sinkCloud.descriptorSize = 2;
+	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&sourceCloud) );
+	mockInputConverter->AddBehaviour("Convert", "2", (void*) (&sinkCloud) );
 
 	//VisualPointFeatureVector3DConstPtr featuresVector = new VisualPointFeatureVector3D();
 	//mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
 
+	VisualPointFeatureVector3DPtr sourceSet =  new VisualPointFeatureVector3D();
+	VisualPointFeatureVector3DPtr sinkSet =  new VisualPointFeatureVector3D();
 	Ransac3D ransac;
 	ransac.sourceFeaturesVectorInput(sourceSet);
 	ransac.sinkFeaturesVectorInput(sinkSet);

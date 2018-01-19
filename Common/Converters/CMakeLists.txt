@@ -6,6 +6,8 @@ add_library(
     VisualPointFeatureVector2DToMatConverter.cpp
     MatToVisualPointFeatureVector3DConverter.cpp
     VisualPointFeatureVector3DToMatConverter.cpp
+    VisualPointFeatureVector3DToPclPointCloudConverter.cpp
+    PclPointCloudToVisualPointFeatureVector3DConverter.cpp
     PointCloudToPclPointCloudConverter.cpp
     PclPointCloudToPointCloudConverter.cpp
 )
