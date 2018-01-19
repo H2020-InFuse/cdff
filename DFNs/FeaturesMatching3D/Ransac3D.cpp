@@ -103,10 +103,6 @@ void Ransac3D::process()
 		ConversionCache<VisualPointFeatureVector3DConstPtr, SupportTypes::PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Convert(inSourceFeaturesVector);
 	PointCloudWithFeatures inputSinkCloud = 
 		ConversionCache<VisualPointFeatureVector3DConstPtr, SupportTypes::PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Convert(inSinkFeaturesVector);
-	//pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputSourceCloud = 
-	//	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inSourceCloud);
-	//pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputSinkCloud = 
-	//	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inSinkCloud);
 	ValidateInputs(inputSourceCloud, inputSinkCloud);
 	outTransform = ComputeTransform(inputSourceCloud, inputSinkCloud);
 	//outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Convert(harrisPoints);
@@ -144,22 +140,31 @@ Transform3DConstPtr Ransac3D::ComputeTransform(Converters::SupportTypes::PointCl
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud(new pcl::PointCloud<pcl::PointXYZ>);
 	ransac->align(*outputCloud);
-
-	Transform3DPtr transform = new Transform3D();	
+	
 	if (ransac->hasConverged())
 		{
 		Eigen::Matrix4f eigenTransform = ransac->getFinalTransformation();
-		Eigen::Matrix3f eigenRotationMatrix = eigenTransform.block(0,0,3,3);
-		Eigen::Quaternionf eigenRotation (eigenRotationMatrix);
-
-		SetPosition(*transform, eigenTransform(0, 3), eigenTransform(1, 3), eigenTransform(2, 3) );
-		SetOrientation(*transform, eigenRotation.x(), eigenRotation.y(), eigenRotation.z(), eigenRotation.w());
+		return Ransac3D::Convert(eigenTransform);
 		}
 	else
 		{
+		Transform3DPtr transform = new Transform3D();
 		SetPosition(*transform, 0, 0, 0);
 		SetOrientation(*transform, 0, 0, 0, 0);
+		return transform;
 		}
+	
+	}
+
+PoseWrapper::Transform3DConstPtr Ransac3D::Convert(Eigen::Matrix4f eigenTransform)
+	{
+	Transform3DPtr transform = new Transform3D();	
+
+	Eigen::Matrix3f eigenRotationMatrix = eigenTransform.block(0,0,3,3);
+	Eigen::Quaternionf eigenRotation (eigenRotationMatrix);
+
+	SetPosition(*transform, eigenTransform(0, 3), eigenTransform(1, 3), eigenTransform(2, 3) );
+	SetOrientation(*transform, eigenRotation.x(), eigenRotation.y(), eigenRotation.z(), eigenRotation.w());
 
 	return transform;
 	}
@@ -182,40 +187,29 @@ void Ransac3D::ValidateParameters()
 
 void Ransac3D::ValidateInputs(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud)
 	{
-	ASSERT(sourceCloud.pointCloud->points.size() == sourceCloud.featureCloud->points.size(), "Ransac 3D Error, Source point cloud has different size than source feature cloud");
-	ASSERT(sinkCloud.pointCloud->points.size() == sinkCloud.featureCloud->points.size(), "Ransac 3D Error, Sink point cloud has different size than sink feature cloud");
+	ASSERT(sourceCloud.descriptorSize == sinkCloud.descriptorSize, "Ransac 3D Error, Source Cloud has different descriptor size than sink cloud");
+	ValidateCloud(sourceCloud);
+	ValidateCloud(sinkCloud);
+	}
 
-	for(int pointIndex = 0; pointIndex < sourceCloud.pointCloud->points.size(); pointIndex++)
-		{
-		pcl::PointXYZ point = sourceCloud.pointCloud->points.at(pointIndex);
-		FeatureType feature = sourceCloud.featureCloud->points.at(pointIndex);
-		ASSERT(point.x == point.x, "Ransac 3D Error, Source Cloud contains an NaN point");
-		ASSERT(point.y == point.y, "Ransac 3D Error, Source Cloud contains an NaN point");
-		ASSERT(point.z == point.z, "Ransac 3D Error, Source Cloud contains an NaN point");
-		for(unsigned componentIndex = 0; componentIndex < sourceCloud.descriptorSize; componentIndex++)
-			{
-			ASSERT(feature.histogram[componentIndex] == feature.histogram[componentIndex], "Ransac 3D Error, Source Feature Cloud contains a NaN feature");
-			}
-		for(unsigned componentIndex = sourceCloud.descriptorSize; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
-			{
-			ASSERT(feature.histogram[componentIndex] == 0, "Ransac 3D Error, Source Feature Cloud contains an invalid feature, probably it was a conversion error");
-			}
-		}
+void Ransac3D::ValidateCloud(Converters::SupportTypes::PointCloudWithFeatures cloud)
+	{
+	ASSERT(cloud.pointCloud->points.size() == cloud.featureCloud->points.size(), "Ransac 3D Error, point cloud has different size than feature cloud");
 
-	for(int pointIndex = 0; pointIndex < sinkCloud.pointCloud->points.size(); pointIndex++)
+	for(unsigned pointIndex = 0; pointIndex < cloud.pointCloud->points.size(); pointIndex++)
 		{
-		pcl::PointXYZ point = sinkCloud.pointCloud->points.at(pointIndex);
-		FeatureType feature = sinkCloud.featureCloud->points.at(pointIndex);
-		ASSERT(point.x == point.x, "Ransac 3D Error, Sink Cloud contains an NaN point");
-		ASSERT(point.y == point.y, "Ransac 3D Error, Sink Cloud contains an NaN point");
-		ASSERT(point.z == point.z, "Ransac 3D Error, Sink Cloud contains an NaN point");
-		for(unsigned componentIndex = 0; componentIndex < sinkCloud.descriptorSize; componentIndex++)
+		pcl::PointXYZ point = cloud.pointCloud->points.at(pointIndex);
+		FeatureType feature = cloud.featureCloud->points.at(pointIndex);
+		ASSERT(point.x == point.x, "Ransac 3D Error, Cloud contains an NaN point");
+		ASSERT(point.y == point.y, "Ransac 3D Error, Cloud contains an NaN point");
+		ASSERT(point.z == point.z, "Ransac 3D Error, Cloud contains an NaN point");
+		for(unsigned componentIndex = 0; componentIndex < cloud.descriptorSize; componentIndex++)
 			{
-			ASSERT(feature.histogram[componentIndex] == feature.histogram[componentIndex], "Ransac 3D Error, Sink Feature Cloud contains a NaN feature");
+			ASSERT(feature.histogram[componentIndex] == feature.histogram[componentIndex], "Ransac 3D Error, Feature Cloud contains a NaN feature");
 			}
-		for(unsigned componentIndex = sinkCloud.descriptorSize; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
+		for(unsigned componentIndex = cloud.descriptorSize; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
 			{
-			ASSERT(feature.histogram[componentIndex] == 0, "Ransac 3D Error, Sink Feature Cloud contains an invalid feature, probably it was a conversion error");
+			ASSERT(feature.histogram[componentIndex] == 0, "Ransac 3D Error, Feature Cloud contains an invalid feature, probably it was a conversion error");
 			}
 		}
 	}

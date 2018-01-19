@@ -45,7 +45,7 @@ namespace Converters
 		 * --------------------------------------------------------------------------------
 		 */
 
-		static const int MAX_FEATURES_NUMBER = 128;
+		static const unsigned MAX_FEATURES_NUMBER = 128;
 		typedef pcl::Histogram<MAX_FEATURES_NUMBER> FeatureType;		
 		struct PointCloudWithFeatures
 			{

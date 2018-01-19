@@ -65,6 +65,8 @@ class Ransac3DTestInterface : public DFNTestInterface
 	public:
 		Ransac3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
 		~Ransac3DTestInterface();
+
+		static void SegmentationFaultHandler(int signal);
 	protected:
 
 	private:
@@ -74,15 +76,28 @@ class Ransac3DTestInterface : public DFNTestInterface
 		//Mocks::MatToVisualPointFeatureVector3DConverter* mockOutputConverter;
 		Ransac3D* ransac;
 
+		typedef pcl::FPFHSignature33 FeatureT;
+		typedef pcl::FPFHEstimationOMP<pcl::PointXYZ,pcl::Normal,FeatureT> FeatureEstimationT;
+
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclSourceCloud;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclSinkCloud;
+		pcl::PointCloud<FeatureT>::Ptr sourceFeaturesCloud;
+		pcl::PointCloud<FeatureT>::Ptr sinkFeaturesCloud;
 		VisualPointFeatureVector3DPtr inputSourceFeaturesVector;
 		VisualPointFeatureVector3DPtr inputSinkFeaturesVector;
 		std::string outputWindowName;
 
+		void LoadInputClouds();
+		void ComputeFeatures();
+		void PrepareInputs();
+
 		void SetupMocksAndStubs();
 		void SetupParameters();
 		void DisplayResult();
+
+		void PrintInformation(Transform3DConstPtr transform);
+		pcl::PointCloud<pcl::PointXYZ>::ConstPtr PrepareOutputCloud(Transform3DConstPtr transform);
+		void VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud);
 	};
 
 Ransac3DTestInterface::Ransac3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
@@ -91,7 +106,43 @@ Ransac3DTestInterface::Ransac3DTestInterface(std::string dfnName, int buttonWidt
 	ransac = new Ransac3D();
 	SetDFN(ransac);
 
-	//PclPointCloudToPointCloudConverter converter;
+	LoadInputClouds();
+	ComputeFeatures();
+	PrepareInputs();
+
+	ransac->sourceFeaturesVectorInput(inputSourceFeaturesVector);
+	ransac->sinkFeaturesVectorInput(inputSinkFeaturesVector);
+
+	outputWindowName = "Ransac 3D Result";
+	}
+
+Ransac3DTestInterface::~Ransac3DTestInterface()
+	{
+	delete(stubInputCache);
+	delete(mockInputConverter);
+	//delete(stubOutputCache);
+	//delete(mockOutputConverter);
+	delete(ransac);
+	delete(inputSourceFeaturesVector);
+	delete(inputSinkFeaturesVector);
+	}
+
+void Ransac3DTestInterface::SegmentationFaultHandler(int sig) 
+	{
+	void *array[10];
+	size_t size;
+
+	// get void*'s for all entries on the stack
+	size = backtrace(array, 10);
+
+	// print out all the frames to stderr
+	fprintf(stderr, "Error: signal %d:\n", sig);
+	backtrace_symbols_fd(array, size, STDERR_FILENO);
+	exit(1);
+	}
+
+void Ransac3DTestInterface::LoadInputClouds()
+	{
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclInputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pclSourceCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pclSinkCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
@@ -127,7 +178,10 @@ Ransac3DTestInterface::Ransac3DTestInterface(std::string dfnName, int buttonWidt
   	grid.filter (*pclSinkCloud);
   	grid.setInputCloud (pclSourceCloud);
   	grid.filter (*pclSourceCloud);
+	}
 
+void Ransac3DTestInterface::ComputeFeatures()
+	{
 	pcl::PointCloud<pcl::Normal>::Ptr pclSourceCloudNormal = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
 	pcl::PointCloud<pcl::Normal>::Ptr pclSinkCloudNormal = boost::make_shared<pcl::PointCloud<pcl::Normal> >();	
 	pcl::NormalEstimationOMP<pcl::PointXYZ,pcl::Normal> normalsEstimation;
@@ -137,10 +191,8 @@ Ransac3DTestInterface::Ransac3DTestInterface(std::string dfnName, int buttonWidt
   	normalsEstimation.setInputCloud (pclSourceCloud);
   	normalsEstimation.compute (*pclSourceCloudNormal);
 
-	typedef pcl::FPFHSignature33 FeatureT;
-	typedef pcl::FPFHEstimationOMP<pcl::PointXYZ,pcl::Normal,FeatureT> FeatureEstimationT;
-	pcl::PointCloud<FeatureT>::Ptr sourceFeaturesCloud = boost::make_shared<pcl::PointCloud<FeatureT> >();
-	pcl::PointCloud<FeatureT>::Ptr sinkFeaturesCloud = boost::make_shared<pcl::PointCloud<FeatureT> >();	
+	sourceFeaturesCloud = boost::make_shared<pcl::PointCloud<FeatureT> >();
+	sinkFeaturesCloud = boost::make_shared<pcl::PointCloud<FeatureT> >();	
   	FeatureEstimationT featureEstimation;
   	featureEstimation.setRadiusSearch (0.025);
   	featureEstimation.setInputCloud (pclSinkCloud);
@@ -149,7 +201,10 @@ Ransac3DTestInterface::Ransac3DTestInterface(std::string dfnName, int buttonWidt
   	featureEstimation.setInputCloud (pclSourceCloud);
   	featureEstimation.setInputNormals (pclSourceCloudNormal);
   	featureEstimation.compute (*sourceFeaturesCloud);
+	}
 
+void Ransac3DTestInterface::PrepareInputs()
+	{
 	inputSinkFeaturesVector = new VisualPointFeatureVector3D();
 	inputSourceFeaturesVector = new VisualPointFeatureVector3D();
 	unsigned pointCounter = 0;
@@ -176,25 +231,6 @@ Ransac3DTestInterface::Ransac3DTestInterface(std::string dfnName, int buttonWidt
 			}
 		pointCounter++;
 		}
-
-
-	//inputSourceCloud = converter.Convert(pclSourceCloud);
-	//inputSinkCloud = converter.Convert(pclSinkCloud);
-	ransac->sourceFeaturesVectorInput(inputSourceFeaturesVector);
-	ransac->sinkFeaturesVectorInput(inputSinkFeaturesVector);
-
-	outputWindowName = "Ransac 3D Result";
-	}
-
-Ransac3DTestInterface::~Ransac3DTestInterface()
-	{
-	delete(stubInputCache);
-	delete(mockInputConverter);
-	//delete(stubOutputCache);
-	//delete(mockOutputConverter);
-	delete(ransac);
-	delete(inputSourceFeaturesVector);
-	delete(inputSinkFeaturesVector);
 	}
 
 void Ransac3DTestInterface::SetupMocksAndStubs()
@@ -221,7 +257,15 @@ void Ransac3DTestInterface::SetupParameters()
 void Ransac3DTestInterface::DisplayResult()
 	{
 	Transform3DConstPtr transform= ransac->transformOutput();
+	PrintInformation(transform);	
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud = PrepareOutputCloud(transform);
+	VisualizeClouds(correspondenceCloud);
 
+	delete(transform);
+	}
+
+void Ransac3DTestInterface::PrintInformation(Transform3DConstPtr transform)
+	{
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
 	PRINT_TO_LOG("Sink Cloud Size: ", GetNumberOfPoints(*inputSinkFeaturesVector) );
@@ -230,13 +274,13 @@ void Ransac3DTestInterface::DisplayResult()
 	positionStream << "(" << GetXPosition(*transform) <<", "<<GetYPosition(*transform)<<", "<<GetZPosition(*transform)<<")";
 	orientationStream << "(" << GetXOrientation(*transform) <<", "<<GetYOrientation(*transform)<<", "<<GetZOrientation(*transform)<<", "<<GetWOrientation(*transform)<<")";
 	PRINT_TO_LOG("Transform Position: ", positionStream.str() );
-	PRINT_TO_LOG("Transform Orientation: ", orientationStream.str() );	
+	PRINT_TO_LOG("Transform Orientation: ", orientationStream.str() );
+	}
 
+pcl::PointCloud<pcl::PointXYZ>::ConstPtr Ransac3DTestInterface::PrepareOutputCloud(Transform3DConstPtr transform)
+	{
 	Eigen::Quaternionf eigenRotation( GetWOrientation(*transform), GetXOrientation(*transform), GetYOrientation(*transform), GetZOrientation(*transform));
 	Eigen::Translation<float, 3> eigenTranslation( GetXPosition(*transform), GetYPosition(*transform), GetZPosition(*transform));	
-
-	//Eigen::Quaternionf eigenRotation(0, 0, 0, 1);
-	//Eigen::Translation<float, 3> eigenTranslation(0,0,1);
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr correspondenceCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(unsigned pointIndex = 0; pointIndex < pclSourceCloud->points.size(); pointIndex++)
@@ -251,6 +295,11 @@ void Ransac3DTestInterface::DisplayResult()
 		correspondenceCloud->points.push_back(transformedPclPoint);
 		}
 
+	return correspondenceCloud;
+	}
+
+void Ransac3DTestInterface::VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud)
+	{
 	pcl::visualization::PCLVisualizer viewer (outputWindowName);
     	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclSourceCloudColor(pclSourceCloud, 255, 255, 0);
     	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclSinkCloudColor(pclSinkCloud, 255, 255, 255);
@@ -264,26 +313,11 @@ void Ransac3DTestInterface::DisplayResult()
         	viewer.spinOnce();
         	pcl_sleep (0.01);
     		} 
-
-	delete(transform);
 	}
-
-void handler(int sig) {
-  void *array[10];
-  size_t size;
-
-  // get void*'s for all entries on the stack
-  size = backtrace(array, 10);
-
-  // print out all the frames to stderr
-  fprintf(stderr, "Error: signal %d:\n", sig);
-  backtrace_symbols_fd(array, size, STDERR_FILENO);
-  exit(1);
-}
 
 int main(int argc, char** argv)
 	{
-	signal(SIGSEGV, handler);
+	signal(SIGSEGV, Ransac3DTestInterface::SegmentationFaultHandler);
 	Ransac3DTestInterface interface("Ransac3D", 100, 40);
 	interface.Run();
 	}

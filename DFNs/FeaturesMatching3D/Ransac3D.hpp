@@ -90,9 +90,12 @@ namespace dfn_ci {
 		RansacOptionsSet parameters;
 
 		PoseWrapper::Transform3DConstPtr ComputeTransform(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
+		PoseWrapper::Transform3DConstPtr Convert(Eigen::Matrix4f eigenTransform);
 
 		void ValidateParameters();
 		void ValidateInputs(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
+		void ValidateCloud(Converters::SupportTypes::PointCloudWithFeatures cloud);
+		
 
 		void Configure(const YAML::Node& configurationNode);
     };
