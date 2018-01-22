@@ -30,10 +30,11 @@
  * --------------------------------------------------------------------------
  */
 #include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
-#include <ImageType.h>
-#include <Types/C/VisualPointFeatureVector.h>
+#include <Frame.hpp>
+#include <VisualPointFeatureVector2D.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <yaml-cpp/yaml.h>
 
 
 namespace dfn_ci {
@@ -93,6 +94,8 @@ namespace dfn_ci {
 
 		void ValidateParameters();
 		void ValidateInputs(cv::Mat inputImage);
+
+		void Configure(const YAML::Node& configurationNode);
     };
 }
 #endif

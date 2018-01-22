@@ -32,7 +32,9 @@
 #include <Errors/Assert.hpp>
 
 
-namespace Types {
+namespace Converters {
+
+using namespace VisualPointFeatureVector2DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -40,18 +42,30 @@ namespace Types {
  *
  * --------------------------------------------------------------------------
  */
-	cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(VisualPointFeatureVector2D* vector)
-	{	
-		cv::Mat conversion(vector->nCount, 2, CV_16UC1, cv::Scalar(0));
-		for(unsigned rowIndex = 0; rowIndex < conversion.rows; rowIndex++)
+const cv::Mat VisualPointFeatureVector2DToMatConverter::Convert(const VisualPointFeatureVector2DConstPtr& featuresVector)
+	{
+	if (GetNumberOfPoints(*featuresVector) == 0)
+		return cv::Mat();
+
+	int descriptorSize = GetNumberOfDescriptorComponents(*featuresVector, 0);	
+	cv::Mat conversion(GetNumberOfPoints(*featuresVector), 2 + descriptorSize, CV_32FC1, cv::Scalar(0));
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
 		{
-			VisualPointFeature2D feature = vector->arr[rowIndex];
-			conversion.at<uint16_t>(rowIndex, 0) = feature.point.x;
-			conversion.at<uint16_t>(rowIndex, 1) = feature.point.y;
+		conversion.at<float>(pointIndex, 0) = GetXCoordinate(*featuresVector, pointIndex);
+		conversion.at<float>(pointIndex, 1) = GetYCoordinate(*featuresVector, pointIndex);
+
+		ASSERT(descriptorSize == GetNumberOfDescriptorComponents(*featuresVector, pointIndex), "VisualPointFeatureVector2DToMatConverter: Descriptors do not have the same size.");
+		for(int componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
+			conversion.at<float>(pointIndex, componentIndex + 2) = GetDescriptorComponent(*featuresVector, pointIndex, componentIndex);
 		}
-	
 	return conversion;
 	}
+
+const cv::Mat VisualPointFeatureVector2DToMatConverter::ConvertShared(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DSharedConstPtr& featuresVector)
+	{
+	return Convert(featuresVector.get());
+	}
+
 }
 
 /** @} */

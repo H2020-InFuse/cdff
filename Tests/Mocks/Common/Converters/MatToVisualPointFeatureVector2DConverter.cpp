@@ -29,9 +29,11 @@
  */
 #include "MatToVisualPointFeatureVector2DConverter.hpp"
 #include <Errors/Assert.hpp>
-
+#include "Mocks/MockMacro.hpp"
 
 namespace Mocks {
+
+using namespace VisualPointFeatureVector2DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -39,22 +41,13 @@ namespace Mocks {
  *
  * --------------------------------------------------------------------------
  */
-VisualPointFeatureVector2D* MatToVisualPointFeatureVector2DConverter::Convert(cv::Mat featuresVector)
+MatToVisualPointFeatureVector2DConverter::~MatToVisualPointFeatureVector2DConverter()
 	{
-	static unsigned time = 0;
-	time++;
 
-	VisualPointFeatureVector2D** plannedOutput = (VisualPointFeatureVector2D**) Mock::GetBehaviour("Convert", time); 
-
-	if (plannedOutput == NULL)
-		{
-		return Types::MatToVisualPointFeatureVector2DConverter::Convert(featuresVector);
-		}
-	else
-		{
-		return (*plannedOutput);
-		}
 	}
+
+VisualPointFeatureVector2DConstPtr MatToVisualPointFeatureVector2DConverter::Convert(const cv::Mat& featuresMatrix)
+	MOCK_METHOD(Converters::MatToVisualPointFeatureVector2DConverter, Convert, VisualPointFeatureVector2DConstPtr, (featuresMatrix) )	
 
 }
 

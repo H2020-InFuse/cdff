@@ -1,0 +1,45 @@
+/* --------------------------------------------------------------------------
+*
+* (C) Copyright …
+*
+* ---------------------------------------------------------------------------
+*/
+
+/*!
+ * @file VisualPointFeatureVector3D.asn
+ * @date 08/12/2017
+ * @author Alessandro Bianco
+ *
+ */
+
+/*!
+ * @addtogroup BaseTypes
+ * 
+ * Specification of the VisualPointFeatureVector class.
+ * 
+ * 
+ * @{
+ */
+VisualPointFeature3DNS DEFINITIONS ::=
+BEGIN
+
+IMPORTS
+Point3D FROM GeometryNS
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes;
+
+-- Max. number of features
+features3DElementsMax T-UInt32 ::= 51200
+
+-- Max. name size
+descriptor3DNameLength T-UInt32 ::= 128
+
+VisualPointFeature3D ::= SEQUENCE
+	{
+	point		Point3D,
+	descriptor	SEQUENCE (SIZE(0..descriptor3DNameLength)) OF REAL
+	}
+
+VisualPointFeatureVector3D ::= SEQUENCE (SIZE(0..features3DElementsMax)) OF VisualPointFeature3D
+
+END

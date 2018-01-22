@@ -1,8 +1,0 @@
-[submodule "External/tinyxml2"]
-	path = External/tinyxml2
-	url = https://github.com/leethomason/tinyxml2.git
-	branch = master
-[submodule "External/opencv3"]
-	path = External/opencv3
-	url = https://github.com/opencv/opencv.git
-	branch = master

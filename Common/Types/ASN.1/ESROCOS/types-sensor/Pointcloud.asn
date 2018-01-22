@@ -13,7 +13,7 @@ IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-I
 
 
 --- Size of the Pointcloud data
-maxPointcloudSize T-UInt32 ::= 60
+maxPointcloudSize T-UInt32 ::= 300000
 
 ---  Definition POINTCLOUD Starts 
 Pointcloud   ::= 

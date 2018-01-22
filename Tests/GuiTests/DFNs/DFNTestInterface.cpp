@@ -112,7 +112,7 @@ int DFNTestInterface::GetTotalVirtualMemoryUsedKB()
  * --------------------------------------------------------------------------
  */
 
-const std::string DFNTestInterface::filePath = "../tests/ConfigurationFiles/DFNs/FeaturesExtraction2D/Conf.xml";
+const std::string DFNTestInterface::filePath = "../../tests/ConfigurationFiles/TemporaryGuiTest/Conf.yaml";
 
 
 /* --------------------------------------------------------------------------
@@ -143,7 +143,7 @@ void DFNTestInterface::ProcessCallback(void* referenceToClass)
 
 void DFNTestInterface::ProcessCallback()
 	{
-	parametersInterface.SaveToXml(filePath);
+	parametersInterface.SaveToYaml(filePath);
 	dfn->configure();
 
 	clock_t begin = clock();

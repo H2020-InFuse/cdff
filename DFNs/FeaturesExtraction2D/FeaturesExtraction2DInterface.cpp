@@ -27,10 +27,12 @@
  * --------------------------------------------------------------------------
  */
 #include "FeaturesExtraction2DInterface.hpp"
-
+#include "Errors/Assert.hpp"
 
 namespace dfn_ci {
 
+using namespace FrameWrapper;
+using namespace VisualPointFeatureVector2DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -40,18 +42,20 @@ namespace dfn_ci {
  */
 FeaturesExtraction2DInterface::FeaturesExtraction2DInterface()
 	{
+	
 	}
 
 FeaturesExtraction2DInterface::~FeaturesExtraction2DInterface()
 	{
+
 	}
 
-void FeaturesExtraction2DInterface::imageInput(ImageType* data) 
+void FeaturesExtraction2DInterface::imageInput(FrameConstPtr data) 
 	{
     	inImage = data;
 	}
 
-VisualPointFeatureVector2D* FeaturesExtraction2DInterface::featuresSetOutput() 
+VisualPointFeatureVector2DConstPtr FeaturesExtraction2DInterface::featuresSetOutput() 
 	{
     	return outFeaturesSet;
 	}

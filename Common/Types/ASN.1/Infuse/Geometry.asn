@@ -28,6 +28,13 @@ Point2D ::= SEQUENCE
 	y	REAL
 	}
 
+Point3D ::= SEQUENCE
+	{
+	x	REAL,
+	y	REAL,
+	z	REAL
+	}
+
 END
 
 /** @} */

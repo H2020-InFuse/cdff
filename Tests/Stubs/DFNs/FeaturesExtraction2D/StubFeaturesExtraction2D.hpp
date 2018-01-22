@@ -29,8 +29,8 @@
  * --------------------------------------------------------------------------
  */
 #include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
-#include <ImageType.h>
-#include <Types/C/VisualPointFeatureVector.h>
+#include <Frame.hpp>
+#include <VisualPointFeatureVector2D.hpp>
 
 
 namespace dfn_ci {

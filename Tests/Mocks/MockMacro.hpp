@@ -73,6 +73,23 @@
 		} \
 	}	
 
+#define MOCK_VOID_METHOD(baseClass, methodName, outputType, inputParameter, outputParameter) \
+	{ \
+	static unsigned time = 0; \
+	time++; \
+	 \
+	outputType* plannedOutput = (outputType*) Mock::GetBehaviour(#methodName, time); \
+	 \
+	if (plannedOutput == NULL) \
+		{ \
+		baseClass::methodName (inputParameter, outputParameter); \
+		} \
+	else \
+		{ \
+		outputParameter = (*plannedOutput); \
+		} \
+	}
+
 #endif
 
 /* MockMacro.hpp */

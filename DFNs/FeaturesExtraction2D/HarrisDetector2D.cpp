@@ -28,21 +28,20 @@
  */
 #include "HarrisDetector2D.hpp"
 #include <Errors/Assert.hpp>
-#include <ImageTypeToMatConverter.hpp>
+#include <FrameToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
-#include <tinyxml2.h>
-#include <XmlHelper/XmlHelper.hpp>
 
 #include <stdlib.h>
 #include <fstream>
 
-using namespace Types;
+using namespace Converters;
 using namespace Common;
-using namespace tinyxml2;
 
 namespace dfn_ci {
 
+using namespace VisualPointFeatureVector2DWrapper;
+using namespace FrameWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -71,49 +70,35 @@ HarrisDetector2D::~HarrisDetector2D()
 
 	}
 
-void HarrisDetector2D::configure() 
+void HarrisDetector2D::configure()
 	{
-    	XMLDocument configuration;
-    	XMLError error = configuration.LoadFile( configurationFilePath.c_str() );
-	ASSERT(error == XML_SUCCESS, "HarrisDetector2D Configuration file could not be loaded");
-
-	XMLElement* root = configuration.FirstChildElement("HarrisDetector2D");
-	ASSERT(root != NULL, "Error in configuration file, no root element HarrisDetector2d");
-
-	XMLElement* generalGroupElement = root->FirstChildElement("General");
-	VERIFY(generalGroupElement != NULL, "Warning in Harris Detector 2D Configuration: no general parameters, default ones will be used");
-	if (generalGroupElement != NULL)
+	try
 		{
-		/* XmlHelper::ExtractTYPE(A, B, C, D): 
-		* it looks for name B in element A and populates variable C with the value found, if the value is not of the right type message D is written to log. */ 
-		XmlHelper::ExtractInt(generalGroupElement, "ApertureSize", parameters.apertureSize, "HarrisDetector2D Configuration error, Aperture Size is not an integer");
-		XmlHelper::ExtractInt(generalGroupElement, "BlockSize", parameters.blockSize, "HarrisDetector2D Configuration error, Block Size is not an integer");
-		XmlHelper::ExtractFloat(generalGroupElement, "ParameterK", parameters.parameterK, "HarrisDetector2D Configuration error, Parameter K is not a float");
-		XmlHelper::ExtractInt(generalGroupElement, "DetectionThreshold", parameters.detectionThreshold, "HarrisDetector2D Configuration error, Detection Threshold is not an integer");
-		XmlHelper::ExtractBool(generalGroupElement, "UseGaussianBlur", parameters.useGaussianBlur, "HarrisDetector2D Configuration error, Use Gaussian Blur is not a bool");
-		}
-
-	XMLElement* gaussianBlurGroupElement = root->FirstChildElement("GaussianBlur");
-	VERIFY(!parameters.useGaussianBlur || gaussianBlurGroupElement != NULL, "Warning in Harris Detector 2D Configuration: no gaussian blur parameters");
-	if (parameters.useGaussianBlur && gaussianBlurGroupElement != NULL)
+		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
+		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
+			{
+			YAML::Node configurationNode = configuration[configuationIndex];
+			Configure(configurationNode);
+			}
+		} 
+	catch(YAML::ParserException& e) 
 		{
-		XmlHelper::ExtractInt(gaussianBlurGroupElement, "KernelWidth", gaussianBlurParameters.kernelWidth, "HarrisDetector2D Kernel Width is not an integer");
-		XmlHelper::ExtractInt(gaussianBlurGroupElement, "KernelHeight", gaussianBlurParameters.kernelHeight, "HarrisDetector2D Kernel Height is not an integer");
-		XmlHelper::ExtractFloat(gaussianBlurGroupElement, "WidthStandardDeviation", gaussianBlurParameters.widthStandardDeviation, "HarrisDetector2D Width Standard Deviation is not a float");
-		XmlHelper::ExtractFloat(gaussianBlurGroupElement, "HeightStandardDeviation", gaussianBlurParameters.heightStandardDeviation, "HarrisDetector2D Height Standard Deviation is not a float");
+    		ASSERT(false, e.what() );
 		}
-
-	ValidateParameters();
+	catch(YAML::RepresentationException& e)
+		{
+		ASSERT(false, e.what() );
+		}
 	}
 
 
 void HarrisDetector2D::process() 
 	{
-	cv::Mat inputImage = ConversionCache<ImageType*, cv::Mat, ImageTypeToMatConverter>::Convert(inImage);
+	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
 	ValidateInputs(inputImage);
 	cv::Mat harrisImage = ComputeHarrisImage(inputImage);
 	cv::Mat harrisPoints = ExtractHarrisPoints(harrisImage);
-	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector2D*, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
+	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
 	}
 
 
@@ -124,6 +109,7 @@ cv::Mat HarrisDetector2D::ComputeHarrisImage(cv::Mat inputImage)
 
 	cv::Mat blurredImage;
 	if(parameters.useGaussianBlur)
+		{
 		cv::GaussianBlur
 			(
 			grayImage, 
@@ -132,9 +118,12 @@ cv::Mat HarrisDetector2D::ComputeHarrisImage(cv::Mat inputImage)
 			gaussianBlurParameters.widthStandardDeviation, 
 			gaussianBlurParameters.heightStandardDeviation
 			);
+		}
 	else
+		{
 		blurredImage = grayImage;
- 
+ 		}
+
 	cv::Mat harrisMatrix = cv::Mat(inputImage.size(), CV_32FC1);
 	cv::cornerHarris(blurredImage, harrisMatrix, parameters.blockSize, parameters.apertureSize, parameters.parameterK, cv::BORDER_DEFAULT );
 
@@ -152,16 +141,20 @@ cv::Mat HarrisDetector2D::ExtractHarrisPoints(cv::Mat harrisImage)
 	{
 	int numberOfPoints = cv::countNonZero(harrisImage > parameters.detectionThreshold);
 
-	cv::Mat harrisPointsList(numberOfPoints, 2, CV_16UC1, cv::Scalar(0));
+	cv::Mat harrisPointsList(numberOfPoints, 2, CV_32FC1, cv::Scalar(0));
 	unsigned pointIndex = 0;
 
 	for(int rowIndex = 0; rowIndex < harrisImage.rows; rowIndex++)
-	for(int columnIndex = 0; columnIndex < harrisImage.cols; columnIndex++)
-	if (harrisImage.at<uint8_t>(rowIndex, columnIndex) > parameters.detectionThreshold)
 		{
-		harrisPointsList.at<uint16_t>(pointIndex, 1) = (uint16_t)rowIndex;
-		harrisPointsList.at<uint16_t>(pointIndex, 0) = (uint16_t)columnIndex;
-		pointIndex++;
+		for(int columnIndex = 0; columnIndex < harrisImage.cols; columnIndex++)
+			{
+			if (harrisImage.at<uint8_t>(rowIndex, columnIndex) > parameters.detectionThreshold)
+				{
+				harrisPointsList.at<float>(pointIndex, 1) = (float)rowIndex;
+				harrisPointsList.at<float>(pointIndex, 0) = (float)columnIndex;
+				pointIndex++;
+				}
+			}
 		}		
 
 	return harrisPointsList;
@@ -188,9 +181,31 @@ void HarrisDetector2D::ValidateParameters()
 
 void HarrisDetector2D::ValidateInputs(cv::Mat inputImage)
 	{
-
+	ASSERT(inputImage.type() == CV_8UC3 || inputImage.type() == CV_8UC1, "HarrisDetector2D error: input image is not of type CV_8UC3 or CV_8UC1");
+	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "HarrisDetector2D error: input image is empty");
 	}
 
+
+void HarrisDetector2D::Configure(const YAML::Node& configurationNode)
+	{
+	std::string nodeName = configurationNode["Name"].as<std::string>();
+	if ( nodeName == "GeneralParameters")
+		{
+		parameters.apertureSize = configurationNode["ApertureSize"].as<int>();
+		parameters.blockSize = configurationNode["BlockSize"].as<int>();
+		parameters.parameterK = configurationNode["ParameterK"].as<float>();
+		parameters.detectionThreshold = configurationNode["DetectionThreshold"].as<int>();
+		parameters.useGaussianBlur = configurationNode["UseGaussianBlur"].as<bool>();
+		}
+	else if (nodeName == "GaussianBlur")
+		{
+		gaussianBlurParameters.kernelWidth = configurationNode["KernelWidth"].as<int>();
+		gaussianBlurParameters.kernelHeight = configurationNode["KernelHeight"].as<int>();
+		gaussianBlurParameters.widthStandardDeviation = configurationNode["WidthStandardDeviation"].as<float>();
+		gaussianBlurParameters.heightStandardDeviation = configurationNode["HeightStandardDeviation"].as<float>();
+		}
+	//Ignore everything else
+	}
 
 }
 

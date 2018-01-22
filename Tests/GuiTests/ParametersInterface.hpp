@@ -38,12 +38,10 @@
  */
 #include <stdlib.h>
 #include <string>
-#include <tinyxml2.h>
 #include <vector>
 #include <map>
 #include <opencv2/highgui/highgui.hpp>
-
-using namespace tinyxml2;
+#include <yaml-cpp/yaml.h>
 
 
 /* --------------------------------------------------------------------------
@@ -64,7 +62,7 @@ class ParametersInterface
 		void AddParameter(std::string groupName, std::string name, int defaultValue, int maxValue);
 		void AddParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
 		void CreateTrackbars();
-		void SaveToXml(std::string filePath);
+		void SaveToYaml(std::string filePath);
 
 	/* --------------------------------------------------------------------
 	 * Protected

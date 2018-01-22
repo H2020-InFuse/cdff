@@ -1,9 +1,13 @@
 add_library(
     converters_opencv
-    ImageTypeToMatConverter.cpp
-    MatToImageTypeConverter.cpp
+    FrameToMatConverter.cpp
+    MatToFrameConverter.cpp
     MatToVisualPointFeatureVector2DConverter.cpp
     VisualPointFeatureVector2DToMatConverter.cpp
+    MatToVisualPointFeatureVector3DConverter.cpp
+    VisualPointFeatureVector3DToMatConverter.cpp
+    PointCloudToPclPointCloudConverter.cpp
+    PclPointCloudToPointCloudConverter.cpp
 )
 target_link_libraries(converters_opencv opencv_core cdff_types)
 

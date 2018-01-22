@@ -1,1 +1,2 @@
 add_subdirectory(FeaturesExtraction2D)
+add_subdirectory(FeaturesExtraction3D)
