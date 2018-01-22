@@ -89,6 +89,18 @@ class AssertException: public std::exception
 		LoggerFactory::GetLogger()->Print(); \
 		ABORT_PROGRAM() \
 		} \
+	}
+
+#define ASSERT_CLOSE(expression1, expression2, resolution, message) \
+	{ \
+	if ( (expression1) < (expression2 - resolution*expression2) || (expression1) > (expression2 + resolution*expression2) ) \
+		{ \
+		std::stringstream stream; \
+		stream << #expression1 <<" evaluates to "<<(expression1)<<", "<<#expression2<<" evaluates to "<<(expression2)<<", message: "<<message;\
+		LoggerFactory::GetLogger()->AddEntry(stream.str()); \
+		LoggerFactory::GetLogger()->Print(); \
+		ABORT_PROGRAM() \
+		} \
 	}	
 
 #define WRITE_TO_LOG(message, value) \

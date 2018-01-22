@@ -29,6 +29,7 @@
 #include "Ransac3D.hpp"
 #include <Errors/Assert.hpp>
 #include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <EigenTransformToTransform3DConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <pcl/sample_consensus/ransac.h>
 #include <pcl/sample_consensus/sac_model_registration.h>
@@ -105,7 +106,6 @@ void Ransac3D::process()
 		ConversionCache<VisualPointFeatureVector3DConstPtr, SupportTypes::PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Convert(inSinkFeaturesVector);
 	ValidateInputs(inputSourceCloud, inputSinkCloud);
 	outTransform = ComputeTransform(inputSourceCloud, inputSinkCloud);
-	//outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Convert(harrisPoints);
 	}
 
 
@@ -141,16 +141,17 @@ Transform3DConstPtr Ransac3D::ComputeTransform(Converters::SupportTypes::PointCl
 	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud(new pcl::PointCloud<pcl::PointXYZ>);
 	ransac->align(*outputCloud);
 	
-	if (ransac->hasConverged())
+	outSuccess = ransac->hasConverged();
+	if (outSuccess)
 		{
 		Eigen::Matrix4f eigenTransform = ransac->getFinalTransformation();
-		return Ransac3D::Convert(eigenTransform);
+		PRINT_TO_LOG("Matrix ", eigenTransform);
+		return ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Convert(eigenTransform);
 		}
 	else
 		{
 		Transform3DPtr transform = new Transform3D();
-		SetPosition(*transform, 0, 0, 0);
-		SetOrientation(*transform, 0, 0, 0, 0);
+		Reset(*transform);
 		return transform;
 		}
 	

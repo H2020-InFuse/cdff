@@ -69,6 +69,12 @@ namespace dfn_ci {
             */
             virtual PoseWrapper::Transform3DConstPtr transformOutput();
 
+            /**
+            * Receive value from output port success
+            * @param success, This is a boolean value representing whether it was really possible to compute a valid transform. If this value is false the transform is meaningless.
+            */
+            virtual bool successOutput();
+
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
@@ -77,6 +83,7 @@ namespace dfn_ci {
             VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inSourceFeaturesVector;
             VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inSinkFeaturesVector;
             PoseWrapper::Transform3DConstPtr outTransform;
+	    bool outSuccess;
 
 	/* --------------------------------------------------------------------
 	 * Private

@@ -43,6 +43,7 @@
 #include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
+#include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.hpp>
 
 using namespace dfn_ci;
 using namespace Converters;
@@ -65,9 +66,9 @@ TEST_CASE( "Call to process", "[process]" )
 	Mocks::VisualPointFeatureVector3DToPclPointCloudConverter* mockInputConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
 	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
-	//Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>();
-	//Mocks::MatToVisualPointFeatureVector3DConverter* mockOutputConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
-	//ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
+	Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr >* stubOutputCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
+	Mocks::EigenTransformToTransform3DConverter* mockOutputConverter = new Mocks::EigenTransformToTransform3DConverter();
+	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::PointCloud<FeatureType>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<FeatureType> >();
@@ -95,8 +96,9 @@ TEST_CASE( "Call to process", "[process]" )
 	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&sourceCloud) );
 	mockInputConverter->AddBehaviour("Convert", "2", (void*) (&sinkCloud) );
 
-	//VisualPointFeatureVector3DConstPtr featuresVector = new VisualPointFeatureVector3D();
-	//mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
+	Transform3DPtr transform = new Transform3D();
+	Reset(*transform);
+	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&transform) );
 
 	VisualPointFeatureVector3DPtr sourceSet =  new VisualPointFeatureVector3D();
 	VisualPointFeatureVector3DPtr sinkSet =  new VisualPointFeatureVector3D();
@@ -107,7 +109,13 @@ TEST_CASE( "Call to process", "[process]" )
 
 	Transform3DConstPtr output = ransac.transformOutput();
 
-	//REQUIRE(GetNumberOfCorrespondences(*output) == numberOfPoints);
+	REQUIRE(GetXPosition(*output) == 0);
+	REQUIRE(GetYPosition(*output) == 0);
+	REQUIRE(GetZPosition(*output) == 0);
+	REQUIRE(GetXOrientation(*output) == 0);
+	REQUIRE(GetYOrientation(*output) == 0);
+	REQUIRE(GetZOrientation(*output) == 0);
+	REQUIRE(GetWOrientation(*output) == 0);
 	delete(output);
 	}
 

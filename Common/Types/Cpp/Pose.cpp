@@ -97,6 +97,57 @@ T_Double GetWOrientation(const Pose3D& pose)
 	return pose.orient.arr[3];
 	}
 
+void SetTranslation(Pose3D& pose, T_Double x, T_Double y, T_Double z)
+	{
+	SetPosition(pose, x, y, z);
+	}
+
+T_Double GetXTranslation(const Pose3D& pose)
+	{
+	return GetXPosition(pose);
+	}
+
+T_Double GetYTranslation(const Pose3D& pose)
+	{
+	return GetYPosition(pose);	
+	}
+
+T_Double GetZTranslation(const Pose3D& pose)
+	{
+	return GetZPosition(pose);
+	}
+
+void SetRotation(Pose3D& pose, T_Double x, T_Double y, T_Double z, T_Double w)
+	{
+	SetOrientation(pose, x, y, z, w);
+	}
+
+T_Double GetXRotation(const Pose3D& pose)
+	{
+	return GetXOrientation(pose);
+	}
+
+T_Double GetYORotation(const Pose3D& pose)
+	{
+	return GetYOrientation(pose);
+	}
+
+T_Double GetZRotation(const Pose3D& pose)
+	{
+	return GetZOrientation(pose);
+	}
+
+T_Double GetWRotation(const Pose3D& pose)
+	{
+	return GetWOrientation(pose);
+	}
+
+void Reset(Pose3D& pose)
+	{
+	SetPosition(pose, 0, 0, 0);
+	SetOrientation(pose, 0, 0, 0, 0);
+	}
+
 void Copy(const Pose2D& source, Pose2D& destination)
 	{
 	SetPosition(destination, GetXPosition(source), GetYPosition(source) );
@@ -129,7 +180,36 @@ T_Double GetOrientation(const Pose2D& pose)
 	return pose.orientation;
 	}
 
+void SetTranslation(Pose2D& pose, T_Double x, T_Double y)
+	{
+	SetPosition(pose, x, y);
+	}
 
+T_Double GetXTranslation(const Pose2D& pose)
+	{
+	return GetXPosition(pose);
+	}
+
+T_Double GetYTranslation(const Pose2D& pose)
+	{
+	return GetYPosition(pose);
+	}
+
+void SetRotation(Pose2D& pose, T_Double angle)
+	{
+	SetOrientation(pose, angle);
+	}
+
+T_Double GetRotation(const Pose2D& pose)
+	{
+	return GetOrientation(pose);
+	}
+
+void Reset(Pose2D& pose)
+	{
+	SetPosition(pose, 0, 0);
+	SetOrientation(pose, 0);
+	}
 
 }
 

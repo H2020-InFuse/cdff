@@ -63,6 +63,11 @@ Transform3DConstPtr FeaturesMatching3DInterface::transformOutput()
     	return outTransform;
 	}
 
+bool FeaturesMatching3DInterface::successOutput()
+	{
+	return outSuccess;
+	}
+
 
 
 

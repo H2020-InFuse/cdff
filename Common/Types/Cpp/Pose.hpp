@@ -112,6 +112,19 @@ BaseTypesWrapper::T_Double GetYOrientation(const Pose3D& pose);
 BaseTypesWrapper::T_Double GetZOrientation(const Pose3D& pose);
 BaseTypesWrapper::T_Double GetWOrientation(const Pose3D& pose);
 
+void SetTranslation(Pose3D& pose, BaseTypesWrapper::T_Double x, BaseTypesWrapper::T_Double y, BaseTypesWrapper::T_Double z);
+BaseTypesWrapper::T_Double GetXTranslation(const Pose3D& pose);
+BaseTypesWrapper::T_Double GetYTranslation(const Pose3D& pose);
+BaseTypesWrapper::T_Double GetZTranslation(const Pose3D& pose);
+
+void SetRotation(Pose3D& pose, BaseTypesWrapper::T_Double x, BaseTypesWrapper::T_Double y, BaseTypesWrapper::T_Double z, BaseTypesWrapper::T_Double w);
+BaseTypesWrapper::T_Double GetXRotation(const Pose3D& pose);
+BaseTypesWrapper::T_Double GetYRotation(const Pose3D& pose);
+BaseTypesWrapper::T_Double GetZRotation(const Pose3D& pose);
+BaseTypesWrapper::T_Double GetWRotation(const Pose3D& pose);
+
+void Reset(Pose3D& pose);
+
 void Copy(const Pose2D& source, Pose2D& destination);
 
 void SetPosition(Pose2D& pose, BaseTypesWrapper::T_Double x, BaseTypesWrapper::T_Double y);
@@ -121,6 +134,14 @@ BaseTypesWrapper::T_Double GetYPosition(const Pose2D& pose);
 void SetOrientation(Pose2D& pose, BaseTypesWrapper::T_Double angle);
 BaseTypesWrapper::T_Double GetOrientation(const Pose2D& pose);
 
+void SetTranslation(Pose2D& pose, BaseTypesWrapper::T_Double x, BaseTypesWrapper::T_Double y);
+BaseTypesWrapper::T_Double GetXTranslation(const Pose2D& pose);
+BaseTypesWrapper::T_Double GetYTranslation(const Pose2D& pose);
+
+void SetRotation(Pose2D& pose, BaseTypesWrapper::T_Double angle);
+BaseTypesWrapper::T_Double GetRotation(const Pose2D& pose);
+
+void Reset(Pose2D& pose);
 }
 
 #endif

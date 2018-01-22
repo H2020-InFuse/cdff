@@ -10,4 +10,6 @@ output_ports:
     - name: transform
       type: Transform3D
       doc: This is the best 3D trasform correspondence that matches source features to sink features.
-
+    - name: success
+      type: bool
+      doc: This is a boolean value representing whether it was really possible to compute a valid transform. If this value is false the transform is meaningless.

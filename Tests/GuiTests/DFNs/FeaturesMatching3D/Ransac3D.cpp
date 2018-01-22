@@ -52,6 +52,8 @@
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/features/fpfh_omp.h>
 #include <pcl/filters/voxel_grid.h>
+#include <EigenTransformToTransform3DConverter.cpp>
+#include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.cpp>
 
 using namespace dfn_ci;
 using namespace Converters;
@@ -72,8 +74,8 @@ class Ransac3DTestInterface : public DFNTestInterface
 	private:
 		Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures >* stubInputCache;
 		Mocks::VisualPointFeatureVector3DToPclPointCloudConverter* mockInputConverter;
-		//Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>* stubOutputCache;
-		//Mocks::MatToVisualPointFeatureVector3DConverter* mockOutputConverter;
+		Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>* stubOutputCache;
+		Mocks::EigenTransformToTransform3DConverter* mockOutputConverter;
 		Ransac3D* ransac;
 
 		typedef pcl::FPFHSignature33 FeatureT;
@@ -120,8 +122,8 @@ Ransac3DTestInterface::~Ransac3DTestInterface()
 	{
 	delete(stubInputCache);
 	delete(mockInputConverter);
-	//delete(stubOutputCache);
-	//delete(mockOutputConverter);
+	delete(stubOutputCache);
+	delete(mockOutputConverter);
 	delete(ransac);
 	delete(inputSourceFeaturesVector);
 	delete(inputSinkFeaturesVector);
@@ -239,9 +241,9 @@ void Ransac3DTestInterface::SetupMocksAndStubs()
 	mockInputConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
 	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
-	//stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>();
-	//mockOutputConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
-	//ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubOutputCache, mockOutputConverter);
+	stubOutputCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
+	mockOutputConverter = new Mocks::EigenTransformToTransform3DConverter();
+	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 	}
 
 void Ransac3DTestInterface::SetupParameters()

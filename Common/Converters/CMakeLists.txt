@@ -10,6 +10,8 @@ add_library(
     PclPointCloudToVisualPointFeatureVector3DConverter.cpp
     PointCloudToPclPointCloudConverter.cpp
     PclPointCloudToPointCloudConverter.cpp
+    Transform3DToEigenTransformConverter.cpp
+    EigenTransformToTransform3DConverter.cpp
 )
 target_link_libraries(converters_opencv opencv_core cdff_types)
 
