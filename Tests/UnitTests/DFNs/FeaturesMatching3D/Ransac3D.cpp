@@ -78,7 +78,8 @@ TEST_CASE( "Call to process", "[process]" )
 		FeatureType feature;
 		feature.histogram[0] = 0.001*pointIndex;
 		feature.histogram[1] = 0.002*pointIndex;
-		for(int componentIndex = 0; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
+		int maxFeaturesNumber = static_cast<int>(MAX_FEATURES_NUMBER);
+		for(int componentIndex = 0; componentIndex < maxFeaturesNumber; componentIndex++)
 			{
 			feature.histogram[componentIndex] = 0;
 			}

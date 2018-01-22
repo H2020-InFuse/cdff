@@ -63,7 +63,8 @@ TEST_CASE( "PclPointCloud to VisualPointFeatureVector3D and Back", "[PclPointClo
 		FeatureType feature;
 		feature.histogram[0] = 2*pointIndex;
 		feature.histogram[1] = pointIndex /2;
-		for(int componentIndex = 2; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
+		int maxFeaturesNumber = static_cast<int>(MAX_FEATURES_NUMBER);
+		for(int componentIndex = 2; componentIndex < maxFeaturesNumber; componentIndex++)
 			{
 			feature.histogram[componentIndex] = 0;
 			}
@@ -84,7 +85,7 @@ TEST_CASE( "PclPointCloud to VisualPointFeatureVector3D and Back", "[PclPointClo
 		REQUIRE( GetZCoordinate(*asnVector, pointIndex) == inputCloud.pointCloud->points.at(pointIndex).z );
 		
 		REQUIRE( GetNumberOfDescriptorComponents(*asnVector, pointIndex) == inputCloud.descriptorSize );
-		for(int componentIndex = 0; componentIndex < inputCloud.descriptorSize; componentIndex++)
+		for(unsigned componentIndex = 0; componentIndex < inputCloud.descriptorSize; componentIndex++)
 			{
 			REQUIRE( GetDescriptorComponent(*asnVector, pointIndex, componentIndex) == inputCloud.featureCloud->points.at(pointIndex).histogram[componentIndex]);
 			}
@@ -104,11 +105,12 @@ TEST_CASE( "PclPointCloud to VisualPointFeatureVector3D and Back", "[PclPointClo
 		
 		FeatureType inputFeature = inputCloud.featureCloud->points.at(pointIndex);
 		FeatureType outputFeature = outputCloud.featureCloud->points.at(pointIndex);
-		for(int componentIndex = 0; componentIndex < outputCloud.descriptorSize; componentIndex++)
+		for(unsigned componentIndex = 0; componentIndex < outputCloud.descriptorSize; componentIndex++)
 			{
 			REQUIRE(inputFeature.histogram[componentIndex] == outputFeature.histogram[componentIndex]);
 			}	
-		for(int componentIndex = outputCloud.descriptorSize; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
+		int maxFeaturesNumber = static_cast<int>(MAX_FEATURES_NUMBER);
+		for(int componentIndex = outputCloud.descriptorSize; componentIndex < maxFeaturesNumber; componentIndex++)
 			{
 			REQUIRE(outputFeature.histogram[componentIndex] == 0);
 			}	
@@ -133,7 +135,8 @@ TEST_CASE( "VisualPointFeatureVector3D to PclPointCloud and Back", "[VisualPoint
 		FeatureType feature;
 		feature.histogram[0] = 2*pointIndex;
 		feature.histogram[1] = pointIndex /2;
-		for(int componentIndex = 2; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
+		int maxFeaturesNumber = static_cast<int>(MAX_FEATURES_NUMBER);
+		for(int componentIndex = 2; componentIndex < maxFeaturesNumber; componentIndex++)
 			{
 			feature.histogram[componentIndex] = 0;
 			}

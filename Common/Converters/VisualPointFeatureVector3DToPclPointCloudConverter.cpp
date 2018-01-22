@@ -55,7 +55,8 @@ const PointCloudWithFeatures VisualPointFeatureVector3DToPclPointCloudConverter:
 		return conversion;
 
 	int descriptorSize = GetNumberOfDescriptorComponents(*featuresVector, 0);
-	ASSERT(descriptorSize <= MAX_FEATURES_NUMBER, "VisualPointFeatureVector3DToPclPointCloudConverter: Cannot convert features vector, number of component is larger than maximum allowed conversion");
+	int maxFeaturesNumber = static_cast<int>(MAX_FEATURES_NUMBER);
+	ASSERT(descriptorSize <= maxFeaturesNumber, "VisualPointFeatureVector3DToPclPointCloudConverter: Cannot convert features vector, number of component is larger than maximum allowed conversion");
 	conversion.descriptorSize = descriptorSize;
 
 	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
@@ -72,7 +73,7 @@ const PointCloudWithFeatures VisualPointFeatureVector3DToPclPointCloudConverter:
 			{
 			newFeature.histogram[componentIndex] = GetDescriptorComponent(*featuresVector, pointIndex, componentIndex);
 			}
-		for(int componentIndex = descriptorSize; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
+		for(int componentIndex = descriptorSize; componentIndex < maxFeaturesNumber; componentIndex++)
 			{
 			newFeature.histogram[componentIndex] = 0;
 			}
