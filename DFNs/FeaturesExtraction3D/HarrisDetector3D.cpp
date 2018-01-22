@@ -31,7 +31,7 @@
 #include <PointCloudToPclPointCloudConverter.hpp>
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
-
+#include <Macros/YamlcppMacros.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -53,13 +53,13 @@ namespace dfn_ci {
  */
 HarrisDetector3D::HarrisDetector3D()
 	{
-	parameters.nonMaxSuppression = true;
-	parameters.radius = 0.01;
-	parameters.searchRadius = 0.01;
-	parameters.detectionThreshold = 0;
-	parameters.enableRefinement = false;
-	parameters.numberOfThreads = 0;
-	parameters.method = pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS;
+	parameters.nonMaxSuppression = DEFAULT_PARAMETERS.nonMaxSuppression;
+	parameters.radius = DEFAULT_PARAMETERS.radius;
+	parameters.searchRadius = DEFAULT_PARAMETERS.searchRadius;
+	parameters.detectionThreshold = DEFAULT_PARAMETERS.detectionThreshold;
+	parameters.enableRefinement = DEFAULT_PARAMETERS.enableRefinement;
+	parameters.numberOfThreads = DEFAULT_PARAMETERS.numberOfThreads;
+	parameters.method = DEFAULT_PARAMETERS.method;
 
 	configurationFilePath = "";
 	}
@@ -95,6 +95,17 @@ void HarrisDetector3D::process()
 	cv::Mat harrisPoints = ComputeHarrisPoints(inputPointCloud);
 	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Convert(harrisPoints);
 	}
+
+const HarrisDetector3D::HarryOptionsSet HarrisDetector3D::DEFAULT_PARAMETERS
+	{
+	.nonMaxSuppression = true,
+	.radius = 0.01,
+	.searchRadius = 0.01,
+	.detectionThreshold = 0,
+	.enableRefinement = false,
+	.numberOfThreads = 0,
+	.method = pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS
+	};
 
 
 cv::Mat HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
@@ -181,13 +192,13 @@ void HarrisDetector3D::Configure(const YAML::Node& configurationNode)
 	std::string nodeName = configurationNode["Name"].as<std::string>();
 	if ( nodeName == "GeneralParameters")
 		{
-		parameters.radius = configurationNode["Radius"].as<float>();
-		parameters.searchRadius = configurationNode["SearchRadius"].as<float>();
-		parameters.nonMaxSuppression = configurationNode["NonMaxSuppression"].as<bool>();
-		parameters.detectionThreshold = configurationNode["DetectionThreshold"].as<float>();
-		parameters.enableRefinement = configurationNode["EnableRefinement"].as<bool>();
-		parameters.numberOfThreads = configurationNode["NumberOfThreads"].as<int>();
-		parameters.method = ConvertToMethod( configurationNode["HarrisMethod"].as<std::string>() );
+		YAMLCPP_DFN_ASSIGN(radius, float, configurationNode, "Radius");
+		YAMLCPP_DFN_ASSIGN(searchRadius, float, configurationNode, "SearchRadius");
+		YAMLCPP_DFN_ASSIGN(nonMaxSuppression, bool, configurationNode, "NonMaxSuppression");
+		YAMLCPP_DFN_ASSIGN(detectionThreshold, float, configurationNode, "DetectionThreshold");
+		YAMLCPP_DFN_ASSIGN(enableRefinement, bool, configurationNode, "EnableRefinement");
+		YAMLCPP_DFN_ASSIGN(numberOfThreads, int, configurationNode, "NumberOfThreads");
+		YAMLCPP_DFN_ASSIGN_WITH_FUNCTION(method, std::string, configurationNode, "HarrisMethod", ConvertToMethod);
 		}
 	//Ignore everything else
 	}

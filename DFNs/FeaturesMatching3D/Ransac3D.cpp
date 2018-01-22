@@ -38,6 +38,7 @@
 #include <pcl/sample_consensus/sac_model_plane.h>
 #include <pcl/kdtree/impl/kdtree_flann.hpp>
 #include <SupportTypes.hpp>
+#include <Macros/YamlcppMacros.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -60,17 +61,12 @@ namespace dfn_ci {
  */
 Ransac3D::Ransac3D()
 	{
-	parameters.similarityThreshold = 0.9;
-	parameters.inlierFraction = 0.25;
-	parameters.correspondenceRandomness = 5;
-	parameters.numberOfSamples = 3;
-	parameters.maximumIterations = 50000;
-	parameters.maxCorrespondenceDistance = 0.00125;
-
-	parameters.ransacIterations = 50000;
-	parameters.ransacOutlierRejectionThreshold = 0.05;
-	parameters.transformationEpsilon = std::numeric_limits<double>::epsilon();
-	parameters.euclideanFitnessEpsilon = std::numeric_limits<double>::epsilon();
+	parameters.similarityThreshold = DEFAULT_PARAMETERS.similarityThreshold;
+	parameters.inlierFraction = DEFAULT_PARAMETERS.inlierFraction;
+	parameters.correspondenceRandomness = DEFAULT_PARAMETERS.correspondenceRandomness;
+	parameters.numberOfSamples = DEFAULT_PARAMETERS.numberOfSamples;
+	parameters.maximumIterations = DEFAULT_PARAMETERS.maximumIterations;
+	parameters.maxCorrespondenceDistance = DEFAULT_PARAMETERS.maxCorrespondenceDistance;
 
 	configurationFilePath = "";
 	}
@@ -91,9 +87,9 @@ void Ransac3D::configure()
 			Configure(configurationNode);
 			}
 		} 
-	catch(YAML::ParserException& e) 
+	catch(YAML::Exception& e) 
 		{
-    		ASSERT(false, e.what() );
+    		ASSERT(false, e.what());
 		}
 	}
 
@@ -108,12 +104,30 @@ void Ransac3D::process()
 	outTransform = ComputeTransform(inputSourceCloud, inputSinkCloud);
 	}
 
+const Ransac3D::RansacOptionsSet Ransac3D::DEFAULT_PARAMETERS =
+	{
+	.similarityThreshold = 0.9,
+	.inlierFraction = 0.25,
+	.correspondenceRandomness = 5,
+	.numberOfSamples = 3,
+	.maximumIterations = 50000,
+	.maxCorrespondenceDistance = 0.00125	
+	};
 
+/**
+** This is the function that computes the detect the presence of the source point cloud within the sink point cloud, and computes the trasform that allows the source to be transformed to its position in
+** the sink.
+** Observe that in PCL terminology the sink cloud is called target cloud.
+**
+** Notes: In the specification of SampleConsensuProjective, a few more parameters where specified (RANSACOutlierRejectionThreshold, RANSACIterations, TransformationEpsilon, 
+** EuclideanFitnessEpislon, SearchMethodTarget and SearchMethodSource). However these parameters seem to not be used by the algorithm, with the exception of the search method.
+** The search method are set in the algorithm in a standard way.
+**/
 Transform3DConstPtr Ransac3D::ComputeTransform(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud)
 	{
 	pcl::SampleConsensusPrerejective<pcl::PointXYZ, pcl::PointXYZ, FeatureType>::Ptr ransac(new pcl::SampleConsensusPrerejective<pcl::PointXYZ, pcl::PointXYZ, FeatureType>);
 	ransac->setSourceFeatures(sourceCloud.featureCloud);
-	ransac->setTargetFeatures(sinkCloud.featureCloud);
+	ransac->setTargetFeatures(sinkCloud.featureCloud); //Pcl terminology Sink == Target
 	ransac->setInputSource(sourceCloud.pointCloud);
 	ransac->setInputTarget(sinkCloud.pointCloud);	
 
@@ -123,20 +137,6 @@ Transform3DConstPtr Ransac3D::ComputeTransform(Converters::SupportTypes::PointCl
 	ransac->setNumberOfSamples(parameters.numberOfSamples);
 	ransac->setMaximumIterations(parameters.maximumIterations);
 	ransac->setMaxCorrespondenceDistance(parameters.maxCorrespondenceDistance);
-
-	/*
-	These parameters seems to not make any difference at all
-	***
-	ransac->setRANSACOutlierRejectionThreshold(parameters.ransacOutlierRejectionThreshold);
-	ransac->setRANSACIterations(parameters.ransacIterations);
-	ransac->setTransformationEpsilon(parameters.transformationEpsilon);
-	ransac->setEuclideanFitnessEpsilon(parameters.euclideanFitnessEpsilon);
-	pcl::search::KdTree<pcl::PointXYZ>::Ptr sinkTree(new pcl::search::KdTree<pcl::PointXYZ>());
-	sinkTree->setInputCloud(sinkCloud);
-	ransac->setSearchMethodTarget(sinkTree);
-	pcl::search::KdTree<pcl::PointXYZ>::Ptr sourceTree(new pcl::search::KdTree<pcl::PointXYZ>());
-	sourceTree->setInputCloud(sourceCloud);
-	ransac->setSearchMethodSource(sourceTree);*/
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud(new pcl::PointCloud<pcl::PointXYZ>);
 	ransac->align(*outputCloud);
@@ -179,11 +179,6 @@ void Ransac3D::ValidateParameters()
 	ASSERT( parameters.numberOfSamples > 0, "Ransac3D Configuration error, number of samples is not stricltly positive");
 	ASSERT( parameters.maximumIterations > 0, "Ransac3D Configuration error, number of iterations is not stricltly positive");
 	ASSERT( parameters.maxCorrespondenceDistance >= 0, "Ransac3D Configuration error, max correspondence distance is not positive");
-
-	ASSERT( parameters.ransacIterations > 0, "Ransac3D Configuration error, randac iterations is not stricltly positive");
-	ASSERT( parameters.ransacOutlierRejectionThreshold >= 0, "Ransac3D Configuration error, ransac outlier rejection threshold is not positive");
-	ASSERT( parameters.transformationEpsilon > 0, "Ransac3D Configuration error, transformation epsilon is not stricltly positive");
-	ASSERT( parameters.euclideanFitnessEpsilon > 0, "Ransac3D Configuration error, euclidean fiteness epsilon is not stricltly positive");
 	}
 
 void Ransac3D::ValidateInputs(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud)
@@ -221,17 +216,12 @@ void Ransac3D::Configure(const YAML::Node& configurationNode)
 	std::string nodeName = configurationNode["Name"].as<std::string>();
 	if ( nodeName == "GeneralParameters")
 		{
-		parameters.similarityThreshold = configurationNode["SimilarityThreshold"].as<float>();
-		parameters.inlierFraction = configurationNode["InlierFraction"].as<float>();
-		parameters.correspondenceRandomness = configurationNode["CorrespondenceRandomness"].as<int>();
-		parameters.numberOfSamples = configurationNode["NumberOfSamples"].as<int>();
-		parameters.maximumIterations = configurationNode["MaximumIterations"].as<int>();
-		parameters.maxCorrespondenceDistance = configurationNode["MaxCorrespondenceDistance"].as<float>();
-
-		//parameters.ransacIterations = configurationNode["RansacIterations"].as<int>();
-		//parameters.ransacOutlierRejectionThreshold = configurationNode["RansacOutlierRejectionThreshold"].as<float>();
-		//parameters.transformationEpsilon = configurationNode["TransformationEpsilon"].as<double>();
-		//parameters.euclideanFitnessEpsilon = configurationNode["EuclideanFitnessEpsilon"].as<double>();
+		YAMLCPP_DFN_ASSIGN(similarityThreshold, float, configurationNode, "SimilarityThreshold");
+		YAMLCPP_DFN_ASSIGN(inlierFraction, float, configurationNode, "InlierFraction");
+		YAMLCPP_DFN_ASSIGN(correspondenceRandomness, int, configurationNode, "CorrespondenceRandomness");
+		YAMLCPP_DFN_ASSIGN(numberOfSamples, int, configurationNode, "NumberOfSamples");
+		YAMLCPP_DFN_ASSIGN(maximumIterations, int, configurationNode, "MaximumIterations");
+		YAMLCPP_DFN_ASSIGN(maxCorrespondenceDistance, float, configurationNode, "MaxCorrespondenceDistance");
 		}
 	//Ignore everything else
 	}

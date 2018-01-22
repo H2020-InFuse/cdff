@@ -132,6 +132,19 @@ class AssertException: public std::exception
 		} \
 	}
 
+#define NOTIFY_ON_EXCEPTION(expression, message) \
+	{ \
+	try \
+		{ \
+		expression; \
+		} \
+	catch (std::exception e) \
+		{ \
+		PRINT_TO_LOG(message, "") \
+		throw e; \
+		} \
+	}
+
 /*
 * VIEW_POINT_CLOUD is meant for debugging purposes. 
 * When you use thid function, you should:

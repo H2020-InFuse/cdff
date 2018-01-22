@@ -55,10 +55,10 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */
         public:
-            Ransac3D();
-            ~Ransac3D();
-            void process();
-            void configure();
+        	Ransac3D();
+        	~Ransac3D();
+        	void process();
+        	void configure();
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -71,7 +71,6 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
-
 		struct RansacOptionsSet
 			{
 			float similarityThreshold;
@@ -80,14 +79,10 @@ namespace dfn_ci {
 			int numberOfSamples;
 			int maximumIterations;
 			float maxCorrespondenceDistance;
-
-			int ransacIterations;
-			float ransacOutlierRejectionThreshold;
-			double transformationEpsilon;
-			double euclideanFitnessEpsilon;
 			};
 
 		RansacOptionsSet parameters;
+		static const RansacOptionsSet DEFAULT_PARAMETERS;
 
 		PoseWrapper::Transform3DConstPtr ComputeTransform(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
 		PoseWrapper::Transform3DConstPtr Convert(Eigen::Matrix4f eigenTransform);
@@ -96,7 +91,6 @@ namespace dfn_ci {
 		void ValidateInputs(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
 		void ValidateCloud(Converters::SupportTypes::PointCloudWithFeatures cloud);
 		
-
 		void Configure(const YAML::Node& configurationNode);
     };
 }

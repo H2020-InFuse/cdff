@@ -86,6 +86,7 @@ namespace dfn_ci {
 			};
 
 		HarryOptionsSet parameters;
+		static const HarryOptionsSet DEFAULT_PARAMETERS;
 
 		cv::Mat ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 		HarrisMethod ConvertToMethod(std::string method);
