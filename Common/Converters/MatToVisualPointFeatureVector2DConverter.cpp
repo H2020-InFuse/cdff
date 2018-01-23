@@ -14,7 +14,7 @@
 /*!
  * @addtogroup Types
  * 
- * Implementation of the Harris Detector 2D class.
+ * Implementation of MatToVisualPointFeatureVector2DConverter class.
  * 
  * 
  * @{

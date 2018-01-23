@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNsTest
  * 
- * Testing application for the DFN HarrisDetector3D.
+ * Unit Test for the DFN HarrisDetector3D.
  * 
  * 
  * @{

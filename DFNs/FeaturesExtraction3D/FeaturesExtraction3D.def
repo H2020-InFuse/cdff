@@ -1,10 +1,10 @@
-name: FeaturesExtraction2D
+name: FeaturesExtraction3D
 input_ports:
     - name: pointCloud
-      type: PointCloud3D
+      type: PointCloud
       doc: a 3D point cloud taken from a 3D sensor or assembled by 3D reconstruction
 output_ports:
     - name: featuresSet
       type: VisualPointFeatureVector3D
-      doc: This is the set of the points extracted from the point cloud, no descriptor is provided yet
+      doc: This is the set of the points extracted from the point cloud, a descriptor may or may not be provided.
 

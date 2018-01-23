@@ -14,7 +14,7 @@
 /*!
  * @addtogroup Mocks
  * 
- * This is the main mocking class, it supports the programming of ad hoc behaviours. Every Mock should inherit from this class.
+ * This is a mock for the converter from cv matrix to MatToVisualPointFeatureVector2D
  * 
  * 
  * @{

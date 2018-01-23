@@ -14,7 +14,7 @@
 /*!
  * @addtogroup CommonTests
  * 
- * Testing conversion from Mat to VisualPointFeaturesVector and viceversa.
+ * Testing conversion from Mat to VisualPointFeaturesVector2D and viceversa.
  * 
  * 
  * @{

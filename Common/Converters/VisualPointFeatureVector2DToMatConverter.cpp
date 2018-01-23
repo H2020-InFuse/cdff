@@ -9,7 +9,6 @@
  * @file VisualPointFeatureVector2DToMatConverter.cpp
  * @date 28/11/2017
  * @author Alessandro Bianco
- * @remarks Returns a type using smart pointers
  */
 
 /*!

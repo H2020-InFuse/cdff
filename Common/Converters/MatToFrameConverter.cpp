@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file MatToImageTypeConverter.cpp
+ * @file MatToFrameConverter.cpp
  * @date 27/11/2017
  * @authors Alessandro Bianco, Xavier Martinez
  */

@@ -59,7 +59,7 @@ namespace dfn_ci {
 
             /**
             * Receive value from output port featuresSet
-            * @param featuresSet, This is the set of the points extracted from the image, no descriptor is provided yet
+            * @param featuresSet, This is the set of the points extracted from the image, a descriptor may or may not be provided.
             */
             virtual VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featuresSetOutput();
 
