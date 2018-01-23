@@ -1,0 +1,43 @@
+/* --------------------------------------------------------------------------
+*
+* (C) Copyright …
+*
+* ---------------------------------------------------------------------------
+*/
+
+/*!
+ * @file CorrespondenceMap3D.asn
+ * @date 17/01/2017
+ * @author Alessandro Bianco
+ *
+ */
+
+/*!
+ * @addtogroup BaseTypes
+ * 
+ * Specification of the CorrespondenceMap3D type.
+ * 
+ * 
+ * @{
+ */
+CorrespondenceMap3DNS DEFINITIONS ::=
+BEGIN
+
+IMPORTS
+Point3D FROM GeometryNS
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes;
+
+-- Max. number of correspondences
+correspondeceMap3DElementsMax T-UInt32 ::= 51200
+
+Correspondence3D ::= SEQUENCE
+	{
+	source		Point3D,
+	sink		Point3D,
+	probability	T-Float
+	}
+
+CorrespondenceMap3D ::= SEQUENCE (SIZE(0..correspondeceMap3DElementsMax)) OF Correspondence3D
+
+END

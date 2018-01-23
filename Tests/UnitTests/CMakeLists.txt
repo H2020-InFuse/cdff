@@ -22,6 +22,16 @@ target_link_libraries(
 add_test(HarrisDetector3DTest HarrisDetector3DTest)
 
 add_executable(
+    Ransac3DTest
+    DFNs/FeaturesMatching3D/Ransac3D.cpp
+)
+target_link_libraries(
+	Ransac3DTest
+	mock cdff_logger cdff_types ransac_3d  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
+)
+add_test(Ransac3DTest Ransac3DTest)
+
+add_executable(
     MatFrameConvertersTest
     Common/Converters/MatFrameConvertersTest.cpp
 )
@@ -58,3 +68,21 @@ target_link_libraries(
 	PointCloudPclPointCloudConvertersTest cdff_types converters_opencv cdff_logger opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
 )
 add_test(PointCloudPclPointCloudConvertersTest PointCloudPclPointCloudConvertersTest)
+
+add_executable(
+    VisualPointFeatureVector3DPclPointCloudConvertersTest
+    Common/Converters/VisualPointFeatureVector3DPclPointCloudConvertersTest.cpp
+)
+target_link_libraries(
+	VisualPointFeatureVector3DPclPointCloudConvertersTest cdff_types converters_opencv cdff_logger opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
+)
+add_test(VisualPointFeatureVector3DPclPointCloudConvertersTest VisualPointFeatureVector3DPclPointCloudConvertersTest)
+
+add_executable(
+    Transform3DEigenTransformConvertersTest
+    Common/Converters/Transform3DEigenTransformConvertersTest.cpp
+)
+target_link_libraries(
+	Transform3DEigenTransformConvertersTest cdff_types converters_opencv cdff_logger
+)
+add_test(Transform3DEigenTransformConvertersTest Transform3DEigenTransformConvertersTest)

@@ -77,25 +77,25 @@ int GetNumberOfPoints(const VisualPointFeatureVector3D& featuresVector)
 
 float GetXCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
-	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
+	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
 	return featuresVector.arr[pointIndex].point.x;
 	}
 
 float GetYCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
-	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
+	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
 	return featuresVector.arr[pointIndex].point.y;
 	}
 
 float GetZCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
-	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
+	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
 	return featuresVector.arr[pointIndex].point.z;
 	}
 
 void AddDescriptorComponent(VisualPointFeatureVector3D& featuresVector, int pointIndex, float component)
 	{
-	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
+	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
 	ASSERT_ON_TEST(featuresVector.arr[pointIndex].descriptor.nCount < MAX_DESCRIPTOR_3D_LENGTH, "Descriptor maximum capacity has been reached");
 	int currentIndex = featuresVector.arr[pointIndex].descriptor.nCount;
 	featuresVector.arr[pointIndex].descriptor.arr[currentIndex] = component;
@@ -104,20 +104,20 @@ void AddDescriptorComponent(VisualPointFeatureVector3D& featuresVector, int poin
 
 void ClearDescriptor(VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
-	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
+	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
 	featuresVector.arr[pointIndex].descriptor.nCount = 0;
 	}
 
 int GetNumberOfDescriptorComponents(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
-	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
+	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
 	return featuresVector.arr[pointIndex].descriptor.nCount;
 	}
 
 float GetDescriptorComponent(const VisualPointFeatureVector3D& featuresVector, int pointIndex, int componentIndex)
 	{
-	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
-	ASSERT_ON_TEST(componentIndex < featuresVector.arr[pointIndex].descriptor.nCount, "A missing descriptor component was requested from a features vector 2D");
+	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
+	ASSERT_ON_TEST(componentIndex < featuresVector.arr[pointIndex].descriptor.nCount, "A missing descriptor component was requested from a features vector 3D");
 	return featuresVector.arr[pointIndex].descriptor.arr[componentIndex];
 	}
 

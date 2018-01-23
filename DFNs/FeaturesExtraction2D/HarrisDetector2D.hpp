@@ -77,7 +77,7 @@ namespace dfn_ci {
 			float heightStandardDeviation;
 			};
 		
-		struct HarryOptionsSet
+		struct GeneralOptionsSet
 			{
 			int apertureSize;
 			int blockSize;
@@ -86,8 +86,14 @@ namespace dfn_ci {
 			bool useGaussianBlur;
 			};
 
+		struct HarryOptionsSet
+			{
+			GeneralOptionsSet generalParameters;
+			GaussianBlurOptionsSet gaussianBlurParameters;
+			};
+
 		HarryOptionsSet parameters;
-		GaussianBlurOptionsSet gaussianBlurParameters;
+		static const HarryOptionsSet DEFAULT_PARAMETERS;
 
 		cv::Mat ComputeHarrisImage(cv::Mat inputImage);
 		cv::Mat ExtractHarrisPoints(cv::Mat harrisImage);

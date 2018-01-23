@@ -1,0 +1,7 @@
+- Name: GeneralParameters
+  SimilarityThreshold: 0.91
+  InlierFraction: 0.73
+  CorrespondenceRandomness: 25
+  NumberOfSamples: 3
+  MaximumIterations: 95000
+  MaxCorrespondenceDistance: 0.020

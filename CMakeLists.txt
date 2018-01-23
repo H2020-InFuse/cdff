@@ -21,6 +21,7 @@ add_definitions(-DTESTING)
 if(UNIX)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
 endif()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 
 #This policy disable warning for the use of relative libraries path
 cmake_policy(SET CMP0015 NEW)

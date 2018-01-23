@@ -6,22 +6,22 @@
 */
 
 /*!
- * @file HarrisDetector3D.hpp
- * @date 01/12/2017
+ * @file Ransac3D.hpp
+ * @date 17/01/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements the Harris Detector for 3D Point Clouds.
+ *  This DFN implements the RANSAC for matching points between two 3D point clouds.
  *  
  *
  * @{
  */
 
-#ifndef HARRIS_DETECTOR_3D_HPP
-#define HARRIS_DETECTOR_3D_HPP
+#ifndef RANSAC_3D_HPP
+#define RANSAC_3D_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -29,16 +29,16 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
-#include <PointCloud.hpp>
+#include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <VisualPointFeatureVector3D.hpp>
+#include <Pose.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <stdlib.h>
 #include <string>
 #include <pcl/keypoints/harris_3d.h>
 #include <yaml-cpp/yaml.h>
-
+#include <SupportTypes.hpp>
 
 namespace dfn_ci {
 
@@ -48,17 +48,17 @@ namespace dfn_ci {
  *
  * --------------------------------------------------------------------------
  */
-    class HarrisDetector3D : public FeaturesExtraction3DInterface
+    class Ransac3D : public FeaturesMatching3DInterface
     {
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
         public:
-            HarrisDetector3D();
-            ~HarrisDetector3D();
-            void process();
-            void configure();
+        	Ransac3D();
+        	~Ransac3D();
+        	void process();
+        	void configure();
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -71,32 +71,29 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
-		
-		typedef pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::ResponseMethod HarrisMethod;
-
-		struct HarryOptionsSet
+		struct RansacOptionsSet
 			{
-			bool nonMaxSuppression;
-			float radius;
-			float searchRadius;
-			float detectionThreshold;
-			bool enableRefinement;
-			int numberOfThreads;
-			HarrisMethod method;
+			float similarityThreshold;
+			float inlierFraction;
+			int correspondenceRandomness;
+			int numberOfSamples;
+			int maximumIterations;
+			float maxCorrespondenceDistance;
 			};
 
-		HarryOptionsSet parameters;
-		static const HarryOptionsSet DEFAULT_PARAMETERS;
+		RansacOptionsSet parameters;
+		static const RansacOptionsSet DEFAULT_PARAMETERS;
 
-		cv::Mat ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
-		HarrisMethod ConvertToMethod(std::string method);
+		PoseWrapper::Transform3DConstPtr ComputeTransform(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
+		PoseWrapper::Transform3DConstPtr Convert(Eigen::Matrix4f eigenTransform);
 
 		void ValidateParameters();
-		void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
-
+		void ValidateInputs(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
+		void ValidateCloud(Converters::SupportTypes::PointCloudWithFeatures cloud);
+		
 		void Configure(const YAML::Node& configurationNode);
     };
 }
 #endif
-/* HarrisDetector3D.hpp */
+/* Ransac3D.hpp */
 /** @} */

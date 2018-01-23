@@ -31,6 +31,7 @@
 #include <FrameToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
+#include <Macros/YamlcppMacros.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -51,16 +52,16 @@ using namespace FrameWrapper;
  */
 HarrisDetector2D::HarrisDetector2D()
 	{
-	parameters.apertureSize = 3;
-	parameters.blockSize = 3;
-	parameters.parameterK = 0.5;
-	parameters.detectionThreshold = 45;
-	parameters.useGaussianBlur = false;
+	parameters.generalParameters.apertureSize = DEFAULT_PARAMETERS.generalParameters.apertureSize;
+	parameters.generalParameters.blockSize = DEFAULT_PARAMETERS.generalParameters.blockSize;
+	parameters.generalParameters.parameterK = DEFAULT_PARAMETERS.generalParameters.parameterK;
+	parameters.generalParameters.detectionThreshold = DEFAULT_PARAMETERS.generalParameters.detectionThreshold;
+	parameters.generalParameters.useGaussianBlur = DEFAULT_PARAMETERS.generalParameters.useGaussianBlur;
 
-	gaussianBlurParameters.kernelWidth = 0;
-	gaussianBlurParameters.kernelHeight = 0;
-	gaussianBlurParameters.widthStandardDeviation = 0;
-	gaussianBlurParameters.heightStandardDeviation = 0;
+	parameters.gaussianBlurParameters.kernelWidth = DEFAULT_PARAMETERS.gaussianBlurParameters.kernelWidth;
+	parameters.gaussianBlurParameters.kernelHeight = DEFAULT_PARAMETERS.gaussianBlurParameters.kernelHeight;
+	parameters.gaussianBlurParameters.widthStandardDeviation = DEFAULT_PARAMETERS.gaussianBlurParameters.widthStandardDeviation;
+	parameters.gaussianBlurParameters.heightStandardDeviation = DEFAULT_PARAMETERS.gaussianBlurParameters.heightStandardDeviation;
 
 	configurationFilePath = "";
 	}
@@ -101,6 +102,26 @@ void HarrisDetector2D::process()
 	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
 	}
 
+const HarrisDetector2D::HarryOptionsSet HarrisDetector2D::DEFAULT_PARAMETERS =
+	{
+	.generalParameters =
+		{
+		.apertureSize = 3,
+		.blockSize = 3,
+		.parameterK = 0.5,
+		.detectionThreshold = 45,
+		.useGaussianBlur = false
+		},
+
+	.gaussianBlurParameters =
+		{
+		.kernelWidth = 0,
+		.kernelHeight = 0,
+		.widthStandardDeviation = 0,
+		.heightStandardDeviation = 0
+		}
+	};
+
 
 cv::Mat HarrisDetector2D::ComputeHarrisImage(cv::Mat inputImage)
 	{
@@ -108,15 +129,15 @@ cv::Mat HarrisDetector2D::ComputeHarrisImage(cv::Mat inputImage)
 	cv::cvtColor(inputImage, grayImage, CV_BGR2GRAY);
 
 	cv::Mat blurredImage;
-	if(parameters.useGaussianBlur)
+	if(parameters.generalParameters.useGaussianBlur)
 		{
 		cv::GaussianBlur
 			(
 			grayImage, 
 			blurredImage, 
-			cv::Size(gaussianBlurParameters.kernelWidth, gaussianBlurParameters.kernelHeight), 
-			gaussianBlurParameters.widthStandardDeviation, 
-			gaussianBlurParameters.heightStandardDeviation
+			cv::Size(parameters.gaussianBlurParameters.kernelWidth, parameters.gaussianBlurParameters.kernelHeight), 
+			parameters.gaussianBlurParameters.widthStandardDeviation, 
+			parameters.gaussianBlurParameters.heightStandardDeviation
 			);
 		}
 	else
@@ -125,7 +146,7 @@ cv::Mat HarrisDetector2D::ComputeHarrisImage(cv::Mat inputImage)
  		}
 
 	cv::Mat harrisMatrix = cv::Mat(inputImage.size(), CV_32FC1);
-	cv::cornerHarris(blurredImage, harrisMatrix, parameters.blockSize, parameters.apertureSize, parameters.parameterK, cv::BORDER_DEFAULT );
+	cv::cornerHarris(blurredImage, harrisMatrix, parameters.generalParameters.blockSize, parameters.generalParameters.apertureSize, parameters.generalParameters.parameterK, cv::BORDER_DEFAULT );
 
 	cv::Mat normalizedHarrisMatrix;
  	cv::normalize( harrisMatrix, normalizedHarrisMatrix, 0, 255, cv::NORM_MINMAX, CV_32FC1, cv::Mat() );
@@ -139,7 +160,7 @@ cv::Mat HarrisDetector2D::ComputeHarrisImage(cv::Mat inputImage)
 
 cv::Mat HarrisDetector2D::ExtractHarrisPoints(cv::Mat harrisImage)
 	{
-	int numberOfPoints = cv::countNonZero(harrisImage > parameters.detectionThreshold);
+	int numberOfPoints = cv::countNonZero(harrisImage > parameters.generalParameters.detectionThreshold);
 
 	cv::Mat harrisPointsList(numberOfPoints, 2, CV_32FC1, cv::Scalar(0));
 	unsigned pointIndex = 0;
@@ -148,7 +169,7 @@ cv::Mat HarrisDetector2D::ExtractHarrisPoints(cv::Mat harrisImage)
 		{
 		for(int columnIndex = 0; columnIndex < harrisImage.cols; columnIndex++)
 			{
-			if (harrisImage.at<uint8_t>(rowIndex, columnIndex) > parameters.detectionThreshold)
+			if (harrisImage.at<uint8_t>(rowIndex, columnIndex) > parameters.generalParameters.detectionThreshold)
 				{
 				harrisPointsList.at<float>(pointIndex, 1) = (float)rowIndex;
 				harrisPointsList.at<float>(pointIndex, 0) = (float)columnIndex;
@@ -163,17 +184,24 @@ cv::Mat HarrisDetector2D::ExtractHarrisPoints(cv::Mat harrisImage)
 
 void HarrisDetector2D::ValidateParameters()
 	{
-	ASSERT(parameters.apertureSize == 3 || parameters.apertureSize == 5 || parameters.apertureSize == 7, "Harris Detector Configuration error: Aperture size should be either 3, 5, or 7");
+	ASSERT
+		(
+		parameters.generalParameters.apertureSize == 3 || parameters.generalParameters.apertureSize == 5 || parameters.generalParameters.apertureSize == 7, 
+		"Harris Detector Configuration error: Aperture size should be either 3, 5, or 7"
+		);
 	
-	if (parameters.useGaussianBlur)
+	if (parameters.generalParameters.useGaussianBlur)
 		{
-		bool useKernel = gaussianBlurParameters.kernelWidth > 0 || gaussianBlurParameters.kernelHeight > 0;
-		bool useDeviation = gaussianBlurParameters.widthStandardDeviation > std::numeric_limits<float>::epsilon() || gaussianBlurParameters.heightStandardDeviation > std::numeric_limits<float>::epsilon();
+		bool useKernel = parameters.gaussianBlurParameters.kernelWidth > 0 || parameters.gaussianBlurParameters.kernelHeight > 0;
+		bool useDeviation = 
+					parameters.gaussianBlurParameters.widthStandardDeviation > std::numeric_limits<float>::epsilon() || 
+					parameters.gaussianBlurParameters.heightStandardDeviation > std::numeric_limits<float>::epsilon();
+
 		ASSERT(useKernel || useDeviation, "Harris Detector Configuration error: no Gaussian Blur mode have been configured");
 		if (useKernel)
 			{
-			ASSERT(gaussianBlurParameters.kernelWidth%2 == 1, "Harris Detector Configuration error: Gaussian Blur Kernel Width should be odd"); 
-			ASSERT(gaussianBlurParameters.kernelHeight%2 == 1, "Harris Detector Configuration error: Gaussian Blur Kernel Height should be odd"); 
+			ASSERT(parameters.gaussianBlurParameters.kernelWidth%2 == 1, "Harris Detector Configuration error: Gaussian Blur Kernel Width should be odd"); 
+			ASSERT(parameters.gaussianBlurParameters.kernelHeight%2 == 1, "Harris Detector Configuration error: Gaussian Blur Kernel Height should be odd"); 
 			VERIFY(!useDeviation, "Warning in Harris Detector Configuration: gaussian blur is configured both in kernel and deviation mode. Kernel mode will be used");
 			}
 		}
@@ -191,18 +219,18 @@ void HarrisDetector2D::Configure(const YAML::Node& configurationNode)
 	std::string nodeName = configurationNode["Name"].as<std::string>();
 	if ( nodeName == "GeneralParameters")
 		{
-		parameters.apertureSize = configurationNode["ApertureSize"].as<int>();
-		parameters.blockSize = configurationNode["BlockSize"].as<int>();
-		parameters.parameterK = configurationNode["ParameterK"].as<float>();
-		parameters.detectionThreshold = configurationNode["DetectionThreshold"].as<int>();
-		parameters.useGaussianBlur = configurationNode["UseGaussianBlur"].as<bool>();
+		YAMLCPP_DFN_ASSIGN(generalParameters.apertureSize, int, configurationNode, "ApertureSize");
+		YAMLCPP_DFN_ASSIGN(generalParameters.blockSize, int, configurationNode, "BlockSize");
+		YAMLCPP_DFN_ASSIGN(generalParameters.parameterK, float, configurationNode, "ParameterK");
+		YAMLCPP_DFN_ASSIGN(generalParameters.detectionThreshold, int, configurationNode, "DetectionThreshold");
+		YAMLCPP_DFN_ASSIGN(generalParameters.useGaussianBlur, bool, configurationNode, "UseGaussianBlur");
 		}
 	else if (nodeName == "GaussianBlur")
 		{
-		gaussianBlurParameters.kernelWidth = configurationNode["KernelWidth"].as<int>();
-		gaussianBlurParameters.kernelHeight = configurationNode["KernelHeight"].as<int>();
-		gaussianBlurParameters.widthStandardDeviation = configurationNode["WidthStandardDeviation"].as<float>();
-		gaussianBlurParameters.heightStandardDeviation = configurationNode["HeightStandardDeviation"].as<float>();
+		YAMLCPP_DFN_ASSIGN(gaussianBlurParameters.kernelWidth, int, configurationNode, "KernelWidth");
+		YAMLCPP_DFN_ASSIGN(gaussianBlurParameters.kernelHeight, int, configurationNode, "KernelHeight");
+		YAMLCPP_DFN_ASSIGN(gaussianBlurParameters.widthStandardDeviation, float, configurationNode, "WidthStandardDeviation");
+		YAMLCPP_DFN_ASSIGN(gaussianBlurParameters.heightStandardDeviation, float, configurationNode, "HeightStandardDeviation");
 		}
 	//Ignore everything else
 	}
