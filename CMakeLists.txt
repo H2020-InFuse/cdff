@@ -41,7 +41,7 @@ include_directories(
     External/install/include/opencv
     External/install/include/opencv2
     External/install/include/pcl-1.8
-    External/install/include/vtk-8.0
+    External/install/include/vtk-8.1
     External/install/include/yaml-cpp
 )
 link_directories(
