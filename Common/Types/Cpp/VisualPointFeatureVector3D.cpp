@@ -58,9 +58,21 @@ void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, floa
 	{
 	ASSERT_ON_TEST(featuresVector.nCount < MAX_FEATURE_3D_POINTS, "Features descriptor vector maximum capacity has been reached");
 	int currentIndex = featuresVector.nCount;
-	featuresVector.arr[currentIndex].point.x = x;
-	featuresVector.arr[currentIndex].point.y = y;	
-	featuresVector.arr[currentIndex].point.z = z;	
+	featuresVector.arr[currentIndex].point.kind = VISUAL_POINT_COORDINATES;
+	featuresVector.arr[currentIndex].point.u.position.x = x;
+	featuresVector.arr[currentIndex].point.u.position.y = y;	
+	featuresVector.arr[currentIndex].point.u.position.z = z;	
+	featuresVector.arr[currentIndex].descriptor.nCount = 0;
+	featuresVector.nCount++;
+	}
+
+void AddPoint(VisualPointFeatureVector3D& featuresVector, BaseTypesWrapper::T_UInt64 index, BaseTypesWrapper::T_UInt16 pointCloudIdentifier)
+	{
+	ASSERT_ON_TEST(featuresVector.nCount < MAX_FEATURE_3D_POINTS, "Features descriptor vector maximum capacity has been reached");
+	int currentIndex = featuresVector.nCount;
+	featuresVector.arr[currentIndex].point.kind = VISUAL_POINT_REFERENCE;
+	featuresVector.arr[currentIndex].point.u.reference.index = index;
+	featuresVector.arr[currentIndex].point.u.reference.pointCloudIdentifier = pointCloudIdentifier;
 	featuresVector.arr[currentIndex].descriptor.nCount = 0;
 	featuresVector.nCount++;
 	}
@@ -78,19 +90,36 @@ int GetNumberOfPoints(const VisualPointFeatureVector3D& featuresVector)
 float GetXCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
-	return featuresVector.arr[pointIndex].point.x;
+	ASSERT_ON_TEST(featuresVector.arr[pointIndex].point.kind == VISUAL_POINT_COORDINATES, "Request for coordinates for a non-coordinates type visual point");
+	return featuresVector.arr[pointIndex].point.u.position.x;
 	}
 
 float GetYCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
-	return featuresVector.arr[pointIndex].point.y;
+	ASSERT_ON_TEST(featuresVector.arr[pointIndex].point.kind == VISUAL_POINT_COORDINATES, "Request for coordinates for a non-coordinates type visual point");
+	return featuresVector.arr[pointIndex].point.u.position.y;
 	}
 
 float GetZCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 	{
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
-	return featuresVector.arr[pointIndex].point.z;
+	ASSERT_ON_TEST(featuresVector.arr[pointIndex].point.kind == VISUAL_POINT_COORDINATES, "Request for coordinates for a non-coordinates type visual point");
+	return featuresVector.arr[pointIndex].point.u.position.z;
+	}
+
+BaseTypesWrapper::T_UInt64 GetReferenceIndex(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
+	{
+	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
+	ASSERT_ON_TEST(featuresVector.arr[pointIndex].point.kind == VISUAL_POINT_REFERENCE, "Request for index for a non-reference type visual point");
+	return featuresVector.arr[pointIndex].point.u.reference.index;
+	}
+
+BaseTypesWrapper::T_UInt16 GetPointCloudIdentifier(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
+	{
+	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 3D");
+	ASSERT_ON_TEST(featuresVector.arr[pointIndex].point.kind == VISUAL_POINT_REFERENCE, "Request for point cloud id for a non-reference type visual point");
+	return featuresVector.arr[pointIndex].point.u.reference.pointCloudIdentifier;
 	}
 
 void AddDescriptorComponent(VisualPointFeatureVector3D& featuresVector, int pointIndex, float component)

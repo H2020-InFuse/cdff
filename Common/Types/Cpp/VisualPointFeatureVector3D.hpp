@@ -52,6 +52,7 @@ namespace VisualPointFeatureVector3DWrapper
 typedef CTypes::VisualPointFeature3D_descriptor VisualPointDescriptor3D;
 typedef CTypes::VisualPointFeature3D VisualPointFeature3D;
 typedef CTypes::VisualPointFeatureVector3D VisualPointFeatureVector3D;
+typedef CTypes::VisualPointFeature3D_point VisualPoint;
 
 
 /* --------------------------------------------------------------------------
@@ -62,6 +63,9 @@ typedef CTypes::VisualPointFeatureVector3D VisualPointFeatureVector3D;
  */
 const int MAX_FEATURE_3D_POINTS = static_cast<int>(CTypes::features3DElementsMax);
 const int MAX_DESCRIPTOR_3D_LENGTH = static_cast<int>(CTypes::descriptor3DNameLength);
+#define VISUAL_POINT_NONE VisualPoint::VisualPointFeature3D_point_NONE
+#define VISUAL_POINT_COORDINATES VisualPoint::position_PRESENT
+#define VISUAL_POINT_REFERENCE VisualPoint::reference_PRESENT
 
 
 
@@ -85,11 +89,14 @@ typedef VisualPointFeatureVector3D const* VisualPointFeatureVector3DConstPtr;
 void Copy(const VisualPointFeatureVector3D& source, VisualPointFeatureVector3D& destination);
 
 void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, float z);
+void AddPoint(VisualPointFeatureVector3D& featuresVector, BaseTypesWrapper::T_UInt64 index, BaseTypesWrapper::T_UInt16 pointCloudIdentifier = 0);
 void ClearPoints(VisualPointFeatureVector3D& featuresVector);
 int GetNumberOfPoints(const VisualPointFeatureVector3D& featuresVector);
 float GetXCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex);
 float GetYCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex);
 float GetZCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex);
+BaseTypesWrapper::T_UInt64 GetReferenceIndex(const VisualPointFeatureVector3D& featuresVector, int pointIndex);
+BaseTypesWrapper::T_UInt16 GetPointCloudIdentifier(const VisualPointFeatureVector3D& featuresVector, int pointIndex);
 
 void AddDescriptorComponent(VisualPointFeatureVector3D& featuresVector, int pointIndex, float component);
 void ClearDescriptor(VisualPointFeatureVector3D& featuresVector, int pointIndex);

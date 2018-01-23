@@ -34,9 +34,15 @@ features3DElementsMax T-UInt32 ::= 51200
 -- Max. name size
 descriptor3DNameLength T-UInt32 ::= 128
 
+Point3DReference ::= SEQUENCE
+	{
+	pointCloudIdentifier	T-UInt16,
+	index 			T-UInt64
+	}
+
 VisualPointFeature3D ::= SEQUENCE
 	{
-	point		Point3D,
+	point		CHOICE { position Point3D, reference Point3DReference },
 	descriptor	SEQUENCE (SIZE(0..descriptor3DNameLength)) OF REAL
 	}
 
