@@ -14,7 +14,7 @@
 /*!
  * @addtogroup VisualPointFeatureVector3DWrapper
  * 
- * VisualPointFeatureVector3D wrapper for the VisualPointFeatureVector2D type
+ * VisualPointFeatureVector3D wrapper for the VisualPointFeatureVector3D type
  * 
  * 
  * @{

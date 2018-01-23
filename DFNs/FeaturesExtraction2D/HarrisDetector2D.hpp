@@ -99,5 +99,5 @@ namespace dfn_ci {
     };
 }
 #endif
-/* StubFeaturesExtraction2D.hpp */
+/* HarrisDetector2D.hpp */
 /** @} */

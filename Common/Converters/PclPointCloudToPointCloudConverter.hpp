@@ -14,7 +14,7 @@
 /*!
  * @addtogroup Converters
  * 
- *  This is the class for type conversion from Pcl Point Cloud to InFuse PointCloud.
+ *  This is the class for type conversion from Pcl Point Cloud to ESROCOS PointCloud.
  *  
  *
  * @{

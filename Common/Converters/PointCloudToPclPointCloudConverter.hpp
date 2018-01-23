@@ -14,7 +14,7 @@
 /*!
  * @addtogroup Converters
  * 
- *  This is the class for type conversion from Point Cloud Type to PCL Point Cloud.
+ *  This is the class for type conversion from ESROCOS Point Cloud Type to PCL Point Cloud.
  *  
  *
  * @{
