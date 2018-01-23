@@ -1,0 +1,10 @@
+- Name: GeneralParameters
+  EdgeThreshold: 0
+  FastThreshold: 0
+  FirstLevel: 0
+  MaxFeaturesNumber: 0
+  LevelsNumber: 0
+  PatchSize: 0
+  ScaleFactor: 0.00
+  ScoreType: 0
+  Wta_k: 0
