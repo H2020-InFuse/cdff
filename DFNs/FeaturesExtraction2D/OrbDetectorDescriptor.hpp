@@ -79,7 +79,7 @@ namespace dfn_ci {
 			int patchSize;
 			double scaleFactor;
 			int scoreType;
-			int wta_k;
+			int sizeOfBrightnessTestSet;
 			};
 
 		OrbOptionsSet parameters;
@@ -90,6 +90,7 @@ namespace dfn_ci {
 		void ValidateParameters();
 		void ValidateInputs(cv::Mat inputImage);
 
+		static int ConvertToScoreType(std::string scoreType);
 		void Configure(const YAML::Node& configurationNode);
     };
 }

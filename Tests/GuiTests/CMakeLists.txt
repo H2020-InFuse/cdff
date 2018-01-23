@@ -13,6 +13,20 @@ target_link_libraries(
 )
 
 add_executable(
+    OrbDetectorDescriptorGuiTest
+    DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
+    ParametersInterface.cpp
+    ButtonsInterface.cpp
+    MainInterface.cpp
+    DFNs/DFNTestInterface.cpp
+)
+set_target_properties(OrbDetectorDescriptorGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+	OrbDetectorDescriptorGuiTest
+	orb_detector_descriptor mock cdff_logger orb_detector_descriptor converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
+add_executable(
     HarrisDetector3DGuiTest
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     ParametersInterface.cpp
