@@ -19,7 +19,6 @@ file(GLOB_RECURSE source_list
 add_library(
     cdff_types
     ${source_list}
-    Cpp/Pose.cpp
 )
 install(
     TARGETS cdff_types
