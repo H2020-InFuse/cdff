@@ -11,3 +11,12 @@ target_link_libraries(
     harris_detector_2d
     feature_extraction_2d cdff_types yaml-cpp
 )
+
+add_library(
+    orb_detector_descriptor
+    OrbDetectorDescriptor.cpp
+)
+target_link_libraries(
+    orb_detector_descriptor
+    feature_extraction_2d cdff_types yaml-cpp opencv_features2d
+)

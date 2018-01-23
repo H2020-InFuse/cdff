@@ -12,6 +12,16 @@ target_link_libraries(
 add_test(HarrisDetector2DTest HarrisDetector2DTest)
 
 add_executable(
+    OrbDetectorDescriptorTest
+    DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
+)
+target_link_libraries(
+	OrbDetectorDescriptorTest
+	mock cdff_logger cdff_types orb_detector_descriptor  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+)
+add_test(OrbDetectorDescriptorTest OrbDetectorDescriptorTest)
+
+add_executable(
     HarrisDetector3DTest
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
 )
