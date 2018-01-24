@@ -74,8 +74,10 @@ namespace dfn_ci {
 
             /**
             * Receive value from output port featuresSet
-            * @param featuresSet, This is the optional cloud of estimated normals to the surface represented by the first point cloud. This input is optional, as normals may be estimate in this DFN.
-	    * If parameter ForceNormalEstimation is set to true, this input will be ignored; otherwise:
+            * @param featuresSet, 
+	    * This is the optional cloud of estimated normals to the surface represented by the first point cloud. This input may be optional depending on DFNs, as normals may be estimated in this DFN.
+	    * As a suggestion for the implementation of different DFNs, one may use two parameters ForceNormalEstimation and EnableNormalEstimation:
+            * If parameter ForceNormalEstimation is set to true, this input will be ignored; otherwise:
 	    * If parameter EnableNormalEstimation is set to false, an empty input or invalid input will cause an exception,
 	    * If parameter EnableNormalEstimation is set to true, normals will be estimated when this input is empty or not valid.
             */
