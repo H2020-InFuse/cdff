@@ -32,6 +32,16 @@ target_link_libraries(
 add_test(HarrisDetector3DTest HarrisDetector3DTest)
 
 add_executable(
+    ShotDescriptor3DTest
+    DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
+)
+target_link_libraries(
+	ShotDescriptor3DTest
+	mock cdff_logger cdff_types shot_descriptor_3d  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
+)
+add_test(ShotDescriptor3DTest ShotDescriptor3DTest)
+
+add_executable(
     Ransac3DTest
     DFNs/FeaturesMatching3D/Ransac3D.cpp
 )
@@ -78,6 +88,15 @@ target_link_libraries(
 	PointCloudPclPointCloudConvertersTest cdff_types converters_opencv cdff_logger opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
 )
 add_test(PointCloudPclPointCloudConvertersTest PointCloudPclPointCloudConvertersTest)
+
+add_executable(
+    PointCloudPclNormalsCloudConvertersTest
+    Common/Converters/PointCloudPclNormalsCloudConvertersTest.cpp
+)
+target_link_libraries(
+	PointCloudPclNormalsCloudConvertersTest cdff_types converters_opencv cdff_logger opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
+)
+add_test(PointCloudPclNormalsCloudConvertersTest PointCloudPclNormalsCloudConvertersTest)
 
 add_executable(
     VisualPointFeatureVector3DPclPointCloudConvertersTest

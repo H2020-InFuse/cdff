@@ -1,3 +1,4 @@
 add_subdirectory(FeaturesExtraction2D)
 add_subdirectory(FeaturesExtraction3D)
 add_subdirectory(FeaturesMatching3D)
+add_subdirectory(FeaturesDescription3D)

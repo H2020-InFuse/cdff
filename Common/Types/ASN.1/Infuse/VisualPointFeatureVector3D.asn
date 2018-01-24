@@ -32,7 +32,7 @@ T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedType
 features3DElementsMax T-UInt32 ::= 51200
 
 -- Max. name size
-descriptor3DNameLength T-UInt32 ::= 128
+descriptor3DNameLength T-UInt32 ::= 352
 
 Point3DReference ::= SEQUENCE
 	{
@@ -46,6 +46,16 @@ VisualPointFeature3D ::= SEQUENCE
 	descriptor	SEQUENCE (SIZE(0..descriptor3DNameLength)) OF REAL
 	}
 
-VisualPointFeatureVector3D ::= SEQUENCE (SIZE(0..features3DElementsMax)) OF VisualPointFeature3D
+VisualPointFeatureVector3DType ::= ENUMERATED
+	{
+	all-positions	(0),
+	all-references	(1),
+	hybrid-vector	(2)
+	}
 
+VisualPointFeatureVector3D ::= SEQUENCE
+	{
+	list		SEQUENCE (SIZE(0..features3DElementsMax)) OF VisualPointFeature3D,
+	type		VisualPointFeatureVector3DType
+	}
 END

@@ -1,0 +1,19 @@
+name: FeaturesDescription3D
+input_ports:
+    - name: pointCloud
+      type: PointCloud
+      doc: a 3D point cloud taken from a 3D sensor or assembled by 3D reconstruction
+    - name: featuresSet
+      type: VisualPointFeatureVector3D
+      doc: this is the list of Visual Point detected by a previous processing step. Their descriptors are empty. The points are defined by a reference to the input point cloud.
+    - name: normalsCloud
+      type: PointCloud
+      doc: This is the optional cloud of estimated normals to the surface represented by the first point cloud. This input is optional, as normals may be estimate in this DFN.
+           If parameter ForceNormalEstimation is set to true, this input will be ignored; otherwise:
+	   If parameter EnableNormalEstimation is set to false, an empty input or invalid input will cause an exception,
+	   If parameter EnableNormalEstimation is set to true, normals will be estimated when this input is empty or not valid.
+output_ports:
+    - name: featuresSetWithDescriptors
+      type: VisualPointFeatureVector3D
+      doc: This is the same list of visual point defined above. A SHOT descriptor is associated to each point. The points may be defined by position or references according to a configuration parameter. 
+
