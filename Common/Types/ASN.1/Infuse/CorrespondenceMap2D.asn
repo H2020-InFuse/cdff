@@ -1,0 +1,44 @@
+/* --------------------------------------------------------------------------
+*
+* (C) Copyright …
+*
+* ---------------------------------------------------------------------------
+*/
+
+/*!
+ * @file CorrespondenceMap2D.asn
+ * @date 26/01/2018
+ * @author Alessandro Bianco
+ *
+ *
+ */
+
+/*!
+ * @addtogroup BaseTypes
+ * 
+ * Specification of the CorrespondenceMap2D class.
+ * 
+ * 
+ * @{
+ */
+CorrespondenceMap2DNS DEFINITIONS ::=
+BEGIN
+
+IMPORTS
+Point2D FROM GeometryNS
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes;
+
+-- Max. number of features
+correspondenceMap2DElementsMax T-UInt32 ::= 1024
+
+Correspondence2D ::= SEQUENCE
+	{
+	source		Point2D,
+	sink		Point2D,
+	probability	T-Float
+	}
+
+CorrespondenceMap2D ::= SEQUENCE (SIZE(0..correspondenceMap2DElementsMax)) OF Correspondence2D
+
+END
