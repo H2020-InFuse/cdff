@@ -32,6 +32,16 @@ target_link_libraries(
 add_test(FundamentalMatrixRansacTest FundamentalMatrixRansacTest)
 
 add_executable(
+    TriangulationTest
+    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
+)
+target_link_libraries(
+	TriangulationTest
+	mock cdff_logger cdff_types triangulation  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+)
+add_test(TriangulationTest TriangulationTest)
+
+add_executable(
     HarrisDetector3DTest
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
 )
