@@ -195,3 +195,31 @@ TEST_CASE("Empty Point Cloud conversion", "[EmptyPointCloud]")
 	asnVector.reset();
 	outputCloud.reset();
 	}
+
+TEST_CASE("Reference Features Conversion", "[ReferenceFeaturesConversion]")
+	{
+	VisualPointFeatureVector3DToPclPointCloudConverter converter;
+
+	VisualPointFeatureVector3DPtr featuresVector = NewVisualPointFeatureVector3D();
+	AddPoint(*featuresVector, 10, 0);
+	REQUIRE(GetPointType(*featuresVector, 0) == VISUAL_POINT_REFERENCE);
+	REQUIRE(GetVectorType(*featuresVector) == ALL_REFERENCES_VECTOR );
+	REQUIRE_THROWS( converter.Convert(featuresVector) );
+
+	delete(featuresVector);				
+	}
+
+TEST_CASE("Hybrid Features Conversion", "[HybridFeaturesConversion]")
+	{
+	VisualPointFeatureVector3DToPclPointCloudConverter converter;
+
+	VisualPointFeatureVector3DPtr featuresVector = NewVisualPointFeatureVector3D();
+	AddPoint(*featuresVector, 10, 0);
+	AddPoint(*featuresVector, 1.00, 2.10, 3.00);
+	REQUIRE(GetPointType(*featuresVector, 0) == VISUAL_POINT_REFERENCE);
+	REQUIRE(GetPointType(*featuresVector, 1) == VISUAL_POINT_POSITION);
+	REQUIRE(GetVectorType(*featuresVector) == HYBRID_VECTOR);
+	REQUIRE_THROWS( converter.Convert(featuresVector) );
+
+	delete(featuresVector);				
+	}

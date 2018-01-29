@@ -12,6 +12,8 @@ add_library(
     PclPointCloudToPointCloudConverter.cpp
     Transform3DToEigenTransformConverter.cpp
     EigenTransformToTransform3DConverter.cpp
+    PointCloudToPclNormalsCloudConverter.cpp
+    PclNormalsCloudToPointCloudConverter.cpp  
 )
 target_link_libraries(converters_opencv opencv_core cdff_types)
 

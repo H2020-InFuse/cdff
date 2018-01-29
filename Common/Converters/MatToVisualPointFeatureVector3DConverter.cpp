@@ -43,7 +43,7 @@ using namespace VisualPointFeatureVector3DWrapper;
  */
 VisualPointFeatureVector3DConstPtr MatToVisualPointFeatureVector3DConverter::Convert(const cv::Mat& featuresMatrix)
 	{
-	VisualPointFeatureVector3DPtr conversion = new VisualPointFeatureVector3D();
+	VisualPointFeatureVector3DPtr conversion = NewVisualPointFeatureVector3D();
 
 	if (featuresMatrix.cols == 0 && featuresMatrix.rows == 0)
 		return conversion;
