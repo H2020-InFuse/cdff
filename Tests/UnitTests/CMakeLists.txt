@@ -32,6 +32,15 @@ target_link_libraries(
 add_test(FundamentalMatrixRansacTest FundamentalMatrixRansacTest)
 
 add_executable(
+    FlannMatcherTest
+    DFNs/FeaturesMatching2D/FlannMatcher.cpp
+)
+target_link_libraries(
+	FlannMatcherTest
+	mock cdff_logger cdff_types flann_matcher  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+)
+add_test(FlannMatcherTest FlannMatcherTest)
+add_executable(
     TriangulationTest
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
 )

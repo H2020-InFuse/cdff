@@ -1,0 +1,13 @@
+name: FeaturesMatching2D
+input_ports:
+    - name: sourceFeaturesVector
+      type: VisualPointFeatureVector2D
+      doc: these are the extracted features of the 2D source image we would like to match with the sink.
+    - name: sinkFeaturesVector
+      type: VisualPointFeatureVector2D
+      doc: these are the extracted features of the 2D sink image we would like to match with the source.
+output_ports:
+    - name: correspondenceMap
+      type: CorrespondenceMap2D
+      doc: This is the best set of correspondences between the source features set and the sink features set.
+

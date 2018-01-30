@@ -128,13 +128,6 @@ TEST_CASE( "Fail Configuration due to force but not enabled normal estimation", 
 	REQUIRE_THROWS( shot.configure() );
 	}
 
-TEST_CASE( "Fail Configuration due to enabled normal estimation with no parameters", "[NoEnabledEstimationParameters]")
-	{
-	ShotDescriptor3D shot;
-	shot.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesDescription3D/ShotDescriptor3D_NoEnabledEstimationParameters.yaml");
-	REQUIRE_THROWS( shot.configure() );
-	}
-
 TEST_CASE( "Fail Configuration due to enabled normal estimation with conflicting parameters", "[ConflictingEnabledEstimationParameters]")
 	{
 	ShotDescriptor3D shot;
