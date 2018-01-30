@@ -58,6 +58,7 @@ namespace BaseTypesWrapper
  * --------------------------------------------------------------------------
  */
 typedef CTypes::T_Int64 T_Int64;
+typedef CTypes::T_UInt64 T_UInt64;
 typedef CTypes::T_UInt32 T_UInt32;
 typedef CTypes::T_UInt16 T_UInt16;
 typedef CTypes::T_String T_String;

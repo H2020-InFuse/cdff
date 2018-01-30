@@ -1,0 +1,9 @@
+- Name: GeneralParameters
+  LocalReferenceFrameEstimationRadius: 0.10
+  SearchRadius: 0.01
+  OutputFormat: Positions
+  EnableNormalsEstimation: false
+  ForceNormalsEstimation: false
+- Name: NormalEstimationParameters
+  SearchRadius: 0.01
+  NeighboursSetSize: 0

@@ -45,7 +45,7 @@ using namespace SupportTypes;
  */
 const VisualPointFeatureVector3DConstPtr PclPointCloudToVisualPointFeatureVector3DConverter::Convert(const SupportTypes::PointCloudWithFeatures& featuresCloud)
 	{	
-	VisualPointFeatureVector3DPtr conversion = new VisualPointFeatureVector3D();
+	VisualPointFeatureVector3DPtr conversion = NewVisualPointFeatureVector3D();
 	
 	for(unsigned pointIndex = 0; pointIndex < featuresCloud.pointCloud->points.size(); pointIndex++)
 		{
