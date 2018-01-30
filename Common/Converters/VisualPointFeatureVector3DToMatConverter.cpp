@@ -44,7 +44,10 @@ using namespace VisualPointFeatureVector3DWrapper;
 const cv::Mat VisualPointFeatureVector3DToMatConverter::Convert(const VisualPointFeatureVector3DConstPtr& featuresVector)
 	{	
 	if (GetNumberOfPoints(*featuresVector) == 0)
+		{
 		return cv::Mat();
+		}
+	ASSERT( GetVectorType(*featuresVector) == ALL_POSITIONS_VECTOR, "VisualPointFeatureVector3DToMatConverter: non empty input feature vector must have all positions-defined points");
 
 	int descriptorSize = GetNumberOfDescriptorComponents(*featuresVector, 0);
 	cv::Mat conversion(GetNumberOfPoints(*featuresVector), 3 + descriptorSize, CV_32FC1, cv::Scalar(0));

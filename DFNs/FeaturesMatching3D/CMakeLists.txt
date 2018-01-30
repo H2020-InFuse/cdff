@@ -11,3 +11,12 @@ target_link_libraries(
     ransac_3d
     feature_matching_3d cdff_types yaml-cpp flann_cpp
 )
+
+add_library(
+    icp_3d
+    Icp3D.cpp
+)
+target_link_libraries(
+    icp_3d
+    feature_matching_3d cdff_types yaml-cpp flann_cpp
+)
