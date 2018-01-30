@@ -44,7 +44,7 @@ using namespace SupportTypes;
  * --------------------------------------------------------------------------
  */
 const PointCloudWithFeatures VisualPointFeatureVector3DToPclPointCloudConverter::Convert(const VisualPointFeatureVector3DConstPtr& featuresVector)
-	{	
+	{
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::PointCloud<FeatureType>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<FeatureType> >();
 	PointCloudWithFeatures conversion;
@@ -52,7 +52,10 @@ const PointCloudWithFeatures VisualPointFeatureVector3DToPclPointCloudConverter:
 	conversion.featureCloud = featureCloud;	
 	conversion.descriptorSize = 0;
 	if (GetNumberOfPoints(*featuresVector) == 0)
+		{
 		return conversion;
+		}
+	ASSERT( GetVectorType(*featuresVector) == ALL_POSITIONS_VECTOR, "VisualPointFeatureVector3DToPclPointCloudConverter: non empty input feature vector must have all positions-defined points");
 
 	int descriptorSize = GetNumberOfDescriptorComponents(*featuresVector, 0);
 	int maxFeaturesNumber = static_cast<int>(MAX_FEATURES_NUMBER);
