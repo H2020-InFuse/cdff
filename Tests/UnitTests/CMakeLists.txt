@@ -22,6 +22,16 @@ target_link_libraries(
 add_test(OrbDetectorDescriptorTest OrbDetectorDescriptorTest)
 
 add_executable(
+    FundamentalMatrixRansacTest
+    DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
+)
+target_link_libraries(
+	FundamentalMatrixRansacTest
+	mock cdff_logger cdff_types fundamental_matrix_ransac  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+)
+add_test(FundamentalMatrixRansacTest FundamentalMatrixRansacTest)
+
+add_executable(
     HarrisDetector3DTest
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
 )
