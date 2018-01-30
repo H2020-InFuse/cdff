@@ -6,7 +6,7 @@ find_package( Boost 1.61 REQUIRED )
 find_package( Eigen3 3.3.4 REQUIRED )
 find_package( OpenCV 3.4.0 REQUIRED )
 find_package( VTK 8.1.0 REQUIRED )
-find_package( pcl 1.8.1 REQUIRED )
+find_package( PCL 1.8.1 REQUIRED )
 
 #find_package( Flann 1.9.1 REQUIRED )
 #find_package( QHull REQUIRED )
