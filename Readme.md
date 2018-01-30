@@ -13,7 +13,7 @@ See https://docs.google.com/document/d/1jQ8I3lRKLel6BT5Fac5twtjzZ0SiQrc9rK23v-3N
 
 ## DFN Coding Guidelines
 
-https://docs.google.com/document/d/127s1hKflUZHQbWrHCKFbB10K9aQr70ZUkkxSnJ6iH7o/edit?usp=sharing
+https://docs.google.com/document/d/1hFTRKgJNN3n_brT3aajMA03AR_jQ2eCo-ZM33ggY5cE/edit
 
 ## Externals (aka 3rd party dependencies)
 See [Third party readme] (/External/Readme.md)
