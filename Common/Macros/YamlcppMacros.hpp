@@ -37,21 +37,15 @@
  *
  * --------------------------------------------------------------------------
  */
-#define HANDLE_YAMLCPP_MISSING_KEY(variable, key, defaultValue) \
-        catch (YAML::KeyNotFound exception) \
-		{ \
-		std::stringstream stream; \
-		stream << "Parameter "<< key <<" was not set, default value will be used:  " << defaultValue; \
-		variable = defaultValue; \
-		} \
 
-#define HANDLE_YAMLCPP_BAD_PARAMETER(key, typeString) \
+#define HANDLE_YAMLCPP_BAD_PARAMETER(key, typeString, variable, defaultValue) \
 	catch (YAML::Exception exception) \
 		{ \
 		std::stringstream stream; \
-		stream << "Parameter "<< key <<" should be of type " << typeString; \
-		PRINT_TO_LOG(stream.str(), ""); \
-		throw exception; \
+		stream << "Parameter "<< key <<" is absent or has wrong type. Type must be " << typeString<<". Default value will be used: "<< defaultValue; \
+		std::string errorString = stream.str(); \
+		WRITE_TO_LOG(errorString, ""); \
+		variable = defaultValue; \
 		} \
 
 #define TRY_EXPRESSION(expression) \
@@ -63,15 +57,13 @@
 #define YAMLCPP_ASSIGN(variable, type, defaultValue, node, key) \
 	{ \
 	TRY_EXPRESSION(variable = node[key].as<type>() ) \
-	HANDLE_YAMLCPP_MISSING_KEY(variable, key, defaultValue) \
-	HANDLE_YAMLCPP_BAD_PARAMETER(key, #type) \
+	HANDLE_YAMLCPP_BAD_PARAMETER(key, #type, variable, defaultValue) \
 	}	
 	
 #define YAMLCPP_ASSIGN_WITH_FUNCTION(variable, type, defaultValue, node, key, function) \
 	{ \
 	TRY_EXPRESSION(variable = function(node[key].as<type>()) ) \
-	HANDLE_YAMLCPP_MISSING_KEY(variable, key, defaultValue) \
-	HANDLE_YAMLCPP_BAD_PARAMETER(key, #type) \
+	HANDLE_YAMLCPP_BAD_PARAMETER(key, #type, variable, defaultValue) \
 	}
 
 #define YAMLCPP_DFN_ASSIGN(variable, type, node, key) \

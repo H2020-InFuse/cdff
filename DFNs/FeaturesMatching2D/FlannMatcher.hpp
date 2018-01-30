@@ -82,6 +82,15 @@ namespace dfn_ci {
 			COMPOSITE_SEARCH,
 			LINEAR_SEARCH
 			};
+
+		struct GeneralOptionsSet
+			{
+			float distanceThreshold;
+			int numberOfChecks;
+			float epsilon;
+			bool sortedSearch;
+			MatcherMethod matcherMethod;			
+			};
 	
 		struct KdTreeSearchOptionsSet
 			{
@@ -130,12 +139,7 @@ namespace dfn_ci {
 
 		struct FlannMatcherOptionsSet
 			{
-			float distanceThreshold;
-			int numberOfChecks;
-			float epsilon;
-			bool sortedSearch;
-
-			MatcherMethod matcherMethod;
+			GeneralOptionsSet generalOptionsSet;
 			KdTreeSearchOptionsSet kdTreeSearchOptionsSet;
 			KMeansClusteringOptionsSet kMeansClusteringOptionsSet;
 			AutotunedOptionsSet autotunedOptionsSet;
@@ -155,6 +159,8 @@ namespace dfn_ci {
 		void ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix);
 
 		void Configure(const YAML::Node& configurationNode);
+		MatcherMethod ConvertToMatcherMethod(std::string matcherMethod);
+		CenterInitializationMethod ConvertToCenterInitializationMethod(std::string centerInitializationMethod);
     };
 }
 #endif

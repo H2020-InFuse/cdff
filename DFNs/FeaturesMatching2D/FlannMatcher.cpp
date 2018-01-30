@@ -52,12 +52,12 @@ using namespace CorrespondenceMap2DWrapper;
  */
 FlannMatcher::FlannMatcher()
 	{
-	parameters.distanceThreshold = DEFAULT_PARAMETERS.distanceThreshold;
-	parameters.matcherMethod = DEFAULT_PARAMETERS.matcherMethod;
+	parameters.generalOptionsSet.distanceThreshold = DEFAULT_PARAMETERS.generalOptionsSet.distanceThreshold;
+	parameters.generalOptionsSet.matcherMethod = DEFAULT_PARAMETERS.generalOptionsSet.matcherMethod;
 
-	parameters.numberOfChecks = DEFAULT_PARAMETERS.numberOfChecks;
-	parameters.epsilon = DEFAULT_PARAMETERS.epsilon;
-	parameters.sortedSearch = DEFAULT_PARAMETERS.sortedSearch;
+	parameters.generalOptionsSet.numberOfChecks = DEFAULT_PARAMETERS.generalOptionsSet.numberOfChecks;
+	parameters.generalOptionsSet.epsilon = DEFAULT_PARAMETERS.generalOptionsSet.epsilon;
+	parameters.generalOptionsSet.sortedSearch = DEFAULT_PARAMETERS.generalOptionsSet.sortedSearch;
 
 	parameters.kdTreeSearchOptionsSet.numberOfTrees = DEFAULT_PARAMETERS.kdTreeSearchOptionsSet.numberOfTrees;
 
@@ -131,11 +131,14 @@ void FlannMatcher::process()
 
 const FlannMatcher::FlannMatcherOptionsSet FlannMatcher::DEFAULT_PARAMETERS =
 	{
-	.distanceThreshold = 0.02,
-	.numberOfChecks = 32,
-	.epsilon = 0,
-	.sortedSearch = false,
-	.matcherMethod = KD_TREE_SEARCH,
+	.generalOptionsSet =
+		{
+		.distanceThreshold = 0.02,
+		.numberOfChecks = 32,
+		.epsilon = 0,
+		.sortedSearch = false,
+		.matcherMethod = KD_TREE_SEARCH
+		},
 	.kdTreeSearchOptionsSet = 
 		{
 		.numberOfTrees = 4
@@ -179,7 +182,7 @@ const FlannMatcher::FlannMatcherOptionsSet FlannMatcher::DEFAULT_PARAMETERS =
 
 cv::Ptr<cv::flann::IndexParams> FlannMatcher::ConvertParameters()
 	{
-	switch(parameters.matcherMethod)
+	switch(parameters.generalOptionsSet.matcherMethod)
 		{
 		case KD_TREE_SEARCH:
 			{
@@ -253,7 +256,8 @@ std::vector< cv::DMatch > FlannMatcher::ComputeMatches(cv::Mat sourceDescriptors
 	cv::transpose(sourceDescriptorsMatrix, sourceDescriptorsMatrixTransposed);
 	cv::transpose(sinkDescriptorsMatrix, sinkDescriptorsMatrixTransposed);	
 
-	cv::Ptr<cv::flann::SearchParams> searchParams = new cv::flann::SearchParams(parameters.numberOfChecks, parameters.epsilon, parameters.sortedSearch);
+	cv::Ptr<cv::flann::SearchParams> searchParams = 
+		new cv::flann::SearchParams(parameters.generalOptionsSet.numberOfChecks, parameters.generalOptionsSet.epsilon, parameters.generalOptionsSet.sortedSearch);
 	cv::Ptr<cv::flann::IndexParams> indexParams = ConvertParameters();
 
 	cv::FlannBasedMatcher matcher(indexParams, searchParams);
@@ -264,7 +268,7 @@ std::vector< cv::DMatch > FlannMatcher::ComputeMatches(cv::Mat sourceDescriptors
 	for(unsigned matchIndex = 0; matchIndex < matchesVector.size(); matchIndex++)
 		{
 		double matchDistance = matchesVector.at(matchIndex).distance;
-		if(matchDistance <= parameters.distanceThreshold)
+		if(matchDistance <= parameters.generalOptionsSet.distanceThreshold)
 			{
 			goodMatchesVector.push_back( matchesVector.at(matchIndex) );
 			}
@@ -287,7 +291,7 @@ CorrespondenceMap2DConstPtr FlannMatcher::Convert(std::vector< cv::DMatch > matc
 		sinkPoint.x = sinkFeaturesMatrix.at<float>( currentMatch.trainIdx, 0);
 		sinkPoint.y = sinkFeaturesMatrix.at<float>( currentMatch.trainIdx, 1);
 		
-		AddCorrespondence(*correspondenceMap, sourcePoint, sinkPoint, 1 - currentMatch.distance / parameters.distanceThreshold);
+		AddCorrespondence(*correspondenceMap, sourcePoint, sinkPoint, 1 - currentMatch.distance / parameters.generalOptionsSet.distanceThreshold);
 		}
 
 	return correspondenceMap;
@@ -296,7 +300,45 @@ CorrespondenceMap2DConstPtr FlannMatcher::Convert(std::vector< cv::DMatch > matc
 
 void FlannMatcher::ValidateParameters()
 	{
-	ASSERT(parameters.distanceThreshold > 0, "FlannMatcher Error: distanceThreshold is not positive");
+	ASSERT(parameters.generalOptionsSet.distanceThreshold > 0, "FlannMatcher Error: distanceThreshold is not positive");
+	ASSERT(parameters.generalOptionsSet.numberOfChecks > 0, "FlannMatcher Error: number of checks is not positive");
+	ASSERT(parameters.generalOptionsSet.epsilon >= 0, "FlannMatcher Error: epsilon is negative");
+	if (parameters.generalOptionsSet.matcherMethod == KD_TREE_SEARCH)
+		{
+		ASSERT(parameters.kdTreeSearchOptionsSet.numberOfTrees > 0, "FlannMatcher Error: kdTreeSearchOptionsSet.numberOfTrees is not positive");
+		}
+	else if (parameters.generalOptionsSet.matcherMethod == K_MEANS_CLUSTERING)
+		{
+		ASSERT(parameters.kMeansClusteringOptionsSet.branching > 0, "FlannMatcher Error: kMeansClusteringOptionsSet.branching is not positive");
+		ASSERT(parameters.kMeansClusteringOptionsSet.iterations > 0, "FlannMatcher Error: kMeansClusteringOptionsSet.iterations is not positive");
+		ASSERT(parameters.kMeansClusteringOptionsSet.convertibleBoundIndex > 0, "FlannMatcher Error: kMeansClusteringOptionsSet.convertibleBoundIndex is not positive");
+		}
+	else if (parameters.generalOptionsSet.matcherMethod == AUTOTUNED_SEARCH)
+		{
+		ASSERT(parameters.autotunedOptionsSet.targetPrecision > 0, "FlannMatcher Error: autotunedOptionsSet.targetPrecision is not positive");
+		ASSERT(parameters.autotunedOptionsSet.buildWeight > 0, "FlannMatcher Error: autotunedOptionsSet.buildWeight is not positive");
+		ASSERT(parameters.autotunedOptionsSet.memoryWeight >= 0, "FlannMatcher Error: autotunedOptionsSet.memoryWeight is negative");
+		ASSERT(parameters.autotunedOptionsSet.sampleFraction > 0, "FlannMatcher Error: autotunedOptionsSet.sampleFraction is not positive");
+		}
+	else if (parameters.generalOptionsSet.matcherMethod == HIERARCHICAL_CLUSTERING)
+		{
+		ASSERT(parameters.hierarchicalClusteringOptionsSet.numberOfTrees > 0, "FlannMatcher Error: hierarchicalClusteringOptionsSet.numberOfTrees is not positive");
+		ASSERT(parameters.hierarchicalClusteringOptionsSet.branching > 0, "FlannMatcher Error: hierarchicalClusteringOptionsSet.branching is not positive");
+		ASSERT(parameters.hierarchicalClusteringOptionsSet.leafSize > 0, "FlannMatcher Error: hierarchicalClusteringOptionsSet.leafSize is not positive");
+		}
+	else if (parameters.generalOptionsSet.matcherMethod == LOCALITY_SENSITIVE_HASHING)
+		{
+		ASSERT(parameters.localitySensitiveHashingOptionsSet.tableNumber >= 0, "FlannMatcher Error: localitySensitiveHashingOptionsSet.tableNumber is negative");
+		ASSERT(parameters.localitySensitiveHashingOptionsSet.keySize >= 0, "FlannMatcher Error: localitySensitiveHashingOptionsSet.keySize is negative");
+		ASSERT(parameters.localitySensitiveHashingOptionsSet.multiProbeLevel >= 0, "FlannMatcher Error: localitySensitiveHashingOptionsSet.multiProbeLevel is negative");
+		}
+	else if (parameters.generalOptionsSet.matcherMethod == COMPOSITE_SEARCH)
+		{
+		ASSERT(parameters.compositeSearchOptionsSet.numberOfTrees > 0, "FlannMatcher Error: compositeSearchOptionsSet.numberOfTrees is not positive");
+		ASSERT(parameters.compositeSearchOptionsSet.branching > 0, "FlannMatcher Error: compositeSearchOptionsSet.branching is not positive");
+		ASSERT(parameters.compositeSearchOptionsSet.iterations > 0, "FlannMatcher Error: compositeSearchOptionsSet.iterations is not positive");
+		ASSERT(parameters.compositeSearchOptionsSet.convertibleBoundIndex > 0, "FlannMatcher Error: compositeSearchOptionsSet.convertibleBoundIndex is not positive");
+		}
 	}
 
 void FlannMatcher::ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix)
@@ -310,9 +352,128 @@ void FlannMatcher::Configure(const YAML::Node& configurationNode)
 	std::string nodeName = configurationNode["Name"].as<std::string>();
 	if ( nodeName == "GeneralParameters")
 		{
-		YAMLCPP_DFN_ASSIGN(distanceThreshold, float, configurationNode, "DistanceThreshold");
+		YAMLCPP_DFN_ASSIGN(generalOptionsSet.distanceThreshold, float, configurationNode, "DistanceThreshold");
+		YAMLCPP_DFN_ASSIGN(generalOptionsSet.numberOfChecks, int, configurationNode, "NumberOfChecks");
+		YAMLCPP_DFN_ASSIGN(generalOptionsSet.epsilon, float, configurationNode, "Epsilon");
+		YAMLCPP_DFN_ASSIGN(generalOptionsSet.sortedSearch, bool, configurationNode, "SortedSearch");
+		YAMLCPP_DFN_ASSIGN_WITH_FUNCTION(generalOptionsSet.matcherMethod, std::string, configurationNode, "MatcherMethod", ConvertToMatcherMethod);
+		}
+	else if (nodeName == "KdTreeSearchParameters")
+		{
+		YAMLCPP_DFN_ASSIGN(kdTreeSearchOptionsSet.numberOfTrees, int, configurationNode, "NumberOfTrees");
+		}
+	else if (nodeName == "KMeansClusteringParameters")
+		{
+		YAMLCPP_DFN_ASSIGN(kMeansClusteringOptionsSet.branching, int, configurationNode, "Branching");
+		YAMLCPP_DFN_ASSIGN(kMeansClusteringOptionsSet.iterations, int, configurationNode, "Iterations");
+		YAMLCPP_DFN_ASSIGN_WITH_FUNCTION(kMeansClusteringOptionsSet.centersInitialization, std::string, configurationNode, "CentersInitialization", ConvertToCenterInitializationMethod);
+		YAMLCPP_DFN_ASSIGN(kMeansClusteringOptionsSet.convertibleBoundIndex, float, configurationNode, "ConvertibleBoundIndex");
+		}
+	else if (nodeName == "AutotunedSearchParameters")
+		{
+		YAMLCPP_DFN_ASSIGN(autotunedOptionsSet.targetPrecision, float, configurationNode, "TargetPrecision");
+		YAMLCPP_DFN_ASSIGN(autotunedOptionsSet.buildWeight, float, configurationNode, "BuildWeight");
+		YAMLCPP_DFN_ASSIGN(autotunedOptionsSet.memoryWeight, float, configurationNode, "MemoryWeight");
+		YAMLCPP_DFN_ASSIGN(autotunedOptionsSet.sampleFraction, float, configurationNode, "SampleFraction");
+		}
+	else if (nodeName == "HierarchicalClusteringParameters")
+		{
+		YAMLCPP_DFN_ASSIGN(hierarchicalClusteringOptionsSet.branching, int, configurationNode, "Branching");
+		YAMLCPP_DFN_ASSIGN(hierarchicalClusteringOptionsSet.numberOfTrees, int, configurationNode, "NumberOfTrees");
+		YAMLCPP_DFN_ASSIGN_WITH_FUNCTION(hierarchicalClusteringOptionsSet.centersInitialization, std::string, configurationNode, "CentersInitialization", ConvertToCenterInitializationMethod);
+		YAMLCPP_DFN_ASSIGN(hierarchicalClusteringOptionsSet.leafSize, int, configurationNode, "LeafSize");
+		}
+	else if (nodeName == "LocalitySensitiveHashingParameters")
+		{
+		YAMLCPP_DFN_ASSIGN(localitySensitiveHashingOptionsSet.tableNumber, int, configurationNode, "TableNumber");
+		YAMLCPP_DFN_ASSIGN(localitySensitiveHashingOptionsSet.keySize, int, configurationNode, "KeySize");
+		YAMLCPP_DFN_ASSIGN(localitySensitiveHashingOptionsSet.multiProbeLevel, int, configurationNode, "MultiProbeLevel");
+		}
+	else if (nodeName == "CompositeSearch")
+		{
+		YAMLCPP_DFN_ASSIGN(compositeSearchOptionsSet.numberOfTrees, int, configurationNode, "NumberOfTrees");
+		YAMLCPP_DFN_ASSIGN(compositeSearchOptionsSet.branching, int, configurationNode, "Branching");
+		YAMLCPP_DFN_ASSIGN(compositeSearchOptionsSet.iterations, int, configurationNode, "Iterations");
+		YAMLCPP_DFN_ASSIGN_WITH_FUNCTION(compositeSearchOptionsSet.centersInitialization, std::string, configurationNode, "CentersInitialization", ConvertToCenterInitializationMethod);
+		YAMLCPP_DFN_ASSIGN(compositeSearchOptionsSet.convertibleBoundIndex, float, configurationNode, "ConvertibleBoundIndex");
 		}
 	//Ignore everything else
+	}
+
+FlannMatcher::MatcherMethod FlannMatcher::ConvertToMatcherMethod(std::string matcherMethod)
+	{
+	if (matcherMethod == "KdTreeSearch" || matcherMethod == "0")
+		{
+		return KD_TREE_SEARCH;
+		}
+	else if (matcherMethod == "KMeansClustering" || matcherMethod == "1")
+		{
+		return K_MEANS_CLUSTERING;
+		}
+	else if (matcherMethod == "AutotunedSearch" || matcherMethod == "2")
+		{
+		return AUTOTUNED_SEARCH;
+		}
+	else if (matcherMethod == "HierarchichalClustering" || matcherMethod == "3")
+		{
+		return HIERARCHICAL_CLUSTERING;
+		}
+	else if (matcherMethod == "LocalitySensitiveHashing" || matcherMethod == "4")
+		{
+		return LOCALITY_SENSITIVE_HASHING;
+		}
+	else if (matcherMethod == "CompositeSearch" || matcherMethod == "5")
+		{	
+		return COMPOSITE_SEARCH;
+		}
+	else if (matcherMethod == "LinearSearch" || matcherMethod == "6")
+		{
+		return LINEAR_SEARCH;
+		}
+	else
+		{
+		std::string errorString = "FlannMatcher ConfigurationError: matcher method has to be one of ";
+		errorString += "{KdTreeSearch, KMeansClustering, AutotunedSearch, HierarchichalClustering, LocalitySensitiveHashing, CompositeSearch, or LinearSearch}";
+		ASSERT(false, errorString);
+		}
+	}
+
+FlannMatcher::CenterInitializationMethod FlannMatcher::ConvertToCenterInitializationMethod(std::string centerInitializationMethod)
+	{
+	if (centerInitializationMethod == "FlannRandomCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::FLANN_CENTERS_RANDOM;
+		}
+	else if (centerInitializationMethod == "FlannGonzalesCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::FLANN_CENTERS_GONZALES ;
+		}
+	else if (centerInitializationMethod == "FlannKmeanCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::FLANN_CENTERS_KMEANSPP ;
+		}
+	else if (centerInitializationMethod == "FlannGroupwiseCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::FLANN_CENTERS_GROUPWISE;
+		}
+	else if (centerInitializationMethod == "RandomCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::CENTERS_RANDOM;
+		}
+	else if (centerInitializationMethod == "GonzalesCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::CENTERS_GONZALES;
+		}
+	else if (centerInitializationMethod == "KmeansCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::CENTERS_KMEANSPP;
+		}
+	else
+		{
+		std::string errorString = "FlannMatcher ConfigurationError: center initialization method has to be one of ";
+		errorString += "{FlannRandomCenters, FlannGonzalesCenters, FlannKmeanCenters, FlannGroupwiseCenters, RandomCenters, GonzalesCenters, or KmeansCenters}";
+		ASSERT(false, errorString);
+		}
 	}
 
 }
