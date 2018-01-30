@@ -40,6 +40,15 @@ target_link_libraries(
 	mock cdff_logger cdff_types flann_matcher  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
 )
 add_test(FlannMatcherTest FlannMatcherTest)
+add_executable(
+    TriangulationTest
+    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
+)
+target_link_libraries(
+	TriangulationTest
+	mock cdff_logger cdff_types triangulation  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+)
+add_test(TriangulationTest TriangulationTest)
 
 add_executable(
     HarrisDetector3DTest
