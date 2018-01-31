@@ -154,6 +154,13 @@ function clean_function {
 	echo "$1 cleanup done."
 }
 
+function build_all_function {
+  for i in "${!infuse_dependencies_map[@]}"
+  do
+    InstallersToRUN+=($i)
+  done
+}
+
 ###### MAIN PROGRAMM
 find_installers
 
@@ -188,6 +195,9 @@ while getopts ":b:i:p:s:c" opt; do
       ;;
     esac
 done
+if [ $OPTIND -eq 1 ]; then
+  build_all_function
+fi
 shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 
