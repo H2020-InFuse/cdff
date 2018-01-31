@@ -12,5 +12,5 @@ The scrip downloads a binary from https://download.tuxfamily.org/taste/ASN1SCC/ 
 
 ## Fetching latest C code
 Run FetcherScript.sh to get latest C generated build files from master. 
-* note : This will override your /Common/Types/C folder. 
+* note : This will overwrite(replace) your /Common/Types/C folder. 
 
