@@ -35,6 +35,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
+#include <Helpers/ParametersListHelper.hpp>
 
 
 namespace dfn_ci {
@@ -92,6 +93,7 @@ namespace dfn_ci {
 			GaussianBlurOptionsSet gaussianBlurParameters;
 			};
 
+		Helpers::ParametersListHelper parametersHelper;
 		HarryOptionsSet parameters;
 		static const HarryOptionsSet DEFAULT_PARAMETERS;
 

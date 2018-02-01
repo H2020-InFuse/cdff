@@ -41,6 +41,7 @@
 #include <yaml-cpp/yaml.h>
 #include <SupportTypes.hpp>
 #include "opencv2/calib3d.hpp"
+#include <Helpers/ParametersListHelper.hpp>
 
 namespace dfn_ci {
 

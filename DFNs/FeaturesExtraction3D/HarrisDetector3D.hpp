@@ -38,6 +38,7 @@
 #include <string>
 #include <pcl/keypoints/harris_3d.h>
 #include <yaml-cpp/yaml.h>
+#include <Helpers/ParametersListHelper.hpp>
 
 
 namespace dfn_ci {
@@ -72,7 +73,16 @@ namespace dfn_ci {
 	 */	
 	private:
 		
+		Helpers::ParametersListHelper parametersHelper;
+
 		typedef pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::ResponseMethod HarrisMethod;
+		class HarrisMethodHelper : public Helpers::ParameterHelper<HarrisMethod, std::string>
+			{
+			public:
+				HarrisMethodHelper(const std::string& parameterName, HarrisMethod& boundVariable, const HarrisMethod& defaultValue);
+			private:
+				HarrisMethod Convert(const std::string& value);
+			};
 
 		struct HarryOptionsSet
 			{
@@ -89,12 +99,9 @@ namespace dfn_ci {
 		static const HarryOptionsSet DEFAULT_PARAMETERS;
 
 		cv::Mat ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
-		HarrisMethod ConvertToMethod(std::string method);
 
 		void ValidateParameters();
 		void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
-
-		void Configure(const YAML::Node& configurationNode);
     };
 }
 #endif

@@ -36,6 +36,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 #include "opencv2/features2d/features2d.hpp"
+#include <Helpers/ParametersListHelper.hpp>
 
 
 namespace dfn_ci {
@@ -71,6 +72,13 @@ namespace dfn_ci {
 	private:
 
 		typedef cvflann::flann_centers_init_t CenterInitializationMethod;
+		class CenterInitializationMethodHelper : public Helpers::ParameterHelper<CenterInitializationMethod, std::string>
+			{
+			public:
+				CenterInitializationMethodHelper(const std::string& parameterName, CenterInitializationMethod& boundVariable, const CenterInitializationMethod& defaultValue);
+			private:
+				CenterInitializationMethod Convert(const std::string& value);
+			};		
 
 		enum MatcherMethod
 			{
@@ -81,6 +89,13 @@ namespace dfn_ci {
 			LOCALITY_SENSITIVE_HASHING,	
 			COMPOSITE_SEARCH,
 			LINEAR_SEARCH
+			};
+		class MatcherMethodHelper : public Helpers::ParameterHelper<MatcherMethod, std::string>
+			{
+			public:
+				MatcherMethodHelper(const std::string& parameterName, MatcherMethod& boundVariable, const MatcherMethod& defaultValue);
+			private:
+				MatcherMethod Convert(const std::string& value);
 			};
 
 		struct GeneralOptionsSet
@@ -148,6 +163,7 @@ namespace dfn_ci {
 			CompositeSearchOptionsSet compositeSearchOptionsSet;
 			};
 
+		Helpers::ParametersListHelper parametersHelper;
 		FlannMatcherOptionsSet parameters;
 		static const FlannMatcherOptionsSet DEFAULT_PARAMETERS;
 
@@ -157,10 +173,6 @@ namespace dfn_ci {
 
 		void ValidateParameters();
 		void ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix);
-
-		void Configure(const YAML::Node& configurationNode);
-		MatcherMethod ConvertToMatcherMethod(std::string matcherMethod);
-		CenterInitializationMethod ConvertToCenterInitializationMethod(std::string centerInitializationMethod);
     };
 }
 #endif

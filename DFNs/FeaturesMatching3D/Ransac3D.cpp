@@ -61,12 +61,12 @@ namespace dfn_ci {
  */
 Ransac3D::Ransac3D()
 	{
-	parameters.similarityThreshold = DEFAULT_PARAMETERS.similarityThreshold;
-	parameters.inlierFraction = DEFAULT_PARAMETERS.inlierFraction;
-	parameters.correspondenceRandomness = DEFAULT_PARAMETERS.correspondenceRandomness;
-	parameters.numberOfSamples = DEFAULT_PARAMETERS.numberOfSamples;
-	parameters.maximumIterations = DEFAULT_PARAMETERS.maximumIterations;
-	parameters.maxCorrespondenceDistance = DEFAULT_PARAMETERS.maxCorrespondenceDistance;
+	parametersHelper.AddParameter<float>("GeneralParameters", "SimilarityThreshold", parameters.similarityThreshold, DEFAULT_PARAMETERS.similarityThreshold);
+	parametersHelper.AddParameter<float>("GeneralParameters", "InlierFraction", parameters.inlierFraction, DEFAULT_PARAMETERS.inlierFraction);
+	parametersHelper.AddParameter<int>("GeneralParameters", "CorrespondenceRandomness", parameters.correspondenceRandomness, DEFAULT_PARAMETERS.correspondenceRandomness);
+	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfSamples", parameters.numberOfSamples, DEFAULT_PARAMETERS.numberOfSamples);
+	parametersHelper.AddParameter<int>("GeneralParameters", "MaximumIterations", parameters.maximumIterations, DEFAULT_PARAMETERS.maximumIterations);
+	parametersHelper.AddParameter<float>("GeneralParameters", "MaxCorrespondenceDistance", parameters.maxCorrespondenceDistance, DEFAULT_PARAMETERS.maxCorrespondenceDistance);
 
 	configurationFilePath = "";
 	}
@@ -78,19 +78,8 @@ Ransac3D::~Ransac3D()
 
 void Ransac3D::configure()
 	{
-	try
-		{
-		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
-		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
-			{
-			YAML::Node configurationNode = configuration[configuationIndex];
-			Configure(configurationNode);
-			}
-		} 
-	catch(YAML::Exception& e) 
-		{
-    		ASSERT(false, e.what());
-		}
+	parametersHelper.ReadFile(configurationFilePath);
+	ValidateParameters();
 	}
 
 
@@ -208,22 +197,6 @@ void Ransac3D::ValidateCloud(Converters::SupportTypes::PointCloudWithFeatures cl
 			ASSERT(feature.histogram[componentIndex] == 0, "Ransac 3D Error, Feature Cloud contains an invalid feature, probably it was a conversion error");
 			}
 		}
-	}
-
-
-void Ransac3D::Configure(const YAML::Node& configurationNode)
-	{
-	std::string nodeName = configurationNode["Name"].as<std::string>();
-	if ( nodeName == "GeneralParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(similarityThreshold, float, configurationNode, "SimilarityThreshold");
-		YAMLCPP_DFN_ASSIGN(inlierFraction, float, configurationNode, "InlierFraction");
-		YAMLCPP_DFN_ASSIGN(correspondenceRandomness, int, configurationNode, "CorrespondenceRandomness");
-		YAMLCPP_DFN_ASSIGN(numberOfSamples, int, configurationNode, "NumberOfSamples");
-		YAMLCPP_DFN_ASSIGN(maximumIterations, int, configurationNode, "MaximumIterations");
-		YAMLCPP_DFN_ASSIGN(maxCorrespondenceDistance, float, configurationNode, "MaxCorrespondenceDistance");
-		}
-	//Ignore everything else
 	}
 
 

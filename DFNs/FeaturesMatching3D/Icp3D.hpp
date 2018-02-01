@@ -39,6 +39,7 @@
 #include <pcl/keypoints/harris_3d.h>
 #include <yaml-cpp/yaml.h>
 #include <SupportTypes.hpp>
+#include <Helpers/ParametersListHelper.hpp>
 
 namespace dfn_ci {
 
@@ -79,6 +80,7 @@ namespace dfn_ci {
 			double euclideanFitnessEpsilon;
 			};
 
+		Helpers::ParametersListHelper parametersHelper;
 		IcpOptionsSet parameters;
 		static const IcpOptionsSet DEFAULT_PARAMETERS;
 
@@ -88,8 +90,6 @@ namespace dfn_ci {
 		void ValidateParameters();
 		void ValidateInputs(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
 		void ValidateCloud(Converters::SupportTypes::PointCloudWithFeatures cloud);
-		
-		void Configure(const YAML::Node& configurationNode);
     };
 }
 #endif

@@ -62,10 +62,10 @@ namespace dfn_ci {
  */
 Icp3D::Icp3D()
 	{
-	parameters.maxCorrespondenceDistance = DEFAULT_PARAMETERS.maxCorrespondenceDistance;
-	parameters.maximumIterations = DEFAULT_PARAMETERS.maximumIterations;
-	parameters.transformationEpsilon = DEFAULT_PARAMETERS.transformationEpsilon;
-	parameters.euclideanFitnessEpsilon = DEFAULT_PARAMETERS.euclideanFitnessEpsilon;
+	parametersHelper.AddParameter<double>("GeneralParameters", "MaxCorrespondenceDistance", parameters.maxCorrespondenceDistance, DEFAULT_PARAMETERS.maxCorrespondenceDistance);
+	parametersHelper.AddParameter<int>("GeneralParameters", "MaximumIterations", parameters.maximumIterations, DEFAULT_PARAMETERS.maximumIterations);
+	parametersHelper.AddParameter<double>("GeneralParameters", "TransformationEpsilon", parameters.transformationEpsilon, DEFAULT_PARAMETERS.transformationEpsilon);
+	parametersHelper.AddParameter<double>("GeneralParameters", "EuclideanFitnessEpsilon", parameters.euclideanFitnessEpsilon, DEFAULT_PARAMETERS.euclideanFitnessEpsilon);
 
 	configurationFilePath = "";
 	}
@@ -77,19 +77,8 @@ Icp3D::~Icp3D()
 
 void Icp3D::configure()
 	{
-	try
-		{
-		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
-		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
-			{
-			YAML::Node configurationNode = configuration[configuationIndex];
-			Configure(configurationNode);
-			}
-		} 
-	catch(YAML::Exception& e) 
-		{
-    		ASSERT(false, e.what());
-		}
+	parametersHelper.ReadFile(configurationFilePath);
+	ValidateParameters();
 	}
 
 
@@ -195,20 +184,6 @@ void Icp3D::ValidateCloud(Converters::SupportTypes::PointCloudWithFeatures cloud
 			ASSERT(feature.histogram[componentIndex] == 0, "Icp3D Error, Feature Cloud contains an invalid feature, probably it was a conversion error");
 			}
 		}
-	}
-
-
-void Icp3D::Configure(const YAML::Node& configurationNode)
-	{
-	std::string nodeName = configurationNode["Name"].as<std::string>();
-	if ( nodeName == "GeneralParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(maxCorrespondenceDistance, double, configurationNode, "MaxCorrespondenceDistance");
-		YAMLCPP_DFN_ASSIGN(maximumIterations, int, configurationNode, "MaximumIterations");
-		YAMLCPP_DFN_ASSIGN(transformationEpsilon, double, configurationNode, "TransformationEpsilon");
-		YAMLCPP_DFN_ASSIGN(euclideanFitnessEpsilon, double, configurationNode, "EuclideanFitnessEpsilon");
-		}
-	//Ignore everything else
 	}
 
 

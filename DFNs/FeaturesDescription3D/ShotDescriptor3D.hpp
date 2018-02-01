@@ -39,6 +39,7 @@
 #include <pcl/features/shot.h>
 #include <boost/make_shared.hpp>
 #include <yaml-cpp/yaml.h>
+#include <Helpers/ParametersListHelper.hpp>
 
 
 namespace dfn_ci {
@@ -78,6 +79,13 @@ namespace dfn_ci {
 			POSITIONS_OUTPUT,
 			REFERENCES_OUTPUT
 			};
+		class OutputFormatHelper : public Helpers::ParameterHelper<OutputFormat, std::string>
+			{
+			public:
+				OutputFormatHelper(const std::string& parameterName, OutputFormat& boundVariable, const OutputFormat& defaultValue);
+			private:
+				OutputFormat Convert(const std::string& value);
+			};
 
 		struct BaseOptionsSet
 			{
@@ -100,6 +108,7 @@ namespace dfn_ci {
 			NormalEstimationOptionsSet normalEstimationOptions;
 			};
 
+		Helpers::ParametersListHelper parametersHelper;
 		ShotOptionsSet parameters;
 		static const ShotOptionsSet DEFAULT_PARAMETERS;
 
@@ -121,9 +130,6 @@ namespace dfn_ci {
 		void ValidateParameters();
 		void ValidateMandatoryInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, pcl::IndicesConstPtr indicesList);
 		bool IsNormalsCloudValid(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, pcl::PointCloud<pcl::Normal>::ConstPtr normalsCloud);
-
-		void Configure(const YAML::Node& configurationNode);
-		OutputFormat ConvertToOutputFormat(std::string outputFormat);
     };
 }
 #endif

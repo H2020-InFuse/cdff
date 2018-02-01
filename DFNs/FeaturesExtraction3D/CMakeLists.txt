@@ -9,5 +9,5 @@ add_library(
 )
 target_link_libraries(
     harris_detector_3d
-    feature_extraction_3d cdff_types yaml-cpp
+    feature_extraction_3d cdff_types yaml-cpp cdff_helpers
 )

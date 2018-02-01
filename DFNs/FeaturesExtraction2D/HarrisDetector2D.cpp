@@ -36,6 +36,7 @@
 #include <stdlib.h>
 #include <fstream>
 
+using namespace Helpers;
 using namespace Converters;
 using namespace Common;
 
@@ -52,16 +53,18 @@ using namespace FrameWrapper;
  */
 HarrisDetector2D::HarrisDetector2D()
 	{
-	parameters.generalParameters.apertureSize = DEFAULT_PARAMETERS.generalParameters.apertureSize;
-	parameters.generalParameters.blockSize = DEFAULT_PARAMETERS.generalParameters.blockSize;
-	parameters.generalParameters.parameterK = DEFAULT_PARAMETERS.generalParameters.parameterK;
-	parameters.generalParameters.detectionThreshold = DEFAULT_PARAMETERS.generalParameters.detectionThreshold;
-	parameters.generalParameters.useGaussianBlur = DEFAULT_PARAMETERS.generalParameters.useGaussianBlur;
+	parametersHelper.AddParameter<int>("GeneralParameters", "ApertureSize", parameters.generalParameters.apertureSize, DEFAULT_PARAMETERS.generalParameters.apertureSize);
+	parametersHelper.AddParameter<int>("GeneralParameters", "BlockSize", parameters.generalParameters.blockSize, DEFAULT_PARAMETERS.generalParameters.blockSize);
+	parametersHelper.AddParameter<float>("GeneralParameters", "ParameterK", parameters.generalParameters.parameterK, DEFAULT_PARAMETERS.generalParameters.parameterK);
+	parametersHelper.AddParameter<int>("GeneralParameters", "DetectionThreshold", parameters.generalParameters.detectionThreshold, DEFAULT_PARAMETERS.generalParameters.detectionThreshold);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "UseGaussianBlur", parameters.generalParameters.useGaussianBlur, DEFAULT_PARAMETERS.generalParameters.useGaussianBlur);
 
-	parameters.gaussianBlurParameters.kernelWidth = DEFAULT_PARAMETERS.gaussianBlurParameters.kernelWidth;
-	parameters.gaussianBlurParameters.kernelHeight = DEFAULT_PARAMETERS.gaussianBlurParameters.kernelHeight;
-	parameters.gaussianBlurParameters.widthStandardDeviation = DEFAULT_PARAMETERS.gaussianBlurParameters.widthStandardDeviation;
-	parameters.gaussianBlurParameters.heightStandardDeviation = DEFAULT_PARAMETERS.gaussianBlurParameters.heightStandardDeviation;
+	parametersHelper.AddParameter<int>("GaussianBlur", "KernelWidth", parameters.gaussianBlurParameters.kernelWidth, DEFAULT_PARAMETERS.gaussianBlurParameters.kernelWidth);
+	parametersHelper.AddParameter<int>("GaussianBlur", "KernelHeight", parameters.gaussianBlurParameters.kernelHeight, DEFAULT_PARAMETERS.gaussianBlurParameters.kernelHeight);
+	parametersHelper.AddParameter<float>(
+		"GaussianBlur", "WidthStandardDeviation", parameters.gaussianBlurParameters.widthStandardDeviation, DEFAULT_PARAMETERS.gaussianBlurParameters.widthStandardDeviation);
+	parametersHelper.AddParameter<float>(
+		"GaussianBlur", "HeightStandardDeviation", parameters.gaussianBlurParameters.heightStandardDeviation, DEFAULT_PARAMETERS.gaussianBlurParameters.heightStandardDeviation);
 
 	configurationFilePath = "";
 	}
@@ -73,23 +76,8 @@ HarrisDetector2D::~HarrisDetector2D()
 
 void HarrisDetector2D::configure()
 	{
-	try
-		{
-		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
-		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
-			{
-			YAML::Node configurationNode = configuration[configuationIndex];
-			Configure(configurationNode);
-			}
-		} 
-	catch(YAML::ParserException& e) 
-		{
-    		ASSERT(false, e.what() );
-		}
-	catch(YAML::RepresentationException& e)
-		{
-		ASSERT(false, e.what() );
-		}
+	parametersHelper.ReadFile(configurationFilePath);
+	ValidateParameters();
 	}
 
 
@@ -211,28 +199,6 @@ void HarrisDetector2D::ValidateInputs(cv::Mat inputImage)
 	{
 	ASSERT(inputImage.type() == CV_8UC3 || inputImage.type() == CV_8UC1, "HarrisDetector2D error: input image is not of type CV_8UC3 or CV_8UC1");
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "HarrisDetector2D error: input image is empty");
-	}
-
-
-void HarrisDetector2D::Configure(const YAML::Node& configurationNode)
-	{
-	std::string nodeName = configurationNode["Name"].as<std::string>();
-	if ( nodeName == "GeneralParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(generalParameters.apertureSize, int, configurationNode, "ApertureSize");
-		YAMLCPP_DFN_ASSIGN(generalParameters.blockSize, int, configurationNode, "BlockSize");
-		YAMLCPP_DFN_ASSIGN(generalParameters.parameterK, float, configurationNode, "ParameterK");
-		YAMLCPP_DFN_ASSIGN(generalParameters.detectionThreshold, int, configurationNode, "DetectionThreshold");
-		YAMLCPP_DFN_ASSIGN(generalParameters.useGaussianBlur, bool, configurationNode, "UseGaussianBlur");
-		}
-	else if (nodeName == "GaussianBlur")
-		{
-		YAMLCPP_DFN_ASSIGN(gaussianBlurParameters.kernelWidth, int, configurationNode, "KernelWidth");
-		YAMLCPP_DFN_ASSIGN(gaussianBlurParameters.kernelHeight, int, configurationNode, "KernelHeight");
-		YAMLCPP_DFN_ASSIGN(gaussianBlurParameters.widthStandardDeviation, float, configurationNode, "WidthStandardDeviation");
-		YAMLCPP_DFN_ASSIGN(gaussianBlurParameters.heightStandardDeviation, float, configurationNode, "HeightStandardDeviation");
-		}
-	//Ignore everything else
 	}
 
 }

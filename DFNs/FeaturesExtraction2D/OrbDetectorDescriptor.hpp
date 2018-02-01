@@ -36,6 +36,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 #include <opencv2/features2d.hpp>
+#include <Helpers/ParametersListHelper.hpp>
 
 namespace dfn_ci {
 
@@ -82,6 +83,7 @@ namespace dfn_ci {
 			int sizeOfBrightnessTestSet;
 			};
 
+		Helpers::ParametersListHelper parametersHelper;
 		OrbOptionsSet parameters;
 		static const OrbOptionsSet DEFAULT_PARAMETERS;
 
@@ -91,7 +93,6 @@ namespace dfn_ci {
 		void ValidateInputs(cv::Mat inputImage);
 
 		static int ConvertToScoreType(std::string scoreType);
-		void Configure(const YAML::Node& configurationNode);
     };
 }
 #endif

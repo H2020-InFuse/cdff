@@ -35,6 +35,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
+#include <Helpers/ParametersListHelper.hpp>
 
 
 namespace dfn_ci {
@@ -75,6 +76,7 @@ namespace dfn_ci {
 			double confidence; //probability between 0 and 1
 			};
 
+		Helpers::ParametersListHelper parametersHelper;
 		FundamentalMatrixRansacOptionsSet parameters;
 		static const FundamentalMatrixRansacOptionsSet DEFAULT_PARAMETERS;
 
@@ -84,8 +86,6 @@ namespace dfn_ci {
 
 		void ValidateParameters();
 		void ValidateInputs(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector);
-
-		void Configure(const YAML::Node& configurationNode);
     };
 }
 #endif

@@ -44,6 +44,8 @@ namespace dfn_ci {
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace CorrespondenceMap2DWrapper;
 
+
+
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions
@@ -52,39 +54,44 @@ using namespace CorrespondenceMap2DWrapper;
  */
 FlannMatcher::FlannMatcher()
 	{
-	parameters.generalOptionsSet.distanceThreshold = DEFAULT_PARAMETERS.generalOptionsSet.distanceThreshold;
-	parameters.generalOptionsSet.matcherMethod = DEFAULT_PARAMETERS.generalOptionsSet.matcherMethod;
+	#define ADD_PARAMETER(type, groupName, parameterName, groupVariable, parameterVariable) \
+		parametersHelper.AddParameter<type>(groupName, parameterName, parameters.groupVariable.parameterVariable, DEFAULT_PARAMETERS.groupVariable.parameterVariable); 
+	#define ADD_PARAMETER_WITH_HELPER(type, helperType, groupName, parameterName, groupVariable, parameterVariable) \
+		parametersHelper.AddParameter<type, helperType>(groupName, parameterName, parameters.groupVariable.parameterVariable, DEFAULT_PARAMETERS.groupVariable.parameterVariable); 
 
-	parameters.generalOptionsSet.numberOfChecks = DEFAULT_PARAMETERS.generalOptionsSet.numberOfChecks;
-	parameters.generalOptionsSet.epsilon = DEFAULT_PARAMETERS.generalOptionsSet.epsilon;
-	parameters.generalOptionsSet.sortedSearch = DEFAULT_PARAMETERS.generalOptionsSet.sortedSearch;
+	ADD_PARAMETER(float, "GeneralParameters", "DistanceThreshold", generalOptionsSet, distanceThreshold);
+	ADD_PARAMETER_WITH_HELPER(MatcherMethod, MatcherMethodHelper, "GeneralParameters", "MatcherMethod", generalOptionsSet, matcherMethod);
+	ADD_PARAMETER(int, "GeneralParameters", "NumberOfChecks", generalOptionsSet, numberOfChecks);
+	ADD_PARAMETER(float, "GeneralParameters", "Epsilon", generalOptionsSet, epsilon);
+	ADD_PARAMETER(bool, "GeneralParameters", "SortedSearch", generalOptionsSet, sortedSearch);
 
-	parameters.kdTreeSearchOptionsSet.numberOfTrees = DEFAULT_PARAMETERS.kdTreeSearchOptionsSet.numberOfTrees;
+	ADD_PARAMETER(int, "KdTreeSearchParameters", "NumberOfTrees", kdTreeSearchOptionsSet, numberOfTrees);
 
-	parameters.kMeansClusteringOptionsSet.branching = DEFAULT_PARAMETERS.kMeansClusteringOptionsSet.branching;
-	parameters.kMeansClusteringOptionsSet.iterations = DEFAULT_PARAMETERS.kMeansClusteringOptionsSet.iterations;
-	parameters.kMeansClusteringOptionsSet.centersInitialization = DEFAULT_PARAMETERS.kMeansClusteringOptionsSet.centersInitialization;
-	parameters.kMeansClusteringOptionsSet.convertibleBoundIndex = DEFAULT_PARAMETERS.kMeansClusteringOptionsSet.convertibleBoundIndex;
+	ADD_PARAMETER(int, "KMeansClusteringParameters", "Branching", kMeansClusteringOptionsSet, branching);
+	ADD_PARAMETER(int, "KMeansClusteringParameters", "Iterations", kMeansClusteringOptionsSet, iterations);
+	ADD_PARAMETER_WITH_HELPER(CenterInitializationMethod, CenterInitializationMethodHelper, "KMeansClusteringParameters", "CentersInitialization", kMeansClusteringOptionsSet, centersInitialization);
+	ADD_PARAMETER(float, "KMeansClusteringParameters", "ConvertibleBoundIndex", kMeansClusteringOptionsSet, convertibleBoundIndex);
 
-	parameters.autotunedOptionsSet.targetPrecision = DEFAULT_PARAMETERS.autotunedOptionsSet.targetPrecision;
-	parameters.autotunedOptionsSet.buildWeight = DEFAULT_PARAMETERS.autotunedOptionsSet.buildWeight;
-	parameters.autotunedOptionsSet.memoryWeight = DEFAULT_PARAMETERS.autotunedOptionsSet.memoryWeight;
-	parameters.autotunedOptionsSet.sampleFraction = DEFAULT_PARAMETERS.autotunedOptionsSet.sampleFraction;
+	ADD_PARAMETER(float, "AutotunedSearchParameters", "TargetPrecision", autotunedOptionsSet, targetPrecision);
+	ADD_PARAMETER(float, "AutotunedSearchParameters", "BuildWeight", autotunedOptionsSet, buildWeight);
+	ADD_PARAMETER(float, "AutotunedSearchParameters", "MemoryWeight", autotunedOptionsSet, memoryWeight);
+	ADD_PARAMETER(float, "AutotunedSearchParameters", "SampleFraction", autotunedOptionsSet, sampleFraction);
 
-	parameters.hierarchicalClusteringOptionsSet.branching = DEFAULT_PARAMETERS.hierarchicalClusteringOptionsSet.branching;
-	parameters.hierarchicalClusteringOptionsSet.centersInitialization = DEFAULT_PARAMETERS.hierarchicalClusteringOptionsSet.centersInitialization;
-	parameters.hierarchicalClusteringOptionsSet.numberOfTrees = DEFAULT_PARAMETERS.hierarchicalClusteringOptionsSet.numberOfTrees;
-	parameters.hierarchicalClusteringOptionsSet.leafSize = DEFAULT_PARAMETERS.hierarchicalClusteringOptionsSet.leafSize;
+	ADD_PARAMETER(int, "HierarchicalClusteringParameters", "Branching", hierarchicalClusteringOptionsSet, branching);
+	ADD_PARAMETER_WITH_HELPER(
+		CenterInitializationMethod, CenterInitializationMethodHelper, "HierarchicalClusteringParameters", "CentersInitialization", hierarchicalClusteringOptionsSet, centersInitialization);
+	ADD_PARAMETER(int, "HierarchicalClusteringParameters", "NumberOfTrees", hierarchicalClusteringOptionsSet, numberOfTrees);
+	ADD_PARAMETER(int, "HierarchicalClusteringParameters", "LeafSize", hierarchicalClusteringOptionsSet, leafSize);
 
-	parameters.localitySensitiveHashingOptionsSet.tableNumber = DEFAULT_PARAMETERS.localitySensitiveHashingOptionsSet.tableNumber;
-	parameters.localitySensitiveHashingOptionsSet.keySize = DEFAULT_PARAMETERS.localitySensitiveHashingOptionsSet.keySize;
-	parameters.localitySensitiveHashingOptionsSet.multiProbeLevel = DEFAULT_PARAMETERS.localitySensitiveHashingOptionsSet.multiProbeLevel;
+	ADD_PARAMETER(int, "LocalitySensitiveHashingParameters", "TableNumber", localitySensitiveHashingOptionsSet, tableNumber);
+	ADD_PARAMETER(int, "LocalitySensitiveHashingParameters", "KeySize", localitySensitiveHashingOptionsSet, keySize);
+	ADD_PARAMETER(int, "LocalitySensitiveHashingParameters", "MultiProbeLevel", localitySensitiveHashingOptionsSet, multiProbeLevel);
 
-	parameters.compositeSearchOptionsSet.branching = DEFAULT_PARAMETERS.compositeSearchOptionsSet.branching;
-	parameters.compositeSearchOptionsSet.iterations = DEFAULT_PARAMETERS.compositeSearchOptionsSet.iterations;
-	parameters.compositeSearchOptionsSet.centersInitialization = DEFAULT_PARAMETERS.compositeSearchOptionsSet.centersInitialization;
-	parameters.compositeSearchOptionsSet.convertibleBoundIndex = DEFAULT_PARAMETERS.compositeSearchOptionsSet.convertibleBoundIndex;
-	parameters.compositeSearchOptionsSet.numberOfTrees = DEFAULT_PARAMETERS.compositeSearchOptionsSet.numberOfTrees;
+	ADD_PARAMETER(int, "CompositeSearch", "Branching", compositeSearchOptionsSet, branching);
+	ADD_PARAMETER(int, "CompositeSearch", "Iterations", compositeSearchOptionsSet, iterations);
+	ADD_PARAMETER_WITH_HELPER(CenterInitializationMethod, CenterInitializationMethodHelper, "CompositeSearch", "CentersInitialization", compositeSearchOptionsSet, centersInitialization);
+	ADD_PARAMETER(float, "CompositeSearch", "ConvertibleBoundIndex", compositeSearchOptionsSet, convertibleBoundIndex);
+	ADD_PARAMETER(int, "CompositeSearch", "NumberOfTrees", compositeSearchOptionsSet, numberOfTrees);
 
 	configurationFilePath = "";
 	}
@@ -96,23 +103,8 @@ FlannMatcher::~FlannMatcher()
 
 void FlannMatcher::configure()
 	{
-	try
-		{
-		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
-		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
-			{
-			YAML::Node configurationNode = configuration[configuationIndex];
-			Configure(configurationNode);
-			}
-		} 
-	catch(YAML::ParserException& e) 
-		{
-    		ASSERT(false, e.what() );
-		}
-	catch(YAML::RepresentationException& e)
-		{
-		ASSERT(false, e.what() );
-		}
+	parametersHelper.ReadFile(configurationFilePath);
+	ValidateParameters();
 	}
 
 
@@ -127,6 +119,95 @@ void FlannMatcher::process()
 
 	std::vector< cv::DMatch > matchesMatrix = ComputeMatches(sourceDescriptorsSubmatrix, sinkDescriptorsSubmatrix);
 	outCorrespondenceMap = Convert(matchesMatrix, sourceFeaturesMatrix, sinkFeaturesMatrix);
+	}
+
+FlannMatcher::CenterInitializationMethodHelper::CenterInitializationMethodHelper
+	(const std::string& parameterName, CenterInitializationMethod& boundVariable, const CenterInitializationMethod& defaultValue) :
+	ParameterHelper(parameterName, boundVariable, defaultValue)
+	{
+
+	}
+
+FlannMatcher::CenterInitializationMethod FlannMatcher::CenterInitializationMethodHelper::Convert(const std::string& centerInitializationMethod)
+	{
+	if (centerInitializationMethod == "FlannRandomCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::FLANN_CENTERS_RANDOM;
+		}
+	else if (centerInitializationMethod == "FlannGonzalesCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::FLANN_CENTERS_GONZALES ;
+		}
+	else if (centerInitializationMethod == "FlannKmeanCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::FLANN_CENTERS_KMEANSPP ;
+		}
+	else if (centerInitializationMethod == "FlannGroupwiseCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::FLANN_CENTERS_GROUPWISE;
+		}
+	else if (centerInitializationMethod == "RandomCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::CENTERS_RANDOM;
+		}
+	else if (centerInitializationMethod == "GonzalesCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::CENTERS_GONZALES;
+		}
+	else if (centerInitializationMethod == "KmeansCenters" || centerInitializationMethod == "0")
+		{
+		return cvflann::CENTERS_KMEANSPP;
+		}
+	else
+		{
+		std::string errorString = "FlannMatcher ConfigurationError: center initialization method has to be one of ";
+		errorString += "{FlannRandomCenters, FlannGonzalesCenters, FlannKmeanCenters, FlannGroupwiseCenters, RandomCenters, GonzalesCenters, or KmeansCenters}";
+		ASSERT(false, errorString);
+		}
+	}
+
+FlannMatcher::MatcherMethodHelper::MatcherMethodHelper(const std::string& parameterName, MatcherMethod& boundVariable, const MatcherMethod& defaultValue) :
+	ParameterHelper(parameterName, boundVariable, defaultValue)
+	{
+
+	}
+
+FlannMatcher::MatcherMethod FlannMatcher::MatcherMethodHelper::Convert(const std::string& matcherMethod)
+	{
+	if (matcherMethod == "KdTreeSearch" || matcherMethod == "0")
+		{
+		return KD_TREE_SEARCH;
+		}
+	else if (matcherMethod == "KMeansClustering" || matcherMethod == "1")
+		{
+		return K_MEANS_CLUSTERING;
+		}
+	else if (matcherMethod == "AutotunedSearch" || matcherMethod == "2")
+		{
+		return AUTOTUNED_SEARCH;
+		}
+	else if (matcherMethod == "HierarchichalClustering" || matcherMethod == "3")
+		{
+		return HIERARCHICAL_CLUSTERING;
+		}
+	else if (matcherMethod == "LocalitySensitiveHashing" || matcherMethod == "4")
+		{
+		return LOCALITY_SENSITIVE_HASHING;
+		}
+	else if (matcherMethod == "CompositeSearch" || matcherMethod == "5")
+		{	
+		return COMPOSITE_SEARCH;
+		}
+	else if (matcherMethod == "LinearSearch" || matcherMethod == "6")
+		{
+		return LINEAR_SEARCH;
+		}
+	else
+		{
+		std::string errorString = "FlannMatcher ConfigurationError: matcher method has to be one of ";
+		errorString += "{KdTreeSearch, KMeansClustering, AutotunedSearch, HierarchichalClustering, LocalitySensitiveHashing, CompositeSearch, or LinearSearch}";
+		ASSERT(false, errorString);
+		}
 	}
 
 const FlannMatcher::FlannMatcherOptionsSet FlannMatcher::DEFAULT_PARAMETERS =
@@ -344,136 +425,6 @@ void FlannMatcher::ValidateParameters()
 void FlannMatcher::ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix)
 	{
 	ASSERT( sourceFeaturesMatrix.cols == sinkFeaturesMatrix.cols, "FlannMatcher Error: Input features vectors have different descriptors");
-	}
-
-
-void FlannMatcher::Configure(const YAML::Node& configurationNode)
-	{
-	std::string nodeName = configurationNode["Name"].as<std::string>();
-	if ( nodeName == "GeneralParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(generalOptionsSet.distanceThreshold, float, configurationNode, "DistanceThreshold");
-		YAMLCPP_DFN_ASSIGN(generalOptionsSet.numberOfChecks, int, configurationNode, "NumberOfChecks");
-		YAMLCPP_DFN_ASSIGN(generalOptionsSet.epsilon, float, configurationNode, "Epsilon");
-		YAMLCPP_DFN_ASSIGN(generalOptionsSet.sortedSearch, bool, configurationNode, "SortedSearch");
-		YAMLCPP_DFN_ASSIGN_WITH_FUNCTION(generalOptionsSet.matcherMethod, std::string, configurationNode, "MatcherMethod", ConvertToMatcherMethod);
-		}
-	else if (nodeName == "KdTreeSearchParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(kdTreeSearchOptionsSet.numberOfTrees, int, configurationNode, "NumberOfTrees");
-		}
-	else if (nodeName == "KMeansClusteringParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(kMeansClusteringOptionsSet.branching, int, configurationNode, "Branching");
-		YAMLCPP_DFN_ASSIGN(kMeansClusteringOptionsSet.iterations, int, configurationNode, "Iterations");
-		YAMLCPP_DFN_ASSIGN_WITH_FUNCTION(kMeansClusteringOptionsSet.centersInitialization, std::string, configurationNode, "CentersInitialization", ConvertToCenterInitializationMethod);
-		YAMLCPP_DFN_ASSIGN(kMeansClusteringOptionsSet.convertibleBoundIndex, float, configurationNode, "ConvertibleBoundIndex");
-		}
-	else if (nodeName == "AutotunedSearchParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(autotunedOptionsSet.targetPrecision, float, configurationNode, "TargetPrecision");
-		YAMLCPP_DFN_ASSIGN(autotunedOptionsSet.buildWeight, float, configurationNode, "BuildWeight");
-		YAMLCPP_DFN_ASSIGN(autotunedOptionsSet.memoryWeight, float, configurationNode, "MemoryWeight");
-		YAMLCPP_DFN_ASSIGN(autotunedOptionsSet.sampleFraction, float, configurationNode, "SampleFraction");
-		}
-	else if (nodeName == "HierarchicalClusteringParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(hierarchicalClusteringOptionsSet.branching, int, configurationNode, "Branching");
-		YAMLCPP_DFN_ASSIGN(hierarchicalClusteringOptionsSet.numberOfTrees, int, configurationNode, "NumberOfTrees");
-		YAMLCPP_DFN_ASSIGN_WITH_FUNCTION(hierarchicalClusteringOptionsSet.centersInitialization, std::string, configurationNode, "CentersInitialization", ConvertToCenterInitializationMethod);
-		YAMLCPP_DFN_ASSIGN(hierarchicalClusteringOptionsSet.leafSize, int, configurationNode, "LeafSize");
-		}
-	else if (nodeName == "LocalitySensitiveHashingParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(localitySensitiveHashingOptionsSet.tableNumber, int, configurationNode, "TableNumber");
-		YAMLCPP_DFN_ASSIGN(localitySensitiveHashingOptionsSet.keySize, int, configurationNode, "KeySize");
-		YAMLCPP_DFN_ASSIGN(localitySensitiveHashingOptionsSet.multiProbeLevel, int, configurationNode, "MultiProbeLevel");
-		}
-	else if (nodeName == "CompositeSearch")
-		{
-		YAMLCPP_DFN_ASSIGN(compositeSearchOptionsSet.numberOfTrees, int, configurationNode, "NumberOfTrees");
-		YAMLCPP_DFN_ASSIGN(compositeSearchOptionsSet.branching, int, configurationNode, "Branching");
-		YAMLCPP_DFN_ASSIGN(compositeSearchOptionsSet.iterations, int, configurationNode, "Iterations");
-		YAMLCPP_DFN_ASSIGN_WITH_FUNCTION(compositeSearchOptionsSet.centersInitialization, std::string, configurationNode, "CentersInitialization", ConvertToCenterInitializationMethod);
-		YAMLCPP_DFN_ASSIGN(compositeSearchOptionsSet.convertibleBoundIndex, float, configurationNode, "ConvertibleBoundIndex");
-		}
-	//Ignore everything else
-	}
-
-FlannMatcher::MatcherMethod FlannMatcher::ConvertToMatcherMethod(std::string matcherMethod)
-	{
-	if (matcherMethod == "KdTreeSearch" || matcherMethod == "0")
-		{
-		return KD_TREE_SEARCH;
-		}
-	else if (matcherMethod == "KMeansClustering" || matcherMethod == "1")
-		{
-		return K_MEANS_CLUSTERING;
-		}
-	else if (matcherMethod == "AutotunedSearch" || matcherMethod == "2")
-		{
-		return AUTOTUNED_SEARCH;
-		}
-	else if (matcherMethod == "HierarchichalClustering" || matcherMethod == "3")
-		{
-		return HIERARCHICAL_CLUSTERING;
-		}
-	else if (matcherMethod == "LocalitySensitiveHashing" || matcherMethod == "4")
-		{
-		return LOCALITY_SENSITIVE_HASHING;
-		}
-	else if (matcherMethod == "CompositeSearch" || matcherMethod == "5")
-		{	
-		return COMPOSITE_SEARCH;
-		}
-	else if (matcherMethod == "LinearSearch" || matcherMethod == "6")
-		{
-		return LINEAR_SEARCH;
-		}
-	else
-		{
-		std::string errorString = "FlannMatcher ConfigurationError: matcher method has to be one of ";
-		errorString += "{KdTreeSearch, KMeansClustering, AutotunedSearch, HierarchichalClustering, LocalitySensitiveHashing, CompositeSearch, or LinearSearch}";
-		ASSERT(false, errorString);
-		}
-	}
-
-FlannMatcher::CenterInitializationMethod FlannMatcher::ConvertToCenterInitializationMethod(std::string centerInitializationMethod)
-	{
-	if (centerInitializationMethod == "FlannRandomCenters" || centerInitializationMethod == "0")
-		{
-		return cvflann::FLANN_CENTERS_RANDOM;
-		}
-	else if (centerInitializationMethod == "FlannGonzalesCenters" || centerInitializationMethod == "0")
-		{
-		return cvflann::FLANN_CENTERS_GONZALES ;
-		}
-	else if (centerInitializationMethod == "FlannKmeanCenters" || centerInitializationMethod == "0")
-		{
-		return cvflann::FLANN_CENTERS_KMEANSPP ;
-		}
-	else if (centerInitializationMethod == "FlannGroupwiseCenters" || centerInitializationMethod == "0")
-		{
-		return cvflann::FLANN_CENTERS_GROUPWISE;
-		}
-	else if (centerInitializationMethod == "RandomCenters" || centerInitializationMethod == "0")
-		{
-		return cvflann::CENTERS_RANDOM;
-		}
-	else if (centerInitializationMethod == "GonzalesCenters" || centerInitializationMethod == "0")
-		{
-		return cvflann::CENTERS_GONZALES;
-		}
-	else if (centerInitializationMethod == "KmeansCenters" || centerInitializationMethod == "0")
-		{
-		return cvflann::CENTERS_KMEANSPP;
-		}
-	else
-		{
-		std::string errorString = "FlannMatcher ConfigurationError: center initialization method has to be one of ";
-		errorString += "{FlannRandomCenters, FlannGonzalesCenters, FlannKmeanCenters, FlannGroupwiseCenters, RandomCenters, GonzalesCenters, or KmeansCenters}";
-		ASSERT(false, errorString);
-		}
 	}
 
 }
