@@ -1,0 +1,14 @@
+name: CamerasTransformEstimation
+input_ports:
+    - name: correspondenceMap
+      type: CorrespondenceMap2D
+      doc: 	This is a list coordinates of physical points in two distinct images taken from a camera. The set contains pairs of 2d coordinates ( (x1, y1), (x2, y2)), each pair represents the same 
+		physical point. (x1, y1) is its position in the first camera image and (x2, y2) is its position in the second camera image.
+output_ports:
+    - name: transform
+      type: Transform3D
+      doc: This is the relative pose of the camera that took the second image into the system of the camera that took the first image.
+    - name: success
+      type: boolean
+      doc: This outputs tells whether the computation was succesfull. The computation may fail if the inputs are not good. If the computation fails the first output is meaningless.
+

@@ -81,8 +81,13 @@ void Triangulation::process()
 
 cv::Mat Triangulation::Triangulate(cv::Mat projectionMatrix, cv::Mat pointsVectorAtSource, cv::Mat pointsVectorAtSink)
 	{
+	cv::Mat identityProjection(3, 4, CV_32FC1, cv::Scalar(0) );
+	identityProjection.at<float>(0,0) = 1;
+	identityProjection.at<float>(1,1) = 1;
+	identityProjection.at<float>(2,2) = 1;
+
 	cv::Mat uniformPointCloudMatrix;
-	cv::triangulatePoints(projectionMatrix, projectionMatrix, pointsVectorAtSource, pointsVectorAtSink, uniformPointCloudMatrix);
+	cv::triangulatePoints(identityProjection, projectionMatrix, pointsVectorAtSource, pointsVectorAtSink, uniformPointCloudMatrix);
 	return uniformPointCloudMatrix;
 	}
 
