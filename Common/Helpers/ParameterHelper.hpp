@@ -140,10 +140,12 @@ template <typename UsageType, typename YamlType>
 UsageType ParameterHelper<UsageType, YamlType>::Convert(const YamlType& value)
 	{
 	bool sameTypes = std::is_same<UsageType, YamlType>::value;
-	ASSERT(sameTypes, "Parameter Error: UsageType and YamlType are not the same, you have to implement the conversion function");
+	ASSERT(sameTypes, "Parameter Error: UsageType and YamlType are not the same, you have to implement the conversion function in a derived class of ParameterHelper.");
 
+	//This code just transform the variable type from YamlType to UsageType.
+	//As precondition above, this code is only called when YamlType and UsageType are the same, and it works only if they are the same.
 	YamlType valueCopy = value;
-	void* pointerToYamlType = &valueCopy;
+	void* pointerToYamlType = static_cast<void*>(&valueCopy);
 	UsageType* pointerToUsageType = static_cast<UsageType*>(pointerToYamlType);
 	return *pointerToUsageType;
 	}
