@@ -117,6 +117,7 @@ cv::Mat OrbDetectorDescriptor::ComputeOrbFeatures(cv::Mat inputImage)
 	cv::Mat descriptorsMatrix;
 	cv::Mat mask = cv::Mat();
 	orb->detectAndCompute(inputImage, mask, keypointsVector, descriptorsMatrix);
+	ASSERT(keypointsVector.size() == descriptorsMatrix.rows, "Orb Error: keypoints vector size does not match descriptorMatrix rows number");
 
 	if (keypointsVector.size() == 0)
 		{
@@ -124,14 +125,15 @@ cv::Mat OrbDetectorDescriptor::ComputeOrbFeatures(cv::Mat inputImage)
 		}
 
 	cv::Mat orbFeaturesMatrix(keypointsVector.size(), descriptorsMatrix.cols + 2, CV_32FC1);
-	cv::Mat descriptorSubmatrix = orbFeaturesMatrix(cv::Rect(2, 0, descriptorsMatrix.cols, keypointsVector.size() ) );
-	descriptorsMatrix.convertTo(descriptorSubmatrix, CV_32FC1);
+	cv::Mat descriptorsSubmatrix = orbFeaturesMatrix( cv::Rect(2, 0, orbFeaturesMatrix.cols-2, orbFeaturesMatrix.rows) );
+	descriptorsMatrix.convertTo(descriptorsSubmatrix, CV_32FC1);
+	
 	for(unsigned pointIndex = 0; pointIndex < keypointsVector.size(); pointIndex++)
 		{
 		orbFeaturesMatrix.at<float>(pointIndex, 0) = keypointsVector.at(pointIndex).pt.x;
 		orbFeaturesMatrix.at<float>(pointIndex, 1) = keypointsVector.at(pointIndex).pt.y;
 		}
-	
+
 	return orbFeaturesMatrix;
 	}
 

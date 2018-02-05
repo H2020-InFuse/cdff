@@ -86,9 +86,9 @@ cv::Mat Triangulation::Triangulate(cv::Mat projectionMatrix, cv::Mat pointsVecto
 	identityProjection.at<float>(1,1) = 1;
 	identityProjection.at<float>(2,2) = 1;
 
-	cv::Mat uniformPointCloudMatrix;
-	cv::triangulatePoints(identityProjection, projectionMatrix, pointsVectorAtSource, pointsVectorAtSink, uniformPointCloudMatrix);
-	return uniformPointCloudMatrix;
+	cv::Mat homogeneousPointCloudMatrix;
+	cv::triangulatePoints(identityProjection, projectionMatrix, pointsVectorAtSource, pointsVectorAtSink, homogeneousPointCloudMatrix);
+	return homogeneousPointCloudMatrix;
 	}
 
 cv::Mat Triangulation::Convert(Transform3DConstPtr transform)
@@ -133,18 +133,18 @@ cv::Mat Triangulation::ConvertAtPose(CorrespondenceMap2DConstPtr correspondenceM
 	return pointsVector;
 	}
 
-PointCloudConstPtr Triangulation::Convert(cv::Mat uniformPointCloudMatrix)
+PointCloudConstPtr Triangulation::Convert(cv::Mat homogeneousPointCloudMatrix)
 	{
 	PointCloudPtr pointCloud = new PointCloud();
 	ClearPoints(*pointCloud);
 
-	for(unsigned pointIndex = 0; pointIndex < uniformPointCloudMatrix.cols; pointIndex++)
+	for(unsigned pointIndex = 0; pointIndex < homogeneousPointCloudMatrix.cols; pointIndex++)
 		{
-		float uniformPointX = uniformPointCloudMatrix.at<float>(0, pointIndex);
-		float uniformPointY = uniformPointCloudMatrix.at<float>(1, pointIndex);
-		float uniformPointZ = uniformPointCloudMatrix.at<float>(2, pointIndex);
-		float uniformPointFactor = uniformPointCloudMatrix.at<float>(3, pointIndex);
-		AddPoint(*pointCloud, uniformPointX/uniformPointFactor, uniformPointY/uniformPointFactor, uniformPointZ/uniformPointFactor);
+		float homogeneousPointX = homogeneousPointCloudMatrix.at<float>(0, pointIndex);
+		float homogeneousPointY = homogeneousPointCloudMatrix.at<float>(1, pointIndex);
+		float homogeneousPointZ = homogeneousPointCloudMatrix.at<float>(2, pointIndex);
+		float homogeneousPointFactor = homogeneousPointCloudMatrix.at<float>(3, pointIndex);
+		AddPoint(*pointCloud, homogeneousPointX/homogeneousPointFactor, homogeneousPointY/homogeneousPointFactor, homogeneousPointZ/homogeneousPointFactor);
 		}
 	return pointCloud;
 	}

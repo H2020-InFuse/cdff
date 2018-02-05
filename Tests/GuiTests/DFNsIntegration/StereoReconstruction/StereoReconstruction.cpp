@@ -122,11 +122,16 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		void PrepareFlann();
 		void PrepareRansac();
 		void PrepareTriangulation();
+
+		void ExtractCalibrationParameters();
+		void VisualizeCorrespondences(CorrespondenceMap2DConstPtr correspondenceMap);
 	};
 
 StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string integrationName, int buttonWidth, int buttonHeight)
 	: DFNsIntegrationTestInterface(buttonWidth, buttonHeight)
 	{
+	ExtractCalibrationParameters();
+
 	orb = new OrbDetectorDescriptor();
 	AddDFN(orb, "orb");
 
@@ -198,9 +203,9 @@ void StereoReconstructionTestInterface::SetupParameters()
 
 	AddParameter(ransac, "GeneralParameters", "OutlierThreshold", 1, 100);
 	AddParameter(ransac, "GeneralParameters", "Confidence", 0.9, 1, 0.01);
-	AddParameter(ransac, "GeneralParameters", "FocalLength", 1, 5, 0.1);
-	AddParameter(ransac, "GeneralParameters", "PrinciplePointX", 0, 10);
-	AddParameter(ransac, "GeneralParameters", "PrinciplePointY", 0, 10);
+	AddParameter(ransac, "GeneralParameters", "FocalLength", 71.2256, 71.2257, 0.0001);
+	AddParameter(ransac, "GeneralParameters", "PrinciplePointX", 620.951, 630, 0.001);
+	AddParameter(ransac, "GeneralParameters", "PrinciplePointY", 581.838, 600, 0.001);
 	}
 
 void StereoReconstructionTestInterface::DisplayResult()
@@ -361,6 +366,151 @@ void StereoReconstructionTestInterface::PrepareTriangulation()
 
 	triangulation->transformInput(transform);
 	triangulation->correspondenceMapInput(correspondenceMap);
+	}
+
+void StereoReconstructionTestInterface::ExtractCalibrationParameters()
+	{
+	static const unsigned ROW_NUMBER = 7;
+	static const unsigned COLUMN_NUMBER = 11;
+	static const float SQUARE_EDGE_LENGTH = 0.02;
+
+	cv::Mat doubleImage1 = cv::imread("../../tests/Data/Images/chessboard1.jpg", cv::IMREAD_COLOR);
+	cv::Mat leftImage1 = doubleImage1( cv::Rect(0, 0, doubleImage1.cols/2, doubleImage1.rows) );
+	cv::Mat rightImage1 = doubleImage1( cv::Rect(doubleImage1.cols/2, 0, doubleImage1.cols/2, doubleImage1.rows) );
+
+	cv::Mat doubleImage2 = cv::imread("../../tests/Data/Images/chessboard2.jpg", cv::IMREAD_COLOR);
+	cv::Mat leftImage2 = doubleImage2( cv::Rect(0, 0, doubleImage2.cols/2, doubleImage2.rows) );
+	cv::Mat rightImage2 = doubleImage2( cv::Rect(doubleImage2.cols/2, 0, doubleImage2.cols/2, doubleImage2.rows) );
+
+	ASSERT(doubleImage1.cols == doubleImage2.cols && doubleImage1.rows == doubleImage2.rows, "Input calibration Images do not have same size");
+
+ 	std::vector<std::vector<cv::Point2f> > leftCornersList(2);
+ 	std::vector<std::vector<cv::Point2f> > rightCornersList(2);
+
+	bool leftFlag1 = cv::findChessboardCorners(leftImage1, cv::Size(ROW_NUMBER, COLUMN_NUMBER), leftCornersList[0]);
+	bool rightFlag1 = cv::findChessboardCorners(rightImage1, cv::Size(ROW_NUMBER, COLUMN_NUMBER), rightCornersList[0]);
+	ASSERT(leftFlag1 && rightFlag1, "Camera calibration failed");
+
+	std::vector<cv::Point2f> leftCornersList2, rightCornersList2;
+	bool leftFlag2 = cv::findChessboardCorners(leftImage2, cv::Size(ROW_NUMBER, COLUMN_NUMBER), leftCornersList[1]);
+	bool rightFlag2 = cv::findChessboardCorners(rightImage2, cv::Size(ROW_NUMBER, COLUMN_NUMBER), rightCornersList[1]);
+	ASSERT(leftFlag2 && rightFlag2, "Camera calibration failed");
+
+	std::vector< std::vector<cv::Point3f> > objectPoints(2);
+	for(unsigned row=0; row<ROW_NUMBER; row++) 
+		{
+		for(unsigned column=0; column<COLUMN_NUMBER; column++)
+			{
+			cv::Point3f point(column*SQUARE_EDGE_LENGTH, row*SQUARE_EDGE_LENGTH, 0);
+			objectPoints[0].push_back( point );
+			objectPoints[1].push_back( point );
+			}
+		}
+
+	cv::Mat leftCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
+	cv::Mat rightCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
+
+	cv::Mat leftDistortionCoefficients, rightDistortionCoefficients;
+	cv::Mat rotationMatrix, translationMatrix, essentialMatrix, fundamentalMatrix;
+
+	cv::stereoCalibrate
+		(
+		objectPoints,
+		leftCornersList,
+		rightCornersList,
+		leftCameraMatrix,
+		leftDistortionCoefficients,
+		rightCameraMatrix,
+		rightDistortionCoefficients,
+		leftImage1.size(),
+		rotationMatrix,
+		translationMatrix,
+		essentialMatrix,
+		fundamentalMatrix,
+		CV_CALIB_FIX_ASPECT_RATIO + CV_CALIB_ZERO_TANGENT_DIST + CV_CALIB_SAME_FOCAL_LENGTH + CV_CALIB_RATIONAL_MODEL + CV_CALIB_FIX_K3 + CV_CALIB_FIX_K4 + CV_CALIB_FIX_K5,
+		cv::TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 100, 1e-5)
+		);
+	PRINT_TO_LOG("Calibration complete", "");
+
+	PRINT_TO_LOG("Left calibration: ", leftCameraMatrix);
+	PRINT_TO_LOG("Right calibration: ", rightCameraMatrix);
+	PRINT_TO_LOG("Left distortion: ", leftDistortionCoefficients);
+	PRINT_TO_LOG("Right distortion: ", rightDistortionCoefficients);
+	PRINT_TO_LOG("Translation: ", translationMatrix);
+	PRINT_TO_LOG("Rotation: ", rotationMatrix);
+
+	cv::Mat rototranslationMatrix(3, 4, CV_64FC1, cv::Scalar(0));
+	rototranslationMatrix.at<double>(0,0) = rotationMatrix.at<double>(0,0);
+	rototranslationMatrix.at<double>(0,1) = rotationMatrix.at<double>(0,1);
+	rototranslationMatrix.at<double>(0,2) = rotationMatrix.at<double>(0,2);
+	rototranslationMatrix.at<double>(1,0) = rotationMatrix.at<double>(1,0);
+	rototranslationMatrix.at<double>(1,1) = rotationMatrix.at<double>(1,1);
+	rototranslationMatrix.at<double>(1,2) = rotationMatrix.at<double>(1,2);
+	rototranslationMatrix.at<double>(2,0) = rotationMatrix.at<double>(2,0);
+	rototranslationMatrix.at<double>(2,1) = rotationMatrix.at<double>(1,1);
+	rototranslationMatrix.at<double>(2,2) = rotationMatrix.at<double>(2,1);
+	rototranslationMatrix.at<double>(0,3) = translationMatrix.at<double>(0);
+	rototranslationMatrix.at<double>(1,3) = translationMatrix.at<double>(1);
+	rototranslationMatrix.at<double>(2,3) = translationMatrix.at<double>(2);
+
+	cv::Mat leftProjectionMatrix = leftCameraMatrix*rototranslationMatrix;
+	cv::Mat rightProjectionMatrix = rightCameraMatrix*rototranslationMatrix;
+	PRINT_TO_LOG("Left Projection Matrix", leftProjectionMatrix);
+	PRINT_TO_LOG("Right Projection Matrix", rightProjectionMatrix);	
+
+	cv::Mat leftRectificationMatrix, rightRectificationMatrix, leftRectifiedProjectionMatrix, rightRectifiedProjectionMatrix, disparityToDepthMatrix;
+	cv::stereoRectify
+		(
+		leftCameraMatrix,
+		leftDistortionCoefficients,
+		rightCameraMatrix,
+		rightDistortionCoefficients,
+		leftImage1.size(),
+		rotationMatrix,
+		translationMatrix,
+		leftRectificationMatrix,
+		rightRectificationMatrix,
+		leftRectifiedProjectionMatrix,
+		rightRectifiedProjectionMatrix,
+		disparityToDepthMatrix
+		);
+
+	PRINT_TO_LOG("Rectified Left Projection Matrix", leftRectifiedProjectionMatrix);
+	PRINT_TO_LOG("Rectified Right Projection Matrix", rightRectifiedProjectionMatrix);	
+	}
+
+void StereoReconstructionTestInterface::VisualizeCorrespondences(CorrespondenceMap2DConstPtr correspondenceMap)
+	{
+	std::vector<cv::KeyPoint> sourceVector, sinkVector;
+	std::vector<cv::DMatch> matchesVector;
+	for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(*correspondenceMap); correspondenceIndex++)
+		{
+		BaseTypesWrapper::Point2D sourcePoint, sinkPoint;
+		sourcePoint = GetSource(*correspondenceMap, correspondenceIndex);
+		sinkPoint = GetSink(*correspondenceMap, correspondenceIndex);
+		cv::KeyPoint sourceKeypoint(sourcePoint.x, sourcePoint.y, 0.02);
+		cv::KeyPoint sinkKeypoint(sinkPoint.x, sinkPoint.y, 0.02);
+		sourceVector.push_back(sourceKeypoint);
+		sinkVector.push_back(sinkKeypoint);
+		cv::DMatch match;
+		match.queryIdx = correspondenceIndex;
+		match.trainIdx = correspondenceIndex;
+		matchesVector.push_back(match);
+		}
+	
+
+ 	cv::Mat outputImage;
+ 	cv::drawMatches
+		(
+		leftCvImage, sourceVector, rightCvImage, sinkVector, matchesVector, 
+		outputImage, 
+		cv::Scalar::all(-1), cv::Scalar::all(-1),
+               	std::vector<char>(), 
+		cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
+		);
+
+	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
+	cv::imshow(outputWindowName, outputImage);
 	}
 
 
