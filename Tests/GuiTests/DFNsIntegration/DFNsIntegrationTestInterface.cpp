@@ -7,7 +7,7 @@
 
 /*!
  * @file DFNsIntegrationTestInterface.cpp
- * @date 27/11/2017
+ * @date 02/02/2017
  * @author Alessandro Bianco
  */
 
@@ -63,12 +63,11 @@ void DFNsIntegrationTestInterface::Run()
 
 void DFNsIntegrationTestInterface::AddDFN(DFNCommonInterface* dfn, std::string dfnName)
 	{
-	unsigned dfnIndex = dfnsList.size() - 1;
+	unsigned dfnIndex = dfnsList.size();
 
 	dfnsList.push_back(dfn);
 	dfn->setConfigurationFile(GetDfnFilePath(dfnIndex));
 
-	processingTime.push_back(0);
 	parametersInterfaceList.push_back( ParametersInterface(dfnName) );
 	}
 
@@ -88,22 +87,13 @@ void DFNsIntegrationTestInterface::AddParameter(DFNCommonInterface* dfn, std::st
 
 double DFNsIntegrationTestInterface::GetTotalProcessingTimeSeconds()
 	{
-	double totalProcessingTime = 0;
-	for(unsigned dfnIndex = 0; dfnIndex < dfnsList.size(); dfnIndex++)
-		{
-		totalProcessingTime += processingTime.at(dfnIndex);
-		}
 	return totalProcessingTime;
 	}
 
-double DFNsIntegrationTestInterface::GetLastProcessingTimeSeconds(DFNCommonInterface* dfn)
+double DFNsIntegrationTestInterface::GetLastProcessingTimeSeconds(unsigned timeIndex)
 	{
-	unsigned dfnIndex = GetDfnIndex(dfn);
-	if (dfnIndex < dfnsList.size() )
-		{
-		return processingTime.at(dfnIndex);
-		}
-	return -1;
+	ASSERT(timeIndex < processingTime.size(), "DFNs Integration Test Interface Error: Trying to read a processing time that was not previously set");
+	return processingTime.at(timeIndex);
 	}
 
 int DFNsIntegrationTestInterface::GetTotalVirtualMemoryUsedKB()
@@ -177,10 +167,8 @@ unsigned DFNsIntegrationTestInterface::GetDfnIndex(DFNCommonInterface* dfn)
 
 void DFNsIntegrationTestInterface::CleanProcessingTime()
 	{
-	for(unsigned dfnIndex = 0; dfnIndex < dfnsList.size(); dfnIndex++)
-		{
-		processingTime.at(dfnIndex) = 0;
-		}
+	totalProcessingTime = 0;
+	processingTime.clear();
 	}
 
 void DFNsIntegrationTestInterface::ProcessCallback(void* referenceToClass)
@@ -210,14 +198,23 @@ void DFNsIntegrationTestInterface::ProcessCallback()
 	CleanProcessingTime();
 	ResetProcess();
 
+	clock_t begin = clock();
 	while (!IsProcessCompleted())
 		{
-		unsigned dfnIndex = PrepareNextDfn();
-		clock_t begin = clock();
-		dfnsList.at(dfnIndex)->process();
-		clock_t end = clock();
- 		processingTime.at(dfnIndex) += double(end - begin) / CLOCKS_PER_SEC;
+		//Maybe I can add a State framework in this class, rather the letting the derived class define everything.
+		DFNCommonInterface* nextDfn = PrepareNextDfn();
+
+		clock_t beginStep = clock();
+		nextDfn->process();
+		clock_t endStep = clock();
+		double stepTime = double(endStep - beginStep) / CLOCKS_PER_SEC;
+		processingTime.push_back(stepTime);
+
+		UpdateState();
 		}
+	clock_t end = clock();
+	totalProcessingTime += double(end - begin) / CLOCKS_PER_SEC;
+	
 
 	DisplayResult();
 	}

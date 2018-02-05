@@ -60,7 +60,7 @@ class DFNsIntegrationTestInterface
 		void AddParameter(DFNCommonInterface* dfn, std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
 
 		double GetTotalProcessingTimeSeconds();
-		double GetLastProcessingTimeSeconds(DFNCommonInterface* dfn);
+		double GetLastProcessingTimeSeconds(unsigned timeIndex);
 		int GetTotalVirtualMemoryUsedKB();
 
 	/* --------------------------------------------------------------------
@@ -82,6 +82,7 @@ class DFNsIntegrationTestInterface
 		std::vector<DFNCommonInterface*> dfnsList;
 		static const std::string baseFilePath;
 		std::vector<double> processingTime;
+		double totalProcessingTime;
 	
 		virtual void SetupMocksAndStubs();
 		virtual void SetupParameters();
@@ -95,7 +96,9 @@ class DFNsIntegrationTestInterface
 
 		virtual void ResetProcess() = 0;
 		virtual bool IsProcessCompleted() = 0;
-		virtual unsigned PrepareNextDfn() = 0;
+		virtual void UpdateState() = 0;
+		virtual DFNCommonInterface* PrepareNextDfn() = 0;
+
 
 	};
 
