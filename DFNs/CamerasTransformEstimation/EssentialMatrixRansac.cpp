@@ -37,6 +37,7 @@
 #include <fstream>
 
 using namespace Common;
+using namespace Helpers;
 
 namespace dfn_ci {
 
@@ -51,11 +52,11 @@ using namespace CorrespondenceMap2DWrapper;
  */
 EssentialMatrixRansac::EssentialMatrixRansac()
 	{
-	parameters.outlierThreshold = DEFAULT_PARAMETERS.outlierThreshold;
-	parameters.confidence = DEFAULT_PARAMETERS.confidence;
-	parameters.focalLength = DEFAULT_PARAMETERS.focalLength;
-	parameters.principlePoint.x = DEFAULT_PARAMETERS.principlePoint.x;
-	parameters.principlePoint.y = DEFAULT_PARAMETERS.principlePoint.y;
+	parametersHelper.AddParameter<double>("GeneralParameters", "OutlierThreshold", parameters.outlierThreshold, DEFAULT_PARAMETERS.outlierThreshold);
+	parametersHelper.AddParameter<double>("GeneralParameters", "Confidence", parameters.confidence, DEFAULT_PARAMETERS.confidence);
+	parametersHelper.AddParameter<double>("GeneralParameters", "FocalLength", parameters.focalLength, DEFAULT_PARAMETERS.focalLength);
+	parametersHelper.AddParameter<double>("GeneralParameters", "PrinciplePointX", parameters.principlePoint.x, DEFAULT_PARAMETERS.principlePoint.x);
+	parametersHelper.AddParameter<double>("GeneralParameters", "PrinciplePointY", parameters.principlePoint.y, DEFAULT_PARAMETERS.principlePoint.y);
 
 	configurationFilePath = "";
 	}
@@ -67,23 +68,8 @@ EssentialMatrixRansac::~EssentialMatrixRansac()
 
 void EssentialMatrixRansac::configure()
 	{
-	try
-		{
-		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
-		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
-			{
-			YAML::Node configurationNode = configuration[configuationIndex];
-			Configure(configurationNode);
-			}
-		} 
-	catch(YAML::ParserException& e) 
-		{
-    		ASSERT(false, e.what() );
-		}
-	catch(YAML::RepresentationException& e)
-		{
-		ASSERT(false, e.what() );
-		}
+	parametersHelper.ReadFile(configurationFilePath);
+	ValidateParameters();
 	}
 
 
@@ -208,22 +194,6 @@ void EssentialMatrixRansac::ValidateParameters()
 void EssentialMatrixRansac::ValidateInputs(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector)
 	{
 	ASSERT(firstImagePointsVector.size() == secondImagePointsVector.size(), "EssentialMatrixRansac Error: Points vector do not have the same size");
-	}
-
-
-void EssentialMatrixRansac::Configure(const YAML::Node& configurationNode)
-	{
-	std::string nodeName = configurationNode["Name"].as<std::string>();
-	if ( nodeName == "GeneralParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(outlierThreshold, double, configurationNode, "OutlierThreshold");
-		YAMLCPP_DFN_ASSIGN(confidence, double, configurationNode, "Confidence");
-		YAMLCPP_DFN_ASSIGN(focalLength, double, configurationNode, "FocalLength");
-		YAMLCPP_DFN_ASSIGN(principlePoint.x, double, configurationNode, "PrinciplePointX");
-		YAMLCPP_DFN_ASSIGN(principlePoint.y, double, configurationNode, "PrinciplePointY");
-		}
-
-	//Ignore everything else
 	}
 
 }

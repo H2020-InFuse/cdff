@@ -9,5 +9,5 @@ add_library(
 )
 target_link_libraries(
     fundamental_matrix_ransac
-    fundamental_matrix_computation cdff_types yaml-cpp opencv_calib3d
+    fundamental_matrix_computation cdff_types yaml-cpp opencv_calib3d cdff_helpers
 )

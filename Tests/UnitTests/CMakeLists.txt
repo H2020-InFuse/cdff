@@ -2,6 +2,16 @@ add_definitions(-DTEST_CONFIGURATIONS="${TEST_CONFIGURATIONS}")
 add_definitions(-DTEST_DATA="${TEST_DATA}")
 
 add_executable(
+    ParametersHelperTest
+    Common/Helpers/ParametersHelper.cpp
+)
+target_link_libraries(
+	ParametersHelperTest
+	cdff_helpers cdff_logger
+)
+add_test(ParametersHelperTest ParametersHelperTest)
+
+add_executable(
     HarrisDetector2DTest
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
 )
@@ -37,7 +47,7 @@ add_executable(
 )
 target_link_libraries(
 	EssentialMatrixRansacTest
-	mock cdff_logger cdff_types essential_matrix_ransac  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+	mock cdff_logger cdff_types cdff_helpers essential_matrix_ransac  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
 )
 add_test(EssentialMatrixRansacTest EssentialMatrixRansacTest)
 

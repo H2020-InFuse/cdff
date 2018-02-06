@@ -35,6 +35,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
+#include <Helpers/ParametersListHelper.hpp>
 
 
 namespace dfn_ci {
@@ -69,6 +70,8 @@ namespace dfn_ci {
 	 */	
 	private:
 
+		Helpers::ParametersListHelper parametersHelper;
+
 		struct EssentialMatrixRansacOptionsSet
 			{
 			double outlierThreshold; // in pixels
@@ -87,8 +90,6 @@ namespace dfn_ci {
 
 		void ValidateParameters();
 		void ValidateInputs(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector);
-
-		void Configure(const YAML::Node& configurationNode);
     };
 }
 #endif

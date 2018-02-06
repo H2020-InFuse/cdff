@@ -1,0 +1,9 @@
+- Name: GroupFloat
+  Parameter: 21.90
+  ParameterTwo: Then
+- Name: GroupBool
+  Parameter: false
+  ParameterTwo: If
+- Name: GroupMore
+- Name: GroupLess
+  Parameter: Three

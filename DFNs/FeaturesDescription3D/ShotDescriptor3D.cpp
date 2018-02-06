@@ -56,14 +56,16 @@ namespace dfn_ci {
  */
 ShotDescriptor3D::ShotDescriptor3D()
 	{
-	parameters.baseOptions.localReferenceFrameEstimationRadius = DEFAULT_PARAMETERS.baseOptions.localReferenceFrameEstimationRadius;
-	parameters.baseOptions.searchRadius = DEFAULT_PARAMETERS.baseOptions.searchRadius;
-	parameters.baseOptions.outputFormat = DEFAULT_PARAMETERS.baseOptions.outputFormat;
-	parameters.baseOptions.enableNormalsEstimation = DEFAULT_PARAMETERS.baseOptions.enableNormalsEstimation;
-	parameters.baseOptions.forceNormalsEstimation = DEFAULT_PARAMETERS.baseOptions.forceNormalsEstimation;
+	parametersHelper.AddParameter<float>(
+		"GeneralParameters", "LocalReferenceFrameEstimationRadius", parameters.baseOptions.localReferenceFrameEstimationRadius, DEFAULT_PARAMETERS.baseOptions.localReferenceFrameEstimationRadius);
+	parametersHelper.AddParameter<double>("GeneralParameters", "SearchRadius", parameters.baseOptions.searchRadius, DEFAULT_PARAMETERS.baseOptions.searchRadius);
+	parametersHelper.AddParameter<OutputFormat, OutputFormatHelper>("GeneralParameters", "OutputFormat", parameters.baseOptions.outputFormat, DEFAULT_PARAMETERS.baseOptions.outputFormat);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "EnableNormalsEstimation", parameters.baseOptions.enableNormalsEstimation, DEFAULT_PARAMETERS.baseOptions.enableNormalsEstimation);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "ForceNormalsEstimation", parameters.baseOptions.forceNormalsEstimation, DEFAULT_PARAMETERS.baseOptions.forceNormalsEstimation);
 
-	parameters.normalEstimationOptions.searchRadius = DEFAULT_PARAMETERS.normalEstimationOptions.searchRadius;
-	parameters.normalEstimationOptions.neighboursSetSize = DEFAULT_PARAMETERS.normalEstimationOptions.neighboursSetSize;
+	parametersHelper.AddParameter<double>("NormalEstimationParameters", "SearchRadius", parameters.normalEstimationOptions.searchRadius, DEFAULT_PARAMETERS.normalEstimationOptions.searchRadius);
+	parametersHelper.AddParameter<int>(
+		"NormalEstimationParameters", "NeighboursSetSize", parameters.normalEstimationOptions.neighboursSetSize, DEFAULT_PARAMETERS.normalEstimationOptions.neighboursSetSize);
 
 	configurationFilePath = "";
 	}
@@ -75,19 +77,7 @@ ShotDescriptor3D::~ShotDescriptor3D()
 
 void ShotDescriptor3D::configure()
 	{
-	try
-		{
-		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
-		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
-			{
-			YAML::Node configurationNode = configuration[configuationIndex];
-			Configure(configurationNode);
-			}
-		} 
-	catch(YAML::ParserException& e) 
-		{
-    		ASSERT(false, e.what() );
-		}
+	parametersHelper.ReadFile(configurationFilePath);
 	ValidateParameters();
 	}
 
@@ -103,6 +93,26 @@ void ShotDescriptor3D::process()
 		ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr, PointCloudToPclNormalsCloudConverter>::Convert(inNormalsCloud);
 	pcl::PointCloud<pcl::SHOT352>::ConstPtr shotPointCloud = ComputeShotDescriptors(inputPointCloud, indicesList, inputNormalsCloud);
 	outFeaturesSetWithDescriptors = Convert(inputPointCloud, indicesList, shotPointCloud);
+	}
+
+ShotDescriptor3D::OutputFormatHelper::OutputFormatHelper(const std::string& parameterName, OutputFormat& boundVariable, const OutputFormat& defaultValue) :
+	ParameterHelper(parameterName, boundVariable, defaultValue)
+	{
+
+	}
+
+ShotDescriptor3D::OutputFormat ShotDescriptor3D::OutputFormatHelper::Convert(const std::string& outputFormat)
+	{
+	if (outputFormat == "Positions" || outputFormat == "0")
+		{
+		return POSITIONS_OUTPUT;
+		}
+	else if (outputFormat == "References" || outputFormat == "1")
+		{
+		return REFERENCES_OUTPUT;
+		}
+	ASSERT(false, "ShotDescriptor3d Error: unhandled output format");
+	return POSITIONS_OUTPUT;
 	}
 
 const ShotDescriptor3D::ShotOptionsSet ShotDescriptor3D::DEFAULT_PARAMETERS
@@ -283,40 +293,6 @@ bool ShotDescriptor3D::IsNormalsCloudValid(pcl::PointCloud<pcl::PointXYZ>::Const
 		}
 	return true;
 	}
-
-void ShotDescriptor3D::Configure(const YAML::Node& configurationNode)
-	{
-	std::string nodeName = configurationNode["Name"].as<std::string>();
-	if ( nodeName == "GeneralParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(baseOptions.localReferenceFrameEstimationRadius, float, configurationNode, "LocalReferenceFrameEstimationRadius");
-		YAMLCPP_DFN_ASSIGN(baseOptions.searchRadius, double, configurationNode, "SearchRadius");
-		YAMLCPP_DFN_ASSIGN_WITH_FUNCTION(baseOptions.outputFormat, std::string, configurationNode, "OutputFormat", ConvertToOutputFormat);
-		YAMLCPP_DFN_ASSIGN(baseOptions.enableNormalsEstimation, bool, configurationNode, "EnableNormalsEstimation");
-		YAMLCPP_DFN_ASSIGN(baseOptions.forceNormalsEstimation, bool, configurationNode, "ForceNormalsEstimation");
-		}
-	if ( nodeName == "NormalEstimationParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(normalEstimationOptions.searchRadius, double, configurationNode, "SearchRadius");
-		YAMLCPP_DFN_ASSIGN(normalEstimationOptions.neighboursSetSize, int, configurationNode, "NeighboursSetSize");
-		}
-	//Ignore everything else
-	}
-
-ShotDescriptor3D::OutputFormat ShotDescriptor3D::ConvertToOutputFormat(std::string outputFormat)
-	{
-	if (outputFormat == "Positions" || outputFormat == "0")
-		{
-		return POSITIONS_OUTPUT;
-		}
-	else if (outputFormat == "References" || outputFormat == "1")
-		{
-		return REFERENCES_OUTPUT;
-		}
-	ASSERT(false, "ShotDescriptor3d Error: unhandled output format");
-	return POSITIONS_OUTPUT;
-	}
-
 
 }
 

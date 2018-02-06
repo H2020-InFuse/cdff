@@ -1,0 +1,4 @@
+- Name: GroupFloat
+  Parameter: 21.90
+- Name: GroupBool
+  Parameter: false

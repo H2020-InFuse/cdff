@@ -50,8 +50,8 @@ using namespace CorrespondenceMap2DWrapper;
  */
 FundamentalMatrixRansac::FundamentalMatrixRansac()
 	{
-	parameters.outlierThreshold = DEFAULT_PARAMETERS.outlierThreshold;
-	parameters.confidence = DEFAULT_PARAMETERS.confidence;
+	parametersHelper.AddParameter<double>("GeneralParameters", "OutlierThreshold", parameters.outlierThreshold, DEFAULT_PARAMETERS.outlierThreshold);
+	parametersHelper.AddParameter<double>("GeneralParameters", "Confidence", parameters.confidence, DEFAULT_PARAMETERS.confidence);
 
 	configurationFilePath = "";
 	}
@@ -63,23 +63,8 @@ FundamentalMatrixRansac::~FundamentalMatrixRansac()
 
 void FundamentalMatrixRansac::configure()
 	{
-	try
-		{
-		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
-		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
-			{
-			YAML::Node configurationNode = configuration[configuationIndex];
-			Configure(configurationNode);
-			}
-		} 
-	catch(YAML::ParserException& e) 
-		{
-    		ASSERT(false, e.what() );
-		}
-	catch(YAML::RepresentationException& e)
-		{
-		ASSERT(false, e.what() );
-		}
+	parametersHelper.ReadFile(configurationFilePath);
+	ValidateParameters();
 	}
 
 
@@ -184,19 +169,6 @@ void FundamentalMatrixRansac::ValidateParameters()
 void FundamentalMatrixRansac::ValidateInputs(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector)
 	{
 	ASSERT(firstImagePointsVector.size() == secondImagePointsVector.size(), "FundamentalMatrixRansac Error: Points vector do not have the same size");
-	}
-
-
-void FundamentalMatrixRansac::Configure(const YAML::Node& configurationNode)
-	{
-	std::string nodeName = configurationNode["Name"].as<std::string>();
-	if ( nodeName == "GeneralParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(outlierThreshold, double, configurationNode, "OutlierThreshold");
-		YAMLCPP_DFN_ASSIGN(confidence, double, configurationNode, "Confidence");
-		}
-
-	//Ignore everything else
 	}
 
 }

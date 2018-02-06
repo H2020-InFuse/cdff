@@ -1,0 +1,3 @@
+- Name: Group
+  ParameterDouble: 65.1
+  ParameterString: AnotherString

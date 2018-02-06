@@ -53,13 +53,13 @@ namespace dfn_ci {
  */
 HarrisDetector3D::HarrisDetector3D()
 	{
-	parameters.nonMaxSuppression = DEFAULT_PARAMETERS.nonMaxSuppression;
-	parameters.radius = DEFAULT_PARAMETERS.radius;
-	parameters.searchRadius = DEFAULT_PARAMETERS.searchRadius;
-	parameters.detectionThreshold = DEFAULT_PARAMETERS.detectionThreshold;
-	parameters.enableRefinement = DEFAULT_PARAMETERS.enableRefinement;
-	parameters.numberOfThreads = DEFAULT_PARAMETERS.numberOfThreads;
-	parameters.method = DEFAULT_PARAMETERS.method;
+	parametersHelper.AddParameter<bool>("GeneralParameters", "NonMaxSuppression", parameters.nonMaxSuppression, DEFAULT_PARAMETERS.nonMaxSuppression);
+	parametersHelper.AddParameter<float>("GeneralParameters", "Radius", parameters.radius, DEFAULT_PARAMETERS.radius);
+	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
+	parametersHelper.AddParameter<float>("GeneralParameters", "DetectionThreshold", parameters.detectionThreshold, DEFAULT_PARAMETERS.detectionThreshold);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "EnableRefinement", parameters.enableRefinement, DEFAULT_PARAMETERS.enableRefinement);
+	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfThreads", parameters.numberOfThreads, DEFAULT_PARAMETERS.numberOfThreads);
+	parametersHelper.AddParameter<HarrisMethod, HarrisMethodHelper>("GeneralParameters", "HarrisMethod", parameters.method, DEFAULT_PARAMETERS.method);
 
 	configurationFilePath = "";
 	}
@@ -71,19 +71,8 @@ HarrisDetector3D::~HarrisDetector3D()
 
 void HarrisDetector3D::configure()
 	{
-	try
-		{
-		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
-		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
-			{
-			YAML::Node configurationNode = configuration[configuationIndex];
-			Configure(configurationNode);
-			}
-		} 
-	catch(YAML::ParserException& e) 
-		{
-    		ASSERT(false, e.what() );
-		}
+	parametersHelper.ReadFile(configurationFilePath);
+	ValidateParameters();
 	}
 
 
@@ -94,6 +83,38 @@ void HarrisDetector3D::process()
 	ValidateInputs(inputPointCloud);
 	cv::Mat harrisPoints = ComputeHarrisPoints(inputPointCloud);
 	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Convert(harrisPoints);
+	}
+
+HarrisDetector3D::HarrisMethodHelper::HarrisMethodHelper(const std::string& parameterName, HarrisMethod& boundVariable, const HarrisMethod& defaultValue) :
+	ParameterHelper(parameterName, boundVariable, defaultValue)
+	{
+
+	}
+
+HarrisDetector3D::HarrisMethod HarrisDetector3D::HarrisMethodHelper::Convert(const std::string& method)
+	{
+	if (method == "Harris" || method == "0")
+		{
+		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS;
+		}
+	else if (method == "Noble" || method == "1")
+		{
+		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::NOBLE;
+		}
+	else if (method == "Lowe" || method == "2")
+		{
+		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::LOWE;
+		}
+	else if (method == "Tomasi" || method == "3")
+		{
+		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::TOMASI;
+		}
+	else if (method == "Curvature" || method == "4")
+		{
+		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::CURVATURE;
+		}
+
+	ASSERT(false, "HarrisDetector3D Configuration error, Harris Method is not one of {Harris, Noble, Lowe, Tomasi, Curvature}");
 	}
 
 const HarrisDetector3D::HarryOptionsSet HarrisDetector3D::DEFAULT_PARAMETERS
@@ -147,32 +168,6 @@ cv::Mat HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::Co
 	return featuresVector;
 	}
 
-HarrisDetector3D::HarrisMethod HarrisDetector3D::ConvertToMethod(std::string method)
-	{
-	if (method == "Harris" || method == "0")
-		{
-		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS;
-		}
-	else if (method == "Noble" || method == "1")
-		{
-		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::NOBLE;
-		}
-	else if (method == "Lowe" || method == "2")
-		{
-		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::LOWE;
-		}
-	else if (method == "Tomasi" || method == "3")
-		{
-		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::TOMASI;
-		}
-	else if (method == "Curvature" || method == "4")
-		{
-		return pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::CURVATURE;
-		}
-
-	ASSERT(false, "HarrisDetector3D Configuration error, Harris Method is not one of {Harris, Noble, Lowe, Tomasi, Curvature}");
-	}
-
 
 void HarrisDetector3D::ValidateParameters()
 	{
@@ -184,23 +179,6 @@ void HarrisDetector3D::ValidateParameters()
 void HarrisDetector3D::ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
 	{
 
-	}
-
-
-void HarrisDetector3D::Configure(const YAML::Node& configurationNode)
-	{
-	std::string nodeName = configurationNode["Name"].as<std::string>();
-	if ( nodeName == "GeneralParameters")
-		{
-		YAMLCPP_DFN_ASSIGN(radius, float, configurationNode, "Radius");
-		YAMLCPP_DFN_ASSIGN(searchRadius, float, configurationNode, "SearchRadius");
-		YAMLCPP_DFN_ASSIGN(nonMaxSuppression, bool, configurationNode, "NonMaxSuppression");
-		YAMLCPP_DFN_ASSIGN(detectionThreshold, float, configurationNode, "DetectionThreshold");
-		YAMLCPP_DFN_ASSIGN(enableRefinement, bool, configurationNode, "EnableRefinement");
-		YAMLCPP_DFN_ASSIGN(numberOfThreads, int, configurationNode, "NumberOfThreads");
-		YAMLCPP_DFN_ASSIGN_WITH_FUNCTION(method, std::string, configurationNode, "HarrisMethod", ConvertToMethod);
-		}
-	//Ignore everything else
 	}
 
 

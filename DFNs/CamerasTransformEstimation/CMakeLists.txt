@@ -9,5 +9,5 @@ add_library(
 )
 target_link_libraries(
     essential_matrix_ransac
-    cameras_transform_estimation cdff_types yaml-cpp opencv_calib3d
+    cameras_transform_estimation cdff_types yaml-cpp opencv_calib3d cdff_helpers
 )

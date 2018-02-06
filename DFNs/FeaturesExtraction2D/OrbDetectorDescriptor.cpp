@@ -51,15 +51,17 @@ using namespace FrameWrapper;
  */
 OrbDetectorDescriptor::OrbDetectorDescriptor()
 	{
-	parameters.edgeThreshold = DEFAULT_PARAMETERS.edgeThreshold;
-	parameters.fastThreshold = DEFAULT_PARAMETERS.fastThreshold;
-	parameters.firstLevel = DEFAULT_PARAMETERS.firstLevel;
-	parameters.maxFeaturesNumber = DEFAULT_PARAMETERS.maxFeaturesNumber;
-	parameters.levelsNumber = DEFAULT_PARAMETERS.levelsNumber;
-	parameters.patchSize = DEFAULT_PARAMETERS.patchSize;
-	parameters.scaleFactor = DEFAULT_PARAMETERS.scaleFactor;
-	parameters.scoreType = DEFAULT_PARAMETERS.scoreType;
-	parameters.sizeOfBrightnessTestSet = DEFAULT_PARAMETERS.sizeOfBrightnessTestSet;
+	parametersHelper.AddParameter<int>("GeneralParameters", "EdgeThreshold", parameters.edgeThreshold, DEFAULT_PARAMETERS.edgeThreshold);
+	parametersHelper.AddParameter<int>("GeneralParameters", "FastThreshold", parameters.fastThreshold, DEFAULT_PARAMETERS.fastThreshold);
+	parametersHelper.AddParameter<int>("GeneralParameters", "FirstLevel", parameters.firstLevel, DEFAULT_PARAMETERS.firstLevel);
+	parametersHelper.AddParameter<int>("GeneralParameters", "MaxFeaturesNumber", parameters.maxFeaturesNumber, DEFAULT_PARAMETERS.maxFeaturesNumber);
+
+	parametersHelper.AddParameter<int>("GeneralParameters", "LevelsNumber", parameters.levelsNumber, DEFAULT_PARAMETERS.levelsNumber);
+	parametersHelper.AddParameter<int>("GeneralParameters", "PatchSize", parameters.patchSize, DEFAULT_PARAMETERS.patchSize);
+	parametersHelper.AddParameter<double>("GeneralParameters", "ScaleFactor", parameters.scaleFactor, DEFAULT_PARAMETERS.scaleFactor);
+	parametersHelper.AddParameter<int>("GeneralParameters", "ScoreType", parameters.scoreType, DEFAULT_PARAMETERS.scoreType);
+
+	parametersHelper.AddParameter<int>("GeneralParameters", "SizeOfBrightnessTestSet", parameters.sizeOfBrightnessTestSet, DEFAULT_PARAMETERS.sizeOfBrightnessTestSet);
 
 	configurationFilePath = "";
 	}
@@ -71,23 +73,8 @@ OrbDetectorDescriptor::~OrbDetectorDescriptor()
 
 void OrbDetectorDescriptor::configure()
 	{
-	try
-		{
-		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
-		for(unsigned configuationIndex=0; configuationIndex < configuration.size(); configuationIndex++)
-			{
-			YAML::Node configurationNode = configuration[configuationIndex];
-			Configure(configurationNode);
-			}
-		} 
-	catch(YAML::ParserException& e) 
-		{
-    		ASSERT(false, e.what() );
-		}
-	catch(YAML::RepresentationException& e)
-		{
-		ASSERT(false, e.what() );
-		}
+	parametersHelper.ReadFile(configurationFilePath);
+	ValidateParameters();
 	}
 
 
@@ -179,25 +166,6 @@ int OrbDetectorDescriptor::ConvertToScoreType(std::string scoreType)
 		return cv::ORB::FAST_SCORE;
 		}
 	ASSERT(false, "Orb Detector Descriptor Configuration Error: Score type should be either HarrisScore or FastScore (1, or 2)");
-	}
-
-
-void OrbDetectorDescriptor::Configure(const YAML::Node& configurationNode)
-	{
-	std::string nodeName = configurationNode["Name"].as<std::string>();
-	if ( nodeName == "GeneralParameters")
-		{
-		parameters.edgeThreshold = configurationNode["EdgeThreshold"].as<int>(); 
-		parameters.fastThreshold = configurationNode["FastThreshold"].as<int>(); 
-		parameters.firstLevel = configurationNode["FirstLevel"].as<int>(); 
-		parameters.maxFeaturesNumber = configurationNode["MaxFeaturesNumber"].as<int>(); 
-		parameters.levelsNumber = configurationNode["LevelsNumber"].as<int>(); 
-		parameters.patchSize = configurationNode["PatchSize"].as<int>(); 
-		parameters.scaleFactor = configurationNode["ScaleFactor"].as<double>(); 
-		parameters.scoreType = ConvertToScoreType( configurationNode["ScoreType"].as<std::string>() ); 
-		parameters.sizeOfBrightnessTestSet = configurationNode["SizeOfBrightnessTestSet"].as<int>(); 
-		}
-	//Ignore everything else
 	}
 
 }

@@ -9,7 +9,7 @@ add_library(
 )
 target_link_libraries(
     harris_detector_2d
-    feature_extraction_2d cdff_types yaml-cpp
+    feature_extraction_2d cdff_types yaml-cpp cdff_helpers
 )
 
 add_library(
@@ -18,5 +18,5 @@ add_library(
 )
 target_link_libraries(
     orb_detector_descriptor
-    feature_extraction_2d cdff_types yaml-cpp opencv_features2d
+    feature_extraction_2d cdff_types yaml-cpp opencv_features2d cdff_helpers
 )
