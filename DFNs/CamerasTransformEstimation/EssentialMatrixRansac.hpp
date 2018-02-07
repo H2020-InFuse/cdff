@@ -69,7 +69,6 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
-
 		Helpers::ParametersListHelper parametersHelper;
 
 		struct CameraMatrix

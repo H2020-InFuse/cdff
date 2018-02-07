@@ -209,12 +209,11 @@ cv::Mat EssentialMatrixRansac::ComputeTransformMatrix(cv::Mat fundamentalMatrix,
 	cv::Mat epipoleFundametalMatrixProduct = epipoleMatrix * fundamentalMatrix;
 
 	cv::Mat transformMatrix(3, 4, CV_32FC1, cv::Scalar(0));
+
 	epipoleFundametalMatrixProduct.convertTo( transformMatrix(cv::Rect(0,0,3,3)), CV_32FC1 );
 	transformMatrix.at<float>(0,3) = static_cast<float>(epipole.x);
 	transformMatrix.at<float>(1,3) = static_cast<float>(epipole.y);
 	transformMatrix.at<float>(2,3) = static_cast<float>(epipole.z);
-
-	PRINT_TO_LOG("TransformMatrix", transformMatrix);
 
 	return transformMatrix;
 	}
