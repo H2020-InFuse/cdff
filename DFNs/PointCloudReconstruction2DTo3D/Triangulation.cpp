@@ -144,7 +144,14 @@ PointCloudConstPtr Triangulation::Convert(cv::Mat homogeneousPointCloudMatrix)
 		float homogeneousPointY = homogeneousPointCloudMatrix.at<float>(1, pointIndex);
 		float homogeneousPointZ = homogeneousPointCloudMatrix.at<float>(2, pointIndex);
 		float homogeneousPointFactor = homogeneousPointCloudMatrix.at<float>(3, pointIndex);
-		AddPoint(*pointCloud, homogeneousPointX/homogeneousPointFactor, homogeneousPointY/homogeneousPointFactor, homogeneousPointZ/homogeneousPointFactor);
+		if (homogeneousPointFactor == 0)
+			{
+			AddPoint(*pointCloud, 0, 0, 0);
+			}
+		else
+			{
+			AddPoint(*pointCloud, homogeneousPointX/homogeneousPointFactor, homogeneousPointY/homogeneousPointFactor, homogeneousPointZ/homogeneousPointFactor);
+			}
 		}
 	return pointCloud;
 	}
