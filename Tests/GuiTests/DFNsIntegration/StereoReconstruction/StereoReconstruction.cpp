@@ -124,12 +124,14 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		void PrepareTriangulation();
 
 		void ExtractCalibrationParameters();
+		void ExtractCalibrationParametersOneCamera();
 		void VisualizeCorrespondences(CorrespondenceMap2DConstPtr correspondenceMap);
 	};
 
 StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string integrationName, int buttonWidth, int buttonHeight)
 	: DFNsIntegrationTestInterface(buttonWidth, buttonHeight)
 	{
+	//ExtractCalibrationParametersOneCamera();
 	ExtractCalibrationParameters();
 
 	orb = new OrbDetectorDescriptor();
@@ -149,11 +151,11 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 
 	unsigned singleImageCols = doubleImage.cols/2;
 	unsigned singleImageRows = doubleImage.rows;
-	unsigned extractCols = singleImageCols/2;
-	unsigned extractRows = singleImageRows/2;
-	unsigned startRow = singleImageRows/4;
-	unsigned startColumnLeft = singleImageCols/4;
-	unsigned startColumnRight = singleImageCols/4 + singleImageCols;
+	unsigned extractCols = singleImageCols;
+	unsigned extractRows = singleImageRows;
+	unsigned startRow = 0; //singleImageRows/4;
+	unsigned startColumnLeft = 0; //singleImageCols/4;
+	unsigned startColumnRight = singleImageCols; //singleImageCols/4 + singleImageCols;
 	doubleImage(cv::Rect(startColumnLeft, startRow, extractCols, extractRows) ).copyTo(leftCvImage);
 	doubleImage(cv::Rect(startColumnRight, startRow, extractCols, extractRows) ).copyTo(rightCvImage);
 
@@ -203,9 +205,14 @@ void StereoReconstructionTestInterface::SetupParameters()
 
 	AddParameter(ransac, "GeneralParameters", "OutlierThreshold", 1, 100);
 	AddParameter(ransac, "GeneralParameters", "Confidence", 0.9, 1, 0.01);
-	AddParameter(ransac, "GeneralParameters", "FocalLength", 71.2256, 71.2257, 0.0001);
-	AddParameter(ransac, "GeneralParameters", "PrinciplePointX", 620.951, 630, 0.001);
-	AddParameter(ransac, "GeneralParameters", "PrinciplePointY", 581.838, 600, 0.001);
+	AddParameter(ransac, "FirstCameraMatrix", "FocalLengthX", 1408.899186439272, 1500, 0.0001);
+	AddParameter(ransac, "FirstCameraMatrix", "FocalLengthY", 1403.116708010621, 1500, 0.0001);
+	AddParameter(ransac, "FirstCameraMatrix", "PrinciplePointX", 1053.351342078365, 1500, 0.001);
+	AddParameter(ransac, "FirstCameraMatrix", "PrinciplePointY", 588.8342842821718, 1500, 0.001);
+	AddParameter(ransac, "SecondCameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 0.0001);
+	AddParameter(ransac, "SecondCameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 0.0001);
+	AddParameter(ransac, "SecondCameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 0.001);
+	AddParameter(ransac, "SecondCameraMatrix", "PrinciplePointY", 592.5031927882591, 1500, 0.001);
 	}
 
 void StereoReconstructionTestInterface::DisplayResult()
@@ -374,36 +381,48 @@ void StereoReconstructionTestInterface::ExtractCalibrationParameters()
 	static const unsigned COLUMN_NUMBER = 11;
 	static const float SQUARE_EDGE_LENGTH = 0.02;
 
-	cv::Mat doubleImage1 = cv::imread("../../tests/Data/Images/chessboard1.jpg", cv::IMREAD_COLOR);
-	cv::Mat leftImage1 = doubleImage1( cv::Rect(0, 0, doubleImage1.cols/2, doubleImage1.rows) );
-	cv::Mat rightImage1 = doubleImage1( cv::Rect(doubleImage1.cols/2, 0, doubleImage1.cols/2, doubleImage1.rows) );
+ 	std::vector<std::vector<cv::Point2f> > leftCornersList(11);
+ 	std::vector<std::vector<cv::Point2f> > rightCornersList(11);
 
-	cv::Mat doubleImage2 = cv::imread("../../tests/Data/Images/chessboard2.jpg", cv::IMREAD_COLOR);
-	cv::Mat leftImage2 = doubleImage2( cv::Rect(0, 0, doubleImage2.cols/2, doubleImage2.rows) );
-	cv::Mat rightImage2 = doubleImage2( cv::Rect(doubleImage2.cols/2, 0, doubleImage2.cols/2, doubleImage2.rows) );
-
-	ASSERT(doubleImage1.cols == doubleImage2.cols && doubleImage1.rows == doubleImage2.rows, "Input calibration Images do not have same size");
-
- 	std::vector<std::vector<cv::Point2f> > leftCornersList(2);
- 	std::vector<std::vector<cv::Point2f> > rightCornersList(2);
-
-	bool leftFlag1 = cv::findChessboardCorners(leftImage1, cv::Size(ROW_NUMBER, COLUMN_NUMBER), leftCornersList[0]);
-	bool rightFlag1 = cv::findChessboardCorners(rightImage1, cv::Size(ROW_NUMBER, COLUMN_NUMBER), rightCornersList[0]);
-	ASSERT(leftFlag1 && rightFlag1, "Camera calibration failed");
-
-	std::vector<cv::Point2f> leftCornersList2, rightCornersList2;
-	bool leftFlag2 = cv::findChessboardCorners(leftImage2, cv::Size(ROW_NUMBER, COLUMN_NUMBER), leftCornersList[1]);
-	bool rightFlag2 = cv::findChessboardCorners(rightImage2, cv::Size(ROW_NUMBER, COLUMN_NUMBER), rightCornersList[1]);
-	ASSERT(leftFlag2 && rightFlag2, "Camera calibration failed");
-
-	std::vector< std::vector<cv::Point3f> > objectPoints(2);
-	for(unsigned row=0; row<ROW_NUMBER; row++) 
+	cv::Size imageSize;
+	for(unsigned imageId=1; imageId<=11; imageId++)
 		{
-		for(unsigned column=0; column<COLUMN_NUMBER; column++)
+		std::stringstream filePath;
+		filePath<<"../../tests/Data/Images/chessboard"<<imageId<<".jpg";
+		cv::Mat stereoImage = cv::imread(filePath.str(), cv::IMREAD_COLOR);
+		cv::Mat leftImage = stereoImage( cv::Rect(0, 0, stereoImage.cols/2, stereoImage.rows) );
+		cv::Mat rightImage = stereoImage( cv::Rect(stereoImage.cols/2, 0, stereoImage.cols/2, stereoImage.rows) );
+		ASSERT(leftImage.rows == rightImage.rows && leftImage.cols == rightImage.cols, "Error, left and right image should have same size");
+		
+		if (imageId == 1)
 			{
-			cv::Point3f point(column*SQUARE_EDGE_LENGTH, row*SQUARE_EDGE_LENGTH, 0);
-			objectPoints[0].push_back( point );
-			objectPoints[1].push_back( point );
+			imageSize = leftImage.size();
+			}
+		else
+			{
+			ASSERT(imageSize == leftImage.size(), "Images in the set do not have same size");
+			}
+
+		bool leftFlag = cv::findChessboardCorners(leftImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), leftCornersList[imageId-1]);
+		bool rightFlag = cv::findChessboardCorners(rightImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), rightCornersList[imageId-1]);
+		ASSERT(leftFlag && rightFlag, "Camera calibration failed");
+
+		//cv::Mat img = leftImage.clone();
+		//cv::drawChessboardCorners(img, cv::Size(7, 11), leftCornersList[imageId-1], leftFlag);
+		//cv::imshow("img", img);
+		//cv::waitKey(0);
+		}
+
+	std::vector< std::vector<cv::Point3f> > objectPoints(11);
+	for(unsigned column=0; column<COLUMN_NUMBER; column++) 
+		{
+		for(unsigned row=0; row<ROW_NUMBER; row++)
+			{
+			for(unsigned imageId = 1; imageId<=11; imageId++)
+				{
+				cv::Point3f point((float)column*SQUARE_EDGE_LENGTH, (float)row*SQUARE_EDGE_LENGTH, 0);
+				objectPoints[imageId-1].push_back( point );
+				}
 			}
 		}
 
@@ -422,13 +441,13 @@ void StereoReconstructionTestInterface::ExtractCalibrationParameters()
 		leftDistortionCoefficients,
 		rightCameraMatrix,
 		rightDistortionCoefficients,
-		leftImage1.size(),
+		imageSize,
 		rotationMatrix,
 		translationMatrix,
 		essentialMatrix,
 		fundamentalMatrix,
-		CV_CALIB_FIX_ASPECT_RATIO + CV_CALIB_ZERO_TANGENT_DIST + CV_CALIB_SAME_FOCAL_LENGTH + CV_CALIB_RATIONAL_MODEL + CV_CALIB_FIX_K3 + CV_CALIB_FIX_K4 + CV_CALIB_FIX_K5,
-		cv::TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 100, 1e-5)
+		CV_CALIB_RATIONAL_MODEL,
+		cv::TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, 1e-5)
 		);
 	PRINT_TO_LOG("Calibration complete", "");
 
@@ -465,7 +484,7 @@ void StereoReconstructionTestInterface::ExtractCalibrationParameters()
 		leftDistortionCoefficients,
 		rightCameraMatrix,
 		rightDistortionCoefficients,
-		leftImage1.size(),
+		imageSize,
 		rotationMatrix,
 		translationMatrix,
 		leftRectificationMatrix,
@@ -477,6 +496,92 @@ void StereoReconstructionTestInterface::ExtractCalibrationParameters()
 
 	PRINT_TO_LOG("Rectified Left Projection Matrix", leftRectifiedProjectionMatrix);
 	PRINT_TO_LOG("Rectified Right Projection Matrix", rightRectifiedProjectionMatrix);	
+	}
+
+void StereoReconstructionTestInterface::ExtractCalibrationParametersOneCamera()
+	{
+	static const unsigned ROW_NUMBER = 7;
+	static const unsigned COLUMN_NUMBER = 11;
+	static const float SQUARE_EDGE_LENGTH = 0.02;
+
+ 	std::vector<std::vector<cv::Point2f> > leftCornersList(11);
+ 	std::vector<std::vector<cv::Point2f> > rightCornersList(11);
+
+	cv::Size imageSize;
+	for(unsigned imageId=1; imageId<=11; imageId++)
+		{
+		std::stringstream filePath;
+		filePath<<"../../tests/Data/Images/chessboard"<<imageId<<".jpg";
+		cv::Mat stereoImage = cv::imread(filePath.str(), cv::IMREAD_COLOR);
+		cv::Mat leftImage = stereoImage( cv::Rect(0, 0, stereoImage.cols/2, stereoImage.rows) );
+		cv::Mat rightImage = stereoImage( cv::Rect(stereoImage.cols/2, 0, stereoImage.cols/2, stereoImage.rows) );
+		ASSERT(leftImage.rows == rightImage.rows && leftImage.cols == rightImage.cols, "Error, left and right image should have same size");
+		
+		if (imageId == 1)
+			{
+			imageSize = leftImage.size();
+			}
+		else
+			{
+			ASSERT(imageSize == leftImage.size(), "Images in the set do not have same size");
+			}
+
+		bool leftFlag = cv::findChessboardCorners(leftImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), leftCornersList[imageId-1]);
+		bool rightFlag = cv::findChessboardCorners(rightImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), rightCornersList[imageId-1]);
+		ASSERT(leftFlag && rightFlag, "Camera calibration failed");
+		}
+
+	std::vector< std::vector<cv::Point3f> > objectPoints(11);
+	for(unsigned column=0; column<COLUMN_NUMBER; column++) 
+		{
+		for(unsigned row=0; row<ROW_NUMBER; row++)
+			{
+			for(unsigned imageId = 1; imageId<=11; imageId++)
+				{
+				cv::Point3f point((float)column*SQUARE_EDGE_LENGTH, (float)row*SQUARE_EDGE_LENGTH, 0);
+				objectPoints[imageId-1].push_back( point );
+				}
+			}
+		}
+
+	cv::Mat leftCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
+	cv::Mat rightCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
+
+	cv::Mat leftDistortionCoefficients, rightDistortionCoefficients;
+	cv::Mat leftRotationMatrix, leftTranslationMatrix, rightRotationMatrix, rightTranslationMatrix;
+
+	cv::calibrateCamera
+		(
+		objectPoints,
+		leftCornersList,
+		imageSize,
+		leftCameraMatrix,
+		leftDistortionCoefficients,
+		leftRotationMatrix,
+		leftTranslationMatrix,
+		CV_CALIB_RATIONAL_MODEL,
+		cv::TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, 1e-5)
+		);
+	cv::calibrateCamera
+		(
+		objectPoints,
+		rightCornersList,
+		imageSize,
+		rightCameraMatrix,
+		rightDistortionCoefficients,
+		rightRotationMatrix,
+		rightTranslationMatrix,
+		CV_CALIB_RATIONAL_MODEL,
+		cv::TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, 1e-5)
+		);
+	PRINT_TO_LOG("Calibration complete", "");
+
+	PRINT_TO_LOG("Left calibration: ", leftCameraMatrix);
+	PRINT_TO_LOG("Right calibration: ", rightCameraMatrix);
+	PRINT_TO_LOG("Left distortion: ", leftDistortionCoefficients);
+	PRINT_TO_LOG("Right distortion: ", rightDistortionCoefficients);
+	PRINT_TO_LOG("Translation: ", leftTranslationMatrix);
+	PRINT_TO_LOG("Rotation: ", leftRotationMatrix);
 	}
 
 void StereoReconstructionTestInterface::VisualizeCorrespondences(CorrespondenceMap2DConstPtr correspondenceMap)

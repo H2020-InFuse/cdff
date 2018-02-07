@@ -53,9 +53,14 @@ EssentialMatrixRansac::EssentialMatrixRansac()
 	{
 	parameters.outlierThreshold = DEFAULT_PARAMETERS.outlierThreshold;
 	parameters.confidence = DEFAULT_PARAMETERS.confidence;
-	parameters.focalLength = DEFAULT_PARAMETERS.focalLength;
-	parameters.principlePoint.x = DEFAULT_PARAMETERS.principlePoint.x;
-	parameters.principlePoint.y = DEFAULT_PARAMETERS.principlePoint.y;
+	parameters.firstCameraMatrix.focalLengthX = DEFAULT_PARAMETERS.firstCameraMatrix.focalLengthX;
+	parameters.firstCameraMatrix.focalLengthY = DEFAULT_PARAMETERS.firstCameraMatrix.focalLengthY;
+	parameters.firstCameraMatrix.principlePoint.x = DEFAULT_PARAMETERS.firstCameraMatrix.principlePoint.x;
+	parameters.firstCameraMatrix.principlePoint.y = DEFAULT_PARAMETERS.firstCameraMatrix.principlePoint.y;
+	parameters.secondCameraMatrix.focalLengthX = DEFAULT_PARAMETERS.secondCameraMatrix.focalLengthX;
+	parameters.secondCameraMatrix.focalLengthY = DEFAULT_PARAMETERS.secondCameraMatrix.focalLengthY;
+	parameters.secondCameraMatrix.principlePoint.x = DEFAULT_PARAMETERS.secondCameraMatrix.principlePoint.x;
+	parameters.secondCameraMatrix.principlePoint.y = DEFAULT_PARAMETERS.secondCameraMatrix.principlePoint.y;
 
 	configurationFilePath = "";
 	}
@@ -110,12 +115,32 @@ void EssentialMatrixRansac::process()
 
 const EssentialMatrixRansac::EssentialMatrixRansacOptionsSet EssentialMatrixRansac::DEFAULT_PARAMETERS =
 	{
-	.outlierThreshold = 1.3,
+	.outlierThreshold = 1,
 	.confidence = 0.99,
-	.focalLength = 1.0,
-	.principlePoint = cv::Point2d(0, 0)
+	.firstCameraMatrix =
+		{
+		.focalLengthX = 1.0,
+		.focalLengthY = 1.0,
+		.principlePoint = cv::Point2d(0, 0)
+		},
+	.secondCameraMatrix =
+		{
+		.focalLengthX = 1.0,
+		.focalLengthY = 1.0,
+		.principlePoint = cv::Point2d(0, 0)
+		}
 	};
 
+cv::Mat EssentialMatrixRansac::ConvertToMat(CameraMatrix cameraMatrix)
+	{
+	cv::Mat conversion(3, 3, CV_64FC1, cv::Scalar(0));
+	conversion.at<double>(0,0) = cameraMatrix.focalLengthX;
+	conversion.at<double>(1,1) = cameraMatrix.focalLengthY;
+	conversion.at<double>(0,2) = cameraMatrix.principlePoint.x;
+	conversion.at<double>(1,2) = cameraMatrix.principlePoint.y;
+	conversion.at<double>(2,2) = 1.0;
+	return conversion;
+	}
 
 cv::Mat EssentialMatrixRansac::ComputeTransformMatrix(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector)
 	{
@@ -136,6 +161,16 @@ cv::Mat EssentialMatrixRansac::ComputeTransformMatrix(const std::vector<cv::Poin
 		}
 
 	cv::Mat essentialMatrix = ComputeEssentialMatrix(fundamentalMatrix);
+	/*cv::Mat essentialMatrix = cv::findEssentialMat
+		(
+		firstImagePointsVector,
+		secondImagePointsVector,
+		parameters.firstCameraMatrix.focalLengthX,
+		parameters.firstCameraMatrix.principlePoint,
+		cv::RANSAC,
+		parameters.confidence,
+		parameters.outlierThreshold
+		);*/
 
 	cv::Mat rotationMatrix1, rotationMatrix2, translationMatrix;
 	cv::decomposeEssentialMat(essentialMatrix, rotationMatrix1, rotationMatrix2, translationMatrix);
@@ -146,24 +181,20 @@ cv::Mat EssentialMatrixRansac::ComputeTransformMatrix(const std::vector<cv::Poin
 		}
 
 	cv::Mat transformMatrix(3, 4, CV_32FC1, cv::Scalar(0));
-	rotationMatrix1.copyTo( transformMatrix(cv::Rect(0,0,3,3)) );
-	translationMatrix.copyTo( transformMatrix(cv::Rect(3, 0, 1, 3)) );
+	rotationMatrix1.convertTo( transformMatrix(cv::Rect(0,0,3,3)), CV_32FC1 );
+	translationMatrix.convertTo( transformMatrix(cv::Rect(3, 0, 1, 3)), CV_32FC1 );
 
 	return transformMatrix;
 	}
 
 cv::Mat EssentialMatrixRansac::ComputeEssentialMatrix(cv::Mat fundamentalMatrix)
 	{
-	cv::Mat cameraMatrix(3, 3, CV_64FC1, cv::Scalar(0));
-	cameraMatrix.at<float>(0,0) = parameters.focalLength;
-	cameraMatrix.at<float>(1,1) = parameters.focalLength;
-	cameraMatrix.at<float>(0,2) = parameters.principlePoint.x;
-	cameraMatrix.at<float>(1,2) = parameters.principlePoint.y;
-	cameraMatrix.at<float>(2,2) = 1;
+	cv::Mat firstCameraMatrix = ConvertToMat(parameters.firstCameraMatrix);
+	cv::Mat secondCameraMatrix = ConvertToMat(parameters.secondCameraMatrix);
 
-	cv::Mat cameraMatrixTransposed;
-	cv::transpose(cameraMatrix, cameraMatrixTransposed);
-	cv::Mat essentialMatrix = cameraMatrixTransposed * fundamentalMatrix * cameraMatrix;
+	cv::Mat secondCameraMatrixTransposed;
+	cv::transpose(secondCameraMatrix, secondCameraMatrixTransposed);
+	cv::Mat essentialMatrix = secondCameraMatrixTransposed * fundamentalMatrix * firstCameraMatrix;
 
 	return essentialMatrix;
 	}
@@ -202,7 +233,8 @@ void EssentialMatrixRansac::ValidateParameters()
 	{
 	ASSERT(parameters.outlierThreshold >= 0, "EssentialMatrixRansac Configuration Error: outlierThreshold is negative");
 	ASSERT(parameters.confidence >= 0 && parameters.confidence <= 1, "EssentialMatrixRansac Configuration Error: confidence should be a probability between 0 and 1");
-	ASSERT(parameters.focalLength > 0, "EssentialMatrixRansac Configuration Error: focalLength is not positive");
+	ASSERT(parameters.firstCameraMatrix.focalLengthX > 0 && parameters.firstCameraMatrix.focalLengthY > 0, "EssentialMatrixRansac Configuration Error: focalLength is not positive");
+	ASSERT(parameters.secondCameraMatrix.focalLengthX > 0 && parameters.secondCameraMatrix.focalLengthY > 0, "EssentialMatrixRansac Configuration Error: focalLength is not positive");
 	}
 
 void EssentialMatrixRansac::ValidateInputs(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector)
@@ -218,9 +250,20 @@ void EssentialMatrixRansac::Configure(const YAML::Node& configurationNode)
 		{
 		YAMLCPP_DFN_ASSIGN(outlierThreshold, double, configurationNode, "OutlierThreshold");
 		YAMLCPP_DFN_ASSIGN(confidence, double, configurationNode, "Confidence");
-		YAMLCPP_DFN_ASSIGN(focalLength, double, configurationNode, "FocalLength");
-		YAMLCPP_DFN_ASSIGN(principlePoint.x, double, configurationNode, "PrinciplePointX");
-		YAMLCPP_DFN_ASSIGN(principlePoint.y, double, configurationNode, "PrinciplePointY");
+		}
+	else if ( nodeName == "FirstCameraMatrix")
+		{
+		YAMLCPP_DFN_ASSIGN(firstCameraMatrix.focalLengthX, double, configurationNode, "FocalLengthX");
+		YAMLCPP_DFN_ASSIGN(firstCameraMatrix.focalLengthY, double, configurationNode, "FocalLengthY");
+		YAMLCPP_DFN_ASSIGN(firstCameraMatrix.principlePoint.x, double, configurationNode, "PrinciplePointX");
+		YAMLCPP_DFN_ASSIGN(firstCameraMatrix.principlePoint.y, double, configurationNode, "PrinciplePointY");
+		}
+	else if ( nodeName == "SecondCameraMatrix")
+		{
+		YAMLCPP_DFN_ASSIGN(secondCameraMatrix.focalLengthX, double, configurationNode, "FocalLengthX");
+		YAMLCPP_DFN_ASSIGN(secondCameraMatrix.focalLengthY, double, configurationNode, "FocalLengthY");
+		YAMLCPP_DFN_ASSIGN(secondCameraMatrix.principlePoint.x, double, configurationNode, "PrinciplePointX");
+		YAMLCPP_DFN_ASSIGN(secondCameraMatrix.principlePoint.y, double, configurationNode, "PrinciplePointY");
 		}
 
 	//Ignore everything else

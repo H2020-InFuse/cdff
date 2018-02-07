@@ -69,16 +69,24 @@ namespace dfn_ci {
 	 */	
 	private:
 
+		struct CameraMatrix
+			{
+			double focalLengthX;
+			double focalLengthY;
+			cv::Point2d principlePoint;
+			};
+
 		struct EssentialMatrixRansacOptionsSet
 			{
 			double outlierThreshold; // in pixels
 			double confidence; //probability between 0 and 1
-			double focalLength;
-			cv::Point2d principlePoint;
+			CameraMatrix firstCameraMatrix;
+			CameraMatrix secondCameraMatrix;
 			};
 
 		EssentialMatrixRansacOptionsSet parameters;
 		static const EssentialMatrixRansacOptionsSet DEFAULT_PARAMETERS;
+		cv::Mat ConvertToMat(CameraMatrix cameraMatrix);
 
 		cv::Mat ComputeTransformMatrix(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector);
 		cv::Mat ComputeEssentialMatrix(cv::Mat fundamentalMatrix);
