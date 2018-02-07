@@ -42,7 +42,7 @@
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <FeaturesMatching2D/FlannMatcher.hpp>
 #include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
-#include <CamerasTransformEstimation/EssentialMatrixRansac.hpp>
+#include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 
 #include <FrameToMatConverter.hpp>
 #include <MatToFrameConverter.hpp>
@@ -56,7 +56,6 @@
 #include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 
 
-
 using namespace dfn_ci;
 using namespace Converters;
 using namespace Common;
@@ -65,6 +64,8 @@ using namespace VisualPointFeatureVector2DWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
+using namespace MatrixWrapper;
+using namespace BaseTypesWrapper;
 
 class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 	{
@@ -94,7 +95,7 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 
 		OrbDetectorDescriptor* orb;
 		FlannMatcher* flann;	
-		EssentialMatrixRansac* ransac;	
+		FundamentalMatrixRansac* ransac;	
 		Triangulation* triangulation;
 
 		std::string outputWindowName;
@@ -106,7 +107,8 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		VisualPointFeatureVector2DConstPtr leftFeaturesVector;
 		VisualPointFeatureVector2DConstPtr rightFeaturesVector;
 		CorrespondenceMap2DConstPtr correspondenceMap;
-		Transform3DConstPtr transform;
+		Matrix3dConstPtr fundamentalMatrix;
+		Point2DConstPtr secondEpipole;
 
 		void SetupMocksAndStubs();
 		void SetupParameters();
@@ -132,7 +134,7 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 	: DFNsIntegrationTestInterface(buttonWidth, buttonHeight)
 	{
 	//ExtractCalibrationParametersOneCamera();
-	ExtractCalibrationParameters();
+	//ExtractCalibrationParameters();
 
 	orb = new OrbDetectorDescriptor();
 	AddDFN(orb, "orb");
@@ -140,7 +142,7 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 	flann = new FlannMatcher();
 	AddDFN(flann, "flann");
 		
-	ransac = new EssentialMatrixRansac();
+	ransac = new FundamentalMatrixRansac();
 	AddDFN(ransac, "ransac");
 	
 	triangulation = new Triangulation();
@@ -205,14 +207,6 @@ void StereoReconstructionTestInterface::SetupParameters()
 
 	AddParameter(ransac, "GeneralParameters", "OutlierThreshold", 1, 100);
 	AddParameter(ransac, "GeneralParameters", "Confidence", 0.9, 1, 0.01);
-	AddParameter(ransac, "FirstCameraMatrix", "FocalLengthX", 1408.899186439272, 1500, 0.0001);
-	AddParameter(ransac, "FirstCameraMatrix", "FocalLengthY", 1403.116708010621, 1500, 0.0001);
-	AddParameter(ransac, "FirstCameraMatrix", "PrinciplePointX", 1053.351342078365, 1500, 0.001);
-	AddParameter(ransac, "FirstCameraMatrix", "PrinciplePointY", 588.8342842821718, 1500, 0.001);
-	AddParameter(ransac, "SecondCameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 0.0001);
-	AddParameter(ransac, "SecondCameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 0.0001);
-	AddParameter(ransac, "SecondCameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 0.001);
-	AddParameter(ransac, "SecondCameraMatrix", "PrinciplePointY", 592.5031927882591, 1500, 0.001);
 	}
 
 void StereoReconstructionTestInterface::DisplayResult()
@@ -250,7 +244,8 @@ void StereoReconstructionTestInterface::DisplayResult()
 	delete(leftFeaturesVector);
 	delete(rightFeaturesVector);
 	delete(correspondenceMap);
-	delete(transform);
+	delete(fundamentalMatrix);
+	delete(secondEpipole);
 	delete(pointCloud);
 	}
 
@@ -362,16 +357,14 @@ void StereoReconstructionTestInterface::PrepareRansac()
 void StereoReconstructionTestInterface::PrepareTriangulation()
 	{
 	bool success = ransac->successOutput();
-	ASSERT(success, "Essential Matrix Ransac failed: unable to find a valid transform");
+	ASSERT(success, "Fundamental Matrix Ransac failed: unable to find a valid transform");
 
-	transform = ransac->transformOutput();
-	std::stringstream stream;
-	stream << "(" << GetXTranslation(*transform)<<", "<< GetYTranslation(*transform)<<", "<< GetZTranslation(*transform)<<") ";
-	stream << "(" << GetXRotation(*transform)<<", "<< GetYOrientation(*transform)<<", "<< GetZRotation(*transform)<<", "<< GetWRotation(*transform) <<") ";
-	std::string message = stream.str();
-	PRINT_TO_LOG("Essential matrix Ransac found transform: ", message);
+	fundamentalMatrix = ransac->fundamentalMatrixOutput();
+	secondEpipole = ransac->secondEpipoleOutput();
+	PRINT_TO_LOG("Fundamental matrix Ransac found transform: ", "");
 
-	triangulation->transformInput(transform);
+	triangulation->fundamentalMatrixInput(fundamentalMatrix);
+	triangulation->secondEpipoleInput(secondEpipole);
 	triangulation->correspondenceMapInput(correspondenceMap);
 	}
 

@@ -32,6 +32,7 @@
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
 #include <CorrespondenceMap2D.hpp>
 #include <Matrix.hpp>
+#include <BaseTypes.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
@@ -81,6 +82,8 @@ namespace dfn_ci {
 		static const FundamentalMatrixRansacOptionsSet DEFAULT_PARAMETERS;
 
 		cv::Mat ComputeFundamentalMatrix(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector);
+		BaseTypesWrapper::Point2DConstPtr ComputeSecondEpipole
+			(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector, cv::Mat fundamentalMatrix);
 		void Convert(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap, std::vector<cv::Point2d>& firstImagePointsVector, std::vector<cv::Point2d>& secondImagePointsVector);
 		MatrixWrapper::Matrix3dConstPtr Convert(cv::Mat matrix);
 

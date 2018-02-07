@@ -369,7 +369,7 @@ cv::Mat FlannMatcher::ConvertToValidType(cv::Mat floatDescriptorsMatrix)
 		floatDescriptorsMatrix.convertTo(uint8DescriptorsMatrix, CV_8UC1);
 		return uint8DescriptorsMatrix;
 		}
-	return floatDescriptorsMatrix;
+	return floatDescriptorsMatrix.clone();
 	}
 
 

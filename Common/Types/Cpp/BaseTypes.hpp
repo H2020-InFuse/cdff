@@ -43,6 +43,7 @@ namespace CTypes {
 #include <Geometry.h>
 #include <CorrespondenceMap3D.h>
 }
+#include <memory>
 
 #ifndef BASE_TYPES_HPP
 #define BASE_TYPES_HPP
@@ -67,6 +68,11 @@ typedef CTypes::T_Float T_Float;
 typedef CTypes::T_Double T_Double;
 typedef CTypes::Point3D Point3D;
 typedef CTypes::Point2D Point2D;
+
+typedef std::shared_ptr<Point2D> Point2DSharedPtr;
+typedef std::shared_ptr<const Point2D> Point2DSharedConstPtr;
+typedef Point2D* Point2DPtr;
+typedef Point2D const* Point2DConstPtr;
 
 }
 

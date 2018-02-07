@@ -146,7 +146,7 @@ cv::Mat EssentialMatrixRansac::ComputeTransformMatrix(const std::vector<cv::Poin
 		return cv::Mat();
 		}
 
-	cv::Mat essentialMatrix = ComputeEssentialMatrix(fundamentalMatrix);
+	//cv::Mat essentialMatrix = ComputeEssentialMatrix(fundamentalMatrix);
 	/*cv::Mat essentialMatrix = cv::findEssentialMat
 		(
 		firstImagePointsVector,
@@ -158,17 +158,63 @@ cv::Mat EssentialMatrixRansac::ComputeTransformMatrix(const std::vector<cv::Poin
 		parameters.outlierThreshold
 		);*/
 
-	cv::Mat rotationMatrix1, rotationMatrix2, translationMatrix;
-	cv::decomposeEssentialMat(essentialMatrix, rotationMatrix1, rotationMatrix2, translationMatrix);
+	//cv::Mat rotationMatrix1, rotationMatrix2, translationMatrix;
+	//cv::decomposeEssentialMat(essentialMatrix, rotationMatrix1, rotationMatrix2, translationMatrix);
 
-	if (rotationMatrix1.cols == 0 && rotationMatrix1.rows == 0)
-		{
-		return cv::Mat();
-		}
+	//if (rotationMatrix1.cols == 0 && rotationMatrix1.rows == 0)
+	//	{
+	//	return cv::Mat();
+	//	}
+
+	//cv::Mat transformMatrix(3, 4, CV_32FC1, cv::Scalar(0));
+	//rotationMatrix1.convertTo( transformMatrix(cv::Rect(0,0,3,3)), CV_32FC1 );
+	//translationMatrix.convertTo( transformMatrix(cv::Rect(3, 0, 1, 3)), CV_32FC1 );
+
+	cv::Point3d epipole = ComputeSecondImageEpipole(firstImagePointsVector, secondImagePointsVector, fundamentalMatrix);
+	cv::Mat transformMatrix = ComputeTransformMatrix(fundamentalMatrix, epipole);
+
+	return transformMatrix;
+	}
+
+cv::Point3d EssentialMatrixRansac::ComputeSecondImageEpipole(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector, cv::Mat fundamentalMatrix)
+	{
+	std::vector<cv::Vec3d> epilinesVector;
+	cv::computeCorrespondEpilines(firstImagePointsVector, 1, fundamentalMatrix, epilinesVector);
+
+	double firstEpilineX = epilinesVector.at(0)[0];
+	double secondEpilineY = epilinesVector.at(1)[1];
+	double thirdEpilineZ = epilinesVector.at(2)[2];
+
+	cv::Point2d firstPoint = firstImagePointsVector.at(0);
+	cv::Point2d secondPoint = firstImagePointsVector.at(1);
+	cv::Point2d thirdPoint = firstImagePointsVector.at(2);		
+
+	cv::Point3d secondEpipole;
+	secondEpipole.z = (thirdEpilineZ + secondEpilineY * thirdPoint.y + firstEpilineX * thirdPoint.x) / (secondPoint.x * thirdPoint.y - firstPoint.y * thirdPoint.x);
+	secondEpipole.y = firstEpilineX - secondEpipole.z * firstPoint.y;
+	secondEpipole.x = secondEpipole.z * secondPoint.x - secondEpilineY;
+	return secondEpipole;
+	}
+
+cv::Mat EssentialMatrixRansac::ComputeTransformMatrix(cv::Mat fundamentalMatrix, cv::Point3d epipole)
+	{
+	cv::Mat epipoleMatrix(3, 3, CV_64FC1, cv::Scalar(0));
+	epipoleMatrix.at<double>(0,1) = -epipole.z;
+	epipoleMatrix.at<double>(0,2) = +epipole.y;
+	epipoleMatrix.at<double>(1,0) = +epipole.z;
+	epipoleMatrix.at<double>(1,2) = -epipole.x;
+	epipoleMatrix.at<double>(2,0) = -epipole.y;
+	epipoleMatrix.at<double>(2,1) = +epipole.x;
+
+	cv::Mat epipoleFundametalMatrixProduct = epipoleMatrix * fundamentalMatrix;
 
 	cv::Mat transformMatrix(3, 4, CV_32FC1, cv::Scalar(0));
-	rotationMatrix1.convertTo( transformMatrix(cv::Rect(0,0,3,3)), CV_32FC1 );
-	translationMatrix.convertTo( transformMatrix(cv::Rect(3, 0, 1, 3)), CV_32FC1 );
+	epipoleFundametalMatrixProduct.convertTo( transformMatrix(cv::Rect(0,0,3,3)), CV_32FC1 );
+	transformMatrix.at<float>(0,3) = static_cast<float>(epipole.x);
+	transformMatrix.at<float>(1,3) = static_cast<float>(epipole.y);
+	transformMatrix.at<float>(2,3) = static_cast<float>(epipole.z);
+
+	PRINT_TO_LOG("TransformMatrix", transformMatrix);
 
 	return transformMatrix;
 	}
