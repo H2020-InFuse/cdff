@@ -162,27 +162,19 @@ cv::Mat FundamentalMatrixRansac::ComputeFundamentalMatrix(const std::vector<cv::
 	return fundamentalMatrix;
 	}
 
-//Computing the epipole e knowing that for each point x with epiline l, it holds l = e * x (cross product) 
+//Computing the epipole e' of the second camera from equation e' F = 0: according to result 9.13 of Multiple view geometry in computer vision. Richard Hartley, Andrew Zisserman.
 Point2DConstPtr FundamentalMatrixRansac::ComputeSecondEpipole(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector, cv::Mat fundamentalMatrix)
 	{
-	std::vector<cv::Vec3d> secondEpilinesVector;
-	cv::computeCorrespondEpilines(firstImagePointsVector, 1, fundamentalMatrix, secondEpilinesVector);
-
-	double epilineX = secondEpilinesVector.at(0)[0];
-	double epilineY = secondEpilinesVector.at(0)[1];
-
-	cv::Point2d firstPoint = secondImagePointsVector.at(0);		
-
-	cv::Point3d secondEpipole;
-	secondEpipole.z = 1;
-	secondEpipole.y = epilineX + firstPoint.y;
-	secondEpipole.x = firstPoint.x - epilineY;
+	cv::Mat solution;
+	cv::Mat coeffiecientsMatrix, scalarsMatrix;
+	cv::transpose ( fundamentalMatrix(cv::Rect(0, 0, 3, 2)), coeffiecientsMatrix);
+	cv::transpose (-fundamentalMatrix(cv::Rect(0, 2, 3, 1)), scalarsMatrix);
+	cv::solve(coeffiecientsMatrix, scalarsMatrix, solution, cv::DECOMP_SVD);
 
 	Point2DPtr secondEpipolePtr = new Point2D();
-	secondEpipolePtr->x = secondEpipole.x;
-	secondEpipolePtr->y = secondEpipole.y;
-	PRINT_TO_LOG("EX: ", secondEpipolePtr->x);
-	PRINT_TO_LOG("EY: ", secondEpipolePtr->y);
+	secondEpipolePtr->x = solution.at<double>(0,0);
+	secondEpipolePtr->y = solution.at<double>(1,0);
+
 	return secondEpipolePtr;
 	}
 

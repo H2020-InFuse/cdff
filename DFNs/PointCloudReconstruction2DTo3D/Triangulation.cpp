@@ -91,6 +91,7 @@ cv::Mat Triangulation::Triangulate(cv::Mat projectionMatrix, cv::Mat pointsVecto
 
 	cv::Mat homogeneousPointCloudMatrix;
 	cv::triangulatePoints(identityProjection, projectionMatrix, pointsVectorAtSource, pointsVectorAtSink, homogeneousPointCloudMatrix);
+	//cv::sfm::triangulatePoints(pointsVectorAtSource, projectionMatrix, homogeneousPointCloudMatrix);
 	return homogeneousPointCloudMatrix;
 	}
 

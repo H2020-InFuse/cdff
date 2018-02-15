@@ -349,6 +349,7 @@ void StereoReconstructionTestInterface::PrepareFlann()
 void StereoReconstructionTestInterface::PrepareRansac()
 	{
 	correspondenceMap = flann->correspondenceMapOutput();
+	VisualizeCorrespondences(correspondenceMap);
 	PRINT_TO_LOG("Number of correspondences from flann matcher: ", GetNumberOfCorrespondences(*correspondenceMap));
 
 	ransac->correspondenceMapInput(correspondenceMap);
@@ -368,6 +369,37 @@ void StereoReconstructionTestInterface::PrepareTriangulation()
 	triangulation->correspondenceMapInput(correspondenceMap);
 	}
 
+
+/*
+This is the output of the following method:
+	cv::Mat rotationTranslationMatrix(3, 4, CV_32FC1, cv::Scalar(0));
+	rotationTranslationMatrix.at<float>(0,0) = 0.453266151496562; 
+	rotationTranslationMatrix.at<float>(0,1) = -0.4189590134265467;
+	rotationTranslationMatrix.at<float>(0,2) = 0.7867802367727283;
+ 	rotationTranslationMatrix.at<float>(1,0) = -0.03139148385142432;
+	rotationTranslationMatrix.at<float>(1,1) = 0.8746086689785711; 
+	rotationTranslationMatrix.at<float>(1,2) = 0.4838122062217302;
+ 	rotationTranslationMatrix.at<float>(2,0) = -0.8908223002648179;
+	rotationTranslationMatrix.at<float>(2,1) = -0.2439938958584555;
+	rotationTranslationMatrix.at<float>(2,2) = 0.3832787603490593;
+	rotationTranslationMatrix.at<float>(0,3) = -2.042263939854534;
+	rotationTranslationMatrix.at<float>(1,3) = -1.342189200820332;
+	rotationTranslationMatrix.at<float>(2,3) = 0.7502406403804528;
+
+	cv::Mat leftCameraMatrixS(3, 3, CV_32FC1, cv::Scalar(0));
+	leftCameraMatrix.at<float>(0, 0) = 9245.469388977166;
+	leftCameraMatrix.at<float>(1, 1) = 20554.77101321935;
+	leftCameraMatrix.at<float>(0, 2) = -1010.674087871778;
+	leftCameraMatrix.at<float>(1, 2) = -2562.301106695449;
+	leftCameraMatrix.at<float>(2, 2) = 1.0;
+
+	cv::Mat rightCameraMatrixS(3, 3, CV_32FC1, cv::Scalar(0));
+	rightCameraMatrix.at<float>(0, 0) = 947.2017949977272;
+	rightCameraMatrix.at<float>(1, 1) = 1657.602441223055;
+	rightCameraMatrix.at<float>(0, 2) = 3026.416358478908;
+	rightCameraMatrix.at<float>(1, 2) = 257.3840612345921;
+	rightCameraMatrix.at<float>(2, 2) = 1.0;
+*/
 void StereoReconstructionTestInterface::ExtractCalibrationParameters()
 	{
 	static const unsigned ROW_NUMBER = 7;
@@ -491,6 +523,22 @@ void StereoReconstructionTestInterface::ExtractCalibrationParameters()
 	PRINT_TO_LOG("Rectified Right Projection Matrix", rightRectifiedProjectionMatrix);	
 	}
 
+
+/* This is the output of the following method:
+	cv::Mat leftCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
+	leftCameraMatrix.at<float>(0, 0) = 1408.899186439272;
+	leftCameraMatrix.at<float>(1, 1) = 1403.116708010621;
+	leftCameraMatrix.at<float>(0, 2) = 1053.351342078365;
+	leftCameraMatrix.at<float>(1, 2) = 588.8342842821718;
+	leftCameraMatrix.at<float>(2, 2) = 1.0;
+
+	cv::Mat rightCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
+	rightCameraMatrix.at<float>(0, 0) = 1415.631284126374;
+	rightCameraMatrix.at<float>(1, 1) = 1408.026118461406;
+	rightCameraMatrix.at<float>(0, 2) = 1013.347852589407;
+	rightCameraMatrix.at<float>(1, 2) = 592.5031927882591;
+	rightCameraMatrix.at<float>(2, 2) = 1.0;
+*/
 void StereoReconstructionTestInterface::ExtractCalibrationParametersOneCamera()
 	{
 	static const unsigned ROW_NUMBER = 7;
@@ -609,6 +657,8 @@ void StereoReconstructionTestInterface::VisualizeCorrespondences(CorrespondenceM
 
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
 	cv::imshow(outputWindowName, outputImage);
+	cv::resizeWindow(outputWindowName, leftCvImage.cols*2, leftCvImage.rows);
+	cv::waitKey(500);
 	}
 
 
