@@ -1,0 +1,671 @@
+/* --------------------------------------------------------------------------
+*
+* (C) Copyright …
+*
+* ---------------------------------------------------------------------------
+*/
+
+/*!
+ * @file StereoReconstruction.cpp
+ * @date 02/02/2018
+ * @author Alessandro Bianco
+ */
+
+/*!
+ * @addtogroup DFNsTest
+ * 
+ * Testing application for a Stereo Reconstruction Integration Test.
+ * This test uses: DFN Orb2D, DFN Flann Matcher, DFN Essential Matrix and DFN Triangulation
+ * 
+ * 
+ * @{
+ */
+
+/* --------------------------------------------------------------------------
+ *
+ * Includes
+ *
+ * --------------------------------------------------------------------------
+ */
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/core/core.hpp>
+#include<pcl/io/ply_io.h>
+#include <pcl/visualization/pcl_visualizer.h>
+#include <ConversionCache/ConversionCache.hpp>
+
+#include <Errors/Assert.hpp>
+#include <GuiTests/ParametersInterface.hpp>
+#include <GuiTests/MainInterface.hpp>
+#include <GuiTests/DFNsIntegration/DFNsIntegrationTestInterface.hpp>
+
+#include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
+#include <FeaturesMatching2D/FlannMatcher.hpp>
+#include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
+#include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
+
+#include <FrameToMatConverter.hpp>
+#include <MatToFrameConverter.hpp>
+#include <PointCloudToPclPointCloudConverter.hpp>
+#include <PclPointCloudToPointCloudConverter.hpp>
+
+#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
+#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
+#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Mocks/Common/Converters/VisualPointFeatureVector2DToMatConverter.hpp>
+#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
+
+
+using namespace dfn_ci;
+using namespace Converters;
+using namespace Common;
+using namespace FrameWrapper;
+using namespace VisualPointFeatureVector2DWrapper;
+using namespace CorrespondenceMap2DWrapper;
+using namespace PoseWrapper;
+using namespace PointCloudWrapper;
+using namespace MatrixWrapper;
+using namespace BaseTypesWrapper;
+
+class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
+	{
+	public:
+		StereoReconstructionTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		~StereoReconstructionTestInterface();
+	protected:
+
+	private:
+		enum State
+			{
+			START,
+			ORB_LEFT_IMAGE_DONE,
+			ORB_RIGHT_IMAGE_DONE,
+			MATCHING_DONE,
+			TRANSFORM_DONE,
+			END
+			};
+		State state;
+
+		Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubFrameCache;
+		Mocks::FrameToMatConverter* mockFrameConverter;
+		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>* stubMatToVectorCache;
+		Mocks::MatToVisualPointFeatureVector2DConverter* mockMatToVectorConverter;
+		Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>* stubVectorToMatCache;
+		Mocks::VisualPointFeatureVector2DToMatConverter* mockVectorToMatConverter;
+
+		OrbDetectorDescriptor* orb;
+		FlannMatcher* flann;	
+		FundamentalMatrixRansac* ransac;	
+		Triangulation* triangulation;
+
+		std::string outputWindowName;
+		cv::Mat leftCvImage;
+		cv::Mat rightCvImage;
+
+		FrameConstPtr leftImage;
+		FrameConstPtr rightImage;
+		VisualPointFeatureVector2DConstPtr leftFeaturesVector;
+		VisualPointFeatureVector2DConstPtr rightFeaturesVector;
+		CorrespondenceMap2DConstPtr correspondenceMap;
+		Matrix3dConstPtr fundamentalMatrix;
+		Point2DConstPtr secondEpipole;
+
+		void SetupMocksAndStubs();
+		void SetupParameters();
+		void DisplayResult();
+
+		void ResetProcess();
+		bool IsProcessCompleted();
+		void UpdateState();
+		DFNCommonInterface* PrepareNextDfn();
+
+		void PrepareOrbLeft();
+		void PrepareOrbRight();
+		void PrepareFlann();
+		void PrepareRansac();
+		void PrepareTriangulation();
+
+		void ExtractCalibrationParameters();
+		void ExtractCalibrationParametersOneCamera();
+		void VisualizeCorrespondences(CorrespondenceMap2DConstPtr correspondenceMap);
+	};
+
+StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string integrationName, int buttonWidth, int buttonHeight)
+	: DFNsIntegrationTestInterface(buttonWidth, buttonHeight)
+	{
+	//ExtractCalibrationParametersOneCamera();
+	//ExtractCalibrationParameters();
+
+	orb = new OrbDetectorDescriptor();
+	AddDFN(orb, "orb");
+
+	flann = new FlannMatcher();
+	AddDFN(flann, "flann");
+		
+	ransac = new FundamentalMatrixRansac();
+	AddDFN(ransac, "ransac");
+	
+	triangulation = new Triangulation();
+	AddDFN(triangulation, "triangulation");
+
+	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/SmestechLab.jpg", cv::IMREAD_COLOR);
+	ASSERT(doubleImage.rows > 0 && doubleImage.cols > 0, "Test Error: failed to load image correctly");
+
+	unsigned singleImageCols = doubleImage.cols/2;
+	unsigned singleImageRows = doubleImage.rows;
+	unsigned extractCols = singleImageCols;
+	unsigned extractRows = singleImageRows;
+	unsigned startRow = 0; //singleImageRows/4;
+	unsigned startColumnLeft = 0; //singleImageCols/4;
+	unsigned startColumnRight = singleImageCols; //singleImageCols/4 + singleImageCols;
+	doubleImage(cv::Rect(startColumnLeft, startRow, extractCols, extractRows) ).copyTo(leftCvImage);
+	doubleImage(cv::Rect(startColumnRight, startRow, extractCols, extractRows) ).copyTo(rightCvImage);
+
+	outputWindowName = integrationName;
+	}
+
+StereoReconstructionTestInterface::~StereoReconstructionTestInterface()
+	{
+	delete(orb);
+	delete(flann);
+	delete(ransac);
+	delete(triangulation);
+	}
+
+void StereoReconstructionTestInterface::SetupMocksAndStubs()
+	{
+	stubFrameCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
+	mockFrameConverter = new Mocks::FrameToMatConverter();
+	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubFrameCache, mockFrameConverter);
+
+	stubMatToVectorCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
+	mockMatToVectorConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
+	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubMatToVectorCache, mockMatToVectorConverter);
+
+	stubVectorToMatCache = new Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>();
+	mockVectorToMatConverter = new Mocks::VisualPointFeatureVector2DToMatConverter();
+	ConversionCache<VisualPointFeatureVector2DConstPtr, cv::Mat, VisualPointFeatureVector2DToMatConverter>::Instance(stubVectorToMatCache, mockVectorToMatConverter);
+	}
+
+void StereoReconstructionTestInterface::SetupParameters()
+	{
+	AddParameter(orb, "GeneralParameters", "EdgeThreshold", 31, 100);
+	AddParameter(orb, "GeneralParameters", "FastThreshold", 20, 100);
+	AddParameter(orb, "GeneralParameters", "FirstLevel", 0, 2);
+	AddParameter(orb, "GeneralParameters", "MaxFeaturesNumber", 500, 1000, 10);
+	AddParameter(orb, "GeneralParameters", "LevelsNumber", 8, 20);
+	AddParameter(orb, "GeneralParameters", "PatchSize", 31, 100);
+	AddParameter(orb, "GeneralParameters", "ScaleFactor", 1.2, 10, 0.1);
+	AddParameter(orb, "GeneralParameters", "ScoreType", 0, 2);
+	AddParameter(orb ,"GeneralParameters", "SizeOfBrightnessTestSet", 2, 4);
+
+	AddParameter(flann, "GeneralParameters", "DistanceThreshold", 0.02, 1.00, 0.01);
+	AddParameter(flann, "GeneralParameters", "MatcherMethod", 4, 6);
+	AddParameter(flann, "LocalitySensitiveHashingParameters", "TableNumber", 6, 20);
+	AddParameter(flann, "LocalitySensitiveHashingParameters", "KeySize", 12, 20);
+	AddParameter(flann, "LocalitySensitiveHashingParameters", "MultiProbeLevel", 1, 20);
+
+	AddParameter(ransac, "GeneralParameters", "OutlierThreshold", 1, 100);
+	AddParameter(ransac, "GeneralParameters", "Confidence", 0.9, 1, 0.01);
+	}
+
+void StereoReconstructionTestInterface::DisplayResult()
+	{
+	PointCloudWrapper::PointCloudConstPtr pointCloud = triangulation->pointCloudOutput();
+
+	PRINT_TO_LOG("The processing took (seconds): ", GetTotalProcessingTimeSeconds() );
+	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
+	PRINT_TO_LOG("Number of points: ", GetNumberOfPoints(*pointCloud) );
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*pointCloud); pointIndex++)
+		{
+		pcl::PointXYZ newPoint(GetXCoordinate(*pointCloud, pointIndex), GetYCoordinate(*pointCloud, pointIndex), GetZCoordinate(*pointCloud, pointIndex) );
+		std::stringstream stream;
+		pclPointCloud->points.push_back(newPoint);
+
+		stream << "Point "<<pointIndex<<": ("<<newPoint.x<<", "<<newPoint.y<<", "<<newPoint.z<<")";
+		std::string string = stream.str();
+		PRINT_TO_LOG("", string );
+		}
+
+	pcl::visualization::PCLVisualizer viewer (outputWindowName);
+    	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclCloudColor(pclPointCloud, 255, 255, 255);
+    	viewer.addPointCloud(pclPointCloud,pclCloudColor,"input");
+
+    	while (!viewer.wasStopped ())
+    		{
+        	viewer.spinOnce();
+        	pcl_sleep (0.01);
+    		} 
+
+	delete(leftImage);
+	delete(rightImage);
+	delete(leftFeaturesVector);
+	delete(rightFeaturesVector);
+	delete(correspondenceMap);
+	delete(fundamentalMatrix);
+	delete(secondEpipole);
+	delete(pointCloud);
+	}
+
+void StereoReconstructionTestInterface::ResetProcess()
+	{
+	state = START;
+	}
+
+bool StereoReconstructionTestInterface::IsProcessCompleted()
+	{
+	if (state == END)
+		{
+		PRINT_TO_LOG("Step Triangulation processing time (seconds): ", GetLastProcessingTimeSeconds(4) );
+		return true;
+		}
+	return false;
+	}
+
+void StereoReconstructionTestInterface::UpdateState()
+	{
+	if (state == START)
+		{
+		state = ORB_LEFT_IMAGE_DONE;
+		}
+	else if (state == ORB_LEFT_IMAGE_DONE)
+		{
+		state = ORB_RIGHT_IMAGE_DONE;
+		}
+	else if (state == ORB_RIGHT_IMAGE_DONE)
+		{
+		state = MATCHING_DONE;
+		}
+	else if (state == MATCHING_DONE)
+		{
+		state = TRANSFORM_DONE;
+		}
+	}
+
+DFNCommonInterface* StereoReconstructionTestInterface::PrepareNextDfn()
+	{
+	if (state == START)
+		{
+		PrepareOrbLeft();
+		return orb;
+		}
+	else if (state == ORB_LEFT_IMAGE_DONE)
+		{
+		PRINT_TO_LOG("Step Orb Left processing time (seconds): ", GetLastProcessingTimeSeconds(0) );
+		PrepareOrbRight();
+		return orb;
+		}
+	else if (state == ORB_RIGHT_IMAGE_DONE)
+		{
+		PRINT_TO_LOG("Step Orb Right processing time (seconds): ", GetLastProcessingTimeSeconds(1) );
+		PrepareFlann();
+		return flann;
+		}
+	else if (state == MATCHING_DONE)
+		{
+		PRINT_TO_LOG("Step Flann processing time (seconds): ", GetLastProcessingTimeSeconds(2) );
+		PrepareRansac();
+		return ransac;
+		}
+	else if (state == TRANSFORM_DONE)
+		{
+		PRINT_TO_LOG("Step Ransac processing time (seconds): ", GetLastProcessingTimeSeconds(3) );
+		PrepareTriangulation();
+		state = END;
+		return triangulation;
+		}
+	ASSERT(false, "Unhandled State!");
+	return 0;
+	}
+
+void StereoReconstructionTestInterface::PrepareOrbLeft()
+	{
+	MatToFrameConverter converter;
+	leftImage = converter.Convert(leftCvImage);
+	orb->imageInput(leftImage);
+	}
+
+void StereoReconstructionTestInterface::PrepareOrbRight()
+	{
+	leftFeaturesVector = orb->featuresSetOutput();
+	PRINT_TO_LOG("Number of features points from left image: ", GetNumberOfPoints(*leftFeaturesVector));
+
+	MatToFrameConverter converter;
+	rightImage = converter.Convert(rightCvImage);
+	orb->imageInput(rightImage);
+	}
+
+void StereoReconstructionTestInterface::PrepareFlann()
+	{
+	rightFeaturesVector = orb->featuresSetOutput();
+	PRINT_TO_LOG("Number of features points from right image: ", GetNumberOfPoints(*rightFeaturesVector));
+
+	flann->sourceFeaturesVectorInput(leftFeaturesVector);
+	flann->sinkFeaturesVectorInput(rightFeaturesVector);
+	}
+
+void StereoReconstructionTestInterface::PrepareRansac()
+	{
+	correspondenceMap = flann->correspondenceMapOutput();
+	VisualizeCorrespondences(correspondenceMap);
+	PRINT_TO_LOG("Number of correspondences from flann matcher: ", GetNumberOfCorrespondences(*correspondenceMap));
+
+	ransac->correspondenceMapInput(correspondenceMap);
+	}
+
+void StereoReconstructionTestInterface::PrepareTriangulation()
+	{
+	bool success = ransac->successOutput();
+	ASSERT(success, "Fundamental Matrix Ransac failed: unable to find a valid transform");
+
+	fundamentalMatrix = ransac->fundamentalMatrixOutput();
+	secondEpipole = ransac->secondEpipoleOutput();
+	PRINT_TO_LOG("Fundamental matrix Ransac found transform: ", "");
+
+	triangulation->fundamentalMatrixInput(fundamentalMatrix);
+	triangulation->secondEpipoleInput(secondEpipole);
+	triangulation->correspondenceMapInput(correspondenceMap);
+	}
+
+
+/*
+This is the output of the following method:
+	cv::Mat rotationTranslationMatrix(3, 4, CV_32FC1, cv::Scalar(0));
+	rotationTranslationMatrix.at<float>(0,0) = 0.453266151496562; 
+	rotationTranslationMatrix.at<float>(0,1) = -0.4189590134265467;
+	rotationTranslationMatrix.at<float>(0,2) = 0.7867802367727283;
+ 	rotationTranslationMatrix.at<float>(1,0) = -0.03139148385142432;
+	rotationTranslationMatrix.at<float>(1,1) = 0.8746086689785711; 
+	rotationTranslationMatrix.at<float>(1,2) = 0.4838122062217302;
+ 	rotationTranslationMatrix.at<float>(2,0) = -0.8908223002648179;
+	rotationTranslationMatrix.at<float>(2,1) = -0.2439938958584555;
+	rotationTranslationMatrix.at<float>(2,2) = 0.3832787603490593;
+	rotationTranslationMatrix.at<float>(0,3) = -2.042263939854534;
+	rotationTranslationMatrix.at<float>(1,3) = -1.342189200820332;
+	rotationTranslationMatrix.at<float>(2,3) = 0.7502406403804528;
+
+	cv::Mat leftCameraMatrixS(3, 3, CV_32FC1, cv::Scalar(0));
+	leftCameraMatrix.at<float>(0, 0) = 9245.469388977166;
+	leftCameraMatrix.at<float>(1, 1) = 20554.77101321935;
+	leftCameraMatrix.at<float>(0, 2) = -1010.674087871778;
+	leftCameraMatrix.at<float>(1, 2) = -2562.301106695449;
+	leftCameraMatrix.at<float>(2, 2) = 1.0;
+
+	cv::Mat rightCameraMatrixS(3, 3, CV_32FC1, cv::Scalar(0));
+	rightCameraMatrix.at<float>(0, 0) = 947.2017949977272;
+	rightCameraMatrix.at<float>(1, 1) = 1657.602441223055;
+	rightCameraMatrix.at<float>(0, 2) = 3026.416358478908;
+	rightCameraMatrix.at<float>(1, 2) = 257.3840612345921;
+	rightCameraMatrix.at<float>(2, 2) = 1.0;
+*/
+void StereoReconstructionTestInterface::ExtractCalibrationParameters()
+	{
+	static const unsigned ROW_NUMBER = 7;
+	static const unsigned COLUMN_NUMBER = 11;
+	static const float SQUARE_EDGE_LENGTH = 0.02;
+
+ 	std::vector<std::vector<cv::Point2f> > leftCornersList(11);
+ 	std::vector<std::vector<cv::Point2f> > rightCornersList(11);
+
+	cv::Size imageSize;
+	for(unsigned imageId=1; imageId<=11; imageId++)
+		{
+		std::stringstream filePath;
+		filePath<<"../../tests/Data/Images/chessboard"<<imageId<<".jpg";
+		cv::Mat stereoImage = cv::imread(filePath.str(), cv::IMREAD_COLOR);
+		cv::Mat leftImage = stereoImage( cv::Rect(0, 0, stereoImage.cols/2, stereoImage.rows) );
+		cv::Mat rightImage = stereoImage( cv::Rect(stereoImage.cols/2, 0, stereoImage.cols/2, stereoImage.rows) );
+		ASSERT(leftImage.rows == rightImage.rows && leftImage.cols == rightImage.cols, "Error, left and right image should have same size");
+		
+		if (imageId == 1)
+			{
+			imageSize = leftImage.size();
+			}
+		else
+			{
+			ASSERT(imageSize == leftImage.size(), "Images in the set do not have same size");
+			}
+
+		bool leftFlag = cv::findChessboardCorners(leftImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), leftCornersList[imageId-1]);
+		bool rightFlag = cv::findChessboardCorners(rightImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), rightCornersList[imageId-1]);
+		ASSERT(leftFlag && rightFlag, "Camera calibration failed");
+
+		//cv::Mat img = leftImage.clone();
+		//cv::drawChessboardCorners(img, cv::Size(7, 11), leftCornersList[imageId-1], leftFlag);
+		//cv::imshow("img", img);
+		//cv::waitKey(0);
+		}
+
+	std::vector< std::vector<cv::Point3f> > objectPoints(11);
+	for(unsigned column=0; column<COLUMN_NUMBER; column++) 
+		{
+		for(unsigned row=0; row<ROW_NUMBER; row++)
+			{
+			for(unsigned imageId = 1; imageId<=11; imageId++)
+				{
+				cv::Point3f point((float)column*SQUARE_EDGE_LENGTH, (float)row*SQUARE_EDGE_LENGTH, 0);
+				objectPoints[imageId-1].push_back( point );
+				}
+			}
+		}
+
+	cv::Mat leftCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
+	cv::Mat rightCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
+
+	cv::Mat leftDistortionCoefficients, rightDistortionCoefficients;
+	cv::Mat rotationMatrix, translationMatrix, essentialMatrix, fundamentalMatrix;
+
+	cv::stereoCalibrate
+		(
+		objectPoints,
+		leftCornersList,
+		rightCornersList,
+		leftCameraMatrix,
+		leftDistortionCoefficients,
+		rightCameraMatrix,
+		rightDistortionCoefficients,
+		imageSize,
+		rotationMatrix,
+		translationMatrix,
+		essentialMatrix,
+		fundamentalMatrix,
+		CV_CALIB_RATIONAL_MODEL,
+		cv::TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, 1e-5)
+		);
+	PRINT_TO_LOG("Calibration complete", "");
+
+	PRINT_TO_LOG("Left calibration: ", leftCameraMatrix);
+	PRINT_TO_LOG("Right calibration: ", rightCameraMatrix);
+	PRINT_TO_LOG("Left distortion: ", leftDistortionCoefficients);
+	PRINT_TO_LOG("Right distortion: ", rightDistortionCoefficients);
+	PRINT_TO_LOG("Translation: ", translationMatrix);
+	PRINT_TO_LOG("Rotation: ", rotationMatrix);
+
+	cv::Mat rototranslationMatrix(3, 4, CV_64FC1, cv::Scalar(0));
+	rototranslationMatrix.at<double>(0,0) = rotationMatrix.at<double>(0,0);
+	rototranslationMatrix.at<double>(0,1) = rotationMatrix.at<double>(0,1);
+	rototranslationMatrix.at<double>(0,2) = rotationMatrix.at<double>(0,2);
+	rototranslationMatrix.at<double>(1,0) = rotationMatrix.at<double>(1,0);
+	rototranslationMatrix.at<double>(1,1) = rotationMatrix.at<double>(1,1);
+	rototranslationMatrix.at<double>(1,2) = rotationMatrix.at<double>(1,2);
+	rototranslationMatrix.at<double>(2,0) = rotationMatrix.at<double>(2,0);
+	rototranslationMatrix.at<double>(2,1) = rotationMatrix.at<double>(1,1);
+	rototranslationMatrix.at<double>(2,2) = rotationMatrix.at<double>(2,1);
+	rototranslationMatrix.at<double>(0,3) = translationMatrix.at<double>(0);
+	rototranslationMatrix.at<double>(1,3) = translationMatrix.at<double>(1);
+	rototranslationMatrix.at<double>(2,3) = translationMatrix.at<double>(2);
+
+	cv::Mat leftProjectionMatrix = leftCameraMatrix*rototranslationMatrix;
+	cv::Mat rightProjectionMatrix = rightCameraMatrix*rototranslationMatrix;
+	PRINT_TO_LOG("Left Projection Matrix", leftProjectionMatrix);
+	PRINT_TO_LOG("Right Projection Matrix", rightProjectionMatrix);	
+
+	cv::Mat leftRectificationMatrix, rightRectificationMatrix, leftRectifiedProjectionMatrix, rightRectifiedProjectionMatrix, disparityToDepthMatrix;
+	cv::stereoRectify
+		(
+		leftCameraMatrix,
+		leftDistortionCoefficients,
+		rightCameraMatrix,
+		rightDistortionCoefficients,
+		imageSize,
+		rotationMatrix,
+		translationMatrix,
+		leftRectificationMatrix,
+		rightRectificationMatrix,
+		leftRectifiedProjectionMatrix,
+		rightRectifiedProjectionMatrix,
+		disparityToDepthMatrix
+		);
+
+	PRINT_TO_LOG("Rectified Left Projection Matrix", leftRectifiedProjectionMatrix);
+	PRINT_TO_LOG("Rectified Right Projection Matrix", rightRectifiedProjectionMatrix);	
+	}
+
+
+/* This is the output of the following method:
+	cv::Mat leftCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
+	leftCameraMatrix.at<float>(0, 0) = 1408.899186439272;
+	leftCameraMatrix.at<float>(1, 1) = 1403.116708010621;
+	leftCameraMatrix.at<float>(0, 2) = 1053.351342078365;
+	leftCameraMatrix.at<float>(1, 2) = 588.8342842821718;
+	leftCameraMatrix.at<float>(2, 2) = 1.0;
+
+	cv::Mat rightCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
+	rightCameraMatrix.at<float>(0, 0) = 1415.631284126374;
+	rightCameraMatrix.at<float>(1, 1) = 1408.026118461406;
+	rightCameraMatrix.at<float>(0, 2) = 1013.347852589407;
+	rightCameraMatrix.at<float>(1, 2) = 592.5031927882591;
+	rightCameraMatrix.at<float>(2, 2) = 1.0;
+*/
+void StereoReconstructionTestInterface::ExtractCalibrationParametersOneCamera()
+	{
+	static const unsigned ROW_NUMBER = 7;
+	static const unsigned COLUMN_NUMBER = 11;
+	static const float SQUARE_EDGE_LENGTH = 0.02;
+
+ 	std::vector<std::vector<cv::Point2f> > leftCornersList(11);
+ 	std::vector<std::vector<cv::Point2f> > rightCornersList(11);
+
+	cv::Size imageSize;
+	for(unsigned imageId=1; imageId<=11; imageId++)
+		{
+		std::stringstream filePath;
+		filePath<<"../../tests/Data/Images/chessboard"<<imageId<<".jpg";
+		cv::Mat stereoImage = cv::imread(filePath.str(), cv::IMREAD_COLOR);
+		cv::Mat leftImage = stereoImage( cv::Rect(0, 0, stereoImage.cols/2, stereoImage.rows) );
+		cv::Mat rightImage = stereoImage( cv::Rect(stereoImage.cols/2, 0, stereoImage.cols/2, stereoImage.rows) );
+		ASSERT(leftImage.rows == rightImage.rows && leftImage.cols == rightImage.cols, "Error, left and right image should have same size");
+		
+		if (imageId == 1)
+			{
+			imageSize = leftImage.size();
+			}
+		else
+			{
+			ASSERT(imageSize == leftImage.size(), "Images in the set do not have same size");
+			}
+
+		bool leftFlag = cv::findChessboardCorners(leftImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), leftCornersList[imageId-1]);
+		bool rightFlag = cv::findChessboardCorners(rightImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), rightCornersList[imageId-1]);
+		ASSERT(leftFlag && rightFlag, "Camera calibration failed");
+		}
+
+	std::vector< std::vector<cv::Point3f> > objectPoints(11);
+	for(unsigned column=0; column<COLUMN_NUMBER; column++) 
+		{
+		for(unsigned row=0; row<ROW_NUMBER; row++)
+			{
+			for(unsigned imageId = 1; imageId<=11; imageId++)
+				{
+				cv::Point3f point((float)column*SQUARE_EDGE_LENGTH, (float)row*SQUARE_EDGE_LENGTH, 0);
+				objectPoints[imageId-1].push_back( point );
+				}
+			}
+		}
+
+	cv::Mat leftCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
+	cv::Mat rightCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
+
+	cv::Mat leftDistortionCoefficients, rightDistortionCoefficients;
+	cv::Mat leftRotationMatrix, leftTranslationMatrix, rightRotationMatrix, rightTranslationMatrix;
+
+	cv::calibrateCamera
+		(
+		objectPoints,
+		leftCornersList,
+		imageSize,
+		leftCameraMatrix,
+		leftDistortionCoefficients,
+		leftRotationMatrix,
+		leftTranslationMatrix,
+		CV_CALIB_RATIONAL_MODEL,
+		cv::TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, 1e-5)
+		);
+	cv::calibrateCamera
+		(
+		objectPoints,
+		rightCornersList,
+		imageSize,
+		rightCameraMatrix,
+		rightDistortionCoefficients,
+		rightRotationMatrix,
+		rightTranslationMatrix,
+		CV_CALIB_RATIONAL_MODEL,
+		cv::TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, 1e-5)
+		);
+	PRINT_TO_LOG("Calibration complete", "");
+
+	PRINT_TO_LOG("Left calibration: ", leftCameraMatrix);
+	PRINT_TO_LOG("Right calibration: ", rightCameraMatrix);
+	PRINT_TO_LOG("Left distortion: ", leftDistortionCoefficients);
+	PRINT_TO_LOG("Right distortion: ", rightDistortionCoefficients);
+	PRINT_TO_LOG("Translation: ", leftTranslationMatrix);
+	PRINT_TO_LOG("Rotation: ", leftRotationMatrix);
+	}
+
+void StereoReconstructionTestInterface::VisualizeCorrespondences(CorrespondenceMap2DConstPtr correspondenceMap)
+	{
+	std::vector<cv::KeyPoint> sourceVector, sinkVector;
+	std::vector<cv::DMatch> matchesVector;
+	for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(*correspondenceMap); correspondenceIndex++)
+		{
+		BaseTypesWrapper::Point2D sourcePoint, sinkPoint;
+		sourcePoint = GetSource(*correspondenceMap, correspondenceIndex);
+		sinkPoint = GetSink(*correspondenceMap, correspondenceIndex);
+		cv::KeyPoint sourceKeypoint(sourcePoint.x, sourcePoint.y, 0.02);
+		cv::KeyPoint sinkKeypoint(sinkPoint.x, sinkPoint.y, 0.02);
+		sourceVector.push_back(sourceKeypoint);
+		sinkVector.push_back(sinkKeypoint);
+		cv::DMatch match;
+		match.queryIdx = correspondenceIndex;
+		match.trainIdx = correspondenceIndex;
+		matchesVector.push_back(match);
+		}
+	
+
+ 	cv::Mat outputImage;
+ 	cv::drawMatches
+		(
+		leftCvImage, sourceVector, rightCvImage, sinkVector, matchesVector, 
+		outputImage, 
+		cv::Scalar::all(-1), cv::Scalar::all(-1),
+               	std::vector<char>(), 
+		cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
+		);
+
+	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
+	cv::imshow(outputWindowName, outputImage);
+	cv::resizeWindow(outputWindowName, leftCvImage.cols*2, leftCvImage.rows);
+	cv::waitKey(500);
+	}
+
+
+int main(int argc, char** argv)
+	{
+	StereoReconstructionTestInterface interface("Stereo Reconstruction", 100, 40);
+	interface.Run();
+	};
+
+/** @} */

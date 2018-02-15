@@ -31,6 +31,8 @@
 #include <CorrespondenceMap2D.hpp>
 #include <Pose.hpp>
 #include <PointCloud.hpp>
+#include <BaseTypes.hpp>
+#include <Matrix.hpp>
 
 
 namespace dfn_ci {
@@ -59,10 +61,16 @@ namespace dfn_ci {
             virtual void correspondenceMapInput(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr data);
 
             /**
-            * Send value to input port transform
-            * @param transform, This is the transform between the two camera poses when the camera (or cameras) recorded the two images.
+            * Send value to input port fundamentalMatrix
+            * @param fundamentalMatrix, This is the fundamental matrix of the camera that took the two images.
             */
-            virtual void transformInput(PoseWrapper::Transform3DConstPtr data);
+            virtual void fundamentalMatrixInput(MatrixWrapper::Matrix3dConstPtr data);
+
+            /**
+            * Send value to input port secondEpipole
+            * @param secondEpipole, This is the epipole of the second camera view.
+            */
+            virtual void secondEpipoleInput(BaseTypesWrapper::Point2DConstPtr data);
 
             /**
             * Receive value from output port pointCloud
@@ -76,7 +84,8 @@ namespace dfn_ci {
 	 */
         protected:
             CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inCorrespondenceMap;
-	    PoseWrapper::Transform3DConstPtr inTransform;
+	    MatrixWrapper::Matrix3dConstPtr inFundamentalMatrix;
+	    BaseTypesWrapper::Point2DConstPtr inSecondEpipole;
             PointCloudWrapper::PointCloudConstPtr outPointCloud;
 
 	/* --------------------------------------------------------------------

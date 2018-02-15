@@ -33,6 +33,7 @@ namespace dfn_ci {
 
 using namespace CorrespondenceMap2DWrapper;
 using namespace MatrixWrapper;
+using namespace BaseTypesWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -58,6 +59,11 @@ void FundamentalMatrixComputationInterface::correspondenceMapInput(Correspondenc
 Matrix3dConstPtr FundamentalMatrixComputationInterface::fundamentalMatrixOutput() 
 	{
     	return outFundamentalMatrix;
+	}
+
+Point2DConstPtr FundamentalMatrixComputationInterface::secondEpipoleOutput()
+	{
+	return outSecondEpipole;
 	}
 
 bool FundamentalMatrixComputationInterface::successOutput()

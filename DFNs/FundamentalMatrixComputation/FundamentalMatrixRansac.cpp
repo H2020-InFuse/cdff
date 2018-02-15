@@ -41,6 +41,7 @@ namespace dfn_ci {
 
 using namespace MatrixWrapper;
 using namespace CorrespondenceMap2DWrapper;
+using namespace BaseTypesWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -80,11 +81,13 @@ void FundamentalMatrixRansac::process()
 	if (fundamentalMatrix.rows == 0 && fundamentalMatrix.cols == 0)
 		{
 		outFundamentalMatrix =  NewMatrix3d();
+		outSecondEpipole = new Point2D();
 		outSuccess = false;
 		}	
 	else
 		{
 		outFundamentalMatrix = Convert(fundamentalMatrix);
+		outSecondEpipole = ComputeSecondEpipole(firstImagePointsVector, secondImagePointsVector, fundamentalMatrix);
 		outSuccess = true;
 		}
 	}
@@ -157,6 +160,22 @@ cv::Mat FundamentalMatrixRansac::ComputeFundamentalMatrix(const std::vector<cv::
 		);
 
 	return fundamentalMatrix;
+	}
+
+//Computing the epipole e' of the second camera from equation e' F = 0: according to result 9.13 of Multiple view geometry in computer vision. Richard Hartley, Andrew Zisserman.
+Point2DConstPtr FundamentalMatrixRansac::ComputeSecondEpipole(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector, cv::Mat fundamentalMatrix)
+	{
+	cv::Mat solution;
+	cv::Mat coeffiecientsMatrix, scalarsMatrix;
+	cv::transpose ( fundamentalMatrix(cv::Rect(0, 0, 3, 2)), coeffiecientsMatrix);
+	cv::transpose (-fundamentalMatrix(cv::Rect(0, 2, 3, 1)), scalarsMatrix);
+	cv::solve(coeffiecientsMatrix, scalarsMatrix, solution, cv::DECOMP_SVD);
+
+	Point2DPtr secondEpipolePtr = new Point2D();
+	secondEpipolePtr->x = solution.at<double>(0,0);
+	secondEpipolePtr->y = solution.at<double>(1,0);
+
+	return secondEpipolePtr;
 	}
 
 

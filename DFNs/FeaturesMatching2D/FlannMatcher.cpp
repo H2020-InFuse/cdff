@@ -333,29 +333,43 @@ cv::Ptr<cv::flann::IndexParams> FlannMatcher::ConvertParameters()
 
 std::vector< cv::DMatch > FlannMatcher::ComputeMatches(cv::Mat sourceDescriptorsMatrix, cv::Mat sinkDescriptorsMatrix)
 	{
-	cv::Mat sourceDescriptorsMatrixTransposed, sinkDescriptorsMatrixTransposed;
-	cv::transpose(sourceDescriptorsMatrix, sourceDescriptorsMatrixTransposed);
-	cv::transpose(sinkDescriptorsMatrix, sinkDescriptorsMatrixTransposed);	
+	cv::Mat validTypeSourceDescriptorsMatrix = ConvertToValidType(sourceDescriptorsMatrix);
+	cv::Mat validTypeSinkDescriptorsMatrix = ConvertToValidType(sinkDescriptorsMatrix);
 
 	cv::Ptr<cv::flann::SearchParams> searchParams = 
 		new cv::flann::SearchParams(parameters.generalOptionsSet.numberOfChecks, parameters.generalOptionsSet.epsilon, parameters.generalOptionsSet.sortedSearch);
 	cv::Ptr<cv::flann::IndexParams> indexParams = ConvertParameters();
 
 	cv::FlannBasedMatcher matcher(indexParams, searchParams);
-	std::vector< cv::DMatch > matchesVector;
-	matcher.match( sourceDescriptorsMatrixTransposed, sinkDescriptorsMatrixTransposed, matchesVector );
 
-	std::vector< cv::DMatch > goodMatchesVector;
-	for(unsigned matchIndex = 0; matchIndex < matchesVector.size(); matchIndex++)
+	typedef std::vector<cv::DMatch> MatchesSequence;
+	const unsigned NumberOfBestMatchingSequencesToCompare = 2;
+	const float ACCEPTANCE_RATIO = 0.75;
+
+	std::vector<MatchesSequence> bestMatchingSequencesVector;
+	matcher.knnMatch(validTypeSourceDescriptorsMatrix, validTypeSinkDescriptorsMatrix, bestMatchingSequencesVector, NumberOfBestMatchingSequencesToCompare);
+
+	MatchesSequence sequenceOfSelectedMatches;
+	for (unsigned sequenceIndex = 0; sequenceIndex < bestMatchingSequencesVector.size(); sequenceIndex++) 
 		{
-		double matchDistance = matchesVector.at(matchIndex).distance;
-		if(matchDistance <= parameters.generalOptionsSet.distanceThreshold)
+		if (bestMatchingSequencesVector[sequenceIndex][0].distance < bestMatchingSequencesVector[sequenceIndex][1].distance * ACCEPTANCE_RATIO)
 			{
-			goodMatchesVector.push_back( matchesVector.at(matchIndex) );
+			sequenceOfSelectedMatches.push_back(bestMatchingSequencesVector[sequenceIndex][0]);
 			}
 		}
 
-	return goodMatchesVector;
+	return sequenceOfSelectedMatches;
+	}
+
+cv::Mat FlannMatcher::ConvertToValidType(cv::Mat floatDescriptorsMatrix)
+	{
+	if (parameters.generalOptionsSet.matcherMethod == LOCALITY_SENSITIVE_HASHING)
+		{
+		cv::Mat uint8DescriptorsMatrix(floatDescriptorsMatrix.rows, floatDescriptorsMatrix.cols, CV_8UC1);
+		floatDescriptorsMatrix.convertTo(uint8DescriptorsMatrix, CV_8UC1);
+		return uint8DescriptorsMatrix;
+		}
+	return floatDescriptorsMatrix.clone();
 	}
 
 

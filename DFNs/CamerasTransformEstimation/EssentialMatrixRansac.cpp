@@ -54,9 +54,14 @@ EssentialMatrixRansac::EssentialMatrixRansac()
 	{
 	parametersHelper.AddParameter<double>("GeneralParameters", "OutlierThreshold", parameters.outlierThreshold, DEFAULT_PARAMETERS.outlierThreshold);
 	parametersHelper.AddParameter<double>("GeneralParameters", "Confidence", parameters.confidence, DEFAULT_PARAMETERS.confidence);
-	parametersHelper.AddParameter<double>("GeneralParameters", "FocalLength", parameters.focalLength, DEFAULT_PARAMETERS.focalLength);
-	parametersHelper.AddParameter<double>("GeneralParameters", "PrinciplePointX", parameters.principlePoint.x, DEFAULT_PARAMETERS.principlePoint.x);
-	parametersHelper.AddParameter<double>("GeneralParameters", "PrinciplePointY", parameters.principlePoint.y, DEFAULT_PARAMETERS.principlePoint.y);
+	parametersHelper.AddParameter<double>("FirstCameraMatrix", "FocalLengthX", parameters.firstCameraMatrix.focalLengthX, DEFAULT_PARAMETERS.firstCameraMatrix.focalLengthX);
+	parametersHelper.AddParameter<double>("FirstCameraMatrix", "FocalLengthY", parameters.firstCameraMatrix.focalLengthY, DEFAULT_PARAMETERS.firstCameraMatrix.focalLengthY);
+	parametersHelper.AddParameter<double>("FirstCameraMatrix", "PrinciplePointX", parameters.firstCameraMatrix.principlePoint.x, DEFAULT_PARAMETERS.firstCameraMatrix.principlePoint.x);
+	parametersHelper.AddParameter<double>("FirstCameraMatrix", "PrinciplePointY", parameters.firstCameraMatrix.principlePoint.y, DEFAULT_PARAMETERS.firstCameraMatrix.principlePoint.y);
+	parametersHelper.AddParameter<double>("SecondCameraMatrix", "FocalLengthX", parameters.secondCameraMatrix.focalLengthX, DEFAULT_PARAMETERS.secondCameraMatrix.focalLengthX);
+	parametersHelper.AddParameter<double>("SecondCameraMatrix", "FocalLengthY", parameters.secondCameraMatrix.focalLengthY, DEFAULT_PARAMETERS.secondCameraMatrix.focalLengthY);
+	parametersHelper.AddParameter<double>("SecondCameraMatrix", "PrinciplePointX", parameters.secondCameraMatrix.principlePoint.x, DEFAULT_PARAMETERS.secondCameraMatrix.principlePoint.x);
+	parametersHelper.AddParameter<double>("SecondCameraMatrix", "PrinciplePointY", parameters.secondCameraMatrix.principlePoint.y, DEFAULT_PARAMETERS.secondCameraMatrix.principlePoint.y);
 
 	configurationFilePath = "";
 	}
@@ -96,12 +101,32 @@ void EssentialMatrixRansac::process()
 
 const EssentialMatrixRansac::EssentialMatrixRansacOptionsSet EssentialMatrixRansac::DEFAULT_PARAMETERS =
 	{
-	.outlierThreshold = 1.3,
+	.outlierThreshold = 1,
 	.confidence = 0.99,
-	.focalLength = 1.0,
-	.principlePoint = cv::Point2d(0, 0)
+	.firstCameraMatrix =
+		{
+		.focalLengthX = 1.0,
+		.focalLengthY = 1.0,
+		.principlePoint = cv::Point2d(0, 0)
+		},
+	.secondCameraMatrix =
+		{
+		.focalLengthX = 1.0,
+		.focalLengthY = 1.0,
+		.principlePoint = cv::Point2d(0, 0)
+		}
 	};
 
+cv::Mat EssentialMatrixRansac::ConvertToMat(CameraMatrix cameraMatrix)
+	{
+	cv::Mat conversion(3, 3, CV_64FC1, cv::Scalar(0));
+	conversion.at<double>(0,0) = cameraMatrix.focalLengthX;
+	conversion.at<double>(1,1) = cameraMatrix.focalLengthY;
+	conversion.at<double>(0,2) = cameraMatrix.principlePoint.x;
+	conversion.at<double>(1,2) = cameraMatrix.principlePoint.y;
+	conversion.at<double>(2,2) = 1.0;
+	return conversion;
+	}
 
 cv::Mat EssentialMatrixRansac::ComputeTransformMatrix(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector)
 	{
@@ -121,35 +146,86 @@ cv::Mat EssentialMatrixRansac::ComputeTransformMatrix(const std::vector<cv::Poin
 		return cv::Mat();
 		}
 
-	cv::Mat essentialMatrix = ComputeEssentialMatrix(fundamentalMatrix);
+	//cv::Mat essentialMatrix = ComputeEssentialMatrix(fundamentalMatrix);
+	/*cv::Mat essentialMatrix = cv::findEssentialMat
+		(
+		firstImagePointsVector,
+		secondImagePointsVector,
+		parameters.firstCameraMatrix.focalLengthX,
+		parameters.firstCameraMatrix.principlePoint,
+		cv::RANSAC,
+		parameters.confidence,
+		parameters.outlierThreshold
+		);*/
 
-	cv::Mat rotationMatrix1, rotationMatrix2, translationMatrix;
-	cv::decomposeEssentialMat(essentialMatrix, rotationMatrix1, rotationMatrix2, translationMatrix);
+	//cv::Mat rotationMatrix1, rotationMatrix2, translationMatrix;
+	//cv::decomposeEssentialMat(essentialMatrix, rotationMatrix1, rotationMatrix2, translationMatrix);
 
-	if (rotationMatrix1.cols == 0 && rotationMatrix1.rows == 0)
-		{
-		return cv::Mat();
-		}
+	//if (rotationMatrix1.cols == 0 && rotationMatrix1.rows == 0)
+	//	{
+	//	return cv::Mat();
+	//	}
+
+	//cv::Mat transformMatrix(3, 4, CV_32FC1, cv::Scalar(0));
+	//rotationMatrix1.convertTo( transformMatrix(cv::Rect(0,0,3,3)), CV_32FC1 );
+	//translationMatrix.convertTo( transformMatrix(cv::Rect(3, 0, 1, 3)), CV_32FC1 );
+
+	cv::Point3d epipole = ComputeSecondImageEpipole(firstImagePointsVector, secondImagePointsVector, fundamentalMatrix);
+	cv::Mat transformMatrix = ComputeTransformMatrix(fundamentalMatrix, epipole);
+
+	return transformMatrix;
+	}
+
+cv::Point3d EssentialMatrixRansac::ComputeSecondImageEpipole(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector, cv::Mat fundamentalMatrix)
+	{
+	std::vector<cv::Vec3d> epilinesVector;
+	cv::computeCorrespondEpilines(firstImagePointsVector, 1, fundamentalMatrix, epilinesVector);
+
+	double firstEpilineX = epilinesVector.at(0)[0];
+	double secondEpilineY = epilinesVector.at(1)[1];
+	double thirdEpilineZ = epilinesVector.at(2)[2];
+
+	cv::Point2d firstPoint = firstImagePointsVector.at(0);
+	cv::Point2d secondPoint = firstImagePointsVector.at(1);
+	cv::Point2d thirdPoint = firstImagePointsVector.at(2);		
+
+	cv::Point3d secondEpipole;
+	secondEpipole.z = (thirdEpilineZ + secondEpilineY * thirdPoint.y + firstEpilineX * thirdPoint.x) / (secondPoint.x * thirdPoint.y - firstPoint.y * thirdPoint.x);
+	secondEpipole.y = firstEpilineX - secondEpipole.z * firstPoint.y;
+	secondEpipole.x = secondEpipole.z * secondPoint.x - secondEpilineY;
+	return secondEpipole;
+	}
+
+cv::Mat EssentialMatrixRansac::ComputeTransformMatrix(cv::Mat fundamentalMatrix, cv::Point3d epipole)
+	{
+	cv::Mat epipoleMatrix(3, 3, CV_64FC1, cv::Scalar(0));
+	epipoleMatrix.at<double>(0,1) = -epipole.z;
+	epipoleMatrix.at<double>(0,2) = +epipole.y;
+	epipoleMatrix.at<double>(1,0) = +epipole.z;
+	epipoleMatrix.at<double>(1,2) = -epipole.x;
+	epipoleMatrix.at<double>(2,0) = -epipole.y;
+	epipoleMatrix.at<double>(2,1) = +epipole.x;
+
+	cv::Mat epipoleFundametalMatrixProduct = epipoleMatrix * fundamentalMatrix;
 
 	cv::Mat transformMatrix(3, 4, CV_32FC1, cv::Scalar(0));
-	rotationMatrix1.copyTo( transformMatrix(cv::Rect(0,0,3,3)) );
-	translationMatrix.copyTo( transformMatrix(cv::Rect(3, 0, 1, 3)) );
+
+	epipoleFundametalMatrixProduct.convertTo( transformMatrix(cv::Rect(0,0,3,3)), CV_32FC1 );
+	transformMatrix.at<float>(0,3) = static_cast<float>(epipole.x);
+	transformMatrix.at<float>(1,3) = static_cast<float>(epipole.y);
+	transformMatrix.at<float>(2,3) = static_cast<float>(epipole.z);
 
 	return transformMatrix;
 	}
 
 cv::Mat EssentialMatrixRansac::ComputeEssentialMatrix(cv::Mat fundamentalMatrix)
 	{
-	cv::Mat cameraMatrix(3, 3, CV_64FC1, cv::Scalar(0));
-	cameraMatrix.at<float>(0,0) = parameters.focalLength;
-	cameraMatrix.at<float>(1,1) = parameters.focalLength;
-	cameraMatrix.at<float>(0,2) = parameters.principlePoint.x;
-	cameraMatrix.at<float>(1,2) = parameters.principlePoint.y;
-	cameraMatrix.at<float>(2,2) = 1;
+	cv::Mat firstCameraMatrix = ConvertToMat(parameters.firstCameraMatrix);
+	cv::Mat secondCameraMatrix = ConvertToMat(parameters.secondCameraMatrix);
 
-	cv::Mat cameraMatrixTransposed;
-	cv::transpose(cameraMatrix, cameraMatrixTransposed);
-	cv::Mat essentialMatrix = cameraMatrixTransposed * fundamentalMatrix * cameraMatrix;
+	cv::Mat secondCameraMatrixTransposed;
+	cv::transpose(secondCameraMatrix, secondCameraMatrixTransposed);
+	cv::Mat essentialMatrix = secondCameraMatrixTransposed * fundamentalMatrix * firstCameraMatrix;
 
 	return essentialMatrix;
 	}
@@ -188,14 +264,14 @@ void EssentialMatrixRansac::ValidateParameters()
 	{
 	ASSERT(parameters.outlierThreshold >= 0, "EssentialMatrixRansac Configuration Error: outlierThreshold is negative");
 	ASSERT(parameters.confidence >= 0 && parameters.confidence <= 1, "EssentialMatrixRansac Configuration Error: confidence should be a probability between 0 and 1");
-	ASSERT(parameters.focalLength > 0, "EssentialMatrixRansac Configuration Error: focalLength is not positive");
+	ASSERT(parameters.firstCameraMatrix.focalLengthX > 0 && parameters.firstCameraMatrix.focalLengthY > 0, "EssentialMatrixRansac Configuration Error: focalLength is not positive");
+	ASSERT(parameters.secondCameraMatrix.focalLengthX > 0 && parameters.secondCameraMatrix.focalLengthY > 0, "EssentialMatrixRansac Configuration Error: focalLength is not positive");
 	}
 
 void EssentialMatrixRansac::ValidateInputs(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector)
 	{
 	ASSERT(firstImagePointsVector.size() == secondImagePointsVector.size(), "EssentialMatrixRansac Error: Points vector do not have the same size");
 	}
-
 }
 
 

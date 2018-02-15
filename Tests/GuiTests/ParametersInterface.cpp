@@ -85,9 +85,13 @@ void ParametersInterface::CreateTrackbars()
 		{
 		std::string groupName = mapEntry->first;
 		std::vector<Parameter>& parametersList = mapEntry->second;
+		std::stringstream interfaceName;
+		interfaceName << applicationName<<" "<<groupName;
+
+		cv::namedWindow(interfaceName.str(), CV_WINDOW_NORMAL);
 		for(std::vector<Parameter>::iterator parameter = parametersList.begin(); parameter != parametersList.end(); parameter++)
 			{
-			cv::createTrackbar(parameter->name, groupName, &(parameter->value), parameter->maxValue, NULL);
+			cv::createTrackbar(parameter->name, interfaceName.str(), &(parameter->value), parameter->maxValue, NULL);
 			}
 		}
 	}
@@ -162,7 +166,6 @@ void ParametersInterface::AddParameter(std::string groupName, Parameter paramete
 	std::map<std::string, std::vector<Parameter> >::iterator parametersList = parameterGroupsMap.find(groupName);
 	if (parametersList == parameterGroupsMap.end())
 		{
-		cv::namedWindow(groupName, CV_WINDOW_NORMAL);
 		parameterGroupsMap[groupName] = std::vector<Parameter>();	
 		}
 	parameterGroupsMap[groupName].push_back(parameter);

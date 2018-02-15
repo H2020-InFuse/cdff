@@ -169,6 +169,7 @@ namespace dfn_ci {
 
 		cv::Ptr<cv::flann::IndexParams> ConvertParameters();
 		std::vector< cv::DMatch > ComputeMatches(cv::Mat sourceDescriptorsMatrix, cv::Mat sinkDescriptorsMatrix);
+		cv::Mat ConvertToValidType(cv::Mat floatDescriptorsMatrix);
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr Convert(std::vector< cv::DMatch > matchesVector, cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix);
 
 		void ValidateParameters();

@@ -48,6 +48,7 @@ using namespace Converters;
 using namespace BaseTypesWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
+using namespace MatrixWrapper;
 using namespace CorrespondenceMap2DWrapper;
 
 /* --------------------------------------------------------------------------
@@ -90,20 +91,22 @@ TEST_CASE( "Success Call to process", "[processSuccess]" )
 		AddCorrespondence(*input, source, sink, 1);
 		}
 
-	Transform3DPtr transform = new Transform3D();
-	SetTranslation(*transform, 1, 0, 0);
-	SetRotation(*transform, 0, 0, 0, 1);
+	
+	Matrix3dConstPtr fundamentalMatrix = NewMatrix3d(IDENTITY);
+	Point2DConstPtr secondEpipole = new Point2D();
 
 	Triangulation triangulation;
 	triangulation.correspondenceMapInput(input);
-	triangulation.transformInput(transform);
+	triangulation.fundamentalMatrixInput(fundamentalMatrix);
+	triangulation.secondEpipoleInput(secondEpipole);
 	triangulation.process();
 
 	PointCloudConstPtr output = triangulation.pointCloudOutput();
 	REQUIRE ( GetNumberOfPoints(*output) == GetNumberOfCorrespondences(*input) );
 	
 	delete(input);
-	delete(transform);
+	delete(fundamentalMatrix);
+	delete(secondEpipole);
 	delete(output);
 	}
 

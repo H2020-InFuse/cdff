@@ -51,6 +51,8 @@ using namespace Common;
 using namespace PoseWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PointCloudWrapper;
+using namespace MatrixWrapper;
+using namespace BaseTypesWrapper;
 
 class TriangulationTestInterface : public DFNTestInterface
 	{
@@ -89,10 +91,10 @@ TriangulationTestInterface::TriangulationTestInterface(std::string dfnName, int 
 		}
 	triangulation->correspondenceMapInput(correspondenceMap);
 
-	Transform3DPtr transform = new Transform3D();
-	SetTranslation(*transform, 1, 0, 0);
-	SetRotation(*transform, 0, 0, 0, 1);
-	triangulation->transformInput(transform);
+	Matrix3dConstPtr fundamentalMatrix = NewMatrix3d(IDENTITY);
+	Point2DConstPtr secondEpipole = new Point2D();
+	triangulation->fundamentalMatrixInput(fundamentalMatrix);
+	triangulation->secondEpipoleInput(secondEpipole);
 
 	outputWindowName = "Triangulation 2D to 3D Result";
 	}

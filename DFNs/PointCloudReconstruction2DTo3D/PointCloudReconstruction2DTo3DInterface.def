@@ -4,9 +4,12 @@ input_ports:
       type: CorrespondenceMap2D
       doc: 	This is a list coordinates of physical points in two distinct images taken from a camera (or cameras). The set contains pairs of 2d coordinates ( (x1, y1), (x2, y2)), each pair 
 		represents the same physical point. (x1, y1) is its position in the first camera image and (x2, y2) is its position in the second camera image.
-    - name: transform
-      type: Transform3D
-      doc: This is the transform between the two camera poses when the camera (or cameras) recorded the two images.
+    - name: fundamentalMatrix
+      type: Matrix3d
+      doc: This is the fundamental matrix of the camera that took the two images.
+    - name: secondEpipole
+      type: Point2D
+      doc: This is the epipole of the second camera view.
 output_ports:
     - name: pointCloud
       type: PointCloud
