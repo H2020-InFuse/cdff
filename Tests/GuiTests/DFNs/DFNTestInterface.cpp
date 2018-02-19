@@ -74,6 +74,11 @@ void DFNTestInterface::AddParameter(std::string groupName, std::string name, dou
 	parametersInterface.AddParameter(groupName, name, defaultValue, maxValue, resolution);
 	}
 
+void DFNTestInterface::AddSignedParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution)
+	{
+	parametersInterface.AddSignedParameter(groupName, name, defaultValue, maxValue, resolution);
+	}
+
 double DFNTestInterface::GetLastProcessingTimeSeconds()
 	{
 	return processingTime;

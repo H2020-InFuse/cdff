@@ -12,6 +12,17 @@ target_link_libraries(
 add_test(ParametersHelperTest ParametersHelperTest)
 
 add_executable(
+    ImageUndistortionTest
+    DFNs/ImageFiltering/ImageUndistortion.cpp
+)
+target_link_libraries(
+	ImageUndistortionTest
+	mock cdff_logger cdff_types image_undistortion  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+)
+add_test(ImageUndistortionTest ImageUndistortionTest)
+
+
+add_executable(
     HarrisDetector2DTest
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
 )

@@ -61,6 +61,7 @@ class ParametersInterface
 		~ParametersInterface();
 		void AddParameter(std::string groupName, std::string name, int defaultValue, int maxValue);
 		void AddParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
+		void AddSignedParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
 		void CreateTrackbars();
 		void SaveToYaml(std::string filePath);
 
@@ -91,6 +92,7 @@ class ParametersInterface
 			int value;
 			ParameterType type;
 			int maxValue;
+			int minValue;
 			double resolution;
 			};
 
