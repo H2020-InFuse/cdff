@@ -10,4 +10,6 @@ output_ports:
     - name: correspondenceMap
       type: CorrespondenceMap2D
       doc: This is the best set of correspondences between the source features set and the sink features set.
+implementations:
+    - FlannMatcher
 

@@ -11,4 +11,7 @@ output_ports:
     - name: success
       type: boolean
       doc: This outputs tells whether the computation was succesfull. The computation may fail if the inputs are not good. If the computation fails the first output is meaningless.
+implementations:
+    - EssentialMatrixRansac
+
 
