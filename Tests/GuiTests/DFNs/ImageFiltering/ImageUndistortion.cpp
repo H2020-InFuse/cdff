@@ -121,6 +121,9 @@ void ImageUndistortionTestInterface::SetupParameters()
 	AddSignedParameter("Distortion", "K6", -1.458304668407831, 10, 1e-8);
 	AddSignedParameter("Distortion", "P1", 0.001056515495810514, 10, 1e-8);
 	AddSignedParameter("Distortion", "P2", 0.002542555946247054, 10, 1e-8);
+
+	AddParameter("Distortion", "UseK3", 1, 1);
+	AddParameter("Distortion", "UseK4ToK6", 1, 1);
 	}
 
 void ImageUndistortionTestInterface::DisplayResult()

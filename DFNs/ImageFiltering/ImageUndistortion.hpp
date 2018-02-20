@@ -87,6 +87,8 @@ namespace dfn_ci {
 			float k6;
 			float p1;
 			float p2;
+			bool useK3;
+			bool useK4ToK6;
 			};
 
 		struct ImageUndistortionOptionsSet

@@ -60,7 +60,7 @@ void ParametersInterface::AddParameter(std::string groupName, std::string name, 
 	newParameter.maxValue = maxValue;
 	newParameter.value = defaultValue;
 	newParameter.type = (maxValue <= 1) ? BOOL_TYPE : INT_TYPE;
-	newParameter.minValue = 0;
+	newParameter.displacement = 0;
 
 	AddParameter(groupName, newParameter);
 	}
@@ -76,7 +76,7 @@ void ParametersInterface::AddParameter(std::string groupName, std::string name, 
 	newParameter.maxValue = (int) (maxValue / resolution);
 	newParameter.value = (int) (defaultValue/ resolution);	
 	newParameter.resolution = resolution;	
-	newParameter.minValue = 0; 
+	newParameter.displacement = 0; 
 
 	AddParameter(groupName, newParameter);
 	}
@@ -92,7 +92,7 @@ void ParametersInterface::AddSignedParameter(std::string groupName, std::string 
 	newParameter.maxValue = (int) ( (maxValue + maxValue) / resolution);
 	newParameter.value = (int) ( (defaultValue + maxValue) / resolution);	
 	newParameter.resolution = resolution;	
-	newParameter.minValue = -newParameter.maxValue;
+	newParameter.displacement = (int) ( (maxValue) / resolution);
 
 	AddParameter(groupName, newParameter);
 	}
@@ -162,9 +162,9 @@ void ParametersInterface::SaveToYaml(std::string filePath)
 			switch(parameter->type)
 				{
 				case BOOL_TYPE: yamlFile << ( (parameter->value == 1) || (parameter->maxValue == 0) ? "true" : "false"); break;
-				case INT_TYPE: yamlFile << parameter->value - parameter->minValue; break;
-				case FLOAT_TYPE: yamlFile << std::setprecision(7) << (float)(parameter->value - parameter->minValue) * (float)(parameter->resolution); break;
-				case DOUBLE_TYPE: yamlFile << std::setprecision(13) << (double)(parameter->value - parameter->minValue) * (double)(parameter->resolution); break;
+				case INT_TYPE: yamlFile << parameter->value - parameter->displacement; break;
+				case FLOAT_TYPE: yamlFile << std::setprecision(7) << (float)(parameter->value - parameter->displacement) * (float)(parameter->resolution); break;
+				case DOUBLE_TYPE: yamlFile << std::setprecision(13) << (double)(parameter->value - parameter->displacement) * (double)(parameter->resolution); break;
 				}
 			}
 

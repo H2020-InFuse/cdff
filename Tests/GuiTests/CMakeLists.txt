@@ -1,14 +1,14 @@
 add_executable(
-    UndistortImageGuiTest
+    ImageUndistortionGuiTest
     DFNs/ImageFiltering/ImageUndistortion.cpp
     ParametersInterface.cpp
     ButtonsInterface.cpp
     MainInterface.cpp
     DFNs/DFNTestInterface.cpp
 )
-set_target_properties(UndistortImageGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+set_target_properties(ImageUndistortionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	UndistortImageGuiTest
+	ImageUndistortionGuiTest
 	mock cdff_logger image_undistortion converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
 )
 

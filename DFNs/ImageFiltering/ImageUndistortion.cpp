@@ -65,6 +65,9 @@ ImageUndistortion::ImageUndistortion()
 	parametersHelper.AddParameter<float>("Distortion", "P1", parameters.distortionParametersSet.p1, DEFAULT_PARAMETERS.distortionParametersSet.p1);
 	parametersHelper.AddParameter<float>("Distortion", "P2", parameters.distortionParametersSet.p2, DEFAULT_PARAMETERS.distortionParametersSet.p2);
 
+	parametersHelper.AddParameter<bool>("Distortion", "UseK3", parameters.distortionParametersSet.useK3, DEFAULT_PARAMETERS.distortionParametersSet.useK3);
+	parametersHelper.AddParameter<bool>("Distortion", "UseK4ToK6", parameters.distortionParametersSet.useK4ToK6, DEFAULT_PARAMETERS.distortionParametersSet.useK4ToK6);
+
 	configurationFilePath = "";
 	}
 
@@ -106,7 +109,9 @@ const ImageUndistortion::ImageUndistortionOptionsSet ImageUndistortion::DEFAULT_
 		.k5 = 0,
 		.k6 = 0,
 		.p1 = 0,
-		.p2 = 0
+		.p2 = 0,
+		.useK3 = false,
+		.useK4ToK6 = false
 		}
 	};
 
@@ -120,15 +125,29 @@ cv::Mat ImageUndistortion::Undistort(cv::Mat inputImage)
 	cameraMatrix.at<float>(1,2) = parameters.cameraMatrix.principlePointY;
 	cameraMatrix.at<float>(2,2) = 1;
 
-	cv::Mat distortionCoefficients(1, 8, CV_32FC1);
+	cv::Mat distortionCoefficients;
+	if (parameters.distortionParametersSet.useK4ToK6)
+		{
+		distortionCoefficients = cv::Mat(1, 8, CV_32FC1);
+		distortionCoefficients.at<float>(0,4) = parameters.distortionParametersSet.k3;
+		distortionCoefficients.at<float>(0,5) = parameters.distortionParametersSet.k4;
+		distortionCoefficients.at<float>(0,6) = parameters.distortionParametersSet.k5;
+		distortionCoefficients.at<float>(0,7) = parameters.distortionParametersSet.k6;		
+		}
+	else if (parameters.distortionParametersSet.useK3)
+		{
+		distortionCoefficients = cv::Mat(1, 5, CV_32FC1);
+		distortionCoefficients.at<float>(0,4) = parameters.distortionParametersSet.k3;
+		}
+	else
+		{
+		distortionCoefficients = cv::Mat(1, 4, CV_32FC1);
+		}
 	distortionCoefficients.at<float>(0,0) = parameters.distortionParametersSet.k1;
 	distortionCoefficients.at<float>(0,1) = parameters.distortionParametersSet.k2;
 	distortionCoefficients.at<float>(0,2) = parameters.distortionParametersSet.p1;
 	distortionCoefficients.at<float>(0,3) = parameters.distortionParametersSet.p2;
-	distortionCoefficients.at<float>(0,4) = parameters.distortionParametersSet.k3;
-	distortionCoefficients.at<float>(0,5) = parameters.distortionParametersSet.k4;
-	distortionCoefficients.at<float>(0,6) = parameters.distortionParametersSet.k5;
-	distortionCoefficients.at<float>(0,7) = parameters.distortionParametersSet.k6;
+
 
 	cv::Mat undistortedImage;
 	cv::undistort(inputImage, undistortedImage, cameraMatrix, distortionCoefficients);
@@ -140,6 +159,7 @@ cv::Mat ImageUndistortion::Undistort(cv::Mat inputImage)
 void ImageUndistortion::ValidateParameters()
 	{
 	ASSERT(parameters.cameraMatrix.focalLengthX > 0 && parameters.cameraMatrix.focalLengthY > 0, "Image Undistortion Configuration error: focal length has to be positive");
+	ASSERT(!parameters.distortionParametersSet.useK4ToK6 || parameters.distortionParametersSet.useK3, "Image Undistortion Configuration error: cannot use K4,K5,K6 without K3");
 	}
 
 void ImageUndistortion::ValidateInputs(cv::Mat inputImage)

@@ -92,7 +92,7 @@ class ParametersInterface
 			int value;
 			ParameterType type;
 			int maxValue;
-			int minValue;
+			int displacement;
 			double resolution;
 			};
 

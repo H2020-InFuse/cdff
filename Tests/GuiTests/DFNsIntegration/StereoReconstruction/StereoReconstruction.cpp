@@ -15,7 +15,7 @@
  * @addtogroup DFNsTest
  * 
  * Testing application for a Stereo Reconstruction Integration Test.
- * This test uses: DFN Orb2D, DFN Flann Matcher, DFN Essential Matrix and DFN Triangulation
+ * This test uses: DFN ImageUndistortion, DFN Orb2D, DFN Flann Matcher, DFN Essential Matrix and DFN Triangulation
  * 
  * 
  * @{
@@ -39,6 +39,7 @@
 #include <GuiTests/MainInterface.hpp>
 #include <GuiTests/DFNsIntegration/DFNsIntegrationTestInterface.hpp>
 
+#include <ImageFiltering/ImageUndistortion.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <FeaturesMatching2D/FlannMatcher.hpp>
 #include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
@@ -51,6 +52,7 @@
 
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <Mocks/Common/Converters/FrameToMatConverter.hpp>
+#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Mocks/Common/Converters/VisualPointFeatureVector2DToMatConverter.hpp>
 #include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
@@ -78,6 +80,8 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		enum State
 			{
 			START,
+			UNDISTORT_LEFT_IMAGE_DONE,
+			UNDISTORT_RIGHT_IMAGE_DONE,
 			ORB_LEFT_IMAGE_DONE,
 			ORB_RIGHT_IMAGE_DONE,
 			MATCHING_DONE,
@@ -88,11 +92,15 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 
 		Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubFrameCache;
 		Mocks::FrameToMatConverter* mockFrameConverter;
+		Stubs::CacheHandler<cv::Mat, FrameConstPtr>* stubInverseFrameCache;
+		Mocks::MatToFrameConverter* mockInverseFrameConverter;
 		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>* stubMatToVectorCache;
 		Mocks::MatToVisualPointFeatureVector2DConverter* mockMatToVectorConverter;
 		Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>* stubVectorToMatCache;
 		Mocks::VisualPointFeatureVector2DToMatConverter* mockVectorToMatConverter;
 
+		ImageUndistortion* leftUndistortion;
+		ImageUndistortion* rightUndistortion;
 		OrbDetectorDescriptor* orb;
 		FlannMatcher* flann;	
 		FundamentalMatrixRansac* ransac;	
@@ -104,6 +112,8 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 
 		FrameConstPtr leftImage;
 		FrameConstPtr rightImage;
+		FrameConstPtr undistortedLeftImage;
+		FrameConstPtr undistortedRightImage;
 		VisualPointFeatureVector2DConstPtr leftFeaturesVector;
 		VisualPointFeatureVector2DConstPtr rightFeaturesVector;
 		CorrespondenceMap2DConstPtr correspondenceMap;
@@ -119,6 +129,8 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		void UpdateState();
 		DFNCommonInterface* PrepareNextDfn();
 
+		void PrepareUndistortionLeft();
+		void PrepareUndistortionRight();
 		void PrepareOrbLeft();
 		void PrepareOrbRight();
 		void PrepareFlann();
@@ -136,6 +148,12 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 	//ExtractCalibrationParametersOneCamera();
 	//ExtractCalibrationParameters();
 
+	leftUndistortion = new ImageUndistortion();
+	AddDFN(leftUndistortion, "leftUndistortion");
+
+	rightUndistortion = new ImageUndistortion();
+	AddDFN(rightUndistortion, "rightUndistortion");
+	
 	orb = new OrbDetectorDescriptor();
 	AddDFN(orb, "orb");
 
@@ -166,6 +184,8 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 
 StereoReconstructionTestInterface::~StereoReconstructionTestInterface()
 	{
+	delete(leftUndistortion);
+	delete(rightUndistortion);
 	delete(orb);
 	delete(flann);
 	delete(ransac);
@@ -178,6 +198,10 @@ void StereoReconstructionTestInterface::SetupMocksAndStubs()
 	mockFrameConverter = new Mocks::FrameToMatConverter();
 	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubFrameCache, mockFrameConverter);
 
+	stubInverseFrameCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>();
+	mockInverseFrameConverter = new Mocks::MatToFrameConverter();
+	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubInverseFrameCache, mockInverseFrameConverter);
+
 	stubMatToVectorCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
 	mockMatToVectorConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
 	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubMatToVectorCache, mockMatToVectorConverter);
@@ -189,6 +213,38 @@ void StereoReconstructionTestInterface::SetupMocksAndStubs()
 
 void StereoReconstructionTestInterface::SetupParameters()
 	{
+	AddParameter(leftUndistortion, "CameraMatrix", "FocalLengthX", 1408.899186439272, 1500, 1e-5);
+	AddParameter(leftUndistortion, "CameraMatrix", "FocalLengthY", 1403.116708010621, 1500, 1e-5);
+	AddParameter(leftUndistortion, "CameraMatrix", "PrinciplePointX", 1053.351342078365, 1500, 1e-5);
+	AddParameter(leftUndistortion, "CameraMatrix", "PrinciplePointY", 588.8342842821718, 1500, 1e-5);
+
+	AddSignedParameter(leftUndistortion, "Distortion", "K1", 0.8010323519594021, 10, 1e-8);
+	AddSignedParameter(leftUndistortion, "Distortion", "K2", 104.7894482598434, 110, 1e-6);
+	AddSignedParameter(leftUndistortion, "Distortion", "K3", -70.73535010082334, 110, 1e-6);
+	AddSignedParameter(leftUndistortion, "Distortion", "K4", 0.8556124926892613, 10, 1e-8);
+	AddSignedParameter(leftUndistortion, "Distortion", "K5", 105.9684960970509, 110, 1e-6);
+	AddSignedParameter(leftUndistortion, "Distortion", "K6", -60.88515255428263, 110, 1e-6);
+	AddSignedParameter(leftUndistortion, "Distortion", "P1", -6.223427196342877e-05, 10, 1e-8);
+	AddSignedParameter(leftUndistortion, "Distortion", "P2", -0.002209798328517273, 10, 1e-8);
+	AddParameter(leftUndistortion, "Distortion", "UseK3", 1, 1);
+	AddParameter(leftUndistortion, "Distortion", "UseK4ToK6", 1, 1);
+
+	AddParameter(rightUndistortion, "CameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 1e-5);
+	AddParameter(rightUndistortion, "CameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 1e-5);
+	AddParameter(rightUndistortion, "CameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 1e-5);
+	AddParameter(rightUndistortion, "CameraMatrix", "PrinciplePointY", 592.5031927882591, 1500, 1e-5);
+
+	AddSignedParameter(rightUndistortion, "Distortion", "K1", -5.700997352957169, 10, 1e-8);
+	AddSignedParameter(rightUndistortion, "Distortion", "K2", 9.016454056014156, 10, 1e-8);
+	AddSignedParameter(rightUndistortion, "Distortion", "K3", -2.465929585147688, 10, 1e-8);
+	AddSignedParameter(rightUndistortion, "Distortion", "K4", -5.560701053165053, 10, 1e-8);
+	AddSignedParameter(rightUndistortion, "Distortion", "K5", 8.264481221246962, 10, 1e-8);
+	AddSignedParameter(rightUndistortion, "Distortion", "K6", -1.458304668407831, 10, 1e-8);
+	AddSignedParameter(rightUndistortion, "Distortion", "P1", 0.001056515495810514, 10, 1e-8);
+	AddSignedParameter(rightUndistortion, "Distortion", "P2", 0.002542555946247054, 10, 1e-8);
+	AddParameter(rightUndistortion, "Distortion", "UseK3", 1, 1);
+	AddParameter(rightUndistortion, "Distortion", "UseK4ToK6", 1, 1);
+
 	AddParameter(orb, "GeneralParameters", "EdgeThreshold", 31, 100);
 	AddParameter(orb, "GeneralParameters", "FastThreshold", 20, 100);
 	AddParameter(orb, "GeneralParameters", "FirstLevel", 0, 2);
@@ -241,6 +297,8 @@ void StereoReconstructionTestInterface::DisplayResult()
 
 	delete(leftImage);
 	delete(rightImage);
+	delete(undistortedLeftImage);
+	delete(undistortedRightImage);
 	delete(leftFeaturesVector);
 	delete(rightFeaturesVector);
 	delete(correspondenceMap);
@@ -268,6 +326,14 @@ void StereoReconstructionTestInterface::UpdateState()
 	{
 	if (state == START)
 		{
+		state = UNDISTORT_LEFT_IMAGE_DONE;
+		}
+	else if (state == UNDISTORT_LEFT_IMAGE_DONE)
+		{
+		state = UNDISTORT_RIGHT_IMAGE_DONE;
+		}
+	else if (state == UNDISTORT_RIGHT_IMAGE_DONE)
+		{
 		state = ORB_LEFT_IMAGE_DONE;
 		}
 	else if (state == ORB_LEFT_IMAGE_DONE)
@@ -287,6 +353,16 @@ void StereoReconstructionTestInterface::UpdateState()
 DFNCommonInterface* StereoReconstructionTestInterface::PrepareNextDfn()
 	{
 	if (state == START)
+		{
+		PrepareUndistortionLeft();
+		return leftUndistortion;
+		}
+	else if (state == UNDISTORT_LEFT_IMAGE_DONE)
+		{
+		PrepareUndistortionRight();
+		return rightUndistortion;
+		}
+	else if (state == UNDISTORT_RIGHT_IMAGE_DONE)
 		{
 		PrepareOrbLeft();
 		return orb;
@@ -320,21 +396,38 @@ DFNCommonInterface* StereoReconstructionTestInterface::PrepareNextDfn()
 	return 0;
 	}
 
-void StereoReconstructionTestInterface::PrepareOrbLeft()
+void StereoReconstructionTestInterface::PrepareUndistortionLeft()
 	{
 	MatToFrameConverter converter;
 	leftImage = converter.Convert(leftCvImage);
-	orb->imageInput(leftImage);
+	leftUndistortion->imageInput(leftImage);
+	}
+
+void StereoReconstructionTestInterface::PrepareUndistortionRight()
+	{
+	MatToFrameConverter converter;
+	rightImage = converter.Convert(rightCvImage);
+	rightUndistortion->imageInput(rightImage);
+	}
+
+void StereoReconstructionTestInterface::PrepareOrbLeft()
+	{
+	undistortedLeftImage = leftUndistortion->filteredImageOutput();
+
+	MatToFrameConverter converter;
+	leftImage = converter.Convert(leftCvImage);
+	orb->imageInput(undistortedLeftImage);
 	}
 
 void StereoReconstructionTestInterface::PrepareOrbRight()
 	{
+	undistortedRightImage = rightUndistortion->filteredImageOutput();
 	leftFeaturesVector = orb->featuresSetOutput();
 	PRINT_TO_LOG("Number of features points from left image: ", GetNumberOfPoints(*leftFeaturesVector));
 
 	MatToFrameConverter converter;
 	rightImage = converter.Convert(rightCvImage);
-	orb->imageInput(rightImage);
+	orb->imageInput(undistortedRightImage);
 	}
 
 void StereoReconstructionTestInterface::PrepareFlann()
@@ -538,6 +631,10 @@ void StereoReconstructionTestInterface::ExtractCalibrationParameters()
 	rightCameraMatrix.at<float>(0, 2) = 1013.347852589407;
 	rightCameraMatrix.at<float>(1, 2) = 592.5031927882591;
 	rightCameraMatrix.at<float>(2, 2) = 1.0;
+
+Left distortion:  [0.8010323519594021, 104.7894482598434, -6.223427196342877e-05, -0.002209798328517273, -70.73535010082334, 0.8556124926892613, 105.9684960970509, -60.88515255428263, 0, 0, 0, 0, 0, 0]
+Right distortion:  [-5.700997352957169, 9.016454056014156, 0.001056515495810514, 0.002542555946247054, -2.465929585147688, -5.560701053165053, 8.264481221246962, -1.458304668407831, 0, 0, 0, 0, 0, 0]
+
 */
 void StereoReconstructionTestInterface::ExtractCalibrationParametersOneCamera()
 	{
@@ -644,11 +741,14 @@ void StereoReconstructionTestInterface::VisualizeCorrespondences(CorrespondenceM
 		matchesVector.push_back(match);
 		}
 	
+	FrameToMatConverter converter;
+	cv::Mat leftUndistortedCvImage = converter.Convert(undistortedLeftImage);
+	cv::Mat rightUndistortedCvImage = converter.Convert(undistortedRightImage);
 
  	cv::Mat outputImage;
  	cv::drawMatches
 		(
-		leftCvImage, sourceVector, rightCvImage, sinkVector, matchesVector, 
+		leftUndistortedCvImage, sourceVector, rightUndistortedCvImage, sinkVector, matchesVector, 
 		outputImage, 
 		cv::Scalar::all(-1), cv::Scalar::all(-1),
                	std::vector<char>(), 
