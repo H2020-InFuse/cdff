@@ -58,6 +58,7 @@ class DFNTestInterface
 		void SetDFN(DFNCommonInterface* dfn);
 		void AddParameter(std::string groupName, std::string name, int defaultValue, int maxValue);
 		void AddParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
+		void AddSignedParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
 
 		double GetLastProcessingTimeSeconds();
 		int GetTotalVirtualMemoryUsedKB();

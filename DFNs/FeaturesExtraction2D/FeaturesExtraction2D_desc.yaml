@@ -7,4 +7,8 @@ output_ports:
     - name: featuresSet
       type: VisualPointFeatureVector2D
       doc: This is the set of the points extracted from the image, a descriptor may or may not be provided.
+implementations:
+    - HarrisDetector2D
+    - OrbDetectorDescritor
+
 

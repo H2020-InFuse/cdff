@@ -1,0 +1,13 @@
+name: ImageFiltering
+input_ports:
+    - name: image
+      type: Frame
+      doc: a 2D image taken from camera
+output_ports:
+    - name: filteredImage
+      type: Frame
+      doc: the filtered image output
+implementations:
+    - ImageUndistortion
+
+

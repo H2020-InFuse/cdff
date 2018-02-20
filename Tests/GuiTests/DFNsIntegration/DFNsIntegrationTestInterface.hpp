@@ -58,6 +58,7 @@ class DFNsIntegrationTestInterface
 		void AddDFN(DFNCommonInterface* dfn, std::string dfnName);
 		void AddParameter(DFNCommonInterface* dfn, std::string groupName, std::string name, int defaultValue, int maxValue);
 		void AddParameter(DFNCommonInterface* dfn, std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
+		void AddSignedParameter(DFNCommonInterface* dfn, std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
 
 		double GetTotalProcessingTimeSeconds();
 		double GetLastProcessingTimeSeconds(unsigned timeIndex);

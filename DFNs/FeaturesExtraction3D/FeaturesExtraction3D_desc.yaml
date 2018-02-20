@@ -7,4 +7,7 @@ output_ports:
     - name: featuresSet
       type: VisualPointFeatureVector3D
       doc: This is the set of the points extracted from the point cloud, a descriptor may or may not be provided.
+implementations:
+    - HarrisDetector3D
+
 

@@ -60,6 +60,7 @@ void ParametersInterface::AddParameter(std::string groupName, std::string name, 
 	newParameter.maxValue = maxValue;
 	newParameter.value = defaultValue;
 	newParameter.type = (maxValue <= 1) ? BOOL_TYPE : INT_TYPE;
+	newParameter.displacement = 0;
 
 	AddParameter(groupName, newParameter);
 	}
@@ -75,9 +76,27 @@ void ParametersInterface::AddParameter(std::string groupName, std::string name, 
 	newParameter.maxValue = (int) (maxValue / resolution);
 	newParameter.value = (int) (defaultValue/ resolution);	
 	newParameter.resolution = resolution;	
+	newParameter.displacement = 0; 
 
 	AddParameter(groupName, newParameter);
 	}
+
+void ParametersInterface::AddSignedParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution)
+	{
+	ASSERT(defaultValue >= -maxValue && defaultValue <= maxValue, "Parameter interface error: default value not in range [-maxValue, maxValue]");
+	ASSERT( std::abs(resolution) >= std::numeric_limits<double>::epsilon(), "Parameter interface error: resolution of real value higher than maximum machine resolution");
+
+	Parameter newParameter;
+	newParameter.name = name;
+	newParameter.type = (resolution <= 1e-7) ? DOUBLE_TYPE : FLOAT_TYPE;
+	newParameter.maxValue = (int) ( (maxValue + maxValue) / resolution);
+	newParameter.value = (int) ( (defaultValue + maxValue) / resolution);	
+	newParameter.resolution = resolution;	
+	newParameter.displacement = (int) ( (maxValue) / resolution);
+
+	AddParameter(groupName, newParameter);
+	}
+	
 
 void ParametersInterface::CreateTrackbars()
 	{
@@ -143,9 +162,9 @@ void ParametersInterface::SaveToYaml(std::string filePath)
 			switch(parameter->type)
 				{
 				case BOOL_TYPE: yamlFile << ( (parameter->value == 1) || (parameter->maxValue == 0) ? "true" : "false"); break;
-				case INT_TYPE: yamlFile << parameter->value; break;
-				case FLOAT_TYPE: yamlFile << std::setprecision(7) << (float)(parameter->value) * (float)(parameter->resolution); break;
-				case DOUBLE_TYPE: yamlFile << std::setprecision(13) << (double)(parameter->value) * (double)(parameter->resolution); break;
+				case INT_TYPE: yamlFile << parameter->value - parameter->displacement; break;
+				case FLOAT_TYPE: yamlFile << std::setprecision(7) << (float)(parameter->value - parameter->displacement) * (float)(parameter->resolution); break;
+				case DOUBLE_TYPE: yamlFile << std::setprecision(13) << (double)(parameter->value - parameter->displacement) * (double)(parameter->resolution); break;
 				}
 			}
 

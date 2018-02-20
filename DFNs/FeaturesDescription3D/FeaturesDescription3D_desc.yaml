@@ -17,4 +17,6 @@ output_ports:
     - name: featuresSetWithDescriptors
       type: VisualPointFeatureVector3D
       doc: This is the same list of visual point defined above. A SHOT descriptor is associated to each point. The points may be defined by position or references according to a configuration parameter. 
+implementations:
+    - ShotDescriptor3D
 

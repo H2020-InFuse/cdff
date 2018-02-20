@@ -85,6 +85,13 @@ void DFNsIntegrationTestInterface::AddParameter(DFNCommonInterface* dfn, std::st
 	parametersInterfaceList.at(dfnIndex).AddParameter(groupName, name, defaultValue, maxValue, resolution);
 	}
 
+void DFNsIntegrationTestInterface::AddSignedParameter(DFNCommonInterface* dfn, std::string groupName, std::string name, double defaultValue, double maxValue, double resolution)
+	{
+	unsigned dfnIndex = GetDfnIndex(dfn);
+	ASSERT(dfnIndex < dfnsList.size(), "DFNsIntegrationTestInterface, you have to add the dfn before you add parameters");
+	parametersInterfaceList.at(dfnIndex).AddSignedParameter(groupName, name, defaultValue, maxValue, resolution);
+	}
+
 double DFNsIntegrationTestInterface::GetTotalProcessingTimeSeconds()
 	{
 	return totalProcessingTime;
