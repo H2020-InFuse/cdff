@@ -108,7 +108,7 @@ cv::Mat Triangulation::ComputeSecondProjectionMatrix(Matrix3dConstPtr fundamenta
 		}
 	
 	cv::Mat epipoleMatrix(3, 3, CV_64FC1, cv::Scalar(0));
-	epipoleMatrix.at<double>(0,1) = 1;
+	epipoleMatrix.at<double>(0,1) = -1;
 	epipoleMatrix.at<double>(0,2) = secondEpipole->y;
 	epipoleMatrix.at<double>(1,0) = 1;
 	epipoleMatrix.at<double>(1,2) = -secondEpipole->x;
