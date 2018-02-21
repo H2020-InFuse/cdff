@@ -15,7 +15,7 @@
  * @addtogroup DFNsTest
  * 
  * Testing application for a Stereo Reconstruction Integration Test.
- * This test uses: DFN ImageUndistortion, DFN Orb2D, DFN Flann Matcher, DFN Essential Matrix and DFN Triangulation
+ * This test uses: DFN ImageUndistortion, DFN Harris Detector, DFN OrbDescriptor, DFN Flann Matcher, DFN Essential Matrix and DFN Triangulation
  * 
  * 
  * @{
@@ -42,7 +42,8 @@
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <FeaturesMatching2D/FlannMatcher.hpp>
-#include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
+#include <FeaturesExtraction2D/HarrisDetector2D.hpp>
+#include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 
 #include <FrameToMatConverter.hpp>
@@ -82,6 +83,8 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 			START,
 			UNDISTORT_LEFT_IMAGE_DONE,
 			UNDISTORT_RIGHT_IMAGE_DONE,
+			HARRIS_LEFT_IMAGE_DONE,
+			HARRIS_RIGHT_IMAGE_DONE,
 			ORB_LEFT_IMAGE_DONE,
 			ORB_RIGHT_IMAGE_DONE,
 			MATCHING_DONE,
@@ -101,7 +104,8 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 
 		ImageUndistortion* leftUndistortion;
 		ImageUndistortion* rightUndistortion;
-		OrbDetectorDescriptor* orb;
+		HarrisDetector2D* harris;
+		OrbDescriptor* orb;
 		FlannMatcher* flann;	
 		FundamentalMatrixRansac* ransac;	
 		Triangulation* triangulation;
@@ -114,6 +118,8 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		FrameConstPtr rightImage;
 		FrameConstPtr undistortedLeftImage;
 		FrameConstPtr undistortedRightImage;
+		VisualPointFeatureVector2DConstPtr leftKeypointsVector;
+		VisualPointFeatureVector2DConstPtr rightKeypointsVector;
 		VisualPointFeatureVector2DConstPtr leftFeaturesVector;
 		VisualPointFeatureVector2DConstPtr rightFeaturesVector;
 		CorrespondenceMap2DConstPtr correspondenceMap;
@@ -131,6 +137,8 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 
 		void PrepareUndistortionLeft();
 		void PrepareUndistortionRight();
+		void PrepareHarrisLeft();
+		void PrepareHarrisRight();
 		void PrepareOrbLeft();
 		void PrepareOrbRight();
 		void PrepareFlann();
@@ -154,8 +162,11 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 
 	rightUndistortion = new ImageUndistortion();
 	AddDFN(rightUndistortion, "rightUndistortion");
+
+	harris = new HarrisDetector2D();
+	AddDFN(harris, "harris");
 	
-	orb = new OrbDetectorDescriptor();
+	orb = new OrbDescriptor();
 	AddDFN(orb, "orb");
 
 	flann = new FlannMatcher();
@@ -167,7 +178,7 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 	triangulation = new Triangulation();
 	AddDFN(triangulation, "triangulation");
 
-	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/SmestechLab.jpg", cv::IMREAD_COLOR);
+	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/stuff.jpg", cv::IMREAD_COLOR);
 	ASSERT(doubleImage.rows > 0 && doubleImage.cols > 0, "Test Error: failed to load image correctly");
 
 	unsigned singleImageCols = doubleImage.cols/2;
@@ -187,6 +198,7 @@ StereoReconstructionTestInterface::~StereoReconstructionTestInterface()
 	{
 	delete(leftUndistortion);
 	delete(rightUndistortion);
+	delete(harris);
 	delete(orb);
 	delete(flann);
 	delete(ransac);
@@ -246,6 +258,16 @@ void StereoReconstructionTestInterface::SetupParameters()
 	AddParameter(rightUndistortion, "Distortion", "UseK3", 1, 1);
 	AddParameter(rightUndistortion, "Distortion", "UseK4ToK6", 1, 1);
 
+	AddParameter(harris, "GeneralParameters", "ApertureSize", 5, 7);
+	AddParameter(harris, "GeneralParameters", "BlockSize", 2, 50);
+	AddParameter(harris, "GeneralParameters", "ParameterK", 0.04, 1.00, 0.01);
+	AddParameter(harris, "GeneralParameters", "DetectionThreshold", 200, 255);
+	AddParameter(harris, "GeneralParameters", "UseGaussianBlur", 1, 1);
+	AddParameter(harris, "GaussianBlur", "KernelWidth", 3, 99);
+	AddParameter(harris, "GaussianBlur", "KernelHeight", 3, 99);
+	AddParameter(harris, "GaussianBlur", "WidthStandardDeviation", 0.00, 1.00, 0.01);
+	AddParameter(harris, "GaussianBlur", "HeightStandardDeviation", 0.00, 1.00, 0.01);
+
 	AddParameter(orb, "GeneralParameters", "EdgeThreshold", 31, 100);
 	AddParameter(orb, "GeneralParameters", "FastThreshold", 20, 100);
 	AddParameter(orb, "GeneralParameters", "FirstLevel", 0, 2);
@@ -300,6 +322,8 @@ void StereoReconstructionTestInterface::DisplayResult()
 	delete(rightImage);
 	delete(undistortedLeftImage);
 	delete(undistortedRightImage);
+	delete(leftKeypointsVector);
+	delete(rightKeypointsVector);
 	delete(leftFeaturesVector);
 	delete(rightFeaturesVector);
 	delete(correspondenceMap);
@@ -335,6 +359,14 @@ void StereoReconstructionTestInterface::UpdateState()
 		}
 	else if (state == UNDISTORT_RIGHT_IMAGE_DONE)
 		{
+		state = HARRIS_LEFT_IMAGE_DONE;
+		}
+	else if (state == HARRIS_LEFT_IMAGE_DONE)
+		{
+		state = HARRIS_RIGHT_IMAGE_DONE;
+		}
+	else if (state == HARRIS_RIGHT_IMAGE_DONE)
+		{
 		state = ORB_LEFT_IMAGE_DONE;
 		}
 	else if (state == ORB_LEFT_IMAGE_DONE)
@@ -360,11 +392,25 @@ DFNCommonInterface* StereoReconstructionTestInterface::PrepareNextDfn()
 		}
 	else if (state == UNDISTORT_LEFT_IMAGE_DONE)
 		{
+		PRINT_TO_LOG("Step Undistort Left processing time (seconds): ", GetLastProcessingTimeSeconds(0) );
 		PrepareUndistortionRight();
 		return rightUndistortion;
 		}
 	else if (state == UNDISTORT_RIGHT_IMAGE_DONE)
 		{
+		PRINT_TO_LOG("Step Undistort Right processing time (seconds): ", GetLastProcessingTimeSeconds(0) );
+		PrepareHarrisLeft();
+		return harris;
+		}
+	else if (state == HARRIS_LEFT_IMAGE_DONE)
+		{
+		PRINT_TO_LOG("Step Harris Left processing time (seconds): ", GetLastProcessingTimeSeconds(0) );
+		PrepareHarrisRight();
+		return harris;
+		}
+	else if (state == HARRIS_RIGHT_IMAGE_DONE)
+		{
+		PRINT_TO_LOG("Step Harris Right processing time (seconds): ", GetLastProcessingTimeSeconds(0) );
 		PrepareOrbLeft();
 		return orb;
 		}
@@ -411,30 +457,42 @@ void StereoReconstructionTestInterface::PrepareUndistortionRight()
 	rightUndistortion->imageInput(rightImage);
 	}
 
-void StereoReconstructionTestInterface::PrepareOrbLeft()
+void StereoReconstructionTestInterface::PrepareHarrisLeft()
 	{
 	undistortedLeftImage = leftUndistortion->filteredImageOutput();
 
-	MatToFrameConverter converter;
-	leftImage = converter.Convert(leftCvImage);
+	harris->imageInput(undistortedLeftImage);
+	}
+
+void StereoReconstructionTestInterface::PrepareHarrisRight()
+	{
+	undistortedRightImage = rightUndistortion->filteredImageOutput();
+	leftKeypointsVector = harris->featuresSetOutput();
+	PRINT_TO_LOG("Number of features points from left image: ", GetNumberOfPoints(*leftKeypointsVector));
+
+	harris->imageInput(undistortedRightImage);
+	}
+
+void StereoReconstructionTestInterface::PrepareOrbLeft()
+	{
+	rightKeypointsVector = harris->featuresSetOutput();
+	PRINT_TO_LOG("Number of features points from left image: ", GetNumberOfPoints(*rightKeypointsVector));
+
 	orb->imageInput(undistortedLeftImage);
+	orb->featuresSetInput(leftKeypointsVector);
 	}
 
 void StereoReconstructionTestInterface::PrepareOrbRight()
 	{
-	undistortedRightImage = rightUndistortion->filteredImageOutput();
-	leftFeaturesVector = orb->featuresSetOutput();
-	PRINT_TO_LOG("Number of features points from left image: ", GetNumberOfPoints(*leftFeaturesVector));
+	leftFeaturesVector = orb->featuresSetWithDescriptorsOutput();
 
-	MatToFrameConverter converter;
-	rightImage = converter.Convert(rightCvImage);
 	orb->imageInput(undistortedRightImage);
+	orb->featuresSetInput(rightKeypointsVector);
 	}
 
 void StereoReconstructionTestInterface::PrepareFlann()
 	{
-	rightFeaturesVector = orb->featuresSetOutput();
-	PRINT_TO_LOG("Number of features points from right image: ", GetNumberOfPoints(*rightFeaturesVector));
+	rightFeaturesVector = orb->featuresSetWithDescriptorsOutput();
 	VisualizeFeatures(leftFeaturesVector, rightFeaturesVector);
 
 	flann->sourceFeaturesVectorInput(leftFeaturesVector);

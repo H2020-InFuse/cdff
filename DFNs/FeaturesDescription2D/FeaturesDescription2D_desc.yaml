@@ -1,0 +1,16 @@
+name: FeaturesDescription2D
+input_ports:
+    - name: frame
+      type: Frame
+      doc: a 2D image taken from camera
+    - name: featuresSet
+      type: VisualPointFeatureVector2D
+      doc: This is the set of the points extracted from the image with no associated descriptor.
+output_ports:
+    - name: featuresSetWithDescriptors
+      type: VisualPointFeatureVector2D
+      doc: This is the set of the points extracted from the image. A descriptor is associated to each point.
+implementations:
+    - OrbDescriptor
+
+

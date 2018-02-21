@@ -118,6 +118,7 @@ void FlannMatcher::process()
 	cv::Mat sinkDescriptorsSubmatrix = sinkFeaturesMatrix( cv::Rect(2, 0, sinkFeaturesMatrix.cols-2, sinkFeaturesMatrix.rows) ); 
 
 	std::vector< cv::DMatch > matchesMatrix = ComputeMatches(sourceDescriptorsSubmatrix, sinkDescriptorsSubmatrix);
+
 	outCorrespondenceMap = Convert(matchesMatrix, sourceFeaturesMatrix, sinkFeaturesMatrix);
 	}
 
@@ -352,9 +353,12 @@ std::vector< cv::DMatch > FlannMatcher::ComputeMatches(cv::Mat sourceDescriptors
 	MatchesSequence sequenceOfSelectedMatches;
 	for (unsigned sequenceIndex = 0; sequenceIndex < bestMatchingSequencesVector.size(); sequenceIndex++) 
 		{
-		if (bestMatchingSequencesVector[sequenceIndex][0].distance < bestMatchingSequencesVector[sequenceIndex][1].distance * ACCEPTANCE_RATIO)
+		if (bestMatchingSequencesVector[sequenceIndex].size() >= 2)
 			{
-			sequenceOfSelectedMatches.push_back(bestMatchingSequencesVector[sequenceIndex][0]);
+			if (bestMatchingSequencesVector[sequenceIndex][0].distance < bestMatchingSequencesVector[sequenceIndex][1].distance * ACCEPTANCE_RATIO)
+				{
+				sequenceOfSelectedMatches.push_back(bestMatchingSequencesVector[sequenceIndex][0]);
+				}
 			}
 		}
 
@@ -439,6 +443,7 @@ void FlannMatcher::ValidateParameters()
 void FlannMatcher::ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix)
 	{
 	ASSERT( sourceFeaturesMatrix.cols == sinkFeaturesMatrix.cols, "FlannMatcher Error: Input features vectors have different descriptors");
+	ASSERT( sourceFeaturesMatrix.cols > 0, "FlannMatcher Error: Input features vectors are empty");
 	}
 
 }
