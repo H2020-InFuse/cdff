@@ -104,7 +104,8 @@ namespace dfn_ci {
 			int numberOfChecks;
 			float epsilon;
 			bool sortedSearch;
-			MatcherMethod matcherMethod;			
+			MatcherMethod matcherMethod;	
+			float acceptanceRatio;		
 			};
 	
 		struct KdTreeSearchOptionsSet

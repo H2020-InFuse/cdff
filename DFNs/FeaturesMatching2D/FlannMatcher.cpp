@@ -64,6 +64,7 @@ FlannMatcher::FlannMatcher()
 	ADD_PARAMETER(int, "GeneralParameters", "NumberOfChecks", generalOptionsSet, numberOfChecks);
 	ADD_PARAMETER(float, "GeneralParameters", "Epsilon", generalOptionsSet, epsilon);
 	ADD_PARAMETER(bool, "GeneralParameters", "SortedSearch", generalOptionsSet, sortedSearch);
+	ADD_PARAMETER(float, "GeneralParameters", "AcceptanceRatio", generalOptionsSet, acceptanceRatio);
 
 	ADD_PARAMETER(int, "KdTreeSearchParameters", "NumberOfTrees", kdTreeSearchOptionsSet, numberOfTrees);
 
@@ -219,7 +220,8 @@ const FlannMatcher::FlannMatcherOptionsSet FlannMatcher::DEFAULT_PARAMETERS =
 		.numberOfChecks = 32,
 		.epsilon = 0,
 		.sortedSearch = false,
-		.matcherMethod = KD_TREE_SEARCH
+		.matcherMethod = KD_TREE_SEARCH,
+		.acceptanceRatio = 0.75
 		},
 	.kdTreeSearchOptionsSet = 
 		{
@@ -345,7 +347,6 @@ std::vector< cv::DMatch > FlannMatcher::ComputeMatches(cv::Mat sourceDescriptors
 
 	typedef std::vector<cv::DMatch> MatchesSequence;
 	const unsigned NumberOfBestMatchingSequencesToCompare = 2;
-	const float ACCEPTANCE_RATIO = 0.75;
 
 	std::vector<MatchesSequence> bestMatchingSequencesVector;
 	matcher.knnMatch(validTypeSourceDescriptorsMatrix, validTypeSinkDescriptorsMatrix, bestMatchingSequencesVector, NumberOfBestMatchingSequencesToCompare);
@@ -355,7 +356,7 @@ std::vector< cv::DMatch > FlannMatcher::ComputeMatches(cv::Mat sourceDescriptors
 		{
 		if (bestMatchingSequencesVector[sequenceIndex].size() >= 2)
 			{
-			if (bestMatchingSequencesVector[sequenceIndex][0].distance < bestMatchingSequencesVector[sequenceIndex][1].distance * ACCEPTANCE_RATIO)
+			if (bestMatchingSequencesVector[sequenceIndex][0].distance < bestMatchingSequencesVector[sequenceIndex][1].distance * parameters.generalOptionsSet.acceptanceRatio)
 				{
 				sequenceOfSelectedMatches.push_back(bestMatchingSequencesVector[sequenceIndex][0]);
 				}
@@ -402,6 +403,8 @@ void FlannMatcher::ValidateParameters()
 	ASSERT(parameters.generalOptionsSet.distanceThreshold > 0, "FlannMatcher Error: distanceThreshold is not positive");
 	ASSERT(parameters.generalOptionsSet.numberOfChecks > 0, "FlannMatcher Error: number of checks is not positive");
 	ASSERT(parameters.generalOptionsSet.epsilon >= 0, "FlannMatcher Error: epsilon is negative");
+	ASSERT(parameters.generalOptionsSet.acceptanceRatio >= 0 && parameters.generalOptionsSet.acceptanceRatio <= 1, "FlannMatcher Error: acceptanceRatio has to be between 0 and 1");
+
 	if (parameters.generalOptionsSet.matcherMethod == KD_TREE_SEARCH)
 		{
 		ASSERT(parameters.kdTreeSearchOptionsSet.numberOfTrees > 0, "FlannMatcher Error: kdTreeSearchOptionsSet.numberOfTrees is not positive");

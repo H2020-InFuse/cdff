@@ -280,6 +280,7 @@ void StereoReconstructionTestInterface::SetupParameters()
 
 	AddParameter(flann, "GeneralParameters", "DistanceThreshold", 0.02, 1.00, 0.01);
 	AddParameter(flann, "GeneralParameters", "MatcherMethod", 4, 6);
+	AddParameter(flann, "GeneralParameters", "AcceptanceRatio", 0.75, 1, 0.01);
 	AddParameter(flann, "LocalitySensitiveHashingParameters", "TableNumber", 6, 20);
 	AddParameter(flann, "LocalitySensitiveHashingParameters", "KeySize", 12, 20);
 	AddParameter(flann, "LocalitySensitiveHashingParameters", "MultiProbeLevel", 1, 20);
