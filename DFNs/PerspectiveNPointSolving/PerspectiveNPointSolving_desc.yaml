@@ -1,0 +1,18 @@
+name: PerspectiveNPointSolving
+input_ports:
+    - name: pointCloud
+      type: PointCloud
+      doc: this is the set of 3d points representing the scene in some reference coordinate system.
+    - name: cameraFeaturesVector
+      type: VisualPointFeatureVector2D
+      doc: these are the 2d image coordinates of the 3d points as they are observed by the camera.
+output_ports:
+    - name: pose
+      type: Pose3D
+      doc: This is the pose of the camera in the reference coordinate system of the point cloud.
+    - name: success
+      type: bool
+      doc: This boolean value determines whether a valid pose could be found. If this value is false, pose is meaningless.
+implementations:
+    - IterativePnpSolver
+
