@@ -53,6 +53,16 @@ target_link_libraries(
 add_test(OrbDescriptorTest OrbDescriptorTest)
 
 add_executable(
+    IterativePnpSolverTest
+    DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
+)
+target_link_libraries(
+	IterativePnpSolverTest
+	mock cdff_logger cdff_types iterative_pnp_solver  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+)
+add_test(IterativePnpSolverTest IterativePnpSolverTest)
+
+add_executable(
     FundamentalMatrixRansacTest
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
 )
@@ -195,3 +205,12 @@ target_link_libraries(
 	Transform3DEigenTransformConvertersTest cdff_types converters_opencv cdff_logger
 )
 add_test(Transform3DEigenTransformConvertersTest Transform3DEigenTransformConvertersTest)
+
+add_executable(
+    Transform3DMatConvertersTest
+    Common/Converters/Transform3DMatConvertersTest.cpp
+)
+target_link_libraries(
+	Transform3DMatConvertersTest cdff_types converters_opencv cdff_logger
+)
+add_test(Transform3DMatConvertersTest Transform3DMatConvertersTest)

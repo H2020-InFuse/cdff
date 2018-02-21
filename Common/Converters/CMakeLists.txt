@@ -12,6 +12,8 @@ add_library(
     PclPointCloudToPointCloudConverter.cpp
     Transform3DToEigenTransformConverter.cpp
     EigenTransformToTransform3DConverter.cpp
+    Transform3DToMatConverter.cpp
+    MatToTransform3DConverter.cpp
     PointCloudToPclNormalsCloudConverter.cpp
     PclNormalsCloudToPointCloudConverter.cpp  
 )
