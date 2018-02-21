@@ -151,7 +151,7 @@ cv::Mat HarrisDetector2D::ExtractHarrisPoints(cv::Mat harrisImage)
 	int numberOfPoints = cv::countNonZero(harrisImage > parameters.generalParameters.detectionThreshold);
 	int numberOfAllowedPoints = (numberOfPoints < VisualPointFeatureVector2DWrapper::MAX_FEATURE_2D_POINTS) ? numberOfPoints : VisualPointFeatureVector2DWrapper::MAX_FEATURE_2D_POINTS; 
 
-	cv::Mat harrisPointsList(numberOfAllowedPoints, 2, CV_32FC1, cv::Scalar(0));
+	cv::Mat harrisPointsList(numberOfAllowedPoints, 3, CV_32FC1, cv::Scalar(0));
 	unsigned pointIndex = 0;
 	bool extractionComplete = false;
 
@@ -163,6 +163,7 @@ cv::Mat HarrisDetector2D::ExtractHarrisPoints(cv::Mat harrisImage)
 				{
 				harrisPointsList.at<float>(pointIndex, 1) = (float)rowIndex;
 				harrisPointsList.at<float>(pointIndex, 0) = (float)columnIndex;
+				harrisPointsList.at<float>(pointIndex, 2) = parameters.generalParameters.blockSize;
 				pointIndex++;
 				extractionComplete = (pointIndex == numberOfAllowedPoints);
 				}
