@@ -81,13 +81,11 @@ void FundamentalMatrixRansac::process()
 	if (fundamentalMatrix.rows == 0 && fundamentalMatrix.cols == 0)
 		{
 		outFundamentalMatrix =  NewMatrix3d();
-		outSecondEpipole = new Point2D();
 		outSuccess = false;
 		}	
 	else
 		{
 		outFundamentalMatrix = Convert(fundamentalMatrix);
-		outSecondEpipole = ComputeSecondEpipole(firstImagePointsVector, secondImagePointsVector, fundamentalMatrix);
 		outSuccess = true;
 		}
 	}

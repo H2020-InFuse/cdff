@@ -31,8 +31,9 @@
 
 namespace dfn_ci {
 
-using namespace CorrespondenceMap2DWrapper;
+using namespace MatrixWrapper;
 using namespace PoseWrapper;
+using namespace CorrespondenceMap2DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -50,9 +51,14 @@ CamerasTransformEstimationInterface::~CamerasTransformEstimationInterface()
 
 	}
 
-void CamerasTransformEstimationInterface::correspondenceMapInput(CorrespondenceMap2DConstPtr data) 
+void CamerasTransformEstimationInterface::fundamentalMatrixInput(Matrix3dConstPtr data) 
 	{
-    	inCorrespondenceMap = data;
+    	inFundamentalMatrix = data;
+	}
+
+void CamerasTransformEstimationInterface::correspondenceMapInput(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr data)
+	{
+	inCorrespondenceMap = data;
 	}
 
 Transform3DConstPtr CamerasTransformEstimationInterface::transformOutput() 

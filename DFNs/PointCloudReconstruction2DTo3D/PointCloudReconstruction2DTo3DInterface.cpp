@@ -34,7 +34,6 @@ namespace dfn_ci {
 using namespace CorrespondenceMap2DWrapper;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
-using namespace MatrixWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -57,14 +56,9 @@ void PointCloudReconstruction2DTo3DInterface::correspondenceMapInput(Corresponde
     	inCorrespondenceMap = data;
 	}
 
-void PointCloudReconstruction2DTo3DInterface::fundamentalMatrixInput(Matrix3dConstPtr data)
+void PointCloudReconstruction2DTo3DInterface::poseInput(Pose3DConstPtr data) 
 	{
-    	inFundamentalMatrix = data;
-	}
-
-void PointCloudReconstruction2DTo3DInterface::secondEpipoleInput(BaseTypesWrapper::Point2DConstPtr data)
-	{
-	inSecondEpipole = data;
+    	inPose = data;
 	}
 
 PointCloudConstPtr PointCloudReconstruction2DTo3DInterface::pointCloudOutput() 

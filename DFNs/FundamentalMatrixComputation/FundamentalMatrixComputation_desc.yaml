@@ -7,10 +7,7 @@ input_ports:
 output_ports:
     - name: fundamentalMatrix
       type: Matrix3d
-      doc: This is the fundamental matrix of the camera that took the two images.
-    - name: secondEpipole
-      type: Point2d
-      doc: This is the epipole of the second camera view.
+      doc: This is the fundamental matrix of the camera pair that took the two images.
     - name: success
       type: boolean
       doc: This outputs tells whether the matrix computation was succesfull. The computation may fail if the inputs are not good. If the computation fails the first output is meaningless.

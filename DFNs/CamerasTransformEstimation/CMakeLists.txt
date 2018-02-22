@@ -4,10 +4,10 @@ add_library(
 )
 
 add_library(
-    essential_matrix_ransac
-    EssentialMatrixRansac.cpp
+    essential_matrix_computation
+    EssentialMatrixComputation.cpp
 )
 target_link_libraries(
-    essential_matrix_ransac
+    essential_matrix_computation
     cameras_transform_estimation cdff_types yaml-cpp opencv_calib3d cdff_helpers
 )

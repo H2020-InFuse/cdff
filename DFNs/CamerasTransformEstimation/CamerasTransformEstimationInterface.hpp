@@ -28,6 +28,7 @@
  * --------------------------------------------------------------------------
  */
 #include <DFNCommonInterface.hpp>
+#include <Matrix.hpp>
 #include <CorrespondenceMap2D.hpp>
 #include <Pose.hpp>
 
@@ -51,9 +52,15 @@ namespace dfn_ci {
             CamerasTransformEstimationInterface();
             virtual ~CamerasTransformEstimationInterface();
             /**
+            * Send value to input port fundamentalMatrix
+            * @param fundamentalMatrix, This is the fundamental matrix of the camera pair that took the two images.
+            */
+            virtual void fundamentalMatrixInput(MatrixWrapper::Matrix3dConstPtr data);
+
+            /**
             * Send value to input port correspondenceMap
-            * @param correspondenceMap, this is a list coordinates of physical points in two distinct images taken from a camera. The set contains pairs of 2d coordinates ( (x1, y1), (x2, y2)), 
-            * each pair represents the same physical point. (x1, y1) is its position in the first camera image and (x2, y2) is its position in the second camera image.
+            * @param correspondenceMap, This is a set of correspondence between points (x, y) in one image to point (x', y') in the other image. 
+	    * These are test points for the final transform, they should be as reliable as possible.
             */
             virtual void correspondenceMapInput(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr data);
 
@@ -75,7 +82,8 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */
         protected:
-            CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inCorrespondenceMap;
+            MatrixWrapper::Matrix3dConstPtr inFundamentalMatrix;
+	    CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inCorrespondenceMap;
             PoseWrapper::Transform3DConstPtr outTransform;
 	    bool outSuccess;
 

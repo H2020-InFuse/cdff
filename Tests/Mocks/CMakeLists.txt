@@ -9,6 +9,7 @@ add_library(  # TODO split up in multiple mocks
     Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.cpp
     Common/Converters/EigenTransformToTransform3DConverter.cpp
     Common/Converters/MatToTransform3DConverter.cpp
+    Common/Converters/Transform3DToMatConverter.cpp
     Common/Converters/VisualPointFeatureVector2DToMatConverter.cpp
     Common/Converters/PointCloudToPclNormalsCloudConverter.cpp
 )

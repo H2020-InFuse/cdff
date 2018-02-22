@@ -9,5 +9,5 @@ add_library(
 )
 target_link_libraries(
     triangulation
-     point_cloud_reconstruction_2d_to_3d cdff_types yaml-cpp opencv_calib3d
+     point_cloud_reconstruction_2d_to_3d cdff_types yaml-cpp opencv_calib3d cdff_helpers
 )

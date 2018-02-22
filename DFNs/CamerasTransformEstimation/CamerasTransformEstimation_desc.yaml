@@ -1,9 +1,11 @@
 name: CamerasTransformEstimation
 input_ports:
+    - name: fundamentalMatrix
+      type: Matrix3d
+      doc: This is the fundamental matrix of the camera pair that took the two images
     - name: correspondenceMap
       type: CorrespondenceMap2D
-      doc: 	This is a list coordinates of physical points in two distinct images taken from a camera. The set contains pairs of 2d coordinates ( (x1, y1), (x2, y2)), each pair represents the same 
-		physical point. (x1, y1) is its position in the first camera image and (x2, y2) is its position in the second camera image.
+      doc: This is a set of correspondence between points (x, y) in one image to point (x', y') in the other image. These are test points for the final transform, they should be as reliable as possible.
 output_ports:
     - name: transform
       type: Transform3D
@@ -12,6 +14,6 @@ output_ports:
       type: boolean
       doc: This outputs tells whether the computation was succesfull. The computation may fail if the inputs are not good. If the computation fails the first output is meaningless.
 implementations:
-    - EssentialMatrixRansac
+    - EssentialMatrixComputation
 
 

@@ -41,6 +41,7 @@
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <Errors/Assert.hpp>
+#include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
 
 using namespace dfn_ci;
 using namespace Common;
@@ -59,6 +60,10 @@ using namespace CorrespondenceMap2DWrapper;
  */
 TEST_CASE( "Success Call to process", "[processSuccess]" ) 
 	{
+	Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>* stubTriangulationPoseCache = new Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>();
+	Mocks::Pose3DToMatConverter* mockTriangulationPoseConverter = new Mocks::Pose3DToMatConverter();
+	ConversionCache<Pose3DConstPtr, cv::Mat, Pose3DToMatConverter>::Instance(stubTriangulationPoseCache, mockTriangulationPoseConverter);
+
 	const double EPSILON = 0.001;
 	const unsigned NUMBER_OF_CORRESPONDENCES = 15;
 	//These are fundamental matrix elements:
@@ -91,22 +96,20 @@ TEST_CASE( "Success Call to process", "[processSuccess]" )
 		AddCorrespondence(*input, source, sink, 1);
 		}
 
-	
-	Matrix3dConstPtr fundamentalMatrix = NewMatrix3d(IDENTITY);
-	Point2DConstPtr secondEpipole = new Point2D();
+	Pose3DPtr pose = new Pose3D();
+	SetPosition(*pose, 0, 0, 0);
+	SetOrientation(*pose, 0, 0, 0, 1);
 
 	Triangulation triangulation;
 	triangulation.correspondenceMapInput(input);
-	triangulation.fundamentalMatrixInput(fundamentalMatrix);
-	triangulation.secondEpipoleInput(secondEpipole);
+	triangulation.poseInput(pose);
 	triangulation.process();
 
 	PointCloudConstPtr output = triangulation.pointCloudOutput();
 	REQUIRE ( GetNumberOfPoints(*output) == GetNumberOfCorrespondences(*input) );
 	
 	delete(input);
-	delete(fundamentalMatrix);
-	delete(secondEpipole);
+	delete(pose);
 	delete(output);
 	}
 
