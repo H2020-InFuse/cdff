@@ -43,6 +43,16 @@ target_link_libraries(
 add_test(OrbDetectorDescriptorTest OrbDetectorDescriptorTest)
 
 add_executable(
+    OrbDescriptorTest
+    DFNs/FeaturesDescription2D/OrbDescriptor.cpp
+)
+target_link_libraries(
+	OrbDescriptorTest
+	mock cdff_logger cdff_types orb_descriptor  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+)
+add_test(OrbDescriptorTest OrbDescriptorTest)
+
+add_executable(
     IterativePnpSolverTest
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
 )

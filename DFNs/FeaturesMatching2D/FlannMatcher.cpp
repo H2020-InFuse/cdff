@@ -64,6 +64,7 @@ FlannMatcher::FlannMatcher()
 	ADD_PARAMETER(int, "GeneralParameters", "NumberOfChecks", generalOptionsSet, numberOfChecks);
 	ADD_PARAMETER(float, "GeneralParameters", "Epsilon", generalOptionsSet, epsilon);
 	ADD_PARAMETER(bool, "GeneralParameters", "SortedSearch", generalOptionsSet, sortedSearch);
+	ADD_PARAMETER(float, "GeneralParameters", "AcceptanceRatio", generalOptionsSet, acceptanceRatio);
 
 	ADD_PARAMETER(int, "KdTreeSearchParameters", "NumberOfTrees", kdTreeSearchOptionsSet, numberOfTrees);
 
@@ -118,6 +119,7 @@ void FlannMatcher::process()
 	cv::Mat sinkDescriptorsSubmatrix = sinkFeaturesMatrix( cv::Rect(2, 0, sinkFeaturesMatrix.cols-2, sinkFeaturesMatrix.rows) ); 
 
 	std::vector< cv::DMatch > matchesMatrix = ComputeMatches(sourceDescriptorsSubmatrix, sinkDescriptorsSubmatrix);
+
 	outCorrespondenceMap = Convert(matchesMatrix, sourceFeaturesMatrix, sinkFeaturesMatrix);
 	}
 
@@ -218,7 +220,8 @@ const FlannMatcher::FlannMatcherOptionsSet FlannMatcher::DEFAULT_PARAMETERS =
 		.numberOfChecks = 32,
 		.epsilon = 0,
 		.sortedSearch = false,
-		.matcherMethod = KD_TREE_SEARCH
+		.matcherMethod = KD_TREE_SEARCH,
+		.acceptanceRatio = 0.75
 		},
 	.kdTreeSearchOptionsSet = 
 		{
@@ -344,7 +347,6 @@ std::vector< cv::DMatch > FlannMatcher::ComputeMatches(cv::Mat sourceDescriptors
 
 	typedef std::vector<cv::DMatch> MatchesSequence;
 	const unsigned NumberOfBestMatchingSequencesToCompare = 2;
-	const float ACCEPTANCE_RATIO = 0.75;
 
 	std::vector<MatchesSequence> bestMatchingSequencesVector;
 	matcher.knnMatch(validTypeSourceDescriptorsMatrix, validTypeSinkDescriptorsMatrix, bestMatchingSequencesVector, NumberOfBestMatchingSequencesToCompare);
@@ -352,9 +354,12 @@ std::vector< cv::DMatch > FlannMatcher::ComputeMatches(cv::Mat sourceDescriptors
 	MatchesSequence sequenceOfSelectedMatches;
 	for (unsigned sequenceIndex = 0; sequenceIndex < bestMatchingSequencesVector.size(); sequenceIndex++) 
 		{
-		if (bestMatchingSequencesVector[sequenceIndex][0].distance < bestMatchingSequencesVector[sequenceIndex][1].distance * ACCEPTANCE_RATIO)
+		if (bestMatchingSequencesVector[sequenceIndex].size() >= 2)
 			{
-			sequenceOfSelectedMatches.push_back(bestMatchingSequencesVector[sequenceIndex][0]);
+			if (bestMatchingSequencesVector[sequenceIndex][0].distance < bestMatchingSequencesVector[sequenceIndex][1].distance * parameters.generalOptionsSet.acceptanceRatio)
+				{
+				sequenceOfSelectedMatches.push_back(bestMatchingSequencesVector[sequenceIndex][0]);
+				}
 			}
 		}
 
@@ -398,6 +403,8 @@ void FlannMatcher::ValidateParameters()
 	ASSERT(parameters.generalOptionsSet.distanceThreshold > 0, "FlannMatcher Error: distanceThreshold is not positive");
 	ASSERT(parameters.generalOptionsSet.numberOfChecks > 0, "FlannMatcher Error: number of checks is not positive");
 	ASSERT(parameters.generalOptionsSet.epsilon >= 0, "FlannMatcher Error: epsilon is negative");
+	ASSERT(parameters.generalOptionsSet.acceptanceRatio >= 0 && parameters.generalOptionsSet.acceptanceRatio <= 1, "FlannMatcher Error: acceptanceRatio has to be between 0 and 1");
+
 	if (parameters.generalOptionsSet.matcherMethod == KD_TREE_SEARCH)
 		{
 		ASSERT(parameters.kdTreeSearchOptionsSet.numberOfTrees > 0, "FlannMatcher Error: kdTreeSearchOptionsSet.numberOfTrees is not positive");
@@ -439,6 +446,7 @@ void FlannMatcher::ValidateParameters()
 void FlannMatcher::ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix)
 	{
 	ASSERT( sourceFeaturesMatrix.cols == sinkFeaturesMatrix.cols, "FlannMatcher Error: Input features vectors have different descriptors");
+	ASSERT( sourceFeaturesMatrix.cols > 0, "FlannMatcher Error: Input features vectors are empty");
 	}
 
 }

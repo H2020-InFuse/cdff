@@ -128,6 +128,7 @@ void FlannMatcherTestInterface::SetupParameters()
 	{
 	AddParameter("GeneralParameters", "DistanceThreshold", 0.02, 1.00, 0.01);
 	AddParameter("GeneralParameters", "MatcherMethod", 4, 6);
+	AddParameter("GeneralParameters", "AcceptanceRatio", 0.75, 1, 0.01);
 	AddParameter("LocalitySensitiveHashingParameters", "TableNumber", 6, 20);
 	AddParameter("LocalitySensitiveHashingParameters", "KeySize", 12, 20);
 	AddParameter("LocalitySensitiveHashingParameters", "MultiProbeLevel", 1, 20);

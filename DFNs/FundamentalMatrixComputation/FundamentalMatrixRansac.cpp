@@ -172,8 +172,16 @@ Point2DConstPtr FundamentalMatrixRansac::ComputeSecondEpipole(const std::vector<
 	cv::solve(coeffiecientsMatrix, scalarsMatrix, solution, cv::DECOMP_SVD);
 
 	Point2DPtr secondEpipolePtr = new Point2D();
-	secondEpipolePtr->x = solution.at<double>(0,0);
-	secondEpipolePtr->y = solution.at<double>(1,0);
+	if (solution.at<double>(2,0) > 1e-7)
+		{
+		secondEpipolePtr->x = solution.at<double>(0,0) / solution.at<double>(2,0);
+		secondEpipolePtr->y = solution.at<double>(1,0) / solution.at<double>(2,0);
+		}
+	else
+		{
+		secondEpipolePtr->x = 0;
+		secondEpipolePtr->y = 0;
+		}
 
 	return secondEpipolePtr;
 	}

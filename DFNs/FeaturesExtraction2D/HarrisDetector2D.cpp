@@ -149,19 +149,23 @@ cv::Mat HarrisDetector2D::ComputeHarrisImage(cv::Mat inputImage)
 cv::Mat HarrisDetector2D::ExtractHarrisPoints(cv::Mat harrisImage)
 	{
 	int numberOfPoints = cv::countNonZero(harrisImage > parameters.generalParameters.detectionThreshold);
+	int numberOfAllowedPoints = (numberOfPoints < VisualPointFeatureVector2DWrapper::MAX_FEATURE_2D_POINTS) ? numberOfPoints : VisualPointFeatureVector2DWrapper::MAX_FEATURE_2D_POINTS; 
 
-	cv::Mat harrisPointsList(numberOfPoints, 2, CV_32FC1, cv::Scalar(0));
+	cv::Mat harrisPointsList(numberOfAllowedPoints, 3, CV_32FC1, cv::Scalar(0));
 	unsigned pointIndex = 0;
+	bool extractionComplete = false;
 
-	for(int rowIndex = 0; rowIndex < harrisImage.rows; rowIndex++)
+	for(int rowIndex = 0; rowIndex < harrisImage.rows && !extractionComplete; rowIndex++)
 		{
-		for(int columnIndex = 0; columnIndex < harrisImage.cols; columnIndex++)
+		for(int columnIndex = 0; columnIndex < harrisImage.cols && !extractionComplete; columnIndex++)
 			{
 			if (harrisImage.at<uint8_t>(rowIndex, columnIndex) > parameters.generalParameters.detectionThreshold)
 				{
 				harrisPointsList.at<float>(pointIndex, 1) = (float)rowIndex;
 				harrisPointsList.at<float>(pointIndex, 0) = (float)columnIndex;
+				harrisPointsList.at<float>(pointIndex, 2) = parameters.generalParameters.blockSize;
 				pointIndex++;
+				extractionComplete = (pointIndex == numberOfAllowedPoints);
 				}
 			}
 		}		
