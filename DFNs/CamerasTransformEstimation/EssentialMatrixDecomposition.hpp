@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file EssentialMatrixRansac.hpp
+ * @file EssentialMatrixDecomposition.hpp
  * @date 31/01/2018
  * @author Alessandro Bianco
  */
@@ -14,14 +14,14 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements the Cameras Transform Estimation though computation of the essential matrix with the Ransac (Random Sample Consensus) Method.
+ *  This DFN implements the Cameras Transform Estimation though computation of the essential matrix from the fundamental matrix and decomposition of the essential matrix.
  *  
  *
  * @{
  */
 
-#ifndef ESSENTIAL_MATRIX_RANSAC_HPP
-#define ESSENTIAL_MATRIX_RANSAC_HPP
+#ifndef ESSENTIAL_MATRIX_DECOMPOSITION_HPP
+#define ESSENTIAL_MATRIX_DECOMPOSITION_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -46,15 +46,15 @@ namespace dfn_ci {
  *
  * --------------------------------------------------------------------------
  */
-    class EssentialMatrixRansac : public CamerasTransformEstimationInterface
+    class EssentialMatrixDecomposition : public CamerasTransformEstimationInterface
     {
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
         public:
-            EssentialMatrixRansac();
-            ~EssentialMatrixRansac();
+            EssentialMatrixDecomposition();
+            ~EssentialMatrixDecomposition();
             void process();
             void configure();
 
@@ -78,29 +78,30 @@ namespace dfn_ci {
 			cv::Point2d principlePoint;
 			};
 
-		struct EssentialMatrixRansacOptionsSet
+		struct EssentialMatrixDecompositionOptionsSet
 			{
-			double outlierThreshold; // in pixels
-			double confidence; //probability between 0 and 1
+			int numberOfTestPoints;
 			CameraMatrix firstCameraMatrix;
 			CameraMatrix secondCameraMatrix;
 			};
 
-		EssentialMatrixRansacOptionsSet parameters;
-		static const EssentialMatrixRansacOptionsSet DEFAULT_PARAMETERS;
-		cv::Mat ConvertToMat(CameraMatrix cameraMatrix);
+		cv::Mat firstCameraMatrix;
+		cv::Mat secondCameraMatrix;
 
-		cv::Mat ComputeTransformMatrix(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector);
-		cv::Point3d ComputeSecondImageEpipole(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector, cv::Mat fundamentalMatrix);
-		cv::Mat ComputeTransformMatrix(cv::Mat fundamentalMatrix, cv::Point3d epipole);
-		cv::Mat ComputeEssentialMatrix(cv::Mat fundamentalMatrix);
-		void Convert(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap, std::vector<cv::Point2d>& firstImagePointsVector, std::vector<cv::Point2d>& secondImagePointsVector);
-		PoseWrapper::Transform3DConstPtr Convert(cv::Mat transformMatrix);
+		EssentialMatrixDecompositionOptionsSet parameters;
+		static const EssentialMatrixDecompositionOptionsSet DEFAULT_PARAMETERS;
+		cv::Mat ConvertToMat(CameraMatrix cameraMatrix);
+		cv::Mat ConvertToMat(MatrixWrapper::Matrix3dConstPtr matrix);
+		cv::Mat Convert(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap);
+
+		std::vector<cv::Mat> ComputeTransformMatrix(cv::Mat fundamentalMatrix);
+		int FindValidTransform(std::vector<cv::Mat> transformsList, cv::Mat correspondenceMap);
+		bool ProjectionMatrixIsValidForTestPoints(cv::Mat projectionMatrix, cv::Mat correspondenceMap);
 
 		void ValidateParameters();
-		void ValidateInputs(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector);
+		void ValidateInputs(cv::Mat fundamentalMatrix, cv::Mat CorrespondenceMap);
     };
 }
 #endif
-/* EssentialMatrixRansac.hpp */
+/* EssentialMatrixDecomposition.hpp */
 /** @} */

@@ -61,11 +61,6 @@ Matrix3dConstPtr FundamentalMatrixComputationInterface::fundamentalMatrixOutput(
     	return outFundamentalMatrix;
 	}
 
-Point2DConstPtr FundamentalMatrixComputationInterface::secondEpipoleOutput()
-	{
-	return outSecondEpipole;
-	}
-
 bool FundamentalMatrixComputationInterface::successOutput()
 	{
 	return outSuccess;

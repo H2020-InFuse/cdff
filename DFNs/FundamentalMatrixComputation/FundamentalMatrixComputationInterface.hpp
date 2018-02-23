@@ -65,12 +65,6 @@ namespace dfn_ci {
             virtual MatrixWrapper::Matrix3dConstPtr fundamentalMatrixOutput();
 
             /**
-            * Receive value from output port secondEpipole
-            * @param secondEpipole, This is the epipole of the second camera view.
-            */
-            virtual BaseTypesWrapper::Point2DConstPtr secondEpipoleOutput();
-
-            /**
             * Receive value from output port featuresSet
             * @param success, This outputs tells whether the matrix computation was succesfull. The computation may fail if the inputs are not good. 
 	    * If the computation fails the first output is meaningless.
@@ -84,7 +78,6 @@ namespace dfn_ci {
         protected:
             CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inCorrespondenceMap;
             MatrixWrapper::Matrix3dConstPtr outFundamentalMatrix;
-	    BaseTypesWrapper::Point2DConstPtr outSecondEpipole;	
 	    bool outSuccess;
 
 	/* --------------------------------------------------------------------

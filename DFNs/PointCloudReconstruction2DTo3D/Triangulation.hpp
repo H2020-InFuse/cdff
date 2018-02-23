@@ -80,12 +80,34 @@ namespace dfn_ci {
 			SINK_CAMERA
 			};
 
+		Helpers::ParametersListHelper parametersHelper;
+
+		struct CameraMatrix
+			{
+			double focalLengthX;
+			double focalLengthY;
+			cv::Point2d principlePoint;
+			};
+
+		struct TriangulationOptionsSet
+			{
+			CameraMatrix firstCameraMatrix;
+			CameraMatrix secondCameraMatrix;
+			};
+
+		cv::Mat firstCameraMatrix;
+		cv::Mat secondCameraMatrix;
+
+		TriangulationOptionsSet parameters;
+		static const TriangulationOptionsSet DEFAULT_PARAMETERS;
+		cv::Mat ConvertToMat(CameraMatrix cameraMatrix);
+
 		cv::Mat Triangulate(cv::Mat projectionMatrix, cv::Mat pointsVectorAtPose1, cv::Mat pointsVectorAtPose2);
-		cv::Mat ComputeSecondProjectionMatrix(MatrixWrapper::Matrix3dConstPtr fundamentalMatrix, BaseTypesWrapper::Point2DConstPtr secondEpipole);
 		cv::Mat ConvertAtPose(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap, CAMERA_TYPE cameraPoseIdentifier);
 		PointCloudWrapper::PointCloudConstPtr Convert(cv::Mat pointCloudMatrix);
 
-		void ValidateInputs(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap, MatrixWrapper::Matrix3dConstPtr fundamentalMatrix);
+		void ValidateParameters();
+		void ValidateInputs(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap, PoseWrapper::Pose3DConstPtr pose);
     };
 }
 #endif

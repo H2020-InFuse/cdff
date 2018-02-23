@@ -15,7 +15,7 @@
  * @addtogroup DFNsTest
  * 
  * Testing application for a Stereo Reconstruction Integration Test.
- * This test uses: DFN ImageUndistortion, DFN Orb2D, DFN Flann Matcher, DFN Essential Matrix and DFN Triangulation
+ * This test uses: DFN ImageUndistortion, DFN Orb2D, DFN Flann Matcher, DFN Fundamental Matrix, DFN Essential Matrix and DFN Triangulation
  * 
  * 
  * @{
@@ -44,6 +44,7 @@
 #include <FeaturesMatching2D/FlannMatcher.hpp>
 #include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
+#include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 
 #include <FrameToMatConverter.hpp>
 #include <MatToFrameConverter.hpp>
@@ -56,6 +57,8 @@
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Mocks/Common/Converters/VisualPointFeatureVector2DToMatConverter.hpp>
 #include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Mocks/Common/Converters/MatToTransform3DConverter.hpp>
+#include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
 
 
 using namespace dfn_ci;
@@ -85,7 +88,8 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 			ORB_LEFT_IMAGE_DONE,
 			ORB_RIGHT_IMAGE_DONE,
 			MATCHING_DONE,
-			TRANSFORM_DONE,
+			FUNDAMENTAL_DONE,
+			POSE_DONE,
 			END
 			};
 		State state;
@@ -98,12 +102,18 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		Mocks::MatToVisualPointFeatureVector2DConverter* mockMatToVectorConverter;
 		Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>* stubVectorToMatCache;
 		Mocks::VisualPointFeatureVector2DToMatConverter* mockVectorToMatConverter;
+		Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>* stubEssentialPoseCache;
+		Mocks::MatToPose3DConverter* mockEssentialPoseConverter;
+		Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>* stubTriangulationPoseCache;
+		Mocks::Pose3DToMatConverter* mockTriangulationPoseConverter;
+		
 
 		ImageUndistortion* leftUndistortion;
 		ImageUndistortion* rightUndistortion;
 		OrbDetectorDescriptor* orb;
 		FlannMatcher* flann;	
 		FundamentalMatrixRansac* ransac;	
+		EssentialMatrixDecomposition* essential;
 		Triangulation* triangulation;
 
 		std::string outputWindowName;
@@ -118,7 +128,7 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		VisualPointFeatureVector2DConstPtr rightFeaturesVector;
 		CorrespondenceMap2DConstPtr correspondenceMap;
 		Matrix3dConstPtr fundamentalMatrix;
-		Point2DConstPtr secondEpipole;
+		Pose3DConstPtr secondCameraPose;
 
 		void SetupMocksAndStubs();
 		void SetupParameters();
@@ -135,6 +145,7 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		void PrepareOrbRight();
 		void PrepareFlann();
 		void PrepareRansac();
+		void PrepareEssential();
 		void PrepareTriangulation();
 
 		void ExtractCalibrationParameters();
@@ -163,6 +174,9 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 		
 	ransac = new FundamentalMatrixRansac();
 	AddDFN(ransac, "ransac");
+
+	essential = new EssentialMatrixDecomposition();
+	AddDFN(essential, "essential");
 	
 	triangulation = new Triangulation();
 	AddDFN(triangulation, "triangulation");
@@ -190,6 +204,7 @@ StereoReconstructionTestInterface::~StereoReconstructionTestInterface()
 	delete(orb);
 	delete(flann);
 	delete(ransac);
+	delete(essential);
 	delete(triangulation);
 	}
 
@@ -210,6 +225,14 @@ void StereoReconstructionTestInterface::SetupMocksAndStubs()
 	stubVectorToMatCache = new Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>();
 	mockVectorToMatConverter = new Mocks::VisualPointFeatureVector2DToMatConverter();
 	ConversionCache<VisualPointFeatureVector2DConstPtr, cv::Mat, VisualPointFeatureVector2DToMatConverter>::Instance(stubVectorToMatCache, mockVectorToMatConverter);
+
+	stubEssentialPoseCache = new Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>();
+	mockEssentialPoseConverter = new Mocks::MatToPose3DConverter();
+	ConversionCache<cv::Mat, Pose3DConstPtr, MatToPose3DConverter>::Instance(stubEssentialPoseCache, mockEssentialPoseConverter);
+
+	stubTriangulationPoseCache = new Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>();
+	mockTriangulationPoseConverter = new Mocks::Pose3DToMatConverter();
+	ConversionCache<Pose3DConstPtr, cv::Mat, Pose3DToMatConverter>::Instance(stubTriangulationPoseCache, mockTriangulationPoseConverter);
 	}
 
 void StereoReconstructionTestInterface::SetupParameters()
@@ -265,6 +288,25 @@ void StereoReconstructionTestInterface::SetupParameters()
 
 	AddParameter(ransac, "GeneralParameters", "OutlierThreshold", 1, 100);
 	AddParameter(ransac, "GeneralParameters", "Confidence", 0.9, 1, 0.01);
+
+	AddParameter(essential, "GeneralParameters", "NumberOfTestPoints", 20, 100);
+	AddParameter(essential, "FirstCameraMatrix", "FocalLengthX", 1408.899186439272, 1500, 1e-5);
+	AddParameter(essential, "FirstCameraMatrix", "FocalLengthY", 1403.116708010621, 1500, 1e-5);
+	AddParameter(essential, "FirstCameraMatrix", "PrinciplePointX", 1053.351342078365, 1500, 1e-5);
+	AddParameter(essential, "FirstCameraMatrix", "PrinciplePointY", 588.8342842821718, 1500, 1e-5);
+	AddParameter(essential, "SecondCameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 1e-5);
+	AddParameter(essential, "SecondCameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 1e-5);
+	AddParameter(essential, "SecondCameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 1e-5);
+	AddParameter(essential, "SecondCameraMatrix", "PrinciplePointY", 592.5031927882591, 1500, 1e-5);
+
+	AddParameter(triangulation, "FirstCameraMatrix", "FocalLengthX", 1408.899186439272, 1500, 1e-5);
+	AddParameter(triangulation, "FirstCameraMatrix", "FocalLengthY", 1403.116708010621, 1500, 1e-5);
+	AddParameter(triangulation, "FirstCameraMatrix", "PrinciplePointX", 1053.351342078365, 1500, 1e-5);
+	AddParameter(triangulation, "FirstCameraMatrix", "PrinciplePointY", 588.8342842821718, 1500, 1e-5);
+	AddParameter(triangulation, "SecondCameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 1e-5);
+	AddParameter(triangulation, "SecondCameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 1e-5);
+	AddParameter(triangulation, "SecondCameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 1e-5);
+	AddParameter(triangulation, "SecondCameraMatrix", "PrinciplePointY", 592.5031927882591, 1500, 1e-5);
 	}
 
 void StereoReconstructionTestInterface::DisplayResult()
@@ -305,7 +347,7 @@ void StereoReconstructionTestInterface::DisplayResult()
 	delete(rightFeaturesVector);
 	delete(correspondenceMap);
 	delete(fundamentalMatrix);
-	delete(secondEpipole);
+	delete(secondCameraPose);
 	delete(pointCloud);
 	}
 
@@ -348,7 +390,11 @@ void StereoReconstructionTestInterface::UpdateState()
 		}
 	else if (state == MATCHING_DONE)
 		{
-		state = TRANSFORM_DONE;
+		state = FUNDAMENTAL_DONE;
+		}
+	else if (state == FUNDAMENTAL_DONE)
+		{
+		state = POSE_DONE;
 		}
 	}
 
@@ -387,9 +433,15 @@ DFNCommonInterface* StereoReconstructionTestInterface::PrepareNextDfn()
 		PrepareRansac();
 		return ransac;
 		}
-	else if (state == TRANSFORM_DONE)
+	else if (state == FUNDAMENTAL_DONE)
 		{
-		PRINT_TO_LOG("Step Ransac processing time (seconds): ", GetLastProcessingTimeSeconds(3) );
+		PRINT_TO_LOG("Step Ransac processing time (seconds): ", GetLastProcessingTimeSeconds(2) );
+		PrepareEssential();
+		return essential;
+		}
+	else if (state == POSE_DONE)
+		{
+		PRINT_TO_LOG("Step Essential processing time (seconds): ", GetLastProcessingTimeSeconds(3) );
 		PrepareTriangulation();
 		state = END;
 		return triangulation;
@@ -451,17 +503,31 @@ void StereoReconstructionTestInterface::PrepareRansac()
 	ransac->correspondenceMapInput(correspondenceMap);
 	}
 
-void StereoReconstructionTestInterface::PrepareTriangulation()
+void StereoReconstructionTestInterface::PrepareEssential()
 	{
 	bool success = ransac->successOutput();
-	ASSERT(success, "Fundamental Matrix Ransac failed: unable to find a valid transform");
+	ASSERT(success, "Fundamental Matrix Ransac failed: unable to find a fundamental matrix");
 
 	fundamentalMatrix = ransac->fundamentalMatrixOutput();
-	secondEpipole = ransac->secondEpipoleOutput();
 	PRINT_TO_LOG("Fundamental matrix Ransac found transform: ", "");
+	
+	essential->fundamentalMatrixInput(fundamentalMatrix);
+	essential->correspondenceMapInput(correspondenceMap);	
+	}
 
-	triangulation->fundamentalMatrixInput(fundamentalMatrix);
-	triangulation->secondEpipoleInput(secondEpipole);
+void StereoReconstructionTestInterface::PrepareTriangulation()
+	{
+	secondCameraPose = essential->transformOutput();
+	bool success = essential->successOutput();
+	ASSERT(success, "Essential Matrix Decomposition failed: unable to find a valid transform");
+	
+	std::stringstream transformStream;
+	transformStream << "Position: (" << GetXPosition(*secondCameraPose) <<", "<<GetYPosition(*secondCameraPose) << ", "<<GetZPosition(*secondCameraPose) <<") ";
+	transformStream << "Orientation: (" <<GetXRotation(*secondCameraPose)<<", "<<GetYRotation(*secondCameraPose)<<", "<<GetZRotation(*secondCameraPose) <<", "<<GetWRotation(*secondCameraPose)<<")";
+	std::string transformString = transformStream.str();
+	PRINT_TO_LOG("Computed Transform is:", transformString);
+
+	triangulation->poseInput(secondCameraPose);
 	triangulation->correspondenceMapInput(correspondenceMap);
 	}
 

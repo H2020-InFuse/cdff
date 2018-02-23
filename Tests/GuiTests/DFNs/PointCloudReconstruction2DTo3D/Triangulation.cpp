@@ -37,6 +37,7 @@
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
+#include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
@@ -62,6 +63,9 @@ class TriangulationTestInterface : public DFNTestInterface
 	protected:
 
 	private:
+		Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>* stubTriangulationPoseCache;
+		Mocks::Pose3DToMatConverter* mockTriangulationPoseConverter;
+
 		Triangulation* triangulation;
 
 		std::string outputWindowName;
@@ -91,10 +95,10 @@ TriangulationTestInterface::TriangulationTestInterface(std::string dfnName, int 
 		}
 	triangulation->correspondenceMapInput(correspondenceMap);
 
-	Matrix3dConstPtr fundamentalMatrix = NewMatrix3d(IDENTITY);
-	Point2DConstPtr secondEpipole = new Point2D();
-	triangulation->fundamentalMatrixInput(fundamentalMatrix);
-	triangulation->secondEpipoleInput(secondEpipole);
+	Pose3DPtr pose = new Pose3D();
+	SetPosition(*pose, 0, 0, 0);
+	SetOrientation(*pose, 0, 0, 0, 1);
+	triangulation->poseInput(pose);
 
 	outputWindowName = "Triangulation 2D to 3D Result";
 	}
@@ -106,7 +110,9 @@ TriangulationTestInterface::~TriangulationTestInterface()
 
 void TriangulationTestInterface::SetupMocksAndStubs()
 	{
-
+	stubTriangulationPoseCache = new Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>();
+	mockTriangulationPoseConverter = new Mocks::Pose3DToMatConverter();
+	ConversionCache<Pose3DConstPtr, cv::Mat, Pose3DToMatConverter>::Instance(stubTriangulationPoseCache, mockTriangulationPoseConverter);
 	}
 
 void TriangulationTestInterface::SetupParameters()
