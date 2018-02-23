@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file EssentialMatrixComputation.hpp
+ * @file EssentialMatrixDecomposition.hpp
  * @date 31/01/2018
  * @author Alessandro Bianco
  */
@@ -14,14 +14,14 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements the Cameras Transform Estimation though computation of the essential matrix from the fundamental matrix.
+ *  This DFN implements the Cameras Transform Estimation though computation of the essential matrix from the fundamental matrix and decomposition of the essential matrix.
  *  
  *
  * @{
  */
 
-#ifndef ESSENTIAL_MATRIX_COMPUTATION_HPP
-#define ESSENTIAL_MATRIX_COMPUTATION_HPP
+#ifndef ESSENTIAL_MATRIX_DECOMPOSITION_HPP
+#define ESSENTIAL_MATRIX_DECOMPOSITION_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -46,15 +46,15 @@ namespace dfn_ci {
  *
  * --------------------------------------------------------------------------
  */
-    class EssentialMatrixComputation : public CamerasTransformEstimationInterface
+    class EssentialMatrixDecomposition : public CamerasTransformEstimationInterface
     {
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
         public:
-            EssentialMatrixComputation();
-            ~EssentialMatrixComputation();
+            EssentialMatrixDecomposition();
+            ~EssentialMatrixDecomposition();
             void process();
             void configure();
 
@@ -78,7 +78,7 @@ namespace dfn_ci {
 			cv::Point2d principlePoint;
 			};
 
-		struct EssentialMatrixComputationOptionsSet
+		struct EssentialMatrixDecompositionOptionsSet
 			{
 			int numberOfTestPoints;
 			CameraMatrix firstCameraMatrix;
@@ -88,19 +88,20 @@ namespace dfn_ci {
 		cv::Mat firstCameraMatrix;
 		cv::Mat secondCameraMatrix;
 
-		EssentialMatrixComputationOptionsSet parameters;
-		static const EssentialMatrixComputationOptionsSet DEFAULT_PARAMETERS;
+		EssentialMatrixDecompositionOptionsSet parameters;
+		static const EssentialMatrixDecompositionOptionsSet DEFAULT_PARAMETERS;
 		cv::Mat ConvertToMat(CameraMatrix cameraMatrix);
 		cv::Mat ConvertToMat(MatrixWrapper::Matrix3dConstPtr matrix);
 		cv::Mat Convert(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap);
 
 		std::vector<cv::Mat> ComputeTransformMatrix(cv::Mat fundamentalMatrix);
 		int FindValidTransform(std::vector<cv::Mat> transformsList, cv::Mat correspondenceMap);
+		bool ProjectionMatrixIsValidForTestPoints(cv::Mat projectionMatrix, cv::Mat correspondenceMap);
 
 		void ValidateParameters();
 		void ValidateInputs(cv::Mat fundamentalMatrix, cv::Mat CorrespondenceMap);
     };
 }
 #endif
-/* EssentialMatrixComputation.hpp */
+/* EssentialMatrixDecomposition.hpp */
 /** @} */

@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file EssentialMatrixRansac.cpp
+ * @file EssentialMatrixDecomposition.cpp
  * @date 31/01/2018
  * @author Alessandro Bianco
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNsTest
  * 
- * Unit Test for the DFN EssentialMatrixRansac.
+ * Unit Test for the DFN EssentialMatrixDecomposition.
  * 
  * 
  * @{
@@ -37,7 +37,7 @@
  * --------------------------------------------------------------------------
  */
 #include <Catch/catch.h>
-#include <CamerasTransformEstimation/EssentialMatrixComputation.hpp>
+#include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
@@ -128,7 +128,7 @@ TEST_CASE( "Success Call to process", "[processSuccess]" )
 	SetElement(*fundamentalMatrix, 2, 1, cvFundamentalMatrix.at<float>(2,1) );
 	SetElement(*fundamentalMatrix, 2, 2, cvFundamentalMatrix.at<float>(2,2) );
 
-	EssentialMatrixComputation essential;
+	EssentialMatrixDecomposition essential;
 	essential.correspondenceMapInput(input);
 	essential.fundamentalMatrixInput(fundamentalMatrix);
 	essential.process();
@@ -162,7 +162,7 @@ TEST_CASE( "Fail Call to process", "[processFail]" )
 
 	Matrix3dPtr fundamentalMatrix = NewMatrix3d(IDENTITY);
 
-	EssentialMatrixComputation essential;
+	EssentialMatrixDecomposition essential;
 	essential.correspondenceMapInput(input);
 	essential.fundamentalMatrixInput(fundamentalMatrix);
 	essential.process();
@@ -178,8 +178,8 @@ TEST_CASE( "Fail Call to process", "[processFail]" )
 
 TEST_CASE( "Call to configure", "[configure]" )
 	{
-	EssentialMatrixComputation essential;
-	essential.setConfigurationFile("../tests/ConfigurationFiles/DFNs/CamerasTransformEstimation/EssentialMatrixComputation_Conf1.yaml");
+	EssentialMatrixDecomposition essential;
+	essential.setConfigurationFile("../tests/ConfigurationFiles/DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition_Conf1.yaml");
 	essential.configure();	
 	}
 

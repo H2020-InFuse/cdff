@@ -45,7 +45,7 @@
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
-#include <CamerasTransformEstimation/EssentialMatrixComputation.hpp>
+#include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 
 #include <FrameToMatConverter.hpp>
 #include <MatToFrameConverter.hpp>
@@ -116,7 +116,7 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		OrbDescriptor* orb;
 		FlannMatcher* flann;	
 		FundamentalMatrixRansac* ransac;
-		EssentialMatrixComputation* essential;	
+		EssentialMatrixDecomposition* essential;	
 		Triangulation* triangulation;
 
 		std::string outputWindowName;
@@ -185,7 +185,7 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 	ransac = new FundamentalMatrixRansac();
 	AddDFN(ransac, "ransac");
 
-	essential = new EssentialMatrixComputation();
+	essential = new EssentialMatrixDecomposition();
 	AddDFN(essential, "essential");
 	
 	triangulation = new Triangulation();

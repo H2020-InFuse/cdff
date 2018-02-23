@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file EssentialMatrixComputation.cpp
+ * @file EssentialMatrixDecomposition.cpp
  * @date 31/01/2018
  * @author Alessandro Bianco
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNs
  * 
- * Implementation of the Ransac Method for essential matrix computation.
+ * Implementation of the Ransac Method for essential matrix decomposition.
  * 
  * 
  * @{
@@ -26,7 +26,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include "EssentialMatrixComputation.hpp"
+#include "EssentialMatrixDecomposition.hpp"
 #include <Errors/Assert.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <Macros/YamlcppMacros.hpp>
@@ -53,7 +53,7 @@ using namespace Converters;
  *
  * --------------------------------------------------------------------------
  */
-EssentialMatrixComputation::EssentialMatrixComputation()
+EssentialMatrixDecomposition::EssentialMatrixDecomposition()
 	{
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfTestPoints", parameters.numberOfTestPoints, DEFAULT_PARAMETERS.numberOfTestPoints);
 	parametersHelper.AddParameter<double>("FirstCameraMatrix", "FocalLengthX", parameters.firstCameraMatrix.focalLengthX, DEFAULT_PARAMETERS.firstCameraMatrix.focalLengthX);
@@ -71,12 +71,12 @@ EssentialMatrixComputation::EssentialMatrixComputation()
 	configurationFilePath = "";
 	}
 
-EssentialMatrixComputation::~EssentialMatrixComputation()
+EssentialMatrixDecomposition::~EssentialMatrixDecomposition()
 	{
 
 	}
 
-void EssentialMatrixComputation::configure()
+void EssentialMatrixDecomposition::configure()
 	{
 	parametersHelper.ReadFile(configurationFilePath);
 	ValidateParameters();
@@ -86,7 +86,7 @@ void EssentialMatrixComputation::configure()
 	}
 
 
-void EssentialMatrixComputation::process() 
+void EssentialMatrixDecomposition::process() 
 	{
 	cv::Mat correspondenceMap = Convert(inCorrespondenceMap);
 	cv::Mat fundamentalMatrix = ConvertToMat(inFundamentalMatrix);
@@ -108,7 +108,7 @@ void EssentialMatrixComputation::process()
 	}
 
 
-const EssentialMatrixComputation::EssentialMatrixComputationOptionsSet EssentialMatrixComputation::DEFAULT_PARAMETERS =
+const EssentialMatrixDecomposition::EssentialMatrixDecompositionOptionsSet EssentialMatrixDecomposition::DEFAULT_PARAMETERS =
 	{
 	.numberOfTestPoints = 20,
 	.firstCameraMatrix =
@@ -125,7 +125,7 @@ const EssentialMatrixComputation::EssentialMatrixComputationOptionsSet Essential
 		}
 	};
 
-cv::Mat EssentialMatrixComputation::ConvertToMat(CameraMatrix cameraMatrix)
+cv::Mat EssentialMatrixDecomposition::ConvertToMat(CameraMatrix cameraMatrix)
 	{
 	cv::Mat conversion(3, 3, CV_32FC1, cv::Scalar(0));
 	conversion.at<float>(0,0) = cameraMatrix.focalLengthX;
@@ -136,7 +136,7 @@ cv::Mat EssentialMatrixComputation::ConvertToMat(CameraMatrix cameraMatrix)
 	return conversion;
 	}
 
-cv::Mat EssentialMatrixComputation::ConvertToMat(MatrixWrapper::Matrix3dConstPtr matrix)
+cv::Mat EssentialMatrixDecomposition::ConvertToMat(MatrixWrapper::Matrix3dConstPtr matrix)
 	{
 	cv::Mat cvMatrix(3, 3, CV_32FC1);
 	for(unsigned row = 0; row < 3; row++)
@@ -149,7 +149,7 @@ cv::Mat EssentialMatrixComputation::ConvertToMat(MatrixWrapper::Matrix3dConstPtr
 	return cvMatrix;
 	}
 
-cv::Mat EssentialMatrixComputation::Convert(CorrespondenceMap2DConstPtr correspondenceMap)
+cv::Mat EssentialMatrixDecomposition::Convert(CorrespondenceMap2DConstPtr correspondenceMap)
 	{
 	cv::Mat cvCorrespondenceMap(4, GetNumberOfCorrespondences(*correspondenceMap), CV_32FC1);
 	for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(*correspondenceMap); correspondenceIndex++)
@@ -164,7 +164,7 @@ cv::Mat EssentialMatrixComputation::Convert(CorrespondenceMap2DConstPtr correspo
 	return cvCorrespondenceMap;
 	}
 
-std::vector<cv::Mat> EssentialMatrixComputation::ComputeTransformMatrix(cv::Mat fundamentalMatrix)
+std::vector<cv::Mat> EssentialMatrixDecomposition::ComputeTransformMatrix(cv::Mat fundamentalMatrix)
 	{
 	cv::Mat essentialMatrix = secondCameraMatrix.t() * fundamentalMatrix * firstCameraMatrix;
 
@@ -180,16 +180,10 @@ std::vector<cv::Mat> EssentialMatrixComputation::ComputeTransformMatrix(cv::Mat 
 	return projectionMatricesList;
 	}
 
-int EssentialMatrixComputation::FindValidTransform(std::vector<cv::Mat> projectionsList, cv::Mat correspondenceMap)
+int EssentialMatrixDecomposition::FindValidTransform(std::vector<cv::Mat> projectionsList, cv::Mat correspondenceMap)
 	{
 	static const float EPSILON = 1e-5;
 
-	cv::Mat identityProjection(3, 4, CV_32FC1, cv::Scalar(0));
-	identityProjection.at<float>(0,0) = 1;
-	identityProjection.at<float>(1,1) = 1;
-	identityProjection.at<float>(2,2) = 1;
-
-	unsigned testPointsNumber = (correspondenceMap.cols > parameters.numberOfTestPoints) ? parameters.numberOfTestPoints : correspondenceMap.cols;
 	int validMatrixIndex = -1;
 	bool validMatrixFound = false;
 	for(unsigned matrixIndex = 0; matrixIndex < projectionsList.size(); matrixIndex++)
@@ -197,31 +191,14 @@ int EssentialMatrixComputation::FindValidTransform(std::vector<cv::Mat> projecti
 		cv::Mat currentProjectionMatrix = projectionsList.at(matrixIndex);
 		double rotationDeterminant = cv::determinant( currentProjectionMatrix( cv::Rect(0,0,2,2) ));
 		bool orientationPreserved = std::abs(rotationDeterminant - 1) < EPSILON;
-		bool matrixIsValid = orientationPreserved;
 		
-		if (matrixIsValid)
-			{
-			cv::Mat testPointCloudMatrix;
-			cv::triangulatePoints
-				(
-				firstCameraMatrix * identityProjection, 
-				secondCameraMatrix * currentProjectionMatrix, 
-				correspondenceMap(cv::Rect(0, 0, testPointsNumber, 2 )),
-				correspondenceMap(cv::Rect(0, 2, testPointsNumber, 2 )),
-				testPointCloudMatrix
-				);
-
-			for(unsigned pointIndex = 0; pointIndex < testPointCloudMatrix.cols && matrixIsValid; pointIndex++)
-				{
-				float z = testPointCloudMatrix.at<float>(2, pointIndex) / testPointCloudMatrix.at<float>(3, pointIndex);
-				matrixIsValid = (z == z) && (!std::isinf(z)) && (z >= 0);
-				}
-			}
+		bool matrixIsValid = orientationPreserved && ProjectionMatrixIsValidForTestPoints(currentProjectionMatrix, correspondenceMap);	
 
 		if (matrixIsValid)
 			{
 			if (validMatrixFound)
 				{
+				// There should be only one valid matrix. If multiple valid matrix are found, the decomposition has failed.
 				return -1;
 				}
 			validMatrixFound = true;
@@ -232,15 +209,55 @@ int EssentialMatrixComputation::FindValidTransform(std::vector<cv::Mat> projecti
 	return validMatrixIndex;
 	}
 
+bool EssentialMatrixDecomposition::ProjectionMatrixIsValidForTestPoints(cv::Mat projectionMatrix, cv::Mat correspondenceMap)
+	{
+	cv::Mat identityProjection(3, 4, CV_32FC1, cv::Scalar(0));
+	identityProjection.at<float>(0,0) = 1;
+	identityProjection.at<float>(1,1) = 1;
+	identityProjection.at<float>(2,2) = 1;
 
-void EssentialMatrixComputation::ValidateParameters()
+	unsigned testPointsNumber = (correspondenceMap.cols > parameters.numberOfTestPoints) ? parameters.numberOfTestPoints : correspondenceMap.cols;
+	cv::Mat testPointCloudMatrix;
+	cv::triangulatePoints
+		(
+		firstCameraMatrix * identityProjection, 
+		secondCameraMatrix * projectionMatrix, 
+		correspondenceMap(cv::Rect(0, 0, testPointsNumber, 2 )),
+		correspondenceMap(cv::Rect(0, 2, testPointsNumber, 2 )),
+		testPointCloudMatrix
+		);
+
+	bool matrixIsValid = false;
+	bool matrixIsInvalid = false;
+	unsigned validPointsCount = 0;
+	unsigned invalidPointsCount = 0;
+	for(unsigned pointIndex = 0; pointIndex < testPointCloudMatrix.cols && !matrixIsValid && !matrixIsInvalid; pointIndex++)
+		{
+		float z = testPointCloudMatrix.at<float>(2, pointIndex) / testPointCloudMatrix.at<float>(3, pointIndex);
+		bool validPoint = (z == z) && (!std::isinf(z)) && (z >= 0);
+		if (validPoint)
+			{
+			validPointsCount++;
+			}
+		else
+			{
+			invalidPointsCount++;
+			}
+		matrixIsValid = validPointsCount >= testPointsNumber / 2;
+		matrixIsInvalid = invalidPointsCount >= testPointsNumber / 2;
+		}
+
+	return matrixIsValid || !matrixIsInvalid;
+	}
+
+void EssentialMatrixDecomposition::ValidateParameters()
 	{
 	ASSERT(parameters.numberOfTestPoints > 0, "EssentialMatrixComputation Configuration Error: number of test points has to be positive");
 	ASSERT(parameters.firstCameraMatrix.focalLengthX > 0 && parameters.firstCameraMatrix.focalLengthY > 0, "EssentialMatrixComputation Configuration Error: focalLength is not positive");
 	ASSERT(parameters.secondCameraMatrix.focalLengthX > 0 && parameters.secondCameraMatrix.focalLengthY > 0, "EssentialMatrixComputation Configuration Error: focalLength is not positive");
 	}
 
-void EssentialMatrixComputation::ValidateInputs(cv::Mat fundamentalMatrix, cv::Mat correspondenceMap)
+void EssentialMatrixDecomposition::ValidateInputs(cv::Mat fundamentalMatrix, cv::Mat correspondenceMap)
 	{
 
 	}

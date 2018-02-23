@@ -73,14 +73,14 @@ target_link_libraries(
 add_test(FundamentalMatrixRansacTest FundamentalMatrixRansacTest)
 
 add_executable(
-    EssentialMatrixComputationTest
-    DFNs/CamerasTransformEstimation/EssentialMatrixComputation.cpp
+    EssentialMatrixDecompositionTest
+    DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
 )
 target_link_libraries(
-	EssentialMatrixComputationTest
-	mock cdff_logger cdff_types cdff_helpers essential_matrix_computation  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+	EssentialMatrixDecompositionTest
+	mock cdff_logger cdff_types cdff_helpers essential_matrix_decomposition  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
 )
-add_test(EssentialMatrixComputationTest EssentialMatrixComputationTest)
+add_test(EssentialMatrixDecompositionTest EssentialMatrixDecompositionTest)
 
 add_executable(
     FlannMatcherTest
