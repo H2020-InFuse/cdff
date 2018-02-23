@@ -1,3 +1,8 @@
+add_library(
+    dfns_chain_interface
+    DFNsChainInterface.cpp
+)
+
 MACRO(SUBDIRLIST result curdir)
   FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
   SET(dirlist "")
@@ -14,8 +19,3 @@ SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
 FOREACH(subdir ${SUBDIRS})
   ADD_SUBDIRECTORY(${subdir})
 ENDFOREACH()
-
-add_library(
-    dfns_builder
-    DFNsBuilder.cpp
-)

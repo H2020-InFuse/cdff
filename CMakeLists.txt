@@ -27,7 +27,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 cmake_policy(SET CMP0015 NEW)
 
 include_directories(
-    DFNs Common Tests Tools
+    DFNs Common Tests Tools DFPCs
     Common/Types/C/ASNCommon
     Common/Types/C Common/Converters
     Common/Types/Cpp
@@ -51,3 +51,4 @@ link_directories(
 add_subdirectory(Common)
 add_subdirectory(DFNs)
 add_subdirectory(Tests)
+add_subdirectory(DFPCs)
