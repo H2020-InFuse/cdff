@@ -127,23 +127,23 @@ const EssentialMatrixDecomposition::EssentialMatrixDecompositionOptionsSet Essen
 
 cv::Mat EssentialMatrixDecomposition::ConvertToMat(CameraMatrix cameraMatrix)
 	{
-	cv::Mat conversion(3, 3, CV_32FC1, cv::Scalar(0));
-	conversion.at<float>(0,0) = cameraMatrix.focalLengthX;
-	conversion.at<float>(1,1) = cameraMatrix.focalLengthY;
-	conversion.at<float>(0,2) = cameraMatrix.principlePoint.x;
-	conversion.at<float>(1,2) = cameraMatrix.principlePoint.y;
-	conversion.at<float>(2,2) = 1.0;
+	cv::Mat conversion(3, 3, CV_64FC1, cv::Scalar(0));
+	conversion.at<double>(0,0) = cameraMatrix.focalLengthX;
+	conversion.at<double>(1,1) = cameraMatrix.focalLengthY;
+	conversion.at<double>(0,2) = cameraMatrix.principlePoint.x;
+	conversion.at<double>(1,2) = cameraMatrix.principlePoint.y;
+	conversion.at<double>(2,2) = 1.0;
 	return conversion;
 	}
 
 cv::Mat EssentialMatrixDecomposition::ConvertToMat(MatrixWrapper::Matrix3dConstPtr matrix)
 	{
-	cv::Mat cvMatrix(3, 3, CV_32FC1);
+	cv::Mat cvMatrix(3, 3, CV_64FC1);
 	for(unsigned row = 0; row < 3; row++)
 		{
 		for(unsigned column = 0; column < 3; column++)
 			{
-			cvMatrix.at<float>(row,column) = GetElement(*matrix, row, column);
+			cvMatrix.at<double>(row,column) = GetElement(*matrix, row, column);
 			}
 		}
 	return cvMatrix;
@@ -151,15 +151,15 @@ cv::Mat EssentialMatrixDecomposition::ConvertToMat(MatrixWrapper::Matrix3dConstP
 
 cv::Mat EssentialMatrixDecomposition::Convert(CorrespondenceMap2DConstPtr correspondenceMap)
 	{
-	cv::Mat cvCorrespondenceMap(4, GetNumberOfCorrespondences(*correspondenceMap), CV_32FC1);
+	cv::Mat cvCorrespondenceMap(4, GetNumberOfCorrespondences(*correspondenceMap), CV_64FC1);
 	for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(*correspondenceMap); correspondenceIndex++)
 		{
 		BaseTypesWrapper::Point2D firstPoint = GetSource(*correspondenceMap, correspondenceIndex);
 		BaseTypesWrapper::Point2D secondPoint = GetSink(*correspondenceMap, correspondenceIndex);
-		cvCorrespondenceMap.at<float>(0, correspondenceIndex) = firstPoint.x;
-		cvCorrespondenceMap.at<float>(1, correspondenceIndex) = firstPoint.y;
-		cvCorrespondenceMap.at<float>(2, correspondenceIndex) = secondPoint.x;
-		cvCorrespondenceMap.at<float>(3, correspondenceIndex) = secondPoint.y;
+		cvCorrespondenceMap.at<double>(0, correspondenceIndex) = firstPoint.x;
+		cvCorrespondenceMap.at<double>(1, correspondenceIndex) = firstPoint.y;
+		cvCorrespondenceMap.at<double>(2, correspondenceIndex) = secondPoint.x;
+		cvCorrespondenceMap.at<double>(3, correspondenceIndex) = secondPoint.y;
 		}
 	return cvCorrespondenceMap;
 	}
@@ -211,10 +211,10 @@ int EssentialMatrixDecomposition::FindValidTransform(std::vector<cv::Mat> projec
 
 bool EssentialMatrixDecomposition::ProjectionMatrixIsValidForTestPoints(cv::Mat projectionMatrix, cv::Mat correspondenceMap)
 	{
-	cv::Mat identityProjection(3, 4, CV_32FC1, cv::Scalar(0));
-	identityProjection.at<float>(0,0) = 1;
-	identityProjection.at<float>(1,1) = 1;
-	identityProjection.at<float>(2,2) = 1;
+	cv::Mat identityProjection(3, 4, CV_64FC1, cv::Scalar(0));
+	identityProjection.at<double>(0,0) = 1;
+	identityProjection.at<double>(1,1) = 1;
+	identityProjection.at<double>(2,2) = 1;
 
 	unsigned testPointsNumber = (correspondenceMap.cols > parameters.numberOfTestPoints) ? parameters.numberOfTestPoints : correspondenceMap.cols;
 	cv::Mat testPointCloudMatrix;
@@ -233,7 +233,7 @@ bool EssentialMatrixDecomposition::ProjectionMatrixIsValidForTestPoints(cv::Mat 
 	unsigned invalidPointsCount = 0;
 	for(unsigned pointIndex = 0; pointIndex < testPointCloudMatrix.cols && !matrixIsValid && !matrixIsInvalid; pointIndex++)
 		{
-		float z = testPointCloudMatrix.at<float>(2, pointIndex) / testPointCloudMatrix.at<float>(3, pointIndex);
+		float z = testPointCloudMatrix.at<double>(2, pointIndex) / testPointCloudMatrix.at<double>(3, pointIndex);
 		bool validPoint = (z == z) && (!std::isinf(z)) && (z >= 0);
 		if (validPoint)
 			{

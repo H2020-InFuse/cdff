@@ -127,7 +127,7 @@ T_Double GetXRotation(const Pose3D& pose)
 	return GetXOrientation(pose);
 	}
 
-T_Double GetYORotation(const Pose3D& pose)
+T_Double GetYRotation(const Pose3D& pose)
 	{
 	return GetYOrientation(pose);
 	}

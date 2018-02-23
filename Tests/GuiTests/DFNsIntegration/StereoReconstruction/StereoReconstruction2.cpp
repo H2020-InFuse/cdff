@@ -563,7 +563,7 @@ void StereoReconstructionTestInterface::PrepareRansac()
 void StereoReconstructionTestInterface::PrepareEssential()
 	{
 	bool success = ransac->successOutput();
-	ASSERT(success, "Fundamental Matrix Ransac failed: unable to find a valid transform");
+	ASSERT(success, "Fundamental Matrix Ransac failed: unable to find a fundamental matrix");
 
 	fundamentalMatrix = ransac->fundamentalMatrixOutput();
 	PRINT_TO_LOG("Fundamental matrix Ransac found transform: ", "");
@@ -575,6 +575,14 @@ void StereoReconstructionTestInterface::PrepareEssential()
 void StereoReconstructionTestInterface::PrepareTriangulation()
 	{
 	secondCameraPose = essential->transformOutput();
+	bool success = essential->successOutput();
+	ASSERT(success, "Essential Matrix Decomposition failed: unable to find a valid transform");
+
+	std::stringstream transformStream;
+	transformStream << "Position: (" << GetXPosition(*secondCameraPose) <<", "<<GetYPosition(*secondCameraPose) << ", "<<GetZPosition(*secondCameraPose) <<") ";
+	transformStream << "Orientation: (" <<GetXRotation(*secondCameraPose)<<", "<<GetYRotation(*secondCameraPose)<<", "<<GetZRotation(*secondCameraPose) <<", "<<GetWRotation(*secondCameraPose)<<")";
+	std::string transformString = transformStream.str();
+	PRINT_TO_LOG("Computed Transform is:", transformString);
 
 	triangulation->poseInput(secondCameraPose);
 	triangulation->correspondenceMapInput(correspondenceMap);
