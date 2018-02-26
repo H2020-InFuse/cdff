@@ -1,23 +1,17 @@
 ## Externals (aka 3rd_party libraries)
-The third_party dependencies have been reworked.
-
-Submodules are no more a part of this repository.
-
 In order to install the required dependencies:
-Run fetch_compile_install_dependencies.sh.
+Run fetch_compile_install_dependencies.sh. from the /External folder, 
 This will install all the required dependencies into /External/install.
 This will *not* override your system libraries.  
 
 To only install a specific dependency run
 fetch_compile_install_dependencies.sh -s XXXX specific library
 
-
-
 ### Warning !
-For the moment, in the CMakeLists.txt, the include(FindPkgConfig) has been disabled, hence, only libraries under /Externals will be searched for and used in INFUSE.
+The root CMakeLists.txt uses FindPkgConfig to find current dependencies. 
+If your distribution already provides system libraries, FindPkgConfig might pick them instead of the libraries under /Externals. 
 
-If your Distribution comes already with some dependencies, they will not be used.
-Mixed Configuration is not encouraged, but if you like fire, uncomment the lines and start having fun with "dll hell".
+In a close future, an environnement variable will be used to correct this on mixed systems.   
 
 ## Current dependencies :
 - Boost 1.61.0
@@ -35,6 +29,9 @@ You need to add a script with .sh extension in the /installers folder.
 The script needs to contain a function with the signature install4infuse_XXXX where XXXX is your new dependency
 
 ## Removing old submodules from your repository
+The third_party dependencies have been reworked.
+Submodules are no more a part of this repository. Should you need to clean your old local repository here is the procedure : 
+
 1. Delete the relevant line from the .gitmodules file.
 2. Delete the relevant section from .git/config.
 3. Run git rm --cached path_to_submodule (no trailing slash).

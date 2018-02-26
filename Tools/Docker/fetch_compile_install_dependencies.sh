@@ -17,9 +17,9 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 
 # directory where the files will be build and installed
-BUILD_DIR=$DIR"/build"
-INSTALL_DIR=$DIR"/install"
-PKG_DIR=$DIR"/package"
+BUILD_DIR="$(readlink -m $DIR"/../../External/build")"
+INSTALL_DIR="$(readlink -m $DIR"/../../External/install")"
+PKG_DIR="$(readlink -m $DIR"/../../External/package")"
 
 function show_help {
 

@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-LABEL version="1.6.1"
+LABEL version="1.6.5"
 LABEL maintainer "xma@spaceapplications.com"
 LABEL description="This container compiles dependencies from CDFF\external\ \
 It does not rely anymore on the ubuntu packages."
