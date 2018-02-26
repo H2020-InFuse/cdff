@@ -55,11 +55,11 @@ void DFNsChainInterface::configure()
 	try
 		{
 		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
+		SplitConfigurationFile(configuration);
 		if (dfnsSet.empty())
 			{
 			ConstructDFNs(configuration);
 			}
-		SplitConfigurationFile(configuration);
 		ConfigureDfns();
 		AssignDfnsAlias();
 		} 
@@ -116,11 +116,11 @@ void DFNsChainInterface::SplitConfigurationFile(YAML::Node configuration)
 
 	for(unsigned dfnIndex = 0; dfnIndex < configuration.size(); dfnIndex++)
 		{
-		std::stringstream nodeFileStream;
-		nodeFileStream << folderPath << "/DFN_" << dfnIndex << ".yaml";
-
 		YAML::Node dfnNode = configuration[dfnIndex];
 		std::string dfnName = dfnNode["Name"].as<std::string>();
+
+		std::stringstream nodeFileStream;
+		nodeFileStream << folderPath << "/DFN_" << dfnName << ".yaml";
 
 		YAML::Node parametersNode = dfnNode["Parameters"];
 

@@ -81,3 +81,39 @@
     FocalLengthY: 1403.116708010621
     PrinciplePointX: 1053.351342078365
     PrinciplePointY: 588.8342842821718
+- Name: featuresExtractor3d
+  Type: FeaturesExtraction3D
+  Implementation: HarrisDetector3D
+  Parameters:
+  - Name: GeneralParameters
+    Radius: 0.01
+    SearchRadius: 0.01
+    NonMaxSuppression: true
+    DetectionThreshold: 0.001
+    EnableRefinement: false
+    NumberOfThreads: 0
+    HarrisMethod: Harris
+- Name: featuresDescriptor3d
+  Type: FeaturesDescription3D
+  Implementation: ShotDescriptor3D
+  Parameters:
+  - Name: GeneralParameters
+    LocalReferenceFrameEstimationRadius: 0.10
+    SearchRadius: 0.1
+    OutputFormat: Positions
+    EnableNormalsEstimation: true
+    ForceNormalsEstimation: true
+  - Name: NormalEstimationParameters
+    SearchRadius: 0.1
+    NeighboursSetSize: 0
+- Name: featuresMatcher3d
+  Type: FeaturesMatching3D
+  Implementation: Ransac3D
+  Parameters:
+  - Name: GeneralParameters
+    SimilarityThreshold: 0.91
+    InlierFraction: 0.73
+    CorrespondenceRandomness: 25
+    NumberOfSamples: 3
+    MaximumIterations: 95000
+    MaxCorrespondenceDistance: 0.020

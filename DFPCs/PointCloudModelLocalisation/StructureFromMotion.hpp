@@ -38,6 +38,9 @@
 #include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
+#include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
+#include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
+#include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 
 
 namespace dfpc_ci {
@@ -72,12 +75,15 @@ namespace dfpc_ci {
 	private:
 
 		dfn_ci::ImageFilteringInterface* filter;
-		dfn_ci::FeaturesExtraction2DInterface* featureExtractor;
-		dfn_ci::FeaturesDescription2DInterface* optionalFeatureDescriptor;
+		dfn_ci::FeaturesExtraction2DInterface* featuresExtractor;
+		dfn_ci::FeaturesDescription2DInterface* optionalFeaturesDescriptor;
 		dfn_ci::FeaturesMatching2DInterface* featuresMatcher;	
 		dfn_ci::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;	
 		dfn_ci::CamerasTransformEstimationInterface* cameraTransformEstimator;
 		dfn_ci::PointCloudReconstruction2DTo3DInterface* reconstructor3D;
+		dfn_ci::FeaturesExtraction3DInterface* featuresExtractor3d;
+		dfn_ci::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
+		dfn_ci::FeaturesMatching3DInterface* featuresMatcher3d;
 
 		std::vector<FrameWrapper::FrameConstPtr> imagesHistory;
 		FrameWrapper::FrameConstPtr pastImage;
@@ -92,6 +98,12 @@ namespace dfpc_ci {
 		MatrixWrapper::Matrix3dConstPtr fundamentalMatrix;
 		PoseWrapper::Pose3DConstPtr pastToCurrentCameraTransform;
 		PointCloudWrapper::PointCloudConstPtr pointCloud;
+		PointCloudWrapper::PointCloudConstPtr modelCloud;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneKeypointsVector;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelKeypointsVector;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneFeaturesVector;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelFeaturesVector;
+		PoseWrapper::Pose3DConstPtr modelPoseInScene;
 
 		void AssignDfnsAlias();
 
@@ -105,6 +117,11 @@ namespace dfpc_ci {
 		bool ComputeFundamentalMatrix();
 		bool ComputePastToCurrentTransform();
 		void ComputePointCloud();
+		void ExtractSceneFeatures();
+		void ExtractModelFeatures();
+		void DescribeSceneFeatures();
+		void DescribeModelFeatures();
+		bool EstimateModelPose();
     };
 }
 #endif

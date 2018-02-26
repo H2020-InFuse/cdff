@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 #include "StructureFromMotion.hpp"
+#include "Errors/Assert.hpp"
 
 #define DELETE_PREVIOUS(object) \
 	{ \
@@ -66,12 +67,15 @@ StructureFromMotion::StructureFromMotion()
 	pointCloud = NULL;
 
 	filter = NULL;
-	featureExtractor = NULL;
+	featuresExtractor = NULL;
 	featuresMatcher = NULL;
 	fundamentalMatrixComputer = NULL;
 	cameraTransformEstimator = NULL;
 	reconstructor3D = NULL;
-	optionalFeatureDescriptor = NULL;
+	optionalFeaturesDescriptor = NULL;
+	featuresExtractor3d = NULL;
+	optionalFeaturesDescriptor3d = NULL;
+	featuresMatcher3d = NULL;
 
 	configurationFilePath = "";
 	}
@@ -82,7 +86,7 @@ StructureFromMotion::~StructureFromMotion()
 	DELETE_PREVIOUS(filteredPastImage);
 	DELETE_PREVIOUS(currentKeypointsVector);
 	DELETE_PREVIOUS(pastKeypointsVector);
-	if (optionalFeatureDescriptor != NULL)
+	if (optionalFeaturesDescriptor != NULL)
 		{
 		DELETE_PREVIOUS(currentFeaturesVector);
 		DELETE_PREVIOUS(pastFeaturesVector);
@@ -133,21 +137,41 @@ void StructureFromMotion::process()
  */
 void StructureFromMotion::AssignDfnsAlias()
 	{
+	unsigned dfnNumber = dfnsSet.size();
+	unsigned mandatoryDFNsNumber = 8;
+	unsigned optionalDFNsSet = 0;
+
 	filter = static_cast<ImageFilteringInterface*>(dfnsSet["filter"]);
-	featureExtractor = static_cast<FeaturesExtraction2DInterface*>(dfnsSet["featureExtractor"]);
+	featuresExtractor = static_cast<FeaturesExtraction2DInterface*>(dfnsSet["featureExtractor"]);
 	featuresMatcher = static_cast<FeaturesMatching2DInterface*>(dfnsSet["featuresMatcher"]);
 	fundamentalMatrixComputer = static_cast<FundamentalMatrixComputationInterface*>(dfnsSet["fundamentalMatrixComputer"]);
 	cameraTransformEstimator = static_cast<CamerasTransformEstimationInterface*>(dfnsSet["cameraTransformEstimator"]);
 	reconstructor3D = static_cast<PointCloudReconstruction2DTo3DInterface*>(dfnsSet["reconstructor3D"]);
 
-	if (dfnsSet.find("optionalFeatureDetector") != dfnsSet.end() )
+	if (dfnsSet.find("featuresDescriptor") != dfnsSet.end() )
 		{
-		optionalFeatureDescriptor = static_cast<FeaturesDescription2DInterface*>(dfnsSet["optionalFeatureDetector"]);
+		optionalFeaturesDescriptor = static_cast<FeaturesDescription2DInterface*>(dfnsSet["featuresDescriptor"]);
+		optionalDFNsSet++;
 		}
 	else
 		{
-		optionalFeatureDescriptor = NULL;
+		optionalFeaturesDescriptor = NULL;
 		}
+
+	featuresExtractor3d = static_cast<FeaturesExtraction3DInterface*>(dfnsSet["featureExtractor3d"]);
+	featuresMatcher3d = static_cast<FeaturesMatching3DInterface*>(dfnsSet["featuresMatcher3d"]);
+
+	if (dfnsSet.find("featuresDescriptor3d") != dfnsSet.end() )
+		{
+		optionalFeaturesDescriptor3d = static_cast<FeaturesDescription3DInterface*>(dfnsSet["featuresDescriptor"]);
+		optionalDFNsSet++;
+		}
+	else
+		{
+		optionalFeaturesDescriptor3d = NULL;
+		}
+
+	ASSERT(dfnNumber == mandatoryDFNsNumber + optionalDFNsSet, "DFPC Structure from motion error: wrong number of DFNs in configuration file");
 	}
 
 void StructureFromMotion::FilterCurrentImage()
@@ -168,28 +192,28 @@ void StructureFromMotion::FilterPastImage()
 
 void StructureFromMotion::ExtractCurrentFeatures()
 	{
-	featureExtractor->imageInput(filteredCurrentImage);
-	featureExtractor->process();
+	featuresExtractor->imageInput(filteredCurrentImage);
+	featuresExtractor->process();
 	DELETE_PREVIOUS(currentKeypointsVector);
-	currentKeypointsVector = featureExtractor->featuresSetOutput();
+	currentKeypointsVector = featuresExtractor->featuresSetOutput();
 	}
 
 void StructureFromMotion::ExtractPastFeatures()
 	{
-	featureExtractor->imageInput(filteredPastImage);
-	featureExtractor->process();
+	featuresExtractor->imageInput(filteredPastImage);
+	featuresExtractor->process();
 	DELETE_PREVIOUS(pastKeypointsVector);
-	pastKeypointsVector = featureExtractor->featuresSetOutput();
+	pastKeypointsVector = featuresExtractor->featuresSetOutput();
 	}
 
 void StructureFromMotion::DescribeCurrentFeatures()
 	{
-	if (optionalFeatureDescriptor != NULL)
+	if (optionalFeaturesDescriptor != NULL)
 		{
-		optionalFeatureDescriptor->featuresSetInput(currentKeypointsVector);
-		optionalFeatureDescriptor->process();
+		optionalFeaturesDescriptor->featuresSetInput(currentKeypointsVector);
+		optionalFeaturesDescriptor->process();
 		DELETE_PREVIOUS(currentFeaturesVector);
-		currentFeaturesVector = optionalFeatureDescriptor->featuresSetWithDescriptorsOutput();
+		currentFeaturesVector = optionalFeaturesDescriptor->featuresSetWithDescriptorsOutput();
 		}
 	else
 		{
@@ -199,12 +223,12 @@ void StructureFromMotion::DescribeCurrentFeatures()
 
 void StructureFromMotion::DescribePastFeatures()
 	{
-	if (optionalFeatureDescriptor != NULL)
+	if (optionalFeaturesDescriptor != NULL)
 		{
-		optionalFeatureDescriptor->featuresSetInput(pastKeypointsVector);
-		optionalFeatureDescriptor->process();
+		optionalFeaturesDescriptor->featuresSetInput(pastKeypointsVector);
+		optionalFeaturesDescriptor->process();
 		DELETE_PREVIOUS(pastFeaturesVector);
-		pastFeaturesVector = optionalFeatureDescriptor->featuresSetWithDescriptorsOutput();
+		pastFeaturesVector = optionalFeaturesDescriptor->featuresSetWithDescriptorsOutput();
 		}
 	else
 		{
@@ -247,6 +271,63 @@ void StructureFromMotion::ComputePointCloud()
 	reconstructor3D->process();
 	DELETE_PREVIOUS(pointCloud);
 	pointCloud = reconstructor3D->pointCloudOutput();
+	}
+
+void StructureFromMotion::ExtractSceneFeatures()
+	{
+	featuresExtractor3d->pointCloudInput(pointCloud);
+	featuresExtractor3d->process();
+	DELETE_PREVIOUS(sceneKeypointsVector);
+	sceneKeypointsVector = featuresExtractor3d->featuresSetOutput();
+	}
+
+void StructureFromMotion::ExtractModelFeatures()
+	{
+	featuresExtractor3d->pointCloudInput(modelCloud);
+	featuresExtractor3d->process();
+	DELETE_PREVIOUS(modelKeypointsVector);
+	sceneKeypointsVector = featuresExtractor3d->featuresSetOutput();
+	}
+
+void StructureFromMotion::DescribeSceneFeatures()
+	{
+	if (optionalFeaturesDescriptor3d != NULL)
+		{
+		optionalFeaturesDescriptor3d->pointCloudInput(pointCloud);
+		optionalFeaturesDescriptor3d->featuresSetInput(sceneKeypointsVector);
+		optionalFeaturesDescriptor3d->process();
+		DELETE_PREVIOUS(sceneFeaturesVector);
+		sceneFeaturesVector = optionalFeaturesDescriptor3d->featuresSetWithDescriptorsOutput();
+		}
+	else
+		{
+		sceneFeaturesVector = sceneKeypointsVector;
+		}
+	}
+
+void StructureFromMotion::DescribeModelFeatures()
+	{
+	if (optionalFeaturesDescriptor3d != NULL)
+		{
+		optionalFeaturesDescriptor3d->pointCloudInput(modelCloud);
+		optionalFeaturesDescriptor3d->featuresSetInput(modelKeypointsVector);
+		optionalFeaturesDescriptor3d->process();
+		DELETE_PREVIOUS(modelFeaturesVector);
+		modelFeaturesVector = optionalFeaturesDescriptor3d->featuresSetWithDescriptorsOutput();
+		}
+	else
+		{
+		modelFeaturesVector = modelKeypointsVector;
+		}
+	}
+
+bool StructureFromMotion::EstimateModelPose()
+	{
+	featuresMatcher3d->sourceFeaturesVectorInput(modelFeaturesVector);
+	featuresMatcher3d->sinkFeaturesVectorInput(sceneFeaturesVector);
+	DELETE_PREVIOUS(modelPoseInScene);
+	modelPoseInScene = featuresMatcher3d->transformOutput();
+	return featuresMatcher3d->successOutput();
 	}
 }
 
