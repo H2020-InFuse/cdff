@@ -1,11 +1,18 @@
-image: nexus.spaceapplications.com/repository/infuse/infuse:1.6.3
+image: nexus.spaceapplications.com/repository/infuse/cdff-ci:1.6.5.2
 
 stages:
+  - platform
   - autogeneration
   - build
   - test
   - deploy
 
+hardware:
+  stage : platform
+  script:
+      - cat /proc/cpuinfo
+      - lscpu
+      
 autogeneration:
   stage : autogeneration
   script:
@@ -28,13 +35,35 @@ build:
     paths:
       - build/
 
-test:
+cmake test:
   stage: test
   script:
-      - cp -rf /CDFF/External/install ./External/install
       - cd build
       - make test
 
+individual test:
+  stage: test
+  script:
+      - cd build/Tests/UnitTests
+      - ./ParametersHelperTest
+      - ./HarrisDetector2DTest
+      - ./OrbDetectorDescriptorTest
+      - ./FundamentalMatrixRansacTest
+      - ./EssentialMatrixRansacTest
+      - ./FlannMatcherTest
+      - ./TriangulationTest
+      - ./HarrisDetector3DTest 
+      - ./ShotDescriptor3DTest
+      - ./Ransac3DTest
+      - ./Icp3DTest
+      - ./MatFrameConvertersTest
+      - ./MatVisualPointFeatureVector2DConvertersTest
+      - ./MatVisualPointFeatureVector3DConvertersTest
+      - ./PointCloudPclPointCloudConvertersTest
+      - ./PointCloudPclNormalsCloudConvertersTest
+      - ./VisualPointFeatureVector3DPclPointCloudConvertersTest
+      - ./Transform3DEigenTransformConvertersTest
+      
 deploy_staging:
   stage: deploy
   script:
