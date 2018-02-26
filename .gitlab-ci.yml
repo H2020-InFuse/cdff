@@ -40,29 +40,6 @@ cmake test:
   script:
       - cd build
       - make test
-
-individual test:
-  stage: test
-  script:
-      - cd build/Tests/UnitTests
-      - ./ParametersHelperTest
-      - ./HarrisDetector2DTest
-      - ./OrbDetectorDescriptorTest
-      - ./FundamentalMatrixRansacTest
-      - ./EssentialMatrixRansacTest
-      - ./FlannMatcherTest
-      - ./TriangulationTest
-      - ./HarrisDetector3DTest 
-      - ./ShotDescriptor3DTest
-      - ./Ransac3DTest
-      - ./Icp3DTest
-      - ./MatFrameConvertersTest
-      - ./MatVisualPointFeatureVector2DConvertersTest
-      - ./MatVisualPointFeatureVector3DConvertersTest
-      - ./PointCloudPclPointCloudConvertersTest
-      - ./PointCloudPclNormalsCloudConvertersTest
-      - ./VisualPointFeatureVector3DPclPointCloudConvertersTest
-      - ./Transform3DEigenTransformConvertersTest
       
 deploy_staging:
   stage: deploy
