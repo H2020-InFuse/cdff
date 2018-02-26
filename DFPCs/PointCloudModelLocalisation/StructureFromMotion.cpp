@@ -54,13 +54,43 @@ using namespace PointCloudWrapper;
  */
 StructureFromMotion::StructureFromMotion()
 	{
+	filteredCurrentImage = NULL;
+	filteredPastImage = NULL;
+	currentKeypointsVector = NULL;
+	pastKeypointsVector = NULL;
+	currentFeaturesVector = NULL;
+	pastFeaturesVector = NULL;
+	correspondenceMap = NULL;
+	fundamentalMatrix = NULL;
+	pastToCurrentCameraTransform = NULL;
+	pointCloud = NULL;
+
+	filter = NULL;
+	featureExtractor = NULL;
+	featuresMatcher = NULL;
+	fundamentalMatrixComputer = NULL;
+	cameraTransformEstimator = NULL;
+	reconstructor3D = NULL;
+	optionalFeatureDescriptor = NULL;
 
 	configurationFilePath = "";
 	}
 
 StructureFromMotion::~StructureFromMotion()
 	{
-
+	DELETE_PREVIOUS(filteredCurrentImage);
+	DELETE_PREVIOUS(filteredPastImage);
+	DELETE_PREVIOUS(currentKeypointsVector);
+	DELETE_PREVIOUS(pastKeypointsVector);
+	if (optionalFeatureDescriptor != NULL)
+		{
+		DELETE_PREVIOUS(currentFeaturesVector);
+		DELETE_PREVIOUS(pastFeaturesVector);
+		}
+	DELETE_PREVIOUS(correspondenceMap);
+	DELETE_PREVIOUS(fundamentalMatrix);
+	DELETE_PREVIOUS(pastToCurrentCameraTransform);
+	DELETE_PREVIOUS(pointCloud);
 	}
 
 void StructureFromMotion::process() 

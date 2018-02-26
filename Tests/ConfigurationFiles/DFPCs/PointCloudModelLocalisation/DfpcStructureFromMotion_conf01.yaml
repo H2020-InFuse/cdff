@@ -1,0 +1,83 @@
+- Name: filter
+  Type: ImageFiltering
+  Implementation: ImageUndistortion
+  Parameters:
+  - Name: CameraMatrix
+    FocalLengthX: 1408.899186439272
+    FocalLengthY: 1403.116708010621
+    PrinciplePointX: 1053.351342078365
+    PrinciplePointY: 588.8342842821718
+  - Name: Distortion
+    UseK3: true
+    UseK4ToK6: true
+    K1: 0.8010323519594021
+    K2: 104.7894482598434
+    P1: -6.223427196342877e-05
+    P2: -0.002209798328517273
+    K3: -70.73535010082334
+    K4: 0.8556124926892613
+    K5: 105.9684960970509
+    K6: -60.88515255428263
+- Name: featureExtractor
+  Type: FeaturesExtraction2D
+  Implementation: OrbDetectorDescriptor
+  Parameters:
+  - Name: GeneralParameters
+    EdgeThreshold: 31
+    FastThreshold: 20
+    FirstLevel: 0
+    MaxFeaturesNumber: 500
+    LevelsNumber: 8
+    PatchSize: 31
+    ScaleFactor: 1.20
+    ScoreType: HarrisScore
+    SizeOfBrightnessTestSet: 2
+- Name: featuresMatcher
+  Type: FeaturesMatching2D
+  Implementation: FlannMatcher
+  Parameters:
+  - Name: GeneralParameters
+    DistanceThreshold: 0.02
+    MatcherMethod: 4
+    AcceptanceRatio: 0.75
+  - Name: LocalitySensitiveHashingParameters
+    TableNumber: 6
+    KeySize: 12
+    MultiProbeLevel: 1
+- Name: fundamentalMatrixComputer
+  Type: FundamentalMatrixComputation
+  Implementation: FundamentalMatrixRansac
+  Parameters:
+  - Name: GeneralParameters
+    OutlierThreshold: 1 
+    Confidence: 0.90
+- Name: cameraTransformEstimator
+  Type: CamerasTransformEstimation
+  Implementation: EssentialMatrixDecomposition
+  Parameters:
+  - Name: GeneralParameters
+    NumberOfTestPoints: 20
+  - Name: FirstCameraMatrix
+    FocalLengthX: 1408.899186439272
+    FocalLengthY: 1403.116708010621
+    PrinciplePointX: 1053.351342078365
+    PrinciplePointY: 588.8342842821718
+  - Name: SecondCameraMatrix
+    FocalLengthX: 1408.899186439272
+    FocalLengthY: 1403.116708010621
+    PrinciplePointX: 1053.351342078365
+    PrinciplePointY: 588.8342842821718
+- Name: reconstructor3D
+  Type: PointCloudReconstruction2DTo3D
+  Implementation: Triangulation
+  Parameters:
+  - Name: FirstCameraMatrix
+    FocalLengthX: 1408.899186439272
+    FocalLengthY: 1403.116708010621
+    PrinciplePointX: 1053.351342078365
+    PrinciplePointY: 588.8342842821718
+  - Name: SecondCameraMatrix
+    FocalLengthX: 1408.899186439272
+    FocalLengthY: 1403.116708010621
+    PrinciplePointX: 1053.351342078365
+    PrinciplePointY: 588.8342842821718

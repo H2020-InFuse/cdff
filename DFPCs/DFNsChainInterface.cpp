@@ -100,12 +100,10 @@ void DFNsChainInterface::ConstructDFNs(YAML::Node configuration)
 	for(unsigned dfnIndex = 0; dfnIndex < configuration.size(); dfnIndex++)
 		{
 		YAML::Node dfnNode = configuration[dfnIndex];
-		YAML::Node typeNode = dfnNode[0];
-		YAML::Node implementationNode = dfnNode[1];
 
 		std::string dfnName = dfnNode["Name"].as<std::string>();
-		std::string dfnType = typeNode["Type"].as<std::string>();
-		std::string dfnImplementation = implementationNode["Implementation"].as<std::string>();
+		std::string dfnType = dfnNode["Type"].as<std::string>();
+		std::string dfnImplementation = dfnNode["Implementation"].as<std::string>();
 
 		DFNCommonInterface* dfn = DFNsBuilder::CreateDFN(dfnType, dfnImplementation);
 		dfnsSet[dfnName] = dfn;
@@ -124,14 +122,10 @@ void DFNsChainInterface::SplitConfigurationFile(YAML::Node configuration)
 		YAML::Node dfnNode = configuration[dfnIndex];
 		std::string dfnName = dfnNode["Name"].as<std::string>();
 
-		YAML::Node dfnSplitNode;
-		for(unsigned groupIndex = 2; groupIndex < dfnNode.size(); groupIndex++)
-			{
-			dfnSplitNode["seq"] = dfnNode[groupIndex];
-			}
+		YAML::Node parametersNode = dfnNode["Parameters"];
 
 		std::ofstream file(nodeFileStream.str().c_str());
-		file << dfnSplitNode;
+		file << parametersNode;
 		file.close();
 
 		configurationFilesSet[dfnName] = nodeFileStream.str();
@@ -173,7 +167,7 @@ void DFNsChainInterface::DestroyDFNs()
 	configurationFilesSet.clear();
 	}
 
-void AssignDfnsAlias()	
+void DFNsChainInterface::AssignDfnsAlias()	
 	{
 
 	}

@@ -152,3 +152,13 @@ target_link_libraries(
 	image_undistortion harris_detector_2d orb_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition mock cdff_logger icp_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
+add_executable(
+    StructureFromMotionGuiTest
+    DFPCs/PointCloudModelLocalisation/StructureFromMotion.cpp
+)
+set_target_properties(StructureFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+	StructureFromMotionGuiTest
+	structure_from_motion mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+

@@ -214,3 +214,6 @@ target_link_libraries(
 	Transform3DMatConvertersTest cdff_types converters_opencv cdff_logger
 )
 add_test(Transform3DMatConvertersTest Transform3DMatConvertersTest)
+
+
+add_subdirectory(DFPCs)

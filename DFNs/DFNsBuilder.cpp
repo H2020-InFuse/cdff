@@ -97,6 +97,8 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 		{
 		return CreateFeaturesMatching3D(dfnImplementation);
 		}
+	PRINT_TO_LOG("DFN: ", dfnType);
+	PRINT_TO_LOG("Implementation: ", dfnImplementation);
 	ASSERT(false, "DFNsBuilder Error: unhandled dfn Type");
 	return NULL;
 	}
