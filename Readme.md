@@ -26,8 +26,6 @@ See [Third party readme] (/External/Readme.md)
     ./fetch_compile_install_dependencies.sh
   
 ### Build CDFF with
-   
-    mkdir build
     cmake -DCMAKE_INSTALL_PREFIX=./ ..
     make install
 
