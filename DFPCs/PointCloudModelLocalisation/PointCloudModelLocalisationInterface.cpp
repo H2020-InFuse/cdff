@@ -56,6 +56,11 @@ void PointCloudModelLocalisationInterface::imageInput(FrameConstPtr data)
     	inImage = data;
 	}
 
+void PointCloudModelLocalisationInterface::modelInput(PointCloudConstPtr data)
+	{
+	inModel = data;
+	}
+
 PointCloudConstPtr PointCloudModelLocalisationInterface::pointCloudOutput()
 	{
 	return outPointCloud;

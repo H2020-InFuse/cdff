@@ -46,6 +46,7 @@ using namespace CorrespondenceMap2DWrapper;
 using namespace MatrixWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -66,6 +67,13 @@ StructureFromMotion::StructureFromMotion(Map* map) :
 	fundamentalMatrix = NULL;
 	pastToCurrentCameraTransform = NULL;
 	pointCloud = NULL;
+	sceneCloud = NULL;
+	lastModelCloud = NULL;
+	sceneKeypointsVector = NULL;
+	modelKeypointsVector = NULL;
+	sceneFeaturesVector = NULL;
+	modelFeaturesVector = NULL;
+	modelPoseInScene = NULL;
 
 	filter = NULL;
 	featuresExtractor = NULL;
@@ -98,45 +106,43 @@ StructureFromMotion::~StructureFromMotion()
 	DELETE_PREVIOUS(fundamentalMatrix);
 	DELETE_PREVIOUS(pastToCurrentCameraTransform);
 	DELETE_PREVIOUS(pointCloud);
+	DELETE_PREVIOUS(sceneCloud);
+	DELETE_PREVIOUS(sceneKeypointsVector);
+	DELETE_PREVIOUS(modelKeypointsVector);
+	if (optionalFeaturesDescriptor3d != NULL)
+		{
+		DELETE_PREVIOUS(sceneFeaturesVector);
+		DELETE_PREVIOUS(modelFeaturesVector);
+		}
+	DELETE_PREVIOUS(modelPoseInScene);
 	}
 
 void StructureFromMotion::process() 
 	{
-	DEBUG_WRITE_TO_LOG("Structure from motion start", "");
+	DEBUG_PRINT_TO_LOG("Structure from motion start", "");
 	currentImage = inImage;
 	map->AddFrame(currentImage);
-	DEBUG_WRITE_TO_LOG("Added Frame", "");
 	FilterCurrentImage();
-	DEBUG_WRITE_TO_LOG("Filtered Frame", "");
 	ExtractCurrentFeatures();
-	DEBUG_WRITE_TO_LOG("Extracted Features", GetNumberOfPoints(*currentKeypointsVector) );
 	DescribeCurrentFeatures();
-	DEBUG_WRITE_TO_LOG("Described Features", GetNumberOfPoints(*currentFeaturesVector) );
 
 	bool success = false;
 	for(pastImage = map->GetNextReferenceFrame(); !success && pastImage != NULL; pastImage = map->GetNextReferenceFrame())
 		{
-		DEBUG_WRITE_TO_LOG("Selected Past Frame", success);
+		DEBUG_PRINT_TO_LOG("Selected Past Frame", success);
 		FilterPastImage();
-		DEBUG_WRITE_TO_LOG("Filtered Frame", "");
 		ExtractPastFeatures();
-		DEBUG_WRITE_TO_LOG("Extracted Features", GetNumberOfPoints(*pastKeypointsVector) );
 		DescribePastFeatures();
-		DEBUG_WRITE_TO_LOG("Described Features", GetNumberOfPoints(*pastFeaturesVector) );
 
 		MatchCurrentAndPastFeatures();
-		DEBUG_WRITE_TO_LOG("Correspondences", GetNumberOfCorrespondences(*correspondenceMap) );
 		success = ComputeFundamentalMatrix();
-		DEBUG_WRITE_TO_LOG("Fundamental Matrix", success);
 		if (success)
 			{
 			success = ComputePastToCurrentTransform();
-			DEBUG_WRITE_TO_LOG("Essential Matrix", success);
 			}
 		if (success)
 			{	
 			ComputePointCloud();	
-			DEBUG_WRITE_TO_LOG("Point Cloud", GetNumberOfPoints(*pointCloud));
 			}
 		}
 
@@ -144,13 +150,28 @@ void StructureFromMotion::process()
 		{
 		map->AddFramePose(pastToCurrentCameraTransform);
 		map->AddPointCloudInLastReference(pointCloud);
+		DELETE_PREVIOUS(sceneCloud);
 		sceneCloud = map->GetPartialScene(searchRadius);
-		DEBUG_WRITE_TO_LOG("Scene Cloud", GetNumberOfPoints(*sceneCloud));
+		DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*sceneCloud));
 		outPointCloud = sceneCloud;
+		ExtractSceneFeatures();
+		DescribeSceneFeatures();
+		if (lastModelCloud != inModel)
+			{
+			lastModelCloud = inModel;
+			ExtractModelFeatures();
+			DescribeModelFeatures();		
+			}
+		//success = EstimateModelPose();
 		}
 	else
 		{
 		outPointCloud = NULL;
+		}
+
+	if (success)
+		{
+		outPose = modelPoseInScene;
 		}
 
 	outSuccess = success;
@@ -185,12 +206,12 @@ void StructureFromMotion::AssignDfnsAlias()
 		optionalFeaturesDescriptor = NULL;
 		}
 
-	featuresExtractor3d = static_cast<FeaturesExtraction3DInterface*>(dfnsSet["featureExtractor3d"]);
+	featuresExtractor3d = static_cast<FeaturesExtraction3DInterface*>(dfnsSet["featuresExtractor3d"]);
 	featuresMatcher3d = static_cast<FeaturesMatching3DInterface*>(dfnsSet["featuresMatcher3d"]);
 
 	if (dfnsSet.find("featuresDescriptor3d") != dfnsSet.end() )
 		{
-		optionalFeaturesDescriptor3d = static_cast<FeaturesDescription3DInterface*>(dfnsSet["featuresDescriptor"]);
+		optionalFeaturesDescriptor3d = static_cast<FeaturesDescription3DInterface*>(dfnsSet["featuresDescriptor3d"]);
 		optionalDFNsSet++;
 		}
 	else
@@ -199,6 +220,14 @@ void StructureFromMotion::AssignDfnsAlias()
 		}
 
 	ASSERT(dfnNumber == mandatoryDFNsNumber + optionalDFNsSet, "DFPC Structure from motion error: wrong number of DFNs in configuration file");
+	ASSERT(filter != NULL, "DFPC Structure from motion error: filter DFN configured incorrectly");
+	ASSERT(featuresExtractor != NULL, "DFPC Structure from motion error: featuresExtractor DFN configured incorrectly");
+	ASSERT(featuresMatcher != NULL, "DFPC Structure from motion error: featuresMatcher DFN configured incorrectly");
+	ASSERT(fundamentalMatrixComputer != NULL, "DFPC Structure from motion error: fundamentalMatrixComputer DFN configured incorrectly");
+	ASSERT(cameraTransformEstimator != NULL, "DFPC Structure from motion error: cameraTransformEstimator DFN configured incorrectly");
+	ASSERT(reconstructor3D != NULL, "DFPC Structure from motion error: reconstructor3D DFN configured incorrectly");
+	ASSERT(featuresExtractor3d != NULL, "DFPC Structure from motion error: featuresExtractor3d DFN configured incorrectly");
+	ASSERT(featuresMatcher3d != NULL, "DFPC Structure from motion error: featuresMatcher3d DFN configured incorrectly");
 	}
 
 void StructureFromMotion::FilterCurrentImage()
@@ -207,6 +236,7 @@ void StructureFromMotion::FilterCurrentImage()
 	filter->process();
 	DELETE_PREVIOUS(filteredCurrentImage);
 	filteredCurrentImage = filter->filteredImageOutput();
+	DEBUG_PRINT_TO_LOG("Filtered Current Frame", "");
 	}
 
 void StructureFromMotion::FilterPastImage()
@@ -215,6 +245,7 @@ void StructureFromMotion::FilterPastImage()
 	filter->process();
 	DELETE_PREVIOUS(filteredPastImage);
 	filteredPastImage = filter->filteredImageOutput();
+	DEBUG_PRINT_TO_LOG("Filtered Past Frame", "");
 	}
 
 void StructureFromMotion::ExtractCurrentFeatures()
@@ -223,6 +254,7 @@ void StructureFromMotion::ExtractCurrentFeatures()
 	featuresExtractor->process();
 	DELETE_PREVIOUS(currentKeypointsVector);
 	currentKeypointsVector = featuresExtractor->featuresSetOutput();
+	DEBUG_PRINT_TO_LOG("Extracted Current Features", GetNumberOfPoints(*currentKeypointsVector) );
 	}
 
 void StructureFromMotion::ExtractPastFeatures()
@@ -231,6 +263,7 @@ void StructureFromMotion::ExtractPastFeatures()
 	featuresExtractor->process();
 	DELETE_PREVIOUS(pastKeypointsVector);
 	pastKeypointsVector = featuresExtractor->featuresSetOutput();
+	DEBUG_PRINT_TO_LOG("Extracted Past Features", GetNumberOfPoints(*pastKeypointsVector) );
 	}
 
 void StructureFromMotion::DescribeCurrentFeatures()
@@ -241,6 +274,7 @@ void StructureFromMotion::DescribeCurrentFeatures()
 		optionalFeaturesDescriptor->process();
 		DELETE_PREVIOUS(currentFeaturesVector);
 		currentFeaturesVector = optionalFeaturesDescriptor->featuresSetWithDescriptorsOutput();
+		DEBUG_PRINT_TO_LOG("Described Current Features", GetNumberOfPoints(*currentFeaturesVector) );
 		}
 	else
 		{
@@ -256,6 +290,7 @@ void StructureFromMotion::DescribePastFeatures()
 		optionalFeaturesDescriptor->process();
 		DELETE_PREVIOUS(pastFeaturesVector);
 		pastFeaturesVector = optionalFeaturesDescriptor->featuresSetWithDescriptorsOutput();
+		DEBUG_PRINT_TO_LOG("Described Past Features", GetNumberOfPoints(*pastFeaturesVector) );
 		}
 	else
 		{
@@ -270,6 +305,7 @@ void StructureFromMotion::MatchCurrentAndPastFeatures()
 	featuresMatcher->process();
 	DELETE_PREVIOUS(correspondenceMap);
 	correspondenceMap = featuresMatcher->correspondenceMapOutput();	
+	DEBUG_PRINT_TO_LOG("Correspondences", GetNumberOfCorrespondences(*correspondenceMap) );
 	}
 
 bool StructureFromMotion::ComputeFundamentalMatrix()
@@ -278,7 +314,9 @@ bool StructureFromMotion::ComputeFundamentalMatrix()
 	fundamentalMatrixComputer->process();
 	DELETE_PREVIOUS(fundamentalMatrix);	
 	fundamentalMatrix = fundamentalMatrixComputer->fundamentalMatrixOutput();	
-	return fundamentalMatrixComputer->successOutput();
+	bool fundamentalMatrixSuccess =  fundamentalMatrixComputer->successOutput();
+	DEBUG_PRINT_TO_LOG("Fundamental Matrix", fundamentalMatrixSuccess);
+	return fundamentalMatrixSuccess;
 	}
 
 bool StructureFromMotion::ComputePastToCurrentTransform()
@@ -288,7 +326,9 @@ bool StructureFromMotion::ComputePastToCurrentTransform()
 	cameraTransformEstimator->process();
 	DELETE_PREVIOUS(pastToCurrentCameraTransform);
 	pastToCurrentCameraTransform = cameraTransformEstimator->transformOutput();
-	return cameraTransformEstimator->successOutput();
+	bool essentialMatrixSuccess = cameraTransformEstimator->successOutput();
+	DEBUG_PRINT_TO_LOG("Essential Matrix", essentialMatrixSuccess);
+	return essentialMatrixSuccess;
 	}
 
 void StructureFromMotion::ComputePointCloud()
@@ -298,6 +338,7 @@ void StructureFromMotion::ComputePointCloud()
 	reconstructor3D->process();
 	DELETE_PREVIOUS(pointCloud);
 	pointCloud = reconstructor3D->pointCloudOutput();
+	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*pointCloud));
 	}
 
 void StructureFromMotion::ExtractSceneFeatures()
@@ -306,14 +347,16 @@ void StructureFromMotion::ExtractSceneFeatures()
 	featuresExtractor3d->process();
 	DELETE_PREVIOUS(sceneKeypointsVector);
 	sceneKeypointsVector = featuresExtractor3d->featuresSetOutput();
+	DEBUG_PRINT_TO_LOG("Extracted Scene Features", GetNumberOfPoints(*sceneKeypointsVector));
 	}
 
 void StructureFromMotion::ExtractModelFeatures()
 	{
-	featuresExtractor3d->pointCloudInput(modelCloud);
+	featuresExtractor3d->pointCloudInput(lastModelCloud);
 	featuresExtractor3d->process();
 	DELETE_PREVIOUS(modelKeypointsVector);
-	sceneKeypointsVector = featuresExtractor3d->featuresSetOutput();
+	modelKeypointsVector = featuresExtractor3d->featuresSetOutput();
+	DEBUG_PRINT_TO_LOG("Extracted Model Features", GetNumberOfPoints(*modelKeypointsVector));
 	}
 
 void StructureFromMotion::DescribeSceneFeatures()
@@ -325,6 +368,7 @@ void StructureFromMotion::DescribeSceneFeatures()
 		optionalFeaturesDescriptor3d->process();
 		DELETE_PREVIOUS(sceneFeaturesVector);
 		sceneFeaturesVector = optionalFeaturesDescriptor3d->featuresSetWithDescriptorsOutput();
+		DEBUG_PRINT_TO_LOG("Described Scene Features", GetNumberOfPoints(*sceneFeaturesVector));
 		}
 	else
 		{
@@ -336,11 +380,12 @@ void StructureFromMotion::DescribeModelFeatures()
 	{
 	if (optionalFeaturesDescriptor3d != NULL)
 		{
-		optionalFeaturesDescriptor3d->pointCloudInput(modelCloud);
+		optionalFeaturesDescriptor3d->pointCloudInput(lastModelCloud);
 		optionalFeaturesDescriptor3d->featuresSetInput(modelKeypointsVector);
 		optionalFeaturesDescriptor3d->process();
 		DELETE_PREVIOUS(modelFeaturesVector);
 		modelFeaturesVector = optionalFeaturesDescriptor3d->featuresSetWithDescriptorsOutput();
+		DEBUG_PRINT_TO_LOG("Described Model Features", GetNumberOfPoints(*modelFeaturesVector));
 		}
 	else
 		{
@@ -354,7 +399,9 @@ bool StructureFromMotion::EstimateModelPose()
 	featuresMatcher3d->sinkFeaturesVectorInput(sceneFeaturesVector);
 	DELETE_PREVIOUS(modelPoseInScene);
 	modelPoseInScene = featuresMatcher3d->transformOutput();
-	return featuresMatcher3d->successOutput();
+	bool matching3dSuccess = featuresMatcher3d->successOutput();
+	DEBUG_PRINT_TO_LOG("Matching 3d", matching3dSuccess);
+	return matching3dSuccess;
 	}
 }
 

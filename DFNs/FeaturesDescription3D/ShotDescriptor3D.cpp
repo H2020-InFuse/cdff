@@ -67,6 +67,7 @@ ShotDescriptor3D::ShotDescriptor3D()
 	parametersHelper.AddParameter<int>(
 		"NormalEstimationParameters", "NeighboursSetSize", parameters.normalEstimationOptions.neighboursSetSize, DEFAULT_PARAMETERS.normalEstimationOptions.neighboursSetSize);
 
+	inNormalsCloud = NULL;
 	configurationFilePath = "";
 	}
 
@@ -89,8 +90,15 @@ void ShotDescriptor3D::process()
 	pcl::IndicesConstPtr indicesList = Convert(inFeaturesSet);
 	ValidateMandatoryInputs(inputPointCloud, indicesList);
 
-	pcl::PointCloud<pcl::Normal>::ConstPtr inputNormalsCloud = 
-		ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr, PointCloudToPclNormalsCloudConverter>::Convert(inNormalsCloud);
+	pcl::PointCloud<pcl::Normal>::ConstPtr inputNormalsCloud;
+	if (inNormalsCloud != NULL)
+		{
+		inputNormalsCloud = ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr, PointCloudToPclNormalsCloudConverter>::Convert(inNormalsCloud);
+		}
+	else
+		{
+		inputNormalsCloud = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
+		}
 	pcl::PointCloud<pcl::SHOT352>::ConstPtr shotPointCloud = ComputeShotDescriptors(inputPointCloud, indicesList, inputNormalsCloud);
 	outFeaturesSetWithDescriptors = Convert(inputPointCloud, indicesList, shotPointCloud);
 	}

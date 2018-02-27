@@ -102,7 +102,7 @@ namespace dfpc_ci {
 		PoseWrapper::Pose3DConstPtr pastToCurrentCameraTransform;
 		PointCloudWrapper::PointCloudConstPtr pointCloud;
 		PointCloudWrapper::PointCloudConstPtr sceneCloud;
-		PointCloudWrapper::PointCloudConstPtr modelCloud;
+		PointCloudWrapper::PointCloudConstPtr lastModelCloud;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneKeypointsVector;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelKeypointsVector;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneFeaturesVector;

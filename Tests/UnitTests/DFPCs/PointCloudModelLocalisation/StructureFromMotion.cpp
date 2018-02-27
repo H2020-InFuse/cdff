@@ -43,6 +43,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
+#include<pcl/io/ply_io.h>
 
 #include <MatToFrameConverter.hpp>
 #include <Frame.hpp>
@@ -59,6 +60,9 @@
 #include <Mocks/Common/Converters/MatToTransform3DConverter.hpp>
 #include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
 #include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
+#include <Mocks/Common/Converters/PointCloudToPclNormalsCloudConverter.hpp>
 
 #include <Stubs/DFPCs/PointCloudModelLocalisation/ObservedScene.hpp>
 
@@ -66,6 +70,7 @@ using namespace dfpc_ci;
 using namespace FrameWrapper;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
 using namespace PoseWrapper;
 using namespace Common;
 using namespace PointCloudWrapper;
@@ -116,10 +121,43 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 	Mocks::PclPointCloudToPointCloudConverter* mockCloudConverter = new Mocks::PclPointCloudToPointCloudConverter();
 	ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Instance(stubCloudCache, mockCloudConverter);
 
+	Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInverseCloudCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>;
+	Mocks::PointCloudToPclPointCloudConverter* mockInverseCloudConverter = new Mocks::PointCloudToPclPointCloudConverter();
+	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInverseCloudCache, mockInverseCloudConverter);
+
+	Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>* stubFeatures3dCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>();
+	Mocks::MatToVisualPointFeatureVector3DConverter* mockFeatures3dConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
+	ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubFeatures3dCache, mockFeatures3dConverter);
+
+	Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr>* stubInputNormalsCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr>();
+	Mocks::PointCloudToPclNormalsCloudConverter* mockInputNormalsConverter = new Mocks::PointCloudToPclNormalsCloudConverter();
+	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr, PointCloudToPclNormalsCloudConverter>::Instance(stubInputNormalsCache, mockInputNormalsConverter);
+
 	Map* map = new ObservedScene();
 	StructureFromMotion structureFromMotion(map);
 	structureFromMotion.setConfigurationFile("../../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcStructureFromMotion_conf01.yaml");
 	structureFromMotion.configure();
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclModelCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::io::loadPLYFile("../../tests/Data/PointClouds/bunny0.ply", *pclCloud);
+	const unsigned SELECTION_RATIO = 10;
+	unsigned selectionCounter = 0;
+	for(unsigned pointIndex = 0; pointIndex < pclCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ point = pclCloud->points.at(pointIndex);
+		if (point.x == point.x && point.y == point.y && point.z == point.z)
+			{
+			if (selectionCounter == 0)
+				{
+				pclModelCloud->points.push_back(point);
+				}
+			selectionCounter = (selectionCounter+1)%SELECTION_RATIO;
+			}
+		}
+	PclPointCloudToPointCloudConverter pclConverter;
+	PointCloudConstPtr modelCloud = pclConverter.Convert(pclModelCloud);
+	structureFromMotion.modelInput(modelCloud);
 
 	cv::Mat doubleImage1 = cv::imread("../../tests/Data/Images/SmestechLab.jpg", cv::IMREAD_COLOR);
 	cv::Mat doubleImage2 = cv::imread("../../tests/Data/Images/SmestechLab.jpg", cv::IMREAD_COLOR);

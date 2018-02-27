@@ -58,6 +58,12 @@ namespace dfpc_ci {
             virtual void imageInput(FrameWrapper::FrameConstPtr data);
 
             /**
+            * Send value to input port model
+            * @param model, the 3d point cloud of the model
+            */
+            virtual void modelInput(PointCloudWrapper::PointCloudConstPtr data);
+
+            /**
             * Receive value from output port pointCloud
             * @param pointCloud, This is the point cloud representing the 3D scene constructed so far.
             */
@@ -81,6 +87,7 @@ namespace dfpc_ci {
 	 */
         protected:
             FrameWrapper::FrameConstPtr inImage;
+	    PointCloudWrapper::PointCloudConstPtr inModel;
 	    PointCloudWrapper::PointCloudConstPtr outPointCloud;
             PoseWrapper::Pose3DConstPtr outPose;
 	    bool outSuccess;

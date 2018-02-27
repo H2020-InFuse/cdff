@@ -93,6 +93,7 @@
     EnableRefinement: false
     NumberOfThreads: 0
     HarrisMethod: Harris
+    OutputFormat: References
 - Name: featuresDescriptor3d
   Type: FeaturesDescription3D
   Implementation: ShotDescriptor3D
