@@ -300,8 +300,8 @@ void StructureFromMotion::DescribePastFeatures()
 
 void StructureFromMotion::MatchCurrentAndPastFeatures()
 	{
-	featuresMatcher->sourceFeaturesVectorInput(pastFeaturesVector);
-	featuresMatcher->sinkFeaturesVectorInput(currentFeaturesVector);
+	featuresMatcher->sourceFeaturesVectorInput(currentFeaturesVector);
+	featuresMatcher->sinkFeaturesVectorInput(pastFeaturesVector);
 	featuresMatcher->process();
 	DELETE_PREVIOUS(correspondenceMap);
 	correspondenceMap = featuresMatcher->correspondenceMapOutput();	
