@@ -110,7 +110,8 @@ TEST_CASE( "Adding Frame", "[addingFrame]" )
 	Pose3DPtr pose12 = new Pose3D();
 	SetPosition(*pose12, 0, 0, 0);
 	SetOrientation(*pose12, 0, 0, 0, 1);
-	observedScene.AddPointCloud(cloud12, pose12);
+	observedScene.AddPointCloudInLastReference(cloud12);
+	observedScene.AddFramePose(pose12);
 
 	observedScene.AddFrame(frame3);
 	reference = observedScene.GetNextReferenceFrame();
@@ -137,16 +138,19 @@ TEST_CASE( "Adding Point Cloud", "[addingPointCloud]" )
 	ObservedScene observedScene;
 	FramePtr frame1 = new Frame();
 	observedScene.AddFrame(frame1);
+	observedScene.GetNextReferenceFrame();
 
 	FramePtr frame2 = new Frame();
 	observedScene.AddFrame(frame2);
+	observedScene.GetNextReferenceFrame();
 
 	PointCloudPtr cloud12 = new PointCloud();
 	ClearPoints(*cloud12);
 	Pose3DPtr pose12 = new Pose3D();
 	SetPosition(*pose12, 0, 0, 0);
 	SetOrientation(*pose12, 0, 0, 0, 1);
-	observedScene.AddPointCloud(cloud12, pose12);
+	observedScene.AddPointCloudInLastReference(cloud12);
+	observedScene.AddFramePose(pose12);
 
 	Point3D origin;
 	origin.x = 0;
@@ -164,17 +168,32 @@ TEST_CASE( "Translation Transform", "[translation]")
 	ObservedScene observedScene;
 	FramePtr frame1 = new Frame();
 	observedScene.AddFrame(frame1);
+	observedScene.GetNextReferenceFrame();
 
 	FramePtr frame2 = new Frame();
 	observedScene.AddFrame(frame2);
+	observedScene.GetNextReferenceFrame();
 
 	PointCloudPtr cloud12 = new PointCloud();
 	ClearPoints(*cloud12);
-	AddPoint(*cloud12, 1, 1, 1);
 	Pose3DPtr pose12 = new Pose3D();
 	SetPosition(*pose12, 1, 0, 0);
 	SetOrientation(*pose12, 0, 0, 0, 1);
-	observedScene.AddPointCloud(cloud12, pose12);
+	observedScene.AddPointCloudInLastReference(cloud12);
+	observedScene.AddFramePose(pose12);
+
+	FramePtr frame3 = new Frame();
+	observedScene.AddFrame(frame3);
+	observedScene.GetNextReferenceFrame();
+
+	PointCloudPtr cloud23 = new PointCloud();
+	ClearPoints(*cloud23);
+	AddPoint(*cloud23, 1, 1, 1);
+	Pose3DPtr pose23 = new Pose3D();
+	SetPosition(*pose23, 0, 0, 0);
+	SetOrientation(*pose23, 0, 0, 0, 1);
+	observedScene.AddPointCloudInLastReference(cloud23);
+	observedScene.AddFramePose(pose23);
 
 	Point3D origin;
 	origin.x = 0;
@@ -195,17 +214,32 @@ TEST_CASE( "Rotation Transform", "[rotation]")
 	ObservedScene observedScene;
 	FramePtr frame1 = new Frame();
 	observedScene.AddFrame(frame1);
+	observedScene.GetNextReferenceFrame();
 
 	FramePtr frame2 = new Frame();
 	observedScene.AddFrame(frame2);
+	observedScene.GetNextReferenceFrame();
 
 	PointCloudPtr cloud12 = new PointCloud();
 	ClearPoints(*cloud12);
-	AddPoint(*cloud12, 1, 1, 1);
 	Pose3DPtr pose12 = new Pose3D();
 	SetPosition(*pose12, 0, 0, 0);
 	SetOrientation(*pose12, 0, 1, 0, 0);
-	observedScene.AddPointCloud(cloud12, pose12);
+	observedScene.AddPointCloudInLastReference(cloud12);
+	observedScene.AddFramePose(pose12);
+
+	FramePtr frame3 = new Frame();
+	observedScene.AddFrame(frame3);
+	observedScene.GetNextReferenceFrame();
+
+	PointCloudPtr cloud23 = new PointCloud();
+	ClearPoints(*cloud23);
+	AddPoint(*cloud23, 1, 1, 1);
+	Pose3DPtr pose23 = new Pose3D();
+	SetPosition(*pose23, 0, 0, 0);
+	SetOrientation(*pose23, 0, 0, 0, 1);
+	observedScene.AddPointCloudInLastReference(cloud23);
+	observedScene.AddFramePose(pose23);
 
 	Point3D origin;
 	origin.x = 0;
@@ -226,17 +260,32 @@ TEST_CASE( "RotoTranslation Transform", "[rototranslation]")
 	ObservedScene observedScene;
 	FramePtr frame1 = new Frame();
 	observedScene.AddFrame(frame1);
+	observedScene.GetNextReferenceFrame();
 
 	FramePtr frame2 = new Frame();
 	observedScene.AddFrame(frame2);
+	observedScene.GetNextReferenceFrame();
 
 	PointCloudPtr cloud12 = new PointCloud();
 	ClearPoints(*cloud12);
-	AddPoint(*cloud12, 1, 1, 1);
 	Pose3DPtr pose12 = new Pose3D();
 	SetPosition(*pose12, 1, 0, 0);
 	SetOrientation(*pose12, 0, 1, 0, 0);
-	observedScene.AddPointCloud(cloud12, pose12);
+	observedScene.AddPointCloudInLastReference(cloud12);
+	observedScene.AddFramePose(pose12);
+
+	FramePtr frame3 = new Frame();
+	observedScene.AddFrame(frame3);
+	observedScene.GetNextReferenceFrame();
+
+	PointCloudPtr cloud23 = new PointCloud();
+	ClearPoints(*cloud23);
+	AddPoint(*cloud23, 1, 1, 1);
+	Pose3DPtr pose23 = new Pose3D();
+	SetPosition(*pose23, 0, 0, 0);
+	SetOrientation(*pose23, 0, 0, 0, 1);
+	observedScene.AddPointCloudInLastReference(cloud23);
+	observedScene.AddFramePose(pose23);
 
 	Point3D origin;
 	origin.x = 0;

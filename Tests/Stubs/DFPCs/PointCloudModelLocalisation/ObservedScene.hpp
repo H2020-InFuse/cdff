@@ -56,7 +56,8 @@ namespace dfpc_ci {
 		void AddFrame(FrameWrapper::FrameConstPtr frame);
 		FrameWrapper::FrameConstPtr GetNextReferenceFrame();
 
-		void AddPointCloud(PointCloudWrapper::PointCloudConstPtr pointCloud, PoseWrapper::Pose3DConstPtr poseInReference);
+		void AddFramePose(PoseWrapper::Pose3DConstPtr poseInReference);
+		void AddPointCloudInLastReference(PointCloudWrapper::PointCloudConstPtr pointCloudInReference);
 		PointCloudWrapper::PointCloudConstPtr GetPartialScene(BaseTypesWrapper::Point3D origin, float radius);
 		PointCloudWrapper::PointCloudConstPtr GetPartialScene(float radius);
 

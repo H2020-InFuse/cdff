@@ -145,6 +145,20 @@ class AssertException: public std::exception
 		} \
 	}
 
+#ifndef TESTING
+	#define DEBUG_WRITE_TO_LOG(message, value) WRITE_TO_LOG(message, value)
+	#define DEBUG_PRINT_LOG() PRINT_LOG()
+	#define DEBUG_PRINT_TO_LOG(message, value) PRINT_TO_LOG(message, value)
+	#define DEBUG_VERIFY(condition, message) VERIFY(condition, message)
+	#define DEBUG_NOTIFY_ON_EXCEPTION(expression, message) NOTIFY_ON_EXCEPTION(expression, message)
+#else
+	#define DEBUG_WRITE_TO_LOG(message, value)
+	#define DEBUG_PRINT_LOG()
+	#define DEBUG_PRINT_TO_LOG(message, value) 
+	#define DEBUG_VERIFY(condition, message)
+	#define DEBUG_NOTIFY_ON_EXCEPTION(expression, message)
+#endif
+
 /*
 * VIEW_POINT_CLOUD is meant for debugging purposes. 
 * When you use thid function, you should:

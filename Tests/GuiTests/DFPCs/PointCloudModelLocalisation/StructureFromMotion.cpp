@@ -102,31 +102,64 @@ int main(int argc, char** argv)
 	cv::Mat doubleImageA = cv::imread("../../tests/Data/Images/SmestechLabA.jpg", cv::IMREAD_COLOR);
 	cv::Mat doubleImageB = cv::imread("../../tests/Data/Images/SmestechLabB.jpg", cv::IMREAD_COLOR);
 	cv::Mat doubleImageC = cv::imread("../../tests/Data/Images/SmestechLabC.jpg", cv::IMREAD_COLOR);
+	cv::Mat doubleImageD = cv::imread("../../tests/Data/Images/SmestechLabD.jpg", cv::IMREAD_COLOR);
+	cv::Mat doubleImageE = cv::imread("../../tests/Data/Images/SmestechLabE.jpg", cv::IMREAD_COLOR);
+	cv::Mat doubleImageF = cv::imread("../../tests/Data/Images/SmestechLabF.jpg", cv::IMREAD_COLOR);
+	cv::Mat doubleImageG = cv::imread("../../tests/Data/Images/SmestechLabG.jpg", cv::IMREAD_COLOR);
 	
 	cv::Mat firstCvImage = doubleImageA( cv::Rect(0,0,doubleImageA.cols/2,doubleImageA.rows) );
 	cv::Mat secondCvImage = doubleImageB( cv::Rect(0,0,doubleImageB.cols/2,doubleImageB.rows) );
 	cv::Mat thirdCvImage = doubleImageC( cv::Rect(0,0,doubleImageC.cols/2,doubleImageC.rows) );
+	cv::Mat fourthCvImage = doubleImageD( cv::Rect(0,0,doubleImageD.cols/2,doubleImageD.rows) );
+	cv::Mat fifthCvImage = doubleImageE( cv::Rect(0,0,doubleImageE.cols/2,doubleImageE.rows) );
+	cv::Mat sixthCvImage = doubleImageF( cv::Rect(0,0,doubleImageF.cols/2,doubleImageF.rows) );
+	cv::Mat seventhCvImage = doubleImageG( cv::Rect(0,0,doubleImageG.cols/2,doubleImageG.rows) );
 
 	MatToFrameConverter converter;
 	FrameConstPtr firstImage = converter.Convert(firstCvImage);
 	FrameConstPtr secondImage = converter.Convert(secondCvImage);
 	FrameConstPtr thirdImage = converter.Convert(thirdCvImage);
+	FrameConstPtr fourthImage = converter.Convert(fourthCvImage);
+	FrameConstPtr fifthImage = converter.Convert(fifthCvImage);
+	FrameConstPtr sixthImage = converter.Convert(sixthCvImage);
+	FrameConstPtr seventhImage = converter.Convert(seventhCvImage);
 	
-	PRINT_TO_LOG("First Image Input", "");
+	WRITE_TO_LOG("First Image Input", "");
 	structureFromMotion.imageInput(firstImage);
 	structureFromMotion.process();
-	PRINT_TO_LOG("Result", structureFromMotion.successOutput() );
+	WRITE_TO_LOG("Result", structureFromMotion.successOutput() );
 
-	PRINT_TO_LOG("Second Image Input", "");
+	WRITE_TO_LOG("Second Image Input", "");
 	structureFromMotion.imageInput(secondImage);
 	structureFromMotion.process();
-	PRINT_TO_LOG("Result", structureFromMotion.successOutput() );
+	WRITE_TO_LOG("Result", structureFromMotion.successOutput() );
 
-	PRINT_TO_LOG("Third Image Input", "");
+	WRITE_TO_LOG("Third Image Input", "");
 	structureFromMotion.imageInput(thirdImage);
 	structureFromMotion.process();
-	PRINT_TO_LOG("Result", structureFromMotion.successOutput() );
+	WRITE_TO_LOG("Result", structureFromMotion.successOutput() );
 
+	WRITE_TO_LOG("Fourth Image Input", "");
+	structureFromMotion.imageInput(fourthImage);
+	structureFromMotion.process();
+	WRITE_TO_LOG("Result", structureFromMotion.successOutput() );
+
+	WRITE_TO_LOG("Fifth Image Input", "");
+	structureFromMotion.imageInput(fifthImage);
+	structureFromMotion.process();
+	WRITE_TO_LOG("Result", structureFromMotion.successOutput() );
+
+	WRITE_TO_LOG("Sixth Image Input", "");
+	structureFromMotion.imageInput(sixthImage);
+	structureFromMotion.process();
+	WRITE_TO_LOG("Result", structureFromMotion.successOutput() );
+
+	WRITE_TO_LOG("Seventh Image Input", "");
+	structureFromMotion.imageInput(seventhImage);
+	structureFromMotion.process();
+	WRITE_TO_LOG("Result", structureFromMotion.successOutput() );
+
+	PRINT_LOG();
 	PointCloudConstPtr pointCloud = structureFromMotion.pointCloudOutput();
 	if (pointCloud == NULL)
 		{

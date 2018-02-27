@@ -81,17 +81,19 @@ FrameConstPtr ObservedScene::GetNextReferenceFrame()
 	return NULL;
 	}
 
-
-void ObservedScene::AddPointCloud(PointCloudConstPtr pointCloud, Pose3DConstPtr poseInReference)
+void ObservedScene::AddFramePose(PoseWrapper::Pose3DConstPtr poseInReference)
 	{
-	AffineTransform transformInReference = Convert(poseInReference);
-	AffineTransform transformInOrigin = framesMap.at(referenceFrameId).transformInOrigin * transformInReference;
-	framesMap.at( framesMap.size()-1 ).transformInOrigin = transformInOrigin;
+	framesMap.at( framesMap.size()-1 ).transformInOrigin = Convert(poseInReference);
 	framesMap.at( framesMap.size()-1 ).validTransform = true;
+	}
 
-	for(unsigned pointIndex = 0; pointIndex < GetNumberOfPoints(*pointCloud); pointIndex++)
+void ObservedScene::AddPointCloudInLastReference(PointCloudConstPtr pointCloudInReference)
+	{
+	AffineTransform transformInOrigin = framesMap.at(referenceFrameId).transformInOrigin;
+
+	for(unsigned pointIndex = 0; pointIndex < GetNumberOfPoints(*pointCloudInReference); pointIndex++)
 		{
-		pcl::PointXYZ point( GetXCoordinate(*pointCloud, pointIndex), GetYCoordinate(*pointCloud, pointIndex), GetZCoordinate(*pointCloud, pointIndex) );
+		pcl::PointXYZ point( GetXCoordinate(*pointCloudInReference, pointIndex), GetYCoordinate(*pointCloudInReference, pointIndex), GetZCoordinate(*pointCloudInReference, pointIndex) );
 		pcl::PointXYZ pointInOrigin = TransformPoint(point, transformInOrigin);
 		scene->points.push_back(pointInOrigin);
 		}

@@ -78,7 +78,7 @@ StructureFromMotion::StructureFromMotion(Map* map) :
 	optionalFeaturesDescriptor3d = NULL;
 	featuresMatcher3d = NULL;
 
-	searchRadius = 10;
+	searchRadius = 100;
 
 	configurationFilePath = "";
 	}
@@ -102,39 +102,58 @@ StructureFromMotion::~StructureFromMotion()
 
 void StructureFromMotion::process() 
 	{
+	DEBUG_WRITE_TO_LOG("Structure from motion start", "");
 	currentImage = inImage;
 	map->AddFrame(currentImage);
+	DEBUG_WRITE_TO_LOG("Added Frame", "");
 	FilterCurrentImage();
+	DEBUG_WRITE_TO_LOG("Filtered Frame", "");
 	ExtractCurrentFeatures();
+	DEBUG_WRITE_TO_LOG("Extracted Features", GetNumberOfPoints(*currentKeypointsVector) );
 	DescribeCurrentFeatures();
+	DEBUG_WRITE_TO_LOG("Described Features", GetNumberOfPoints(*currentFeaturesVector) );
 
 	bool success = false;
 	for(pastImage = map->GetNextReferenceFrame(); !success && pastImage != NULL; pastImage = map->GetNextReferenceFrame())
 		{
+		DEBUG_WRITE_TO_LOG("Selected Past Frame", success);
 		FilterPastImage();
+		DEBUG_WRITE_TO_LOG("Filtered Frame", "");
 		ExtractPastFeatures();
+		DEBUG_WRITE_TO_LOG("Extracted Features", GetNumberOfPoints(*pastKeypointsVector) );
 		DescribePastFeatures();
+		DEBUG_WRITE_TO_LOG("Described Features", GetNumberOfPoints(*pastFeaturesVector) );
 
 		MatchCurrentAndPastFeatures();
+		DEBUG_WRITE_TO_LOG("Correspondences", GetNumberOfCorrespondences(*correspondenceMap) );
 		success = ComputeFundamentalMatrix();
+		DEBUG_WRITE_TO_LOG("Fundamental Matrix", success);
 		if (success)
 			{
 			success = ComputePastToCurrentTransform();
+			DEBUG_WRITE_TO_LOG("Essential Matrix", success);
 			}
 		if (success)
 			{	
 			ComputePointCloud();	
+			DEBUG_WRITE_TO_LOG("Point Cloud", GetNumberOfPoints(*pointCloud));
 			}
 		}
 
-	outSuccess = success;
-	outPointCloud = pointCloud;
-
 	if (success)
 		{
-		map->AddPointCloud(pointCloud, pastToCurrentCameraTransform);
+		map->AddFramePose(pastToCurrentCameraTransform);
+		map->AddPointCloudInLastReference(pointCloud);
 		sceneCloud = map->GetPartialScene(searchRadius);
+		DEBUG_WRITE_TO_LOG("Scene Cloud", GetNumberOfPoints(*sceneCloud));
+		outPointCloud = sceneCloud;
 		}
+	else
+		{
+		outPointCloud = NULL;
+		}
+
+	outSuccess = success;
 	}
 
 /* --------------------------------------------------------------------------

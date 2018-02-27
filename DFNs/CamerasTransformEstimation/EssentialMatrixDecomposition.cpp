@@ -182,7 +182,7 @@ std::vector<cv::Mat> EssentialMatrixDecomposition::ComputeTransformMatrix(cv::Ma
 
 int EssentialMatrixDecomposition::FindValidTransform(std::vector<cv::Mat> projectionsList, cv::Mat correspondenceMap)
 	{
-	static const float EPSILON = 1e-5;
+	static const float EPSILON = 1e-2;
 
 	int validMatrixIndex = -1;
 	bool validMatrixFound = false;
@@ -190,6 +190,7 @@ int EssentialMatrixDecomposition::FindValidTransform(std::vector<cv::Mat> projec
 		{
 		cv::Mat currentProjectionMatrix = projectionsList.at(matrixIndex);
 		double rotationDeterminant = cv::determinant( currentProjectionMatrix( cv::Rect(0,0,2,2) ));
+		DEBUG_WRITE_TO_LOG("Essential Matrix determinant", rotationDeterminant);
 		bool orientationPreserved = std::abs(rotationDeterminant - 1) < EPSILON;
 		
 		bool matrixIsValid = orientationPreserved && ProjectionMatrixIsValidForTestPoints(currentProjectionMatrix, correspondenceMap);	
@@ -246,6 +247,8 @@ bool EssentialMatrixDecomposition::ProjectionMatrixIsValidForTestPoints(cv::Mat 
 		matrixIsValid = validPointsCount >= testPointsNumber / 2;
 		matrixIsInvalid = invalidPointsCount >= testPointsNumber / 2;
 		}
+	DEBUG_WRITE_TO_LOG("Essential Matrix Valid count", validPointsCount);
+	DEBUG_WRITE_TO_LOG("Essential Matrix Invalid count", invalidPointsCount);
 
 	return matrixIsValid || !matrixIsInvalid;
 	}

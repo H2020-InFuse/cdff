@@ -159,6 +159,6 @@ add_executable(
 set_target_properties(StructureFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
 	StructureFromMotionGuiTest
-	structure_from_motion mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp stub_observed_scene ${VTK_LIBRARIES}
+	structure_from_motion mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp stub_observed_scene ${VTK_LIBRARIES}
 )
 
