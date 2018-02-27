@@ -53,7 +53,8 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-StructureFromMotion::StructureFromMotion()
+StructureFromMotion::StructureFromMotion(Map* map) :
+	map(map)
 	{
 	filteredCurrentImage = NULL;
 	filteredPastImage = NULL;
@@ -76,6 +77,8 @@ StructureFromMotion::StructureFromMotion()
 	featuresExtractor3d = NULL;
 	optionalFeaturesDescriptor3d = NULL;
 	featuresMatcher3d = NULL;
+
+	searchRadius = 10;
 
 	configurationFilePath = "";
 	}
@@ -100,15 +103,14 @@ StructureFromMotion::~StructureFromMotion()
 void StructureFromMotion::process() 
 	{
 	currentImage = inImage;
-	imagesHistory.push_back(currentImage);
+	map->AddFrame(currentImage);
 	FilterCurrentImage();
 	ExtractCurrentFeatures();
 	DescribeCurrentFeatures();
 
 	bool success = false;
-	for(int pastImageIndex = imagesHistory.size()-2; pastImageIndex >= 0 && !success; pastImageIndex--)
+	for(pastImage = map->GetNextReferenceFrame(); !success && pastImage != NULL; pastImage = map->GetNextReferenceFrame())
 		{
-		pastImage = imagesHistory.at(pastImageIndex);
 		FilterPastImage();
 		ExtractPastFeatures();
 		DescribePastFeatures();
@@ -127,6 +129,12 @@ void StructureFromMotion::process()
 
 	outSuccess = success;
 	outPointCloud = pointCloud;
+
+	if (success)
+		{
+		map->AddPointCloud(pointCloud, pastToCurrentCameraTransform);
+		sceneCloud = map->GetPartialScene(searchRadius);
+		}
 	}
 
 /* --------------------------------------------------------------------------

@@ -7,7 +7,7 @@
 
 /*!
  * @file StructureFromMotion.hpp
- * @date 18/02/2018
+ * @date 23/02/2018
  * @author Alessandro Bianco
  */
 
@@ -42,6 +42,8 @@
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 
+#include "Map.hpp"
+
 
 namespace dfpc_ci {
 
@@ -58,7 +60,7 @@ namespace dfpc_ci {
 	 * --------------------------------------------------------------------
 	 */
         public:
-		StructureFromMotion();
+		StructureFromMotion(Map* map);
 		~StructureFromMotion();
 		void process();
 
@@ -73,6 +75,8 @@ namespace dfpc_ci {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		Map* map;
+		float searchRadius;
 
 		dfn_ci::ImageFilteringInterface* filter;
 		dfn_ci::FeaturesExtraction2DInterface* featuresExtractor;
@@ -85,7 +89,6 @@ namespace dfpc_ci {
 		dfn_ci::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
 		dfn_ci::FeaturesMatching3DInterface* featuresMatcher3d;
 
-		std::vector<FrameWrapper::FrameConstPtr> imagesHistory;
 		FrameWrapper::FrameConstPtr pastImage;
 		FrameWrapper::FrameConstPtr currentImage;
 		FrameWrapper::FrameConstPtr filteredPastImage;
@@ -98,6 +101,7 @@ namespace dfpc_ci {
 		MatrixWrapper::Matrix3dConstPtr fundamentalMatrix;
 		PoseWrapper::Pose3DConstPtr pastToCurrentCameraTransform;
 		PointCloudWrapper::PointCloudConstPtr pointCloud;
+		PointCloudWrapper::PointCloudConstPtr sceneCloud;
 		PointCloudWrapper::PointCloudConstPtr modelCloud;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneKeypointsVector;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelKeypointsVector;

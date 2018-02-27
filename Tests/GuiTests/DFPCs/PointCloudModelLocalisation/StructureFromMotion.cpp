@@ -50,6 +50,9 @@
 #include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Mocks/Common/Converters/MatToTransform3DConverter.hpp>
 #include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
+#include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
+
+#include <Stubs/DFPCs/PointCloudModelLocalisation/ObservedScene.hpp>
 
 using namespace dfpc_ci;
 using namespace FrameWrapper;
@@ -85,8 +88,13 @@ int main(int argc, char** argv)
 	Mocks::Pose3DToMatConverter* mockTriangulationPoseConverter = new Mocks::Pose3DToMatConverter();
 	ConversionCache<Pose3DConstPtr, cv::Mat, Pose3DToMatConverter>::Instance(stubTriangulationPoseCache, mockTriangulationPoseConverter);
 
+	Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr>* stubCloudCache = new Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr>;
+	Mocks::PclPointCloudToPointCloudConverter* mockCloudConverter = new Mocks::PclPointCloudToPointCloudConverter();
+	ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Instance(stubCloudCache, mockCloudConverter);
+
 	PRINT_TO_LOG("Configure", "");
-	StructureFromMotion structureFromMotion;
+	Map* map = new ObservedScene();
+	StructureFromMotion structureFromMotion(map);
 	structureFromMotion.setConfigurationFile("../../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcStructureFromMotion_conf01.yaml");
 	structureFromMotion.configure();
 	PRINT_TO_LOG("Configure", "Completed");
