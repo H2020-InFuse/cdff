@@ -162,7 +162,7 @@ void StructureFromMotion::process()
 			ExtractModelFeatures();
 			DescribeModelFeatures();		
 			}
-		//success = EstimateModelPose();
+		success = EstimateModelPose();
 		}
 	else
 		{
@@ -398,6 +398,7 @@ bool StructureFromMotion::EstimateModelPose()
 	featuresMatcher3d->sourceFeaturesVectorInput(modelFeaturesVector);
 	featuresMatcher3d->sinkFeaturesVectorInput(sceneFeaturesVector);
 	DELETE_PREVIOUS(modelPoseInScene);
+	featuresMatcher3d->process();
 	modelPoseInScene = featuresMatcher3d->transformOutput();
 	bool matching3dSuccess = featuresMatcher3d->successOutput();
 	DEBUG_PRINT_TO_LOG("Matching 3d", matching3dSuccess);

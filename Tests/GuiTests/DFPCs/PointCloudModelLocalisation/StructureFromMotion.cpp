@@ -42,6 +42,7 @@
 #include <Pose.hpp>
 #include <PointCloud.hpp>
 
+#include <Converters/SupportTypes.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <Mocks/Common/Converters/FrameToMatConverter.hpp>
@@ -55,6 +56,8 @@
 #include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Mocks/Common/Converters/PointCloudToPclNormalsCloudConverter.hpp>
+#include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.cpp>
+#include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 
 #include <Stubs/DFPCs/PointCloudModelLocalisation/ObservedScene.hpp>
 
@@ -66,6 +69,7 @@ using namespace VisualPointFeatureVector3DWrapper;
 using namespace PoseWrapper;
 using namespace Common;
 using namespace PointCloudWrapper;
+using namespace Converters::SupportTypes;
 
 int main(int argc, char** argv)
 	{
@@ -108,6 +112,14 @@ int main(int argc, char** argv)
 	Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr>* stubInputNormalsCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr>();
 	Mocks::PointCloudToPclNormalsCloudConverter* mockInputNormalsConverter = new Mocks::PointCloudToPclNormalsCloudConverter();
 	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr, PointCloudToPclNormalsCloudConverter>::Instance(stubInputNormalsCache, mockInputNormalsConverter);
+
+	Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>* stubInputCache = new Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>();
+	Mocks::VisualPointFeatureVector3DToPclPointCloudConverter* mockInputConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
+	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
+
+	Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>* stubOutputCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
+	Mocks::EigenTransformToTransform3DConverter* mockOutputConverter = new Mocks::EigenTransformToTransform3DConverter();
+	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 
 	WRITE_TO_LOG("Configure", "");
 	Map* map = new ObservedScene();

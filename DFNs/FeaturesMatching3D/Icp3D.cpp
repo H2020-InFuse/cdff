@@ -84,6 +84,15 @@ void Icp3D::configure()
 
 void Icp3D::process() 
 	{
+	if ( GetNumberOfPoints(*inSourceFeaturesVector) == 0 || GetNumberOfPoints(*inSinkFeaturesVector) == 0)
+		{
+		outSuccess = false;
+		Transform3DPtr transform = new Transform3D();
+		Reset(*transform);
+		outTransform = transform;
+		return;
+		}
+
 	PointCloudWithFeatures inputSourceCloud = 
 		ConversionCache<VisualPointFeatureVector3DConstPtr, SupportTypes::PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Convert(inSourceFeaturesVector);
 	PointCloudWithFeatures inputSinkCloud = 

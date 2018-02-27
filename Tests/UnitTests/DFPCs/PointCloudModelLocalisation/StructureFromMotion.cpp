@@ -50,6 +50,7 @@
 #include <VisualPointFeatureVector2D.hpp>
 #include <Pose.hpp>
 
+#include <Converters/SupportTypes.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <Mocks/Common/Converters/FrameToMatConverter.hpp>
@@ -63,6 +64,8 @@
 #include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Mocks/Common/Converters/PointCloudToPclNormalsCloudConverter.hpp>
+#include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.cpp>
+#include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 
 #include <Stubs/DFPCs/PointCloudModelLocalisation/ObservedScene.hpp>
 
@@ -74,6 +77,7 @@ using namespace VisualPointFeatureVector3DWrapper;
 using namespace PoseWrapper;
 using namespace Common;
 using namespace PointCloudWrapper;
+using namespace Converters::SupportTypes;
 
 
 /* --------------------------------------------------------------------------
@@ -133,6 +137,15 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 	Mocks::PointCloudToPclNormalsCloudConverter* mockInputNormalsConverter = new Mocks::PointCloudToPclNormalsCloudConverter();
 	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr, PointCloudToPclNormalsCloudConverter>::Instance(stubInputNormalsCache, mockInputNormalsConverter);
 
+	Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>* stubInputCache = new Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>();
+	Mocks::VisualPointFeatureVector3DToPclPointCloudConverter* mockInputConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
+	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
+
+	Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>* stubOutputCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
+	Mocks::EigenTransformToTransform3DConverter* mockOutputConverter = new Mocks::EigenTransformToTransform3DConverter();
+	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubOutputCache, mockOutputConverter);
+
+
 	Map* map = new ObservedScene();
 	StructureFromMotion structureFromMotion(map);
 	structureFromMotion.setConfigurationFile("../../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcStructureFromMotion_conf01.yaml");
@@ -175,7 +188,7 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 
 	structureFromMotion.imageInput(secondImage);
 	structureFromMotion.process();
-	REQUIRE( structureFromMotion.successOutput() == true);
+	REQUIRE( structureFromMotion.successOutput() == false);
 	}
 
 

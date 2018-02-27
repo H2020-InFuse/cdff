@@ -85,6 +85,15 @@ void Ransac3D::configure()
 
 void Ransac3D::process() 
 	{
+	if ( GetNumberOfPoints(*inSourceFeaturesVector) == 0 || GetNumberOfPoints(*inSinkFeaturesVector) == 0)
+		{
+		outSuccess = false;
+		Transform3DPtr transform = new Transform3D();
+		Reset(*transform);
+		outTransform = transform;
+		return;
+		}
+
 	PointCloudWithFeatures inputSourceCloud = 
 		ConversionCache<VisualPointFeatureVector3DConstPtr, SupportTypes::PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Convert(inSourceFeaturesVector);
 	PointCloudWithFeatures inputSinkCloud = 
@@ -134,7 +143,6 @@ Transform3DConstPtr Ransac3D::ComputeTransform(Converters::SupportTypes::PointCl
 	if (outSuccess)
 		{
 		Eigen::Matrix4f eigenTransform = ransac->getFinalTransformation();
-		PRINT_TO_LOG("Matrix ", eigenTransform);
 		return ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Convert(eigenTransform);
 		}
 	else
