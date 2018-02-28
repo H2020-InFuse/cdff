@@ -17,6 +17,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 
 # directory where the files will be build and installed
+SOURCE_DIR="$(readlink -m $DIR"/../../External/source")"
 BUILD_DIR="$(readlink -m $DIR"/../../External/build")"
 INSTALL_DIR="$(readlink -m $DIR"/../../External/install")"
 PKG_DIR="$(readlink -m $DIR"/../../External/package")"
@@ -105,6 +106,7 @@ function run_installers {
   mkdir -p $BUILD_DIR
   mkdir -p $INSTALL_DIR
   mkdir -p $PKG_DIR
+  mkdir -p $SOURCE_DIR
 
   cd $BUILD_DIR
   for i in "${InstallersToRUN[@]}"
@@ -128,11 +130,11 @@ fi
 
 function fetchsource_function {
 	echo "Fetching $1"
-  mkdir -p $BUILD_DIR/$1
-  cd $BUILD_DIR/$1
+  mkdir -p $SOURCE_DIR/$1
+  cd $SOURCE_DIR/$1
 	wget $3$2
   if [ ${2: -7} == ".tar.gz" ];then
-	 tar xf $2
+	 tar xf $2 -C $SOURCE_DIR/$1
    rm $2
    cd ${2%.tar.gz}
   fi
@@ -141,7 +143,7 @@ function fetchsource_function {
 
 function fetchgit_function {
 	echo "Checking out $1"
-	git -C $DIR clone --depth 1 --single-branch --recursive -b $2 $3
+	git -C $SOURCE_DIR clone --depth 1 --single-branch --recursive -b $2 $3
 	mkdir -p $BUILD_DIR/$1
 	cd $BUILD_DIR/$1
   echo "Done. $1 Checked out."
@@ -149,7 +151,7 @@ function fetchgit_function {
 
 function clean_function {
   echo "Cleaning $1."
-	rm -rf $DIR/$1
+	rm -rf $SOURCE_DIR/$1
 	rm -rf $BUILD_DIR/$1
 	echo "$1 cleanup done."
 }
