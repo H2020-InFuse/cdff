@@ -60,6 +60,8 @@
 #include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 
 #include <Stubs/DFPCs/PointCloudModelLocalisation/ObservedScene.hpp>
+#include <Visualizers/OpencvVisualizer.hpp>
+#include <Visualizers/PclVisualizer.hpp>
 
 using namespace dfpc_ci;
 using namespace FrameWrapper;
@@ -73,6 +75,9 @@ using namespace Converters::SupportTypes;
 
 int main(int argc, char** argv)
 	{
+	Visualizers::OpencvVisualizer::Enable();
+	Visualizers::PclVisualizer::Enable();
+
 	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubFrameCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
 	Mocks::FrameToMatConverter* mockFrameConverter = new Mocks::FrameToMatConverter();
 	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubFrameCache, mockFrameConverter);

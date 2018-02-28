@@ -14,5 +14,5 @@ add_library(
 )
 target_link_libraries(
     structure_from_motion
-    point_cloud_model_localisation cdff_types yaml-cpp cdff_helpers
+    point_cloud_model_localisation cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer
 )

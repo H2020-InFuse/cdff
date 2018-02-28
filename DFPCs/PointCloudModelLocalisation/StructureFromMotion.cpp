@@ -28,6 +28,8 @@
  */
 #include "StructureFromMotion.hpp"
 #include "Errors/Assert.hpp"
+#include <Visualizers/OpencvVisualizer.hpp>
+#include <Visualizers/PclVisualizer.hpp>
 
 #define DELETE_PREVIOUS(object) \
 	{ \
@@ -332,6 +334,7 @@ void StructureFromMotion::MatchCurrentAndPastFeatures()
 	DELETE_PREVIOUS(correspondenceMap);
 	correspondenceMap = featuresMatcher->correspondenceMapOutput();	
 	DEBUG_PRINT_TO_LOG("Correspondences", GetNumberOfCorrespondences(*correspondenceMap) );
+	DEBUG_SHOW_2D_CORRESPONDENCES(filteredCurrentImage, filteredPastImage, correspondenceMap);
 	}
 
 bool StructureFromMotion::ComputeFundamentalMatrix()
@@ -342,6 +345,10 @@ bool StructureFromMotion::ComputeFundamentalMatrix()
 	fundamentalMatrix = fundamentalMatrixComputer->fundamentalMatrixOutput();	
 	bool fundamentalMatrixSuccess =  fundamentalMatrixComputer->successOutput();
 	DEBUG_PRINT_TO_LOG("Fundamental Matrix", fundamentalMatrixSuccess);
+	if(fundamentalMatrixSuccess)
+		{
+		DEBUG_SHOW_MATRIX(fundamentalMatrix);
+		}
 	return fundamentalMatrixSuccess;
 	}
 
@@ -354,6 +361,10 @@ bool StructureFromMotion::ComputePastToCurrentTransform()
 	pastToCurrentCameraTransform = cameraTransformEstimator->transformOutput();
 	bool essentialMatrixSuccess = cameraTransformEstimator->successOutput();
 	DEBUG_PRINT_TO_LOG("Essential Matrix", essentialMatrixSuccess);
+	if(essentialMatrixSuccess)
+		{
+		DEBUG_SHOW_POSE(pastToCurrentCameraTransform);
+		}
 	return essentialMatrixSuccess;
 	}
 
@@ -365,15 +376,17 @@ void StructureFromMotion::ComputePointCloud()
 	DELETE_PREVIOUS(pointCloud);
 	pointCloud = reconstructor3D->pointCloudOutput();
 	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*pointCloud));
+	DEBUG_SHOW_POINT_CLOUD(pointCloud);
 	}
 
 void StructureFromMotion::ExtractSceneFeatures()
 	{
-	featuresExtractor3d->pointCloudInput(pointCloud);
+	featuresExtractor3d->pointCloudInput(sceneCloud);
 	featuresExtractor3d->process();
 	DELETE_PREVIOUS(sceneKeypointsVector);
 	sceneKeypointsVector = featuresExtractor3d->featuresSetOutput();
 	DEBUG_PRINT_TO_LOG("Extracted Scene Features", GetNumberOfPoints(*sceneKeypointsVector));
+	DEBUG_SHOW_3D_VISUAL_FEATURES(sceneCloud, sceneKeypointsVector);
 	}
 
 void StructureFromMotion::ExtractModelFeatures()
@@ -383,6 +396,7 @@ void StructureFromMotion::ExtractModelFeatures()
 	DELETE_PREVIOUS(modelKeypointsVector);
 	modelKeypointsVector = featuresExtractor3d->featuresSetOutput();
 	DEBUG_PRINT_TO_LOG("Extracted Model Features", GetNumberOfPoints(*modelKeypointsVector));
+	DEBUG_SHOW_3D_VISUAL_FEATURES(lastModelCloud, modelKeypointsVector);
 	}
 
 void StructureFromMotion::DescribeSceneFeatures()
@@ -428,6 +442,10 @@ bool StructureFromMotion::EstimateModelPose()
 	modelPoseInScene = featuresMatcher3d->transformOutput();
 	bool matching3dSuccess = featuresMatcher3d->successOutput();
 	DEBUG_PRINT_TO_LOG("Matching 3d", matching3dSuccess);
+	if(matching3dSuccess)
+		{
+		DEBUG_SHOW_POSE(modelPoseInScene);
+		}
 	return matching3dSuccess;
 	}
 }
