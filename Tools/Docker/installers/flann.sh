@@ -6,9 +6,9 @@
 depends_flann=eigen;
 
 function install4infuse_flann {
-if [[ ! -n $(find $DIR/package/ -name 'flann*') ]]; then
+if [[ ! -n $(find $PKG_DIR -name 'flann*') ]]; then
 	fetchgit_function flann 1.9.1 https://github.com/mariusmuja/flann.git
-	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_TESTS=OFF -D BUILD_EXAMPLES=OFF $DIR/flann
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR -D BUILD_TESTS=OFF -D BUILD_EXAMPLES=OFF $SOURCE_DIR/flann
 	make
 	install_function 1.9.1
 	clean_function flann
