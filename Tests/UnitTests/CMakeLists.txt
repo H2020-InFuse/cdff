@@ -235,7 +235,7 @@ target_link_libraries(
 	StructureFromMotionTest
 	cdff_helpers cdff_logger structure_from_motion opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock stub_observed_scene boost_system
 )
-add_test(StructureFromMotionTest StructureFromMotionTest)
+#add_test(StructureFromMotionTest StructureFromMotionTest)
 
 add_executable(
     ObservedSceneTest

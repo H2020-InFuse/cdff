@@ -33,19 +33,6 @@ test:
   script:
       - cp -rf /CDFF/External/install ./External/install
       - cd build
-      - cd Tests
-      - dir
-      - cd tests
-      - dir
-      - cd ConfigurationFiles
-      - dir
-      - cd DFPCs
-      - dir
-      - cd PointCloudModelLocalisation
-      - dir
-      - cd ../../../../..
-      - cd Tests/UnitTests
-      - .StructureFromMotionTest
       - make test
 
 deploy_staging:
