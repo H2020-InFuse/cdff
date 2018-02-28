@@ -33,6 +33,11 @@ test:
   script:
       - cp -rf /CDFF/External/install ./External/install
       - cd build
+      - cd Tests
+      - cd ConfigurationFiles/DFPCs
+      - dir 
+      - cd PointCloudModelLocalisation
+      - dir
       - ./Tests/UnitTests/DFPCs/StructureFromMotionTest
       - make test
 
