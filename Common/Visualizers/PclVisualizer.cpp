@@ -35,6 +35,7 @@ using namespace PointCloudWrapper;
 using namespace Converters;
 using namespace Common;
 using namespace VisualPointFeatureVector3DWrapper;
+using namespace PoseWrapper;
 
 #define RETURN_IF_DISABLED \
 	if (!enabled) \
@@ -127,6 +128,25 @@ void PclVisualizer::ShowVisualFeatures(PointCloudConstPtr pointCloud, VisualPoin
 	ShowPointClouds(pointCloudsList);
 	}
 
+void PclVisualizer::PlacePointCloud(PointCloudConstPtr sceneCloud, PointCloudConstPtr objectCloud, Pose3DConstPtr objectPoseInScene)
+	{
+	RETURN_IF_DISABLED
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclSceneCloud=ConversionCache<PointCloudConstPtr,pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(sceneCloud);	
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclObjectCloud=ConversionCache<PointCloudConstPtr,pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(objectCloud);	
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr transformedObject(new pcl::PointCloud<pcl::PointXYZ>() );
+	for(unsigned pointIndex = 0; pointIndex < pclObjectCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ transformedPoint = TransformPoint( pclObjectCloud->points.at(pointIndex), objectPoseInScene );
+		transformedObject->points.push_back(transformedPoint);
+		}
+
+	std::vector< pcl::PointCloud<pcl::PointXYZ>::ConstPtr > pointsCloudList;
+	pointsCloudList.push_back(pclSceneCloud);
+	pointsCloudList.push_back(transformedObject);
+	ShowPointClouds(pointsCloudList);
+	}
+
 void PclVisualizer::Enable()
 	{
 	enabled = true;
@@ -170,6 +190,27 @@ const PclVisualizer::Color PclVisualizer::COLORS_LIST[MAX_POINT_CLOUDS] =
 	};
 bool PclVisualizer::enabled = false;
 
+
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Methods
+ *
+ * --------------------------------------------------------------------------
+ */
+pcl::PointXYZ PclVisualizer::TransformPoint(pcl::PointXYZ point, Transform3DConstPtr transform)
+	{
+	Eigen::Quaternion<float> rotation(GetWRotation(*transform), GetXRotation(*transform), GetYRotation(*transform), GetZRotation(*transform));
+	Eigen::Translation<float, 3> translation( GetXPosition(*transform), GetYPosition(*transform), GetZPosition(*transform));
+	Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> affineTransform = translation * rotation;
+
+	Eigen::Vector3f eigenPoint(point.x, point.y, point.z);
+	Eigen::Vector3f eigenTransformedPoint = affineTransform * eigenPoint;
+	pcl::PointXYZ transformedPoint;
+	transformedPoint.x = eigenTransformedPoint.x();
+	transformedPoint.y = eigenTransformedPoint.y();
+	transformedPoint.z = eigenTransformedPoint.z();
+	return transformedPoint;
+	}
 }
 /** @} */
 

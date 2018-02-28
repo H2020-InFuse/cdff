@@ -445,6 +445,7 @@ bool StructureFromMotion::EstimateModelPose()
 	if(matching3dSuccess)
 		{
 		DEBUG_SHOW_POSE(modelPoseInScene);
+		DEBUG_PLACE_POINT_CLOUD(sceneCloud, lastModelCloud, modelPoseInScene);
 		}
 	return matching3dSuccess;
 	}

@@ -36,6 +36,7 @@
 
 #include <PointCloud.hpp>
 #include <VisualPointFeatureVector3D.hpp>
+#include <Pose.hpp>
 
 namespace Visualizers
 {
@@ -56,6 +57,8 @@ class PclVisualizer
 		static void ShowPointClouds(std::vector< pcl::PointCloud<pcl::PointXYZ>::ConstPtr > pointCloudsList);
 		static void ShowPointCloud(PointCloudWrapper::PointCloudConstPtr pointCloud);
 		static void ShowVisualFeatures(PointCloudWrapper::PointCloudConstPtr pointCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr featuresVector);
+
+		static void PlacePointCloud(PointCloudWrapper::PointCloudConstPtr sceneCloud, PointCloudWrapper::PointCloudConstPtr objectCloud, PoseWrapper::Pose3DConstPtr objectPoseInScene);
 
 		static void Enable();
 		static void Disable();
@@ -82,6 +85,8 @@ class PclVisualizer
 		static const unsigned MAX_POINT_CLOUDS = 10;
 		static const Color COLORS_LIST[MAX_POINT_CLOUDS];
 		static bool enabled;
+
+		static pcl::PointXYZ TransformPoint(pcl::PointXYZ point, PoseWrapper::Transform3DConstPtr transform);
 	};
 
 }
@@ -96,10 +101,12 @@ class PclVisualizer
 		#define DEBUG_SHOW_POINT_CLOUD(pointCloud)
 		#define DEBUG_SHOW_POINT_CLOUDS(pointCloudsList)
 		#define DEBUG_SHOW_3D_VISUAL_FEATURES(pointCloud, featuresVector)
+		#define DEBUG_PLACE_POINT_CLOUD(scene, object, objectPose)
 	#else
 		#define DEBUG_SHOW_POINT_CLOUD(pointCloud) Visualizers::PclVisualizer::ShowPointCloud(pointCloud)
 		#define DEBUG_SHOW_POINT_CLOUDS(pointCloudsList) Visualizers::PclVisualizer::ShowPointClouds(pointCloudsList)
 		#define DEBUG_SHOW_3D_VISUAL_FEATURES(pointCloud, featuresVector) Visualizers::PclVisualizer::ShowVisualFeatures(pointCloud, featuresVector)
+		#define DEBUG_PLACE_POINT_CLOUD(scene, object, objectPose) Visualizers::PclVisualizer::PlacePointCloud(scene, object, objectPose)
 	#endif
 
 #endif
