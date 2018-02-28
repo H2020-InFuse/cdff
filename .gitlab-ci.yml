@@ -33,6 +33,7 @@ test:
   script:
       - cp -rf /CDFF/External/install ./External/install
       - cd build
+      - ./Tests/UnitTests/StructureFromMotionTest
       - make test
 
 deploy_staging:

@@ -54,7 +54,9 @@ void DFNsChainInterface::configure()
 	{
 	try
 		{
+		PRINT_TO_LOG("folder path", configurationFilePath);
 		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
+		PRINT_TO_LOG("Success", configurationFilePath);
 		SplitConfigurationFile(configuration);
 		if (dfnsSet.empty())
 			{
@@ -113,6 +115,7 @@ void DFNsChainInterface::ConstructDFNs(YAML::Node configuration)
 void DFNsChainInterface::SplitConfigurationFile(YAML::Node configuration)
 	{
 	std::string folderPath = ComputeConfigurationFolderPath();
+	PRINT_TO_LOG("folder path", folderPath);
 
 	for(unsigned dfnIndex = 0; dfnIndex < configuration.size(); dfnIndex++)
 		{
@@ -121,6 +124,8 @@ void DFNsChainInterface::SplitConfigurationFile(YAML::Node configuration)
 
 		std::stringstream nodeFileStream;
 		nodeFileStream << folderPath << "/DFN_" << dfnName << ".yaml";
+		std::string string = nodeFileStream.str();
+		PRINT_TO_LOG("file path", string);
 
 		YAML::Node parametersNode = dfnNode["Parameters"];
 
@@ -151,8 +156,10 @@ void DFNsChainInterface::ConfigureDfns()
 		std::string dfnName = dfnsIterator->first;
 		DFNCommonInterface* dfn = dfnsIterator->second;
 		ASSERT( configurationFilesSet.find(dfnName) != configurationFilesSet.end(), "DFNsChainInterface Error: no configuration file set for a dfn");
+		PRINT_TO_LOG("configuring", configurationFilesSet[dfnName]);
 		dfn->setConfigurationFile( configurationFilesSet[dfnName] );
 		dfn->configure();
+		PRINT_TO_LOG("Success", "");
 		}
 	}
 
