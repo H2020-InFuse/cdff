@@ -44,7 +44,8 @@ test:
       - cd PointCloudModelLocalisation
       - dir
       - cd ../../../../..
-      - ./Tests/UnitTests/StructureFromMotionTest
+      - cd Tests/UnitTests
+      - .StructureFromMotionTest
       - make test
 
 deploy_staging:
