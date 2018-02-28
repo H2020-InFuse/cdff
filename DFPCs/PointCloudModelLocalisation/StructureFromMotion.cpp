@@ -120,6 +120,40 @@ StructureFromMotion::~StructureFromMotion()
 void StructureFromMotion::process() 
 	{
 	DEBUG_PRINT_TO_LOG("Structure from motion start", "");
+	bool success = ComputeCloudInSight();
+
+	if (success)
+		{
+		UpdateScene();
+		outPointCloud = sceneCloud;
+		success = LookForModel();
+		}
+	else
+		{
+		outPointCloud = NULL;
+		}
+
+	if (success)
+		{
+		outPose = modelPoseInScene;
+		}
+	else
+		{
+		outPose = NULL;
+		}
+
+	outSuccess = success;
+	}
+
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Functions
+ *
+ * --------------------------------------------------------------------------
+ */
+
+bool StructureFromMotion::ComputeCloudInSight()
+	{
 	currentImage = inImage;
 	map->AddFrame(currentImage);
 	FilterCurrentImage();
@@ -146,43 +180,33 @@ void StructureFromMotion::process()
 			}
 		}
 
-	if (success)
-		{
-		map->AddFramePose(pastToCurrentCameraTransform);
-		map->AddPointCloudInLastReference(pointCloud);
-		DELETE_PREVIOUS(sceneCloud);
-		sceneCloud = map->GetPartialScene(searchRadius);
-		DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*sceneCloud));
-		outPointCloud = sceneCloud;
-		ExtractSceneFeatures();
-		DescribeSceneFeatures();
-		if (lastModelCloud != inModel)
-			{
-			lastModelCloud = inModel;
-			ExtractModelFeatures();
-			DescribeModelFeatures();		
-			}
-		success = EstimateModelPose();
-		}
-	else
-		{
-		outPointCloud = NULL;
-		}
-
-	if (success)
-		{
-		outPose = modelPoseInScene;
-		}
-
-	outSuccess = success;
+	return success;
 	}
 
-/* --------------------------------------------------------------------------
- *
- * Private Member Functions
- *
- * --------------------------------------------------------------------------
- */
+void StructureFromMotion::UpdateScene()
+	{
+	map->AddFramePose(pastToCurrentCameraTransform);
+	map->AddPointCloudInLastReference(pointCloud);
+	DELETE_PREVIOUS(sceneCloud);
+	sceneCloud = map->GetPartialScene(searchRadius);
+	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*sceneCloud));
+	}
+
+bool StructureFromMotion::LookForModel()
+	{
+	outPointCloud = sceneCloud;
+	ExtractSceneFeatures();
+	DescribeSceneFeatures();
+	if (lastModelCloud != inModel)
+		{
+		lastModelCloud = inModel;
+		ExtractModelFeatures();
+		DescribeModelFeatures();		
+		}
+	bool success = EstimateModelPose();
+	return success;
+	}
+
 void StructureFromMotion::AssignDfnsAlias()
 	{
 	unsigned dfnNumber = dfnsSet.size();
@@ -199,6 +223,7 @@ void StructureFromMotion::AssignDfnsAlias()
 	if (dfnsSet.find("featuresDescriptor") != dfnsSet.end() )
 		{
 		optionalFeaturesDescriptor = static_cast<FeaturesDescription2DInterface*>(dfnsSet["featuresDescriptor"]);
+		ASSERT(optionalFeaturesDescriptor != NULL, "DFPC Structure from motion error: featuresDescriptor DFN configured incorrectly");
 		optionalDFNsSet++;
 		}
 	else
@@ -212,6 +237,7 @@ void StructureFromMotion::AssignDfnsAlias()
 	if (dfnsSet.find("featuresDescriptor3d") != dfnsSet.end() )
 		{
 		optionalFeaturesDescriptor3d = static_cast<FeaturesDescription3DInterface*>(dfnsSet["featuresDescriptor3d"]);
+		ASSERT(optionalFeaturesDescriptor3d != NULL, "DFPC Structure from motion error: featuresDescriptor3d DFN configured incorrectly");
 		optionalDFNsSet++;
 		}
 	else

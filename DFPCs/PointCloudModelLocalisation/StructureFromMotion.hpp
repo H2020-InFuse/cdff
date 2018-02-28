@@ -111,6 +111,10 @@ namespace dfpc_ci {
 
 		void AssignDfnsAlias();
 
+		bool ComputeCloudInSight();
+		void UpdateScene();
+		bool LookForModel();
+
 		void FilterCurrentImage();
 		void FilterPastImage();
 		void ExtractCurrentFeatures();
