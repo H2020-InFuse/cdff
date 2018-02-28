@@ -91,7 +91,7 @@ TEST_CASE( "Success Call to Configure", "[configureSuccess]" )
 	{
 	Map* map = new ObservedScene();
 	StructureFromMotion structureFromMotion(map);
-	structureFromMotion.setConfigurationFile("../../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcStructureFromMotion_conf01.yaml");
+	structureFromMotion.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcStructureFromMotion_conf01.yaml");
 	structureFromMotion.configure();
 	}
 
@@ -148,12 +148,12 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 
 	Map* map = new ObservedScene();
 	StructureFromMotion structureFromMotion(map);
-	structureFromMotion.setConfigurationFile("../../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcStructureFromMotion_conf01.yaml");
+	structureFromMotion.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcStructureFromMotion_conf01.yaml");
 	structureFromMotion.configure();
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclModelCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::io::loadPLYFile("../../tests/Data/PointClouds/bunny0.ply", *pclCloud);
+	pcl::io::loadPLYFile("../tests/Data/PointClouds/bunny0.ply", *pclCloud);
 	const unsigned SELECTION_RATIO = 10;
 	unsigned selectionCounter = 0;
 	for(unsigned pointIndex = 0; pointIndex < pclCloud->points.size(); pointIndex++)
@@ -172,8 +172,8 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 	PointCloudConstPtr modelCloud = pclConverter.Convert(pclModelCloud);
 	structureFromMotion.modelInput(modelCloud);
 
-	cv::Mat doubleImage1 = cv::imread("../../tests/Data/Images/SmestechLabA.jpg", cv::IMREAD_COLOR);
-	cv::Mat doubleImage2 = cv::imread("../../tests/Data/Images/SmestechLabB.jpg", cv::IMREAD_COLOR);
+	cv::Mat doubleImage1 = cv::imread("../tests/Data/Images/SmestechLabA.jpg", cv::IMREAD_COLOR);
+	cv::Mat doubleImage2 = cv::imread("../tests/Data/Images/SmestechLabB.jpg", cv::IMREAD_COLOR);
 	
 	cv::Mat firstCvImage = doubleImage1( cv::Rect(0,0,doubleImage1.cols/2,doubleImage1.rows) );
 	cv::Mat secondCvImage = doubleImage2( cv::Rect(0,0,doubleImage1.cols/2,doubleImage1.rows) );

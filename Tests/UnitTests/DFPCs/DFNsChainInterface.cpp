@@ -77,10 +77,10 @@ class DFNsChain : public DFNsChainInterface
 TEST_CASE( "Success Call to Configure", "[configureSuccess]" ) 
 	{
 	DFNsChain dfnsChain;
-	dfnsChain.setConfigurationFile("../../tests/ConfigurationFiles/DFPCs/dfns_chain_conf01.yaml");
+	dfnsChain.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/dfns_chain_conf01.yaml");
 	dfnsChain.configure();
 
-	YAML::Node dfn0Node= YAML::LoadFile( "../../tests/ConfigurationFiles/DFPCs/DFN_ZedImageUndistortion.yaml" );
+	YAML::Node dfn0Node= YAML::LoadFile( "../tests/ConfigurationFiles/DFPCs/DFN_ZedImageUndistortion.yaml" );
 	REQUIRE(  dfn0Node[0]["Name"].as<std::string>() == "GeneralParameters") ;
 	REQUIRE(  dfn0Node[0]["NumberOfTestPoints"].as<int>() == 20) ;
 
@@ -96,7 +96,7 @@ TEST_CASE( "Success Call to Configure", "[configureSuccess]" )
 	REQUIRE_CLOSE(  dfn0Node[2]["PrinciplePointX"].as<float>(), 0.0) ;
 	REQUIRE_CLOSE(  dfn0Node[2]["PrinciplePointY"].as<float>(), 0.0) ;
 
-	YAML::Node dfn1Node= YAML::LoadFile( "../../tests/ConfigurationFiles/DFPCs/DFN_3dDescriptor.yaml" );
+	YAML::Node dfn1Node= YAML::LoadFile( "../tests/ConfigurationFiles/DFPCs/DFN_3dDescriptor.yaml" );
 	REQUIRE(  dfn1Node[0]["Name"].as<std::string>() == "GeneralParameters") ;
 	REQUIRE_CLOSE(  dfn1Node[0]["LocalReferenceFrameEstimationRadius"].as<float>(), 0.1) ;
 	REQUIRE(  dfn1Node[0]["OutputFormat"].as<std::string>() == "Positions") ;
