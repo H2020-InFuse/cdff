@@ -34,7 +34,12 @@ test:
       - cp -rf /CDFF/External/install ./External/install
       - cd build
       - cd Tests
-      - cd ConfigurationFiles/DFPCs
+      - dir
+      - cd tests
+      - dir
+      - cd ConfigurationFiles
+      - dir
+      - cd DFPCs
       - dir 
       - cd PointCloudModelLocalisation
       - dir
