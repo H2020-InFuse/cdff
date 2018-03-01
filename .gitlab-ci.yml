@@ -39,21 +39,6 @@ cmake test:
   stage: test
   script:
       - cd build
-      - cd Tests
-      - cd tests
-      - cd ConfigurationFiles
-      - cd DFPCs
-      - cd PointCloudModelLocalisation
-      - dir
-      - cd ..
-      - cd ..
-      - cd ..
-      - cd ..
-      - cd ..
-      - cd Tests
-      - cd UnitTests
-      - dir
-      - ./StructureFromMotionTest
       - make test
       
 deploy_staging:
