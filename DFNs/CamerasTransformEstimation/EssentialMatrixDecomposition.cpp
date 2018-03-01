@@ -182,7 +182,7 @@ std::vector<cv::Mat> EssentialMatrixDecomposition::ComputeTransformMatrix(cv::Ma
 
 int EssentialMatrixDecomposition::FindValidTransform(std::vector<cv::Mat> projectionsList, cv::Mat correspondenceMap)
 	{
-	static const float EPSILON = 1e-5;
+	static const float EPSILON = 1e-2;
 
 	int validMatrixIndex = -1;
 	bool validMatrixFound = false;

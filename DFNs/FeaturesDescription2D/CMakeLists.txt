@@ -9,5 +9,5 @@ add_library(
 )
 target_link_libraries(
     orb_descriptor
-    feature_description_2d cdff_types yaml-cpp cdff_helpers opencv_features2d
+    feature_description_2d cdff_types yaml-cpp cdff_helpers opencv_features2d opencv_core converters_opencv
 )

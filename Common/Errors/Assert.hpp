@@ -145,42 +145,19 @@ class AssertException: public std::exception
 		} \
 	}
 
-/*
-* VIEW_POINT_CLOUD is meant for debugging purposes. 
-* When you use thid function, you should:
-* 1) Include the following file: #include <pcl/visualization/pcl_visualizer.h>
-* 2) Link the following libraries: pcl_visualization vtkRenderingCore-8.0 vtkCommonDataModel-8.0 vtkCommonMath-8.0 vtkCommonCore-8.0 boost_system
-*/
-
-#define VIEW_POINT_CLOUD(pointType, pointCloud) \
-	{ \
-	pcl::visualization::PCLVisualizer viewer ("test view"); \
-    	pcl::visualization::PointCloudColorHandlerCustom< pointType > pclCloudColor(pointCloud, 255, 255, 255); \
-    	viewer.addPointCloud(pointCloud, pclCloudColor, "input"); \
-	\
-    	while (!viewer.wasStopped ()) \
-    		{ \
-        	viewer.spinOnce(); \
-        	pcl_sleep (0.01); \
-    		} \
-	}
-
-#define VIEW_3_POINT_CLOUDS(pointType, pointCloud1, pointCloud2, pointCloud3) \
-	{ \
-	pcl::visualization::PCLVisualizer viewer ("test view"); \
-    	pcl::visualization::PointCloudColorHandlerCustom< pointType > pclCloudColor1(pointCloud1, 255, 255, 255); \
-    	pcl::visualization::PointCloudColorHandlerCustom< pointType > pclCloudColor2(pointCloud2, 255, 255, 0); \
-    	pcl::visualization::PointCloudColorHandlerCustom< pointType > pclCloudColor3(pointCloud3, 255, 0, 0); \
-    	viewer.addPointCloud(pointCloud1, pclCloudColor1, "input1"); \
-    	viewer.addPointCloud(pointCloud2, pclCloudColor2, "input2"); \
-    	viewer.addPointCloud(pointCloud3, pclCloudColor3, "input3"); \
-	\
-    	while (!viewer.wasStopped ()) \
-    		{ \
-        	viewer.spinOnce(); \
-        	pcl_sleep (0.01); \
-    		} \
-	}
+#ifndef TESTING
+	#define DEBUG_WRITE_TO_LOG(message, value)
+	#define DEBUG_PRINT_LOG()
+	#define DEBUG_PRINT_TO_LOG(message, value) 
+	#define DEBUG_VERIFY(condition, message)
+	#define DEBUG_NOTIFY_ON_EXCEPTION(expression, message)
+#else
+	#define DEBUG_WRITE_TO_LOG(message, value) WRITE_TO_LOG(message, value)
+	#define DEBUG_PRINT_LOG() PRINT_LOG()
+	#define DEBUG_PRINT_TO_LOG(message, value) PRINT_TO_LOG(message, value)
+	#define DEBUG_VERIFY(condition, message) VERIFY(condition, message)
+	#define DEBUG_NOTIFY_ON_EXCEPTION(expression, message) NOTIFY_ON_EXCEPTION(expression, message)
+#endif
 
 #endif
 

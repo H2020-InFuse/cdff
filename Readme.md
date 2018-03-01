@@ -15,6 +15,10 @@ See https://docs.google.com/document/d/1jQ8I3lRKLel6BT5Fac5twtjzZ0SiQrc9rK23v-3N
 
 https://docs.google.com/document/d/1hFTRKgJNN3n_brT3aajMA03AR_jQ2eCo-ZM33ggY5cE/edit
 
+## DFPC Coding Guidelines
+
+https://docs.google.com/document/d/1ZUhZPnedd1mO42y-q4N7USltOnKeZzbyyZz_yzpLsmk/edit
+
 ## Externals (aka 3rd party dependencies)
 See [Third party readme] (/External/Readme.md)
 

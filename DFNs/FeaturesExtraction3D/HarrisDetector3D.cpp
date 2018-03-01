@@ -60,6 +60,7 @@ HarrisDetector3D::HarrisDetector3D()
 	parametersHelper.AddParameter<bool>("GeneralParameters", "EnableRefinement", parameters.enableRefinement, DEFAULT_PARAMETERS.enableRefinement);
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfThreads", parameters.numberOfThreads, DEFAULT_PARAMETERS.numberOfThreads);
 	parametersHelper.AddParameter<HarrisMethod, HarrisMethodHelper>("GeneralParameters", "HarrisMethod", parameters.method, DEFAULT_PARAMETERS.method);
+	parametersHelper.AddParameter<OutputFormat, OutputFormatHelper>("GeneralParameters", "OutputFormat", parameters.outputFormat, DEFAULT_PARAMETERS.outputFormat);
 
 	configurationFilePath = "";
 	}
@@ -81,8 +82,28 @@ void HarrisDetector3D::process()
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputPointCloud = 
 		ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inPointCloud);
 	ValidateInputs(inputPointCloud);
-	cv::Mat harrisPoints = ComputeHarrisPoints(inputPointCloud);
-	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Convert(harrisPoints);
+	pcl::PointIndicesConstPtr harrisPoints = ComputeHarrisPoints(inputPointCloud);
+	outFeaturesSet = Convert(inputPointCloud, harrisPoints);
+	}
+
+HarrisDetector3D::OutputFormatHelper::OutputFormatHelper(const std::string& parameterName, OutputFormat& boundVariable, const OutputFormat& defaultValue) :
+	ParameterHelper(parameterName, boundVariable, defaultValue)
+	{
+
+	}
+
+HarrisDetector3D::OutputFormat HarrisDetector3D::OutputFormatHelper::Convert(const std::string& outputFormat)
+	{
+	if (outputFormat == "Positions" || outputFormat == "0")
+		{
+		return POSITIONS_OUTPUT;
+		}
+	else if (outputFormat == "References" || outputFormat == "1")
+		{
+		return REFERENCES_OUTPUT;
+		}
+	ASSERT(false, "ShotDescriptor3d Error: unhandled output format");
+	return POSITIONS_OUTPUT;
 	}
 
 HarrisDetector3D::HarrisMethodHelper::HarrisMethodHelper(const std::string& parameterName, HarrisMethod& boundVariable, const HarrisMethod& defaultValue) :
@@ -125,11 +146,12 @@ const HarrisDetector3D::HarryOptionsSet HarrisDetector3D::DEFAULT_PARAMETERS
 	.detectionThreshold = 0,
 	.enableRefinement = false,
 	.numberOfThreads = 0,
-	.method = pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS
+	.method = pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS,
+	.outputFormat = POSITIONS_OUTPUT,
 	};
 
 
-cv::Mat HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
+pcl::PointIndicesConstPtr HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
 	{
 	pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI> detector; 
     	detector.setNonMaxSupression (parameters.nonMaxSuppression);
@@ -145,26 +167,27 @@ cv::Mat HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::Co
 
     	pcl::PointCloud<pcl::PointXYZI>::Ptr keypoints = boost::make_shared<pcl::PointCloud<pcl::PointXYZI> >();
     	detector.compute(*keypoints); 
-	
-	std::vector<unsigned> validIndicesVector;
-	for(unsigned pointIndex = 0; pointIndex < keypoints->points.size(); pointIndex++)
-		{
-		bool validPoint = keypoints->points.at(pointIndex).x == keypoints->points.at(pointIndex).x &&
-				  keypoints->points.at(pointIndex).y == keypoints->points.at(pointIndex).y &&
-				  keypoints->points.at(pointIndex).z == keypoints->points.at(pointIndex).z;
-		if (validPoint)
-			validIndicesVector.push_back(pointIndex);
-		}	
-	
-	cv::Mat featuresVector(validIndicesVector.size(), 3, CV_32FC1, cv::Scalar(0));
-	for(unsigned indexPosition = 0; indexPosition < validIndicesVector.size(); indexPosition++)
-		{
-		unsigned validIndex = validIndicesVector.at(indexPosition);
-		featuresVector.at<float>(indexPosition, 0) = keypoints->points.at(validIndex).x;
-		featuresVector.at<float>(indexPosition, 1) = keypoints->points.at(validIndex).y;
-		featuresVector.at<float>(indexPosition, 2) = keypoints->points.at(validIndex).z;
-		}
+	pcl::PointIndicesConstPtr harrisPoints = detector.getKeypointsIndices();
 
+	return harrisPoints;
+	}
+
+VisualPointFeatureVector3DConstPtr HarrisDetector3D::Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, const pcl::PointIndicesConstPtr indicesList)
+	{
+	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
+	ClearPoints(*featuresVector);
+	for(unsigned pointIndex = 0; pointIndex < indicesList->indices.size(); pointIndex++)
+		{
+		if (parameters.outputFormat == POSITIONS_OUTPUT)
+			{
+			pcl::PointXYZ point = inputCloud->points.at(indicesList->indices.at(pointIndex));
+			AddPoint(*featuresVector, point.x, point.y, point.z);
+			}
+		else if (parameters.outputFormat == REFERENCES_OUTPUT)
+			{
+			AddPoint(*featuresVector, indicesList->indices.at(pointIndex) );
+			}
+		}
 	return featuresVector;
 	}
 
@@ -178,7 +201,14 @@ void HarrisDetector3D::ValidateParameters()
 
 void HarrisDetector3D::ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
 	{
-
+	for(unsigned pointIndex; pointIndex < pointCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ point = pointCloud->points.at(pointIndex);
+		if (point.x != point.x || point.y != point.y || point.z != point.z)
+			{
+			ASSERT(false, "HarrisDetector3D Error: Invalid point in input point cloud");
+			}
+		}
 	}
 
 

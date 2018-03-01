@@ -73,7 +73,18 @@ namespace dfn_ci {
 	 */	
 	private:
 		
-		Helpers::ParametersListHelper parametersHelper;
+		enum OutputFormat
+			{
+			POSITIONS_OUTPUT,
+			REFERENCES_OUTPUT
+			};
+		class OutputFormatHelper : public Helpers::ParameterHelper<OutputFormat, std::string>
+			{
+			public:
+				OutputFormatHelper(const std::string& parameterName, OutputFormat& boundVariable, const OutputFormat& defaultValue);
+			private:
+				OutputFormat Convert(const std::string& value);
+			};
 
 		typedef pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::ResponseMethod HarrisMethod;
 		class HarrisMethodHelper : public Helpers::ParameterHelper<HarrisMethod, std::string>
@@ -93,12 +104,15 @@ namespace dfn_ci {
 			bool enableRefinement;
 			int numberOfThreads;
 			HarrisMethod method;
+			OutputFormat outputFormat;
 			};
 
+		Helpers::ParametersListHelper parametersHelper;
 		HarryOptionsSet parameters;
 		static const HarryOptionsSet DEFAULT_PARAMETERS;
 
-		cv::Mat ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
+		pcl::PointIndicesConstPtr ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, const pcl::PointIndicesConstPtr indicesList);
 
 		void ValidateParameters();
 		void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);

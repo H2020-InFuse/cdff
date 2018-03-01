@@ -43,6 +43,7 @@
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
 #include<pcl/io/ply_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
+#include <Visualizers/PclVisualizer.hpp>
 
 
 using namespace dfn_ci;
@@ -81,8 +82,17 @@ HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(std::string dfnName
 	SetDFN(harris);
 
 	PclPointCloudToPointCloudConverter converter;
+	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::io::loadPLYFile("../../tests/Data/PointClouds/bunny0.ply", *pclCloud);
+	pcl::io::loadPLYFile("../../tests/Data/PointClouds/bunny0.ply", *basePclCloud);
+	for(unsigned pointIndex = 0; pointIndex < basePclCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ point = basePclCloud->points.at(pointIndex);
+		if (point.x == point.x && point.y == point.y && point.z == point.z)
+			{
+			pclCloud->points.push_back(point);
+			}
+		}
 	inputCloud = converter.Convert(pclCloud);
 	harris->pointCloudInput(inputCloud);
 	outputWindowName = "Harris Detector 3D Result";
@@ -128,24 +138,8 @@ void HarrisDetector3DTestInterface::DisplayResult()
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
 	PRINT_TO_LOG("Number of feature points: ", GetNumberOfPoints(*featuresVector) );
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr featuresCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
-		{
-		pcl::PointXYZ newPoint(GetXCoordinate(*featuresVector, pointIndex), GetYCoordinate(*featuresVector, pointIndex), GetZCoordinate(*featuresVector, pointIndex) );
-		featuresCloud->points.push_back(newPoint);
-		}
-
-	pcl::visualization::PCLVisualizer viewer (outputWindowName);
-    	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclCloudColor(pclCloud, 255, 255, 255);
-    	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> featuresCloudColor(featuresCloud, 255, 0, 0);
-    	viewer.addPointCloud(pclCloud,pclCloudColor,"input");
-    	viewer.addPointCloud(featuresCloud,featuresCloudColor,"keypoints");
-
-    	while (!viewer.wasStopped ())
-    		{
-        	viewer.spinOnce();
-        	pcl_sleep (0.01);
-    		} 
+	Visualizers::PclVisualizer::Enable();
+	Visualizers::PclVisualizer::ShowVisualFeatures(inputCloud, featuresVector);
 
 	delete(featuresVector);
 	}

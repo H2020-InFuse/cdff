@@ -103,6 +103,7 @@ TEST_CASE( "Call to process", "[process]" )
 
 	ShotDescriptor3D shot;
 	shot.pointCloudInput(new PointCloud());
+	shot.normalsCloudInput(new PointCloud());
 	shot.featuresSetInput(inputFeaturesVector);
 	shot.process();
 
