@@ -175,8 +175,12 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 	cv::Mat doubleImage1 = cv::imread("../tests/Data/Images/SmestechLabA.jpg", cv::IMREAD_COLOR);
 	cv::Mat doubleImage2 = cv::imread("../tests/Data/Images/SmestechLabB.jpg", cv::IMREAD_COLOR);
 	
-	cv::Mat firstCvImage = doubleImage1( cv::Rect(0,0,doubleImage1.cols/2,doubleImage1.rows) );
-	cv::Mat secondCvImage = doubleImage2( cv::Rect(0,0,doubleImage1.cols/2,doubleImage1.rows) );
+	unsigned startColumn = doubleImage1.cols/8;
+	unsigned startRow = doubleImage1.rows/4;
+	unsigned columnsSelection = doubleImage1.cols/4;
+	unsigned rowsSelection = doubleImage1.rows/2;
+	cv::Mat firstCvImage = doubleImage1( cv::Rect(startColumn, startRow, columnsSelection, rowsSelection) );
+	cv::Mat secondCvImage = doubleImage2( cv::Rect(startColumn, startRow, columnsSelection, rowsSelection) );
 
 	MatToFrameConverter converter;
 	FrameConstPtr firstImage = converter.Convert(firstCvImage);
