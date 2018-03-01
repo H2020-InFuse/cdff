@@ -1,11 +1,27 @@
 ## Externals (aka 3rd_party libraries)
-In order to install the required dependencies:
-Run fetch_compile_install_dependencies.sh. from the /External folder, 
+### Recommendation 
+It is recommended you install "checkinstall". This helps keeping track of manually installed dependencies. 
+
+### Automatic script
+
+In order to install the required dependencies run 
+```
+$ CDFF/External/fetch_compile_install_dependencies.sh 
+```
 This will install all the required dependencies into /External/install.
 This will *not* override your system libraries.  
+The script fetches the sources, compiles and installs them for each dependency neede by Infuse 
 
-To only install a specific dependency run
-fetch_compile_install_dependencies.sh -s XXXX specific library
+To only install a specific dependency run :
+```
+$ CDFF/External/fetch_compile_install_dependencies.sh -s pcl
+Found infuse installers for : eigen tinyxml2 cmake pcl opencv vtk qhull yaml-cpp flann boost
+Dependencies that will be BUILT : pcl 
+build directory    = PATH_TO_CDFF/External/build
+install directory  = PATH_TO_CDFF/External/install
+Packages directory = PATH_TO_CDFF/External/package
+```
+fetch_compile_install_dependencies.sh ? provides help.
 
 ### Warning !
 The root CMakeLists.txt uses FindPkgConfig to find current dependencies. 
