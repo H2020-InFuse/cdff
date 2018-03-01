@@ -42,8 +42,10 @@ cmake test:
       - cd Tests
       - cd tests
       - cd ConfigurationFiles
+      - cd DFPCs
       - cd PointCloudModelLocalisation
       - dir
+      - cd ..
       - cd ..
       - cd ..
       - cd ..
