@@ -24,17 +24,18 @@ See [Third party readme] (/External/Readme.md)
 
 ## Fetching sources and building 
     git clone https://gitlab.spaceapplications.com/InFuse/CDFF.git
+
 ### Get all dependencies first: 
-    cd /CDFF/External/
+    cd CDFF/External/
     ./fetch_compile_install_dependencies.sh
   
 ### Build CDFF with
-    /$ mkdir /CDFF/build && cd /CDFF/build
+    $ mkdir CDFF/build && cd CDFF/build
     $ cmake -DCMAKE_INSTALL_PREFIX=./ ..
     $ make install
 
 ### Now you can run the tests
-    /CDFF/build$ make test
+    CDFF/build$ make test
 
 ### ASN.1 Datatypes
 On first build, Cmake will run /Tools/ASNToC/FetcherScript.sh. 
