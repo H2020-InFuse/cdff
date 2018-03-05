@@ -30,7 +30,7 @@ If your distribution already provides system libraries, FindPkgConfig might pick
 In a close future, an environnement variable will be used to correct this on mixed systems.   
 
 ## Current dependencies :
-- Boost 1.61.0
+- Boost 1.66.0
 - eigen 3.3.4
 - flann 1.9.1
 - opencv 3.4.0
