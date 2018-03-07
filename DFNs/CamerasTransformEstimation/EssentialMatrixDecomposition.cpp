@@ -165,7 +165,7 @@ cv::Mat EssentialMatrixDecomposition::Convert(CorrespondenceMap2DConstPtr corres
 	}
 
 std::vector<cv::Mat> EssentialMatrixDecomposition::ComputeTransformMatrix(cv::Mat fundamentalMatrix)
-	{
+	{		
 	cv::Mat essentialMatrix = secondCameraMatrix.t() * fundamentalMatrix * firstCameraMatrix;
 
 	cv::Mat firstRotationMatrix, secondRotationMatrix, translationMatrix;
@@ -211,6 +211,15 @@ int EssentialMatrixDecomposition::FindValidTransform(std::vector<cv::Mat> projec
 
 bool EssentialMatrixDecomposition::ProjectionMatrixIsValidForTestPoints(cv::Mat projectionMatrix, cv::Mat correspondenceMap)
 	{
+	static const float EPSILON = 1e-2;
+
+	double rotationDeterminant = cv::determinant( projectionMatrix(cv::Rect(0,0,3,3)) );
+	int rotationDeterminantSign = rotationDeterminant >= 0 ? 1 : -1;
+	double principleRayX = projectionMatrix.at<double>(2, 0);
+	double principleRayY = projectionMatrix.at<double>(2, 1);
+	double principleRayZ = projectionMatrix.at<double>(2, 2);
+	double principleRayNorm = std::sqrt (principleRayX*principleRayX + principleRayY*principleRayY + principleRayZ*principleRayZ);
+
 	cv::Mat identityProjection(3, 4, CV_64FC1, cv::Scalar(0));
 	identityProjection.at<double>(0,0) = 1;
 	identityProjection.at<double>(1,1) = 1;
@@ -233,8 +242,22 @@ bool EssentialMatrixDecomposition::ProjectionMatrixIsValidForTestPoints(cv::Mat 
 	unsigned invalidPointsCount = 0;
 	for(unsigned pointIndex = 0; pointIndex < testPointCloudMatrix.cols && !matrixIsValid && !matrixIsInvalid; pointIndex++)
 		{
-		float z = testPointCloudMatrix.at<double>(2, pointIndex) / testPointCloudMatrix.at<double>(3, pointIndex);
-		bool validPoint = (z == z) && (!std::isinf(z)) && (z >= 0);
+		cv::Mat testPoint = testPointCloudMatrix(cv::Rect(pointIndex, 0, 1, 4));
+		cv::Mat projectedPoint = projectionMatrix * testPoint;
+		float t = testPoint.at<double>(3, 0);
+		float w = projectedPoint.at<double>(2, 0);
+		double depth = (rotationDeterminantSign * w ) / (t * principleRayNorm);
+
+		double scale = 4;
+		cv::Mat scaledTestPoint = scale * testPoint;
+		cv::Mat scaledProjectedPoint = projectionMatrix * scaledTestPoint;
+		double scaledT = scaledTestPoint.at<double>(3, 0);
+		double scaledW = scaledProjectedPoint.at<double>(2, 0);
+		double scaledDepth = (rotationDeterminantSign * scaledW ) / (scaledT * principleRayNorm);
+
+		//float z = testPointCloudMatrix.at<double>(2, pointIndex) / testPointCloudMatrix.at<double>(3, pointIndex);
+		//bool validPoint = (z == z) && (!std::isinf(z)) && (z >= 0);
+		bool validPoint = (depth < scaledDepth + EPSILON && depth > scaledDepth - EPSILON && depth > 0);
 		if (validPoint)
 			{
 			validPointsCount++;

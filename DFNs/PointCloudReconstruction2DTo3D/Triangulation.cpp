@@ -163,6 +163,7 @@ cv::Mat Triangulation::ConvertAtPose(CorrespondenceMap2DConstPtr correspondenceM
 
 PointCloudConstPtr Triangulation::Convert(cv::Mat homogeneousPointCloudMatrix)
 	{
+	static const float EPSILON = 1e-6;
 	PointCloudPtr pointCloud = new PointCloud();
 	ClearPoints(*pointCloud);
 
@@ -172,7 +173,7 @@ PointCloudConstPtr Triangulation::Convert(cv::Mat homogeneousPointCloudMatrix)
 		float homogeneousPointY = homogeneousPointCloudMatrix.at<float>(1, pointIndex);
 		float homogeneousPointZ = homogeneousPointCloudMatrix.at<float>(2, pointIndex);
 		float homogeneousPointFactor = homogeneousPointCloudMatrix.at<float>(3, pointIndex);
-		if (homogeneousPointFactor == 0)
+		if ( std::abs(homogeneousPointFactor) < EPSILON)
 			{
 			AddPoint(*pointCloud, 0, 0, 0);
 			}

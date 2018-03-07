@@ -42,6 +42,7 @@
 #include <ConversionCache/ConversionCache.hpp>
 #include <Errors/Assert.hpp>
 #include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
+#include <DataGenerators/SyntheticGenerators/CameraPair.hpp>
 
 using namespace dfn_ci;
 using namespace Common;
@@ -51,6 +52,83 @@ using namespace PoseWrapper;
 using namespace PointCloudWrapper;
 using namespace MatrixWrapper;
 using namespace CorrespondenceMap2DWrapper;
+using namespace DataGenerators;
+/* --------------------------------------------------------------------------
+ *
+ * Test Class
+ *
+ * --------------------------------------------------------------------------
+ */
+class TriangulationTest 
+	{
+	public:
+		static void RandomCorrespondencesTest(PoseWrapper::Pose3DConstPtr secondCameraPose, unsigned numberOfCorrespondences = 20);
+
+	private:
+		static const double EPSILON;
+		static Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>* stubTriangulationPoseCache;
+		static Mocks::Pose3DToMatConverter* mockTriangulationPoseConverter;
+
+		static void SetupMocksAndStubs();
+		static void ValidateOutput(PointCloudConstPtr output, cv::Mat pointCloud);
+	};
+
+void TriangulationTest::RandomCorrespondencesTest(PoseWrapper::Pose3DConstPtr secondCameraPose, unsigned numberOfCorrespondences)
+	{
+	SetupMocksAndStubs();
+
+	CameraPair cameraPair;
+	cameraPair.SetSecondCameraPose(secondCameraPose);
+
+	cv::Mat cvFundamentalMatrix = cameraPair.GetFundamentalMatrix();
+	cv::Mat pointCloud;
+	CorrespondenceMap2DConstPtr input = cameraPair.GetSomeRandomCorrespondences(numberOfCorrespondences, pointCloud);
+
+	Triangulation triangulation;
+	triangulation.correspondenceMapInput(input);
+	triangulation.poseInput(secondCameraPose);
+	triangulation.process();
+
+	PointCloudConstPtr output = triangulation.pointCloudOutput();
+	ValidateOutput(output, pointCloud);
+	
+	delete(input);
+	delete(output);
+	}
+
+const double TriangulationTest::EPSILON = 0.0001;
+Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>* TriangulationTest::stubTriangulationPoseCache = NULL;
+Mocks::Pose3DToMatConverter* TriangulationTest::mockTriangulationPoseConverter = NULL;
+
+void TriangulationTest::SetupMocksAndStubs()
+	{
+	static bool setupDone = false;
+	if (setupDone)
+		{
+		return;
+		}
+	setupDone = true;
+
+	stubTriangulationPoseCache = new Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>();
+	mockTriangulationPoseConverter = new Mocks::Pose3DToMatConverter();
+	ConversionCache<Pose3DConstPtr, cv::Mat, Pose3DToMatConverter>::Instance(stubTriangulationPoseCache, mockTriangulationPoseConverter);
+	}
+
+#define REQUIRE_CLOSE(a, b) \
+	REQUIRE( a <= b + EPSILON); \
+	REQUIRE( a >= b - EPSILON); \
+
+void TriangulationTest::ValidateOutput(PointCloudConstPtr output, cv::Mat pointCloud)
+	{
+	REQUIRE ( GetNumberOfPoints(*output) == pointCloud.cols );
+
+	for(unsigned pointIndex = 0; pointIndex < pointCloud.cols; pointIndex++)
+		{
+		REQUIRE_CLOSE( pointCloud.at<float>(0, pointIndex), GetXCoordinate(*output, pointIndex) );
+		REQUIRE_CLOSE( pointCloud.at<float>(1, pointIndex), GetYCoordinate(*output, pointIndex) );
+		REQUIRE_CLOSE( pointCloud.at<float>(2, pointIndex), GetZCoordinate(*output, pointIndex) );
+		}
+	}
 
 /* --------------------------------------------------------------------------
  *
@@ -58,59 +136,37 @@ using namespace CorrespondenceMap2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Success Call to process", "[processSuccess]" ) 
+TEST_CASE( "Success Call to process for translation", "[processTranslation]" ) 
 	{
-	Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>* stubTriangulationPoseCache = new Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>();
-	Mocks::Pose3DToMatConverter* mockTriangulationPoseConverter = new Mocks::Pose3DToMatConverter();
-	ConversionCache<Pose3DConstPtr, cv::Mat, Pose3DToMatConverter>::Instance(stubTriangulationPoseCache, mockTriangulationPoseConverter);
+	Pose3DPtr secondCameraPose = new Pose3D();
+	SetPosition(*secondCameraPose, 1, 0, 0);
+	SetOrientation(*secondCameraPose, 0, 0, 0, 1);
 
-	const double EPSILON = 0.001;
-	const unsigned NUMBER_OF_CORRESPONDENCES = 15;
-	//These are fundamental matrix elements:
-	const double F11 = -0.00310695;
-	const double F12 = -0.0025646 ;
-	const double F13 = 2.96584;
-	const double F21 = -0.028094;
-	const double F22 = -0.00771621;
-	const double F23 = 56.3813;
-	const double F31 = 13.1905 ;
-	const double F32 = -29.2007;
-	const double F33 = -9999.79;
+	TriangulationTest::RandomCorrespondencesTest(secondCameraPose, 20);
 
-	CorrespondenceMap2DPtr input = new CorrespondenceMap2D();
-	for(unsigned index = 0; index < NUMBER_OF_CORRESPONDENCES; index++)
-		{		
-		double indexDouble = (double)index;
-		Point2D sink;
-		sink.x = std::sqrt(indexDouble)*10;
-		sink.y = indexDouble;
+	delete(secondCameraPose);
+	}
 
-		double cx = sink.x * F11 + sink.y * F21 + F31;
-		double cy = sink.x * F12 + sink.y * F22 + F32;
-		double c = sink.x * F13 + sink.y * F23 + F33;
+TEST_CASE( "Success Call to process for rototranslation", "[processRototranslation]" ) 
+	{
+	Pose3DPtr secondCameraPose = new Pose3D();
+	SetPosition(*secondCameraPose, 1, 0, 0);
+	SetOrientation(*secondCameraPose, 0, 0, 1, 0);
 
-		Point2D source;
-		source.y = indexDouble;
-		source.x = -(c + (source.y)*cy)/cx;
+	TriangulationTest::RandomCorrespondencesTest(secondCameraPose, 20);
 
-		AddCorrespondence(*input, source, sink, 1);
-		}
+	delete(secondCameraPose);
+	}
 
-	Pose3DPtr pose = new Pose3D();
-	SetPosition(*pose, 0, 0, 0);
-	SetOrientation(*pose, 0, 0, 0, 1);
+TEST_CASE( "Success Call to process for rototranslation 2", "[processRototranslation2]" ) 
+	{
+	Pose3DPtr secondCameraPose = new Pose3D();
+	SetPosition(*secondCameraPose, 1, 1, 0);
+	SetOrientation(*secondCameraPose, 0, 0, std::sin(M_PI/4), std::sin(M_PI/4));
 
-	Triangulation triangulation;
-	triangulation.correspondenceMapInput(input);
-	triangulation.poseInput(pose);
-	triangulation.process();
+	TriangulationTest::RandomCorrespondencesTest(secondCameraPose, 20);
 
-	PointCloudConstPtr output = triangulation.pointCloudOutput();
-	REQUIRE ( GetNumberOfPoints(*output) == GetNumberOfCorrespondences(*input) );
-	
-	delete(input);
-	delete(pose);
-	delete(output);
+	delete(secondCameraPose);
 	}
 
 /** @} */

@@ -68,7 +68,7 @@ add_executable(
 )
 target_link_libraries(
 	FundamentalMatrixRansacTest
-	mock cdff_logger cdff_types fundamental_matrix_ransac  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+	mock cdff_logger cdff_types fundamental_matrix_ransac  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs synthetic_generators
 )
 add_test(FundamentalMatrixRansacTest FundamentalMatrixRansacTest)
 
@@ -78,7 +78,7 @@ add_executable(
 )
 target_link_libraries(
 	EssentialMatrixDecompositionTest
-	mock cdff_logger cdff_types cdff_helpers essential_matrix_decomposition  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+	mock cdff_logger cdff_types cdff_helpers essential_matrix_decomposition  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs synthetic_generators
 )
 add_test(EssentialMatrixDecompositionTest EssentialMatrixDecompositionTest)
 
@@ -97,7 +97,7 @@ add_executable(
 )
 target_link_libraries(
 	TriangulationTest
-	mock cdff_logger cdff_types triangulation  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+	mock cdff_logger cdff_types triangulation  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs synthetic_generators
 )
 add_test(TriangulationTest TriangulationTest)
 
