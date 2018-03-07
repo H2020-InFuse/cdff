@@ -1,0 +1,3 @@
+- Name: GeneralParameters
+  OutlierThreshold: 1
+  Confidence: 0.99

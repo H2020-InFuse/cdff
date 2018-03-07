@@ -45,6 +45,8 @@
 #include <Mocks/Common/Converters/FrameToMatConverter.hpp>
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Errors/Assert.hpp>
+#include <time.h>
+#include <DataGenerators/SyntheticGenerators/CameraPair.hpp>
 
 using namespace dfn_ci;
 using namespace Common;
@@ -52,77 +54,50 @@ using namespace Converters;
 using namespace BaseTypesWrapper;
 using namespace MatrixWrapper;
 using namespace CorrespondenceMap2DWrapper;
+using namespace DataGenerators;
+using namespace PoseWrapper;
 
 /* --------------------------------------------------------------------------
  *
- * Test Cases
+ * Test Class
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Success Call to process", "[processSuccess]" ) 
+class FundamentalMatrixTest 
 	{
-	const double EPSILON = 0.001;
-	const unsigned NUMBER_OF_CORRESPONDENCES = 15;
-	//These are fundamental matrix elements:
-	const double F11 = -0.00310695;
-	const double F12 = -0.0025646 ;
-	const double F13 = 2.96584;
-	const double F21 = -0.028094;
-	const double F22 = -0.00771621;
-	const double F23 = 56.3813;
-	const double F31 = 13.1905 ;
-	const double F32 = -29.2007;
-	const double F33 = -9999.79;
+	public:
+		static void RandomCorrespondencesTest(PoseWrapper::Pose3DConstPtr secondCameraPose, unsigned numberOfCorrespondences = 20);
+		static void FailureTest();
 
-	CorrespondenceMap2DPtr input = new CorrespondenceMap2D();
-	for(unsigned index = 0; index < NUMBER_OF_CORRESPONDENCES; index++)
-		{		
-		double indexDouble = (double)index;
-		Point2D sink;
-		sink.x = std::sqrt(indexDouble)*10;
-		sink.y = indexDouble;
+	private:
+		static const double EPSILON;
 
-		double cx = sink.x * F11 + sink.y * F21 + F31;
-		double cy = sink.x * F12 + sink.y * F22 + F32;
-		double c = sink.x * F13 + sink.y * F23 + F33;
+		static void ValidateOutput(MatrixWrapper::Matrix3dConstPtr output, cv::Mat cvFundamentalMatrix);
+	};
 
-		Point2D source;
-		source.y = indexDouble;
-		source.x = -(c + (source.y)*cy)/cx;
+void FundamentalMatrixTest::RandomCorrespondencesTest(PoseWrapper::Pose3DConstPtr secondCameraPose, unsigned numberOfCorrespondences)
+	{
+	CameraPair cameraPair;
+	cameraPair.SetSecondCameraPose(secondCameraPose);
 
-		AddCorrespondence(*input, source, sink, 1);
-		}
+	cv::Mat cvFundamentalMatrix = cameraPair.GetFundamentalMatrix();
+	CorrespondenceMap2DConstPtr input = cameraPair.GetSomeRandomCorrespondences(numberOfCorrespondences);
 
 	FundamentalMatrixRansac ransac;
+	ransac.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac_Conf2.yaml");
+	ransac.configure();
+
 	ransac.correspondenceMapInput(input);
 	ransac.process();
 
 	Matrix3dConstPtr output = ransac.fundamentalMatrixOutput();
-	bool success = ransac.successOutput();
-	
+	bool success = ransac.successOutput();	
 	REQUIRE(success == true);
 
-	unsigned inliersCount = 0;
-	for(unsigned index = 0; index < NUMBER_OF_CORRESPONDENCES; index++)
-		{
-		Point2D source = GetSource(*input, index);
-		Point2D sink = GetSink(*input, index);
-		
-		double cx = sink.x * GetElement(*output, 0, 0) + sink.y * GetElement(*output, 1, 0) + GetElement(*output, 2, 0);
-		double cy = sink.x * GetElement(*output, 0, 1) + sink.y * GetElement(*output, 1, 1) + GetElement(*output, 2, 1);
-		double c = sink.x * GetElement(*output, 0, 2) + sink.y * GetElement(*output, 1, 2) + GetElement(*output, 2, 2);
-
-		double total = cx * source.x + cy * source.y + c; 
-	
-		REQUIRE( total < EPSILON);
-		REQUIRE( total > -EPSILON);				
-		}
-	
-	delete(input);
-	delete(output);
+	ValidateOutput(output, cvFundamentalMatrix);
 	}
 
-TEST_CASE( "Fail Call to process", "[processFail]" ) 
+void FundamentalMatrixTest::FailureTest()
 	{
 	CorrespondenceMap2DPtr input = new CorrespondenceMap2D();
 	for(unsigned index = 0; index < 15; index++)
@@ -145,11 +120,103 @@ TEST_CASE( "Fail Call to process", "[processFail]" )
 	delete(output);
 	}
 
+const double FundamentalMatrixTest::EPSILON = 0.0001;
+
+#define REQUIRE_CLOSE(a, b) \
+	REQUIRE( a <= b + EPSILON); \
+	REQUIRE( a >= b - EPSILON); \
+
+void FundamentalMatrixTest::ValidateOutput(Matrix3dConstPtr output, cv::Mat cvFundamentalMatrix)
+	{
+	bool commonFactorFound = false;
+	float commonFactor = 0;
+	for(unsigned row = 0; row < 3; row++)
+		{
+		for (unsigned column = 0; column < 3; column++)
+			{
+			bool resultCloseToZero = GetElement(*output, row, column) > -EPSILON && GetElement(*output, row, column) < -EPSILON;
+			if (resultCloseToZero)
+				{
+				bool fundamentalCloseToZero = cvFundamentalMatrix.at<float>(row, column) > -EPSILON && cvFundamentalMatrix.at<float>(row, column) < EPSILON;
+				REQUIRE(fundamentalCloseToZero == true);
+				}
+			else
+				{
+				if (!commonFactorFound)
+					{
+					commonFactor = cvFundamentalMatrix.at<float>(row, column) / GetElement(*output, row, column);
+					}
+				else
+					{
+					float scaledResult = commonFactor * GetElement(*output, row, column);
+					REQUIRE_CLOSE(scaledResult, cvFundamentalMatrix.at<float>(row, column));
+					}
+				}
+			}
+		}
+	}
+
+/* --------------------------------------------------------------------------
+ *
+ * Test Cases
+ *
+ * --------------------------------------------------------------------------
+ */
+TEST_CASE( "Fail Call to process", "[processFail]" ) 
+	{
+	FundamentalMatrixTest::FailureTest();
+	}
+
 TEST_CASE( "Call to configure", "[configure]" )
 	{
 	FundamentalMatrixRansac ransac;
 	ransac.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac_Conf1.yaml");
 	ransac.configure();	
+	}
+
+TEST_CASE( "Correct computation on camera translation X", "[fundamentalTranslationX]" )
+	{
+	Pose3DPtr secondCameraPose = new Pose3D();
+	SetPosition(*secondCameraPose, 2, 0, 0);
+	SetOrientation(*secondCameraPose, 0, 0, 0, 1);
+
+	FundamentalMatrixTest::RandomCorrespondencesTest(secondCameraPose, 12);
+	}
+
+TEST_CASE( "Correct computation on camera translation Y", "[fundamentalTranslationY]" )
+	{
+	Pose3DPtr secondCameraPose = new Pose3D();
+	SetPosition(*secondCameraPose, 0, 2, 0);
+	SetOrientation(*secondCameraPose, 0, 0, 0, 1);
+
+	FundamentalMatrixTest::RandomCorrespondencesTest(secondCameraPose, 12);
+	}
+
+TEST_CASE( "Correct computation on camera translation Z", "[fundamentalTranslationZ]" )
+	{
+	Pose3DPtr secondCameraPose = new Pose3D();
+	SetPosition(*secondCameraPose, 0, 0, 2);
+	SetOrientation(*secondCameraPose, 0, 0, 0, 1);
+
+	FundamentalMatrixTest::RandomCorrespondencesTest(secondCameraPose, 12);
+	}
+
+TEST_CASE( "Correct computation on camera roto-translation", "[fundamentalRototranslation]" )
+	{
+	Pose3DPtr secondCameraPose = new Pose3D();
+	SetPosition(*secondCameraPose, 1, 1, 0);
+	SetOrientation(*secondCameraPose, 0, 0, 1, 0);
+
+	FundamentalMatrixTest::RandomCorrespondencesTest(secondCameraPose, 12);
+	}
+
+TEST_CASE( "Correct computation on camera roto-translation 2", "[fundamentalRototranslation2]" )
+	{
+	Pose3DPtr secondCameraPose = new Pose3D();
+	SetPosition(*secondCameraPose, 1, 1, 0);
+	SetOrientation(*secondCameraPose, 0, 0, std::sin(M_PI/4), std::sin(M_PI_4));
+
+	FundamentalMatrixTest::RandomCorrespondencesTest(secondCameraPose, 12);
 	}
 
 /** @} */
