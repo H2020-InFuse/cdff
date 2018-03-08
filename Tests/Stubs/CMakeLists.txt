@@ -10,3 +10,8 @@ add_library(
     stub_observed_scene
     DFPCs/PointCloudModelLocalisation/ObservedScene.cpp
 )
+
+add_library(
+    reconstruction_3d_stub_observed_scene
+    DFPCs/Reconstruction3D/ObservedScene.cpp
+)

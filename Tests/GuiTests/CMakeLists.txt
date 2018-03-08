@@ -162,3 +162,13 @@ target_link_libraries(
 	structure_from_motion mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp stub_observed_scene ${VTK_LIBRARIES}
 )
 
+add_executable(
+    ReconstructionFromMotionGuiTest
+    DFPCs/Reconstruction3D/ReconstructionFromMotion.cpp
+)
+set_target_properties(ReconstructionFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+	ReconstructionFromMotionGuiTest
+	reconstruction_from_motion mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp reconstruction_3d_stub_observed_scene ${VTK_LIBRARIES}
+)
+

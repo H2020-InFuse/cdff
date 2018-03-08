@@ -1,0 +1,33 @@
+- Name: DFNsChain
+  Parameters:
+  - Name: GeneralParameters
+    UndistortionTimes: 2
+- Name: ZedImageUndistortion
+  Type: ImageFiltering
+  Implementation: ImageUndistortion
+  Parameters:
+  - Name: GeneralParameters
+    NumberOfTestPoints: 20
+  - Name: FirstCameraMatrix
+    FocalLengthX: 1.0
+    FocalLengthY: 1.0
+    PrinciplePointX: 0
+    PrinciplePointY: 0
+  - Name: SecondCameraMatrix
+    FocalLengthX: 1.0
+    FocalLengthY: 1.0
+    PrinciplePointX: 0
+    PrinciplePointY: 0
+- Name: 3dDescriptor
+  Type: FeaturesDescription3D
+  Implementation: ShotDescriptor3D
+  Parameters:
+  - Name: GeneralParameters
+    LocalReferenceFrameEstimationRadius: 0.10
+    SearchRadius: 0.01
+    OutputFormat: Positions
+    EnableNormalsEstimation: true
+    ForceNormalsEstimation: true
+  - Name: NormalEstimationParameters
+    SearchRadius: 0.01
+    NeighboursSetSize: 0  
