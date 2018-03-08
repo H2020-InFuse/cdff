@@ -1,0 +1,254 @@
+/* --------------------------------------------------------------------------
+*
+* (C) Copyright …
+*
+* ---------------------------------------------------------------------------
+*/
+
+/*!
+ * @file DisparityMapping.cpp
+ * @date 08/03/2018
+ * @author Alessandro Bianco
+ */
+
+/*!
+ * @addtogroup DFNs
+ * 
+ * Implementation of the DisparityMapping class.
+ * 
+ * 
+ * @{
+ */
+
+/* --------------------------------------------------------------------------
+ *
+ * Includes
+ *
+ * --------------------------------------------------------------------------
+ */
+#include "DisparityMapping.hpp"
+#include <Errors/Assert.hpp>
+#include <ConversionCache/ConversionCache.hpp>
+#include "opencv2/calib3d.hpp"
+#include <SupportTypes.hpp>
+#include <Macros/YamlcppMacros.hpp>
+#include <Eigen/Geometry>
+#include <FrameToMatConverter.hpp>
+
+#include <stdlib.h>
+#include <fstream>
+
+
+using namespace Common;
+using namespace Converters;
+using namespace PoseWrapper;
+using namespace PointCloudWrapper;
+using namespace FrameWrapper;
+using namespace SupportTypes;
+using namespace BaseTypesWrapper;
+
+namespace dfn_ci {
+
+
+/* --------------------------------------------------------------------------
+ *
+ * Public Member Functions
+ *
+ * --------------------------------------------------------------------------
+ */
+DisparityMapping::DisparityMapping()
+	{
+	parametersHelper.AddParameter<int>("Prefilter", "Size", parameters.prefilter.size, DEFAULT_PARAMETERS.prefilter.size);
+	parametersHelper.AddParameter<PrefilterType, PrefilterTypeHelper>("Prefilter", "Type", parameters.prefilter.type, DEFAULT_PARAMETERS.prefilter.type);
+	parametersHelper.AddParameter<int>("Prefilter", "Maximum", parameters.prefilter.maximum, DEFAULT_PARAMETERS.prefilter.maximum);
+
+	parametersHelper.AddParameter<int>("Disparities", "Minimum", parameters.disparities.minimum, DEFAULT_PARAMETERS.disparities.minimum);
+	parametersHelper.AddParameter<int>("Disparities", "NumberOfIntervals", parameters.disparities.numberOfIntervals, DEFAULT_PARAMETERS.disparities.numberOfIntervals);
+	parametersHelper.AddParameter<int>("Disparities", "MaximumDifference", parameters.disparities.maximumDifference, DEFAULT_PARAMETERS.disparities.maximumDifference);
+	parametersHelper.AddParameter<int>("Disparities", "SpeckleRange", parameters.disparities.speckleRange, DEFAULT_PARAMETERS.disparities.speckleRange);
+	parametersHelper.AddParameter<int>("Disparities", "SpeckleWindow", parameters.disparities.speckleWindow, DEFAULT_PARAMETERS.disparities.speckleWindow);
+
+	parametersHelper.AddParameter<int>("FirstRegionOfInterest", "TopLeftColumn", parameters.firstRegionOfInterest.topLeftColumn, DEFAULT_PARAMETERS.firstRegionOfInterest.topLeftColumn);
+	parametersHelper.AddParameter<int>("FirstRegionOfInterest", "TopLeftRow", parameters.firstRegionOfInterest.topLeftRow, DEFAULT_PARAMETERS.firstRegionOfInterest.topLeftRow);
+	parametersHelper.AddParameter<int>("FirstRegionOfInterest", "NumberOfColumns", parameters.firstRegionOfInterest.numberOfColumns, DEFAULT_PARAMETERS.firstRegionOfInterest.numberOfColumns);
+	parametersHelper.AddParameter<int>("FirstRegionOfInterest", "NumberOfRows", parameters.firstRegionOfInterest.numberOfRows, DEFAULT_PARAMETERS.firstRegionOfInterest.numberOfRows);
+
+	parametersHelper.AddParameter<int>("SecondRegionOfInterest", "TopLeftColumn", parameters.secondRegionOfInterest.topLeftColumn, DEFAULT_PARAMETERS.secondRegionOfInterest.topLeftColumn);
+	parametersHelper.AddParameter<int>("SecondRegionOfInterest", "TopLeftRow", parameters.secondRegionOfInterest.topLeftRow, DEFAULT_PARAMETERS.secondRegionOfInterest.topLeftRow);
+	parametersHelper.AddParameter<int>("SecondRegionOfInterest", "NumberOfColumns", parameters.secondRegionOfInterest.numberOfColumns, DEFAULT_PARAMETERS.secondRegionOfInterest.numberOfColumns);
+	parametersHelper.AddParameter<int>("SecondRegionOfInterest", "NumberOfRows", parameters.secondRegionOfInterest.numberOfRows, DEFAULT_PARAMETERS.secondRegionOfInterest.numberOfRows);
+
+	parametersHelper.AddParameter<int>("BlocksMatching", "BlockSize", parameters.blocksMatching.blockSize, DEFAULT_PARAMETERS.blocksMatching.blockSize);
+	parametersHelper.AddParameter<int>("BlocksMatching", "SmallerBlockSize", parameters.blocksMatching.smallerBlockSize, DEFAULT_PARAMETERS.blocksMatching.smallerBlockSize);
+	parametersHelper.AddParameter<int>("BlocksMatching", "TextureThreshold", parameters.blocksMatching.textureThreshold, DEFAULT_PARAMETERS.blocksMatching.textureThreshold);
+	parametersHelper.AddParameter<int>("BlocksMatching", "UniquenessRatio", parameters.blocksMatching.uniquenessRatio, DEFAULT_PARAMETERS.blocksMatching.uniquenessRatio);
+
+	for(unsigned row = 0; row < 4; row++)
+		{
+		for (unsigned column = 0; column < 4; column++)
+			{
+			std::stringstream elementStream;
+			elementStream << "Element_" << row <<"_"<< column;
+			parametersHelper.AddParameter<int>("DisparityToDepthMap", elementStream.str(), parameters.disparityToDepthMap[4*row+column], DEFAULT_PARAMETERS.disparityToDepthMap[4*row+column]);
+			}
+		}
+
+	configurationFilePath = "";
+	}
+
+DisparityMapping::~DisparityMapping()
+	{
+
+	}
+
+void DisparityMapping::configure()
+	{
+	parametersHelper.ReadFile(configurationFilePath);
+	ValidateParameters();
+
+	disparityToDepthMap = Convert(parameters.disparityToDepthMap);
+	}
+
+void DisparityMapping::process() 
+	{
+	cv::Mat inputLeftImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inLeftImage);
+	cv::Mat inputRightImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inRightImage);
+
+	cv::Mat pointCloud = ComputePointCloud(inputLeftImage, inputRightImage);
+	outPointCloud = Convert(pointCloud);
+	}
+
+DisparityMapping::PrefilterTypeHelper::PrefilterTypeHelper(const std::string& parameterName, PrefilterType& boundVariable, const PrefilterType& defaultValue) :
+	ParameterHelper(parameterName, boundVariable, defaultValue)
+	{
+
+	}
+
+DisparityMapping::PrefilterType DisparityMapping::PrefilterTypeHelper::Convert(const std::string& prefilterType)
+	{
+	if (prefilterType == "NormalizedResponse" || prefilterType == "0")
+		{
+		return NORMALIZED_RESPONSE;
+		}
+	else if (prefilterType == "Xsobel" || prefilterType == "1")
+		{
+		return XSOBEL;
+		}
+	ASSERT(false, "StereoTriangulation Error: unhandled prefilter type");
+	return XSOBEL;
+	}
+
+const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PARAMETERS =
+	{
+	.prefilter =
+		{
+		.size = 9,
+		.type = XSOBEL,
+		.maximum = 31
+		},
+	.disparities = 
+		{
+		.minimum = 0,
+		.numberOfIntervals = 64,
+		.maximumDifference = -1,
+		.speckleRange = 0,
+		.speckleWindow = 0
+		},
+	.firstRegionOfInterest =
+		{
+		.topLeftColumn = 0,
+		.topLeftRow = 0,
+		.numberOfColumns = 0,
+		.numberOfRows = 0
+		},
+	.secondRegionOfInterest =
+		{
+		.topLeftColumn = 0,
+		.topLeftRow = 0,
+		.numberOfColumns = 0,
+		.numberOfRows = 0
+		},
+	.blocksMatching =
+		{
+		.blockSize = 21,
+		.smallerBlockSize = 21,
+		.textureThreshold = 10,
+		.uniquenessRatio = 15
+		},
+	.disparityToDepthMap = 
+		{
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		0, 0, 0, 0
+		}
+	};
+
+cv::Mat DisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage)
+	{
+	cv::Ptr<cv::StereoBM> stereo = cv::StereoBM::create(parameters.disparities.numberOfIntervals, parameters.blocksMatching.blockSize);
+	stereo->setPreFilterCap(parameters.prefilter.maximum);
+	stereo->setPreFilterSize(parameters.prefilter.size);
+	stereo->setPreFilterType( parameters.prefilter.type == XSOBEL ? cv::StereoBM::PREFILTER_XSOBEL : cv::StereoBM::PREFILTER_NORMALIZED_RESPONSE );
+	stereo->setTextureThreshold( parameters.blocksMatching.textureThreshold );
+	stereo->setUniquenessRatio( parameters.blocksMatching.uniquenessRatio );
+	stereo->setSmallerBlockSize( parameters.blocksMatching.blockSize );
+	stereo->setMinDisparity( parameters.disparities.minimum );
+	stereo->setSpeckleRange( parameters.disparities.speckleRange );
+	stereo->setSpeckleWindowSize( parameters.disparities.speckleWindow );
+	stereo->setDisp12MaxDiff( parameters.disparities.maximumDifference );
+	stereo->setROI1( cv::Rect(parameters.firstRegionOfInterest.topLeftColumn, parameters.firstRegionOfInterest.topLeftRow, 
+				parameters.firstRegionOfInterest.numberOfColumns, parameters.firstRegionOfInterest.numberOfRows) );
+	stereo->setROI2( cv::Rect(parameters.secondRegionOfInterest.topLeftColumn, parameters.secondRegionOfInterest.topLeftRow, 
+				parameters.secondRegionOfInterest.numberOfColumns, parameters.secondRegionOfInterest.numberOfRows) );
+
+	cv::Mat disparity;
+	stereo->compute(leftImage, rightImage, disparity);
+
+	cv::Mat pointCloud;
+	cv::reprojectImageTo3D(disparity, pointCloud, disparityToDepthMap);
+	return pointCloud;
+	}
+
+PointCloudConstPtr DisparityMapping::Convert(cv::Mat cvPointCloud)
+	{
+	PointCloudPtr pointCloud = new PointCloud();
+
+	for(unsigned row = 0; row < cvPointCloud.rows; row++)
+		{
+		for(unsigned column = 0; column < cvPointCloud.cols; column++)
+			{
+			cv::Vec3f point = cvPointCloud.at<cv::Vec3f>(row, column);
+			AddPoint(*pointCloud, point[0], point[1], point[2]); 
+			}
+		}
+
+	return pointCloud;
+	}
+
+cv::Mat DisparityMapping::Convert(DisparityToDepthMap disparityToDepthMap)
+	{
+	cv::Mat conversion(4, 4, CV_32FC1);
+	
+	for(unsigned row = 0; row < 4; row++)
+		{
+		for (unsigned column = 0; column < 4; column++)
+			{
+			conversion.at<float>(row, column) = disparityToDepthMap[4*row + column];
+			}
+		}
+
+	return conversion;
+	}
+
+void DisparityMapping::ValidateParameters()
+	{
+	ASSERT(parameters.disparities.numberOfIntervals % 16 == 0, "StereoTriangulation Configuration Error: number of disparities needs to be multiple of 16");
+	ASSERT(parameters.blocksMatching.blockSize % 2 == 1, "StereoTriangulation Configuration Error: blockSize needs to be odd");
+	}
+
+
+}
+
+
+/** @} */
