@@ -1,0 +1,5 @@
+- Name: GeneralParameters
+  InterpolationMode: Linear
+  BorderMethod: Constant
+  ConstantBorderValue: 0
+  TransformationMapsFilePath: ../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMaps.mat
