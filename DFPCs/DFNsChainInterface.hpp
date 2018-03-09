@@ -94,6 +94,7 @@ namespace dfpc_ci {
             int64_t executionTime;
             LogLevel logLevel;
 	    std::string configurationFilePath;
+	    std::string chainConfigurationFilePath;
 
 	    std::map<std::string, dfn_ci::DFNCommonInterface*> dfnsSet;
 	    std::map<std::string, std::string> configurationFilesSet;
@@ -108,6 +109,7 @@ namespace dfpc_ci {
 		std::string ComputeConfigurationFolderPath();
 		void ConfigureDfns();
 		void DestroyDFNs();
+		virtual void ConfigureChain();
 		virtual void AssignDfnsAlias();
     };
 }
