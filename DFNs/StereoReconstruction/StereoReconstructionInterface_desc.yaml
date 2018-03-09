@@ -1,0 +1,15 @@
+name: StereoReconstruction
+input_ports:
+    - name: leftImage
+      type: Frame
+      doc: The left image taken by a stereo camera.
+    - name: rightImage
+      type: Frame
+      doc: The right image taken by a stereo camera.
+output_ports:
+    - name: pointCloud
+      type: PointCloud
+      doc: This is the 3d point cloud representing the scene in front of the stereo camera. The coordinate system is aligned with the position of the left camera.
+implementations:
+    - DisparityMapping
+

@@ -55,6 +55,20 @@ target_link_libraries(
 )
 
 add_executable(
+    DisparityMappingGuiTest
+    DFNs/StereoReconstruction/DisparityMapping.cpp
+    ParametersInterface.cpp
+    ButtonsInterface.cpp
+    MainInterface.cpp
+    DFNs/DFNTestInterface.cpp
+)
+set_target_properties(DisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+	DisparityMappingGuiTest
+	disparity_mapping mock cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui cdff_pcl_visualizer ${VTK_LIBRARIES}
+)
+
+add_executable(
     HarrisDetector3DGuiTest
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     ParametersInterface.cpp

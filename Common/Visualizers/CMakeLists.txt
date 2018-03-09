@@ -4,7 +4,7 @@ add_library(
 )
 target_link_libraries(
     cdff_opencv_visualizer
-    cdff_logger cdff_types opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui 
+    cdff_logger cdff_types opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui converters_opencv
 )
 install(
     TARGETS cdff_opencv_visualizer
@@ -17,7 +17,7 @@ add_library(
 )
 target_link_libraries(
     cdff_pcl_visualizer
-    cdff_logger cdff_types pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system ${VTK_LIBRARIES}
+    converters_opencv cdff_logger cdff_types pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system ${VTK_LIBRARIES}
 )
 install(
     TARGETS cdff_pcl_visualizer

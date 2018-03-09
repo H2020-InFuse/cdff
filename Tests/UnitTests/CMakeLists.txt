@@ -91,6 +91,7 @@ target_link_libraries(
 	mock cdff_logger cdff_types flann_matcher  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
 )
 add_test(FlannMatcherTest FlannMatcherTest)
+
 add_executable(
     TriangulationTest
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
@@ -100,6 +101,16 @@ target_link_libraries(
 	mock cdff_logger cdff_types triangulation  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs synthetic_generators
 )
 add_test(TriangulationTest TriangulationTest)
+
+add_executable(
+    DisparityMappingTest
+    DFNs/StereoReconstruction/DisparityMapping.cpp
+)
+target_link_libraries(
+	DisparityMappingTest
+	mock cdff_logger cdff_types disparity_mapping  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs synthetic_generators
+)
+add_test(DisparityMappingTest DisparityMappingTest)
 
 add_executable(
     HarrisDetector3DTest
