@@ -561,6 +561,12 @@ This is the output of the following method:
 	rightCameraMatrix.at<float>(0, 2) = 3026.416358478908;
 	rightCameraMatrix.at<float>(1, 2) = 257.3840612345921;
 	rightCameraMatrix.at<float>(2, 2) = 1.0;
+
+Disparity To Depth Matrix [1, 0, 0, -3259.404846191406;
+ 0, 1, 0, 1793.122953414917;
+ 0, 0, 0, -1822.793404684805;
+ 0, 0, 0.3911752722551165, -0]
+
 */
 void StereoReconstructionTestInterface::ExtractCalibrationParameters()
 	{
@@ -683,6 +689,7 @@ void StereoReconstructionTestInterface::ExtractCalibrationParameters()
 
 	PRINT_TO_LOG("Rectified Left Projection Matrix", leftRectifiedProjectionMatrix);
 	PRINT_TO_LOG("Rectified Right Projection Matrix", rightRectifiedProjectionMatrix);	
+	PRINT_TO_LOG("Disparity To Depth Matrix", disparityToDepthMatrix);
 	}
 
 

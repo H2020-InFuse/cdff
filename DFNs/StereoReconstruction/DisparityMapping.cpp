@@ -34,6 +34,7 @@
 #include <Macros/YamlcppMacros.hpp>
 #include <Eigen/Geometry>
 #include <FrameToMatConverter.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -64,6 +65,7 @@ DisparityMapping::DisparityMapping()
 
 	parametersHelper.AddParameter<int>("Disparities", "Minimum", parameters.disparities.minimum, DEFAULT_PARAMETERS.disparities.minimum);
 	parametersHelper.AddParameter<int>("Disparities", "NumberOfIntervals", parameters.disparities.numberOfIntervals, DEFAULT_PARAMETERS.disparities.numberOfIntervals);
+	parametersHelper.AddParameter<bool>("Disparities", "UseMaximumDifference", parameters.disparities.useMaximumDifference, DEFAULT_PARAMETERS.disparities.useMaximumDifference);
 	parametersHelper.AddParameter<int>("Disparities", "MaximumDifference", parameters.disparities.maximumDifference, DEFAULT_PARAMETERS.disparities.maximumDifference);
 	parametersHelper.AddParameter<int>("Disparities", "SpeckleRange", parameters.disparities.speckleRange, DEFAULT_PARAMETERS.disparities.speckleRange);
 	parametersHelper.AddParameter<int>("Disparities", "SpeckleWindow", parameters.disparities.speckleWindow, DEFAULT_PARAMETERS.disparities.speckleWindow);
@@ -83,16 +85,19 @@ DisparityMapping::DisparityMapping()
 	parametersHelper.AddParameter<int>("BlocksMatching", "TextureThreshold", parameters.blocksMatching.textureThreshold, DEFAULT_PARAMETERS.blocksMatching.textureThreshold);
 	parametersHelper.AddParameter<int>("BlocksMatching", "UniquenessRatio", parameters.blocksMatching.uniquenessRatio, DEFAULT_PARAMETERS.blocksMatching.uniquenessRatio);
 
+	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudSamplingDensity", parameters.pointCloudSamplingDensity, DEFAULT_PARAMETERS.pointCloudSamplingDensity);
+
 	for(unsigned row = 0; row < 4; row++)
 		{
 		for (unsigned column = 0; column < 4; column++)
 			{
 			std::stringstream elementStream;
 			elementStream << "Element_" << row <<"_"<< column;
-			parametersHelper.AddParameter<int>("DisparityToDepthMap", elementStream.str(), parameters.disparityToDepthMap[4*row+column], DEFAULT_PARAMETERS.disparityToDepthMap[4*row+column]);
+			parametersHelper.AddParameter<float>("DisparityToDepthMap", elementStream.str(), parameters.disparityToDepthMap[4*row+column], DEFAULT_PARAMETERS.disparityToDepthMap[4*row+column]);
 			}
 		}
 
+	disparityToDepthMap = Convert(parameters.disparityToDepthMap);
 	configurationFilePath = "";
 	}
 
@@ -150,6 +155,7 @@ const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PAR
 		{
 		.minimum = 0,
 		.numberOfIntervals = 64,
+		.useMaximumDifference = false,
 		.maximumDifference = -1,
 		.speckleRange = 0,
 		.speckleWindow = 0
@@ -171,7 +177,7 @@ const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PAR
 	.blocksMatching =
 		{
 		.blockSize = 21,
-		.smallerBlockSize = 21,
+		.smallerBlockSize = 0,
 		.textureThreshold = 10,
 		.uniquenessRatio = 15
 		},
@@ -181,7 +187,8 @@ const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PAR
 		0, 0, 0, 0,
 		0, 0, 0, 0,
 		0, 0, 0, 0
-		}
+		},
+	.pointCloudSamplingDensity = 1
 	};
 
 cv::Mat DisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage)
@@ -196,17 +203,25 @@ cv::Mat DisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImag
 	stereo->setMinDisparity( parameters.disparities.minimum );
 	stereo->setSpeckleRange( parameters.disparities.speckleRange );
 	stereo->setSpeckleWindowSize( parameters.disparities.speckleWindow );
-	stereo->setDisp12MaxDiff( parameters.disparities.maximumDifference );
+	if ( parameters.disparities.useMaximumDifference )
+		{
+		stereo->setDisp12MaxDiff( parameters.disparities.maximumDifference );
+		}
 	stereo->setROI1( cv::Rect(parameters.firstRegionOfInterest.topLeftColumn, parameters.firstRegionOfInterest.topLeftRow, 
 				parameters.firstRegionOfInterest.numberOfColumns, parameters.firstRegionOfInterest.numberOfRows) );
 	stereo->setROI2( cv::Rect(parameters.secondRegionOfInterest.topLeftColumn, parameters.secondRegionOfInterest.topLeftRow, 
 				parameters.secondRegionOfInterest.numberOfColumns, parameters.secondRegionOfInterest.numberOfRows) );
 
+	cv::Mat greyLeftImage, greyRightImage;
+	cv::cvtColor(leftImage, greyLeftImage, CV_BGR2GRAY);
+	cv::cvtColor(rightImage, greyRightImage, CV_BGR2GRAY);
+
 	cv::Mat disparity;
-	stereo->compute(leftImage, rightImage, disparity);
+	stereo->compute(greyLeftImage, greyRightImage, disparity);
 
 	cv::Mat pointCloud;
 	cv::reprojectImageTo3D(disparity, pointCloud, disparityToDepthMap);
+
 	return pointCloud;
 	}
 
@@ -214,12 +229,23 @@ PointCloudConstPtr DisparityMapping::Convert(cv::Mat cvPointCloud)
 	{
 	PointCloudPtr pointCloud = new PointCloud();
 
+	unsigned validPointCount = 0;
+	unsigned pickUpPeriod = static_cast<unsigned>(1 / parameters.pointCloudSamplingDensity) ;
 	for(unsigned row = 0; row < cvPointCloud.rows; row++)
 		{
 		for(unsigned column = 0; column < cvPointCloud.cols; column++)
 			{
 			cv::Vec3f point = cvPointCloud.at<cv::Vec3f>(row, column);
-			AddPoint(*pointCloud, point[0], point[1], point[2]); 
+
+			bool validPoint = (point[0] == point[0] && point[1] == point[1] && point[2] == point[2]);
+			if (validPoint)
+				{
+				validPointCount++;
+				if (validPointCount % pickUpPeriod == 0)
+					{
+					AddPoint(*pointCloud, point[0], point[1], point[2]); 
+					}
+				}
 			}
 		}
 
@@ -243,8 +269,10 @@ cv::Mat DisparityMapping::Convert(DisparityToDepthMap disparityToDepthMap)
 
 void DisparityMapping::ValidateParameters()
 	{
-	ASSERT(parameters.disparities.numberOfIntervals % 16 == 0, "StereoTriangulation Configuration Error: number of disparities needs to be multiple of 16");
-	ASSERT(parameters.blocksMatching.blockSize % 2 == 1, "StereoTriangulation Configuration Error: blockSize needs to be odd");
+	ASSERT(parameters.disparities.numberOfIntervals % 16 == 0, "DisparityMapping Configuration Error: number of disparities needs to be multiple of 16");
+	ASSERT(parameters.blocksMatching.blockSize % 2 == 1, "DisparityMapping Configuration Error: blockSize needs to be odd");
+	ASSERT(!parameters.disparities.useMaximumDifference || parameters.disparities.maximumDifference >= 0, "DisparityMapping Configuration, maximum disparity difference used but not set positive");
+	ASSERT(parameters.pointCloudSamplingDensity > 0 && parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
 	}
 
 

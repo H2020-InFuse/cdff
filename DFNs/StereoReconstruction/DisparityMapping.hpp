@@ -106,6 +106,7 @@ namespace dfn_ci {
 			{
 			int minimum;
 			int numberOfIntervals;
+			bool useMaximumDifference;
 			int maximumDifference;
 			int speckleRange;
 			int speckleWindow;
@@ -119,7 +120,7 @@ namespace dfn_ci {
 			int uniquenessRatio;
 			};
 
-		typedef int DisparityToDepthMap[16];
+		typedef float DisparityToDepthMap[16];
 		struct DisparityMappingOptionsSet
 			{
 			PrefilterOptionsSet prefilter;
@@ -128,6 +129,7 @@ namespace dfn_ci {
 			Rectangle secondRegionOfInterest;
 			BlocksMatchingOptionsSet blocksMatching;
 			DisparityToDepthMap disparityToDepthMap;
+			float pointCloudSamplingDensity;
 			};
 
 		cv::Mat disparityToDepthMap;
