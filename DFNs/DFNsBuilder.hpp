@@ -43,6 +43,7 @@
 #include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
+#include <StereoReconstruction/StereoReconstructionInterface.hpp>
 
 
 namespace dfn_ci {
@@ -86,6 +87,7 @@ namespace dfn_ci {
 		static FeaturesExtraction3DInterface* CreateFeaturesExtraction3D(std::string dfnImplementation);
 		static FeaturesDescription3DInterface* CreateFeaturesDescription3D(std::string dfnImplementation);
 		static FeaturesMatching3DInterface* CreateFeaturesMatching3D(std::string dfnImplementation);
+		static StereoReconstructionInterface* CreateStereoReconstruction(std::string dfnImplementation);
     };
 }
 #endif

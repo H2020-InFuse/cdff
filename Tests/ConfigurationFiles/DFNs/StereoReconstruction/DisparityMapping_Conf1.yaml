@@ -1,3 +1,5 @@
+- Name: GeneralParameters
+  PointCloudSamplingDensity: 0.1
 - Name: Prefilter
   Size: 9
   Type: Xsobel
@@ -5,6 +7,7 @@
 - Name: Disparities
   Minimum: 0
   NumberOfIntervals: 64
+  UseMaximumDifference: false
   MaximumDifference: -1
   SpeckleRange: 0
   SpeckleWindow: 0
@@ -24,19 +27,19 @@
   NumberOfColumns: 0
   NumberOfRows: 0
 - Name: DisparityToDepthMap
-  Element_0_0: 0
+  Element_0_0: 1
   Element_0_1: 0
   Element_0_2: 0
-  Element_0_3: 0
+  Element_0_3: -3259.404846191406
   Element_1_0: 0
-  Element_1_1: 0
+  Element_1_1: 1
   Element_1_2: 0
-  Element_1_3: 0
+  Element_1_3: 1793.122953414917
   Element_2_0: 0
   Element_2_1: 0
   Element_2_2: 0
-  Element_2_3: 0
+  Element_2_3: -1822.793404684805
   Element_3_0: 0
   Element_3_1: 0
-  Element_3_2: 0
+  Element_3_2: 0.3911752722551165
   Element_3_3: 0
