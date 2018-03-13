@@ -113,6 +113,16 @@ target_link_libraries(
 add_test(DisparityMappingTest DisparityMappingTest)
 
 add_executable(
+    HirschmullerDisparityMappingTest
+    DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+)
+target_link_libraries(
+	HirschmullerDisparityMappingTest
+	mock cdff_logger cdff_types hirschmuller_disparity_mapping  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs synthetic_generators
+)
+add_test(HirschmullerDisparityMappingTest HirschmullerDisparityMappingTest)
+
+add_executable(
     HarrisDetector3DTest
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
 )

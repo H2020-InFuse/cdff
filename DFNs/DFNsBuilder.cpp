@@ -41,6 +41,8 @@
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
+#include <StereoReconstruction/DisparityMapping.hpp>
+#include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 
 namespace dfn_ci {
 
@@ -96,6 +98,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	else if (dfnType == "FeaturesMatching3D")
 		{
 		return CreateFeaturesMatching3D(dfnImplementation);
+		}
+	else if (dfnType == "StereoReconstruction")
+		{
+		return CreateStereoReconstruction(dfnImplementation);
 		}
 	PRINT_TO_LOG("DFN: ", dfnType);
 	PRINT_TO_LOG("Implementation: ", dfnImplementation);
@@ -223,6 +229,20 @@ FeaturesMatching3DInterface* DFNsBuilder::CreateFeaturesMatching3D(std::string d
 	else if (dfnImplementation == "Ransac3D")
 		{
 		return new Ransac3D();
+		}
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	return NULL;
+	}
+
+StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(std::string dfnImplementation)
+	{
+	if (dfnImplementation == "DisparityMapping")
+		{
+		return new DisparityMapping();
+		}
+	else if (dfnImplementation == "HirschmullerDisparityMapping")
+		{
+		return new HirschmullerDisparityMapping();
 		}
 	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
 	return NULL;
