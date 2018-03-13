@@ -101,6 +101,9 @@ namespace DataGenerators {
 		void ExtractChessboardCornersFromImages();
 		void LoadImages(unsigned imageIndex, cv::Mat& leftImage, cv::Mat& rightImage);
 		void SetUpChessboard3DCorners();
+		void ViewChessboard(unsigned imageIndex, cv::Mat leftImage, cv::Mat rightImage);
+		std::vector<cv::Point2f> SortLeftRightUpDown(std::vector<cv::Point2f>& pointsList);
+		std::vector<cv::Point2f> ChangeFromTopDownLeftRight(std::vector<cv::Point2f>& pointsList);
 		
     };
 

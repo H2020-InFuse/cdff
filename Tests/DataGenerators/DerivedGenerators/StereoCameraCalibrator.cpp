@@ -186,10 +186,16 @@ void StereoCameraCalibrator::ExtractChessboardCornersFromImages()
 		std::vector<cv::Point2f> leftSingleImageCornersList, rightSingleImageCornersList;
 		bool leftSuccess = cv::findChessboardCorners(leftImage, cv::Size(numberOfRows, numberOfColumns), leftSingleImageCornersList);
 		bool rightSuccess = cv::findChessboardCorners(rightImage, cv::Size(numberOfRows, numberOfColumns), rightSingleImageCornersList);
+		PRINT_TO_LOG("Found Corners in Left Camera", leftSuccess);
+		PRINT_TO_LOG("Found Corners in Right Camera", rightSuccess);
 		ASSERT(leftSuccess && rightSuccess, "Camera calibration failed");
 
-		leftCornersList.push_back(leftSingleImageCornersList);
-		rightCornersList.push_back(rightSingleImageCornersList);
+		std::vector<cv::Point2f> sortedLeftSingleImageCornersList = SortLeftRightUpDown(leftSingleImageCornersList);
+		std::vector<cv::Point2f> sortedRightSingleImageCornersList = SortLeftRightUpDown(rightSingleImageCornersList);
+
+		leftCornersList.push_back(sortedLeftSingleImageCornersList);
+		rightCornersList.push_back(sortedRightSingleImageCornersList);
+		//ViewChessboard(imageId, leftImage, rightImage);
 		}
 	}
 
@@ -243,6 +249,56 @@ void StereoCameraCalibrator::SetUpChessboard3DCorners()
 		objectPointsList.push_back(singleObjectPointsList);
 		}
 	}
+
+void StereoCameraCalibrator::ViewChessboard(unsigned imageIndex, cv::Mat leftImage, cv::Mat rightImage)
+	{
+	cv::Mat img = leftImage.clone();
+	cv::drawChessboardCorners(img, cv::Size(numberOfRows, numberOfColumns), leftCornersList[imageIndex-1], true);
+	cv::imshow("img", img);
+	cv::waitKey(0);
+
+	img = rightImage.clone();
+	cv::drawChessboardCorners(img, cv::Size(numberOfRows, numberOfColumns), rightCornersList[imageIndex-1], true);
+	cv::imshow("img", img);
+	cv::waitKey(0);
+	}
+
+std::vector<cv::Point2f> StereoCameraCalibrator::SortLeftRightUpDown(std::vector<cv::Point2f>& pointsList)
+	{
+	/**
+	This algorithm assumes that either the list is already correctly ordered or it is ordered from top-down, left-right direction;
+	**/
+	cv::Point2f checkPoint1 = pointsList[0];
+	cv::Point2f checkPoint2 = pointsList[numberOfRows*numberOfColumns - numberOfColumns];
+
+	float squaredDistance1ToTopLeftCorner = (checkPoint1.x * checkPoint1.x) + (checkPoint1.y * checkPoint1.y);
+	float squaredDistance2ToTopLeftCorner = (checkPoint2.x * checkPoint2.x) + (checkPoint2.y * checkPoint2.y);
+	bool correctOrder = squaredDistance1ToTopLeftCorner < squaredDistance2ToTopLeftCorner;
+
+	if (correctOrder)
+		{
+		return pointsList;
+		}
+	else
+		{
+		return ChangeFromTopDownLeftRight(pointsList);
+		}
+	}
+
+std::vector<cv::Point2f> StereoCameraCalibrator::ChangeFromTopDownLeftRight(std::vector<cv::Point2f>& pointsList)
+	{
+	std::vector<cv::Point2f> orderedPointsList;
+	for(unsigned row = 0; row<numberOfRows; row++)
+		{
+		for (unsigned column = 0; column < numberOfColumns; column++)
+			{
+			cv::Point2f newPoint = pointsList[(numberOfColumns-column-1)*numberOfRows + row];
+			orderedPointsList.push_back(newPoint);
+			}
+		}
+	return orderedPointsList;
+	}
+
 
 
 }
