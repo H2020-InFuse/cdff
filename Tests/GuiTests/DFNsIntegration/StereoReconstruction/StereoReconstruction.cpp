@@ -690,6 +690,38 @@ void StereoReconstructionTestInterface::ExtractCalibrationParameters()
 	PRINT_TO_LOG("Rectified Left Projection Matrix", leftRectifiedProjectionMatrix);
 	PRINT_TO_LOG("Rectified Right Projection Matrix", rightRectifiedProjectionMatrix);	
 	PRINT_TO_LOG("Disparity To Depth Matrix", disparityToDepthMatrix);
+
+	cv::Mat leftMap1, leftMap2;
+	cv::initUndistortRectifyMap
+		(
+		leftCameraMatrix,
+		leftDistortionCoefficients,
+		leftRectificationMatrix,
+		leftCameraMatrix,
+		imageSize,
+		CV_32FC1,
+		leftMap1, 
+		leftMap2
+		);
+
+	cv::Mat rightMap1, rightMap2;
+	cv::initUndistortRectifyMap
+		(
+		rightCameraMatrix,
+		rightDistortionCoefficients,
+		rightRectificationMatrix,
+		rightCameraMatrix,
+		imageSize,
+		CV_32FC1,
+		rightMap1, 
+		rightMap2
+		);
+	cv::FileStorage file1("../../tests/ConfigurationFiles/ImageUndistortionRectificationTransformMapsLeft.yaml", cv::FileStorage::WRITE);
+	file1 << "Map1" << leftMap1 << "Map2" << leftMap2;
+	file1.release();
+	cv::FileStorage file2("../../tests/ConfigurationFiles/ImageUndistortionRectificationTransformMapsRight.yaml", cv::FileStorage::WRITE);
+	file2 << "Map1" << rightMap1 << "Map2" << rightMap2;
+	file2.release();
 	}
 
 

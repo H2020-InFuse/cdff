@@ -13,6 +13,20 @@ target_link_libraries(
 )
 
 add_executable(
+    ImageUndistortionRectificationGuiTest
+    DFNs/ImageFiltering/ImageUndistortionRectification.cpp
+    ParametersInterface.cpp
+    ButtonsInterface.cpp
+    MainInterface.cpp
+    DFNs/DFNTestInterface.cpp
+)
+set_target_properties(ImageUndistortionRectificationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+	ImageUndistortionRectificationGuiTest
+	mock cdff_logger image_undistortion_rectification converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+)
+
+add_executable(
     HarrisDetector2DGuiTest
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
     ParametersInterface.cpp
