@@ -42,6 +42,7 @@
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
+#include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 
 namespace dfn_ci {
 
@@ -238,6 +239,10 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(std::stri
 	if (dfnImplementation == "DisparityMapping")
 		{
 		return new DisparityMapping();
+		}
+	else if (dfnImplementation == "HirschmullerDisparityMapping")
+		{
+		return new HirschmullerDisparityMapping();
 		}
 	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
 	return NULL;
