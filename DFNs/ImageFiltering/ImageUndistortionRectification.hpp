@@ -68,6 +68,18 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		enum CameraConfigurationMode
+			{
+			IN_CONFIGURATION_FILE,
+			EXTERNAL_RECTIFICATION_TRANSFORM
+			};
+		class CameraConfigurationModeHelper : public Helpers::ParameterHelper<CameraConfigurationMode, std::string>
+			{
+			public:
+				CameraConfigurationModeHelper(const std::string& parameterName, CameraConfigurationMode& boundVariable, const CameraConfigurationMode& defaultValue);
+			private:
+				CameraConfigurationMode Convert(const std::string& value);
+			};
 
 		enum InterpolationMethod
 			{
@@ -98,20 +110,57 @@ namespace dfn_ci {
 				BorderMode Convert(const std::string& value);
 			};
 
+		struct CameraMatrix
+			{
+			float focalLengthX;
+			float focalLengthY;
+			float principlePointX;
+			float principlePointY;
+			};
+		
+		struct DistortionParametersSet
+			{
+			float k1;
+			float k2;
+			float k3;
+			float k4;
+			float k5;
+			float k6;
+			float p1;
+			float p2;
+			bool useK3;
+			bool useK4ToK6;
+			};
+
+		struct ImageSize
+			{
+			int width;
+			int height;
+			};
+
+		typedef float RectificationMatrix[9];
+
 		struct ImageUndistortionRectificationOptionsSet
 			{
 			InterpolationMethod interpolationMethod;
 			BorderMode borderMode;
 			float constantBorderValue;
 			std::string transformMapsFilePath;
+			CameraConfigurationMode cameraConfigurationMode;
+
+			CameraMatrix cameraMatrix;
+			DistortionParametersSet distortionParametersSet;
+			ImageSize imageSize;
+			RectificationMatrix rectificationMatrix;
 			};
 
 		cv::Mat transformMap1, transformMap2;
+		cv::Mat cameraMatrix, distortionVector, rectificationMatrix;
 
 		Helpers::ParametersListHelper parametersHelper;
 		ImageUndistortionRectificationOptionsSet parameters;
 		static const ImageUndistortionRectificationOptionsSet DEFAULT_PARAMETERS;
-		void LoadTransformMaps();
+		void LoadUndistortionRectificationMaps();
 
 		cv::Mat UndistortAndRectify(cv::Mat inputImage);
 
@@ -119,6 +168,8 @@ namespace dfn_ci {
 		void ValidateInputs(cv::Mat inputImage);
 
 		void Configure(const YAML::Node& configurationNode);
+		void ConvertParametersToCvMatrices();
+		void ComputeUndistortionRectificationMap();
     };
 }
 #endif

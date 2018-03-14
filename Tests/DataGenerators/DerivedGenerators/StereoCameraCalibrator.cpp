@@ -73,6 +73,8 @@ StereoCameraCalibrator::~StereoCameraCalibrator()
 
 void StereoCameraCalibrator::CalibrateCameras()
 	{
+	PRINT_TO_LOG("Calibrating Images with Size: \n", imageSize);
+ 
 	cv::stereoCalibrate
 		(
 		objectPointsList,
@@ -122,6 +124,8 @@ void StereoCameraCalibrator::RectifyCameras()
 
 	PRINT_TO_LOG("Rectified Left Projection Matrix \n", leftRectifiedProjectionMatrix);
 	PRINT_TO_LOG("Rectified Right Projection Matrix \n", rightRectifiedProjectionMatrix);	
+	PRINT_TO_LOG("Left Rectification Matrix \n", leftRectificationMatrix);
+	PRINT_TO_LOG("Right Rectification Matrix \n", rightRectificationMatrix);
 	PRINT_TO_LOG("Disparity To Depth Matrix \n", disparityToDepthMatrix);
 	}
 
