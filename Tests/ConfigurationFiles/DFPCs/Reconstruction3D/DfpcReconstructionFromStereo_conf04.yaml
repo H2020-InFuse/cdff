@@ -1,43 +1,21 @@
 - Name: leftFilter
   Type: ImageFiltering
-  Implementation: ImageUndistortion
+  Implementation: ImageUndistortionRectification
   Parameters:
-  - Name: CameraMatrix
-    FocalLengthX: 1408.899186439272
-    FocalLengthY: 1403.116708010621
-    PrinciplePointX: 1053.351342078365
-    PrinciplePointY: 588.8342842821718
-  - Name: Distortion
-    UseK3: true
-    UseK4ToK6: true
-    K1: 0.8010323519594021
-    K2: 104.7894482598434
-    P1: -6.223427196342877e-05
-    P2: -0.002209798328517273
-    K3: -70.73535010082334
-    K4: 0.8556124926892613
-    K5: 105.9684960970509
-    K6: -60.88515255428263
+  - Name: GeneralParameters
+    InterpolationMethod: Linear
+    BorderMode: Constant
+    ConstantBorderValue: 0
+    TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsLeft.yaml
 - Name: rightFilter
   Type: ImageFiltering
-  Implementation: ImageUndistortion
+  Implementation: ImageUndistortionRectification
   Parameters:
-  - Name: CameraMatrix
-    FocalLengthX: 1408.899186439272
-    FocalLengthY: 1403.116708010621
-    PrinciplePointX: 1053.351342078365
-    PrinciplePointY: 588.8342842821718
-  - Name: Distortion
-    UseK3: true
-    UseK4ToK6: true
-    K1: 0.8010323519594021
-    K2: 104.7894482598434
-    P1: -6.223427196342877e-05
-    P2: -0.002209798328517273
-    K3: -70.73535010082334
-    K4: 0.8556124926892613
-    K5: 105.9684960970509
-    K6: -60.88515255428263
+  - Name: GeneralParameters
+    InterpolationMethod: Linear
+    BorderMode: Constant
+    ConstantBorderValue: 0
+    TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsRight.yaml
 - Name: featureExtractor
   Type: FeaturesExtraction2D
   Implementation: OrbDetectorDescriptor
@@ -78,24 +56,23 @@
   - Name: GeneralParameters
     NumberOfTestPoints: 20
   - Name: FirstCameraMatrix
-    FocalLengthX: 1408.899186439272
-    FocalLengthY: 1403.116708010621
-    PrinciplePointX: 1053.351342078365
-    PrinciplePointY: 588.8342842821718
+    FocalLengthX: 560.6290698082737
+    FocalLengthY: 562.2289966461627
+    PrinciplePointX: 328.8638440573724
+    PrinciplePointY: 244.2472782950285
   - Name: SecondCameraMatrix
-    FocalLengthX: 1408.899186439272
-    FocalLengthY: 1403.116708010621
-    PrinciplePointX: 1053.351342078365
-    PrinciplePointY: 588.8342842821718
+    FocalLengthX: 560.6290698082737
+    FocalLengthY: 562.2289966461627
+    PrinciplePointX: 328.8638440573724
+    PrinciplePointY: 244.2472782950285
 - Name: reconstructor3D
   Type: StereoReconstruction
-  Implementation: DisparityMapping
+  Implementation: HirschmullerDisparityMapping
   Parameters:
   - Name: GeneralParameters
     PointCloudSamplingDensity: 0.1
+    UseFullScaleTwoPassAlgorithm: false
   - Name: Prefilter
-    Size: 9
-    Type: Xsobel
     Maximum: 31
   - Name: Disparities
     Minimum: 0
@@ -104,35 +81,25 @@
     MaximumDifference: -1
     SpeckleRange: 0
     SpeckleWindow: 0
+    SmoothnessParameter1: 0
+    SmoothnessParameter2: 0
   - Name: BlocksMatching
     BlockSize: 21
-    SmallerBlockSize: 0
-    TextureThreshold: 10
     UniquenessRatio: 15
-  - Name: FirstRegionOfInterest
-    TopLeftColumn: 0
-    TopLeftRow: 0
-    NumberOfColumns: 0
-    NumberOfRows: 0
-  - Name: SecondRegionOfInterest
-    TopLeftColumn: 0
-    TopLeftRow: 0
-    NumberOfColumns: 0
-    NumberOfRows: 0
   - Name: DisparityToDepthMap
     Element_0_0: 1
     Element_0_1: 0
     Element_0_2: 0
-    Element_0_3: -3259.404846191406
+    Element_0_3: -272.7889404296875
     Element_1_0: 0
     Element_1_1: 1
     Element_1_2: 0
-    Element_1_3: 1793.122953414917
+    Element_1_3: -197.8804016113281
     Element_2_0: 0
     Element_2_1: 0
     Element_2_2: 0
-    Element_2_3: -1822.793404684805
+    Element_2_3: -5176.381442185622
     Element_3_0: 0
     Element_3_1: 0
-    Element_3_2: 0.3911752722551165
+    Element_3_2: 2.947305011664324
     Element_3_3: 0

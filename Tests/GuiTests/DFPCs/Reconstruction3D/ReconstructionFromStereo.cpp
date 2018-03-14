@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 	WRITE_TO_LOG("Configure", "");
 	Map* map = new ObservedScene();
 	ReconstructionFromStereo reconstructionFromStereo(map);
-	reconstructionFromStereo.setConfigurationFile("../../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcReconstructionFromStereo_conf01.yaml");
+	reconstructionFromStereo.setConfigurationFile("../../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcReconstructionFromStereo_conf03.yaml");
 	reconstructionFromStereo.configure();
 	WRITE_TO_LOG("Configure", "Completed");
 

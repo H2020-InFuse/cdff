@@ -75,6 +75,9 @@ namespace DataGenerators {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		static const std::string leftMapFilePath;
+		static const std::string rightMapFilePath;
+
 		FilesMode filesMode;
 		std::string filePath;
 		std::string fileExtension;

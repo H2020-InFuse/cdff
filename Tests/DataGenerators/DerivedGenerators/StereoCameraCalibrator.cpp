@@ -152,13 +152,25 @@ void StereoCameraCalibrator::ComputeUndistortionRectificationMap()
 		rightMap1, 
 		rightMap2
 		);
-	cv::FileStorage file1("../../tests/ConfigurationFiles/ImageUndistortionRectificationTransformMapsLeft.yaml", cv::FileStorage::WRITE);
+	PRINT_TO_LOG("Wrinting left map to file: ", leftMapFilePath);
+	cv::FileStorage file1(leftMapFilePath, cv::FileStorage::WRITE);
 	file1 << "Map1" << leftMap1 << "Map2" << leftMap2;
 	file1.release();
-	cv::FileStorage file2("../../tests/ConfigurationFiles/ImageUndistortionRectificationTransformMapsRight.yaml", cv::FileStorage::WRITE);
+
+	PRINT_TO_LOG("Wrinting right map to file: ", rightMapFilePath);
+	cv::FileStorage file2(rightMapFilePath, cv::FileStorage::WRITE);
 	file2 << "Map1" << rightMap1 << "Map2" << rightMap2;
 	file2.release();
 	}
+
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Variables
+ *
+ * --------------------------------------------------------------------------
+ */
+const std::string StereoCameraCalibrator::leftMapFilePath = "../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsLeft.yaml";
+const std::string StereoCameraCalibrator::rightMapFilePath = "../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsRight.yaml";
 
 /* --------------------------------------------------------------------------
  *
