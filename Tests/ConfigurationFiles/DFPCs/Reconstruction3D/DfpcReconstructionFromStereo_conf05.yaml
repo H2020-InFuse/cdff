@@ -1,0 +1,165 @@
+- Name: leftFilter
+  Type: ImageFiltering
+  Implementation: ImageUndistortionRectification
+  Parameters:
+  - Name: GeneralParameters
+    InterpolationMethod: Linear
+    BorderMode: Constant
+    ConstantBorderValue: 0
+    CameraConfigurationMode: Internal
+    TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsLeft.yaml
+  - Name: CameraMatrix
+    FocalLengthX: 9.842439e+02
+    FocalLengthY: 9.808141e+02
+    PrinciplePointX: 6.900000e+02
+    PrinciplePointY: 2.331966e+02
+  - Name: Distortion
+    UseK3: true
+    UseK4ToK6: false
+    K1: -3.728755e-01
+    K2: 2.037299e-01
+    P1: 2.219027e-03
+    P2: 1.383707e-03
+    K3: -7.233722e-02
+    K4: 0.8556124926892613
+    K5: 105.9684960970509
+    K6: -60.88515255428263
+  - Name: ImageSize
+    Width: 1242
+    Height: 375
+  - Name: RectificationMatrix
+    Element_0_0: 1
+    Element_0_1: 0
+    Element_0_2: 0
+    Element_1_0: 0
+    Element_1_1: 1
+    Element_1_2: 0
+    Element_2_0: 0
+    Element_2_1: 0
+    Element_2_2: 1
+- Name: rightFilter
+  Type: ImageFiltering
+  Implementation: ImageUndistortionRectification
+  Parameters:
+  - Name: GeneralParameters
+    InterpolationMethod: Linear
+    BorderMode: Constant
+    ConstantBorderValue: 0
+    TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsRight.yaml
+    CameraConfigurationMode: Internal
+  - Name: CameraMatrix
+    FocalLengthX: 9.895267e+02
+    FocalLengthY: 9.878386e+02
+    PrinciplePointX: 7.020000e+02
+    PrinciplePointY: 2.455590e+02
+  - Name: Distortion
+    UseK3: true
+    UseK4ToK6: false
+    K1: -3.644661e-01
+    K2: 1.790019e-01
+    P1: 1.148107e-03
+    P2: -6.298563e-04
+    K3: -5.314062e-02
+    K4: 0.8556124926892613
+    K5: 105.9684960970509
+    K6: -60.88515255428263
+  - Name: ImageSize
+    Width: 1920
+    Height: 1080
+  - Name: RectificationMatrix
+    Element_0_0: 9.993513e-01
+    Element_0_1: 1.860866e-02
+    Element_0_2: -3.083487e-02
+    Element_1_0: -1.887662e-02
+    Element_1_1: 9.997863e-01
+    Element_1_2: -8.421873e-03
+    Element_2_0: 3.067156e-02
+    Element_2_1: 8.998467e-03
+    Element_2_2: 9.994890e-01
+- Name: featureExtractor
+  Type: FeaturesExtraction2D
+  Implementation: OrbDetectorDescriptor
+  Parameters:
+  - Name: GeneralParameters
+    EdgeThreshold: 31
+    FastThreshold: 20
+    FirstLevel: 0
+    MaxFeaturesNumber: 500
+    LevelsNumber: 8
+    PatchSize: 31
+    ScaleFactor: 1.20
+    ScoreType: HarrisScore
+    SizeOfBrightnessTestSet: 2
+- Name: featuresMatcher
+  Type: FeaturesMatching2D
+  Implementation: FlannMatcher
+  Parameters:
+  - Name: GeneralParameters
+    DistanceThreshold: 0.02
+    MatcherMethod: 4
+    AcceptanceRatio: 0.75
+  - Name: LocalitySensitiveHashingParameters
+    TableNumber: 6
+    KeySize: 12
+    MultiProbeLevel: 1
+- Name: fundamentalMatrixComputer
+  Type: FundamentalMatrixComputation
+  Implementation: FundamentalMatrixRansac
+  Parameters:
+  - Name: GeneralParameters
+    OutlierThreshold: 1 
+    Confidence: 0.90
+- Name: cameraTransformEstimator
+  Type: CamerasTransformEstimation
+  Implementation: EssentialMatrixDecomposition
+  Parameters:
+  - Name: GeneralParameters
+    NumberOfTestPoints: 20
+  - Name: FirstCameraMatrix
+    FocalLengthX: 1408.899186439272
+    FocalLengthY: 1403.116708010621
+    PrinciplePointX: 1053.351342078365
+    PrinciplePointY: 588.8342842821718
+  - Name: SecondCameraMatrix
+    FocalLengthX: 1408.899186439272
+    FocalLengthY: 1403.116708010621
+    PrinciplePointX: 1053.351342078365
+    PrinciplePointY: 588.8342842821718
+- Name: reconstructor3D
+  Type: StereoReconstruction
+  Implementation: HirschmullerDisparityMapping
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudSamplingDensity: 0.1
+    UseFullScaleTwoPassAlgorithm: false
+  - Name: Prefilter
+    Maximum: 31
+  - Name: Disparities
+    Minimum: 0
+    NumberOfIntervals: 64
+    UseMaximumDifference: false
+    MaximumDifference: -1
+    SpeckleRange: 0
+    SpeckleWindow: 0
+    SmoothnessParameter1: 0
+    SmoothnessParameter2: 0
+  - Name: BlocksMatching
+    BlockSize: 21
+    UniquenessRatio: 15
+  - Name: DisparityToDepthMap
+    Element_0_0: 1
+    Element_0_1: 0
+    Element_0_2: 0
+    Element_0_3: -3259.404846191406
+    Element_1_0: 0
+    Element_1_1: 1
+    Element_1_2: 0
+    Element_1_3: 1793.122953414917
+    Element_2_0: 0
+    Element_2_1: 0
+    Element_2_2: 0
+    Element_2_3: -1822.793404684805
+    Element_3_0: 0
+    Element_3_1: 0
+    Element_3_2: 0.3911752722551165
+    Element_3_3: 0
