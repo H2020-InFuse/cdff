@@ -211,7 +211,7 @@ void StereoCameraCalibrator::ExtractChessboardCornersFromImages()
 
 		leftCornersList.push_back(sortedLeftSingleImageCornersList);
 		rightCornersList.push_back(sortedRightSingleImageCornersList);
-		//ViewChessboard(imageId, leftImage, rightImage);
+		ViewChessboard(imageId, leftImage, rightImage);
 		}
 	}
 

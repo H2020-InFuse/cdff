@@ -258,6 +258,7 @@ void ReconstructionFromStereo::FilterCurrentImage()
 	DELETE_PREVIOUS(filteredCurrentImage);
 	filteredCurrentImage = leftFilter->filteredImageOutput();
 	DEBUG_PRINT_TO_LOG("Filtered Current Frame", "");
+	DEBUG_SHOW_IMAGE(filteredCurrentImage);
 	}
 
 void ReconstructionFromStereo::FilterPastImage()
@@ -276,6 +277,7 @@ void ReconstructionFromStereo::FilterCurrentRightImage()
 	DELETE_PREVIOUS(filteredCurrentRightImage);
 	filteredCurrentRightImage = rightFilter->filteredImageOutput();
 	DEBUG_PRINT_TO_LOG("Filtered Current Right Frame", "");
+	DEBUG_SHOW_IMAGE(filteredCurrentRightImage);
 	}
 
 void ReconstructionFromStereo::ExtractCurrentFeatures()
