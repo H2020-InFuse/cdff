@@ -14,8 +14,23 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements both the image undistotion and image rectification operations.
+ *  @brief This DFN implements both the image undistotion and image rectification operations.
  *  
+ * This DFN implementation applies a pre-computed undistortion and rectification transform to the images as provided by OpenCV. The rectification transform is provided to the DFN in two ways: 
+ * (i) it is stored in an external file,
+ * (ii) it is computed from the intrisic camera parameters provided into the DFN configuration file. 
+ * Since the image is a discretized representation of reality, an interpolation algorithm is required to expand the transformation results on all the points of interest. 
+ * 
+ * This DFN implementation requires the following parameters:
+ * @param interpolationMethod, the interpolation algorithm used. One between Nearest, Linear, Cubic or Lanczos
+ * @param borderMode, the way interpolation is handled at the border of the image. One between Constant, Wrap or Reflect
+ * @param constantBorderValue, if the borderMode is constant, this value represents the value of the border for interpolation.
+ * @param cameraConfigurationMode, the way the undistortion rectification transform is configure. One between Internal or External.
+ * @param transformMapsFilePath, if cameraConfigurationMode is External, this is the file containing the undistortion rectification transform.
+ * @param cameraMatrix, if cameraConfigurationMode is Internal, this represents the internal parameters of the camera: focal lengths and principle points.
+ * @param distortionParametersSet, if cameraConfigurationMode is Internal, this represents the distortion coefficients of the camera.
+ * @param imageSize, if cameraConfigurationMode is Internal, this is the size of the images taken by the camera and handled by the filter
+ * @param rectificationMatrix, if cameraConfigurationMode is Internal, this is the 3x3 rectification matrix represented as a vector of size 9.
  *
  * @{
  */

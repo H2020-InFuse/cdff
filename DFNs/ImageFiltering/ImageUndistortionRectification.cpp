@@ -101,7 +101,7 @@ void ImageUndistortionRectification::configure()
 	parametersHelper.ReadFile(configurationFilePath);
 	if (parameters.cameraConfigurationMode == IN_CONFIGURATION_FILE)
 		{
-		ConvertParametersToCvMatrices();
+		ConvertParametersToCvMatrices(); //CameraMatrix, distortionCoefficients and RectificationMatrix are converted in cv::Mat format
 		ComputeUndistortionRectificationMap();
 		}
 	else

@@ -12,4 +12,5 @@ output_ports:
       doc: This is the 3d point cloud representing the scene in front of the stereo camera. The coordinate system is aligned with the position of the left camera.
 implementations:
     - DisparityMapping
+    - HirschmullerDisparityMapping
 

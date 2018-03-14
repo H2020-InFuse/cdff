@@ -64,8 +64,8 @@
     K5: 105.9684960970509
     K6: -60.88515255428263
   - Name: ImageSize
-    Width: 1920
-    Height: 1080
+    Width: 1242
+    Height: 375
   - Name: RectificationMatrix
     Element_0_0: 9.993513e-01
     Element_0_1: 1.860866e-02
