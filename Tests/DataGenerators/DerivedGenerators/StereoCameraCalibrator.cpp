@@ -31,6 +31,7 @@
 #include <time.h>
 #include <ctime>
 #include <Errors/Assert.hpp>
+#include <iomanip>  
 
 namespace DataGenerators
 {
@@ -94,10 +95,10 @@ void StereoCameraCalibrator::CalibrateCameras()
 		);
 	PRINT_TO_LOG("Calibration complete", "");
 
-	PRINT_TO_LOG("Left calibration: \n", leftCameraMatrix);
-	PRINT_TO_LOG("Right calibration: \n", rightCameraMatrix);
-	PRINT_TO_LOG("Left distortion: \n", leftDistortionCoefficients);
-	PRINT_TO_LOG("Right distortion: \n", rightDistortionCoefficients);
+	PrintCameraMatrix("Left Camera Matrix \n", leftCameraMatrix);
+	PrintCameraMatrix("Right Camera Matrix \n", rightCameraMatrix);
+	PrintDistortionCoefficients("Left Distortion Matrix \n", leftDistortionCoefficients);
+	PrintDistortionCoefficients("Right Distortion Matrix \n", rightDistortionCoefficients);
 	PRINT_TO_LOG("Fundamental Matrix: \n", fundamentalMatrix);
 	PRINT_TO_LOG("Essential Matrix: \n", essentialMatrix);
 	PRINT_TO_LOG("Translation: \n", translationMatrix);
@@ -122,11 +123,11 @@ void StereoCameraCalibrator::RectifyCameras()
 		disparityToDepthMatrix
 		);
 
+	PrintRectificationMatrix("Left Rectification Matrix \n", leftRectificationMatrix);
+	PrintRectificationMatrix("Right Rectification Matrix \n", rightRectificationMatrix);
 	PRINT_TO_LOG("Rectified Left Projection Matrix \n", leftRectifiedProjectionMatrix);
 	PRINT_TO_LOG("Rectified Right Projection Matrix \n", rightRectifiedProjectionMatrix);	
-	PRINT_TO_LOG("Left Rectification Matrix \n", leftRectificationMatrix);
-	PRINT_TO_LOG("Right Rectification Matrix \n", rightRectificationMatrix);
-	PRINT_TO_LOG("Disparity To Depth Matrix \n", disparityToDepthMatrix);
+	PrintDisparityToDepthMatrix(disparityToDepthMatrix);
 	}
 
 void StereoCameraCalibrator::ComputeUndistortionRectificationMap()
@@ -137,7 +138,7 @@ void StereoCameraCalibrator::ComputeUndistortionRectificationMap()
 		leftCameraMatrix,
 		leftDistortionCoefficients,
 		leftRectificationMatrix,
-		leftCameraMatrix,
+		cv::getOptimalNewCameraMatrix(leftCameraMatrix, leftDistortionCoefficients, imageSize, 1),
 		imageSize,
 		CV_32FC1,
 		leftMap1, 
@@ -150,7 +151,7 @@ void StereoCameraCalibrator::ComputeUndistortionRectificationMap()
 		rightCameraMatrix,
 		rightDistortionCoefficients,
 		rightRectificationMatrix,
-		rightCameraMatrix,
+		cv::getOptimalNewCameraMatrix(rightCameraMatrix, rightDistortionCoefficients, imageSize, 1),
 		imageSize,
 		CV_32FC1,
 		rightMap1, 
@@ -200,8 +201,10 @@ void StereoCameraCalibrator::ExtractChessboardCornersFromImages()
 			}
 
 		std::vector<cv::Point2f> leftSingleImageCornersList, rightSingleImageCornersList;
-		bool leftSuccess = cv::findChessboardCorners(leftImage, cv::Size(numberOfRows, numberOfColumns), leftSingleImageCornersList);
-		bool rightSuccess = cv::findChessboardCorners(rightImage, cv::Size(numberOfRows, numberOfColumns), rightSingleImageCornersList);
+		bool leftSuccess = cv::findChessboardCorners(leftImage, cv::Size(numberOfRows, numberOfColumns), leftSingleImageCornersList,
+			cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_FAST_CHECK | cv::CALIB_CB_NORMALIZE_IMAGE);
+		bool rightSuccess = cv::findChessboardCorners(rightImage, cv::Size(numberOfRows, numberOfColumns), rightSingleImageCornersList,
+			cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_FAST_CHECK | cv::CALIB_CB_NORMALIZE_IMAGE);
 		PRINT_TO_LOG("Found Corners in Left Camera", leftSuccess);
 		PRINT_TO_LOG("Found Corners in Right Camera", rightSuccess);
 		ASSERT(leftSuccess && rightSuccess, "Camera calibration failed");
@@ -281,6 +284,11 @@ void StereoCameraCalibrator::ViewChessboard(unsigned imageIndex, cv::Mat leftIma
 
 std::vector<cv::Point2f> StereoCameraCalibrator::SortLeftRightUpDown(std::vector<cv::Point2f>& pointsList)
 	{
+	/** If the chessboard is not square the ordering is guaranteed already **/
+	if (numberOfRows != numberOfColumns)
+		{
+		return pointsList;	
+		}
 	/**
 	This algorithm assumes that either the list is already correctly ordered or it is ordered from top-down, left-right direction;
 	**/
@@ -313,6 +321,80 @@ std::vector<cv::Point2f> StereoCameraCalibrator::ChangeFromTopDownLeftRight(std:
 			}
 		}
 	return orderedPointsList;
+	}
+
+void StereoCameraCalibrator::PrintCameraMatrix(std::string message, cv::Mat cameraMatrix)
+	{
+	std::stringstream messageStream;
+	messageStream<<std::setprecision(14);
+	messageStream<<"   FocalLengthX: " << cameraMatrix.at<double>(0,0) <<"\n";
+	messageStream<<"    FocalLengthY: " << cameraMatrix.at<double>(1,1) <<"\n";
+	messageStream<<"    PrinciplePointX: " << cameraMatrix.at<double>(0,2) <<"\n";
+	messageStream<<"    PrinciplePointY: " << cameraMatrix.at<double>(1,2) <<"\n";
+	std::string messageString = messageStream.str();
+	PRINT_TO_LOG(message, messageString);
+	}
+
+void StereoCameraCalibrator::PrintDistortionCoefficients(std::string message, cv::Mat distortionVector)
+	{
+	std::stringstream messageStream;
+	messageStream<<std::setprecision(14);
+	messageStream<<"   UseK3: true \n";
+	messageStream<<"    UseK4ToK6: true \n";
+	messageStream<<"    K1: " << distortionVector.at<double>(0, 0) << "\n";
+	messageStream<<"    K2: " << distortionVector.at<double>(0, 1) << "\n";
+	messageStream<<"    P1: " << distortionVector.at<double>(0, 2) << "\n";
+	messageStream<<"    P2: " << distortionVector.at<double>(0, 3) << "\n";
+	messageStream<<"    K3: " << distortionVector.at<double>(0, 4) << "\n";
+	messageStream<<"    K4: " << distortionVector.at<double>(0, 5) << "\n";
+	messageStream<<"    K5: " << distortionVector.at<double>(0, 6) << "\n";
+	messageStream<<"    K6: " << distortionVector.at<double>(0, 7) << "\n";
+	std::string messageString = messageStream.str();
+	PRINT_TO_LOG(message, messageString);
+	}
+
+void StereoCameraCalibrator::PrintRectificationMatrix(std::string message, cv::Mat rectificationMatrix)
+	{
+	std::stringstream messageStream;
+	messageStream<<std::setprecision(14);
+	for(unsigned row = 0; row < 3; row++)
+		{
+		for(unsigned column = 0; column < 3; column++)
+			{
+			if (row == 0 && column == 0)
+				{
+				messageStream<<"   Element_" << row << "_" << column <<": " << rectificationMatrix.at<double>(row, column) << "\n";
+				}
+			else
+				{
+				messageStream<<"    Element_" << row << "_" << column <<": " << rectificationMatrix.at<double>(row, column) << "\n";
+				}
+			}
+		}
+	std::string messageString = messageStream.str();
+	PRINT_TO_LOG(message, messageString);
+	}
+
+void StereoCameraCalibrator::PrintDisparityToDepthMatrix(cv::Mat disparityToDepthMatrix)
+	{
+	std::stringstream messageStream;
+	messageStream<<std::setprecision(14);
+	for(unsigned row = 0; row < 4; row++)
+		{
+		for(unsigned column = 0; column < 4; column++)
+			{
+			if (row == 0 && column == 0)
+				{
+				messageStream<<"   Element_" << row << "_" << column <<": " << disparityToDepthMatrix.at<double>(row, column) << "\n";
+				}
+			else
+				{
+				messageStream<<"    Element_" << row << "_" << column <<": " << disparityToDepthMatrix.at<double>(row, column) << "\n";
+				}
+			}
+		}
+	std::string messageString = messageStream.str();
+	PRINT_TO_LOG("DisparityToDepthMatrix: \n", messageString);
 	}
 
 

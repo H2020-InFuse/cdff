@@ -59,6 +59,10 @@ namespace dfn_ci {
  */
 DisparityMapping::DisparityMapping()
 	{
+	parametersHelper.AddParameter<float>("ReconstructionSpace", "LimitX", parameters.reconstructionSpace.limitX, DEFAULT_PARAMETERS.reconstructionSpace.limitX);
+	parametersHelper.AddParameter<float>("ReconstructionSpace", "LimitY", parameters.reconstructionSpace.limitY, DEFAULT_PARAMETERS.reconstructionSpace.limitY);
+	parametersHelper.AddParameter<float>("ReconstructionSpace", "LimitZ", parameters.reconstructionSpace.limitZ, DEFAULT_PARAMETERS.reconstructionSpace.limitZ);
+
 	parametersHelper.AddParameter<int>("Prefilter", "Size", parameters.prefilter.size, DEFAULT_PARAMETERS.prefilter.size);
 	parametersHelper.AddParameter<PrefilterType, PrefilterTypeHelper>("Prefilter", "Type", parameters.prefilter.type, DEFAULT_PARAMETERS.prefilter.type);
 	parametersHelper.AddParameter<int>("Prefilter", "Maximum", parameters.prefilter.maximum, DEFAULT_PARAMETERS.prefilter.maximum);
@@ -145,6 +149,12 @@ DisparityMapping::PrefilterType DisparityMapping::PrefilterTypeHelper::Convert(c
 
 const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PARAMETERS =
 	{
+	.reconstructionSpace =
+		{
+		.limitX = 20,
+		.limitY = 20,
+		.limitZ = 40
+		},
 	.prefilter =
 		{
 		.size = 9,
@@ -238,6 +248,8 @@ PointCloudConstPtr DisparityMapping::Convert(cv::Mat cvPointCloud)
 			cv::Vec3f point = cvPointCloud.at<cv::Vec3f>(row, column);
 
 			bool validPoint = (point[0] == point[0] && point[1] == point[1] && point[2] == point[2]);
+			validPoint = validPoint && ( std::abs(point[0]) <= parameters.reconstructionSpace.limitX ) && ( std::abs(point[1]) <= parameters.reconstructionSpace.limitY );
+			validPoint = validPoint && ( point[2] >= 0 ) && ( point[2] <= parameters.reconstructionSpace.limitZ );
 			if (validPoint)
 				{
 				validPointCount++;
@@ -273,6 +285,9 @@ void DisparityMapping::ValidateParameters()
 	ASSERT(parameters.blocksMatching.blockSize % 2 == 1, "DisparityMapping Configuration Error: blockSize needs to be odd");
 	ASSERT(!parameters.disparities.useMaximumDifference || parameters.disparities.maximumDifference >= 0, "DisparityMapping Configuration, maximum disparity difference used but not set positive");
 	ASSERT(parameters.pointCloudSamplingDensity > 0 && parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
+	ASSERT( parameters.reconstructionSpace.limitX > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
+	ASSERT( parameters.reconstructionSpace.limitY > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
+	ASSERT( parameters.reconstructionSpace.limitZ > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
 	}
 
 

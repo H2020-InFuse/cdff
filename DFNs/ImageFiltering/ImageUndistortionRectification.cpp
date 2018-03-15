@@ -31,6 +31,7 @@
 #include <FrameToMatConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <Macros/YamlcppMacros.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -324,13 +325,16 @@ void ImageUndistortionRectification::ConvertParametersToCvMatrices()
 
 void ImageUndistortionRectification::ComputeUndistortionRectificationMap()
 	{
+	cv::Size imageSize(parameters.imageSize.width, parameters.imageSize.height);
+	cv::Mat optimalNewCameraMatrix = cv::getOptimalNewCameraMatrix(cameraMatrix, distortionVector, imageSize, 1);
+
 	cv::initUndistortRectifyMap
 		(
 		cameraMatrix,
 		distortionVector,
 		rectificationMatrix,
-		cameraMatrix,
-		cv::Size(parameters.imageSize.width, parameters.imageSize.height),
+		optimalNewCameraMatrix,
+		imageSize,
 		CV_32FC1,
 		transformMap1, 
 		transformMap2

@@ -92,6 +92,13 @@ namespace dfn_ci {
 	 */	
 	private:
 
+		struct ReconstructionSpace
+			{
+			float limitX;
+			float limitY;
+			float limitZ;
+			};
+
 		struct PrefilterOptionsSet
 			{
 			int maximum;
@@ -115,9 +122,10 @@ namespace dfn_ci {
 			int uniquenessRatio;
 			};
 
-		typedef float DisparityToDepthMap[16];
+		typedef double DisparityToDepthMap[16];
 		struct HirschmullerDisparityMappingOptionsSet
 			{
+			ReconstructionSpace reconstructionSpace;
 			PrefilterOptionsSet prefilter;
 			DisparitiesOptionsSet disparities;
 			BlocksMatchingOptionsSet blocksMatching;

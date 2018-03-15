@@ -83,6 +83,20 @@ target_link_libraries(
 )
 
 add_executable(
+    HirschmullerDisparityMappingGuiTest
+    DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    ParametersInterface.cpp
+    ButtonsInterface.cpp
+    MainInterface.cpp
+    DFNs/DFNTestInterface.cpp
+)
+set_target_properties(HirschmullerDisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+	HirschmullerDisparityMappingGuiTest
+	hirschmuller_disparity_mapping mock cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui cdff_pcl_visualizer ${VTK_LIBRARIES}
+)
+
+add_executable(
     HarrisDetector3DGuiTest
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     ParametersInterface.cpp

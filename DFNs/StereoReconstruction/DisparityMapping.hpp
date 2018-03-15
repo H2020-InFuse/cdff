@@ -87,6 +87,13 @@ namespace dfn_ci {
 				PrefilterType Convert(const std::string& value);
 			};
 
+		struct ReconstructionSpace
+			{
+			float limitX;
+			float limitY;
+			float limitZ;
+			};
+
 		struct Rectangle
 			{
 			int topLeftColumn;
@@ -123,6 +130,7 @@ namespace dfn_ci {
 		typedef float DisparityToDepthMap[16];
 		struct DisparityMappingOptionsSet
 			{
+			ReconstructionSpace reconstructionSpace;
 			PrefilterOptionsSet prefilter;
 			DisparitiesOptionsSet disparities;
 			Rectangle firstRegionOfInterest;

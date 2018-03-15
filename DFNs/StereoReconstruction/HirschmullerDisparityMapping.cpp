@@ -35,6 +35,7 @@
 #include <Eigen/Geometry>
 #include <FrameToMatConverter.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -59,6 +60,10 @@ namespace dfn_ci {
  */
 HirschmullerDisparityMapping::HirschmullerDisparityMapping()
 	{
+	parametersHelper.AddParameter<float>("ReconstructionSpace", "LimitX", parameters.reconstructionSpace.limitX, DEFAULT_PARAMETERS.reconstructionSpace.limitX);
+	parametersHelper.AddParameter<float>("ReconstructionSpace", "LimitY", parameters.reconstructionSpace.limitY, DEFAULT_PARAMETERS.reconstructionSpace.limitY);
+	parametersHelper.AddParameter<float>("ReconstructionSpace", "LimitZ", parameters.reconstructionSpace.limitZ, DEFAULT_PARAMETERS.reconstructionSpace.limitZ);
+
 	parametersHelper.AddParameter<int>("Prefilter", "Maximum", parameters.prefilter.maximum, DEFAULT_PARAMETERS.prefilter.maximum);
 
 	parametersHelper.AddParameter<int>("Disparities", "Minimum", parameters.disparities.minimum, DEFAULT_PARAMETERS.disparities.minimum);
@@ -68,7 +73,7 @@ HirschmullerDisparityMapping::HirschmullerDisparityMapping()
 	parametersHelper.AddParameter<int>("Disparities", "SpeckleRange", parameters.disparities.speckleRange, DEFAULT_PARAMETERS.disparities.speckleRange);
 	parametersHelper.AddParameter<int>("Disparities", "SpeckleWindow", parameters.disparities.speckleWindow, DEFAULT_PARAMETERS.disparities.speckleWindow);
 	parametersHelper.AddParameter<int>("Disparities", "SmoothnessParameter1", parameters.disparities.smoothnessParameter1, DEFAULT_PARAMETERS.disparities.smoothnessParameter1);
-	parametersHelper.AddParameter<int>("Disparities", "SmoothnessParameter2", parameters.disparities.smoothnessParameter1, DEFAULT_PARAMETERS.disparities.smoothnessParameter1);
+	parametersHelper.AddParameter<int>("Disparities", "SmoothnessParameter2", parameters.disparities.smoothnessParameter2, DEFAULT_PARAMETERS.disparities.smoothnessParameter2);
 
 	parametersHelper.AddParameter<int>("BlocksMatching", "BlockSize", parameters.blocksMatching.blockSize, DEFAULT_PARAMETERS.blocksMatching.blockSize);
 	parametersHelper.AddParameter<int>("BlocksMatching", "UniquenessRatio", parameters.blocksMatching.uniquenessRatio, DEFAULT_PARAMETERS.blocksMatching.uniquenessRatio);
@@ -82,7 +87,7 @@ HirschmullerDisparityMapping::HirschmullerDisparityMapping()
 			{
 			std::stringstream elementStream;
 			elementStream << "Element_" << row <<"_"<< column;
-			parametersHelper.AddParameter<float>("DisparityToDepthMap", elementStream.str(), parameters.disparityToDepthMap[4*row+column], DEFAULT_PARAMETERS.disparityToDepthMap[4*row+column]);
+			parametersHelper.AddParameter<double>("DisparityToDepthMap",elementStream.str(), parameters.disparityToDepthMap[4*row+column], DEFAULT_PARAMETERS.disparityToDepthMap[4*row+column]);
 			}
 		}
 
@@ -114,6 +119,12 @@ void HirschmullerDisparityMapping::process()
 
 const HirschmullerDisparityMapping::HirschmullerDisparityMappingOptionsSet HirschmullerDisparityMapping::DEFAULT_PARAMETERS =
 	{
+	.reconstructionSpace =
+		{
+		.limitX = 20,
+		.limitY = 20,
+		.limitZ = 40
+		},
 	.prefilter =
 		{
 		.maximum = 31
@@ -169,7 +180,7 @@ cv::Mat HirschmullerDisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::M
 	cv::Mat disparity;
 	stereo->compute(greyLeftImage, greyRightImage, disparity);
 
-	cv::Mat pointCloud;
+	cv::Mat pointCloud;	
 	cv::reprojectImageTo3D(disparity, pointCloud, disparityToDepthMap);
 
 	return pointCloud;
@@ -188,6 +199,8 @@ PointCloudConstPtr HirschmullerDisparityMapping::Convert(cv::Mat cvPointCloud)
 			cv::Vec3f point = cvPointCloud.at<cv::Vec3f>(row, column);
 
 			bool validPoint = (point[0] == point[0] && point[1] == point[1] && point[2] == point[2]);
+			validPoint = validPoint && ( std::abs(point[0]) <= parameters.reconstructionSpace.limitX ) && ( std::abs(point[1]) <= parameters.reconstructionSpace.limitY );
+			validPoint = validPoint && ( point[2] >= 0 ) && ( point[2] <= parameters.reconstructionSpace.limitZ );
 			if (validPoint)
 				{
 				validPointCount++;
@@ -204,13 +217,13 @@ PointCloudConstPtr HirschmullerDisparityMapping::Convert(cv::Mat cvPointCloud)
 
 cv::Mat HirschmullerDisparityMapping::Convert(DisparityToDepthMap disparityToDepthMap)
 	{
-	cv::Mat conversion(4, 4, CV_32FC1);
+	cv::Mat conversion(4, 4, CV_64FC1);
 	
 	for(unsigned row = 0; row < 4; row++)
 		{
 		for (unsigned column = 0; column < 4; column++)
 			{
-			conversion.at<float>(row, column) = disparityToDepthMap[4*row + column];
+			conversion.at<double>(row, column) = disparityToDepthMap[4*row + column];
 			}
 		}
 
@@ -226,6 +239,9 @@ void HirschmullerDisparityMapping::ValidateParameters()
 	ASSERT( (parameters.disparities.smoothnessParameter2 > parameters.disparities.smoothnessParameter1) ||
 		(parameters.disparities.smoothnessParameter2 == 0 && parameters.disparities.smoothnessParameter1 == 0), 
 		"HirschmullerDisparityMapping Configuration Error: SmoothnessParameters2 has to be greater than SmoothnessParameters1 or both parameters need to be zero");
+	ASSERT( parameters.reconstructionSpace.limitX > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
+	ASSERT( parameters.reconstructionSpace.limitY > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
+	ASSERT( parameters.reconstructionSpace.limitZ > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
 	}
 
 
