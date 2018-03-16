@@ -61,6 +61,7 @@ class OpencvVisualizer
 		static void ShowImage(FrameWrapper::FrameConstPtr frame);
 		static void ShowVisualFeatures(FrameWrapper::FrameConstPtr frame, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featuresVector);
 		static void ShowCorrespondences(FrameWrapper::FrameConstPtr frame1, FrameWrapper::FrameConstPtr frame2, CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap);
+		static void ShowDisparity(cv::Mat disparity);
 
 		static void ShowMatrix(MatrixWrapper::Matrix3dConstPtr matrix);
 		static void ShowPose(PoseWrapper::Pose3DConstPtr pose);
@@ -96,12 +97,14 @@ class OpencvVisualizer
 		#define DEBUG_SHOW_2D_CORRESPONDENCES(frame1, frame2, correspondenceMap)
 		#define DEBUG_SHOW_POSE(pose)
 		#define DEBUG_SHOW_MATRIX(matrix)
+		#define DEBUG_SHOW_DISPARITY(disparity)
 	#else
 		#define DEBUG_SHOW_IMAGE(image) Visualizers::OpencvVisualizer::ShowImage(image)
 		#define DEBUG_SHOW_2D_VISUAL_FEATURES(frame, featuresVector) Visualizers::OpencvVisualizer::ShowVisualFeatures(frame, featuresVector)
 		#define DEBUG_SHOW_2D_CORRESPONDENCES(frame1, frame2, correspondenceMap) Visualizers::OpencvVisualizer::ShowCorrespondences(frame1, frame2, correspondenceMap)
 		#define DEBUG_SHOW_POSE(pose) Visualizers::OpencvVisualizer::ShowPose(pose)
 		#define DEBUG_SHOW_MATRIX(matrix) Visualizers::OpencvVisualizer::ShowMatrix(matrix)
+		#define DEBUG_SHOW_DISPARITY(disparity) Visualizers::OpencvVisualizer::ShowDisparity(disparity)
 	#endif
 
 #endif

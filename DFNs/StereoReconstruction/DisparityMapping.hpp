@@ -127,6 +127,14 @@ namespace dfn_ci {
 			int uniquenessRatio;
 			};
 
+		struct StereoCameraParameters
+			{
+			float leftFocalLength;
+			float leftPrinciplePointX;
+			float leftPrinciplePointY;
+			float baseline;
+			};
+
 		typedef float DisparityToDepthMap[16];
 		struct DisparityMappingOptionsSet
 			{
@@ -138,6 +146,8 @@ namespace dfn_ci {
 			BlocksMatchingOptionsSet blocksMatching;
 			DisparityToDepthMap disparityToDepthMap;
 			float pointCloudSamplingDensity;
+			bool useDisparityToDepthMap;
+			StereoCameraParameters stereoCameraParameters;
 			};
 
 		cv::Mat disparityToDepthMap;
@@ -149,6 +159,7 @@ namespace dfn_ci {
 		cv::Mat ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage);
 		PointCloudWrapper::PointCloudConstPtr Convert(cv::Mat cvPointCloud);
 		cv::Mat Convert(DisparityToDepthMap disparityToDepthMap);
+		cv::Mat ComputePointCloudFromDisparity(cv::Mat disparity);
 
 		void ValidateParameters();
     };

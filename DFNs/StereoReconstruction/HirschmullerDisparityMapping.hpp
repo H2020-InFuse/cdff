@@ -121,6 +121,14 @@ namespace dfn_ci {
 			int blockSize;
 			int uniquenessRatio;
 			};
+		
+		struct StereoCameraParameters
+			{
+			float leftFocalLength;
+			float leftPrinciplePointX;
+			float leftPrinciplePointY;
+			float baseline;
+			};
 
 		typedef double DisparityToDepthMap[16];
 		struct HirschmullerDisparityMappingOptionsSet
@@ -132,6 +140,8 @@ namespace dfn_ci {
 			DisparityToDepthMap disparityToDepthMap;
 			float pointCloudSamplingDensity;
 			bool useFullScaleTwoPassAlgorithm;
+			bool useDisparityToDepthMap;
+			StereoCameraParameters stereoCameraParameters;
 			};
 
 		cv::Mat disparityToDepthMap;
@@ -143,6 +153,7 @@ namespace dfn_ci {
 		cv::Mat ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage);
 		PointCloudWrapper::PointCloudConstPtr Convert(cv::Mat cvPointCloud);
 		cv::Mat Convert(DisparityToDepthMap disparityToDepthMap);
+		cv::Mat ComputePointCloudFromDisparity(cv::Mat disparity);
 
 		void ValidateParameters();
     };

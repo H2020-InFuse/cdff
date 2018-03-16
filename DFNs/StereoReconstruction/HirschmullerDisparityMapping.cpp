@@ -35,7 +35,7 @@
 #include <Eigen/Geometry>
 #include <FrameToMatConverter.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <Visualizers/OpencvVisualizer.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -80,6 +80,7 @@ HirschmullerDisparityMapping::HirschmullerDisparityMapping()
 
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudSamplingDensity", parameters.pointCloudSamplingDensity, DEFAULT_PARAMETERS.pointCloudSamplingDensity);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseFullScaleTwoPassAlgorithm", parameters.useFullScaleTwoPassAlgorithm, DEFAULT_PARAMETERS.useFullScaleTwoPassAlgorithm);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDisparityToDepthMap", parameters.useDisparityToDepthMap, DEFAULT_PARAMETERS.useDisparityToDepthMap);
 
 	for(unsigned row = 0; row < 4; row++)
 		{
@@ -90,6 +91,11 @@ HirschmullerDisparityMapping::HirschmullerDisparityMapping()
 			parametersHelper.AddParameter<double>("DisparityToDepthMap",elementStream.str(), parameters.disparityToDepthMap[4*row+column], DEFAULT_PARAMETERS.disparityToDepthMap[4*row+column]);
 			}
 		}
+
+	parametersHelper.AddParameter<float>("StereoCamera", "LeftFocalLength", parameters.stereoCameraParameters.leftFocalLength, DEFAULT_PARAMETERS.stereoCameraParameters.leftFocalLength);
+	parametersHelper.AddParameter<float>("StereoCamera", "LeftPrinciplePointX", parameters.stereoCameraParameters.leftPrinciplePointX, DEFAULT_PARAMETERS.stereoCameraParameters.leftPrinciplePointX);
+	parametersHelper.AddParameter<float>("StereoCamera", "LeftPrinciplePointY", parameters.stereoCameraParameters.leftPrinciplePointY, DEFAULT_PARAMETERS.stereoCameraParameters.leftPrinciplePointY);
+	parametersHelper.AddParameter<float>("StereoCamera", "Baseline", parameters.stereoCameraParameters.baseline, DEFAULT_PARAMETERS.stereoCameraParameters.baseline);
 
 	disparityToDepthMap = Convert(parameters.disparityToDepthMap);
 	configurationFilePath = "";
@@ -123,7 +129,7 @@ const HirschmullerDisparityMapping::HirschmullerDisparityMappingOptionsSet Hirsc
 		{
 		.limitX = 20,
 		.limitY = 20,
-		.limitZ = 40
+		.limitZ = 10
 		},
 	.prefilter =
 		{
@@ -147,13 +153,21 @@ const HirschmullerDisparityMapping::HirschmullerDisparityMappingOptionsSet Hirsc
 		},
 	.disparityToDepthMap = 
 		{
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 0, 1,
+		0, 0, -1, 0
 		},
 	.pointCloudSamplingDensity = 1,
-	.useFullScaleTwoPassAlgorithm = false
+	.useFullScaleTwoPassAlgorithm = false,
+	.useDisparityToDepthMap = false,
+	.stereoCameraParameters =
+		{
+		.leftFocalLength = 1,
+		.leftPrinciplePointX = 0,
+		.leftPrinciplePointY = 0,
+		.baseline = 1
+		}
 	};
 
 cv::Mat HirschmullerDisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage)
@@ -179,9 +193,17 @@ cv::Mat HirschmullerDisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::M
 
 	cv::Mat disparity;
 	stereo->compute(greyLeftImage, greyRightImage, disparity);
+	DEBUG_SHOW_DISPARITY(disparity);
 
-	cv::Mat pointCloud;	
-	cv::reprojectImageTo3D(disparity, pointCloud, disparityToDepthMap);
+	cv::Mat pointCloud;
+	if (parameters.useDisparityToDepthMap)
+		{
+		cv::reprojectImageTo3D(disparity, pointCloud, disparityToDepthMap);
+		}
+	else
+		{
+		pointCloud = ComputePointCloudFromDisparity(disparity);
+		}
 
 	return pointCloud;
 	}
@@ -230,6 +252,39 @@ cv::Mat HirschmullerDisparityMapping::Convert(DisparityToDepthMap disparityToDep
 	return conversion;
 	}
 
+/** This algorithm is taken from PCL library from file /stereo/src/stereo_matching.cpp **/
+cv::Mat HirschmullerDisparityMapping::ComputePointCloudFromDisparity(cv::Mat disparity)
+	{
+	float principlePointX = parameters.stereoCameraParameters.leftPrinciplePointX;
+	float principlePointY = parameters.stereoCameraParameters.leftPrinciplePointY;
+	float baseline = parameters.stereoCameraParameters.baseline;
+	float focalLength = parameters.stereoCameraParameters.leftFocalLength;
+
+	float depthScale = baseline * focalLength * 16;
+	cv::Mat pointCloud(disparity.rows, disparity.cols, CV_32FC3, cv::Scalar(0,0,0));
+	for(unsigned row = 0; row < disparity.rows; row++)
+		{
+		for(unsigned column = 0; column < disparity.cols; column++)
+			{
+			float disparityValue = ( static_cast<float>(disparity.at<int16_t>(row, column)) ) / 16;	
+			if (disparityValue > 0)
+				{	
+				float depth = depthScale / disparityValue;
+				pointCloud.at<cv::Vec3f>(row, column)[0] = ((static_cast<float> (column) - principlePointX) * depth) / focalLength;
+				pointCloud.at<cv::Vec3f>(row, column)[1] = ((static_cast<float> (row) - principlePointY) * depth) / focalLength;
+				pointCloud.at<cv::Vec3f>(row, column)[2] = depth;
+				}
+			else
+				{
+				pointCloud.at<cv::Vec3f>(row, column)[0] = std::numeric_limits<float>::quiet_NaN();
+				pointCloud.at<cv::Vec3f>(row, column)[1] = std::numeric_limits<float>::quiet_NaN();
+				pointCloud.at<cv::Vec3f>(row, column)[2] = std::numeric_limits<float>::quiet_NaN();
+				}
+			}
+		}
+	return pointCloud;
+	}
+
 void HirschmullerDisparityMapping::ValidateParameters()
 	{
 	ASSERT(parameters.disparities.numberOfIntervals % 16 == 0, "HirschmullerDisparityMapping Configuration Error: number of disparities needs to be multiple of 16");
@@ -242,6 +297,8 @@ void HirschmullerDisparityMapping::ValidateParameters()
 	ASSERT( parameters.reconstructionSpace.limitX > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
 	ASSERT( parameters.reconstructionSpace.limitY > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
 	ASSERT( parameters.reconstructionSpace.limitZ > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
+	ASSERT( parameters.stereoCameraParameters.leftFocalLength > 0, "DisparityMapping Configuration Error: Focal Length has to be positive");
+	ASSERT( parameters.stereoCameraParameters.baseline > 0, "DisparityMapping Configuration Error: Baseline has to be positive");
 	}
 
 

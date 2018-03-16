@@ -65,6 +65,7 @@ void PclVisualizer::ShowPointClouds(std::vector< pcl::PointCloud<pcl::PointXYZ>:
 	RETURN_IF_DISABLED
 	pcl::visualization::PCLVisualizer viewer (WINDOW_NAME);
 	ASSERT( pointCloudsList.size() <= MAX_POINT_CLOUDS, "PclVisualizer, too many point cloud to visualize");
+	viewer.addCoordinateSystem(0.1);
 
 	for(unsigned pointCloudIndex = 0; pointCloudIndex < pointCloudsList.size(); pointCloudIndex++)
 		{
@@ -126,6 +127,40 @@ void PclVisualizer::ShowVisualFeatures(PointCloudConstPtr pointCloud, VisualPoin
 	pointCloudsList.push_back(featuresCloud);
 	
 	ShowPointClouds(pointCloudsList);
+	}
+
+void PclVisualizer::ShowImage(pcl::PointCloud<pcl::RGB>::ConstPtr image)
+	{
+	RETURN_IF_DISABLED
+	pcl::visualization::PCLVisualizer viewer (WINDOW_NAME);
+	viewer.addCoordinateSystem(0.1);
+
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr imageCloud(new pcl::PointCloud<pcl::PointXYZRGB>() );
+	for(unsigned row = 0; row < image->height; row++)
+		{
+		for(unsigned column = 0; column < image->width; column++)
+			{
+			pcl::RGB point = image->points.at(row * image->width + column);
+			pcl::PointXYZRGB imageCloudPoint;
+			imageCloudPoint.x = static_cast<float>(column) * 0.01;
+			imageCloudPoint.y = - static_cast<float>(row) * 0.01;
+			imageCloudPoint.z = 0;
+			imageCloudPoint.r = point.r;
+			imageCloudPoint.g = point.g;
+			imageCloudPoint.b = point.b;
+			imageCloud->points.push_back(imageCloudPoint);
+			}
+		}
+	viewer.addPointCloud<pcl::PointXYZRGB>(imageCloud);
+
+    	while (!viewer.wasStopped ())
+    		{
+        	viewer.spinOnce();
+        	pcl_sleep (0.01);
+    		} 
+
+	viewer.removeAllPointClouds();
+	viewer.close();
 	}
 
 void PclVisualizer::PlacePointCloud(PointCloudConstPtr sceneCloud, PointCloudConstPtr objectCloud, Pose3DConstPtr objectPoseInScene)

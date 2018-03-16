@@ -13,4 +13,5 @@ output_ports:
 implementations:
     - DisparityMapping
     - HirschmullerDisparityMapping
+    - ScanlineOptimization
 

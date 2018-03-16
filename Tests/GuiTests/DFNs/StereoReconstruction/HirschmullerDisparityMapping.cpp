@@ -41,6 +41,7 @@
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
 #include <BaseTypes.hpp>
 #include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/OpencvVisualizer.hpp>
 
 
 using namespace dfn_ci;
@@ -92,6 +93,7 @@ DisparityMappingTestInterface::DisparityMappingTestInterface(std::string dfnName
 	disparityMapping->rightImageInput(rightFrame);
 
 	outputWindowName = "Disparity Mapping Result";
+	Visualizers::OpencvVisualizer::Enable();
 	}
 
 DisparityMappingTestInterface::~DisparityMappingTestInterface()
@@ -121,7 +123,7 @@ void DisparityMappingTestInterface::SetupParameters()
 	AddParameter("Disparities", "UseMaximumDifference", 1, 1);
 	AddParameter("Disparities", "MaximumDifference", 1, 255);
 	AddParameter("Disparities", "SpeckleRange", 37, 255);
-	AddParameter("Disparities", "SpeckleWindowSize", 92, 255);
+	AddParameter("Disparities", "SpeckleWindow", 92, 255);
 	AddParameter("Disparities", "SmoothnessParameter1", 2400, 100000);
 	AddParameter("Disparities", "SmoothnessParameter2", 10000, 100000);
 
@@ -130,6 +132,7 @@ void DisparityMappingTestInterface::SetupParameters()
 
 	AddParameter("GeneralParameters", "PointCloudSamplingDensity", 0.10, 1, 1e-5);
 	AddParameter("GeneralParameters", "useFullScaleTwoPassAlgorithm", 0, 1);
+	AddParameter("GeneralParameters", "useDisparityToDepthMap", 0, 1);
 
 	AddParameter("DisparityToDepthMap", "Element_0_0", 1, 255);
 	AddParameter("DisparityToDepthMap", "Element_0_1", 0, 255);
@@ -147,6 +150,15 @@ void DisparityMappingTestInterface::SetupParameters()
 	AddParameter("DisparityToDepthMap", "Element_3_1", 0, 255);
 	AddParameter("DisparityToDepthMap", "Element_3_2", 6.0102127133098, 10, 1e-6);
 	AddParameter("DisparityToDepthMap", "Element_3_3", 0, 255);
+
+	AddParameter("StereoCamera", "LeftFocalLength", 532.10224793655, 700, 1e-5);
+	AddParameter("StereoCamera", "LeftPrinciplePointX", 341.73837439614, 700, 1e-5);
+	AddParameter("StereoCamera", "LeftPrinciplePointY", 236.03250430604, 700, 1e-5);
+	AddParameter("StereoCamera", "Baseline", 0.012, 1, 1e-5);
+
+	AddParameter("ReconstructionSpace", "LimitX", 20, 100);
+	AddParameter("ReconstructionSpace", "LimitY", 20, 100);
+	AddParameter("ReconstructionSpace", "LimitZ", 10, 100);
 	}
 
 void DisparityMappingTestInterface::DisplayResult()
