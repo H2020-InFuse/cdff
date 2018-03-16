@@ -155,13 +155,13 @@ int main(int argc, char** argv)
 	structureFromMotion.modelInput(modelCloud);
 	WRITE_TO_LOG("Model Loaded", "");
 
-	cv::Mat doubleImageA = cv::imread("../../tests/Data/Images/SmestechLabA.jpg", cv::IMREAD_COLOR);
-	cv::Mat doubleImageB = cv::imread("../../tests/Data/Images/SmestechLabB.jpg", cv::IMREAD_COLOR);
-	cv::Mat doubleImageC = cv::imread("../../tests/Data/Images/SmestechLabC.jpg", cv::IMREAD_COLOR);
-	cv::Mat doubleImageD = cv::imread("../../tests/Data/Images/SmestechLabD.jpg", cv::IMREAD_COLOR);
-	cv::Mat doubleImageE = cv::imread("../../tests/Data/Images/SmestechLabE.jpg", cv::IMREAD_COLOR);
-	cv::Mat doubleImageF = cv::imread("../../tests/Data/Images/SmestechLabF.jpg", cv::IMREAD_COLOR);
-	cv::Mat doubleImageG = cv::imread("../../tests/Data/Images/SmestechLabG.jpg", cv::IMREAD_COLOR);
+	cv::Mat doubleImageA = cv::imread("../../tests/Data/Images/Scene1.png", cv::IMREAD_COLOR);
+	cv::Mat doubleImageB = cv::imread("../../tests/Data/Images/Scene2.png", cv::IMREAD_COLOR);
+	cv::Mat doubleImageC = cv::imread("../../tests/Data/Images/Scene3.png", cv::IMREAD_COLOR);
+	cv::Mat doubleImageD = cv::imread("../../tests/Data/Images/Scene4.png", cv::IMREAD_COLOR);
+	cv::Mat doubleImageE = cv::imread("../../tests/Data/Images/Scene5.png", cv::IMREAD_COLOR);
+	cv::Mat doubleImageF = cv::imread("../../tests/Data/Images/Scene6.png", cv::IMREAD_COLOR);
+	cv::Mat doubleImageG = cv::imread("../../tests/Data/Images/Scene5.png", cv::IMREAD_COLOR);
 	
 	cv::Mat firstCvImage = doubleImageA( cv::Rect(0,0,doubleImageA.cols/2,doubleImageA.rows) );
 	cv::Mat secondCvImage = doubleImageB( cv::Rect(0,0,doubleImageB.cols/2,doubleImageB.rows) );

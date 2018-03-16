@@ -9,34 +9,34 @@
     CameraConfigurationMode: Internal
     TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsLeft.yaml
   - Name: CameraMatrix
-    FocalLengthX: 532.10224793655
-    FocalLengthY: 532.25998767649
-    PrinciplePointX: 341.73837439614
-    PrinciplePointY: 236.03250430604
+    FocalLengthX: 693.4181807813
+    FocalLengthY: 690.36629049483
+    PrinciplePointX: 671.7716154809
+    PrinciplePointY: 391.33378485796
   - Name: Distortion
     UseK3: true 
     UseK4ToK6: true 
-    K1: 26.196733231035
-    K2: 11.295395253356
-    P1: 0.0010195069032126
-    P2: -0.00047790626492385
-    K3: -9.8608226284673
-    K4: 26.374864562648
-    K5: 19.623998335243
-    K6: -10.095220709989
+    K1: 0.39160333319788
+    K2: -67.273810332838
+    P1: 0.00056073969847596
+    P2: -0.0035917800798291
+    K3: 237.61237318275
+    K4: 0.35372515932617
+    K5: -66.934609418439
+    K6: 236.75743075463
   - Name: ImageSize
-    Width: 640
-    Height: 480
+    Width: 1280
+    Height: 720
   - Name: RectificationMatrix
-    Element_0_0: 0.99995025034885
-    Element_0_1: -0.0093670049518263
-    Element_0_2: 0.0034287090145689
-    Element_1_0: 0.0093787311744494
-    Element_1_1: 0.99995017005324
-    Element_1_2: -0.0034200602404983
-    Element_2_0: -0.003396502440973
-    Element_2_1: 0.0034520470338174
-    Element_2_2: 0.99998827350247
+    Element_0_0: 0.99998692232279
+    Element_0_1: 0.00045433768478094
+    Element_0_2: -0.0050939926049538
+    Element_1_0: -0.00046438147916384
+    Element_1_1: 0.999997950374
+    Element_1_2: -0.0019706845597646
+    Element_2_0: 0.0050930868079138
+    Element_2_1: 0.0019730243436088
+    Element_2_2: 0.99998508370961
 - Name: rightFilter
   Type: ImageFiltering
   Implementation: ImageUndistortionRectification
@@ -48,34 +48,34 @@
     TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsRight.yaml
     CameraConfigurationMode: Internal
   - Name: CameraMatrix
-    FocalLengthX: 536.53907668103
-    FocalLengthY: 536.25406309701
-    PrinciplePointX: 327.49508519267
-    PrinciplePointY: 250.81249604899
+    FocalLengthX: 693.70228594399
+    FocalLengthY: 691.5964653592
+    PrinciplePointX: 672.36931687204
+    PrinciplePointY: 393.60885185491
   - Name: Distortion
     UseK3: true 
     UseK4ToK6: true 
-    K1: -5.5548290453122
-    K2: 7.0240891281919
-    P1: -0.00065065769316042
-    P2: -0.00043421281338849
-    K3: 1.9585792817261
-    K4: -5.2518044533959
-    K5: 5.2696676390139
-    K6: 4.4980988906526
+    K1: -11.395471000651
+    K2: 157.12777744394
+    P1: 0.00038932692838161
+    P2: -0.0028309139682407
+    K3: -79.419861245485
+    K4: -11.374087198325
+    K5: 157.10782368884
+    K6: -79.515010847945
   - Name: ImageSize
-    Width: 640
-    Height: 480
+    Width: 1280
+    Height: 720
   - Name: RectificationMatrix
-    Element_0_0: 0.99991738969599
-    Element_0_1: -0.012831231156288
-    Element_0_2: 0.00075715953902404
-    Element_1_0: 0.012828553678434
-    Element_1_1: 0.99991178989107
-    Element_1_2: 0.0034410241714362
-    Element_2_0: -0.00080124532645669
-    Element_2_1: -0.0034310266455938
-    Element_2_2: 0.99999379301178
+    Element_0_0: 0.99999671131107
+    Element_0_1: 0.0001020440908808
+    Element_0_2: -0.0025626068846276
+    Element_1_0: -9.6990784025898e-05
+    Element_1_1: 0.99999805092854
+    Element_1_2: 0.0019719867945831
+    Element_2_0: 0.0025628031195234
+    Element_2_1: -0.0019717317600811
+    Element_2_2: 0.99999477214335
 - Name: featureExtractor
   Type: FeaturesExtraction2D
   Implementation: OrbDetectorDescriptor
@@ -116,15 +116,15 @@
   - Name: GeneralParameters
     NumberOfTestPoints: 20
   - Name: FirstCameraMatrix
-    FocalLengthX: 532.10224793655
-    FocalLengthY: 532.25998767649
-    PrinciplePointX: 341.73837439614
-    PrinciplePointY: 236.03250430604
+    FocalLengthX: 693.4181807813
+    FocalLengthY: 690.36629049483
+    PrinciplePointX: 671.7716154809
+    PrinciplePointY: 391.33378485796
   - Name: SecondCameraMatrix
-    FocalLengthX: 536.53907668103
-    FocalLengthY: 536.25406309701
-    PrinciplePointX: 327.49508519267
-    PrinciplePointY: 250.81249604899
+    FocalLengthX: 693.70228594399
+    FocalLengthY: 691.5964653592
+    PrinciplePointX: 672.36931687204
+    PrinciplePointY: 393.60885185491
 - Name: reconstructor3D
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
@@ -132,6 +132,7 @@
   - Name: GeneralParameters
     PointCloudSamplingDensity: 0.1
     UseFullScaleTwoPassAlgorithm: false
+    UseDisparityToDepthMap: false
   - Name: Prefilter
     Maximum: 11
   - Name: Disparities
@@ -150,16 +151,21 @@
     Element_0_0: 1
     Element_0_1: 0
     Element_0_2: 0
-    Element_0_3: -270.37537384033
+    Element_0_3: -279.0498046875
     Element_1_0: 0
     Element_1_1: 1
     Element_1_2: 0
-    Element_1_3: -229.79105377197
+    Element_1_3: 29.868621826172
     Element_2_0: 0
     Element_2_1: 0
     Element_2_2: 0
-    Element_2_3: -1121.1182691834
+    Element_2_3: -8192.8300337838
     Element_3_0: 0
     Element_3_1: 0
-    Element_3_2: 6.0102127133098
+    Element_3_2: 3.3436329786051
     Element_3_3: -0
+  - Name: StereoCamera
+    LeftFocalLength: 693.4181807813
+    LeftPrinciplePointX: 671.7716154809
+    LeftPrinciplePointY: 391.33378485796
+    Baseline: 0.012
