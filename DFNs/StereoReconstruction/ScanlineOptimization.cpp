@@ -76,10 +76,10 @@ ScanlineOptimization::ScanlineOptimization()
 	parametersHelper.AddParameter<int>("Matching", "NumberOfDisparities", 
 			parameters.matchingOptionsSet.leftRightConsistencyThreshold, DEFAULT_PARAMETERS.matchingOptionsSet.leftRightConsistencyThreshold);
 
-	parametersHelper.AddParameter<float>("CameraParameters", "PrinciplePointX", parameters.cameraParameters.principlePointX, DEFAULT_PARAMETERS.cameraParameters.principlePointX);
-	parametersHelper.AddParameter<float>("CameraParameters", "PrinciplePointY", parameters.cameraParameters.principlePointY, DEFAULT_PARAMETERS.cameraParameters.principlePointY);
-	parametersHelper.AddParameter<float>("CameraParameters", "FocalLength", parameters.cameraParameters.focalLength, DEFAULT_PARAMETERS.cameraParameters.focalLength);
-	parametersHelper.AddParameter<float>("CameraParameters", "Baseline", parameters.cameraParameters.baseline, DEFAULT_PARAMETERS.cameraParameters.baseline);
+	parametersHelper.AddParameter<float>("StereoCamera", "LeftPrinciplePointX", parameters.cameraParameters.leftPrinciplePointX, DEFAULT_PARAMETERS.cameraParameters.leftPrinciplePointX);
+	parametersHelper.AddParameter<float>("StereoCamera", "LeftPrinciplePointY", parameters.cameraParameters.leftPrinciplePointY, DEFAULT_PARAMETERS.cameraParameters.leftPrinciplePointY);
+	parametersHelper.AddParameter<float>("StereoCamera", "LeftFocalLength", parameters.cameraParameters.leftFocalLength, DEFAULT_PARAMETERS.cameraParameters.leftFocalLength);
+	parametersHelper.AddParameter<float>("StereoCamera", "Baseline", parameters.cameraParameters.baseline, DEFAULT_PARAMETERS.cameraParameters.baseline);
 
 	parametersHelper.AddParameter<float>("ReconstructionSpace", "LimitX", parameters.reconstructionSpace.limitX, DEFAULT_PARAMETERS.reconstructionSpace.limitX);
 	parametersHelper.AddParameter<float>("ReconstructionSpace", "LimitY", parameters.reconstructionSpace.limitY, DEFAULT_PARAMETERS.reconstructionSpace.limitY);
@@ -128,9 +128,9 @@ const ScanlineOptimization::ScanlineOptimizationOptionsSet ScanlineOptimization:
 		},
 	.cameraParameters =
 		{
-		.principlePointX = 0,
-		.principlePointY = 0,
-		.focalLength = 1,
+		.leftPrinciplePointX = 0,
+		.leftPrinciplePointY = 0,
+		.leftFocalLength = 1,
 		.baseline = 1
 		},
 	.reconstructionSpace =
@@ -167,9 +167,9 @@ ScanlineOptimization::PclPointCloudPtr ScanlineOptimization::ComputePointCloud(P
 	PclPointCloudPtr pointCloud(new PclPointCloud);
 	stereo.getPointCloud
 		(
-		parameters.cameraParameters.principlePointX, 
-		parameters.cameraParameters.principlePointY, 
-		parameters.cameraParameters.focalLength,
+		parameters.cameraParameters.leftPrinciplePointX, 
+		parameters.cameraParameters.leftPrinciplePointY, 
+		parameters.cameraParameters.leftFocalLength,
 		parameters.cameraParameters.baseline,
 		pointCloud
 		);

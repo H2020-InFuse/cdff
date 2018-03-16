@@ -82,9 +82,8 @@ DisparityMappingTestInterface::DisparityMappingTestInterface(std::string dfnName
 	disparityMapping = new DisparityMapping();
 	SetDFN(disparityMapping);
 
-	cv::Mat cvImage = cv::imread("../../tests/Data/Images/SmestechLab.jpg", cv::IMREAD_COLOR);
-	cvLeftImage = cvImage( cv::Rect(0, 0, cvImage.cols/2, cvImage.rows) );
-	cvRightImage = cvImage( cv::Rect(cvImage.cols/2, 0, cvImage.cols/2, cvImage.rows) );
+	cvLeftImage = cv::imread("../../tests/Data/Images/RectifiedLeft.png", cv::IMREAD_COLOR);
+	cvRightImage = cv::imread("../../tests/Data/Images/RectifiedRight.png", cv::IMREAD_COLOR);
 
 	MatToFrameConverter converter;
 	FrameConstPtr leftFrame = converter.Convert(cvLeftImage);
@@ -148,19 +147,24 @@ void DisparityMappingTestInterface::SetupParameters()
 	AddParameter("DisparityToDepthMap", "Element_0_0", 1, 255);
 	AddParameter("DisparityToDepthMap", "Element_0_1", 0, 255);
 	AddParameter("DisparityToDepthMap", "Element_0_2", 0, 255);
-	AddSignedParameter("DisparityToDepthMap", "Element_0_3", -3259.404846191406, 4000, 1e-5);
+	AddSignedParameter("DisparityToDepthMap", "Element_0_3", -279.0498046875, 2000, 1e-5);
 	AddParameter("DisparityToDepthMap", "Element_1_0", 0, 255);
 	AddParameter("DisparityToDepthMap", "Element_1_1", 1, 255);
 	AddParameter("DisparityToDepthMap", "Element_1_2", 0, 255);
-	AddParameter("DisparityToDepthMap", "Element_1_3", 1793.122953414917, 2000, 1e-5);
+	AddSignedParameter("DisparityToDepthMap", "Element_1_3",29.868621826172, 2000, 1e-5);
 	AddParameter("DisparityToDepthMap", "Element_2_0", 0, 255);
 	AddParameter("DisparityToDepthMap", "Element_2_1", 0, 255);
 	AddParameter("DisparityToDepthMap", "Element_2_2", 0, 255);
-	AddSignedParameter("DisparityToDepthMap", "Element_2_3", -1822.793404684805, 2000, 1e-5);
+	AddSignedParameter("DisparityToDepthMap", "Element_2_3", -8192.8300337838, 10000, 1e-4);
 	AddParameter("DisparityToDepthMap", "Element_3_0", 0, 255);
 	AddParameter("DisparityToDepthMap", "Element_3_1", 0, 255);
-	AddParameter("DisparityToDepthMap", "Element_3_2", 0.3911752722551165, 1, 1e-7);
+	AddParameter("DisparityToDepthMap", "Element_3_2", 3.3436329786051, 10, 1e-6);
 	AddParameter("DisparityToDepthMap", "Element_3_3", 0, 255);
+
+	AddParameter("StereoCamera", "LeftFocalLength", 693.4181807813, 700, 1e-5);
+	AddParameter("StereoCamera", "LeftPrinciplePointX", 671.7716154809, 700, 1e-5);
+	AddParameter("StereoCamera", "LeftPrinciplePointY", 391.33378485796, 700, 1e-5);
+	AddParameter("StereoCamera", "Baseline", 0.012, 1, 1e-5);
 	}
 
 void DisparityMappingTestInterface::DisplayResult()

@@ -81,9 +81,8 @@ DisparityMappingTestInterface::DisparityMappingTestInterface(std::string dfnName
 	disparityMapping = new ScanlineOptimization();
 	SetDFN(disparityMapping);
 
-	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/chessboard9.jpg", cv::IMREAD_COLOR);
-	cv::Mat cvLeftImage = doubleImage( cv::Rect(0,0,doubleImage.cols/2,doubleImage.rows) ); //cv::imread("../../tests/Data/Images/left06.jpg", cv::IMREAD_COLOR);
-	cv::Mat cvRightImage = doubleImage( cv::Rect(doubleImage.cols/2,0,doubleImage.cols/2,doubleImage.rows) ); //cv::imread("../../tests/Data/Images/right06.jpg", cv::IMREAD_COLOR);
+	cvLeftImage = cv::imread("../../tests/Data/Images/RectifiedLeft.png", cv::IMREAD_COLOR);
+	cvRightImage = cv::imread("../../tests/Data/Images/RectifiedRight.png", cv::IMREAD_COLOR);
 
 	MatToFrameConverter converter;
 	FrameConstPtr leftFrame = converter.Convert(cvLeftImage);
@@ -161,10 +160,10 @@ void DisparityMappingTestInterface::SetupParameters()
 	AddParameter("Matching", "UseLeftRightConsistencyCheck", 0, 1);
 	AddParameter("Matching", "LeftRightConsistencyThreshold", 1, 255);
 
-	AddParameter("CameraParameters", "PrinciplePointX", 341.73837439614, 1000, 1e-5);
-	AddParameter("CameraParameters", "PrinciplePointY",  236.03250430604, 1000, 1e-5);
-	AddParameter("CameraParameters", "FocalLength", 532.10224793655, 1000, 1e-5);
-	AddParameter("CameraParameters", "Baseline", 0.012, 1, 1e-5);
+	AddParameter("StereoCamera", "LeftFocalLength", 693.4181807813, 700, 1e-5);
+	AddParameter("StereoCamera", "LeftPrinciplePointX", 671.7716154809, 700, 1e-5);
+	AddParameter("StereoCamera", "LeftPrinciplePointY", 391.33378485796, 700, 1e-5);
+	AddParameter("StereoCamera", "Baseline", 0.012, 1, 1e-5);
 
 	AddParameter("ReconstructionSpace", "LimitX", 20, 100);
 	AddParameter("ReconstructionSpace", "LimitY", 20, 100);

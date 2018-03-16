@@ -122,9 +122,9 @@ namespace dfn_ci {
 
 		struct CameraParameters
 			{
-			float principlePointX;
-			float principlePointY;
-			float focalLength;
+			float leftPrinciplePointX;
+			float leftPrinciplePointY;
+			float leftFocalLength;
 			float baseline;
 			};
 
