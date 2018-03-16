@@ -57,7 +57,7 @@ namespace dfpc_ci {
                 DEBUG
             };
 
-            DFPCCommonInterface() : outputUpdated(true) {}
+            DFPCCommonInterface() {}
             virtual ~DFPCCommonInterface() {}
             virtual void run() = 0;
             virtual void setup() = 0;
