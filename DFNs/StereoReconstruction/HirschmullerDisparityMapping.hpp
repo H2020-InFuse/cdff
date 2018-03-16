@@ -34,6 +34,14 @@
  *  @param useFullScaleTwoPassAlgorithm
  *  @param pointCloudSamplingDensity, this defines the ratio between sampled point cloud and full point cloud, it has to be a number between 0 and 1. The sampled point cloud is constructed by taking the 
  *					points at positions multiple of n where n is 1/pointCloudSamplingDensity.
+ *  @param useDisparityToDepthMap, this determines whether the camera parameters are provided in the form of a DisparityToDepthMatrix or in form of focal length, principle point and baseline.
+ *  @param disparityToDepthMap, the camera parameter in form of a 4x4 disparity to depth matrix, each element is defined as Element_X_Y where X and Y belong to {0, 1, 2, 3}.
+ *  @param stereoCameraParameters, the camera parameter represented as left camera focal length (LeftFocalLength), Left Camera principle point coordinates (LeftPrinciplePointX and LeftPrinciplePointY),
+ *					and distance between the two camera (Baseline).
+ *  @param reconstructionSpace, the limits on the reconstructed 3d points coordinates as LimitX, LimitY and LimitZ. A point (x,y,z) is accepted in the output cloud if -LimitX<=x<=LimitX, -LimitY<=y<=LimitY
+ *					and 0<z<=LimitZ.
+ *
+ *  @reference, the algorithm is inspired by the paper: Hirschmuller, H. "Stereo Processing by Semiglobal Matching and Mutual Information", PAMI(30), No. 2, February 2008, pp. 328-341.
  *
  * @{
  */
