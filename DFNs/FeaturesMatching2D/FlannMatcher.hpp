@@ -20,6 +20,54 @@
  * @{
  */
 
+/*!
+ * @addtogroup DFNs
+ * 
+ *  @brief This DFN applies the Flann Matcher algorithm as provided by OpenCV for matching 2d features in 2d images.
+ *  
+ * This DFN implementation operates according the following steps:
+ * (i) initialization of the Flann matcher according to the DFN parameters, (ii) application of the flann matcher to the inputs and extraction of the best matches, (iii) filtering of the best matches:
+ * only those matches that satisfy the acceptanceRatio are retained.
+ * 
+ * This DFN implementation requires the following parameters:
+ * @param distanceThreshold,
+ * @param numberOfChecks,
+ * @param epsilon,
+ * @param sortedSearch, 
+ * @param acceptanceRatio, the acceptanceRatio between 0 and 1 that defines whether a good match is retained and provided as output.
+ * @param matcherMethod, the matching method applied, it can be one of the following: KdTreeSearch, KMeansClustering, AutotunedSearch, HierarchichalClustering, LocalitySensitiveHashing, CompositeSearch
+ * 			or LinearSearch. Depending on the matcher method other parameters apply.
+ *
+ * @param kdTreeSearchOptionsSet.numberOfTrees,
+ *
+ * @param kMeansClusteringOptionsSet.branching, 
+ * @param kMeansClusteringOptionsSet.iterations, 
+ * @param kMeansClusteringOptionsSet.centersInitialization, 
+ * @param kMeansClusteringOptionsSet.convertibleBoundIndex, 
+ *
+ * @param autotunedOptionsSet.targetPrecision,
+ * @param autotunedOptionsSet.buildWeight,
+ * @param autotunedOptionsSet.memoryWeight,
+ * @param autotunedOptionsSet.sampleFraction,
+ *
+ * @param hierarchicalClusteringOptionsSet.branching,
+ * @param hierarchicalClusteringOptionsSet.centersInitialization,
+ * @param hierarchicalClusteringOptionsSet.numberOfTrees,
+ * @param hierarchicalClusteringOptionsSet.leafSize,
+ *
+ * @param localitySensitiveHashingOptionsSet.tableNumber,
+ * @param localitySensitiveHashingOptionsSet.keySize,
+ * @param localitySensitiveHashingOptionsSet.multiProbeLevel,
+ *
+ * @param compositeSearchOptionsSet.branching,
+ * @param compositeSearchOptionsSet.iterations,
+ * @param compositeSearchOptionsSet.centersInitialization,
+ * @param compositeSearchOptionsSet.convertibleBoundIndex,
+ * @param compositeSearchOptionsSet.numberOfTrees,
+ *
+ * @{
+ */
+
 #ifndef FLANN_MATCHER_HPP
 #define FLANN_MATCHER_HPP
 

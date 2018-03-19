@@ -194,6 +194,7 @@ cv::Mat HirschmullerDisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::M
 	cv::Mat disparity;
 	stereo->compute(greyLeftImage, greyRightImage, disparity);
 	DEBUG_SHOW_DISPARITY(disparity);
+	SAVE_DISPARITY_MATRIX(disparity);
 
 	cv::Mat pointCloud;
 	if (parameters.useDisparityToDepthMap)

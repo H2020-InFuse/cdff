@@ -14,8 +14,13 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements the image undistotion operation.
+ *  @brief This DFN executes an image undistotion operation.
  *  
+ * This DFN implementation applies the undistortion filter provided by OpenCV.
+ * 
+ * This DFN implementation requires the following parameters:
+ * @param cameraMatrix, this represents the internal parameters of the camera: focal lengths and principle points.
+ * @param distortionParametersSet, this represents the distortion coefficients of the camera.
  *
  * @{
  */
