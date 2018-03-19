@@ -14,15 +14,6 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements ORB (FAST Detector + BRIEF descriptor) for 2d images.
- *  
- *
- * @{
- */
-
-/*!
- * @addtogroup DFNs
- * 
  *  @brief This DFN uses the Orb Detector and Descriptor (modified FAST Detector + BRIEF descriptor) for detection of keypoints in 2D images and computation of their descriptors.
  *
  *

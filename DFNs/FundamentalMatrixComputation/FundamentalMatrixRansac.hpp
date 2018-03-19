@@ -14,6 +14,18 @@
 /*!
  * @addtogroup DFNs
  * 
+ *  @brief This DFN applies the RANSAC estimation provided by OpenCV.
+ * 
+ * This DFN implementation requires the following parameters:
+ * @param outlierThreshold, the pixel distance that determines whether an input point (represented by a match between two 2d points) is an outlier in the RANSAC model; Recommended values are 1, 2, and 3. 
+ * @param confidence, the minimum acceptable probability that a RANSAC model represents the set of points defined by the correspondence set.
+ *
+ * @{
+ */
+
+/*!
+ * @addtogroup DFNs
+ * 
  *  This DFN implements the Fundamental Matrix Computation with the Ransac (Randome Sample Consensus) Method.
  *  
  *

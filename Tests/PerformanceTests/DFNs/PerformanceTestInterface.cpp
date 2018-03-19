@@ -79,6 +79,8 @@ void PerformanceTestInterface::Run()
 		while ( PrepareConfigurationFile() )
 			{
 			numberOfTests++;
+			dfn->setConfigurationFile(temporaryConfigurationFilePath);
+			dfn->configure();
 
 			clock_t begin = clock();
 			dfn->process();

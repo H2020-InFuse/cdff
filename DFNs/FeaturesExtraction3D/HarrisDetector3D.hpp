@@ -20,6 +20,25 @@
  * @{
  */
 
+/*!
+ * @addtogroup DFNs
+ * 
+ *  @brief This DFN executes the Harris Detector algorithm for extraction of 3d keypoints from a point cloud. 
+ * 
+ * This DFN implementation requires the following parameters:
+ * @param nonMaxSuppression, 
+ * @param radius, 
+ * @param searchRadius,
+ * @param detectionThreshold,
+ * @param enableRefinement,
+ * @param numberOfThreads,
+ * @param method,
+ * @param outputFormat, this defines the output format of the keypoints cloud. If "Positions" is chosen, then the output point cloud contains the 3d coordinates of the keypoints, if "References" is chosen
+ * 			then the output point cloud contains the indices of the 3d point as they appear in the input point cloud.
+ *
+ * @{
+ */
+
 #ifndef HARRIS_DETECTOR_3D_HPP
 #define HARRIS_DETECTOR_3D_HPP
 

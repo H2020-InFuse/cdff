@@ -14,8 +14,18 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements ORB Descriptor (Rotated BRIEF descriptor) for 2d images.
+ *  @brief This DFN uses the Orb Descriptor (Rotated BRIEF descriptor) for the computation of the descriptors of the input keypoints.
  *  
+ *  The algorithm uses the following parameters:
+ *  @param generalParameters.edgeThreshold
+ *  @param generalParameters.fastThreshold
+ *  @param generalParameters.firstLevel
+ *  @param generalParameters.maxFeaturesNumber, this determines the maximum number of keypoints the algorithm will extract.
+ *  @param generalParameters.levelsNumber
+ *  @param generalParameters.patchSize
+ *  @param generalParameters.scaleFactor
+ *  @param generalParameters.scoreType
+ *  @param generalParameters.sizeOfBrightnessTestSet
  *
  * @{
  */

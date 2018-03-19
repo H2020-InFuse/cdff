@@ -14,8 +14,17 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements the Shot Descriptor Estimation for 3D Point Clouds.
- *  
+ *  @brief This DFN executes computes the SHOT descriptors of a set of keypoints according to the implementation in PCL library. 
+ * 
+ * This DFN implementation requires the following parameters:
+ * @param localReferenceFrameEstimationRadius, 
+ * @param searchRadius, when computing the descriptor, neighbour points within this distance are used in the computation
+ * @param forceNormalsEstimation, this determines whether the surface normals have to be recomputed again, regardless of whether they are in the input or not;
+ * @param enableNormalsEstimation, this determines whether the absence of normals in the input will generate an error or will cause the DFN to compute the normals;
+ * @param outputFormat, this defines the output format of the keypoints cloud. If "Positions" is chosen, then the output point cloud contains the 3d coordinates of the keypoints, if "References" is chosen
+ * 			then the output point cloud contains the indices of the 3d point as they appear in the input point cloud.
+ * @param normalEstimationOptions.searchRadius, when computing the normals on a point, neighbour points within this distance are used in the computation
+ * @param normalEstimationOptions.neighboursSetSize, when computing the normals on a point, the closest neighbours are used in the computation, and this parameters defines how many are included.
  *
  * @{
  */

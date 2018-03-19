@@ -11,10 +11,10 @@
   MaximumDifference: 1
   SpeckleRange: 8 12 16
   SpeckleWindow: 40 60 100
-  SmoothnessParameter1: 600 1000 1400
+  SmoothnessParameter1: 1400 1000 600
   SmoothnessParameter2: 2400 2800 3200
 - Name: BlocksMatching
-  BlockSize: 9 5 11
+  BlockSize: 11 31 5
   UniquenessRatio: 1 5 10
 - Name: StereoCamera
   LeftFocalLength: 693.4181807813
