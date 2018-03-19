@@ -1,8 +1,10 @@
 ## Synopsis
 
-Welcome to the Infuse project repository. 
+Welcome to the code repository for the Common Data Fusion Framework developed by the InFuse consortium.
 
-Enjoy it ! 
+The CDFF repository contains the CDFF-Core and CDFF-Support modules, but not the CDFF-Dev module (the development environment). CDFF-Core and CDFF-Support are the modules that must be deployed on your final robotic target system.
+
+To develop a Data Fusion Node (DFN) or a Data Fusion Processing Compound (DFPC), please download [CDFF-Dev](https://gitlab.spaceapplications.com/InFuse/CDFF_dev), the CDFF development environment (and put it next to your copy of the CDFF, for instance). CDFF-Dev provides many utilities that can be used to efficiently implement reusable data fusion solutions. In fact, they *ought* to be used: using CDFF-Dev is the natural way to develop in InFuse.
 
 ## Structure
 See https://docs.google.com/document/d/1ppECSp_fz4f23C0t9v5XJkrxQOHpKud0CJxJu4E5LpI/edit?usp=sharing
