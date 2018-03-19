@@ -172,8 +172,8 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 	PointCloudConstPtr modelCloud = pclConverter.Convert(pclModelCloud);
 	structureFromMotion.modelInput(modelCloud);
 
-	cv::Mat doubleImage1 = cv::imread("../tests/Data/Images/SmestechLabA.jpg", cv::IMREAD_COLOR);
-	cv::Mat doubleImage2 = cv::imread("../tests/Data/Images/SmestechLabB.jpg", cv::IMREAD_COLOR);
+	cv::Mat doubleImage1 = cv::imread("../tests/Data/Images/Scene1.png", cv::IMREAD_COLOR);
+	cv::Mat doubleImage2 = cv::imread("../tests/Data/Images/Scene2.png", cv::IMREAD_COLOR);
 	
 	unsigned startColumn = doubleImage1.cols/8;
 	unsigned startRow = doubleImage1.rows/4;

@@ -75,6 +75,9 @@ namespace DataGenerators {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		static const std::string leftMapFilePath;
+		static const std::string rightMapFilePath;
+
 		FilesMode filesMode;
 		std::string filePath;
 		std::string fileExtension;
@@ -104,6 +107,11 @@ namespace DataGenerators {
 		void ViewChessboard(unsigned imageIndex, cv::Mat leftImage, cv::Mat rightImage);
 		std::vector<cv::Point2f> SortLeftRightUpDown(std::vector<cv::Point2f>& pointsList);
 		std::vector<cv::Point2f> ChangeFromTopDownLeftRight(std::vector<cv::Point2f>& pointsList);
+
+		void PrintCameraMatrix(std::string message, cv::Mat cameraMatrix);
+		void PrintDistortionCoefficients(std::string message, cv::Mat distortionVector);
+		void PrintRectificationMatrix(std::string message, cv::Mat rectificationMatrix);
+		void PrintDisparityToDepthMatrix(cv::Mat disparityToDepthMatrix);
 		
     };
 

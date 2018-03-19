@@ -57,6 +57,7 @@ class PclVisualizer
 		static void ShowPointClouds(std::vector< pcl::PointCloud<pcl::PointXYZ>::ConstPtr > pointCloudsList);
 		static void ShowPointCloud(PointCloudWrapper::PointCloudConstPtr pointCloud);
 		static void ShowVisualFeatures(PointCloudWrapper::PointCloudConstPtr pointCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr featuresVector);
+		static void ShowImage(pcl::PointCloud<pcl::RGB>::ConstPtr image);
 
 		static void PlacePointCloud(PointCloudWrapper::PointCloudConstPtr sceneCloud, PointCloudWrapper::PointCloudConstPtr objectCloud, PoseWrapper::Pose3DConstPtr objectPoseInScene);
 
@@ -102,11 +103,13 @@ class PclVisualizer
 		#define DEBUG_SHOW_POINT_CLOUDS(pointCloudsList)
 		#define DEBUG_SHOW_3D_VISUAL_FEATURES(pointCloud, featuresVector)
 		#define DEBUG_PLACE_POINT_CLOUD(scene, object, objectPose)
+		#define DEBUG_SHOW_PCL_IMAGE(image)
 	#else
 		#define DEBUG_SHOW_POINT_CLOUD(pointCloud) Visualizers::PclVisualizer::ShowPointCloud(pointCloud)
 		#define DEBUG_SHOW_POINT_CLOUDS(pointCloudsList) Visualizers::PclVisualizer::ShowPointClouds(pointCloudsList)
 		#define DEBUG_SHOW_3D_VISUAL_FEATURES(pointCloud, featuresVector) Visualizers::PclVisualizer::ShowVisualFeatures(pointCloud, featuresVector)
 		#define DEBUG_PLACE_POINT_CLOUD(scene, object, objectPose) Visualizers::PclVisualizer::PlacePointCloud(scene, object, objectPose)
+		#define DEBUG_SHOW_PCL_IMAGE(image) Visualizers::PclVisualizer::ShowImage(image)
 	#endif
 
 #endif

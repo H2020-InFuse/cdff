@@ -14,8 +14,34 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements the Hirschmuller disparity mapping algorithm for the reconstruction of 3D point clouds from images taken by a stereo camera.
+ *  This DFN implementation uses the Hirschmuller disparity mapping algorithm for the reconstruction of 3D point clouds from images taken by a stereo camera.
  *  
+ *  This DFN implementation executes the following tasks: conversion of the input images to grey-scale image, application of the Hirschmuller disparity algorithm for the computation of a disparity map,
+ *  application of reprojection algorithm for the reconstruction of a point cloud from the disparity Map, and reduction of the density of the output point cloud by position sampling.
+ *
+ *  This implementation requires the following parameters:
+ *  @param prefilter.maximum
+ *  @param disparities.minimum, this is the value of the minimum disparity.
+ *  @param disparities.numberOfIntervals, this is the number of disparity intervals that will be detected.
+ *  @param disparities.useMaximumDifference
+ *  @param disparities.maximumDifference
+ *  @param disparities.speckleRange
+ *  @param disparities.speckleWindow
+ *  @param disparities.smoothnessParameter1
+ *  @param disparities.smoothnessParameter2
+ *  @param blocksMatching.blockSize, this is the dimension of the blocks that need to be matched in order to compute the disparity, it needs to be an odd number greater or equal than 5.
+ *  @param blocksMatching.uniquenessRatio
+ *  @param useFullScaleTwoPassAlgorithm
+ *  @param pointCloudSamplingDensity, this defines the ratio between sampled point cloud and full point cloud, it has to be a number between 0 and 1. The sampled point cloud is constructed by taking the 
+ *					points at positions multiple of n where n is 1/pointCloudSamplingDensity.
+ *  @param useDisparityToDepthMap, this determines whether the camera parameters are provided in the form of a DisparityToDepthMatrix or in form of focal length, principle point and baseline.
+ *  @param disparityToDepthMap, the camera parameter in form of a 4x4 disparity to depth matrix, each element is defined as Element_X_Y where X and Y belong to {0, 1, 2, 3}.
+ *  @param stereoCameraParameters, the camera parameter represented as left camera focal length (LeftFocalLength), Left Camera principle point coordinates (LeftPrinciplePointX and LeftPrinciplePointY),
+ *					and distance between the two camera (Baseline).
+ *  @param reconstructionSpace, the limits on the reconstructed 3d points coordinates as LimitX, LimitY and LimitZ. A point (x,y,z) is accepted in the output cloud if -LimitX<=x<=LimitX, -LimitY<=y<=LimitY
+ *					and 0<z<=LimitZ.
+ *
+ *  @reference, the algorithm is inspired by the paper: Hirschmuller, H. "Stereo Processing by Semiglobal Matching and Mutual Information", PAMI(30), No. 2, February 2008, pp. 328-341.
  *
  * @{
  */
@@ -74,6 +100,13 @@ namespace dfn_ci {
 	 */	
 	private:
 
+		struct ReconstructionSpace
+			{
+			float limitX;
+			float limitY;
+			float limitZ;
+			};
+
 		struct PrefilterOptionsSet
 			{
 			int maximum;
@@ -96,16 +129,27 @@ namespace dfn_ci {
 			int blockSize;
 			int uniquenessRatio;
 			};
+		
+		struct StereoCameraParameters
+			{
+			float leftFocalLength;
+			float leftPrinciplePointX;
+			float leftPrinciplePointY;
+			float baseline;
+			};
 
-		typedef float DisparityToDepthMap[16];
+		typedef double DisparityToDepthMap[16];
 		struct HirschmullerDisparityMappingOptionsSet
 			{
+			ReconstructionSpace reconstructionSpace;
 			PrefilterOptionsSet prefilter;
 			DisparitiesOptionsSet disparities;
 			BlocksMatchingOptionsSet blocksMatching;
 			DisparityToDepthMap disparityToDepthMap;
 			float pointCloudSamplingDensity;
 			bool useFullScaleTwoPassAlgorithm;
+			bool useDisparityToDepthMap;
+			StereoCameraParameters stereoCameraParameters;
 			};
 
 		cv::Mat disparityToDepthMap;
@@ -117,6 +161,7 @@ namespace dfn_ci {
 		cv::Mat ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage);
 		PointCloudWrapper::PointCloudConstPtr Convert(cv::Mat cvPointCloud);
 		cv::Mat Convert(DisparityToDepthMap disparityToDepthMap);
+		cv::Mat ComputePointCloudFromDisparity(cv::Mat disparity);
 
 		void ValidateParameters();
     };

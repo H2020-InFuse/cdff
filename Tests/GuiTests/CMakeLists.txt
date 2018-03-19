@@ -83,6 +83,34 @@ target_link_libraries(
 )
 
 add_executable(
+    HirschmullerDisparityMappingGuiTest
+    DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    ParametersInterface.cpp
+    ButtonsInterface.cpp
+    MainInterface.cpp
+    DFNs/DFNTestInterface.cpp
+)
+set_target_properties(HirschmullerDisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+	HirschmullerDisparityMappingGuiTest
+	hirschmuller_disparity_mapping mock cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui cdff_pcl_visualizer ${VTK_LIBRARIES}
+)
+
+add_executable(
+    ScanlineOptimizationGuiTest
+    DFNs/StereoReconstruction/ScanlineOptimization.cpp
+    ParametersInterface.cpp
+    ButtonsInterface.cpp
+    MainInterface.cpp
+    DFNs/DFNTestInterface.cpp
+)
+set_target_properties(ScanlineOptimizationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+	ScanlineOptimizationGuiTest
+	scanline_optimization mock cdff_logger shot_descriptor_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui cdff_pcl_visualizer pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
+add_executable(
     HarrisDetector3DGuiTest
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     ParametersInterface.cpp

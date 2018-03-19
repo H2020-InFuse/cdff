@@ -118,6 +118,15 @@ void OpencvVisualizer::ShowCorrespondences(FrameConstPtr frame1, FrameConstPtr f
 	ShowImage(outputImage);
 	}
 
+void OpencvVisualizer::ShowDisparity(cv::Mat disparity)
+	{
+	RETURN_IF_DISABLED
+	cv::Mat normalizedDisparity;
+	cv::normalize(disparity, normalizedDisparity, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+
+	ShowImage(normalizedDisparity);
+	}
+
 void OpencvVisualizer::ShowMatrix(Matrix3dConstPtr matrix)
 	{
 	RETURN_IF_DISABLED

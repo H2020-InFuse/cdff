@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file DisparityMapping.cpp
- * @date 09/03/2018
+ * @file HirschmullerDisparityMapping.cpp
+ * @date 15/03/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DFNsTest
  * 
- * Testing application for the DFN Disparity Mapping.
+ * Testing application for the DFN Hirschmuller Disparity Mapping.
  * 
  * 
  * @{
@@ -29,7 +29,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
-#include <StereoReconstruction/DisparityMapping.hpp>
+#include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <Mocks/Common/Converters/FrameToMatConverter.hpp>
@@ -65,7 +65,7 @@ class DisparityMappingTestInterface : public DFNTestInterface
 		Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache;
 		Mocks::FrameToMatConverter* mockInputConverter;
 
-		DisparityMapping* disparityMapping;
+		HirschmullerDisparityMapping* disparityMapping;
 
 		cv::Mat cvLeftImage;
 		cv::Mat cvRightImage;
@@ -79,7 +79,7 @@ class DisparityMappingTestInterface : public DFNTestInterface
 DisparityMappingTestInterface::DisparityMappingTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 	{
-	disparityMapping = new DisparityMapping();
+	disparityMapping = new HirschmullerDisparityMapping();
 	SetDFN(disparityMapping);
 
 	cvLeftImage = cv::imread("../../tests/Data/Images/RectifiedLeft.png", cv::IMREAD_COLOR);
@@ -116,33 +116,23 @@ void DisparityMappingTestInterface::SetupMocksAndStubs()
 
 void DisparityMappingTestInterface::SetupParameters()
 	{
-	AddParameter("Prefilter", "Size", 9, 255);
-	AddParameter("Prefilter", "Type", 1, 2);
 	AddParameter("Prefilter", "Maximum", 31, 255);
 
 	AddParameter("Disparities", "Minimum", 0, 255);
-	AddParameter("Disparities", "NumberOfIntervals", 64, 1024);
-	AddParameter("Disparities", "UseMaximumDifference", 0, 1);
-	AddParameter("Disparities", "MaximumDifference", 100, 255);
-	AddParameter("Disparities", "SpeckleRange", 0, 255);
-	AddParameter("Disparities", "SpeckleWindowSize", 0, 255);
+	AddParameter("Disparities", "NumberOfIntervals", 128, 1024);
+	AddParameter("Disparities", "UseMaximumDifference", 1, 1);
+	AddParameter("Disparities", "MaximumDifference", 1, 255);
+	AddParameter("Disparities", "SpeckleRange", 37, 255);
+	AddParameter("Disparities", "SpeckleWindow", 92, 255);
+	AddParameter("Disparities", "SmoothnessParameter1", 2400, 100000);
+	AddParameter("Disparities", "SmoothnessParameter2", 10000, 100000);
 
-	AddParameter("BlocksMatching", "BlockSize", 21, 255);
-	AddParameter("BlocksMatching", "SmallerBlockSize", 0, 255);
+	AddParameter("BlocksMatching", "BlockSize", 9, 255);
 	AddParameter("BlocksMatching", "UniquenessRatio", 10, 255);
-	AddParameter("BlocksMatching", "TextureThreshold", 15, 255);
-
-	AddParameter("FirstRegionOfInterest", "TopLefColumn", 0, 255);
-	AddParameter("FirstRegionOfInterest", "TopLeftRow", 0, 255);
-	AddParameter("FirstRegionOfInterest", "NumberOfColumns", 0, 255);
-	AddParameter("FirstRegionOfInterest", "NumberOfRows", 0, 255);
-
-	AddParameter("SecondRegionOfInterest", "TopLefColumn", 0, 255);
-	AddParameter("SecondRegionOfInterest", "TopLeftRow", 0, 255);
-	AddParameter("SecondRegionOfInterest", "NumberOfColumns", 0, 255);
-	AddParameter("SecondRegionOfInterest", "NumberOfRows", 0, 255);
 
 	AddParameter("GeneralParameters", "PointCloudSamplingDensity", 0.10, 1, 1e-5);
+	AddParameter("GeneralParameters", "useFullScaleTwoPassAlgorithm", 0, 1);
+	AddParameter("GeneralParameters", "useDisparityToDepthMap", 0, 1);
 
 	AddParameter("DisparityToDepthMap", "Element_0_0", 1, 255);
 	AddParameter("DisparityToDepthMap", "Element_0_1", 0, 255);
@@ -165,6 +155,10 @@ void DisparityMappingTestInterface::SetupParameters()
 	AddParameter("StereoCamera", "LeftPrinciplePointX", 671.7716154809, 700, 1e-5);
 	AddParameter("StereoCamera", "LeftPrinciplePointY", 391.33378485796, 700, 1e-5);
 	AddParameter("StereoCamera", "Baseline", 0.012, 1, 1e-5);
+
+	AddParameter("ReconstructionSpace", "LimitX", 20, 100);
+	AddParameter("ReconstructionSpace", "LimitY", 20, 100);
+	AddParameter("ReconstructionSpace", "LimitZ", 10, 100);
 	}
 
 void DisparityMappingTestInterface::DisplayResult()

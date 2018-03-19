@@ -9,5 +9,6 @@ output_ports:
       doc: the filtered image output
 implementations:
     - ImageUndistortion
+    - ImageUndistortionRectification
 
 

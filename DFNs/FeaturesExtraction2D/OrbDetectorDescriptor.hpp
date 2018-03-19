@@ -20,6 +20,26 @@
  * @{
  */
 
+/*!
+ * @addtogroup DFNs
+ * 
+ *  @brief This DFN uses the Orb Detector and Descriptor (modified FAST Detector + BRIEF descriptor) for detection of keypoints in 2D images and computation of their descriptors.
+ *
+ *
+ *  The algorithm uses the following parameters:
+ *  @param generalParameters.edgeThreshold
+ *  @param generalParameters.fastThreshold
+ *  @param generalParameters.firstLevel
+ *  @param generalParameters.maxFeaturesNumber, this determines the maximum number of keypoints the algorithm will extract.
+ *  @param generalParameters.levelsNumber
+ *  @param generalParameters.patchSize
+ *  @param generalParameters.scaleFactor
+ *  @param generalParameters.scoreType
+ *  @param generalParameters.sizeOfBrightnessTestSet
+ *
+ * @{
+ */
+
 #ifndef ORB_DETECTOR_DESCRIPTOR_HPP
 #define ORB_DETECTOR_DESCRIPTOR_HPP
 

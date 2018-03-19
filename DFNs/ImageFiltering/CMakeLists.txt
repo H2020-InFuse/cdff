@@ -18,5 +18,5 @@ add_library(
 )
 target_link_libraries(
     image_undistortion_rectification
-    image_filtering cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core converters_opencv
+    image_filtering cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core converters_opencv opencv_calib3d
 )

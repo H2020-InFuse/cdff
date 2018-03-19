@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file DisparityMapping.cpp
- * @date 09/03/2018
+ * @file ScanlineOptimization.cpp
+ * @date 15/03/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DFNsTest
  * 
- * Testing application for the DFN Disparity Mapping.
+ * Testing application for the DFN Scanline Optimization.
  * 
  * 
  * @{
@@ -29,10 +29,10 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
-#include <StereoReconstruction/DisparityMapping.hpp>
+#include <StereoReconstruction/ScanlineOptimization.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
+#include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <MatToFrameConverter.hpp>
 #include <Errors/Assert.hpp>
@@ -41,7 +41,6 @@
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
 #include <BaseTypes.hpp>
 #include <Visualizers/PclVisualizer.hpp>
-#include <Visualizers/OpencvVisualizer.hpp>
 
 
 using namespace dfn_ci;
@@ -62,10 +61,10 @@ class DisparityMappingTestInterface : public DFNTestInterface
 		Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr >* stubCloudCache;
 		Mocks::PointCloudToPclPointCloudConverter* mockCloudConverter;
 
-		Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache;
-		Mocks::FrameToMatConverter* mockInputConverter;
+		Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr>* stubInputCache;
+		Mocks::PclPointCloudToPointCloudConverter* mockInputConverter;
 
-		DisparityMapping* disparityMapping;
+		ScanlineOptimization* disparityMapping;
 
 		cv::Mat cvLeftImage;
 		cv::Mat cvRightImage;
@@ -79,7 +78,7 @@ class DisparityMappingTestInterface : public DFNTestInterface
 DisparityMappingTestInterface::DisparityMappingTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 	{
-	disparityMapping = new DisparityMapping();
+	disparityMapping = new ScanlineOptimization();
 	SetDFN(disparityMapping);
 
 	cvLeftImage = cv::imread("../../tests/Data/Images/RectifiedLeft.png", cv::IMREAD_COLOR);
@@ -93,7 +92,7 @@ DisparityMappingTestInterface::DisparityMappingTestInterface(std::string dfnName
 	disparityMapping->rightImageInput(rightFrame);
 
 	outputWindowName = "Disparity Mapping Result";
-	Visualizers::OpencvVisualizer::Enable();
+	Visualizers::PclVisualizer::Enable();
 	}
 
 DisparityMappingTestInterface::~DisparityMappingTestInterface()
@@ -105,9 +104,9 @@ DisparityMappingTestInterface::~DisparityMappingTestInterface()
 
 void DisparityMappingTestInterface::SetupMocksAndStubs()
 	{
-	stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
+	stubInputCache = new Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr>();
+	mockInputConverter = new Mocks::PclPointCloudToPointCloudConverter();
+	ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
 
 	stubCloudCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
 	mockCloudConverter = new Mocks::PointCloudToPclPointCloudConverter();
@@ -116,55 +115,59 @@ void DisparityMappingTestInterface::SetupMocksAndStubs()
 
 void DisparityMappingTestInterface::SetupParameters()
 	{
-	AddParameter("Prefilter", "Size", 9, 255);
-	AddParameter("Prefilter", "Type", 1, 2);
-	AddParameter("Prefilter", "Maximum", 31, 255);
+		struct CameraParameters
+			{
+			float principlePointX;
+			float principlePointY;
+			float focalLength;
+			float baseline;
+			};
 
-	AddParameter("Disparities", "Minimum", 0, 255);
-	AddParameter("Disparities", "NumberOfIntervals", 64, 1024);
-	AddParameter("Disparities", "UseMaximumDifference", 0, 1);
-	AddParameter("Disparities", "MaximumDifference", 100, 255);
-	AddParameter("Disparities", "SpeckleRange", 0, 255);
-	AddParameter("Disparities", "SpeckleWindowSize", 0, 255);
+		struct MatchingOptionsSet
+			{
+			int numberOfDisparities;
+			int horizontalOffset;
+			int ratioFilter;
+			int peakFilter;
+			bool usePreprocessing;
+			bool useLeftRightConsistencyCheck;
+			int leftRightConsistencyThreshold;
+			};
 
-	AddParameter("BlocksMatching", "BlockSize", 21, 255);
-	AddParameter("BlocksMatching", "SmallerBlockSize", 0, 255);
-	AddParameter("BlocksMatching", "UniquenessRatio", 10, 255);
-	AddParameter("BlocksMatching", "TextureThreshold", 15, 255);
+		struct ScanlineOptimizationOptionsSet
+			{
+			int costAggregationRadius;
+			int spatialBandwidth;
+			int colorBandwidth;
+			int strongSmoothnessPenalty;
+			int weakSmoothnessPenalty;
+			MatchingOptionsSet matchingOptionsSet;
+			CameraParameters cameraParameters;
+			};
 
-	AddParameter("FirstRegionOfInterest", "TopLefColumn", 0, 255);
-	AddParameter("FirstRegionOfInterest", "TopLeftRow", 0, 255);
-	AddParameter("FirstRegionOfInterest", "NumberOfColumns", 0, 255);
-	AddParameter("FirstRegionOfInterest", "NumberOfRows", 0, 255);
+	AddParameter("GeneralParameters", "CostAggregationRadius", 5, 255);
+	AddParameter("GeneralParameters", "SpatialBandwidth", 25, 255);
+	AddParameter("GeneralParameters", "ColorBandwidth", 15, 255);
+	AddParameter("GeneralParameters", "StrongSmoothnessPenalty", 1, 255);
+	AddParameter("GeneralParameters", "WeakSmoothnessPenalty", 1, 255);
+	AddParameter("GeneralParameters", "PointCloudSamplingDensity", 0.1, 1, 0.1);
 
-	AddParameter("SecondRegionOfInterest", "TopLefColumn", 0, 255);
-	AddParameter("SecondRegionOfInterest", "TopLeftRow", 0, 255);
-	AddParameter("SecondRegionOfInterest", "NumberOfColumns", 0, 255);
-	AddParameter("SecondRegionOfInterest", "NumberOfRows", 0, 255);
-
-	AddParameter("GeneralParameters", "PointCloudSamplingDensity", 0.10, 1, 1e-5);
-
-	AddParameter("DisparityToDepthMap", "Element_0_0", 1, 255);
-	AddParameter("DisparityToDepthMap", "Element_0_1", 0, 255);
-	AddParameter("DisparityToDepthMap", "Element_0_2", 0, 255);
-	AddSignedParameter("DisparityToDepthMap", "Element_0_3", -279.0498046875, 2000, 1e-5);
-	AddParameter("DisparityToDepthMap", "Element_1_0", 0, 255);
-	AddParameter("DisparityToDepthMap", "Element_1_1", 1, 255);
-	AddParameter("DisparityToDepthMap", "Element_1_2", 0, 255);
-	AddSignedParameter("DisparityToDepthMap", "Element_1_3",29.868621826172, 2000, 1e-5);
-	AddParameter("DisparityToDepthMap", "Element_2_0", 0, 255);
-	AddParameter("DisparityToDepthMap", "Element_2_1", 0, 255);
-	AddParameter("DisparityToDepthMap", "Element_2_2", 0, 255);
-	AddSignedParameter("DisparityToDepthMap", "Element_2_3", -8192.8300337838, 10000, 1e-4);
-	AddParameter("DisparityToDepthMap", "Element_3_0", 0, 255);
-	AddParameter("DisparityToDepthMap", "Element_3_1", 0, 255);
-	AddParameter("DisparityToDepthMap", "Element_3_2", 3.3436329786051, 10, 1e-6);
-	AddParameter("DisparityToDepthMap", "Element_3_3", 0, 255);
+	AddParameter("Matching", "NumberOfDisparities", 60, 255);
+	AddParameter("Matching", "HorizontalOffset", 1, 255);
+	AddParameter("Matching", "RatioFilter", 5, 255);
+	AddParameter("Matching", "PeakFilter", 1, 255);
+	AddParameter("Matching", "UsePreprocessing", 0, 1);
+	AddParameter("Matching", "UseLeftRightConsistencyCheck", 0, 1);
+	AddParameter("Matching", "LeftRightConsistencyThreshold", 1, 255);
 
 	AddParameter("StereoCamera", "LeftFocalLength", 693.4181807813, 700, 1e-5);
 	AddParameter("StereoCamera", "LeftPrinciplePointX", 671.7716154809, 700, 1e-5);
 	AddParameter("StereoCamera", "LeftPrinciplePointY", 391.33378485796, 700, 1e-5);
 	AddParameter("StereoCamera", "Baseline", 0.012, 1, 1e-5);
+
+	AddParameter("ReconstructionSpace", "LimitX", 20, 100);
+	AddParameter("ReconstructionSpace", "LimitY", 20, 100);
+	AddParameter("ReconstructionSpace", "LimitZ", 1, 100);
 	}
 
 void DisparityMappingTestInterface::DisplayResult()

@@ -39,6 +39,7 @@
 #include <FeaturesMatching3D/Ransac3D.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
+#include <ImageFiltering/ImageUndistortionRectification.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
@@ -121,6 +122,10 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(std::string dfnImplem
 	if (dfnImplementation == "ImageUndistortion")
 		{
 		return new ImageUndistortion();
+		}
+	else if (dfnImplementation == "ImageUndistortionRectification")
+		{
+		return new ImageUndistortionRectification();
 		}
 	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
 	return NULL;

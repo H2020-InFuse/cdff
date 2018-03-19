@@ -35,6 +35,7 @@
 #include <Eigen/Geometry>
 #include <FrameToMatConverter.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <Visualizers/OpencvVisualizer.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -59,6 +60,10 @@ namespace dfn_ci {
  */
 DisparityMapping::DisparityMapping()
 	{
+	parametersHelper.AddParameter<float>("ReconstructionSpace", "LimitX", parameters.reconstructionSpace.limitX, DEFAULT_PARAMETERS.reconstructionSpace.limitX);
+	parametersHelper.AddParameter<float>("ReconstructionSpace", "LimitY", parameters.reconstructionSpace.limitY, DEFAULT_PARAMETERS.reconstructionSpace.limitY);
+	parametersHelper.AddParameter<float>("ReconstructionSpace", "LimitZ", parameters.reconstructionSpace.limitZ, DEFAULT_PARAMETERS.reconstructionSpace.limitZ);
+
 	parametersHelper.AddParameter<int>("Prefilter", "Size", parameters.prefilter.size, DEFAULT_PARAMETERS.prefilter.size);
 	parametersHelper.AddParameter<PrefilterType, PrefilterTypeHelper>("Prefilter", "Type", parameters.prefilter.type, DEFAULT_PARAMETERS.prefilter.type);
 	parametersHelper.AddParameter<int>("Prefilter", "Maximum", parameters.prefilter.maximum, DEFAULT_PARAMETERS.prefilter.maximum);
@@ -86,6 +91,7 @@ DisparityMapping::DisparityMapping()
 	parametersHelper.AddParameter<int>("BlocksMatching", "UniquenessRatio", parameters.blocksMatching.uniquenessRatio, DEFAULT_PARAMETERS.blocksMatching.uniquenessRatio);
 
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudSamplingDensity", parameters.pointCloudSamplingDensity, DEFAULT_PARAMETERS.pointCloudSamplingDensity);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDisparityToDepthMap", parameters.useDisparityToDepthMap, DEFAULT_PARAMETERS.useDisparityToDepthMap);
 
 	for(unsigned row = 0; row < 4; row++)
 		{
@@ -96,6 +102,11 @@ DisparityMapping::DisparityMapping()
 			parametersHelper.AddParameter<float>("DisparityToDepthMap", elementStream.str(), parameters.disparityToDepthMap[4*row+column], DEFAULT_PARAMETERS.disparityToDepthMap[4*row+column]);
 			}
 		}
+
+	parametersHelper.AddParameter<float>("StereoCamera", "LeftFocalLength", parameters.stereoCameraParameters.leftFocalLength, DEFAULT_PARAMETERS.stereoCameraParameters.leftFocalLength);
+	parametersHelper.AddParameter<float>("StereoCamera", "LeftPrinciplePointX", parameters.stereoCameraParameters.leftPrinciplePointX, DEFAULT_PARAMETERS.stereoCameraParameters.leftPrinciplePointX);
+	parametersHelper.AddParameter<float>("StereoCamera", "LeftPrinciplePointY", parameters.stereoCameraParameters.leftPrinciplePointY, DEFAULT_PARAMETERS.stereoCameraParameters.leftPrinciplePointY);
+	parametersHelper.AddParameter<float>("StereoCamera", "Baseline", parameters.stereoCameraParameters.baseline, DEFAULT_PARAMETERS.stereoCameraParameters.baseline);
 
 	disparityToDepthMap = Convert(parameters.disparityToDepthMap);
 	configurationFilePath = "";
@@ -145,6 +156,12 @@ DisparityMapping::PrefilterType DisparityMapping::PrefilterTypeHelper::Convert(c
 
 const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PARAMETERS =
 	{
+	.reconstructionSpace =
+		{
+		.limitX = 20,
+		.limitY = 20,
+		.limitZ = 40
+		},
 	.prefilter =
 		{
 		.size = 9,
@@ -183,12 +200,20 @@ const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PAR
 		},
 	.disparityToDepthMap = 
 		{
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0,
-		0, 0, 0, 0
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 0, 1,
+		0, 0, -1, 0
 		},
-	.pointCloudSamplingDensity = 1
+	.pointCloudSamplingDensity = 1,
+	.useDisparityToDepthMap = false,
+	.stereoCameraParameters =
+		{
+		.leftFocalLength = 1,
+		.leftPrinciplePointX = 0,
+		.leftPrinciplePointY = 0,
+		.baseline = 1
+		}
 	};
 
 cv::Mat DisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage)
@@ -218,9 +243,17 @@ cv::Mat DisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImag
 
 	cv::Mat disparity;
 	stereo->compute(greyLeftImage, greyRightImage, disparity);
+	DEBUG_SHOW_DISPARITY(disparity);
 
 	cv::Mat pointCloud;
-	cv::reprojectImageTo3D(disparity, pointCloud, disparityToDepthMap);
+	if (parameters.useDisparityToDepthMap)
+		{
+		cv::reprojectImageTo3D(disparity, pointCloud, disparityToDepthMap);
+		}
+	else
+		{
+		pointCloud = ComputePointCloudFromDisparity(disparity);
+		}
 
 	return pointCloud;
 	}
@@ -238,6 +271,8 @@ PointCloudConstPtr DisparityMapping::Convert(cv::Mat cvPointCloud)
 			cv::Vec3f point = cvPointCloud.at<cv::Vec3f>(row, column);
 
 			bool validPoint = (point[0] == point[0] && point[1] == point[1] && point[2] == point[2]);
+			validPoint = validPoint && ( std::abs(point[0]) <= parameters.reconstructionSpace.limitX ) && ( std::abs(point[1]) <= parameters.reconstructionSpace.limitY );
+			validPoint = validPoint && ( point[2] >= 0 ) && ( point[2] <= parameters.reconstructionSpace.limitZ );
 			if (validPoint)
 				{
 				validPointCount++;
@@ -267,12 +302,51 @@ cv::Mat DisparityMapping::Convert(DisparityToDepthMap disparityToDepthMap)
 	return conversion;
 	}
 
+/** This algorithm is taken from PCL library from file /stereo/src/stereo_matching.cpp **/
+cv::Mat DisparityMapping::ComputePointCloudFromDisparity(cv::Mat disparity)
+	{
+	float principlePointX = parameters.stereoCameraParameters.leftPrinciplePointX;
+	float principlePointY = parameters.stereoCameraParameters.leftPrinciplePointY;
+	float baseline = parameters.stereoCameraParameters.baseline;
+	float focalLength = parameters.stereoCameraParameters.leftFocalLength;
+
+	float depthScale = baseline * focalLength * 16;
+	cv::Mat pointCloud(disparity.rows, disparity.cols, CV_32FC3, cv::Scalar(0,0,0));
+	for(unsigned row = 0; row < disparity.rows; row++)
+		{
+		for(unsigned column = 0; column < disparity.cols; column++)
+			{
+			float disparityValue = ( static_cast<float>(disparity.at<int16_t>(row, column)) ) / 16;	
+			if (disparityValue > 0)
+				{	
+				float depth = depthScale / disparityValue;
+				pointCloud.at<cv::Vec3f>(row, column)[0] = ((static_cast<float> (column) - principlePointX) * depth) / focalLength;
+				pointCloud.at<cv::Vec3f>(row, column)[1] = ((static_cast<float> (row) - principlePointY) * depth) / focalLength;
+				pointCloud.at<cv::Vec3f>(row, column)[2] = depth;
+				}
+			else
+				{
+				pointCloud.at<cv::Vec3f>(row, column)[0] = std::numeric_limits<float>::quiet_NaN();
+				pointCloud.at<cv::Vec3f>(row, column)[1] = std::numeric_limits<float>::quiet_NaN();
+				pointCloud.at<cv::Vec3f>(row, column)[2] = std::numeric_limits<float>::quiet_NaN();
+				}
+			}
+		}
+	return pointCloud;
+	}
+
 void DisparityMapping::ValidateParameters()
 	{
 	ASSERT(parameters.disparities.numberOfIntervals % 16 == 0, "DisparityMapping Configuration Error: number of disparities needs to be multiple of 16");
 	ASSERT(parameters.blocksMatching.blockSize % 2 == 1, "DisparityMapping Configuration Error: blockSize needs to be odd");
 	ASSERT(!parameters.disparities.useMaximumDifference || parameters.disparities.maximumDifference >= 0, "DisparityMapping Configuration, maximum disparity difference used but not set positive");
 	ASSERT(parameters.pointCloudSamplingDensity > 0 && parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
+	ASSERT( parameters.reconstructionSpace.limitX > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
+	ASSERT( parameters.reconstructionSpace.limitY > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
+	ASSERT( parameters.reconstructionSpace.limitZ > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
+
+	ASSERT( parameters.stereoCameraParameters.leftFocalLength > 0, "DisparityMapping Configuration Error: Focal Length has to be positive");
+	ASSERT( parameters.stereoCameraParameters.baseline > 0, "DisparityMapping Configuration Error: Baseline has to be positive");
 	}
 
 

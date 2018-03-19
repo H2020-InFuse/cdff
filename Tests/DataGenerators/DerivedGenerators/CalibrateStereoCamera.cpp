@@ -42,6 +42,7 @@ const std::string FILES_PATH = "../tests/Data/Images/";
 const std::string FILE_NAME = "chessboard";
 const std::string FILES_EXTENSION = ".jpg";
 StereoCameraCalibrator::FilesMode FILES_MODE = StereoCameraCalibrator::ONE_IMAGE_FILE;
+bool COMPUTE_RECTIFICATION_MAPS = false;
 
 int main(int argc, char** argv)
 	{
@@ -54,6 +55,7 @@ int main(int argc, char** argv)
 	std::string filesExtension = FILES_EXTENSION;
 	StereoCameraCalibrator::FilesMode filesMode = FILES_MODE;
 	std::string rightFileName;
+	bool computeRectificationMaps = COMPUTE_RECTIFICATION_MAPS;
 
 	if (argc > 1 )
 		{
@@ -99,10 +101,19 @@ int main(int argc, char** argv)
 		{
 		rightFileName = argv[9];
 		}
+	if (argc > 10)
+		{
+		std::string computeRectificationMapsString = argv[10];
+		computeRectificationMaps = (computeRectificationMapsString == "true");
+		}
 
 	StereoCameraCalibrator calibrator(numberOfImages, chessboardSquareSize, numberOfRows, numberOfColumns, filesPath, fileName, filesExtension, filesMode, rightFileName);
 	calibrator.CalibrateCameras();
 	calibrator.RectifyCameras();
+	if (computeRectificationMaps)
+		{
+		calibrator.ComputeUndistortionRectificationMap();
+		}
 
 	return 0;
 	}

@@ -1,43 +1,81 @@
 - Name: leftFilter
   Type: ImageFiltering
-  Implementation: ImageUndistortion
+  Implementation: ImageUndistortionRectification
   Parameters:
+  - Name: GeneralParameters
+    InterpolationMethod: Linear
+    BorderMode: Constant
+    ConstantBorderValue: 0
+    CameraConfigurationMode: Internal
+    TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsLeft.yaml
   - Name: CameraMatrix
-    FocalLengthX: 1408.899186439272
-    FocalLengthY: 1403.116708010621
-    PrinciplePointX: 1053.351342078365
-    PrinciplePointY: 588.8342842821718
+    FocalLengthX: 9.842439e+02
+    FocalLengthY: 9.808141e+02
+    PrinciplePointX: 6.900000e+02
+    PrinciplePointY: 2.331966e+02
   - Name: Distortion
     UseK3: true
-    UseK4ToK6: true
-    K1: 0.8010323519594021
-    K2: 104.7894482598434
-    P1: -6.223427196342877e-05
-    P2: -0.002209798328517273
-    K3: -70.73535010082334
+    UseK4ToK6: false
+    K1: -3.728755e-01
+    K2: 2.037299e-01
+    P1: 2.219027e-03
+    P2: 1.383707e-03
+    K3: -7.233722e-02
     K4: 0.8556124926892613
     K5: 105.9684960970509
     K6: -60.88515255428263
+  - Name: ImageSize
+    Width: 1242
+    Height: 375
+  - Name: RectificationMatrix
+    Element_0_0: 1
+    Element_0_1: 0
+    Element_0_2: 0
+    Element_1_0: 0
+    Element_1_1: 1
+    Element_1_2: 0
+    Element_2_0: 0
+    Element_2_1: 0
+    Element_2_2: 1
 - Name: rightFilter
   Type: ImageFiltering
-  Implementation: ImageUndistortion
+  Implementation: ImageUndistortionRectification
   Parameters:
+  - Name: GeneralParameters
+    InterpolationMethod: Linear
+    BorderMode: Constant
+    ConstantBorderValue: 0
+    TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsRight.yaml
+    CameraConfigurationMode: Internal
   - Name: CameraMatrix
-    FocalLengthX: 1408.899186439272
-    FocalLengthY: 1403.116708010621
-    PrinciplePointX: 1053.351342078365
-    PrinciplePointY: 588.8342842821718
+    FocalLengthX: 9.895267e+02
+    FocalLengthY: 9.878386e+02
+    PrinciplePointX: 7.020000e+02
+    PrinciplePointY: 2.455590e+02
   - Name: Distortion
     UseK3: true
-    UseK4ToK6: true
-    K1: 0.8010323519594021
-    K2: 104.7894482598434
-    P1: -6.223427196342877e-05
-    P2: -0.002209798328517273
-    K3: -70.73535010082334
+    UseK4ToK6: false
+    K1: -3.644661e-01
+    K2: 1.790019e-01
+    P1: 1.148107e-03
+    P2: -6.298563e-04
+    K3: -5.314062e-02
     K4: 0.8556124926892613
     K5: 105.9684960970509
     K6: -60.88515255428263
+  - Name: ImageSize
+    Width: 1242
+    Height: 375
+  - Name: RectificationMatrix
+    Element_0_0: 9.993513e-01
+    Element_0_1: 1.860866e-02
+    Element_0_2: -3.083487e-02
+    Element_1_0: -1.887662e-02
+    Element_1_1: 9.997863e-01
+    Element_1_2: -8.421873e-03
+    Element_2_0: 3.067156e-02
+    Element_2_1: 8.998467e-03
+    Element_2_2: 9.994890e-01
 - Name: featureExtractor
   Type: FeaturesExtraction2D
   Implementation: OrbDetectorDescriptor
@@ -89,13 +127,12 @@
     PrinciplePointY: 588.8342842821718
 - Name: reconstructor3D
   Type: StereoReconstruction
-  Implementation: DisparityMapping
+  Implementation: HirschmullerDisparityMapping
   Parameters:
   - Name: GeneralParameters
     PointCloudSamplingDensity: 0.1
+    UseFullScaleTwoPassAlgorithm: false
   - Name: Prefilter
-    Size: 9
-    Type: Xsobel
     Maximum: 31
   - Name: Disparities
     Minimum: 0
@@ -104,21 +141,11 @@
     MaximumDifference: -1
     SpeckleRange: 0
     SpeckleWindow: 0
+    SmoothnessParameter1: 0
+    SmoothnessParameter2: 0
   - Name: BlocksMatching
     BlockSize: 21
-    SmallerBlockSize: 0
-    TextureThreshold: 10
     UniquenessRatio: 15
-  - Name: FirstRegionOfInterest
-    TopLeftColumn: 0
-    TopLeftRow: 0
-    NumberOfColumns: 0
-    NumberOfRows: 0
-  - Name: SecondRegionOfInterest
-    TopLeftColumn: 0
-    TopLeftRow: 0
-    NumberOfColumns: 0
-    NumberOfRows: 0
   - Name: DisparityToDepthMap
     Element_0_0: 1
     Element_0_1: 0

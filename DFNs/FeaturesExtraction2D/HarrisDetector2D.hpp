@@ -14,8 +14,18 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements the Harris Detector for 2D Images.
- *  
+ *  @brief This DFN uses the Harris Detector for detection of keypoints in 2D images. It does not provide a descriptor.
+ *
+ *  The DFN operates according the following steps: transformation of the image into grey scale, application of a Gaussian Filter, computation and normalization of the Harris Matrix, and extraction of
+ *  the Harris points from the matrix.
+ *
+ *  The algorithm uses the following parameters:
+ *  @param generalParameters.apertureSize
+ *  @param generalParameters.blockSize
+ *  @param generalParameters.parameterK
+ *  @param generalParameters.detectionThreshold
+ *  @param generalParameters.useGaussianBlur, this parameters determines whether the application of the Gaussian filter should be skipped or not.
+ *  @param gaussianBlurParameters, this contains the parameters of the Gaussian filter, either as width and height of the kernel or as standard deviation of width and height.
  *
  * @{
  */

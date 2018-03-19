@@ -83,7 +83,8 @@ ReconstructionFromStereo::ReconstructionFromStereo(Map* map) :
 	pointCloud = NULL;
 	sceneCloud = NULL;
 
-	filter = NULL;
+	leftFilter = NULL;
+	rightFilter = NULL;
 	featuresExtractor = NULL;
 	featuresMatcher = NULL;
 	fundamentalMatrixComputer = NULL;
@@ -179,7 +180,7 @@ void ReconstructionFromStereo::process()
 
 bool ReconstructionFromStereo::ComputeCameraMovement()
 	{
-	currentImage = inLeftImage;
+	currentLeftImage = inLeftImage;
 	currentRightImage = inRightImage;
 	map->AddFrames(inLeftImage, inRightImage);
 	FilterCurrentImage();
@@ -187,7 +188,7 @@ bool ReconstructionFromStereo::ComputeCameraMovement()
 	DescribeCurrentFeatures();
 
 	bool success = false;
-	for(pastImage = map->GetNextReferenceLeftFrame(); !success && pastImage != NULL; pastImage = map->GetNextReferenceLeftFrame())
+	for(pastLeftImage = map->GetNextReferenceLeftFrame(); !success && pastLeftImage != NULL; pastLeftImage = map->GetNextReferenceLeftFrame())
 		{
 		DEBUG_PRINT_TO_LOG("Selected Past Frame", success);
 		FilterPastImage();
@@ -218,10 +219,11 @@ void ReconstructionFromStereo::UpdateScene()
 void ReconstructionFromStereo::AssignDfnsAlias()
 	{
 	unsigned dfnNumber = dfnsSet.size();
-	unsigned mandatoryDFNsNumber = 6;
+	unsigned mandatoryDFNsNumber = 7;
 	unsigned optionalDFNsSet = 0;
 
-	filter = static_cast<ImageFilteringInterface*>(dfnsSet["filter"]);
+	leftFilter = static_cast<ImageFilteringInterface*>(dfnsSet["leftFilter"]);
+	rightFilter = static_cast<ImageFilteringInterface*>(dfnsSet["rightFilter"]);
 	featuresExtractor = static_cast<FeaturesExtraction2DInterface*>(dfnsSet["featureExtractor"]);
 	featuresMatcher = static_cast<FeaturesMatching2DInterface*>(dfnsSet["featuresMatcher"]);
 	fundamentalMatrixComputer = static_cast<FundamentalMatrixComputationInterface*>(dfnsSet["fundamentalMatrixComputer"]);
@@ -240,7 +242,8 @@ void ReconstructionFromStereo::AssignDfnsAlias()
 		}
 
 	ASSERT(dfnNumber == mandatoryDFNsNumber + optionalDFNsSet, "DFPC Structure from motion error: wrong number of DFNs in configuration file");
-	ASSERT(filter != NULL, "DFPC Structure from motion error: filter DFN configured incorrectly");
+	ASSERT(leftFilter != NULL, "DFPC Structure from motion error: left filter DFN configured incorrectly");
+	ASSERT(rightFilter != NULL, "DFPC Structure from motion error: right filter DFN configured incorrectly");
 	ASSERT(featuresExtractor != NULL, "DFPC Structure from motion error: featuresExtractor DFN configured incorrectly");
 	ASSERT(featuresMatcher != NULL, "DFPC Structure from motion error: featuresMatcher DFN configured incorrectly");
 	ASSERT(fundamentalMatrixComputer != NULL, "DFPC Structure from motion error: fundamentalMatrixComputer DFN configured incorrectly");
@@ -250,29 +253,31 @@ void ReconstructionFromStereo::AssignDfnsAlias()
 
 void ReconstructionFromStereo::FilterCurrentImage()
 	{
-	filter->imageInput(currentImage);
-	filter->process();
+	leftFilter->imageInput(currentLeftImage);
+	leftFilter->process();
 	DELETE_PREVIOUS(filteredCurrentImage);
-	filteredCurrentImage = filter->filteredImageOutput();
+	filteredCurrentImage = leftFilter->filteredImageOutput();
 	DEBUG_PRINT_TO_LOG("Filtered Current Frame", "");
+	DEBUG_SHOW_IMAGE(filteredCurrentImage);
 	}
 
 void ReconstructionFromStereo::FilterPastImage()
 	{
-	filter->imageInput(pastImage);
-	filter->process();
+	leftFilter->imageInput(pastLeftImage);
+	leftFilter->process();
 	DELETE_PREVIOUS(filteredPastImage);
-	filteredPastImage = filter->filteredImageOutput();
+	filteredPastImage = leftFilter->filteredImageOutput();
 	DEBUG_PRINT_TO_LOG("Filtered Past Frame", "");
 	}
 
 void ReconstructionFromStereo::FilterCurrentRightImage()
 	{
-	filter->imageInput(currentRightImage);
-	filter->process();
+	rightFilter->imageInput(currentRightImage);
+	rightFilter->process();
 	DELETE_PREVIOUS(filteredCurrentRightImage);
-	filteredCurrentRightImage = filter->filteredImageOutput();
+	filteredCurrentRightImage = rightFilter->filteredImageOutput();
 	DEBUG_PRINT_TO_LOG("Filtered Current Right Frame", "");
+	DEBUG_SHOW_IMAGE(filteredCurrentRightImage);
 	}
 
 void ReconstructionFromStereo::ExtractCurrentFeatures()
