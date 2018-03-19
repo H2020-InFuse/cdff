@@ -88,6 +88,7 @@ namespace dfn_ci {
         	void process();
         	void configure();
 
+
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
@@ -164,6 +165,30 @@ namespace dfn_ci {
 		cv::Mat ComputePointCloudFromDisparity(cv::Mat disparity);
 
 		void ValidateParameters();
+
+
+	/* --------------------------------------------------------------------
+	 * Private Testing 
+	 * --------------------------------------------------------------------
+	 */
+	#ifdef TESTING
+		cv::Mat disparityMatrix;
+		#define SAVE_DISPARITY_MATRIX(disparity) disparityMatrix = disparity
+	#else
+		#define SAVE_DISPARITY_MATRIX(disparity)
+	#endif
+
+	public:
+	/* --------------------------------------------------------------------
+	 * Public Testing 
+	 * --------------------------------------------------------------------
+	 */
+	#ifdef TESTING
+		cv::Mat disparityMatrixOutput()
+			{
+			return disparityMatrix;
+			}
+	#endif
     };
 }
 #endif

@@ -1,0 +1,23 @@
+- Name: GeneralParameters
+  PointCloudSamplingDensity: 0.1
+  UseFullScaleTwoPassAlgorithm: false
+  UseDisparityToDepthMap: false
+- Name: Prefilter
+  Maximum: 11 21 31
+- Name: Disparities
+  Minimum: 0
+  NumberOfIntervals: 128 256
+  UseMaximumDifference: false true
+  MaximumDifference: 1
+  SpeckleRange: 8 12 16
+  SpeckleWindow: 40 60 100
+  SmoothnessParameter1: 600 1000 1400
+  SmoothnessParameter2: 2400 2800 3200
+- Name: BlocksMatching
+  BlockSize: 9 5 11
+  UniquenessRatio: 1 5 10
+- Name: StereoCamera
+  LeftFocalLength: 693.4181807813
+  LeftPrinciplePointX: 671.7716154809
+  LeftPrinciplePointY: 391.33378485796
+  Baseline: 0.012
