@@ -134,20 +134,21 @@ DisparityMappingTestInterface::MeasuresMap DisparityMappingTestInterface::Extrac
 
 	//The disparity matrix is shifted to the right with respect to the reference disparity image.
 	const unsigned COLUMN_SHIFT = 40;
-	uint64_t cost;
+	uint64_t cost = 0;
 	for(unsigned row = 0; row < referenceDisparity.rows; row++)
 		{
 		for(unsigned column = COLUMN_SHIFT; column < referenceDisparity.cols; column++)
 			{
 			cv::Vec3b color = referenceDisparity.at<cv::Vec3b>(row, column-COLUMN_SHIFT);
 			int16_t disparityValue = disparity.at<int16_t>(row, column);
-			if (color[0] == color[1] && color[1] == color[2] && disparityValue >= 0)
+			if (color[0] == color[1] && color[1] == color[2])
 				{
 				cost += std::abs(static_cast<int32_t>(disparityValue) - static_cast<int32_t>(color[0]));	
 				}
 			}
 		}
-	measuresMap["DisparityCost"] = static_cast<double>(cost) / static_cast<double>(referenceDisparity.cols * referenceDisparity.rows);
+	unsigned pixelsNumber = referenceDisparity.cols * referenceDisparity.rows;
+	measuresMap["DisparityCost"] = static_cast<double>(cost) / static_cast<double>(pixelsNumber);
 
 
 	if (saveDisparity)
