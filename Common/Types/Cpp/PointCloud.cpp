@@ -51,6 +51,25 @@ void Copy(const PointCloud& source, PointCloud& destination)
 		}
 	}
 
+PointCloudPtr NewPointCloud()
+	{
+	PointCloudPtr pointCloud = new PointCloud();
+	Initialize(*pointCloud);
+	return pointCloud;
+	}
+
+PointCloudSharedPtr NewSharedPointCloud()
+	{
+	PointCloudSharedPtr sharedPointCloud = std::make_shared<PointCloud>();
+	Initialize(*sharedPointCloud);
+	return sharedPointCloud;
+	}
+
+void Initialize(PointCloud& pointCloud)
+	{
+	ClearPoints(pointCloud);
+	}
+
 void AddPoint(PointCloud& pointCloud, T_Double x, T_Double y, T_Double z)
 	{
 	ASSERT_ON_TEST(pointCloud.points.nCount < MAX_CLOUD_SIZE, "Point Cloud maximum capacity has been reached");

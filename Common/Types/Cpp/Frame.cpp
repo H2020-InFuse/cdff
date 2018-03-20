@@ -63,6 +63,34 @@ void Copy(const Frame& source, Frame& destination)
 		}
 	}
 
+FramePtr NewFrame()
+	{
+	FramePtr frame = new Frame();
+	Initialize(*frame);
+	return frame;
+	}
+
+FrameSharedPtr NewSharedFrame()
+	{
+	FrameSharedPtr sharedFrame = std::make_shared<Frame>();
+	Initialize(*sharedFrame);
+	return sharedFrame;
+	}
+
+void Initialize(Frame& frame)
+	{
+	SetFrameTime(frame, 0);
+	SetReceivedTime(frame, 0);
+	SetDataDepth(frame, 0);
+	SetPixelSize(frame, 0);
+	SetRowSize(frame, 0);
+	SetFrameSize(frame, 0, 0);
+	SetFrameMode(frame, MODE_UNDEFINED);
+	SetFrameStatus(frame, STATUS_EMPTY);
+	ClearAttributes(frame);
+	ClearData(frame);
+	}
+
 void SetFrameTime(Frame& frame, T_Int64 time)
 	{
 	frame.frame_time.microseconds = time;

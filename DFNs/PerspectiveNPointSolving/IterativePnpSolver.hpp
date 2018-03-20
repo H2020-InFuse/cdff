@@ -14,8 +14,11 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements the Iterative Pnp Solver.
+ * @brief This DFN executes the iterative Perspective N Point algorithm implemented in openCV.
  *  
+ *
+ * This DFN implementation uses the following parameters:
+ * @param cameraMatrix, the intrinsic parameter matrix of the camera that took the image, in terms of focal length and principle point coordinates.
  *
  * @{
  */

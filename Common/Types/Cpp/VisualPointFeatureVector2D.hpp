@@ -83,6 +83,9 @@ typedef VisualPointFeatureVector2D const* VisualPointFeatureVector2DConstPtr;
  * --------------------------------------------------------------------------
  */
 void Copy(const VisualPointFeatureVector2D& source, VisualPointFeatureVector2D& destination);
+VisualPointFeatureVector2DPtr NewVisualPointFeatureVector2D();
+VisualPointFeatureVector2DSharedPtr NewSharedVisualPointFeatureVector2D();
+void Initialize(VisualPointFeatureVector2D& featuresVector);
 
 void AddPoint(VisualPointFeatureVector2D& featuresVector, uint16_t x, uint16_t y);
 void ClearPoints(VisualPointFeatureVector2D& featuresVector);
