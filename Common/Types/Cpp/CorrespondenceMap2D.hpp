@@ -81,6 +81,9 @@ typedef CorrespondenceMap2D const* CorrespondenceMap2DConstPtr;
  * --------------------------------------------------------------------------
  */
 void Copy(const CorrespondenceMap2D& source, CorrespondenceMap2D& destination);
+CorrespondenceMap2DPtr NewCorrespondenceMap2D();
+CorrespondenceMap2DSharedPtr NewSharedCorrespondenceMap2D();
+void Initialize(CorrespondenceMap2D& correspondenceMap);
 
 void AddCorrespondence(CorrespondenceMap2D& correspondenceMap, BaseTypesWrapper::Point2D source, BaseTypesWrapper::Point2D sink, BaseTypesWrapper::T_Float probability);
 void ClearCorrespondences(CorrespondenceMap2D& correspondenceMap);

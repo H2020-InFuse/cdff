@@ -81,6 +81,9 @@ typedef PointCloud const* PointCloudConstPtr;
  * --------------------------------------------------------------------------
  */
 void Copy(const PointCloud& source, PointCloud& destination);
+PointCloudPtr NewPointCloud();
+PointCloudSharedPtr NewSharedPointCloud();
+void Initialize(PointCloud& pointCloud);
 
 void AddPoint(PointCloud& pointCloud, BaseTypesWrapper::T_Double x, BaseTypesWrapper::T_Double y, BaseTypesWrapper::T_Double z);
 void ClearPoints(PointCloud& pointCloud);

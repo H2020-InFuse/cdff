@@ -14,7 +14,15 @@
 /*!
  * @addtogroup DFPCs
  * 
- *  This is the DFNs Chain Interface for all chains of DFNs that needs to be used in sequence by a DFPC. 
+ * @brief This is the DFNs Chain Interface for all chains of DFNs that needs to be used in sequence by a DFPC. 
+ *
+ * A DFNsChain behaves the same way as a single DFN, and their public interfaces are very similar. The DFNsChainInterface adds the following capability:
+ * (i) automatic splitting of DFNsChain configuration file in multiple configuration files, one for each DFN so that each DFN can access its proper configuration file;
+ * (ii) instantiation of each DFN according to the information writtenn in the DFNsChain configuration file
+ *
+ * With the above functionality, a derived class need to implement only the process() method, where th DFNs will be called one by one.
+ * Optionally, a developer may code the AddignDFNsAlias() method, where it is possible to assign friendly access names to the DFN instead of accessing them through the dfnsSet.
+ * Optionally, a developer may code the ConfigureChain() method, for accessing extra chain configuration parameters beyond those used by the DFNs.
  * 
  * @{
  */

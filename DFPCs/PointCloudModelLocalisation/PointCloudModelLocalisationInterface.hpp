@@ -28,7 +28,6 @@
  * --------------------------------------------------------------------------
  */
 #include <DFNsChainInterface.hpp>
-#include <Frame.hpp>
 #include <PointCloud.hpp>
 #include <Pose.hpp>
 
@@ -52,22 +51,16 @@ namespace dfpc_ci {
             PointCloudModelLocalisationInterface();
             virtual ~PointCloudModelLocalisationInterface();
             /**
-            * Send value to input port image
-            * @param image, a 2D image taken from a camera
+            * Send value to input port pointCloud
+            * @param pointCloud, a point cloud representing the environment
             */
-            virtual void imageInput(FrameWrapper::FrameConstPtr data);
+            virtual void sceneInput(PointCloudWrapper::PointCloudConstPtr data);
 
             /**
             * Send value to input port model
             * @param model, the 3d point cloud of the model
             */
             virtual void modelInput(PointCloudWrapper::PointCloudConstPtr data);
-
-            /**
-            * Receive value from output port pointCloud
-            * @param pointCloud, This is the point cloud representing the 3D scene constructed so far.
-            */
-	    virtual PointCloudWrapper::PointCloudConstPtr pointCloudOutput();
 
             /**
             * Receive value from output port pose
@@ -86,9 +79,8 @@ namespace dfpc_ci {
 	 * --------------------------------------------------------------------
 	 */
         protected:
-            FrameWrapper::FrameConstPtr inImage;
+            PointCloudWrapper::PointCloudConstPtr inScene;
 	    PointCloudWrapper::PointCloudConstPtr inModel;
-	    PointCloudWrapper::PointCloudConstPtr outPointCloud;
             PoseWrapper::Pose3DConstPtr outPose;
 	    bool outSuccess;
 

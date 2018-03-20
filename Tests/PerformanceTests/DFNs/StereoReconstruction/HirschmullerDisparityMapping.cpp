@@ -78,7 +78,7 @@ DisparityMappingTestInterface::DisparityMappingTestInterface(std::string folderP
 	SetupMocksAndStubs();
 
 	referenceDisparity = cv::imread("../tests/Data/Images/ReferenceDisparity.png", cv::IMREAD_COLOR);
-	saveDisparity = false;
+	saveDisparity = true;
 	}
 
 DisparityMappingTestInterface::~DisparityMappingTestInterface()
@@ -143,7 +143,7 @@ DisparityMappingTestInterface::MeasuresMap DisparityMappingTestInterface::Extrac
 			int16_t disparityValue = disparity.at<int16_t>(row, column);
 			if (color[0] == color[1] && color[1] == color[2])
 				{
-				cost += std::abs(static_cast<int32_t>(disparityValue) - static_cast<int32_t>(color[0]));	
+				cost += std::abs(static_cast<int32_t>(disparityValue) - static_cast<int32_t>(255 - color[0]));	
 				}
 			}
 		}

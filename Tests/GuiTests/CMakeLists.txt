@@ -209,13 +209,13 @@ target_link_libraries(
 )
 
 add_executable(
-    StructureFromMotionGuiTest
-    DFPCs/PointCloudModelLocalisation/StructureFromMotion.cpp
+    FeaturesMatching3DGuiTest
+    DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
 )
-set_target_properties(StructureFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+set_target_properties(FeaturesMatching3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	StructureFromMotionGuiTest
-	structure_from_motion mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp stub_observed_scene ${VTK_LIBRARIES}
+	FeaturesMatching3DGuiTest
+	dfpc_implementation_features_matching_3d mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp stub_observed_scene ${VTK_LIBRARIES}
 )
 
 add_executable(

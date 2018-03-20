@@ -249,14 +249,14 @@ add_test(DFNsChainInterfaceTest DFNsChainInterfaceTest)
 
 
 add_executable(
-    StructureFromMotionTest
-    DFPCs/PointCloudModelLocalisation/StructureFromMotion.cpp
+    FeaturesMatching3DTest
+    DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
 )
 target_link_libraries(
-	StructureFromMotionTest
-	cdff_helpers cdff_logger structure_from_motion opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock stub_observed_scene boost_system
+	FeaturesMatching3DTest
+	cdff_helpers cdff_logger dfpc_implementation_features_matching_3d opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock stub_observed_scene boost_system
 )
-add_test(StructureFromMotionTest StructureFromMotionTest)
+add_test(FeaturesMatching3DTest FeaturesMatching3DTest)
 
 add_executable(
     ObservedSceneTest
@@ -264,6 +264,6 @@ add_executable(
 )
 target_link_libraries(
 	ObservedSceneTest
-	cdff_helpers cdff_logger structure_from_motion opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock stub_observed_scene
+	cdff_helpers cdff_logger cdff_types converters_opencv opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock stub_observed_scene
 )
 add_test(ObservedSceneTest ObservedSceneTest)

@@ -55,6 +55,25 @@ void Copy(const VisualPointFeatureVector2D& source, VisualPointFeatureVector2D& 
 		}
 	}
 
+VisualPointFeatureVector2DPtr NewVisualPointFeatureVector2D()
+	{
+	VisualPointFeatureVector2DPtr vector = new VisualPointFeatureVector2D();
+	Initialize(*vector);
+	return vector;
+	}
+
+VisualPointFeatureVector2DSharedPtr NewSharedVisualPointFeatureVector2D()
+	{
+	VisualPointFeatureVector2DSharedPtr sharedVector = std::make_shared<VisualPointFeatureVector2D>();
+	Initialize(*sharedVector);
+	return sharedVector;
+	}
+
+void Initialize(VisualPointFeatureVector2D& featuresVector)
+	{
+	ClearPoints(featuresVector);
+	}
+
 void AddPoint(VisualPointFeatureVector2D& featuresVector, uint16_t x, uint16_t y)
 	{
 	ASSERT_ON_TEST(featuresVector.nCount < MAX_FEATURE_2D_POINTS, "Features descriptor vector maximum capacity has been reached");

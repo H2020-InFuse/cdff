@@ -114,6 +114,9 @@ typedef Frame const* FrameConstPtr;
  * --------------------------------------------------------------------------
  */
 void Copy(const Frame& source, Frame& destination);
+FramePtr NewFrame();
+FrameSharedPtr NewSharedFrame();
+void Initialize(Frame& frame);
 
 void SetFrameTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
 BaseTypesWrapper::T_Int64 GetFrameTime(const Frame& frame);

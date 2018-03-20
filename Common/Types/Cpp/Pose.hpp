@@ -100,6 +100,9 @@ typedef Transform2D const* Transform2DConstPtr;
  * --------------------------------------------------------------------------
  */
 void Copy(const Pose3D& source, Pose3D& destination);
+Pose3DPtr NewPose3D();
+Pose3DSharedPtr NewSharedPose3D();
+void Reset(Pose3D& pose);
 
 void SetPosition(Pose3D& pose, BaseTypesWrapper::T_Double x, BaseTypesWrapper::T_Double y, BaseTypesWrapper::T_Double z);
 BaseTypesWrapper::T_Double GetXPosition(const Pose3D& pose);
@@ -123,9 +126,10 @@ BaseTypesWrapper::T_Double GetYRotation(const Pose3D& pose);
 BaseTypesWrapper::T_Double GetZRotation(const Pose3D& pose);
 BaseTypesWrapper::T_Double GetWRotation(const Pose3D& pose);
 
-void Reset(Pose3D& pose);
-
 void Copy(const Pose2D& source, Pose2D& destination);
+Pose2DPtr NewPose2D();
+Pose2DSharedPtr NewSharedPose2D();
+void Reset(Pose2D& pose);
 
 void SetPosition(Pose2D& pose, BaseTypesWrapper::T_Double x, BaseTypesWrapper::T_Double y);
 BaseTypesWrapper::T_Double GetXPosition(const Pose2D& pose);
@@ -141,7 +145,7 @@ BaseTypesWrapper::T_Double GetYTranslation(const Pose2D& pose);
 void SetRotation(Pose2D& pose, BaseTypesWrapper::T_Double angle);
 BaseTypesWrapper::T_Double GetRotation(const Pose2D& pose);
 
-void Reset(Pose2D& pose);
+
 }
 
 #endif

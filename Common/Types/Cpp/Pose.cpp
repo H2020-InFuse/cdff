@@ -54,6 +54,26 @@ void SetPosition(Pose3D& pose, T_Double x, T_Double y, T_Double z)
 	pose.pos.arr[2] = z;
 	}
 
+Pose3DPtr NewPose3D()
+	{
+	Pose3DPtr pose = new Pose3D();
+	Reset(*pose);
+	return pose;
+	}
+
+Pose3DSharedPtr NewSharedPose3D()
+	{
+	Pose3DSharedPtr sharedPose = std::make_shared<Pose3D>();
+	Reset(*sharedPose);
+	return sharedPose;
+	}
+
+void Reset(Pose3D& pose)
+	{
+	SetPosition(pose, 0, 0, 0);
+	SetOrientation(pose, 0, 0, 0, 0);
+	}
+
 T_Double GetXPosition(const Pose3D& pose)
 	{
 	return pose.pos.arr[0];
@@ -142,16 +162,30 @@ T_Double GetWRotation(const Pose3D& pose)
 	return GetWOrientation(pose);
 	}
 
-void Reset(Pose3D& pose)
-	{
-	SetPosition(pose, 0, 0, 0);
-	SetOrientation(pose, 0, 0, 0, 0);
-	}
-
 void Copy(const Pose2D& source, Pose2D& destination)
 	{
 	SetPosition(destination, GetXPosition(source), GetYPosition(source) );
 	SetOrientation(destination, GetOrientation(source) );
+	}
+
+Pose2DPtr NewPose2D()
+	{
+	Pose2DPtr pose = new Pose2D();
+	Reset(*pose);
+	return pose;
+	}
+
+Pose2DSharedPtr NewSharedPose2D()
+	{
+	Pose2DSharedPtr sharedPose = std::make_shared<Pose2D>();
+	Reset(*sharedPose);
+	return sharedPose;
+	}
+
+void Reset(Pose2D& pose)
+	{
+	SetPosition(pose, 0, 0);
+	SetOrientation(pose, 0);
 	}
 
 void SetPosition(Pose2D& pose, T_Double x, T_Double y)
@@ -203,12 +237,6 @@ void SetRotation(Pose2D& pose, T_Double angle)
 T_Double GetRotation(const Pose2D& pose)
 	{
 	return GetOrientation(pose);
-	}
-
-void Reset(Pose2D& pose)
-	{
-	SetPosition(pose, 0, 0);
-	SetOrientation(pose, 0);
 	}
 
 }

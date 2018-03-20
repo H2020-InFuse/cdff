@@ -81,6 +81,9 @@ typedef CorrespondenceMap3D const* CorrespondenceMap3DConstPtr;
  * --------------------------------------------------------------------------
  */
 void Copy(const CorrespondenceMap3D& source, CorrespondenceMap3D& destination);
+CorrespondenceMap3DPtr NewCorrespondenceMap3D();
+CorrespondenceMap3DSharedPtr NewSharedCorrespondenceMap3D();
+void Initialize(CorrespondenceMap3D& correspondenceMap);
 
 void AddCorrespondence(CorrespondenceMap3D& correspondenceMap, BaseTypesWrapper::Point3D source, BaseTypesWrapper::Point3D sink, BaseTypesWrapper::T_Float probability);
 void ClearCorrespondences(CorrespondenceMap3D& correspondenceMap);

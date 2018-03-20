@@ -56,6 +56,25 @@ void Copy(const CorrespondenceMap2D& source, CorrespondenceMap2D& destination)
 		}
 	}
 
+CorrespondenceMap2DPtr NewCorrespondenceMap2D()
+	{
+	CorrespondenceMap2DPtr correspondenceMap = new CorrespondenceMap2D();
+	Initialize(*correspondenceMap);
+	return correspondenceMap;
+	}
+
+CorrespondenceMap2DSharedPtr NewSharedCorrespondenceMap2D()
+	{
+	CorrespondenceMap2DSharedPtr sharedCorrespondenceMap = std::make_shared<CorrespondenceMap2D>();
+	Initialize(*sharedCorrespondenceMap);
+	return sharedCorrespondenceMap;
+	}
+
+void Initialize(CorrespondenceMap2D& correspondenceMap)
+	{
+	ClearCorrespondences(correspondenceMap);
+	}
+
 void AddCorrespondence(CorrespondenceMap2D& correspondenceMap, Point2D source, Point2D sink, T_Float probability)
 	{
 	ASSERT_ON_TEST(correspondenceMap.nCount < MAX_CORRESPONDENCES_2D, "Correspondence Map 3D maximum capacity has been reached");
