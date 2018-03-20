@@ -31,7 +31,6 @@
 
 namespace dfpc_ci {
 
-using namespace FrameWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
 
@@ -51,19 +50,14 @@ PointCloudModelLocalisationInterface::~PointCloudModelLocalisationInterface()
 
 	}
 
-void PointCloudModelLocalisationInterface::imageInput(FrameConstPtr data) 
+void PointCloudModelLocalisationInterface::sceneInput(PointCloudWrapper::PointCloudConstPtr data)
 	{
-    	inImage = data;
+    	inScene = data;
 	}
 
 void PointCloudModelLocalisationInterface::modelInput(PointCloudConstPtr data)
 	{
 	inModel = data;
-	}
-
-PointCloudConstPtr PointCloudModelLocalisationInterface::pointCloudOutput()
-	{
-	return outPointCloud;
 	}
 
 Pose3DConstPtr PointCloudModelLocalisationInterface::poseOutput() 

@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file StructureFromMotion.cpp
+ * @file FeaturesMatching3D.cpp
  * @date 26/02/2018
  * @author Alessandro Bianco
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNsTest
  * 
- * Unit Test for the DFPCs StructureFromMotion.
+ * Unit Test for the DFPCs FeaturesMatching3D.
  * 
  * 
  * @{
@@ -37,27 +37,15 @@
  * --------------------------------------------------------------------------
  */
 #include <Catch/catch.h>
-#include <PointCloudModelLocalisation/StructureFromMotion.hpp>
+#include <PointCloudModelLocalisation/FeaturesMatching3D.hpp>
 #include <Errors/Assert.hpp>
 
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/core/core.hpp>
 #include<pcl/io/ply_io.h>
-
-#include <MatToFrameConverter.hpp>
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
 #include <Pose.hpp>
 
 #include <Converters/SupportTypes.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector2DToMatConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Mocks/Common/Converters/MatToTransform3DConverter.hpp>
 #include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
 #include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
@@ -67,12 +55,8 @@
 #include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.cpp>
 #include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 
-#include <Stubs/DFPCs/PointCloudModelLocalisation/ObservedScene.hpp>
-
 using namespace dfpc_ci;
-using namespace FrameWrapper;
 using namespace Converters;
-using namespace VisualPointFeatureVector2DWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PoseWrapper;
 using namespace Common;
@@ -89,30 +73,13 @@ using namespace Converters::SupportTypes;
 
 TEST_CASE( "Success Call to Configure", "[configureSuccess]" ) 
 	{
-	Map* map = new ObservedScene();
-	StructureFromMotion structureFromMotion(map);
-	structureFromMotion.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcStructureFromMotion_conf01.yaml");
-	structureFromMotion.configure();
+	FeaturesMatching3D featuresMatching3d;
+	featuresMatching3d.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcFeaturesMatching3D_conf01.yaml");
+	featuresMatching3d.configure();
 	}
 
 TEST_CASE( "Success Call to Process", "[processSuccess]" ) 
 	{
-	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubFrameCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	Mocks::FrameToMatConverter* mockFrameConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubFrameCache, mockFrameConverter);
-
-	Stubs::CacheHandler<cv::Mat, FrameConstPtr>* stubInverseFrameCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>();
-	Mocks::MatToFrameConverter* mockInverseFrameConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubInverseFrameCache, mockInverseFrameConverter);
-
-	Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>* stubMatToVectorCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
-	Mocks::MatToVisualPointFeatureVector2DConverter* mockMatToVectorConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubMatToVectorCache, mockMatToVectorConverter);
-
-	Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>* stubVectorToMatCache = new Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>();
-	Mocks::VisualPointFeatureVector2DToMatConverter* mockVectorToMatConverter = new Mocks::VisualPointFeatureVector2DToMatConverter();
-	ConversionCache<VisualPointFeatureVector2DConstPtr, cv::Mat, VisualPointFeatureVector2DToMatConverter>::Instance(stubVectorToMatCache, mockVectorToMatConverter);
-
 	Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>* stubEssentialPoseCache = new Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>();
 	Mocks::MatToPose3DConverter* mockEssentialPoseConverter = new Mocks::MatToPose3DConverter();
 	ConversionCache<cv::Mat, Pose3DConstPtr, MatToPose3DConverter>::Instance(stubEssentialPoseCache, mockEssentialPoseConverter);
@@ -146,10 +113,9 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubOutputCache, mockOutputConverter);
 
 
-	Map* map = new ObservedScene();
-	StructureFromMotion structureFromMotion(map);
-	structureFromMotion.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcStructureFromMotion_conf01.yaml");
-	structureFromMotion.configure();
+	FeaturesMatching3D featuresMatching3d;
+	featuresMatching3d.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcFeaturesMatching3D_conf01.yaml");
+	featuresMatching3d.configure();
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclModelCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
@@ -170,29 +136,35 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 		}
 	PclPointCloudToPointCloudConverter pclConverter;
 	PointCloudConstPtr modelCloud = pclConverter.Convert(pclModelCloud);
-	structureFromMotion.modelInput(modelCloud);
+	featuresMatching3d.modelInput(modelCloud);
 
-	cv::Mat doubleImage1 = cv::imread("../tests/Data/Images/Scene1.png", cv::IMREAD_COLOR);
-	cv::Mat doubleImage2 = cv::imread("../tests/Data/Images/Scene2.png", cv::IMREAD_COLOR);
-	
-	unsigned startColumn = doubleImage1.cols/8;
-	unsigned startRow = doubleImage1.rows/4;
-	unsigned columnsSelection = doubleImage1.cols/4;
-	unsigned rowsSelection = doubleImage1.rows/2;
-	cv::Mat firstCvImage = doubleImage1( cv::Rect(startColumn, startRow, columnsSelection, rowsSelection) );
-	cv::Mat secondCvImage = doubleImage2( cv::Rect(startColumn, startRow, columnsSelection, rowsSelection) );
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclSceneCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	for(unsigned pointIndex = 0; pointIndex < pclModelCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ point = pclModelCloud->points.at(pointIndex);
+		pcl::PointXYZ scenePoint;
+		scenePoint.x = point.x + 0.2;
+		scenePoint.y = point.y - 0.1;
+		scenePoint.z = point.z + 0.2;
+		pclSceneCloud->points.push_back(scenePoint);
+		}	
+	for(float x = -1; x<1; x+=0.01)
+		{
+		for(float y = -1; y<1; y+=0.01)
+			{
+			pclSceneCloud->points.push_back( pcl::PointXYZ(x, y, -1) );
+			pclSceneCloud->points.push_back( pcl::PointXYZ(x, y, 1) );
+			pclSceneCloud->points.push_back( pcl::PointXYZ(-1, x, y) );
+			pclSceneCloud->points.push_back( pcl::PointXYZ(1, x, y) );
+			pclSceneCloud->points.push_back( pcl::PointXYZ(x, -1, y) );
+			pclSceneCloud->points.push_back( pcl::PointXYZ(x, 1, y) );
+			}
+		}
+	PointCloudConstPtr sceneCloud = pclConverter.Convert(pclSceneCloud);
+	featuresMatching3d.sceneInput(sceneCloud);
+	WRITE_TO_LOG("Scene added in input", "");
 
-	MatToFrameConverter converter;
-	FrameConstPtr firstImage = converter.Convert(firstCvImage);
-	FrameConstPtr secondImage = converter.Convert(secondCvImage);
-	
-	structureFromMotion.imageInput(firstImage);
-	structureFromMotion.process();
-	REQUIRE( structureFromMotion.successOutput() == false);
-
-	structureFromMotion.imageInput(secondImage);
-	structureFromMotion.process();
-	//REQUIRE( structureFromMotion.successOutput() == false);
+	featuresMatching3d.process();
 	}
 
 

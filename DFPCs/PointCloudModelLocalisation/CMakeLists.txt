@@ -9,10 +9,10 @@ target_link_libraries(
 )
 
 add_library(
-    structure_from_motion
-    StructureFromMotion.cpp
+    dfpc_implementation_features_matching_3d
+    FeaturesMatching3D.cpp
 )
 target_link_libraries(
-    structure_from_motion
+    dfpc_implementation_features_matching_3d
     point_cloud_model_localisation cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer
 )
