@@ -32,6 +32,14 @@ function show_error_exit {
   exit -1
 }
 
+function test_present_or_exit {
+  if (! command -v $1); then
+    echo "$1 Not Found."
+    echo "Please Install it first before running this scrip."
+    exit -1
+  fi
+}
+
 function getbranch_function(){
   branch_name=$(git symbolic-ref -q HEAD)
   branch_name=${branch_name##refs/heads/}
@@ -44,6 +52,9 @@ function getbranch_function(){
 }
 
 function download_artifact_function(){
+  test_present_or_exit wget
+  test_present_or_exit curl
+
   if [[ `wget -S --spider $1  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
   echo "Fetching latest Artifacts for branch $branch_name."
   curl -o generatedFiles.gz -LOk -X GET --header "PRIVATE-TOKEN: pVUF6xEhoz2kgWAUyyCr" https://gitlab.spaceapplications.com/InFuse/CDFF/-/jobs/artifacts/$branch_name/download?job=autogeneration
@@ -53,6 +64,7 @@ else
 }
 
 function unzip_function(){
+  test_present_or_exit unzip
   echo "Unzipping to $OUTPUT_DIR"
   unzip -joq generatedFiles.gz -d $OUTPUT_DIR
   rm generatedFiles.gz

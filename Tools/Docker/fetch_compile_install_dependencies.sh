@@ -157,10 +157,19 @@ function clean_function {
 }
 
 function build_all_function {
-  for i in "${!infuse_dependencies_map[@]}"
-  do
-    InstallersToRUN+=($i)
-  done
+ InstallersToRUN+=("cmake")
+ InstallersToRUN+=("boost")
+ InstallersToRUN+=("eigen")
+ InstallersToRUN+=("flann")
+ InstallersToRUN+=("qhull")
+ InstallersToRUN+=("yaml-cpp")
+ InstallersToRUN+=("opencv")
+ InstallersToRUN+=("vtk")
+ InstallersToRUN+=("pcl")
+  #for i in "${!infuse_dependencies_map[@]}"
+  #do
+  #  InstallersToRUN+=($i)
+  #done
 }
 
 ###### MAIN PROGRAMM
