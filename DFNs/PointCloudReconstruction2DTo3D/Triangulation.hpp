@@ -14,8 +14,12 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements the triangulation algorithm for the reconstruction of 3D point clouds from matched 2d images.
- *  
+ * @brief This DFN executes the triangulation algorithms for reconstruction of the 3d pose of a point from its position recorded by two cameras. The algorithm is described in "Multiple view geometry in 
+ * computer vision" by Richard Hartley, and Andrew Zisserman, and is implemented by the openCV library 
+ * 
+ * This DFN implementation requires the following parameters:
+ * @param firstCameraMatrix, the first (or left) camera matrix in terms of focal length and principle point coordinates;
+ * @param secondCameraMatrix, the second (or right) camera matrix in terms of focal length and principle point coordinates;
  *
  * @{
  */

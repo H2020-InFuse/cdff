@@ -14,8 +14,13 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements the ICP algorithm for matching points between two 3D point clouds.
- *  
+ *  @brief This DFN executes the ICP algorithms for detecting a 3d model pose in a 3d scene, according to the implementation in PCL library. 
+ * 
+ * This DFN implementation requires the following parameters:
+ * @param maxCorrespondenceDistance, the maximum spatial distance allowed between the transformed point model and a scene point to consider the matching acceptable.
+ * @param maximumIterations, this is the maximum number of iteration of the algorithm, after these iterations the best transform (the one with more inliers) is given as output.
+ * @param transformationEpsilon, 
+ * @param euclideanFitnessEpsilon,
  *
  * @{
  */

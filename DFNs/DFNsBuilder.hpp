@@ -14,7 +14,9 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This is a generic builder for building DFNs. 
+ *  @brief This is a DFN builder, it offers static method for the instantiation of a DFN implementation from the name of the DFN and implementation name of the DFN.
+ *
+ *  It has only one public method, which takes as input two strings (name of DFN and implementation name of the DFN) and gives a pointer to the instantiated implementation object.
  * 
  * @{
  */

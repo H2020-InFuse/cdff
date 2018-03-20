@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This is the common interface of all DFNs Chain that want to reconstruct a 3D scene from a pair of stereo images.    
+ *  This is the common interface of all DFNs Chain that want to reconstruct a 3D scene from a pair of images.    
  *
  * @{
  */

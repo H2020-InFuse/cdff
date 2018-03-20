@@ -20,6 +20,23 @@
  * @{
  */
 
+/*!
+ * @addtogroup DFNs
+ * 
+ *  @brief This DFN executes the RANSAC algorithms for detecting a 3d model pose in a 3d scene, according to the implementation in PCL library. 
+ * 
+ * This DFN implementation requires the following parameters:
+ * @param similarityThreshold, this is the minimum amount of similarity between two features, as a condition for considering them a possible match.
+ * @param inlierFraction, when the model is transformed into the coordinate system of the scene, this is the minimum fraction of model points that has to be found in the scene, as a condition for
+ *				accepting the transformation.
+ * @param correspondenceRandomness, 
+ * @param numberOfSamples, this is the number of random samples that are selected in the intial phase of RANSAC for the construction of a model,
+ * @param maximumIterations, this is the maximum number of iteration of the algorithm, after these iterations the best transform (the one with more inliers) is given as output,
+ * @param maxCorrespondenceDistance.searchRadius, the maximum spatial distance allowed between the transformed point model and a scene point to consider the matching acceptable.
+ *
+ * @{
+ */
+
 #ifndef RANSAC_3D_HPP
 #define RANSAC_3D_HPP
 
