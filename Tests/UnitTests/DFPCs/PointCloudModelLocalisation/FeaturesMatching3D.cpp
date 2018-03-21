@@ -75,7 +75,7 @@ TEST_CASE( "Success Call to Configure", "[configureSuccess]" )
 	{
 	FeaturesMatching3D featuresMatching3d;
 	featuresMatching3d.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcFeaturesMatching3D_conf01.yaml");
-	featuresMatching3d.configure();
+	featuresMatching3d.setup();
 	}
 
 TEST_CASE( "Success Call to Process", "[processSuccess]" ) 
@@ -115,7 +115,7 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 
 	FeaturesMatching3D featuresMatching3d;
 	featuresMatching3d.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcFeaturesMatching3D_conf01.yaml");
-	featuresMatching3d.configure();
+	featuresMatching3d.setup();
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclModelCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
@@ -164,7 +164,7 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 	featuresMatching3d.sceneInput(sceneCloud);
 	WRITE_TO_LOG("Scene added in input", "");
 
-	featuresMatching3d.process();
+	featuresMatching3d.run();
 	}
 
 

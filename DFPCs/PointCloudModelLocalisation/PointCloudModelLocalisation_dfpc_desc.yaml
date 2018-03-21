@@ -1,0 +1,32 @@
+name: PointCloudModelLocalisation
+dfns:
+    - name: FeaturesExtraction3D
+    - name: FeaturesDescription3D
+    - name: FeaturesMatching3D
+input_ports:
+    - name: scene
+      type: PointCloud
+      doc: "a point cloud representing the environment"
+      connections:
+        - dfn: FeaturesExtraction3D
+          port: pointCloud
+    - name: model
+      type: PointCloud
+      doc: "the 3d point cloud of the model"
+      connections:
+        - dfn: FeaturesExtraction3D
+          port: pointCloud
+output_ports:
+    - name: pose
+      type: Pose3D
+      doc: "This is the pose of the model in the scene"
+      connections:
+        dfn: FeaturesMatching3D
+        port: pose
+    - name: success
+      type: bool
+      doc: "this determines whether the dfpc could localise the model"
+      connections:
+        dfn: FeaturesMatching3D
+        port: success
+

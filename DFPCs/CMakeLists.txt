@@ -1,9 +1,9 @@
 add_library(
-    dfns_chain_interface
-    DFNsChainInterface.cpp
+    dfpc_configurator
+    DfpcConfigurator.cpp
 )
 target_link_libraries(
-	dfns_chain_interface
+	dfpc_configurator
 	cdff_helpers cdff_logger cdff_types dfns_builder
 )
 

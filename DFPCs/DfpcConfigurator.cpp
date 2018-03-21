@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file DFNsChainInterface.cpp
- * @date 23/02/2018
+ * @file DfpcConfigurator.cpp
+ * @date 21/03/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DFNs
  * 
- * Implementation of the DFNsChainInterface non virtual methods.
+ * Implementation of the DfpcConfigurator class.
  * 
  * 
  * @{
@@ -26,7 +26,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include "DFNsChainInterface.hpp"
+#include "DfpcConfigurator.hpp"
 #include "Errors/Assert.hpp"
 #include <fstream>
 #include <DFNsBuilder.hpp>
@@ -41,28 +41,28 @@ using namespace dfn_ci;
  *
  * --------------------------------------------------------------------------
  */
-DFNsChainInterface::DFNsChainInterface() : outputUpdated(true) 
+DfpcConfigurator::DfpcConfigurator()
 	{
 
 	}
-DFNsChainInterface::~DFNsChainInterface() 
+
+DfpcConfigurator::~DfpcConfigurator() 
 	{
-	DestroyDFNs();
+	DestroyDfns();
 	}
 
-void DFNsChainInterface::configure() 
+void DfpcConfigurator::configure(std::string configurationFilePath) 
 	{
 	try
 		{
+		std::string folderPath = ComputeConfigurationFolderPath(configurationFilePath);
 		YAML::Node configuration= YAML::LoadFile( configurationFilePath );
-		SplitConfigurationFile(configuration);
+		SplitConfigurationFile(configuration, folderPath);
 		if (dfnsSet.empty())
 			{
 			ConstructDFNs(configuration);
 			}
 		ConfigureDfns();
-		ConfigureChain();
-		AssignDfnsAlias();
 		} 
 	catch(YAML::Exception& e) 
 		{
@@ -70,24 +70,23 @@ void DFNsChainInterface::configure()
 		}
 	} 
 
-bool DFNsChainInterface::hasNewOutput()
+std::string DfpcConfigurator::GetExtraParametersConfigurationFilePath()
 	{
-	return outputUpdated;
+	return extraParametersConfigurationFilePath;
 	}
 
-void DFNsChainInterface::executionTimeInput(int64_t data)
+DFNCommonInterface* DfpcConfigurator::GetDfn(std::string dfnName, bool optional)
 	{
-	executionTime = data;
-	}
-
-void DFNsChainInterface::loggingIsActivatedInput(LogLevel data)
-	{
-	logLevel = data;
-	}
-
-void DFNsChainInterface::setConfigurationFile(std::string configurationFilePath)
-	{
-	this->configurationFilePath = configurationFilePath;
+	std::map<std::string, dfn_ci::DFNCommonInterface*>::iterator dfnElement = dfnsSet.find(dfnName);
+	if ( dfnElement != dfnsSet.end() )
+		{
+		return dfnElement->second;
+		}
+	else
+		{
+		ASSERT(optional, "Mandatory DFN not properly configured");
+		return NULL;
+		}
 	}
 
 /* --------------------------------------------------------------------------
@@ -96,7 +95,7 @@ void DFNsChainInterface::setConfigurationFile(std::string configurationFilePath)
  *
  * --------------------------------------------------------------------------
  */
-void DFNsChainInterface::ConstructDFNs(YAML::Node configuration)
+void DfpcConfigurator::ConstructDFNs(YAML::Node configuration)
 	{
 	for(unsigned dfnIndex = 0; dfnIndex < configuration.size(); dfnIndex++)
 		{
@@ -116,10 +115,8 @@ void DFNsChainInterface::ConstructDFNs(YAML::Node configuration)
 		}
 	}
 
-void DFNsChainInterface::SplitConfigurationFile(YAML::Node configuration)
+void DfpcConfigurator::SplitConfigurationFile(YAML::Node configuration, std::string folderPath)
 	{
-	std::string folderPath = ComputeConfigurationFolderPath();
-
 	for(unsigned dfnIndex = 0; dfnIndex < configuration.size(); dfnIndex++)
 		{
 		YAML::Node dfnNode = configuration[dfnIndex];
@@ -137,7 +134,7 @@ void DFNsChainInterface::SplitConfigurationFile(YAML::Node configuration)
 
 		if (dfnName == "DFNsChain")
 			{
-			chainConfigurationFilePath = nodeFileStream.str();
+			extraParametersConfigurationFilePath = nodeFileStream.str();
 			}
 		else
 			{
@@ -146,7 +143,7 @@ void DFNsChainInterface::SplitConfigurationFile(YAML::Node configuration)
 		}
 	}
 
-std::string DFNsChainInterface::ComputeConfigurationFolderPath()
+std::string DfpcConfigurator::ComputeConfigurationFolderPath(std::string configurationFilePath)
 	{
  	static const char slash = '/';
 
@@ -158,7 +155,7 @@ std::string DFNsChainInterface::ComputeConfigurationFolderPath()
 	return "";
 	}
 		
-void DFNsChainInterface::ConfigureDfns()
+void DfpcConfigurator::ConfigureDfns()
 	{
 	for(std::map<std::string, DFNCommonInterface*>::iterator dfnsIterator = dfnsSet.begin(); dfnsIterator != dfnsSet.end(); dfnsIterator++)
 		{
@@ -170,7 +167,7 @@ void DFNsChainInterface::ConfigureDfns()
 		}
 	}
 
-void DFNsChainInterface::DestroyDFNs()
+void DfpcConfigurator::DestroyDfns()
 	{
 	for(std::map<std::string, DFNCommonInterface*>::iterator dfnsIterator = dfnsSet.begin(); dfnsIterator != dfnsSet.end(); dfnsIterator++)
 		{
@@ -179,16 +176,6 @@ void DFNsChainInterface::DestroyDFNs()
 		}
 	dfnsSet.clear();
 	configurationFilesSet.clear();
-	}
-
-void DFNsChainInterface::ConfigureChain()
-	{
-
-	}
-
-void DFNsChainInterface::AssignDfnsAlias()	
-	{
-
 	}
 
 }

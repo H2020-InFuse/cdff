@@ -238,14 +238,14 @@ add_test(Transform3DMatConvertersTest Transform3DMatConvertersTest)
 
 
 add_executable(
-    DFNsChainInterfaceTest
-    DFPCs/DFNsChainInterface.cpp
+    DfpcConfiguratorTest
+    DFPCs/DfpcConfigurator.cpp
 )
 target_link_libraries(
-	DFNsChainInterfaceTest
-	cdff_helpers cdff_logger dfns_chain_interface
+	DfpcConfiguratorTest
+	cdff_helpers cdff_logger dfpc_configurator
 )
-add_test(DFNsChainInterfaceTest DFNsChainInterfaceTest)
+add_test(DfpcConfiguratorTest DfpcConfiguratorTest)
 
 
 add_executable(
@@ -254,7 +254,7 @@ add_executable(
 )
 target_link_libraries(
 	FeaturesMatching3DTest
-	cdff_helpers cdff_logger dfpc_implementation_features_matching_3d opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock stub_observed_scene boost_system
+	cdff_helpers cdff_logger dfpc_implementation_features_matching_3d opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock stub_observed_scene boost_system dfpc_configurator
 )
 add_test(FeaturesMatching3DTest FeaturesMatching3DTest)
 

@@ -44,6 +44,7 @@
 
 #include "Map.hpp"
 #include <Helpers/ParametersListHelper.hpp>
+#include <DfpcConfigurator.hpp>
 
 
 namespace dfpc_ci {
@@ -63,7 +64,8 @@ namespace dfpc_ci {
         public:
 		ReconstructionFromMotion(Map* map);
 		~ReconstructionFromMotion();
-		void process();
+		void run();
+		void setup();
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -96,8 +98,9 @@ namespace dfpc_ci {
 		ReconstructionFromMotionOptionsSet parameters;
 		static const ReconstructionFromMotionOptionsSet DEFAULT_PARAMETERS;
 
-		void ConfigureChain();
+		void ConfigureExtraParameters();
 
+		DfpcConfigurator configurator;
 		Map* map;
 		float searchRadius;
 		PoseWrapper::Pose3DPtr rightToLeftCameraPose;
@@ -110,19 +113,19 @@ namespace dfpc_ci {
 		dfn_ci::CamerasTransformEstimationInterface* cameraTransformEstimator;
 		dfn_ci::PointCloudReconstruction2DTo3DInterface* reconstructor3D;
 
-		FrameWrapper::FrameConstPtr pastImage;
-		FrameWrapper::FrameConstPtr currentImage;
+		FrameWrapper::FrameConstPtr pastLeftImage;
+		FrameWrapper::FrameConstPtr currentLeftImage;
 		FrameWrapper::FrameConstPtr currentRightImage;
-		FrameWrapper::FrameConstPtr filteredPastImage;
-		FrameWrapper::FrameConstPtr filteredCurrentImage;
+		FrameWrapper::FrameConstPtr filteredPastLeftImage;
+		FrameWrapper::FrameConstPtr filteredCurrentLeftImage;
 		FrameWrapper::FrameConstPtr filteredCurrentRightImage;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr pastKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentKeypointsVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr pastLeftKeypointsVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentLeftKeypointsVector;
 		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentRightKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr pastFeaturesVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentFeaturesVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr pastLeftFeaturesVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentLeftFeaturesVector;
 		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentRightFeaturesVector;
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap;
+		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr pastToCurrentCorrespondenceMap;
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr leftRightCorrespondenceMap;
 		MatrixWrapper::Matrix3dConstPtr fundamentalMatrix;
 		PoseWrapper::Pose3DConstPtr pastToCurrentCameraTransform;
@@ -131,23 +134,24 @@ namespace dfpc_ci {
 
 		void AssignDfnsAlias();
 
-		bool ComputeCloudInSight();
+		bool ComputeCameraMovement();
+		void ComputePointCloud();
 		void UpdateScene();
 
-		void FilterCurrentImage();
-		void FilterPastImage();
+		void FilterCurrentLeftImage();
+		void FilterPastLeftImage();
 		void FilterCurrentRightImage();
-		void ExtractCurrentFeatures();
-		void ExtractPastFeatures();
+		void ExtractCurrentLeftFeatures();
+		void ExtractPastLeftFeatures();
 		void ExtractCurrentRightFeatures();
-		void DescribeCurrentFeatures();
-		void DescribePastFeatures();
+		void DescribeCurrentLeftFeatures();
+		void DescribePastLeftFeatures();
 		void DescribeCurrentRightFeatures();
 		void MatchCurrentAndPastFeatures();
 		void MatchLeftAndRightFeatures();
 		bool ComputeFundamentalMatrix();
 		bool ComputePastToCurrentTransform();
-		void ComputePointCloud();
+		void ComputeStereoPointCloud();
     };
 }
 #endif

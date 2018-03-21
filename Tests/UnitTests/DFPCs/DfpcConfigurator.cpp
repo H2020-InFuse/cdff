@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file DFNsChainInterface.cpp
- * @date 26/02/2018
+ * @file DfpcConfigurator.cpp
+ * @date 21/03/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DFNsTest
  * 
- * Unit Test for the DFNsChainInterface Common Methods.
+ * Unit Test for the DfpcConfigurator Methods.
  * 
  * 
  * @{
@@ -37,30 +37,13 @@
  * --------------------------------------------------------------------------
  */
 #include <Catch/catch.h>
-#include <DFNsChainInterface.hpp>
+#include <DfpcConfigurator.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <Errors/Assert.hpp>
 
 using namespace dfpc_ci;
 using namespace dfn_ci;
-
-/* --------------------------------------------------------------------------
- *
- * Concrete Class for testing (DFNsChainInterface is pure virtual)
- *
- * --------------------------------------------------------------------------
- */
-class DFNsChain : public DFNsChainInterface
-	{
-	public:
-		void process() 
-			{
-			REQUIRE( dynamic_cast<ImageUndistortion*>(dfnsSet["ZedImageUndistortion"]) != nullptr);
-			REQUIRE( dynamic_cast<ShotDescriptor3D*>(dfnsSet["3dDescriptor"]) != nullptr);
-			}
-	};
-
 
 /* --------------------------------------------------------------------------
  *
@@ -76,9 +59,8 @@ class DFNsChain : public DFNsChainInterface
 
 TEST_CASE( "Success Call to Configure", "[configureSuccess]" ) 
 	{
-	DFNsChain dfnsChain;
-	dfnsChain.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/dfns_chain_conf01.yaml");
-	dfnsChain.configure();
+	DfpcConfigurator configurator;
+	configurator.configure("../tests/ConfigurationFiles/DFPCs/dfns_chain_conf01.yaml");
 
 	YAML::Node dfn0Node= YAML::LoadFile( "../tests/ConfigurationFiles/DFPCs/DFN_ZedImageUndistortion.yaml" );
 	REQUIRE(  dfn0Node[0]["Name"].as<std::string>() == "GeneralParameters") ;
@@ -108,15 +90,15 @@ TEST_CASE( "Success Call to Configure", "[configureSuccess]" )
 	REQUIRE_CLOSE(  dfn1Node[1]["SearchRadius"].as<float>(), 0.01) ;
 	REQUIRE(  dfn1Node[1]["NeighboursSetSize"].as<int>() == 0) ;
 
-	dfnsChain.process();
+	REQUIRE( dynamic_cast<ImageUndistortion*>( configurator.GetDfn("ZedImageUndistortion") ) != NULL );
+	REQUIRE( dynamic_cast<ShotDescriptor3D*>( configurator.GetDfn("3dDescriptor") ) != NULL);
 	}
 
 
 TEST_CASE( "Success Call to Configure With Chain Parameters", "[configureSuccessChainParameters]" ) 
 	{
-	DFNsChain dfnsChain;
-	dfnsChain.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/dfns_chain_conf02.yaml");
-	dfnsChain.configure();
+	DfpcConfigurator configurator;
+	configurator.configure("../tests/ConfigurationFiles/DFPCs/dfns_chain_conf02.yaml");
 
 	YAML::Node dfn0Node= YAML::LoadFile( "../tests/ConfigurationFiles/DFPCs/DFN_ZedImageUndistortion.yaml" );
 	REQUIRE(  dfn0Node[0]["Name"].as<std::string>() == "GeneralParameters") ;
@@ -150,7 +132,8 @@ TEST_CASE( "Success Call to Configure With Chain Parameters", "[configureSuccess
 	REQUIRE(  chainNode[0]["Name"].as<std::string>() == "GeneralParameters") ;
 	REQUIRE(  chainNode[0]["UndistortionTimes"].as<int>() == 2) ;
 
-	dfnsChain.process();
+	REQUIRE( dynamic_cast<ImageUndistortion*>( configurator.GetDfn("ZedImageUndistortion") ) != NULL );
+	REQUIRE( dynamic_cast<ShotDescriptor3D*>( configurator.GetDfn("3dDescriptor") ) != NULL);
 	}
 
 /** @} */

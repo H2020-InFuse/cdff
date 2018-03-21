@@ -1,0 +1,51 @@
+name: PointCloudModelLocalisation
+dfns:
+    - name: FeaturesExtraction2D
+    - name: FeaturesDescription2D
+    - name: FeaturesMatching2D
+    - name: FundamentalMatrixComputation
+    - name: CamerasTransformEstimation
+    - name: StereoReconstruction
+    - name: ImageFiltering
+    - name: PointCloudReconstruction2DTo3D
+input_ports:
+    - name: leftImage
+      type: Frame
+      doc: "a 2D left image taken from a stereo camera"
+      connections:
+        - dfn: ImageFiltering
+          port: image
+    - name: rightImage
+      type: Frame
+      doc: "a 2D right image taken from a stereo camera"
+      connections:
+        - dfn: ImageFiltering
+          port: image
+output_ports:
+    - name: pointCloud
+      type: PointCloud
+      doc: "This is the point cloud representing the 3D scene constructed so far."
+      connections:
+        dfn: StereoReconstruction
+        port: pointCloud
+        dfn: PointCloudReconstruction2DTo3D
+        port: pointCloud
+    - name: pose
+      type: Pose3D
+      doc: "This is the pose of the camera in the scene."
+      connections:
+        dfn: CamerasTransformEstimation
+        port: pose
+    - name: success
+      type: bool
+      doc: "this determines whether the dfpc determine the camera transform"
+      connections:
+        dfn: CamerasTransformEstimation
+        port: success
+      connections:
+        dfn: FeaturesMatching2D
+        port: success
+      connections:
+        dfn: FundamentalMatrixComputation
+        port: success
+

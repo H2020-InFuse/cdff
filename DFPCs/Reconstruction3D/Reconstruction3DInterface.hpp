@@ -27,7 +27,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <DFNsChainInterface.hpp>
+#include <DFPCCommonInterface.hpp>
 #include <Frame.hpp>
 #include <PointCloud.hpp>
 #include <Pose.hpp>
@@ -42,7 +42,7 @@ namespace dfpc_ci {
  *
  * --------------------------------------------------------------------------
  */
-    class Reconstruction3DInterface : public DFNsChainInterface
+    class Reconstruction3DInterface : public DFPCCommonInterface
     {
 	/* --------------------------------------------------------------------
 	 * Public
@@ -77,7 +77,7 @@ namespace dfpc_ci {
 
             /**
             * Receive value from output port success
-            * @param success, this determines whether the dfpc could localise the model.
+            * @param success, this determines whether the dfpc determine the camera transform.
             */
             virtual bool successOutput();
 

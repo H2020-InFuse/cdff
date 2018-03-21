@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 	Map* map = new ObservedScene();
 	ReconstructionFromStereo reconstructionFromStereo(map);
 	reconstructionFromStereo.setConfigurationFile("../../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcReconstructionFromStereo_conf07.yaml");
-	reconstructionFromStereo.configure();
+	reconstructionFromStereo.setup();
 	WRITE_TO_LOG("Configure", "Completed");
 
 	cv::Mat doubleImageA = cv::imread("../../tests/Data/Images/Scene1.png", cv::IMREAD_COLOR);
@@ -162,43 +162,43 @@ int main(int argc, char** argv)
 	WRITE_TO_LOG("First Image Input", "");
 	reconstructionFromStereo.leftImageInput(firstLeftImage);
 	reconstructionFromStereo.rightImageInput(firstRightImage);
-	reconstructionFromStereo.process();
+	reconstructionFromStereo.run();
 	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
 
 	WRITE_TO_LOG("Second Image Input", "");
 	reconstructionFromStereo.leftImageInput(secondLeftImage);
 	reconstructionFromStereo.rightImageInput(secondRightImage);
-	reconstructionFromStereo.process();
+	reconstructionFromStereo.run();
 	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
 
 	WRITE_TO_LOG("Third Image Input", "");
 	reconstructionFromStereo.leftImageInput(thirdLeftImage);
 	reconstructionFromStereo.rightImageInput(thirdRightImage);
-	reconstructionFromStereo.process();
+	reconstructionFromStereo.run();
 	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
 
 	WRITE_TO_LOG("Fourth Image Input", "");
 	reconstructionFromStereo.leftImageInput(fourthLeftImage);
 	reconstructionFromStereo.rightImageInput(fourthRightImage);
-	reconstructionFromStereo.process();
+	reconstructionFromStereo.run();
 	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
 
 	WRITE_TO_LOG("Fifth Image Input", "");
 	reconstructionFromStereo.leftImageInput(fifthLeftImage);
 	reconstructionFromStereo.rightImageInput(fifthRightImage);
-	reconstructionFromStereo.process();
+	reconstructionFromStereo.run();
 	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
 
 	WRITE_TO_LOG("Sixth Image Input", "");
 	reconstructionFromStereo.leftImageInput(sixthLeftImage);
 	reconstructionFromStereo.rightImageInput(sixthRightImage);
-	reconstructionFromStereo.process();
+	reconstructionFromStereo.run();
 	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
 
 	WRITE_TO_LOG("Seventh Image Input", "");
 	reconstructionFromStereo.leftImageInput(seventhLeftImage);
 	reconstructionFromStereo.rightImageInput(seventhRightImage);
-	reconstructionFromStereo.process();
+	reconstructionFromStereo.run();
 	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
 
 	PRINT_LOG();
@@ -208,28 +208,9 @@ int main(int argc, char** argv)
 		return 0;
 		}
 
+	Visualizers::PclVisualizer::Enable();
+	DEBUG_SHOW_POINT_CLOUD(pointCloud);
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*pointCloud); pointIndex++)
-		{
-		pcl::PointXYZ newPoint(GetXCoordinate(*pointCloud, pointIndex), GetYCoordinate(*pointCloud, pointIndex), GetZCoordinate(*pointCloud, pointIndex) );
-		std::stringstream stream;
-		pclPointCloud->points.push_back(newPoint);
-
-		stream << "Point "<<pointIndex<<": ("<<newPoint.x<<", "<<newPoint.y<<", "<<newPoint.z<<")";
-		std::string string = stream.str();
-		PRINT_TO_LOG("", string );
-		}
-
-	pcl::visualization::PCLVisualizer viewer ("Output Cloud");
-    	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclCloudColor(pclPointCloud, 255, 255, 255);
-    	viewer.addPointCloud(pclPointCloud,pclCloudColor,"input");
-
-    	while (!viewer.wasStopped ())
-    		{
-        	viewer.spinOnce();
-        	pcl_sleep (0.01);
-    		} 
 	return 0;
 	};
 

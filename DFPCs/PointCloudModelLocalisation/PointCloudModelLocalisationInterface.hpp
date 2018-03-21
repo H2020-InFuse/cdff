@@ -27,7 +27,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <DFNsChainInterface.hpp>
+#include <DFPCCommonInterface.hpp>
 #include <PointCloud.hpp>
 #include <Pose.hpp>
 
@@ -41,7 +41,7 @@ namespace dfpc_ci {
  *
  * --------------------------------------------------------------------------
  */
-    class PointCloudModelLocalisationInterface : public DFNsChainInterface
+    class PointCloudModelLocalisationInterface : public DFPCCommonInterface
     {
 	/* --------------------------------------------------------------------
 	 * Public

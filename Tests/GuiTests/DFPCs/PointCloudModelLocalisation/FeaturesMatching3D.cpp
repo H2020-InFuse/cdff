@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 	WRITE_TO_LOG("Configure", "");
 	FeaturesMatching3D featuresMatching3d;
 	featuresMatching3d.setConfigurationFile("../../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcFeaturesMatching3D_conf01.yaml");
-	featuresMatching3d.configure();
+	featuresMatching3d.setup();
 	WRITE_TO_LOG("Configure", "Completed");
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
@@ -150,7 +150,7 @@ int main(int argc, char** argv)
 	featuresMatching3d.sceneInput(sceneCloud);
 	WRITE_TO_LOG("Scene added in input", "");
 
-	featuresMatching3d.process();
+	featuresMatching3d.run();
 
 	bool success = featuresMatching3d.successOutput();
 	Pose3DConstPtr pose = featuresMatching3d.poseOutput();

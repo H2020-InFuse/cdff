@@ -81,7 +81,7 @@ FeaturesMatching3D::~FeaturesMatching3D()
 	DELETE_PREVIOUS(modelPoseInScene);
 	}
 
-void FeaturesMatching3D::process() 
+void FeaturesMatching3D::run() 
 	{
 	DEBUG_PRINT_TO_LOG("FeaturesMatching3D start", "");
 	sceneCloud = inScene;
@@ -101,6 +101,16 @@ void FeaturesMatching3D::process()
 		{
 		outPose = NULL;
 		}
+	else
+		{
+		outPose = modelPoseInScene;
+		}
+	}
+
+void FeaturesMatching3D::setup()
+	{
+	configurator.configure(configurationFilePath);
+	AssignDfnsAlias();
 	}
 
 /* --------------------------------------------------------------------------
@@ -112,25 +122,10 @@ void FeaturesMatching3D::process()
 
 void FeaturesMatching3D::AssignDfnsAlias()
 	{
-	unsigned dfnNumber = dfnsSet.size();
-	unsigned mandatoryDFNsNumber = 2;
-	unsigned optionalDFNsSet = 0;
+	featuresExtractor3d = static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") );
+	optionalFeaturesDescriptor3d = static_cast<FeaturesDescription3DInterface*>( configurator.GetDfn("featuresDescriptor3d", true) );
+	featuresMatcher3d = static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") );
 
-	featuresExtractor3d = static_cast<FeaturesExtraction3DInterface*>(dfnsSet["featuresExtractor3d"]);
-	featuresMatcher3d = static_cast<FeaturesMatching3DInterface*>(dfnsSet["featuresMatcher3d"]);
-
-	if (dfnsSet.find("featuresDescriptor3d") != dfnsSet.end() )
-		{
-		optionalFeaturesDescriptor3d = static_cast<FeaturesDescription3DInterface*>(dfnsSet["featuresDescriptor3d"]);
-		ASSERT(optionalFeaturesDescriptor3d != NULL, "DFPC Structure from motion error: featuresDescriptor3d DFN configured incorrectly");
-		optionalDFNsSet++;
-		}
-	else
-		{
-		optionalFeaturesDescriptor3d = NULL;
-		}
-
-	ASSERT(dfnNumber == mandatoryDFNsNumber + optionalDFNsSet, "DFPC Structure from motion error: wrong number of DFNs in configuration file");
 	ASSERT(featuresExtractor3d != NULL, "DFPC Structure from motion error: featuresExtractor3d DFN configured incorrectly");
 	ASSERT(featuresMatcher3d != NULL, "DFPC Structure from motion error: featuresMatcher3d DFN configured incorrectly");
 	}
