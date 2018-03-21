@@ -254,16 +254,16 @@ add_executable(
 )
 target_link_libraries(
 	FeaturesMatching3DTest
-	cdff_helpers cdff_logger dfpc_implementation_features_matching_3d opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock stub_observed_scene boost_system dfpc_configurator
+	cdff_helpers cdff_logger dfpc_implementation_features_matching_3d opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock boost_system dfpc_configurator
 )
 add_test(FeaturesMatching3DTest FeaturesMatching3DTest)
 
 add_executable(
     ObservedSceneTest
-    DFPCs/PointCloudModelLocalisation/ObservedScene.cpp
+    DFPCs/Reconstruction3D/ObservedScene.cpp
 )
 target_link_libraries(
 	ObservedSceneTest
-	cdff_helpers cdff_logger cdff_types converters_opencv opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock stub_observed_scene
+	cdff_helpers cdff_logger cdff_types converters_opencv opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock reconstruction_3d_stub_observed_scene
 )
 add_test(ObservedSceneTest ObservedSceneTest)

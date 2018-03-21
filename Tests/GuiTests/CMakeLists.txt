@@ -215,7 +215,7 @@ add_executable(
 set_target_properties(FeaturesMatching3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
 	FeaturesMatching3DGuiTest
-	dfpc_implementation_features_matching_3d mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp stub_observed_scene dfpc_configurator ${VTK_LIBRARIES}
+	dfpc_implementation_features_matching_3d mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator  ${VTK_LIBRARIES}
 )
 
 add_executable(
