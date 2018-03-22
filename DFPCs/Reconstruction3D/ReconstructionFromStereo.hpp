@@ -17,8 +17,8 @@
  *  This DFN chain implements the Reconstruction From Stereo as implementation of the DPFC for Reconsrtruction3D.
  *  This chain operates as follows: 
  *  the left and right images are used to reconstruct a 3D point cloud throught computation of a disparity map
- *  camera movement is estimated by matching features in the left images taken at two distinct times,
- *  point clouds at different time are merged together taking into account the time displacement of the camera.
+ *  camera movement is estimated by matching features in the left images taken at two distinct time instants,
+ *  point clouds at different time instants are merged together taking into account the movement of the camera.
  * 
  * @{
  */
@@ -44,6 +44,7 @@
 
 #include "Map.hpp"
 #include <Helpers/ParametersListHelper.hpp>
+#include <DfpcConfigurator.hpp>
 
 
 namespace dfpc_ci {
@@ -63,7 +64,8 @@ namespace dfpc_ci {
         public:
 		ReconstructionFromStereo(Map* map);
 		~ReconstructionFromStereo();
-		void process();
+		void run();
+		void setup();
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -76,31 +78,9 @@ namespace dfpc_ci {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
-		/*struct CameraPose
-			{
-			float positionX;
-			float positionY;
-			float positionZ;
-			float orientationX;
-			float orientationY;
-			float orientationZ;
-			float orientationW;			
-			};
-
-		struct ReconstructionFromMotionOptionsSet
-			{
-			CameraPose rightToLeftCameraPose;
-			};
-
-		Helpers::ParametersListHelper parametersHelper;
-		ReconstructionFromMotionOptionsSet parameters;
-		static const ReconstructionFromMotionOptionsSet DEFAULT_PARAMETERS;
-
-		void ConfigureChain();*/
-
+		DfpcConfigurator configurator;
 		Map* map;
 		float searchRadius;
-		//PoseWrapper::Pose3DPtr rightToLeftCameraPose;
 
 		dfn_ci::ImageFilteringInterface* leftFilter;
 		dfn_ci::ImageFilteringInterface* rightFilter;
@@ -114,17 +94,17 @@ namespace dfpc_ci {
 		FrameWrapper::FrameConstPtr pastLeftImage;
 		FrameWrapper::FrameConstPtr currentLeftImage;
 		FrameWrapper::FrameConstPtr currentRightImage;
-		FrameWrapper::FrameConstPtr filteredPastImage;
-		FrameWrapper::FrameConstPtr filteredCurrentImage;
+		FrameWrapper::FrameConstPtr filteredPastLeftImage;
+		FrameWrapper::FrameConstPtr filteredCurrentLeftImage;
 		FrameWrapper::FrameConstPtr filteredCurrentRightImage;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr pastKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentKeypointsVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr pastLeftKeypointsVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentLeftKeypointsVector;
 		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentRightKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr pastFeaturesVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentFeaturesVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr pastLeftFeaturesVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentLeftFeaturesVector;
 		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentRightFeaturesVector;
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap;
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr leftRightCorrespondenceMap;
+		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr pastToCurrentCorrespondenceMap;
+		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr leftToRightCorrespondenceMap;
 		MatrixWrapper::Matrix3dConstPtr fundamentalMatrix;
 		PoseWrapper::Pose3DConstPtr pastToCurrentCameraTransform;
 		PointCloudWrapper::PointCloudConstPtr pointCloud;
@@ -133,22 +113,23 @@ namespace dfpc_ci {
 		void AssignDfnsAlias();
 
 		bool ComputeCameraMovement();
+		void ComputePointCloud();
 		void UpdateScene();
 
-		void FilterCurrentImage();
-		void FilterPastImage();
+		void FilterCurrentLeftImage();
+		void FilterPastLeftImage();
 		void FilterCurrentRightImage();
-		void ExtractCurrentFeatures();
-		void ExtractPastFeatures();
+		void ExtractCurrentLeftFeatures();
+		void ExtractPastLeftFeatures();
 		void ExtractCurrentRightFeatures();
-		void DescribeCurrentFeatures();
-		void DescribePastFeatures();
+		void DescribeCurrentLeftFeatures();
+		void DescribePastLeftFeatures();
 		void DescribeCurrentRightFeatures();
 		void MatchCurrentAndPastFeatures();
 		void MatchLeftAndRightFeatures();
 		bool ComputeFundamentalMatrix();
 		bool ComputePastToCurrentTransform();
-		void ComputePointCloud();
+		void ComputeStereoPointCloud();
     };
 }
 #endif

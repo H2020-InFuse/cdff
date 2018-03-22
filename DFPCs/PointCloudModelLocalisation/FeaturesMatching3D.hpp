@@ -14,8 +14,11 @@
 /*!
  * @addtogroup DFNs
  * 
- *  This DFN implements the Structure From Motion as implementation of the DPFC for Point Cloud Model Localisation.
- *  
+ *  This DFN Chains detects a point cloud model within a point cloud scene by execution of the following DFNs:
+ *
+ * (i) 3d keypoints extraction on the model and the scene;  
+ * (ii) computation of the features descriptors for the keypoints extracted from the model and the scene;
+ * (iii) matching of the features and computation of the model pose within the coordinate system of the scene.
  *
  * @{
  */
@@ -33,6 +36,7 @@
 #include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
+#include <DfpcConfigurator.hpp>
 
 
 namespace dfpc_ci {
@@ -52,7 +56,8 @@ namespace dfpc_ci {
         public:
 		FeaturesMatching3D();
 		~FeaturesMatching3D();
-		void process();
+		void run();
+		void setup();
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -65,6 +70,8 @@ namespace dfpc_ci {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		DfpcConfigurator configurator;
+
 		dfn_ci::FeaturesExtraction3DInterface* featuresExtractor3d;
 		dfn_ci::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
 		dfn_ci::FeaturesMatching3DInterface* featuresMatcher3d;

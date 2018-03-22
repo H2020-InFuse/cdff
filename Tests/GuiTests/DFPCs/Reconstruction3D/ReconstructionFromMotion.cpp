@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 	Map* map = new ObservedScene();
 	ReconstructionFromMotion reconstructionFromMotion(map);
 	reconstructionFromMotion.setConfigurationFile("../../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcReconstructionFromMotion_conf01.yaml");
-	reconstructionFromMotion.configure();
+	reconstructionFromMotion.setup();
 	WRITE_TO_LOG("Configure", "Completed");
 
 	cv::Mat doubleImageA = cv::imread("../../tests/Data/Images/Scene1.png", cv::IMREAD_COLOR);
@@ -162,43 +162,43 @@ int main(int argc, char** argv)
 	WRITE_TO_LOG("First Image Input", "");
 	reconstructionFromMotion.leftImageInput(firstLeftImage);
 	reconstructionFromMotion.rightImageInput(firstRightImage);
-	reconstructionFromMotion.process();
+	reconstructionFromMotion.run();
 	WRITE_TO_LOG("Result", reconstructionFromMotion.successOutput() );
 
 	WRITE_TO_LOG("Second Image Input", "");
 	reconstructionFromMotion.leftImageInput(secondLeftImage);
 	reconstructionFromMotion.rightImageInput(secondRightImage);
-	reconstructionFromMotion.process();
+	reconstructionFromMotion.run();
 	WRITE_TO_LOG("Result", reconstructionFromMotion.successOutput() );
 
 	WRITE_TO_LOG("Third Image Input", "");
 	reconstructionFromMotion.leftImageInput(thirdLeftImage);
 	reconstructionFromMotion.rightImageInput(thirdRightImage);
-	reconstructionFromMotion.process();
+	reconstructionFromMotion.run();
 	WRITE_TO_LOG("Result", reconstructionFromMotion.successOutput() );
 
 	WRITE_TO_LOG("Fourth Image Input", "");
 	reconstructionFromMotion.leftImageInput(fourthLeftImage);
 	reconstructionFromMotion.rightImageInput(fourthRightImage);
-	reconstructionFromMotion.process();
+	reconstructionFromMotion.run();
 	WRITE_TO_LOG("Result", reconstructionFromMotion.successOutput() );
 
 	WRITE_TO_LOG("Fifth Image Input", "");
 	reconstructionFromMotion.leftImageInput(fifthLeftImage);
 	reconstructionFromMotion.rightImageInput(fifthRightImage);
-	reconstructionFromMotion.process();
+	reconstructionFromMotion.run();
 	WRITE_TO_LOG("Result", reconstructionFromMotion.successOutput() );
 
 	WRITE_TO_LOG("Sixth Image Input", "");
 	reconstructionFromMotion.leftImageInput(sixthLeftImage);
 	reconstructionFromMotion.rightImageInput(sixthRightImage);
-	reconstructionFromMotion.process();
+	reconstructionFromMotion.run();
 	WRITE_TO_LOG("Result", reconstructionFromMotion.successOutput() );
 
 	WRITE_TO_LOG("Seventh Image Input", "");
 	reconstructionFromMotion.leftImageInput(seventhLeftImage);
 	reconstructionFromMotion.rightImageInput(seventhRightImage);
-	reconstructionFromMotion.process();
+	reconstructionFromMotion.run();
 	WRITE_TO_LOG("Result", reconstructionFromMotion.successOutput() );
 
 	PRINT_LOG();
@@ -209,27 +209,9 @@ int main(int argc, char** argv)
 		}
 
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*pointCloud); pointIndex++)
-		{
-		pcl::PointXYZ newPoint(GetXCoordinate(*pointCloud, pointIndex), GetYCoordinate(*pointCloud, pointIndex), GetZCoordinate(*pointCloud, pointIndex) );
-		std::stringstream stream;
-		pclPointCloud->points.push_back(newPoint);
-
-		stream << "Point "<<pointIndex<<": ("<<newPoint.x<<", "<<newPoint.y<<", "<<newPoint.z<<")";
-		std::string string = stream.str();
-		PRINT_TO_LOG("", string );
-		}
-
-	pcl::visualization::PCLVisualizer viewer ("Output Cloud");
-    	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclCloudColor(pclPointCloud, 255, 255, 255);
-    	viewer.addPointCloud(pclPointCloud,pclCloudColor,"input");
-
-    	while (!viewer.wasStopped ())
-    		{
-        	viewer.spinOnce();
-        	pcl_sleep (0.01);
-    		} 
+	Visualizers::PclVisualizer::Enable();
+	DEBUG_SHOW_POINT_CLOUD(pointCloud);
+ 
 	return 0;
 	};
 

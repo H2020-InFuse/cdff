@@ -5,7 +5,6 @@ add_library(
 
 target_link_libraries(
 	reconstruction_3d
-	dfns_chain_interface
 )
 
 add_library(
@@ -14,7 +13,7 @@ add_library(
 )
 target_link_libraries(
     reconstruction_from_motion
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer
+    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator
 )
 
 add_library(
@@ -23,5 +22,5 @@ add_library(
 )
 target_link_libraries(
     reconstruction_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer
+    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator
 )
