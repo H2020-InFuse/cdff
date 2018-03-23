@@ -1,0 +1,10 @@
+- Name: GeneralParameters
+  EdgeThreshold: 31
+  FastThreshold: 20
+  FirstLevel: 0
+  MaxFeaturesNumber: 500
+  LevelsNumber: 8
+  PatchSize: 31
+  ScaleFactor: 1.20
+  ScoreType: HarrisScore
+  SizeOfBrightnessTestSet: 2
