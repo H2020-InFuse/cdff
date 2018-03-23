@@ -118,91 +118,40 @@ int main(int argc, char** argv)
 	reconstructionFromStereo.setup();
 	WRITE_TO_LOG("Configure", "Completed");
 
-	cv::Mat doubleImageA = cv::imread("../../tests/Data/Images/Scene1.png", cv::IMREAD_COLOR);
-	cv::Mat doubleImageB = cv::imread("../../tests/Data/Images/Scene2.png", cv::IMREAD_COLOR);
-	cv::Mat doubleImageC = cv::imread("../../tests/Data/Images/Scene3.png", cv::IMREAD_COLOR);
-	cv::Mat doubleImageD = cv::imread("../../tests/Data/Images/Scene4.png", cv::IMREAD_COLOR);
-	cv::Mat doubleImageE = cv::imread("../../tests/Data/Images/Scene5.png", cv::IMREAD_COLOR);
-	cv::Mat doubleImageF = cv::imread("../../tests/Data/Images/Scene6.png", cv::IMREAD_COLOR);
-	cv::Mat doubleImageG = cv::imread("../../tests/Data/Images/Scene5.png", cv::IMREAD_COLOR);
-	
-	cv::Mat firstCvLeftImage = doubleImageA( cv::Rect(0,0,doubleImageA.cols/2,doubleImageA.rows) );
-	cv::Mat secondCvLeftImage = doubleImageB( cv::Rect(0,0,doubleImageB.cols/2,doubleImageB.rows) );
-	cv::Mat thirdCvLeftImage = doubleImageC( cv::Rect(0,0,doubleImageC.cols/2,doubleImageC.rows) );
-	cv::Mat fourthCvLeftImage = doubleImageD( cv::Rect(0,0,doubleImageD.cols/2,doubleImageD.rows) );
-	cv::Mat fifthCvLeftImage = doubleImageE( cv::Rect(0,0,doubleImageE.cols/2,doubleImageE.rows) );
-	cv::Mat sixthCvLeftImage = doubleImageF( cv::Rect(0,0,doubleImageF.cols/2,doubleImageF.rows) );
-	cv::Mat seventhCvLeftImage = doubleImageG( cv::Rect(0,0,doubleImageG.cols/2,doubleImageG.rows) );
-
-	cv::Mat firstCvRightImage = doubleImageA( cv::Rect(doubleImageA.cols/2,0,doubleImageA.cols/2,doubleImageA.rows) );
-	cv::Mat secondCvRightImage = doubleImageB( cv::Rect(doubleImageB.cols/2,0,doubleImageB.cols/2,doubleImageB.rows) );
-	cv::Mat thirdCvRightImage = doubleImageC( cv::Rect(doubleImageC.cols/2,0,doubleImageC.cols/2,doubleImageC.rows) );
-	cv::Mat fourthCvRightImage = doubleImageD( cv::Rect(doubleImageD.cols/2,0,doubleImageD.cols/2,doubleImageD.rows) );
-	cv::Mat fifthCvRightImage = doubleImageE( cv::Rect(doubleImageE.cols/2,0,doubleImageE.cols/2,doubleImageE.rows) );
-	cv::Mat sixthCvRightImage = doubleImageF( cv::Rect(doubleImageF.cols/2,0,doubleImageF.cols/2,doubleImageF.rows) );
-	cv::Mat seventhCvRightImage = doubleImageG( cv::Rect(doubleImageG.cols/2,0,doubleImageG.cols/2,doubleImageG.rows) );
-
 	MatToFrameConverter converter;
-	FrameConstPtr firstLeftImage = converter.Convert(firstCvLeftImage);
-	FrameConstPtr secondLeftImage = converter.Convert(secondCvLeftImage);
-	FrameConstPtr thirdLeftImage = converter.Convert(thirdCvLeftImage);
-	FrameConstPtr fourthLeftImage = converter.Convert(fourthCvLeftImage);
-	FrameConstPtr fifthLeftImage = converter.Convert(fifthCvLeftImage);
-	FrameConstPtr sixthLeftImage = converter.Convert(sixthCvLeftImage);
-	FrameConstPtr seventhLeftImage = converter.Convert(seventhCvLeftImage);
+	unsigned numberOfScenes = 32;
+	PointCloudConstPtr pointCloud = NULL;
+	Pose3DConstPtr pose = NULL;
+	for(unsigned sceneIndex = 1; sceneIndex <= numberOfScenes; sceneIndex++)
+		{
+		if (pointCloud != NULL)
+			{
+			delete(pointCloud);
+			}
+		if (pose != NULL)
+			{
+			delete(pose);
+			}
 
-	FrameConstPtr firstRightImage = converter.Convert(firstCvRightImage);
-	FrameConstPtr secondRightImage = converter.Convert(secondCvRightImage);
-	FrameConstPtr thirdRightImage = converter.Convert(thirdCvRightImage);
-	FrameConstPtr fourthRightImage = converter.Convert(fourthCvRightImage);
-	FrameConstPtr fifthRightImage = converter.Convert(fifthCvRightImage);
-	FrameConstPtr sixthRightImage = converter.Convert(sixthCvRightImage);
-	FrameConstPtr seventhRightImage = converter.Convert(seventhCvRightImage);
-	
-	WRITE_TO_LOG("First Image Input", "");
-	reconstructionFromStereo.leftImageInput(firstLeftImage);
-	reconstructionFromStereo.rightImageInput(firstRightImage);
-	reconstructionFromStereo.run();
-	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
+		std::stringstream sceneFileName;
+		sceneFileName << "../../tests/Data/Images/Scene"<<sceneIndex<<".png";
+		cv::Mat doubleImage = cv::imread(sceneFileName.str(), cv::IMREAD_COLOR);
+		cv::Mat cvleftImage = doubleImage( cv::Rect(0,0,doubleImage.cols/2,doubleImage.rows) );	
+		cv::Mat cvRightImage = doubleImage( cv::Rect(doubleImage.cols/2,0,doubleImage.cols/2,doubleImage.rows) );
+		FrameConstPtr leftImage = converter.Convert(cvleftImage);
+		FrameConstPtr rightImage = converter.Convert(cvRightImage);
 
-	WRITE_TO_LOG("Second Image Input", "");
-	reconstructionFromStereo.leftImageInput(secondLeftImage);
-	reconstructionFromStereo.rightImageInput(secondRightImage);
-	reconstructionFromStereo.run();
-	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
+		WRITE_TO_LOG("Image Input Number", sceneIndex);
+		reconstructionFromStereo.leftImageInput(leftImage);
+		reconstructionFromStereo.rightImageInput(rightImage);
+		reconstructionFromStereo.run();
+		WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
 
-	WRITE_TO_LOG("Third Image Input", "");
-	reconstructionFromStereo.leftImageInput(thirdLeftImage);
-	reconstructionFromStereo.rightImageInput(thirdRightImage);
-	reconstructionFromStereo.run();
-	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
-
-	WRITE_TO_LOG("Fourth Image Input", "");
-	reconstructionFromStereo.leftImageInput(fourthLeftImage);
-	reconstructionFromStereo.rightImageInput(fourthRightImage);
-	reconstructionFromStereo.run();
-	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
-
-	WRITE_TO_LOG("Fifth Image Input", "");
-	reconstructionFromStereo.leftImageInput(fifthLeftImage);
-	reconstructionFromStereo.rightImageInput(fifthRightImage);
-	reconstructionFromStereo.run();
-	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
-
-	WRITE_TO_LOG("Sixth Image Input", "");
-	reconstructionFromStereo.leftImageInput(sixthLeftImage);
-	reconstructionFromStereo.rightImageInput(sixthRightImage);
-	reconstructionFromStereo.run();
-	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
-
-	WRITE_TO_LOG("Seventh Image Input", "");
-	reconstructionFromStereo.leftImageInput(seventhLeftImage);
-	reconstructionFromStereo.rightImageInput(seventhRightImage);
-	reconstructionFromStereo.run();
-	WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
+		pointCloud = reconstructionFromStereo.pointCloudOutput();
+		pose = reconstructionFromStereo.poseOutput();
+		}
 
 	PRINT_LOG();
-	PointCloudConstPtr pointCloud = reconstructionFromStereo.pointCloudOutput();
 	if (pointCloud == NULL)
 		{
 		return 0;

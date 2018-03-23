@@ -82,7 +82,6 @@ namespace dfpc_ci {
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelKeypointsVector;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneFeaturesVector;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelFeaturesVector;
-		PoseWrapper::Pose3DConstPtr modelPoseInScene;
 
 		void AssignDfnsAlias();
 

@@ -166,6 +166,7 @@ int main(int argc, char** argv)
 		poseStream << "Orientation: (" << GetXOrientation(*pose) << ", " << GetYOrientation(*pose) << ", " << GetZOrientation(*pose) << ", " << GetWOrientation(*pose) << ")" << "\n";
 		std::string poseString = poseStream.str();
 		WRITE_TO_LOG("Pose: \n", poseString);
+		delete(pose);
 		}
 
 	PRINT_LOG();

@@ -1,0 +1,11 @@
+- Name: GeneralParameters
+  DistanceThreshold: 0.02
+  NumberOfChecks: 32
+  Epsilon: 0
+  SortedSearch: false
+  AcceptanceRatio: 0.75 0.90
+  MatcherMethod: LocalitySensitiveHashing
+- Name: LocalitySensitiveHashingParameters
+  TableNumber: 1 2
+  KeySize: 4 8 
+  MultiProbeLevel: 2 4

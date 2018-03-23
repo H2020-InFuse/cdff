@@ -61,6 +61,7 @@ class DisparityMappingTestInterface : public PerformanceTestInterface
 		Mocks::FrameToMatConverter* mockInputConverter;
 
 		cv::Mat referenceDisparity;
+		cv::Mat normalizedReferenceDisparity;
 		bool saveDisparity;
 
 		HirschmullerDisparityMapping* disparityMapping;
@@ -77,7 +78,15 @@ DisparityMappingTestInterface::DisparityMappingTestInterface(std::string folderP
 	SetDfn(disparityMapping);
 	SetupMocksAndStubs();
 
-	referenceDisparity = cv::imread("../tests/Data/Images/ReferenceDisparity.png", cv::IMREAD_COLOR);
+	//referenceDisparity = cv::imread("../tests/Data/Images/ReferenceDisparity.png", cv::IMREAD_COLOR);
+	cv::FileStorage file("../tests/Data/Images/chairDepth40.yml", cv::FileStorage::READ);
+	file["depth"] >> referenceDisparity; //reference disparity type is CV_16UC1
+
+	cv::normalize(referenceDisparity, normalizedReferenceDisparity, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+	std::stringstream stream;
+	stream << "../tests/ConfigurationFiles/DFNs/StereoReconstruction/ReferenceDisparity.jpg"; 
+	cv::imwrite(stream.str(), normalizedReferenceDisparity);
+
 	saveDisparity = true;
 	}
 
@@ -105,8 +114,8 @@ bool DisparityMappingTestInterface::SetNextInputs()
 
 	if (time == 0)
 		{
-		cv::Mat cvLeftImage = cv::imread("../tests/Data/Images/RectifiedLeft.png", cv::IMREAD_COLOR);
-		cv::Mat cvRightImage = cv::imread("../tests/Data/Images/RectifiedRight.png", cv::IMREAD_COLOR);
+		cv::Mat cvLeftImage = cv::imread("../tests/Data/Images/RectifiedChair40Left.png", cv::IMREAD_COLOR);
+		cv::Mat cvRightImage = cv::imread("../tests/Data/Images/RectifiedChair40Right.png", cv::IMREAD_COLOR);
 		ASSERT( cvLeftImage.size() == cvRightImage.size(), "Performance Test Error: input images do not have same size");
 		ASSERT( referenceDisparity.size() == cvRightImage.size(), "Performance Test Error: reference disparity does not have same size as input images");
 
@@ -130,32 +139,59 @@ DisparityMappingTestInterface::MeasuresMap DisparityMappingTestInterface::Extrac
 	testId++;
 
 	MeasuresMap measuresMap;
-	cv::Mat disparity = disparityMapping->disparityMatrixOutput();
+	cv::Mat disparity = disparityMapping->disparityMatrixOutput(); //Disparity type is CV_16SC1
+	cv::Mat normalizedDisparity;
+	cv::normalize(disparity, normalizedDisparity, 0, 255, cv::NORM_MINMAX, CV_8UC1);
 
-	//The disparity matrix is shifted to the right with respect to the reference disparity image.
-	const unsigned COLUMN_SHIFT = 40;
-	uint64_t cost = 0;
-	for(unsigned row = 0; row < referenceDisparity.rows; row++)
+	/** The output disparity has always a black border on the left side of the image, here we compute the size of the black border as well as its ending column **/
+	bool stop = false;
+	unsigned firstValidColumn, numberOfValidColumns;
+	for(unsigned column = 0; column < normalizedDisparity.cols && !stop; column++)
 		{
-		for(unsigned column = COLUMN_SHIFT; column < referenceDisparity.cols; column++)
+		for(unsigned row = 0; row < normalizedDisparity.rows; row++)
 			{
-			cv::Vec3b color = referenceDisparity.at<cv::Vec3b>(row, column-COLUMN_SHIFT);
-			int16_t disparityValue = disparity.at<int16_t>(row, column);
-			if (color[0] == color[1] && color[1] == color[2])
+			stop = normalizedDisparity.at<uint8_t>(row, column) > 0;
+			}
+		if (stop)
+			{
+			firstValidColumn = column;
+			}
+		}
+	numberOfValidColumns = normalizedDisparity.cols - firstValidColumn;
+
+	/** Sometimes completely white images are in the output, this loop determines whether the image is completely white**/
+	bool badOutput = true;
+	for(unsigned column = firstValidColumn; column < normalizedDisparity.cols && badOutput; column++)
+		{
+		for(unsigned row = 0; row < normalizedDisparity.rows && badOutput; row++)
+			{
+			badOutput = normalizedDisparity.at<uint8_t>(row, column) == 255;
+			}
+		}
+	measuresMap["OutputQuality"] = badOutput ? 0 : 1;	
+
+	//This loop computes the difference between the computed disparity and the reference disparity after normalization of both disparities in the interval [0, 255]
+	uint64_t cost = 0;
+	unsigned pixelsNumber = 0;
+	for(unsigned row = 0; row < normalizedReferenceDisparity.rows; row++)
+		{
+		for(unsigned column = 0; column < normalizedReferenceDisparity.cols; column++)
+			{
+			uint8_t referenceDisparityValue = normalizedReferenceDisparity.at<uint8_t>(row, column);
+			if (referenceDisparityValue > 0)
 				{
-				cost += std::abs(static_cast<int32_t>(disparityValue) - static_cast<int32_t>(255 - color[0]));	
+				unsigned validColumn = firstValidColumn + (column * numberOfValidColumns / normalizedReferenceDisparity.cols );
+				uint8_t disparityValue = normalizedDisparity.at<uint8_t>(row, validColumn);
+				cost += std::abs(static_cast<int16_t>(disparityValue) - static_cast<int16_t>(255 - referenceDisparityValue));	
+				pixelsNumber++;
 				}
 			}
 		}
-	unsigned pixelsNumber = referenceDisparity.cols * referenceDisparity.rows;
 	measuresMap["DisparityCost"] = static_cast<double>(cost) / static_cast<double>(pixelsNumber);
 
 
 	if (saveDisparity)
 		{
-		cv::Mat normalizedDisparity;
-		cv::normalize(disparity, normalizedDisparity, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-
 		std::stringstream stream;
 		stream << "../tests/ConfigurationFiles/DFNs/StereoReconstruction/Test_" << testId << ".jpg"; 
 		cv::imwrite(stream.str(), normalizedDisparity);

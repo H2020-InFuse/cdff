@@ -108,7 +108,6 @@ namespace dfpc_ci {
 		MatrixWrapper::Matrix3dConstPtr fundamentalMatrix;
 		PoseWrapper::Pose3DConstPtr pastToCurrentCameraTransform;
 		PointCloudWrapper::PointCloudConstPtr pointCloud;
-		PointCloudWrapper::PointCloudConstPtr sceneCloud;
 
 		void AssignDfnsAlias();
 

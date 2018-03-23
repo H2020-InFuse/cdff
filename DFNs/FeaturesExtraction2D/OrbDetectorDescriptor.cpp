@@ -124,11 +124,12 @@ cv::Mat OrbDetectorDescriptor::ComputeOrbFeatures(cv::Mat inputImage)
 		return cv::Mat();
 		}
 
-	cv::Mat orbFeaturesMatrix(keypointsVector.size(), descriptorsMatrix.cols + 2, CV_32FC1);
+	unsigned numberOfFeatures = (keypointsVector.size() <= parameters.maxFeaturesNumber) ? keypointsVector.size() : parameters.maxFeaturesNumber;
+	cv::Mat orbFeaturesMatrix(numberOfFeatures, descriptorsMatrix.cols + 2, CV_32FC1);
 	cv::Mat descriptorsSubmatrix = orbFeaturesMatrix( cv::Rect(2, 0, orbFeaturesMatrix.cols-2, orbFeaturesMatrix.rows) );
 	descriptorsMatrix.convertTo(descriptorsSubmatrix, CV_32FC1);
 	
-	for(unsigned pointIndex = 0; pointIndex < keypointsVector.size(); pointIndex++)
+	for(unsigned pointIndex = 0; pointIndex < numberOfFeatures; pointIndex++)
 		{
 		orbFeaturesMatrix.at<float>(pointIndex, 0) = keypointsVector.at(pointIndex).pt.x;
 		orbFeaturesMatrix.at<float>(pointIndex, 1) = keypointsVector.at(pointIndex).pt.y;

@@ -66,6 +66,7 @@ class OrbDetectorDescriptorTestInterface : public DFNTestInterface
 		Mocks::MatToVisualPointFeatureVector2DConverter* mockOutputConverter;
 		OrbDetectorDescriptor* orb;
 
+		bool saveFeaturesToFile;
 		cv::Mat cvImage;
 		FrameConstPtr inputImage;
 		std::string outputWindowName;
@@ -84,9 +85,11 @@ OrbDetectorDescriptorTestInterface::OrbDetectorDescriptorTestInterface(std::stri
 	{
 	orb = new OrbDetectorDescriptor();
 	SetDFN(orb);
+	saveFeaturesToFile = true;
 
 	MatToFrameConverter converter;
-	cvImage = cv::imread("../../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
+	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/Scene10.png", cv::IMREAD_COLOR);
+	cvImage = doubleImage( cv::Rect(0, 0, doubleImage.cols/2, doubleImage.rows) );
 	inputImage = converter.Convert(cvImage);
 	orb->imageInput(inputImage);
 	outputWindowName = "Orb Detector Descriptor Result";
@@ -118,7 +121,7 @@ void OrbDetectorDescriptorTestInterface::SetupParameters()
 	AddParameter("GeneralParameters", "EdgeThreshold", 31, 100);
 	AddParameter("GeneralParameters", "FastThreshold", 20, 100);
 	AddParameter("GeneralParameters", "FirstLevel", 0, 2);
-	AddParameter("GeneralParameters", "MaxFeaturesNumber", 500, 1000, 10);
+	AddParameter("GeneralParameters", "MaxFeaturesNumber", 1024, 1500, 10);
 	AddParameter("GeneralParameters", "LevelsNumber", 8, 20);
 	AddParameter("GeneralParameters", "PatchSize", 31, 100);
 	AddParameter("GeneralParameters", "ScaleFactor", 1.2, 10, 0.1);
@@ -162,6 +165,24 @@ void OrbDetectorDescriptorTestInterface::DisplayResult()
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
 	PRINT_TO_LOG("Number of features detected: ", GetNumberOfPoints(*featuresVector) );
+
+	if (saveFeaturesToFile)
+		{
+		cv::Mat keypointsMatrix( GetNumberOfPoints(*featuresVector), 2, CV_16UC1);
+		cv::Mat descriptorsMatrix( GetNumberOfPoints(*featuresVector), ORB_DESCRIPTOR_SIZE, CV_32FC1);
+		for(int featureIndex = 0; featureIndex < GetNumberOfPoints(*featuresVector); featureIndex++)
+			{
+			keypointsMatrix.at<uint16_t>(featureIndex, 0) = GetXCoordinate(*featuresVector, featureIndex);
+			keypointsMatrix.at<uint16_t>(featureIndex, 1) = GetYCoordinate(*featuresVector, featureIndex);
+			for(int componentIndex = 0; componentIndex < ORB_DESCRIPTOR_SIZE; componentIndex++)
+				{
+				descriptorsMatrix.at<float>(featureIndex, componentIndex) = GetDescriptorComponent(*featuresVector, featureIndex, componentIndex);
+				}
+			}
+		cv::FileStorage file("../../tests/Data/Images/OrbFeaturesScene10.yml", cv::FileStorage::WRITE);
+		file << "keypoints" << keypointsMatrix;
+		file << "descriptors" << descriptorsMatrix;
+		}
 
 	delete(featuresVector);
 	}

@@ -72,7 +72,6 @@ ReconstructionFromStereo::ReconstructionFromStereo(Map* map) :
 	fundamentalMatrix = NULL;
 	pastToCurrentCameraTransform = NULL;
 	pointCloud = NULL;
-	sceneCloud = NULL;
 
 	leftFilter = NULL;
 	rightFilter = NULL;
@@ -107,7 +106,6 @@ ReconstructionFromStereo::~ReconstructionFromStereo()
 	DELETE_PREVIOUS(fundamentalMatrix);
 	DELETE_PREVIOUS(pastToCurrentCameraTransform);
 	DELETE_PREVIOUS(pointCloud);
-	DELETE_PREVIOUS(sceneCloud);
 	}
 
 /**
@@ -127,8 +125,6 @@ void ReconstructionFromStereo::run()
 		{
 		ComputePointCloud();
 		UpdateScene();
-		outPose = map->GetCurrentFramePoseInOrigin();
-		outPointCloud = sceneCloud;
 		}
 	else
 		{
@@ -212,10 +208,12 @@ void ReconstructionFromStereo::UpdateScene()
 	{
 	map->AddFramePoseInReference(pastToCurrentCameraTransform);
 	map->AddPointCloudInLastReference(pointCloud);
-	DELETE_PREVIOUS(sceneCloud);
-	sceneCloud = map->GetPartialScene(searchRadius);
-	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*sceneCloud));
-	DEBUG_SHOW_POINT_CLOUD(sceneCloud);
+
+	outPointCloud = map->GetPartialScene(searchRadius);
+	outPose = map->GetCurrentFramePoseInOrigin();
+
+	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*outPointCloud));
+	DEBUG_SHOW_POINT_CLOUD(outPointCloud);
 	}
 
 void ReconstructionFromStereo::AssignDfnsAlias()
