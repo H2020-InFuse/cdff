@@ -74,6 +74,8 @@ class OrbDetectorDescriptorFlannMatcher : public PerformanceTestInterface
 
 		FrameConstPtr leftFrame;
 		FrameConstPtr rightFrame;
+		VisualPointFeatureVector2DConstPtr leftFeaturesVector;
+		VisualPointFeatureVector2DConstPtr rightFeaturesVector;
 		CorrespondenceMap2DConstPtr correspondenceMap;
 
 		OrbDetectorDescriptor* orb;
@@ -96,6 +98,9 @@ OrbDetectorDescriptorFlannMatcher::OrbDetectorDescriptorFlannMatcher(std::string
 
 	leftFrame = NULL;
 	rightFrame = NULL;
+	leftFeaturesVector = NULL;
+	rightFeaturesVector = NULL;
+	correspondenceMap = NULL;
 	}
 
 OrbDetectorDescriptorFlannMatcher::~OrbDetectorDescriptorFlannMatcher()
@@ -114,6 +119,14 @@ OrbDetectorDescriptorFlannMatcher::~OrbDetectorDescriptorFlannMatcher()
 	if (rightFrame != NULL)
 		{
 		delete(rightFrame);
+		}
+	if (leftFeaturesVector != NULL)
+		{
+		delete(leftFeaturesVector);
+		}
+	if (rightFeaturesVector != NULL)
+		{
+		delete(rightFeaturesVector);
 		}
 	if (correspondenceMap != NULL)
 		{
@@ -159,14 +172,26 @@ bool OrbDetectorDescriptorFlannMatcher::SetNextInputs()
 
 void OrbDetectorDescriptorFlannMatcher::ExecuteDfns()
 	{
+	if (leftFeaturesVector != NULL)
+		{
+		delete(leftFeaturesVector);
+		}
 	orb->imageInput(leftFrame);
 	orb->process();
-	VisualPointFeatureVector2DConstPtr leftFeaturesVector = orb->featuresSetOutput();
+	leftFeaturesVector = orb->featuresSetOutput();
 
+	if (rightFeaturesVector != NULL)
+		{
+		delete(rightFeaturesVector);
+		}
 	orb->imageInput(rightFrame);
 	orb->process();
-	VisualPointFeatureVector2DConstPtr rightFeaturesVector = orb->featuresSetOutput();
+	rightFeaturesVector = orb->featuresSetOutput();
 
+	if (correspondenceMap != NULL)
+		{
+		delete(correspondenceMap);
+		}
 	flann->sinkFeaturesVectorInput( leftFeaturesVector );
 	flann->sourceFeaturesVectorInput( rightFeaturesVector );
 	flann->process();
@@ -190,8 +215,6 @@ OrbDetectorDescriptorFlannMatcher::MeasuresMap OrbDetectorDescriptorFlannMatcher
 	measuresMap["OutOfLineCost"] = (outOfLineCost / static_cast<float>( GetNumberOfCorrespondences(*correspondenceMap) ) );
 	measuresMap["NumberOfCorrespondences"] = GetNumberOfCorrespondences(*correspondenceMap);
 
-	delete(correspondenceMap);
-	correspondenceMap = NULL;
 	return measuresMap;
 	}
 

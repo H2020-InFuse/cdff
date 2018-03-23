@@ -283,6 +283,7 @@ void PerformanceTestInterface::ReadConfiguration()
 				if (parameterValuesList.size() > 1)
 					{
 					Parameter parameter;
+					parameter.dfnIndex = dfnIndex;
 					parameter.groupIndex = groupIndex;
 					parameter.name = parameterName;
 					parameter.optionsNumber = parameterValuesList.size();
