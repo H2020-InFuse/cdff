@@ -52,7 +52,7 @@ namespace dfpc_ci {
 	 */
         public:
 		Map() { };
-		~Map() { };
+		virtual ~Map() { };
 
 		/*
 		* @brief Adds a left and a right frame to the current map, the frames carry time information, but no pose information.
