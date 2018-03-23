@@ -165,6 +165,13 @@ TEST_CASE( "Success Call to Process", "[processSuccess]" )
 	WRITE_TO_LOG("Scene added in input", "");
 
 	featuresMatching3d.run();
+
+	bool success = featuresMatching3d.successOutput();
+	Pose3DConstPtr pose = featuresMatching3d.poseOutput();
+	if(success)
+		{
+		delete(pose);
+		}
 	}
 
 

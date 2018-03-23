@@ -120,8 +120,19 @@ int main(int argc, char** argv)
 
 	MatToFrameConverter converter;
 	unsigned numberOfScenes = 32;
+	PointCloudConstPtr pointCloud = NULL;
+	Pose3DConstPtr pose = NULL;
 	for(unsigned sceneIndex = 1; sceneIndex <= numberOfScenes; sceneIndex++)
 		{
+		if (pointCloud != NULL)
+			{
+			delete(pointCloud);
+			}
+		if (pose != NULL)
+			{
+			delete(pose);
+			}
+
 		std::stringstream sceneFileName;
 		sceneFileName << "../../tests/Data/Images/Scene"<<sceneIndex<<".png";
 		cv::Mat doubleImage = cv::imread(sceneFileName.str(), cv::IMREAD_COLOR);
@@ -135,10 +146,12 @@ int main(int argc, char** argv)
 		reconstructionFromStereo.rightImageInput(rightImage);
 		reconstructionFromStereo.run();
 		WRITE_TO_LOG("Result", reconstructionFromStereo.successOutput() );
+
+		pointCloud = reconstructionFromStereo.pointCloudOutput();
+		pose = reconstructionFromStereo.poseOutput();
 		}
 
 	PRINT_LOG();
-	PointCloudConstPtr pointCloud = reconstructionFromStereo.pointCloudOutput();
 	if (pointCloud == NULL)
 		{
 		return 0;

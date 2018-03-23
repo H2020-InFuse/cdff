@@ -60,7 +60,6 @@ FeaturesMatching3D::FeaturesMatching3D()
 	modelKeypointsVector = NULL;
 	sceneFeaturesVector = NULL;
 	modelFeaturesVector = NULL;
-	modelPoseInScene = NULL;
 
 	featuresExtractor3d = NULL;
 	optionalFeaturesDescriptor3d = NULL;
@@ -78,7 +77,6 @@ FeaturesMatching3D::~FeaturesMatching3D()
 		DELETE_PREVIOUS(sceneFeaturesVector);
 		DELETE_PREVIOUS(modelFeaturesVector);
 		}
-	DELETE_PREVIOUS(modelPoseInScene);
 	}
 
 void FeaturesMatching3D::run() 
@@ -101,10 +99,7 @@ void FeaturesMatching3D::run()
 		{
 		outPose = NULL;
 		}
-	else
-		{
-		outPose = modelPoseInScene;
-		}
+
 	}
 
 void FeaturesMatching3D::setup()
@@ -188,15 +183,14 @@ bool FeaturesMatching3D::EstimateModelPose()
 	{
 	featuresMatcher3d->sourceFeaturesVectorInput(modelFeaturesVector);
 	featuresMatcher3d->sinkFeaturesVectorInput(sceneFeaturesVector);
-	DELETE_PREVIOUS(modelPoseInScene);
 	featuresMatcher3d->process();
-	modelPoseInScene = featuresMatcher3d->transformOutput();
+	outPose = featuresMatcher3d->transformOutput();
 	bool matching3dSuccess = featuresMatcher3d->successOutput();
 	DEBUG_PRINT_TO_LOG("Matching 3d", matching3dSuccess);
 	if(matching3dSuccess)
 		{
-		DEBUG_SHOW_POSE(modelPoseInScene);
-		DEBUG_PLACE_POINT_CLOUD(sceneCloud, lastModelCloud, modelPoseInScene);
+		DEBUG_SHOW_POSE(outPose);
+		DEBUG_PLACE_POINT_CLOUD(sceneCloud, lastModelCloud, outPose);
 		}
 	return matching3dSuccess;
 	}
