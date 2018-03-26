@@ -324,7 +324,10 @@ void PerformanceTestInterface::UpdateAggregators(MeasuresMap measuresMap, unsign
 		{
 		AggregatorEntry entry =  aggregatorsList.at(aggregatorIndex);
 		
-		ASSERT( measuresMap.find( entry.measure ) != measuresMap.end(), "We could not find right measure for aggregator");
+		if( measuresMap.find( entry.measure ) == measuresMap.end() )
+			{
+			continue;
+			}
 		double value = measuresMap[ entry.measure ];
 
 		switch(entry.aggregatorType)

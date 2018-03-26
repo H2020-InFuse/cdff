@@ -94,17 +94,18 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		bool decompositionSuccess;
 		Pose3DConstPtr pose;
 
-
 		OrbDetectorDescriptor* orb;
 		FlannMatcher* flann;
 		FundamentalMatrixRansac* ransac;
 		EssentialMatrixDecomposition* decomposition;
 
-		Aggregator* groundTruthDistanceAggregator;
+		Aggregator* groundPositionDistanceAggregator;
+		Aggregator* groundOrientationDistanceAggregator;
 		std::vector<std::string> imageFileNamesList;
 		std::vector<Pose3D> posesList;
 		std::vector<float> imageTimesList;
 		std::vector<float> poseTimesList;
+		std::vector<Pose3D> imagePosesList;
 		std::vector<Pose3D> displacementsList;
 
 		static const std::string imageFileNamesFolder;
@@ -112,8 +113,9 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		static const std::string posesFileContainer;
 		void LoadImageFileNames();
 		void LoadPoses();
-		void ComputeDisplacements();
-		Pose3D InterpolatePose(unsigned beforePoseIndex, unsigned afterPoseIndex, float imageTime);
+		void ComputeImagePoses();
+		
+		Pose3D InterpolatePose(unsigned beforePoseIndex, unsigned afterPoseIndex, float imageTime, Pose3D& displacement);
 		void SetupMocksAndStubs();
 
 		bool SetNextInputs();
@@ -136,8 +138,10 @@ OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath,
 	AddDfn(decomposition);
 	SetupMocksAndStubs();
 
-	groundTruthDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("GroundTruthDistance", groundTruthDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	groundPositionDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
+	AddAggregator("GroundPositionDistance", groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	groundOrientationDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
+	AddAggregator("GroundOrientationDistance", groundOrientationDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
 
 	leftFrame = NULL;
 	rightFrame = NULL;
@@ -153,8 +157,8 @@ OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath,
 
 	LoadImageFileNames();
 	LoadPoses();
-	ComputeDisplacements();
-	ASSERT(imageFileNamesList.size() == displacementsList.size(), "Number of displacement different from number of images");
+	ComputeImagePoses();
+	ASSERT(imageFileNamesList.size() == imagePosesList.size(), "Number of displacement different from number of images");
 	}
 
 OrbFlannRansacDecomposition::~OrbFlannRansacDecomposition()
@@ -252,7 +256,7 @@ void OrbFlannRansacDecomposition::LoadPoses()
 	containerFile.close();
 	}
 
-void OrbFlannRansacDecomposition::ComputeDisplacements()
+void OrbFlannRansacDecomposition::ComputeImagePoses()
 	{
 	for(unsigned imageIndex = 0; imageIndex < imageFileNamesList.size(); imageIndex++)
 		{
@@ -271,13 +275,33 @@ void OrbFlannRansacDecomposition::ComputeDisplacements()
 		ASSERT(afterPoseIndex > 0, "Error: No before pose found");
 		unsigned beforePoseIndex = afterPoseIndex-1;
 
-		Pose3D estimatedPose = InterpolatePose(beforePoseIndex, afterPoseIndex, imageTime);
-		displacementsList.push_back(estimatedPose);
+		Pose3D displacement;
+		Pose3D estimatedPose = InterpolatePose(beforePoseIndex, afterPoseIndex, imageTime, displacement);
+		imagePosesList.push_back(estimatedPose);
+		displacementsList.push_back(displacement);
 		}
 	}
 
-Pose3D OrbFlannRansacDecomposition::InterpolatePose(unsigned beforePoseIndex, unsigned afterPoseIndex, float imageTime)
+#define COMPUTE_ROLL(x, y, z, w) std::atan2(2*y*w - 2*x*z, 1 - 2*y*y - 2*z*z)
+#define COMPUTE_PITCH(x, y, z, w) std::atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z)
+#define COMPUTE_YAW(x, y, z, w) std::asin(2*x*y + 2*z*w)
+#define COMPUTE_QUATERNION_W(r, p, y) std::cos(y/2) * std::cos(r/2) * std::cos(p/2) + std::sin(y/2) * std::sin(r/2) * std::sin(p/2)
+#define COMPUTE_QUATERNION_X(r, p, y) std::cos(y/2) * std::sin(r/2) * std::cos(p/2) - std::sin(y/2) * std::cos(r/2) * std::sin(p/2)
+#define COMPUTE_QUATERNION_Y(r, p, y) std::cos(y/2) * std::cos(r/2) * std::sin(p/2) + std::sin(y/2) * std::sin(r/2) * std::cos(p/2)
+#define COMPUTE_QUATERNION_Z(r, p, y) std::sin(y/2) * std::cos(r/2) * std::cos(p/2) - std::cos(y/2) * std::sin(r/2) * std::sin(p/2)
+
+Pose3D OrbFlannRansacDecomposition::InterpolatePose(unsigned beforePoseIndex, unsigned afterPoseIndex, float imageTime, Pose3D& displacement)
 	{
+	static float referenceRoll;
+	static float referencePitch;
+	static float referenceYaw;
+	static float referenceX;
+	static float referenceY;
+	static float referenceZ;
+	
+
+	Pose3D interpolation;
+
 	const Pose3D& beforePose = posesList.at(beforePoseIndex);
 	const Pose3D& afterPose = posesList.at(afterPoseIndex);
 	const float beforeTime = poseTimesList.at(beforePoseIndex);
@@ -293,9 +317,46 @@ Pose3D OrbFlannRansacDecomposition::InterpolatePose(unsigned beforePoseIndex, un
 	float linearInterpolationY = GetYPosition(beforePose) + (deltaY / deltaTime) * runTime;
 	float linearInterpolationZ = GetZPosition(beforePose) + (deltaZ / deltaTime) * runTime;
 
-	Pose3D interpolation;
-	SetPosition(interpolation, linearInterpolationX,linearInterpolationY, linearInterpolationZ);
+	SetPosition(interpolation, linearInterpolationX, linearInterpolationY, linearInterpolationZ);
 
+	float beforeRoll = COMPUTE_ROLL(GetXOrientation(beforePose), GetYOrientation(beforePose), GetZOrientation(beforePose), GetWOrientation(beforePose));
+	float beforePitch = COMPUTE_PITCH(GetXOrientation(beforePose), GetYOrientation(beforePose), GetZOrientation(beforePose), GetWOrientation(beforePose));
+	float beforeYaw = COMPUTE_YAW(GetXOrientation(beforePose), GetYOrientation(beforePose), GetZOrientation(beforePose), GetWOrientation(beforePose));
+	float afterRoll = COMPUTE_ROLL(GetXOrientation(afterPose), GetYOrientation(afterPose), GetZOrientation(afterPose), GetWOrientation(afterPose));
+	float afterPitch = COMPUTE_PITCH(GetXOrientation(afterPose), GetYOrientation(afterPose), GetZOrientation(afterPose), GetWOrientation(afterPose));
+	float afterYaw = COMPUTE_YAW(GetXOrientation(afterPose), GetYOrientation(afterPose), GetZOrientation(afterPose), GetWOrientation(afterPose));
+	float linearInterpolationRoll = beforeRoll + ( (afterRoll-beforeRoll) / deltaTime) * runTime;
+	float linearInterpolationPitch = beforePitch + ( (afterPitch-beforePitch) / deltaTime) * runTime;
+	float linearInterpolationYaw = beforeYaw + ( (afterYaw-beforeYaw) / deltaTime) * runTime;
+
+	SetOrientation
+		(
+		interpolation,
+		COMPUTE_QUATERNION_X(linearInterpolationRoll, linearInterpolationPitch, linearInterpolationYaw),
+		COMPUTE_QUATERNION_Y(linearInterpolationRoll, linearInterpolationPitch, linearInterpolationYaw),
+		COMPUTE_QUATERNION_Z(linearInterpolationRoll, linearInterpolationPitch, linearInterpolationYaw),
+		COMPUTE_QUATERNION_W(linearInterpolationRoll, linearInterpolationPitch, linearInterpolationYaw)
+		);
+
+	if (imagePosesList.size() > 0)
+		{
+		SetPosition(displacement, linearInterpolationX - referenceX, linearInterpolationY - referenceY, linearInterpolationZ - referenceZ);
+		SetOrientation
+			(
+			displacement, 
+			COMPUTE_QUATERNION_X(linearInterpolationRoll - referenceRoll, linearInterpolationPitch - referencePitch, linearInterpolationYaw - referenceYaw),
+			COMPUTE_QUATERNION_Y(linearInterpolationRoll - referenceRoll, linearInterpolationPitch - referencePitch, linearInterpolationYaw - referenceYaw),
+			COMPUTE_QUATERNION_Z(linearInterpolationRoll - referenceRoll, linearInterpolationPitch - referencePitch, linearInterpolationYaw - referenceYaw),
+			COMPUTE_QUATERNION_W(linearInterpolationRoll - referenceRoll, linearInterpolationPitch - referencePitch, linearInterpolationYaw - referenceYaw)
+			);
+		}
+
+	referenceX = linearInterpolationX;
+	referenceY = linearInterpolationY;
+	referenceZ = linearInterpolationZ;
+	referenceRoll = linearInterpolationRoll;
+	referencePitch = linearInterpolationPitch;
+	referenceYaw = linearInterpolationYaw;
 
 	return interpolation;
 	}
@@ -405,20 +466,20 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 	measuresMap["RansacSuccess"] = ransacSuccess;
 	measuresMap["DecompositionSuccess"] = decompositionSuccess;
 
-	Pose3D& leftGroundTruth = displacementsList.at(inputId);
-	Pose3D& rightGroundTruth = displacementsList.at(inputId+1);
-	float groundTruthDeltaX = GetXPosition(leftGroundTruth) - GetXPosition(rightGroundTruth);
-	float groundTruthDeltaY = GetYPosition(leftGroundTruth) - GetYPosition(rightGroundTruth);
-	float groundTruthDeltaZ = GetZPosition(leftGroundTruth) - GetZPosition(rightGroundTruth);
-	float computedDeltaX = GetXPosition(*pose);
-	float computedDeltaY = GetYPosition(*pose);
-	float computedDeltaZ = GetZPosition(*pose);
-	float differenceX = groundTruthDeltaX - computedDeltaX;
-	float differenceY = groundTruthDeltaY - computedDeltaY;
-	float differenceZ = groundTruthDeltaZ - computedDeltaZ;
-	float squaredDistance = differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ;
+	if (decompositionSuccess)
+		{
+		Pose3D& groundTruth = displacementsList.at(inputId+1);
+		float differenceX = GetXPosition(groundTruth) - GetXPosition(*pose);
+		float differenceY = GetYPosition(groundTruth) - GetYPosition(*pose);
+		float differenceZ = GetZPosition(groundTruth) - GetZPosition(*pose);
+		float squaredDistance = differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ;
 
-	measuresMap["GroundTruthDistance"] = std::sqrt(squaredDistance);
+		measuresMap["GroundPositionDistance"] = std::sqrt(squaredDistance);
+
+		float scalarProduct = GetXOrientation(groundTruth) * GetXOrientation(*pose) + GetYOrientation(groundTruth) * GetYOrientation(*pose) +
+			GetZOrientation(groundTruth) * GetZOrientation(*pose) + GetWOrientation(groundTruth) * GetWOrientation(*pose);
+		measuresMap["GroundOrientationDistance"] = 1 - scalarProduct*scalarProduct;
+		}
 
 	return measuresMap;
 	}

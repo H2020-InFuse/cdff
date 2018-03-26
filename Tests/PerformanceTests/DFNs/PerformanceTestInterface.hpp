@@ -63,7 +63,7 @@ class PerformanceTestInterface
 		* @brief The constructor requires the folder were the configuration files and outputs will be stored, it also requires the configuration file name and the output file name
 		*
 		* @param folderPath, the path containing the configuration file, the output file and a temporary DFN configuration file will be written here as well;
-		* @param baseConfigurationFileName, the name of the configuration file that coontains the range of input parameters for the tests;
+		* @param baseConfigurationFileName, the name of the configuration file that contains the range of input parameters for the tests;
 		* @param performanceMeasuresFileName, the name of the output file;
 		*
 		*/

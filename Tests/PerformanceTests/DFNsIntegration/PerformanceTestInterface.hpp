@@ -104,8 +104,8 @@ class PerformanceTestInterface
 		*
 		* @param measure, this is the string identifier of the test measure the aggregator will work upon;
 		* @param aggregator, this is the aggretor object that will perform the aggregation;
-		* @param aggregatorType, this defines whether all measures are aggregated (OVER_INPUTS_AND_PARAMETERS), whether the measure with the same inputs are aggregated (OVER_PARAMTERS), or
-		*	whether the mesaures with the same parameters are aggregated (OVER_INPUTS);
+		* @param aggregatorType, this defines whether all measures are aggregated (VARIABLE_PARAMETERS_VARIABLE_INPUTS), whether the measure with the same inputs are aggregated
+		*	(VARIABLE_PARAMETERS_FIXED_INPUTS), or whether the mesaures with the same parameters are aggregated (FIXED_PARAMETERS_VARIABLE_INPUTS);
 		*
 		*/
 		void AddAggregator(std::string measure, Aggregator* aggregator, AggregationType aggregatorType);		
