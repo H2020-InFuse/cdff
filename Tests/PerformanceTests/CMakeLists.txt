@@ -32,6 +32,7 @@ target_link_libraries(
 add_library(
     performance_integration_test_interface
     DFNsIntegration/PerformanceTestInterface.cpp
+    DFNsIntegration/Aggregator.cpp
 )
 target_link_libraries(
 	performance_integration_test_interface

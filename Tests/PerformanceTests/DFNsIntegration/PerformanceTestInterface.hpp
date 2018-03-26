@@ -45,6 +45,7 @@
 #include <DFNCommonInterface.hpp>
 #include <map>
 #include <yaml-cpp/yaml.h>
+#include "Aggregator.hpp"
 
 
 /* --------------------------------------------------------------------------
@@ -88,6 +89,27 @@ class PerformanceTestInterface
 		*/
 		void AddDfn(dfn_ci::DFNCommonInterface* dfn);
 
+		/*
+		* @brief defines the way an aggregator is used. See next menthod
+		*/
+		enum AggregationType
+			{
+			FIXED_PARAMETERS_VARIABLE_INPUTS,
+			VARIABLE_PARAMETERS_FIXED_INPUTS,
+			VARIABLE_PARAMETERS_VARIABLE_INPUTS
+			};
+
+		/*
+		* @brief the function defines an aggregator of measures.
+		*
+		* @param measure, this is the string identifier of the test measure the aggregator will work upon;
+		* @param aggregator, this is the aggretor object that will perform the aggregation;
+		* @param aggregatorType, this defines whether all measures are aggregated (OVER_INPUTS_AND_PARAMETERS), whether the measure with the same inputs are aggregated (OVER_PARAMTERS), or
+		*	whether the mesaures with the same parameters are aggregated (OVER_INPUTS);
+		*
+		*/
+		void AddAggregator(std::string measure, Aggregator* aggregator, AggregationType aggregatorType);		
+
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
@@ -112,15 +134,25 @@ class PerformanceTestInterface
 			std::vector<std::string> optionsList;
 			};
 
+		struct AggregatorEntry
+			{
+			std::string measure;
+			Aggregator* aggregator;
+			AggregationType aggregatorType;
+			};
+
 		unsigned dfnsNumber;
 		static const std::string temporaryConfigurationFileNameBase;
 		static const std::string temporaryConfigurationFileNameExtension;
+		static const std::string aggregatorsResultsFileName;
 		std::vector<std::string> baseConfigurationFilePathsList;
 		std::string performanceMeasuresFilePath;
+		std::string aggregatorsResultsFilePath;
 		std::vector<std::string> temporaryConfigurationFilePathsList;
 
 		std::vector<YAML::Node> configurationsList;
 		std::vector<Parameter> changingParametersList;
+		std::vector<AggregatorEntry> aggregatorsList;
 		bool firstRun;
 		bool firstMeasureTimeForCurrentInput;
 
@@ -132,6 +164,9 @@ class PerformanceTestInterface
 		void SaveRunTime(float time, unsigned numberOfTests);
 		void ReadConfiguration();
 		std::vector<std::string> SplitString(std::string inputString);
+		void UpdateAggregators(MeasuresMap measuresMap, unsigned testNumberOnCurrentInput);
+		void SaveAggregatorsResults();
+		std::string ToString(AggregationType type);
 
 		/*
 		* @brief This method has to set the inputs of the DFN, it returns true if and only if an input is actually set.

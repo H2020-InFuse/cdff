@@ -61,9 +61,11 @@ PerformanceTestInterface::PerformanceTestInterface(std::string folderPath, std::
 		temporaryConfigurationFilePathsList.push_back(temporaryConfigurationFileStream.str());
 		}
 
-	std::stringstream performanceMeasuresFileStream;	
+	std::stringstream performanceMeasuresFileStream, aggregatorsResultsFileStream;	
 	performanceMeasuresFileStream << folderPath << "/" << performanceMeasuresFileName;
+	aggregatorsResultsFileStream << folderPath << "/" << aggregatorsResultsFileName;
 	performanceMeasuresFilePath = performanceMeasuresFileStream.str();
+	aggregatorsResultsFilePath = aggregatorsResultsFileStream.str();
 
 	ReadConfiguration();
 	firstRun = true;
@@ -102,6 +104,7 @@ void PerformanceTestInterface::Run()
 			measuresMap["VirtualMemoryKB"] = GetTotalVirtualMemoryUsedKB();
 
 			SaveMeasures(measuresMap);
+			UpdateAggregators(measuresMap, numberOfTests);
 			}
 
 		clock_t endRun = clock();
@@ -109,13 +112,23 @@ void PerformanceTestInterface::Run()
 		numberOfTests = 0;
 		}
 
-
+	SaveAggregatorsResults();
 	firstRun = true;
 	}
 
 void PerformanceTestInterface::AddDfn(dfn_ci::DFNCommonInterface* dfn)
 	{
 	dfnsList.push_back(dfn);
+	}
+
+void PerformanceTestInterface::AddAggregator(std::string measure, Aggregator* aggregator, AggregationType aggregatorType)
+	{
+	AggregatorEntry entry;
+	entry.measure = measure;
+	entry.aggregator = aggregator;
+	entry.aggregatorType = aggregatorType;
+
+	aggregatorsList.push_back(entry);
 	}
 
 /* --------------------------------------------------------------------------
@@ -126,6 +139,7 @@ void PerformanceTestInterface::AddDfn(dfn_ci::DFNCommonInterface* dfn)
  */
 const std::string PerformanceTestInterface::temporaryConfigurationFileNameBase = "PerformanceTest_TemporaryDFN";
 const std::string PerformanceTestInterface::temporaryConfigurationFileNameExtension = ".yaml";
+const std::string PerformanceTestInterface::aggregatorsResultsFileName = "AggregatedMeasures.txt";
 
 
 /* --------------------------------------------------------------------------
@@ -302,6 +316,89 @@ std::vector<std::string> PerformanceTestInterface::SplitString(std::string input
 	std::vector<std::string> componentsList;
 	boost::split(componentsList, inputString, boost::is_any_of(", "), boost::token_compress_on);
 	return componentsList;
+	}
+
+void PerformanceTestInterface::UpdateAggregators(MeasuresMap measuresMap, unsigned testNumberOnCurrentInput)
+	{
+	for(unsigned aggregatorIndex = 0; aggregatorIndex < aggregatorsList.size(); aggregatorIndex++)
+		{
+		AggregatorEntry entry =  aggregatorsList.at(aggregatorIndex);
+		
+		ASSERT( measuresMap.find( entry.measure ) != measuresMap.end(), "We could not find right measure for aggregator");
+		double value = measuresMap[ entry.measure ];
+
+		switch(entry.aggregatorType)
+			{
+			case VARIABLE_PARAMETERS_FIXED_INPUTS:
+				{
+				unsigned numberOfAggregatorChannels = entry.aggregator->GetNumberOfChannels();
+				if (testNumberOnCurrentInput == 1)
+					{
+					entry.aggregator->AddMeasure( value, numberOfAggregatorChannels);
+					}
+				else
+					{
+					entry.aggregator->AddMeasure( value, numberOfAggregatorChannels-1);
+					}
+				break;
+				}
+			case FIXED_PARAMETERS_VARIABLE_INPUTS:
+				{
+				entry.aggregator->AddMeasure( value, testNumberOnCurrentInput-1);
+				break;
+				}
+			case VARIABLE_PARAMETERS_VARIABLE_INPUTS:
+				{
+				entry.aggregator->AddMeasure( value );
+				break;
+				}
+			default:
+				{
+				ASSERT(false, "Unhandler aggregator type in PerformanceTestInterface::UpdateAggregators");
+				}
+			}
+		}
+	}
+
+void PerformanceTestInterface::SaveAggregatorsResults()
+	{
+	std::ofstream aggregatorsFile(aggregatorsResultsFilePath.c_str());	
+
+	for(unsigned aggregatorIndex = 0; aggregatorIndex < aggregatorsList.size(); aggregatorIndex++)
+		{
+		AggregatorEntry entry =  aggregatorsList.at(aggregatorIndex);
+		std::vector<double> result = entry.aggregator->Aggregate();
+		aggregatorsFile << entry.measure << " " << ToString(entry.aggregatorType) << "\n";
+		for(unsigned index = 0; index < result.size(); index++)
+			{
+			aggregatorsFile << index << " " << result.at(index) << "\n";
+			}
+		aggregatorsFile << "\n";
+		}
+
+	aggregatorsFile.close();
+	}
+
+std::string PerformanceTestInterface::ToString(AggregationType type)
+	{
+	if (type == FIXED_PARAMETERS_VARIABLE_INPUTS)
+		{
+		return "fixed parameters variable inputs";
+		}
+	else if (type == VARIABLE_PARAMETERS_FIXED_INPUTS)
+		{
+		return "variable parameters fixed inputs";
+		}
+	else if (type == VARIABLE_PARAMETERS_VARIABLE_INPUTS)
+		{
+		return "variable parameters variable inputs";
+		}
+	else
+		{
+		ASSERT(false, "Unhandler aggregator type in PerformanceTestInterface::ToString");
+		}
+
+	return "";
 	}
 
 /** @} */
