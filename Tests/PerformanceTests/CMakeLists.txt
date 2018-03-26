@@ -49,6 +49,16 @@ target_link_libraries(
 )
 
 
+add_executable(
+    orb_flann_ransac_decomposition
+    DFNsIntegration/VisualOdometry/OrbFlannRansacDecomposition.cpp
+)
+target_link_libraries(
+	orb_flann_ransac_decomposition
+	mock cdff_helpers cdff_logger cdff_types orb_detector_descriptor flann_matcher fundamental_matrix_ransac essential_matrix_decomposition performance_integration_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
+)
+
+
 add_library(
     performance_dfpc_test_interface
     DFPCs/PerformanceTestInterface.cpp
