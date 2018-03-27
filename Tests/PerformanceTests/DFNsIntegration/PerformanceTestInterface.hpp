@@ -154,6 +154,7 @@ class PerformanceTestInterface
 		std::vector<Parameter> changingParametersList;
 		std::vector<AggregatorEntry> aggregatorsList;
 		bool firstRun;
+		bool firstRunOnInput;
 		bool firstMeasureTimeForCurrentInput;
 
 		int GetTotalVirtualMemoryUsedKB();
@@ -167,6 +168,7 @@ class PerformanceTestInterface
 		void UpdateAggregators(MeasuresMap measuresMap, unsigned testNumberOnCurrentInput);
 		void SaveAggregatorsResults();
 		std::string ToString(AggregationType type);
+		void SaveParameters(std::ofstream& file, unsigned index);
 
 		/*
 		* @brief This method has to set the inputs of the DFN, it returns true if and only if an input is actually set.

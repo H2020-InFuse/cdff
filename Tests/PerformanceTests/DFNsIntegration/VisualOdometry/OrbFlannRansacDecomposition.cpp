@@ -103,8 +103,8 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		Aggregator* groundOrientationDistanceAggregator;
 		std::vector<std::string> imageFileNamesList;
 		std::vector<Pose3D> posesList;
-		std::vector<float> imageTimesList;
-		std::vector<float> poseTimesList;
+		std::vector<double> imageTimesList;
+		std::vector<double> poseTimesList;
 		std::vector<Pose3D> imagePosesList;
 		std::vector<Pose3D> displacementsList;
 
@@ -223,7 +223,7 @@ void OrbFlannRansacDecomposition::LoadImageFileNames()
 		boost::split(stringsList, line, boost::is_any_of(" "));
 		imageFileNamesList.push_back( stringsList.at(1) );
 
-		imageTimesList.push_back( std::stof( stringsList.at(0) ) );
+		imageTimesList.push_back( std::stod( stringsList.at(0) ) );
 		}	
 
 	containerFile.close();
@@ -250,7 +250,7 @@ void OrbFlannRansacDecomposition::LoadPoses()
 		SetOrientation(pose, std::stof( stringsList.at(4) ), std::stof( stringsList.at(5) ), std::stof( stringsList.at(6) ), std::stof( stringsList.at(7) ) );
 		posesList.push_back(pose);
 
-		poseTimesList.push_back( std::stof( stringsList.at(0) ) );
+		poseTimesList.push_back( std::stod( stringsList.at(0) ) );
 		}
 
 	containerFile.close();
@@ -260,7 +260,7 @@ void OrbFlannRansacDecomposition::ComputeImagePoses()
 	{
 	for(unsigned imageIndex = 0; imageIndex < imageFileNamesList.size(); imageIndex++)
 		{
-		float imageTime = imageTimesList.at(imageIndex);
+		double imageTime = imageTimesList.at(imageIndex);
 		unsigned afterPoseIndex;
 		bool afterPoseFound = false;
 		for(unsigned index = 0; index < posesList.size() && !afterPoseFound; index++)
@@ -304,10 +304,10 @@ Pose3D OrbFlannRansacDecomposition::InterpolatePose(unsigned beforePoseIndex, un
 
 	const Pose3D& beforePose = posesList.at(beforePoseIndex);
 	const Pose3D& afterPose = posesList.at(afterPoseIndex);
-	const float beforeTime = poseTimesList.at(beforePoseIndex);
-	const float afterTime = poseTimesList.at(afterPoseIndex);
+	const double beforeTime = poseTimesList.at(beforePoseIndex);
+	const double afterTime = poseTimesList.at(afterPoseIndex);
 
-	float deltaTime = afterTime - beforeTime;
+	double deltaTime = afterTime - beforeTime;
 	float deltaX = GetXPosition(afterPose) - GetXPosition(beforePose);
 	float deltaY = GetYPosition(afterPose) - GetYPosition(beforePose);
 	float deltaZ = GetZPosition(afterPose) - GetZPosition(beforePose);
@@ -397,6 +397,14 @@ bool OrbFlannRansacDecomposition::SetNextInputs()
 	cvRightImage = cv::imread(successiveFileStream.str(), cv::IMREAD_COLOR);
 	ASSERT( cvLeftImage.size() == cvRightImage.size(), "Performance Test Error: input images do not have same size");
 
+	if (leftFrame != NULL)
+		{
+		delete(leftFrame);
+		}
+	if (rightFrame != NULL)
+		{
+		delete(rightFrame);
+		}
 	MatToFrameConverter converter;
 	leftFrame = converter.Convert(cvLeftImage);
 	rightFrame = converter.Convert(cvRightImage);

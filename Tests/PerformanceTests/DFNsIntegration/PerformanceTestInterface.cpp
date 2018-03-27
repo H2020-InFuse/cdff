@@ -84,6 +84,7 @@ void PerformanceTestInterface::Run()
 		unsigned numberOfTests = 0;
 		clock_t beginRun = clock();
 		SaveNewInputsLine();
+		firstRunOnInput = true;
 
 		while ( PrepareConfigurationFile() )
 			{
@@ -184,11 +185,11 @@ void PerformanceTestInterface::SaveNewInputsLine()
 	if (firstTime)
 		{
 		measuresFile.open(performanceMeasuresFilePath.c_str());
+		firstTime = false;
 		}
 	else
 		{
 		measuresFile.open(performanceMeasuresFilePath.c_str(), std::ios::app);
-		firstTime = false;
 		}
 
 	inputNumber++;
@@ -235,9 +236,10 @@ void PerformanceTestInterface::SaveMeasures(MeasuresMap measuresMap)
 
 bool PerformanceTestInterface::PrepareConfigurationFile()	
 	{
-	if (firstRun)
+	if (firstRun || firstRunOnInput)
 		{
 		firstRun = false;
+		firstRunOnInput = false;
 		SaveToYaml();
 		return true;
 		}
@@ -374,6 +376,7 @@ void PerformanceTestInterface::SaveAggregatorsResults()
 		aggregatorsFile << entry.measure << " " << ToString(entry.aggregatorType) << "\n";
 		for(unsigned index = 0; index < result.size(); index++)
 			{
+			SaveParameters(aggregatorsFile, index);
 			aggregatorsFile << index << " " << result.at(index) << "\n";
 			}
 		aggregatorsFile << "\n";
@@ -402,6 +405,24 @@ std::string PerformanceTestInterface::ToString(AggregationType type)
 		}
 
 	return "";
+	}
+
+void PerformanceTestInterface::SaveParameters(std::ofstream& file, unsigned index)
+	{
+	for(std::vector<Parameter>::iterator parameter = changingParametersList.begin(); parameter != changingParametersList.end(); parameter++)
+		{
+		file << parameter->name << " ";
+		}
+	file << "\n";
+
+	unsigned residualIndex = index;
+	for(std::vector<Parameter>::iterator parameter = changingParametersList.begin(); parameter != changingParametersList.end(); parameter++)
+		{
+		unsigned optionIndex = residualIndex % parameter->optionsNumber;
+		file << parameter->optionsList.at(optionIndex) << " ";
+		residualIndex = residualIndex / parameter->optionsNumber;
+		}
+	file << "\n";	
 	}
 
 /** @} */

@@ -119,6 +119,7 @@ class PerformanceTestInterface
 		YAML::Node configuration;
 		std::vector<Parameter> changingParametersList;
 		bool firstRun;
+		bool firstRunOnInput;
 		bool firstMeasureTimeForCurrentInput;
 
 		int GetTotalVirtualMemoryUsedKB();

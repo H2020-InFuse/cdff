@@ -75,6 +75,7 @@ void PerformanceTestInterface::Run()
 		unsigned numberOfTests = 0;
 		clock_t beginRun = clock();
 		SaveNewInputsLine();
+		firstRunOnInput = true;
 
 		while ( PrepareConfigurationFile() )
 			{
@@ -158,11 +159,11 @@ void PerformanceTestInterface::SaveNewInputsLine()
 	if (firstTime)
 		{
 		measuresFile.open(performanceMeasuresFilePath.c_str());
+		firstTime = false;
 		}
 	else
 		{
 		measuresFile.open(performanceMeasuresFilePath.c_str(), std::ios::app);
-		firstTime = false;
 		}
 
 	inputNumber++;
@@ -209,9 +210,10 @@ void PerformanceTestInterface::SaveMeasures(MeasuresMap measuresMap)
 
 bool PerformanceTestInterface::PrepareConfigurationFile()	
 	{
-	if (firstRun)
+	if (firstRun || firstRunOnInput)
 		{
 		firstRun = false;
+		firstRunOnInput = false;
 		SaveToYaml();
 		return true;
 		}
