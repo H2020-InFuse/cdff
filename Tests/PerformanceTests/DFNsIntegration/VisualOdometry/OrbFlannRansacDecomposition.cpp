@@ -492,7 +492,7 @@ int main(int argc, char** argv)
 		"OrbExtractorDescriptor_PerformanceTest_1.yaml",
 		"FlannMatcher_PerformanceTest_1.yaml",
 		"FundamentalMatrixRansac_PerformanceTest_1.yaml",
-		"EssentialMatrixDecomposition_PerformanceTest_1.yaml"
+		"EssentialMatrixDecomposition_PerformanceTest_2.yaml"
 		};
 	OrbFlannRansacDecomposition interface("../tests/ConfigurationFiles/DFNsIntegration/VisualOdometry", baseConfigurationFiles, "Orb_Flann_Ransac_Decomposition.txt");
 	interface.Run();

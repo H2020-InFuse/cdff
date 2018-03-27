@@ -1,0 +1,12 @@
+- Name: GeneralParameters
+  NumberOfTestPoints: 10 20
+- Name: FirstCameraMatrix
+  FocalLengthX: 508.62456003356
+  FocalLengthY: 506.15331127257
+  PrinciplePointX: 313.59690574077
+  PrinciplePointY: 252.30577422324
+- Name: SecondCameraMatrix
+  FocalLengthX: 508.62456003356
+  FocalLengthY: 506.15331127257
+  PrinciplePointX: 313.59690574077
+  PrinciplePointY: 252.30577422324
