@@ -41,11 +41,8 @@
  */
 #include <stdlib.h>
 #include <string>
-#include <vector>
 #include <DFNCommonInterface.hpp>
-#include <map>
-#include <yaml-cpp/yaml.h>
-#include "Aggregator.hpp"
+#include <PerformanceTests/PerformanceTestBase.hpp>
 
 
 /* --------------------------------------------------------------------------
@@ -54,7 +51,7 @@
  *
  * --------------------------------------------------------------------------
  */
-class PerformanceTestInterface
+class PerformanceTestInterface : public PerformanceTestBase
 	{
 	/* --------------------------------------------------------------------
 	 * Public
@@ -78,45 +75,16 @@ class PerformanceTestInterface
 		~PerformanceTestInterface();
 
 		/*
-		* @brief The function will execute the DFN for each input provided by SetNextInputs(), and for each combination of parameters in the Configuration File defined in the constructor.
-		*
-		*/
-		void Run();
-
-		/*
 		* @brief The function defines the main DFNs the performance test is executed upon.
 		*
 		*/
-		void AddDfn(dfn_ci::DFNCommonInterface* dfn);
-
-		/*
-		* @brief defines the way an aggregator is used. See next menthod
-		*/
-		enum AggregationType
-			{
-			FIXED_PARAMETERS_VARIABLE_INPUTS,
-			VARIABLE_PARAMETERS_FIXED_INPUTS,
-			VARIABLE_PARAMETERS_VARIABLE_INPUTS
-			};
-
-		/*
-		* @brief the function defines an aggregator of measures.
-		*
-		* @param measure, this is the string identifier of the test measure the aggregator will work upon;
-		* @param aggregator, this is the aggretor object that will perform the aggregation;
-		* @param aggregatorType, this defines whether all measures are aggregated (VARIABLE_PARAMETERS_VARIABLE_INPUTS), whether the measure with the same inputs are aggregated
-		*	(VARIABLE_PARAMETERS_FIXED_INPUTS), or whether the mesaures with the same parameters are aggregated (FIXED_PARAMETERS_VARIABLE_INPUTS);
-		*
-		*/
-		void AddAggregator(std::string measure, Aggregator* aggregator, AggregationType aggregatorType);		
+		void AddDfn(dfn_ci::DFNCommonInterface* dfn);		
 
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
 	 */
-	protected:	
-		typedef std::map<std::string, float> MeasuresMap;
-
+	protected:
 		std::vector<dfn_ci::DFNCommonInterface*> dfnsList;
 
 	/* --------------------------------------------------------------------
@@ -124,51 +92,8 @@ class PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	private:	
-		struct Parameter
-			{
-			unsigned dfnIndex;
-			unsigned groupIndex;
-			std::string name;
-			unsigned optionsNumber;
-			unsigned currentOption;
-			std::vector<std::string> optionsList;
-			};
-
-		struct AggregatorEntry
-			{
-			std::string measure;
-			Aggregator* aggregator;
-			AggregationType aggregatorType;
-			};
-
-		unsigned dfnsNumber;
-		static const std::string temporaryConfigurationFileNameBase;
-		static const std::string temporaryConfigurationFileNameExtension;
-		static const std::string aggregatorsResultsFileName;
-		std::vector<std::string> baseConfigurationFilePathsList;
-		std::string performanceMeasuresFilePath;
-		std::string aggregatorsResultsFilePath;
-		std::vector<std::string> temporaryConfigurationFilePathsList;
-
-		std::vector<YAML::Node> configurationsList;
-		std::vector<Parameter> changingParametersList;
-		std::vector<AggregatorEntry> aggregatorsList;
-		bool firstRun;
-		bool firstRunOnInput;
-		bool firstMeasureTimeForCurrentInput;
-
-		int GetTotalVirtualMemoryUsedKB();
-		void SaveNewInputsLine();
-		void SaveMeasures(MeasuresMap measuresMap);
-		bool PrepareConfigurationFile();
-		void SaveToYaml();
-		void SaveRunTime(float time, unsigned numberOfTests);
-		void ReadConfiguration();
-		std::vector<std::string> SplitString(std::string inputString);
-		void UpdateAggregators(MeasuresMap measuresMap, unsigned testNumberOnCurrentInput);
-		void SaveAggregatorsResults();
-		std::string ToString(AggregationType type);
-		void SaveParameters(std::ofstream& file, unsigned index);
+		void Configure();
+		void Process();
 
 		/*
 		* @brief This method has to set the inputs of the DFN, it returns true if and only if an input is actually set.

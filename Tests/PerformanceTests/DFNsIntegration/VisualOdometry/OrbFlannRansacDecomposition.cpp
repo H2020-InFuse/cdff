@@ -48,7 +48,7 @@
 
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>
-#include <PerformanceTests/DFNsIntegration/Aggregator.hpp>
+#include <PerformanceTests/Aggregator.hpp>
 
 
 using namespace dfn_ci;
@@ -202,9 +202,9 @@ OrbFlannRansacDecomposition::~OrbFlannRansacDecomposition()
 		}
 	}
 
-const std::string OrbFlannRansacDecomposition::imageFileNamesFolder = "../tests/Data/Images";
-const std::string OrbFlannRansacDecomposition::imagesFileContainer = "../tests/Data/Images/imagesList.txt";
-const std::string OrbFlannRansacDecomposition::posesFileContainer = "../tests/Data/Images/posesList.txt";
+const std::string OrbFlannRansacDecomposition::imageFileNamesFolder = "/media/alexander/Agridrive/rgbd_dataset_freiburg1_plant"; //"../tests/Data/Images";
+const std::string OrbFlannRansacDecomposition::imagesFileContainer = "/media/alexander/Agridrive/rgbd_dataset_freiburg1_plant/rgb.txt"; //"../tests/Data/Images/imagesList.txt";
+const std::string OrbFlannRansacDecomposition::posesFileContainer = "/media/alexander/Agridrive/rgbd_dataset_freiburg1_plant/groundtruth.txt"; //"../tests/Data/Images/posesList.txt";
 
 void OrbFlannRansacDecomposition::LoadImageFileNames()
 	{
