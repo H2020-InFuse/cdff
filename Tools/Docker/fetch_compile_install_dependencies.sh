@@ -129,16 +129,16 @@ fi
 }
 
 function fetchsource_function {
-	echo "Fetching $1"
-  mkdir -p $SOURCE_DIR/$1
-  cd $SOURCE_DIR/$1
-	wget $3$2
-  if [ ${2: -7} == ".tar.gz" ];then
-	 tar xf $2 -C $SOURCE_DIR/$1
-   rm $2
-   cd ${2%.tar.gz}
+  echo "Downloading ${1}"
+  mkdir -p "${SOURCE_DIR}/${1}"
+  cd "${SOURCE_DIR}/${1}"
+  wget "${3}${2}"
+  if [[ "${2: -7}" == ".tar.gz" ]]; then
+    tar xf "${2}"
+    rm -f "${2}"
+    cd "${2%.tar.gz}"
   fi
-  echo "Done. Fetching $1"
+  echo "Downloading ${1}: done."
 }
 
 function fetchgit_function {
@@ -150,10 +150,11 @@ function fetchgit_function {
 }
 
 function clean_function {
-  echo "Cleaning $1."
-	rm -rf $SOURCE_DIR/$1
-	rm -rf $BUILD_DIR/$1
-	echo "$1 cleanup done."
+  echo "Removing ${1} source and build directories"
+  cd "${SOURCE_DIR}"
+  rm -rf "${SOURCE_DIR}/${1}"
+  rm -rf "${BUILD_DIR}/${1}"
+  echo "Removing ${1} source and build directories: done."
 }
 
 function build_all_function {
