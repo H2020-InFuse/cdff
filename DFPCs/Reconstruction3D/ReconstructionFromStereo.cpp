@@ -364,6 +364,10 @@ void ReconstructionFromStereo::MatchLeftAndRightFeatures()
 
 bool ReconstructionFromStereo::ComputeFundamentalMatrix()
 	{
+	if (GetNumberOfCorrespondences(*pastToCurrentCorrespondenceMap) < 8 )
+		{
+		return false;
+		}
 	fundamentalMatrixComputer->correspondenceMapInput(pastToCurrentCorrespondenceMap);
 	fundamentalMatrixComputer->process();
 	DELETE_PREVIOUS(fundamentalMatrix);	
