@@ -5,7 +5,7 @@ LABEL maintainer "xma@spaceapplications.com"
 LABEL description="This container compiles dependencies from CDFF\external\ \
 It does not rely anymore on the ubuntu packages."
 
-RUN apt-get update && apt-get install -y
+RUN apt-get update && apt-get install -y \
   build-essential \
   apt-utils \
   cmake \
