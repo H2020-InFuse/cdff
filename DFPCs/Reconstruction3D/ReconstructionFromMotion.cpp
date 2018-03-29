@@ -409,6 +409,10 @@ void ReconstructionFromMotion::MatchLeftAndRightFeatures()
 
 bool ReconstructionFromMotion::ComputeFundamentalMatrix()
 	{
+	if (GetNumberOfCorrespondences(*pastToCurrentCorrespondenceMap) < 8 )
+		{
+		return false;
+		}
 	fundamentalMatrixComputer->correspondenceMapInput(pastToCurrentCorrespondenceMap);
 	fundamentalMatrixComputer->process();
 	DELETE_PREVIOUS(fundamentalMatrix);	

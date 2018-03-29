@@ -1,6 +1,6 @@
 - Name: GeneralParameters
-  DistanceThreshold: 0.02 0.2 0.002
-  NumberOfChecks: 32 16 64
+  DistanceThreshold: 0.02 0.2
+  NumberOfChecks: 16 64
   Epsilon: 0
   SortedSearch: false
   AcceptanceRatio: 0.75

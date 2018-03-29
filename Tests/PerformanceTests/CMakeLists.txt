@@ -1,3 +1,5 @@
+
+## AsnTypesSize Printer
 add_executable(
     AsnTypesSizePrinter
     Common/AsnTypesSizePrinter.cpp
@@ -8,36 +10,28 @@ target_link_libraries(
 )
 
 
-
+##Performance Test Base
 add_library(
-    performance_test_interface
-    DFNs/PerformanceTestInterface.cpp
+    performance_test_base
+    PerformanceTestBase.cpp
+    Aggregator.cpp
 )
 target_link_libraries(
-	performance_test_interface
+	performance_test_base
 	cdff_helpers cdff_logger cdff_types
 )
 
 
-add_executable(
-	hirschmuller_disparity_mapping_performance_test
-	DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
-)
-target_link_libraries(
-	hirschmuller_disparity_mapping_performance_test
-	mock cdff_helpers cdff_logger cdff_types hirschmuller_disparity_mapping performance_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
-)
 
-
+## Integration Performance Tests
 add_library(
     performance_integration_test_interface
     DFNsIntegration/PerformanceTestInterface.cpp
 )
 target_link_libraries(
 	performance_integration_test_interface
-	cdff_helpers cdff_logger cdff_types
+	cdff_helpers cdff_logger cdff_types performance_test_base
 )
-
 
 add_executable(
     orb_detector_descriptor_flann_matcher_performance_test
@@ -48,16 +42,44 @@ target_link_libraries(
 	mock cdff_helpers cdff_logger cdff_types orb_detector_descriptor flann_matcher performance_integration_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
 )
 
+add_executable(
+    orb_flann_ransac_decomposition
+    DFNsIntegration/VisualOdometry/OrbFlannRansacDecomposition.cpp
+)
+target_link_libraries(
+	orb_flann_ransac_decomposition
+	mock cdff_helpers cdff_logger cdff_types orb_detector_descriptor flann_matcher fundamental_matrix_ransac essential_matrix_decomposition performance_integration_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
+)
 
+
+## DFN performance Tests
+add_library(
+    performance_dfn_test_interface
+    DFNs/PerformanceTestInterface.cpp
+)
+target_link_libraries(
+	performance_dfn_test_interface
+	cdff_helpers cdff_logger cdff_types performance_test_base
+)
+
+add_executable(
+	hirschmuller_disparity_mapping_performance_test
+	DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+)
+target_link_libraries(
+	hirschmuller_disparity_mapping_performance_test
+	mock cdff_helpers cdff_logger cdff_types hirschmuller_disparity_mapping performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
+)
+
+## DFPC performance tests
 add_library(
     performance_dfpc_test_interface
     DFPCs/PerformanceTestInterface.cpp
 )
 target_link_libraries(
 	performance_dfpc_test_interface
-	cdff_helpers cdff_logger cdff_types
+	cdff_helpers cdff_logger cdff_types performance_test_base
 )
-
 
 add_executable(
     reconstruction_from_stereo_performance_test
