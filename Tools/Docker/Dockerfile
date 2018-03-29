@@ -39,9 +39,6 @@ RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s flann
 COPY installers/qhull.sh CDFF/External/installers
 RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s qhull
 
-COPY installers/tinyxml2.sh CDFF/External/installers
-RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s tinyxml2
-
 COPY installers/yamlcpp.sh CDFF/External/installers
 RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s yaml-cpp
 
