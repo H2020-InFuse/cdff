@@ -1,56 +1,74 @@
-## Synopsis
+# CDFF
 
-Welcome to the code repository for the Common Data Fusion Framework developed by the InFuse consortium.
+Welcome to the code repository for the Common Data Fusion Framework developed by the InFuse consortium (Core and Support components).
 
-The CDFF repository contains the CDFF-Core and CDFF-Support modules, but not the CDFF-Dev module (the development environment). CDFF-Core and CDFF-Support are the modules that must be deployed on your final robotic target system.
+## The repositories
 
-To develop a Data Fusion Node (DFN) or a Data Fusion Processing Compound (DFPC), please download [CDFF-Dev](https://gitlab.spaceapplications.com/InFuse/CDFF_dev), the CDFF development environment (and put it next to your copy of the CDFF, for instance). CDFF-Dev provides many utilities that can be used to efficiently implement reusable data fusion solutions. In fact, they *ought* to be used: using CDFF-Dev is the natural way to develop in InFuse.
+The `CDFF` repository contains the Core and Support components of the CDFF, whereas the `CDFF_dev` repository contains its Dev component.
 
-## Structure
-See https://docs.google.com/document/d/1ppECSp_fz4f23C0t9v5XJkrxQOHpKud0CJxJu4E5LpI/edit?usp=sharing
+  The Core and Support components are those that must be deployed on your final robotic target system.
 
-## Coding Standard
+  The [Dev component](https://gitlab.spaceapplications.com/InFuse/CDFF_dev) is a development environment for the CDFF, which provides many utilities that can be used to efficiently implement reusable data fusion solutions. In fact, they *ought* to be used: using the CDFF's development environment is the natural way to develop the CDFF.
 
-See https://docs.google.com/document/d/1jQ8I3lRKLel6BT5Fac5twtjzZ0SiQrc9rK23v-3NOLM
+So to develop a Data Fusion Node (DFN) or a Data Fusion Processing Compound (DFPC), you should not just clone the `CDFF` repository but also the `CDFF_dev` repository. Put your resulting local repositories next to each other, for instance.
 
-## DFN Coding Guidelines
+## Documentation
 
-https://docs.google.com/document/d/1hFTRKgJNN3n_brT3aajMA03AR_jQ2eCo-ZM33ggY5cE/edit
+Documentation about building the CDFF:
 
-## DFPC Coding Guidelines
+* [Dependencies of the CDFF](/External/Readme.md)
+* [Building the CDFF inside a Docker container (and more generally, using Docker)](https://drive.google.com/open?id=1aW3_giavOZdvOljEEfun4W0Cq2tlnDvb8S3y2bysjpw)
+* This file
 
-https://docs.google.com/document/d/1ZUhZPnedd1mO42y-q4N7USltOnKeZzbyyZz_yzpLsmk/edit
+## How to build the CDFF
 
-## Externals (aka 3rd party dependencies)
-See [Third party readme] (/External/Readme.md)
+First clone the `CDFF` repository and make sure that you have all the CDFF's direct and recurse dependencies. The documentation about the [dependencies of the CDFF](/External/Readme.md) describes this topic in detail and you **really** should read it. In short, if you aren't using a Docker image where everything is already installed (but **warning** see caveats and WIPs in linked documentation), you should first install all of the CDFF's recurse dependencies using your system's package manager, and then install all of the CDFF's direct dependencies from source into `External/install` (default):
 
-## Fetching sources and building 
-    git clone https://gitlab.spaceapplications.com/InFuse/CDFF.git
+```
+$ git clone git@gitlab.spaceapplications.com:InFuse/CDFF.git
+$ cd CDFF/External
+$ ./fetch_compile_install_dependencies.sh  # warning: tested on bash/Ubuntu only
+```
 
-### Get all dependencies first: 
-    cd CDFF/External/
-    ./fetch_compile_install_dependencies.sh
-  
-### Build CDFF with
-    $ mkdir CDFF/build && cd CDFF/build
-    $ cmake -DCMAKE_INSTALL_PREFIX=./ ..
-    $ make install
+Once this is done (VTK and the PCL take forever to compile), you can build the CDFF with e.g.:
 
-### Now you can run the tests
-    CDFF/build$ make test
+```
+/path/to/CDFF/build$ cmake -D USE_BUNDLED_DEPENDENCIES=ON -D CMAKE_INSTALL_PREFIX=./ ..
+/path/to/CDFF/build$ make
+```
 
-### ASN.1 Datatypes
-On first build, Cmake will run /Tools/ASNToC/FetcherScript.sh. 
-This will download generated files from the server.  
+Once the CDFF is built you can install it and/or run the tests with, respectively:
 
-If you want to develop new Types, you will need to compile them. See /Tools/ASNToC/Readme.md
+```
+/path/to/CDFF/build$ make install
+/path/to/CDFF/build$ make tests
+```
 
-## Contributing
+## ASN.1 datatypes
 
-Excellent code depends on rigorous review. In Infuse, every change is reviewed using this flow:
+On the first run of the first build process, CMake will run `/Tools/ASNToC/FetcherScript.sh` which will download ASN.1 datatype generated files from Space Apps's servers and put them into your local repository. This won't happen again unless you clone the `CDFF` repository anew of course. If you want to develop new datatypes, you will need to compile them: see the [ASNtoC documentation](/Tools/ASNToC/Readme.md).
 
-A developer makes a change in their feature branch and tests it. When they're happy they push, and make a merge request.
-The developer assigns the merge request to a reviewer, who looks at it and makes line and design level comments as appropriate. When the reviewer is finished, they assign it back to the author. 
-The author addresses the comments. This stage can go around for a while, but once both are happy, one assigns to a final reviewer who can merge(a maintainer).
-The final reviewer follows the same process again. The author again addresses any comments, either by changing the code or by responding with their own comments.
-Once the final reviewer is happy and the build is green, they will merge.
+# Contributing to the CDFF
+
+We use the popular Git **feature branch workflow** with **merge requests**.
+
+In short, developpers develop bug fixes and new features in *feature branches* named anything but `master` in their *local repositories* cloned from the one on the `origin` *remote*, which is Space Apps's server. When they feel that a branch is ready to be publicized (made available) to the other developers, they may *push* it to the `origin` remote (they mustn't push it before it is at least somewhat ready to be shared). When they feel that the branch is ready to be integrated into the main development history, they must request that it is merged into the `master` branch of the `origin` remote.
+
+The *merge request* is easiest initiated through GitLab's web interface. The developer shall write a detailed description of the changes introduced by their branch, and assign the merge request to the most adequate reviewer. Everyone though, not just the reviewer, is encouraged to review and comment on the merge request. Once enough positive feedback is obtained, and all objections have been addressed, the branch can be *merged* into `master` on `origin`. However, if the merge request is rejected, or if the original developer cancels it, the request must be *closed* without the branch being merged (this is the case, for instance, of an idea that needs substantial further work). Note that the original developer must of course **never** merge their branch themselves (accept their own merge request) until they have left enough time for the request to be reviewed and gather enough positive feedback!
+
+In the case of an accepted merge request, the original developper, and everyone else, can finally *pull* (fetch and merge) the updated `master` into their own `master` branch in their repositories. Last but not least, the original developper must also *delete the merged branch* not just from their own local repository but also from the `origin` remote, and more generally from every other remote where they may have pushed it.
+
+In the case of a rejected or canceled merge request, the original developper must also *delete the unmerged branch* from the `origin` remote, however they might want to keep it in their local repository if they intend to rework it. Note that one must also *delete their abandonned branches* (abandonned ideas) from the `origin` remote if they had pushed them here.
+
+Git will never delete a branch by itself, hence why we have to do it ourselves, otherwise they'll linger around. In particular, branches are not deleted after they are merged into another.
+
+## Documentation
+
+Documentation about contributing to the CDFF:
+
+* [Dependencies of the CDFF (extended version)](https://drive.google.com/open?id=1Lv1ryzOCpTKXPyYZ77M07PNrthuIvzkSY2At1ib6FX8)
+* [Description of this Git repository](https://drive.google.com/open?id=1ppECSp_fz4f23C0t9v5XJkrxQOHpKud0CJxJu4E5LpI)
+* [Help and guidelines for not misusing Git](https://drive.google.com/open?id=1b9SNJDLAeYy8wc-1ryeyGpYzZKl0vcmHSz0IqaAfmLI) and the Git workflow described above
+* [Coding standard](https://drive.google.com/open?id=1jQ8I3lRKLel6BT5Fac5twtjzZ0SiQrc9rK23v-3NOLM)
+* [Tutorial on writing DFNs](https://drive.google.com/open?id=1hFTRKgJNN3n_brT3aajMA03AR_jQ2eCo-ZM33ggY5cE)
+* [Tutorial on writing DFPCs](https://drive.google.com/open?id=1ZUhZPnedd1mO42y-q4N7USltOnKeZzbyyZz_yzpLsmk)
