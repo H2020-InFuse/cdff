@@ -1,10 +1,10 @@
 FROM ubuntu:16.04
 
 LABEL version="1.6.5"
-LABEL maintainer "xma@spaceapplications.com"
-LABEL description="This container compiles dependencies from CDFF\external\ \
-It does not rely anymore on the ubuntu packages."
+LABEL maintainer="xma@spaceapplications.com,romain.michalec@strath.ac.uk"
+LABEL description="Image providing the CDFF's dependencies compiled from source and installed in /CDFF/External/install"
 
+# Install the basic tools that are not already available in the base image
 RUN apt-get update && apt-get install -y \
   build-essential \
   apt-utils \
@@ -17,16 +17,15 @@ RUN apt-get update && apt-get install -y \
   unzip \
   checkinstall
 
-# add install directory
-#RUN echo "PATH=$PATH:/CDFF/External/install/bin" >> /root/.bashrc
-#RUN echo "export PATH" >> /root/.bashrc
+# The binaries that are going to be compiled must be found first on the PATH
 ENV PATH="/CDFF/External/install/bin:${PATH}"
 
-# master
+# Add the scripts that download, build, and install the CDFF's dependencies
+# (main script added here, component scripts added next)
 COPY installers/infuse_environnement.env CDFF/Tools/Docker/installers/
 COPY fetch_compile_install_dependencies.sh CDFF/Tools/Docker/
 
-# dependencies
+# Download, build, and install the CDFF's dependencies
 RUN apt-get update && apt-get install -y libbz2-dev python-dev
 COPY installers/boost.sh CDFF/Tools/Docker/installers/
 RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s boost
@@ -49,6 +48,6 @@ RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s opencv
 
 COPY installers/vtk.sh CDFF/Tools/Docker/installers/
 RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s vtk
-#
+
 COPY installers/pcl.sh CDFF/Tools/Docker/installers/
 RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s pcl
