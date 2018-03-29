@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:16.04
 
 LABEL version="1.6.5"
 LABEL maintainer "xma@spaceapplications.com"
