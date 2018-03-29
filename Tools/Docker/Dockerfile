@@ -5,14 +5,16 @@ LABEL maintainer "xma@spaceapplications.com"
 LABEL description="This container compiles dependencies from CDFF\external\ \
 It does not rely anymore on the ubuntu packages."
 
-RUN apt-get update && apt-get install -y build-essential \
-apt-utils \
-git \
-cppcheck \
-mono-devel \
-wget \
-unzip \
-checkinstall
+RUN apt-get update && apt-get install -y
+  build-essential \
+  apt-utils \
+  cmake \
+  git \
+  cppcheck \
+  mono-devel \
+  wget \
+  unzip \
+  checkinstall
 
 # add install directory
 #RUN echo "PATH=$PATH:/CDFF/External/install/bin" >> /root/.bashrc
@@ -27,9 +29,6 @@ ADD fetch_compile_install_dependencies.sh CDFF/External
 RUN apt-get install -y libbz2-dev python-dev
 COPY installers/boost.sh CDFF/External/installers
 RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s boost
-
-COPY installers/cmake.sh CDFF/External/installers
-RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s cmake
 
 COPY installers/eigen.sh CDFF/External/installers
 RUN /bin/bash CDFF/External/fetch_compile_install_dependencies.sh -s eigen
