@@ -50,6 +50,8 @@
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>
 #include <PerformanceTests/Aggregator.hpp>
 
+#include <Eigen/Geometry>
+
 
 using namespace dfn_ci;
 using namespace Common;
@@ -106,7 +108,6 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		std::vector<double> imageTimesList;
 		std::vector<double> poseTimesList;
 		std::vector<Pose3D> imagePosesList;
-		std::vector<Pose3D> displacementsList;
 
 		static const std::string imageFileNamesFolder;
 		static const std::string imagesFileContainer;
@@ -114,8 +115,11 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		void LoadImageFileNames();
 		void LoadPoses();
 		void ComputeImagePoses();
+
+		float initialX, initialY, initialZ;
+		float initialRoll, initialPitch, initialYaw;
 		
-		Pose3D InterpolatePose(unsigned beforePoseIndex, unsigned afterPoseIndex, float imageTime, Pose3D& displacement);
+		Pose3D InterpolatePose(unsigned beforePoseIndex, unsigned afterPoseIndex, double imageTime);
 		void SetupMocksAndStubs();
 
 		bool SetNextInputs();
@@ -275,31 +279,24 @@ void OrbFlannRansacDecomposition::ComputeImagePoses()
 		ASSERT(afterPoseIndex > 0, "Error: No before pose found");
 		unsigned beforePoseIndex = afterPoseIndex-1;
 
-		Pose3D displacement;
-		Pose3D estimatedPose = InterpolatePose(beforePoseIndex, afterPoseIndex, imageTime, displacement);
+		Pose3D estimatedPose = InterpolatePose(beforePoseIndex, afterPoseIndex, imageTime);
 		imagePosesList.push_back(estimatedPose);
-		displacementsList.push_back(displacement);
+
+		if (imageIndex == 0)
+			{
+			initialX = GetXPosition(estimatedPose);
+			initialY = GetYPosition(estimatedPose);
+			initialZ = GetZPosition(estimatedPose);
+			Eigen::Quaternionf poseQuaternion(GetWOrientation(estimatedPose), GetXOrientation(estimatedPose), GetYOrientation(estimatedPose), GetZOrientation(estimatedPose));
+			initialRoll = poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0];
+			initialPitch = poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1];
+			initialYaw = poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2];
+			}
 		}
 	}
 
-#define COMPUTE_ROLL(x, y, z, w) std::atan2(2*y*w - 2*x*z, 1 - 2*y*y - 2*z*z)
-#define COMPUTE_PITCH(x, y, z, w) std::atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z)
-#define COMPUTE_YAW(x, y, z, w) std::asin(2*x*y + 2*z*w)
-#define COMPUTE_QUATERNION_W(r, p, y) std::cos(y/2) * std::cos(r/2) * std::cos(p/2) + std::sin(y/2) * std::sin(r/2) * std::sin(p/2)
-#define COMPUTE_QUATERNION_X(r, p, y) std::cos(y/2) * std::sin(r/2) * std::cos(p/2) - std::sin(y/2) * std::cos(r/2) * std::sin(p/2)
-#define COMPUTE_QUATERNION_Y(r, p, y) std::cos(y/2) * std::cos(r/2) * std::sin(p/2) + std::sin(y/2) * std::sin(r/2) * std::cos(p/2)
-#define COMPUTE_QUATERNION_Z(r, p, y) std::sin(y/2) * std::cos(r/2) * std::cos(p/2) - std::cos(y/2) * std::sin(r/2) * std::sin(p/2)
-
-Pose3D OrbFlannRansacDecomposition::InterpolatePose(unsigned beforePoseIndex, unsigned afterPoseIndex, float imageTime, Pose3D& displacement)
+Pose3D OrbFlannRansacDecomposition::InterpolatePose(unsigned beforePoseIndex, unsigned afterPoseIndex, double imageTime)
 	{
-	static float referenceRoll;
-	static float referencePitch;
-	static float referenceYaw;
-	static float referenceX;
-	static float referenceY;
-	static float referenceZ;
-	
-
 	Pose3D interpolation;
 
 	const Pose3D& beforePose = posesList.at(beforePoseIndex);
@@ -319,44 +316,26 @@ Pose3D OrbFlannRansacDecomposition::InterpolatePose(unsigned beforePoseIndex, un
 
 	SetPosition(interpolation, linearInterpolationX, linearInterpolationY, linearInterpolationZ);
 
-	float beforeRoll = COMPUTE_ROLL(GetXOrientation(beforePose), GetYOrientation(beforePose), GetZOrientation(beforePose), GetWOrientation(beforePose));
-	float beforePitch = COMPUTE_PITCH(GetXOrientation(beforePose), GetYOrientation(beforePose), GetZOrientation(beforePose), GetWOrientation(beforePose));
-	float beforeYaw = COMPUTE_YAW(GetXOrientation(beforePose), GetYOrientation(beforePose), GetZOrientation(beforePose), GetWOrientation(beforePose));
-	float afterRoll = COMPUTE_ROLL(GetXOrientation(afterPose), GetYOrientation(afterPose), GetZOrientation(afterPose), GetWOrientation(afterPose));
-	float afterPitch = COMPUTE_PITCH(GetXOrientation(afterPose), GetYOrientation(afterPose), GetZOrientation(afterPose), GetWOrientation(afterPose));
-	float afterYaw = COMPUTE_YAW(GetXOrientation(afterPose), GetYOrientation(afterPose), GetZOrientation(afterPose), GetWOrientation(afterPose));
+	Eigen::Quaternionf beforeQuaternion(GetWOrientation(beforePose), GetXOrientation(beforePose), GetYOrientation(beforePose), GetZOrientation(beforePose));
+	float beforeRoll = beforeQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0];
+	float beforePitch = beforeQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1];
+	float beforeYaw = beforeQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2];
+
+	Eigen::Quaternionf afterQuaternion(GetWOrientation(afterPose), GetXOrientation(afterPose), GetYOrientation(afterPose), GetZOrientation(afterPose));
+	float afterRoll = afterQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0];
+	float afterPitch = afterQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1];
+	float afterYaw = afterQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2];
+
 	float linearInterpolationRoll = beforeRoll + ( (afterRoll-beforeRoll) / deltaTime) * runTime;
 	float linearInterpolationPitch = beforePitch + ( (afterPitch-beforePitch) / deltaTime) * runTime;
 	float linearInterpolationYaw = beforeYaw + ( (afterYaw-beforeYaw) / deltaTime) * runTime;
 
-	SetOrientation
-		(
-		interpolation,
-		COMPUTE_QUATERNION_X(linearInterpolationRoll, linearInterpolationPitch, linearInterpolationYaw),
-		COMPUTE_QUATERNION_Y(linearInterpolationRoll, linearInterpolationPitch, linearInterpolationYaw),
-		COMPUTE_QUATERNION_Z(linearInterpolationRoll, linearInterpolationPitch, linearInterpolationYaw),
-		COMPUTE_QUATERNION_W(linearInterpolationRoll, linearInterpolationPitch, linearInterpolationYaw)
-		);
+	Eigen::Quaternionf linearInterpolationQ = 
+		Eigen::AngleAxisf(linearInterpolationRoll, Eigen::Vector3f::UnitX()) * 
+		Eigen::AngleAxisf(linearInterpolationPitch, Eigen::Vector3f::UnitY()) * 
+		Eigen::AngleAxisf(linearInterpolationYaw, Eigen::Vector3f::UnitZ());
 
-	if (imagePosesList.size() > 0)
-		{
-		SetPosition(displacement, linearInterpolationX - referenceX, linearInterpolationY - referenceY, linearInterpolationZ - referenceZ);
-		SetOrientation
-			(
-			displacement, 
-			COMPUTE_QUATERNION_X(linearInterpolationRoll - referenceRoll, linearInterpolationPitch - referencePitch, linearInterpolationYaw - referenceYaw),
-			COMPUTE_QUATERNION_Y(linearInterpolationRoll - referenceRoll, linearInterpolationPitch - referencePitch, linearInterpolationYaw - referenceYaw),
-			COMPUTE_QUATERNION_Z(linearInterpolationRoll - referenceRoll, linearInterpolationPitch - referencePitch, linearInterpolationYaw - referenceYaw),
-			COMPUTE_QUATERNION_W(linearInterpolationRoll - referenceRoll, linearInterpolationPitch - referencePitch, linearInterpolationYaw - referenceYaw)
-			);
-		}
-
-	referenceX = linearInterpolationX;
-	referenceY = linearInterpolationY;
-	referenceZ = linearInterpolationZ;
-	referenceRoll = linearInterpolationRoll;
-	referencePitch = linearInterpolationPitch;
-	referenceYaw = linearInterpolationYaw;
+	SetOrientation(interpolation, linearInterpolationQ.x(), linearInterpolationQ.y(), linearInterpolationQ.z(), linearInterpolationQ.w());
 
 	return interpolation;
 	}
@@ -476,17 +455,40 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 
 	if (decompositionSuccess)
 		{
-		Pose3D& groundTruth = displacementsList.at(inputId+1);
-		float differenceX = GetXPosition(groundTruth) - GetXPosition(*pose);
-		float differenceY = GetYPosition(groundTruth) - GetYPosition(*pose);
-		float differenceZ = GetZPosition(groundTruth) - GetZPosition(*pose);
+		/**** The output pose roll pitch and yaw seem to be opposite of the ground truth *****/
+		float absolutePoseX = GetXOrientation(*pose) + initialX;
+		float absolutePoseY = GetYOrientation(*pose) + initialY;
+		float absolutePoseZ = GetZOrientation(*pose) + initialZ;
+		Eigen::Quaternionf poseQuaternion(GetWOrientation(*pose), GetXOrientation(*pose), GetYOrientation(*pose), GetZOrientation(*pose));
+		float absolutePoseRoll = M_PI - poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0] + initialRoll;
+		float absolutePosePitch = M_PI - poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1] + initialPitch;
+		float absolutePoseYaw = M_PI - poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2] + initialYaw;
+
+		Pose3D& groundTruth = imagePosesList.at(inputId);
+		float differenceX = GetXPosition(groundTruth) - absolutePoseX;
+		float differenceY = GetYPosition(groundTruth) - absolutePoseY;
+		float differenceZ = GetZPosition(groundTruth) - absolutePoseZ;
+		float gx = GetXPosition(groundTruth);
+		float diffx = gx - absolutePoseX;
 		float squaredDistance = differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ;
+		measuresMap["PositionDistance"] = std::sqrt(squaredDistance);
 
-		measuresMap["GroundPositionDistance"] = std::sqrt(squaredDistance);
+		Eigen::Quaternionf absolutePoseQuaternion =
+			Eigen::AngleAxisf(absolutePoseRoll, Eigen::Vector3f::UnitX()) * 
+			Eigen::AngleAxisf(absolutePosePitch, Eigen::Vector3f::UnitY()) * 
+			Eigen::AngleAxisf(absolutePoseYaw, Eigen::Vector3f::UnitZ());
+		float scalarProduct =
+			GetXOrientation(groundTruth) *	absolutePoseQuaternion.x() +
+			GetYOrientation(groundTruth) *	absolutePoseQuaternion.y() +
+			GetZOrientation(groundTruth) *	absolutePoseQuaternion.z() +
+			GetWOrientation(groundTruth) *	absolutePoseQuaternion.w();
+		measuresMap["AngleDistace1"] = 1 - scalarProduct*scalarProduct;				
 
-		float scalarProduct = GetXOrientation(groundTruth) * GetXOrientation(*pose) + GetYOrientation(groundTruth) * GetYOrientation(*pose) +
-			GetZOrientation(groundTruth) * GetZOrientation(*pose) + GetWOrientation(groundTruth) * GetWOrientation(*pose);
-		measuresMap["GroundOrientationDistance"] = 1 - scalarProduct*scalarProduct;
+		Eigen::Quaternionf groundTruthQuaternion(GetWOrientation(groundTruth), GetXOrientation(groundTruth), GetYOrientation(groundTruth), GetZOrientation(groundTruth));
+		float differenceRoll = 1 - std::cos(groundTruthQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0] - absolutePoseRoll);
+		float differencePitch = 1 - std::cos(groundTruthQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1] - absolutePosePitch);
+		float differenceYaw = 1 - std::cos(groundTruthQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2] - absolutePoseYaw);
+		measuresMap["AngleDistace2"] = differenceRoll + differencePitch + differenceYaw;
 		}
 
 	return measuresMap;
