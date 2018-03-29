@@ -221,6 +221,7 @@ target_link_libraries(
 add_executable(
     ReconstructionFromMotionGuiTest
     DFPCs/Reconstruction3D/ReconstructionFromMotion.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
 )
 set_target_properties(ReconstructionFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
@@ -231,6 +232,7 @@ target_link_libraries(
 add_executable(
     ReconstructionFromStereoGuiTest
     DFPCs/Reconstruction3D/ReconstructionFromStereo.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
 )
 set_target_properties(ReconstructionFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
