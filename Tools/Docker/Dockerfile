@@ -1,8 +1,8 @@
 FROM ubuntu:16.04
 
-LABEL version="1.6.5"
+LABEL version="1.7"
 LABEL maintainer="xma@spaceapplications.com,romain.michalec@strath.ac.uk"
-LABEL description="Image providing the CDFF's dependencies compiled from source and installed in /CDFF/External/install"
+LABEL description="Image providing the CDFF's dependencies compiled from source and installed in /usr/local"
 
 # Install the basic tools that are not already available in the base image
 RUN apt-get update && apt-get install -y \
@@ -17,37 +17,34 @@ RUN apt-get update && apt-get install -y \
   unzip \
   checkinstall
 
-# The binaries that are going to be compiled must be found first on the PATH
-ENV PATH="/CDFF/External/install/bin:${PATH}"
-
 # Add the scripts that download, build, and install the CDFF's dependencies
 # (main script added here, component scripts added next)
-COPY installers/infuse_environnement.env CDFF/Tools/Docker/installers/
-COPY fetch_compile_install_dependencies.sh CDFF/Tools/Docker/
+COPY installers/infuse_environnement.env /tmp/CDFF/Tools/Docker/installers/
+COPY fetch_compile_install_dependencies.sh /tmp/CDFF/Tools/Docker/
 
 # Download, build, and install the CDFF's dependencies
 RUN apt-get update && apt-get install -y libbz2-dev python-dev
-COPY installers/boost.sh CDFF/Tools/Docker/installers/
-RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s boost
+COPY installers/boost.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s boost
 
-COPY installers/eigen.sh CDFF/Tools/Docker/installers/
-RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s eigen
+COPY installers/eigen.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s eigen
 
-COPY installers/flann.sh CDFF/Tools/Docker/installers/
-RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s flann
+COPY installers/flann.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s flann
 
-COPY installers/qhull.sh CDFF/Tools/Docker/installers/
-RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s qhull
+COPY installers/qhull.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s qhull
 
-COPY installers/yamlcpp.sh CDFF/Tools/Docker/installers/
-RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s yaml-cpp
+COPY installers/yamlcpp.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s yaml-cpp
 
 RUN apt-get update && apt-get install -y freeglut3-dev
-COPY installers/opencv.sh CDFF/Tools/Docker/installers/
-RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s opencv
+COPY installers/opencv.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s opencv
 
-COPY installers/vtk.sh CDFF/Tools/Docker/installers/
-RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s vtk
+COPY installers/vtk.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s vtk
 
-COPY installers/pcl.sh CDFF/Tools/Docker/installers/
-RUN /bin/bash CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -s pcl
+COPY installers/pcl.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s pcl
