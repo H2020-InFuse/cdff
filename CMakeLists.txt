@@ -31,16 +31,8 @@ include_directories(
     Common/Types/C Common/Converters
     Common/Types/Cpp
     External/install/include
-    External/install/include/boost
     External/install/include/eigen3
-    External/install/include/flann
-    External/install/include/libqhull
-    External/install/include/libqhullcpp
-    External/install/include/libqhull_r
-    External/install/include/opencv
     External/install/include/pcl-1.8
-    External/install/include/vtk-8.1
-    External/install/include/yaml-cpp
 )
 link_directories(
 	 External/install/lib
