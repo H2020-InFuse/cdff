@@ -81,27 +81,30 @@
   Implementation: OrbDetectorDescriptor
   Parameters:
   - Name: GeneralParameters
-    EdgeThreshold: 31
+    EdgeThreshold: 39
     FastThreshold: 20
     FirstLevel: 0
     MaxFeaturesNumber: 1024
-    LevelsNumber: 8
-    PatchSize: 31
+    LevelsNumber: 4
+    PatchSize: 51
     ScaleFactor: 1.20
-    ScoreType: HarrisScore
+    ScoreType: 0
     SizeOfBrightnessTestSet: 2
 - Name: featuresMatcher
   Type: FeaturesMatching2D
   Implementation: FlannMatcher
   Parameters:
   - Name: GeneralParameters
-    DistanceThreshold: 0.02
+    DistanceThreshold: 0.2
+    NumberOfChecks: 16
+    SortedSearch: false
+    Epsilon: 0
     MatcherMethod: 4
     AcceptanceRatio: 0.75
   - Name: LocalitySensitiveHashingParameters
-    TableNumber: 6
-    KeySize: 12
-    MultiProbeLevel: 1
+    TableNumber: 1
+    KeySize: 4
+    MultiProbeLevel: 2
 - Name: fundamentalMatrixComputer
   Type: FundamentalMatrixComputation
   Implementation: FundamentalMatrixRansac
@@ -134,18 +137,18 @@
     UseFullScaleTwoPassAlgorithm: false
     UseDisparityToDepthMap: false
   - Name: Prefilter
-    Maximum: 11
+    Maximum: 5
   - Name: Disparities
     Minimum: 0
     NumberOfIntervals: 128
     UseMaximumDifference: true
-    MaximumDifference: 1
-    SpeckleRange: 8
-    SpeckleWindow: 40
+    MaximumDifference: 10
+    SpeckleRange: 50
+    SpeckleWindow: 10
     SmoothnessParameter1: 600
-    SmoothnessParameter2: 2400
+    SmoothnessParameter2: 10000
   - Name: BlocksMatching
-    BlockSize: 9
+    BlockSize: 11
     UniquenessRatio: 1
   - Name: DisparityToDepthMap
     Element_0_0: 1
@@ -169,3 +172,7 @@
     LeftPrinciplePointX: 671.7716154809
     LeftPrinciplePointY: 391.33378485796
     Baseline: 0.012
+  - Name: ReconstructionSpace
+    LimitX: 10
+    LimitY: 10
+    LimitZ: 3

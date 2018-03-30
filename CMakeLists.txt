@@ -224,45 +224,32 @@ include_directories(
 ## Don't look for FLANN, QHull, yaml-cpp ---------------------------------------
 
 # There aren't any CMake find modules nor any package configuration files for
-# those libraries, so just add their headers manually
+# those libraries, so just add the main include directory and use the libraries
+# as e.g. #include <flann/stuff.hpp>
 #
 # TODO: there are .pc files though, that might be of use in conjunction with
 # CMake's pkg-config module
 
 include_directories(
-  "${_DEPENDENCIES_PREFIX}/include/flann"
-  "${_DEPENDENCIES_PREFIX}/include/libqhull"
-  "${_DEPENDENCIES_PREFIX}/include/libqhullcpp"
-  "${_DEPENDENCIES_PREFIX}/include/libqhull_r"
-  "${_DEPENDENCIES_PREFIX}/include/yaml-cpp"
+  "${_DEPENDENCIES_PREFIX}/include"
 )
 
 ## Look for VTK, PCL, OpenCV ---------------------------------------------------
 
-# TODO: the following commented commands succesfully locate VTK, PCL, OpenCV,
-# but the build still fails, why? In the meantime we add their headers manually
-# below with include_directories(), as before.
+# TODO: rework this section
 
-#find_package(VTK 8.1.0 REQUIRED NAMES VTK VTK-8.1 CONFIGS VTKConfig.cmake)
-#find_package_mode(VTK)
+find_package(VTK 8.1.0 REQUIRED NAMES VTK VTK-8.1 CONFIGS VTKConfig.cmake)
+find_package_mode(VTK)
 
-#find_package(PCL 1.8.1 REQUIRED NAMES PCL PCL-1.8 CONFIGS PCLConfig.cmake)
-#find_package_mode(PCL)
+find_package(PCL 1.8.1 REQUIRED NAMES PCL PCL-1.8 CONFIGS PCLConfig.cmake)
+find_package_mode(PCL)
 
-#find_package(OpenCV 3.4.0 REQUIRED)
-#find_package_mode(OpenCV)
+find_package(OpenCV 3.4.0 REQUIRED)
+find_package_mode(OpenCV)
 
 include_directories(
-  "${_DEPENDENCIES_PREFIX}/include/vtk-8.1"
   "${_DEPENDENCIES_PREFIX}/include/pcl-1.8"
-  "${_DEPENDENCIES_PREFIX}/include/opencv"
-  "${_DEPENDENCIES_PREFIX}/include/opencv2"
 )
-
-# TODO: use the adequate find_package() in "config" mode instead
-
-set(VTK_LIBRARIES
-  vtkRenderingCore-8.1 vtkCommonDataModel-8.1 vtkCommonMath-8.1 vtkCommonCore-8.1 ${VTK_LIBRARIES})
 
 ## Dependencies: compiled libraries --------------------------------------------
 

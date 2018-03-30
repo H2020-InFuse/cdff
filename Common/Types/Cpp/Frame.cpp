@@ -77,6 +77,20 @@ FrameSharedPtr NewSharedFrame()
 	return sharedFrame;
 	}
 
+FrameConstPtr Clone(const Frame& source)
+	{
+	FramePtr frame = new Frame();
+	Copy(source, *frame);
+	return frame;
+	}
+
+FrameSharedPtr SharedClone(const Frame& source)
+	{
+	FrameSharedPtr sharedFrame = std::make_shared<Frame>();
+	Copy(source, *sharedFrame);
+	return sharedFrame;
+	}
+
 void Initialize(Frame& frame)
 	{
 	SetFrameTime(frame, 0);

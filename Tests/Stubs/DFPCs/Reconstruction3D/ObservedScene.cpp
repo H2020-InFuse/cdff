@@ -61,8 +61,8 @@ ObservedScene::~ObservedScene()
 void ObservedScene::AddFrames(FrameConstPtr leftFrame, FrameConstPtr rightFrame)
 	{
 	FrameNode newNode;
-	newNode.leftFrame = leftFrame;
-	newNode.rightFrame = rightFrame;
+	newNode.leftFrame = Clone(*leftFrame);
+	newNode.rightFrame = Clone(*rightFrame);
 	newNode.transformInOrigin = IdentityTransform();
 	newNode.validTransform = (framesMap.size() == 0);	
 	framesMap.push_back(newNode);

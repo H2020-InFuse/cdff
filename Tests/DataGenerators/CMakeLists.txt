@@ -13,6 +13,7 @@ target_link_libraries(
 add_library(
     derived_generators
     DerivedGenerators/StereoCameraCalibrator.cpp
+    DerivedGenerators/SingleCameraCalibrator.cpp
 )
 target_link_libraries(
 	derived_generators
@@ -25,5 +26,14 @@ add_executable(
 )
 target_link_libraries(
 	calibrate_stereo_camera
+	derived_generators
+)
+
+add_executable(
+	calibrate_single_camera
+	DerivedGenerators/CalibrateSingleCamera.cpp
+)
+target_link_libraries(
+	calibrate_single_camera
 	derived_generators
 )

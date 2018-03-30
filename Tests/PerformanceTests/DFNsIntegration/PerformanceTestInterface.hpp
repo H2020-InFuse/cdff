@@ -41,10 +41,8 @@
  */
 #include <stdlib.h>
 #include <string>
-#include <vector>
 #include <DFNCommonInterface.hpp>
-#include <map>
-#include <yaml-cpp/yaml.h>
+#include <PerformanceTests/PerformanceTestBase.hpp>
 
 
 /* --------------------------------------------------------------------------
@@ -53,7 +51,7 @@
  *
  * --------------------------------------------------------------------------
  */
-class PerformanceTestInterface
+class PerformanceTestInterface : public PerformanceTestBase
 	{
 	/* --------------------------------------------------------------------
 	 * Public
@@ -77,24 +75,16 @@ class PerformanceTestInterface
 		~PerformanceTestInterface();
 
 		/*
-		* @brief The function will execute the DFN for each input provided by SetNextInputs(), and for each combination of parameters in the Configuration File defined in the constructor.
-		*
-		*/
-		void Run();
-
-		/*
 		* @brief The function defines the main DFNs the performance test is executed upon.
 		*
 		*/
-		void AddDfn(dfn_ci::DFNCommonInterface* dfn);
+		void AddDfn(dfn_ci::DFNCommonInterface* dfn);		
 
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
 	 */
-	protected:	
-		typedef std::map<std::string, float> MeasuresMap;
-
+	protected:
 		std::vector<dfn_ci::DFNCommonInterface*> dfnsList;
 
 	/* --------------------------------------------------------------------
@@ -102,36 +92,8 @@ class PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	private:	
-		struct Parameter
-			{
-			unsigned dfnIndex;
-			unsigned groupIndex;
-			std::string name;
-			unsigned optionsNumber;
-			unsigned currentOption;
-			std::vector<std::string> optionsList;
-			};
-
-		unsigned dfnsNumber;
-		static const std::string temporaryConfigurationFileNameBase;
-		static const std::string temporaryConfigurationFileNameExtension;
-		std::vector<std::string> baseConfigurationFilePathsList;
-		std::string performanceMeasuresFilePath;
-		std::vector<std::string> temporaryConfigurationFilePathsList;
-
-		std::vector<YAML::Node> configurationsList;
-		std::vector<Parameter> changingParametersList;
-		bool firstRun;
-		bool firstMeasureTimeForCurrentInput;
-
-		int GetTotalVirtualMemoryUsedKB();
-		void SaveNewInputsLine();
-		void SaveMeasures(MeasuresMap measuresMap);
-		bool PrepareConfigurationFile();
-		void SaveToYaml();
-		void SaveRunTime(float time, unsigned numberOfTests);
-		void ReadConfiguration();
-		std::vector<std::string> SplitString(std::string inputString);
+		void Configure();
+		void Process();
 
 		/*
 		* @brief This method has to set the inputs of the DFN, it returns true if and only if an input is actually set.

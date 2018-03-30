@@ -40,10 +40,8 @@
  */
 #include <stdlib.h>
 #include <string>
-#include <vector>
 #include <DFNCommonInterface.hpp>
-#include <map>
-#include <yaml-cpp/yaml.h>
+#include <PerformanceTests/PerformanceTestBase.hpp>
 
 
 /* --------------------------------------------------------------------------
@@ -52,7 +50,7 @@
  *
  * --------------------------------------------------------------------------
  */
-class PerformanceTestInterface
+class PerformanceTestInterface : public PerformanceTestBase
 	{
 	/* --------------------------------------------------------------------
 	 * Public
@@ -63,7 +61,7 @@ class PerformanceTestInterface
 		* @brief The constructor requires the folder were the configuration files and outputs will be stored, it also requires the configuration file name and the output file name
 		*
 		* @param folderPath, the path containing the configuration file, the output file and a temporary DFN configuration file will be written here as well;
-		* @param baseConfigurationFileName, the name of the configuration file that coontains the range of input parameters for the tests;
+		* @param baseConfigurationFileName, the name of the configuration file that contains the range of input parameters for the tests;
 		* @param performanceMeasuresFileName, the name of the output file;
 		*
 		*/
@@ -76,12 +74,6 @@ class PerformanceTestInterface
 		~PerformanceTestInterface();
 
 		/*
-		* @brief The function will execute the DFN for each input provided by SetNextInputs(), and for each combination of parameters in the Configuration File defined in the constructor.
-		*
-		*/
-		void Run();
-
-		/*
 		* @brief The function defines the main DFN the performance test is executed upon.
 		*
 		*/
@@ -92,8 +84,6 @@ class PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	protected:	
-		typedef std::map<std::string, float> MeasuresMap;
-
 		dfn_ci::DFNCommonInterface* dfn;
 
 	/* --------------------------------------------------------------------
@@ -101,33 +91,8 @@ class PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	private:	
-		struct Parameter
-			{
-			unsigned groupIndex;
-			std::string name;
-			unsigned optionsNumber;
-			unsigned currentOption;
-			std::vector<std::string> optionsList;
-			};
-
-		static const std::string temporaryConfigurationFileName;
-		std::string baseConfigurationFilePath;
-		std::string performanceMeasuresFilePath;
-		std::string temporaryConfigurationFilePath;
-
-		YAML::Node configuration;
-		std::vector<Parameter> changingParametersList;
-		bool firstRun;
-		bool firstMeasureTimeForCurrentInput;
-
-		int GetTotalVirtualMemoryUsedKB();
-		void SaveNewInputsLine();
-		void SaveMeasures(MeasuresMap measuresMap);
-		bool PrepareConfigurationFile();
-		void SaveToYaml();
-		void SaveRunTime(float time, unsigned numberOfTests);
-		void ReadConfiguration();
-		std::vector<std::string> SplitString(std::string inputString);
+		void Configure();
+		void Process();
 
 		/*
 		* @brief This method has to set the inputs of the DFN, it returns true if and only if an input is actually set.
