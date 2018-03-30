@@ -38,7 +38,6 @@ include_directories(
     External/install/include/libqhullcpp
     External/install/include/libqhull_r
     External/install/include/opencv
-    External/install/include/opencv2
     External/install/include/pcl-1.8
     External/install/include/vtk-8.1
     External/install/include/yaml-cpp
