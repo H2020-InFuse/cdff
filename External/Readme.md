@@ -60,7 +60,7 @@ However, if installing manually somewhere else, you may want to consider using C
 Download, build, and install the CDFF's direct dependencies in `External/install/{bin,include,lib,share}` by default:
 
 ```
-/path/to/CDFF/External$ fetch_compile_install_dependencies.sh
+/path/to/CDFF/External$ ./fetch_compile_install_dependencies.sh
 ```
 
 As explained in "Step 1" above, nothing is installed in your system directories not even in the local hierarchy `/usr/local` (where you may already have put the same libraries in different versions for your other work). If you have CheckInstall though, your system's package database is updated to include the CheckInstall-created packages.
@@ -69,7 +69,7 @@ Use option `-s` to only install a specific dependency (e.g. OpenCV but not the P
 
 ## Or use a Docker image
 
-The CDFF's direct dependencies are ready to use in the Docker image `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` and in all the images built on top of it, in particular `h2020infuse/cdff-core:latest`. They have been compiled from source and installed in the image's`/CDFF/External/install/{bin,include,lib,share}`. In the near future they will be installed in the image's `/usr/local` instead (which is otherwise empty).
+The CDFF's direct dependencies are ready to use in the Docker image `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` and in all the images built on top of it, in particular `h2020infuse/cdff-core:latest`. They have been compiled from source and installed in the image's `/usr/local` (which is otherwise empty) (**warning:** images currently being rebuild, don't use today).
 
 The Docker images *should* also provide the CDFF's recurse dependencies but I am afraid we missed some of them. In particular, no widget toolkit is available in these images (e.g. `apt:libgtk-3-dev` or `apt:libgtk2.0-dev`) which means that OpenCV was compiled without any GUI features (e.g. without support for `cv::imshow()`). Until we fix that, whenever you span a container from a Docker image, you can workaround that missing recurse dependency by installing it yourself with `apt-get` and recompile OpenCV (sorry for the bother).
 
@@ -86,8 +86,9 @@ to search for what CMake calls "packages" and which are in our case libraries, t
 The supported use cases are:
 
 * **building the CDFF inside a Docker container**:
-  - libraries in `/CDFF/External/install` (in a near future `/usr/local`)
-  - build the CDFF with `cmake -D USE_BUNDLED_DEPENDENCIES=ON /path/to/top-level/directory` (in a near future `cmake /path/to/top-level/directory`)
+  - libraries in `/usr/local`
+  - build the CDFF with `cmake /path/to/top-level/directory`
+
 * **building the CDFF without Docker**:
   - libraries in `External/install`
   - build the CDFF with `cmake -D USE_BUNDLED_DEPENDENCIES=ON /path/to/top-level/directory`

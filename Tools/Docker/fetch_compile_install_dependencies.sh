@@ -158,7 +158,6 @@ function clean_function {
 }
 
 function build_all_function {
- InstallersToRUN+=("cmake")
  InstallersToRUN+=("boost")
  InstallersToRUN+=("eigen")
  InstallersToRUN+=("flann")
