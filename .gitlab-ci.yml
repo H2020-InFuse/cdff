@@ -1,4 +1,4 @@
-image: nexus.spaceapplications.com/repository/infuse/cdff-ci:1.6.5.2
+image: nexus.spaceapplications.com/repository/infuse/cdff-ci:1.7
 
 stages:
   - platform
@@ -12,7 +12,7 @@ hardware:
   script:
       - cat /proc/cpuinfo
       - lscpu
-      
+
 autogeneration:
   stage : autogeneration
   script:
@@ -26,7 +26,6 @@ build:
   stage: build
   script:
       - pwd
-      - cp -rf /CDFF/External/install ./External/install
       - mkdir build
       - cd build
       - cmake -DCMAKE_INSTALL_PREFIX=./ ..
@@ -40,10 +39,10 @@ cmake test:
   script:
       - cd build
       - make test
-      
+
 deploy_staging:
   stage: deploy
   script:
-  - echo "Deploy to staging server"
+      - echo "Deploy to staging server"
   only:
-  - master
+      - master
