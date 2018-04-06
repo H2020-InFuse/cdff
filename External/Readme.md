@@ -58,6 +58,8 @@ Also note that a working basic **development environment** is of course required
 
 ### Additional dependencies
 
+Downloading the compiled ASN.1 data types from Space Applications' GitLab server requires cURL (`apt: curl`). Alternatively, compiling the ASN.1 data types requires the [ASN1SCC](https://github.com/ttsiodras/asn1scc) compiler and its dependencies, among which Mono.
+
 The dependency installation script (see further) additionally requires Bash, GNU Core Utilities, Git, GNU Wget, cURL, GNU tar, CMake at the moment (`apt: bash coreutils git wget curl tar cmake`).
 
 ## Option 1: get the CDFF's dependencies packaged in a Docker image
