@@ -78,13 +78,13 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
 
 1. Make sure you have the most up-to-date Docker image:
 
-    ```
+    ```shell
     $ sudo docker pull h2020infuse/cdff-core:latest
     ```
 
 2. Span a Docker container from that image, mounting your code repository inside it at the same time:
 
-    ```
+    ```shell
     $ sudo docker run
 
       # Optional: your choice of identifiers
