@@ -51,6 +51,8 @@
 #include <Visualizers/OpencvVisualizer.hpp>
 #include <Visualizers/PclVisualizer.hpp>
 
+#include <boost/make_shared.hpp>
+
 using namespace dfpc_ci;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;

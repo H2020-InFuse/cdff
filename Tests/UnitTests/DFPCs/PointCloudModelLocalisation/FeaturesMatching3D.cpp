@@ -55,6 +55,9 @@
 #include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.cpp>
 #include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 
+#include <boost/make_shared.hpp>
+
+
 using namespace dfpc_ci;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
