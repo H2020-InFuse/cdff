@@ -18,19 +18,6 @@ $ git clone git@gitlab.spaceapplications.com:InFuse/CDFF.git [/path/to/where/I/w
 
 There are two ways you can build the CDFF:
 
-* You can compile it using CMake and a C++ compiler **in a directory on your computer**.
-
-    In that case, you will have installed the **dependencies** of the CDFF on your computer, and the dependencies of these dependencies, and the necessary build tools. To do so, you can use a combination of your distribution's software package manager and/or compiling from source. The dependencies you compile from source do not need to be installed in your system's local hierarchy (`/usr/local/`): you may want to put them there, or you may prefer to put them in a dedicated directory next to the CDFF's source (`External/install/`), which is the **recommended** location for now as it makes uninstalling them easy.
-
-    The documentation about the [dependencies of the CDFF](/External/Readme.md) describes this topic in detail.
-
-    Once you have installed all the dependencies and build tools, you can build the CDFF:
-
-    ```
-    /path/to/CDFF/build$ cmake [-D USE_BUNDLED_DEPENDENCIES=ON] [-D CMAKE_INSTALL_PREFIX=/path/to/CDFF/install/] /path/to/CDFF/
-    /path/to/CDFF/build$ make
-    ```
-
 * You can compile it using CMake and a C++ compiler **in a Docker container**.
 
     We provide a Docker image based on Ubuntu 16.04 where build tools and the CDFF's dependencies are already installed (**warning:** except those we forgot: please let us know if you spot one). You can span a container from that image, mount the CDFF's code inside it, and compile. That image, and the libraries it contains, make up a common **reference environment** for the CDFF.
@@ -41,6 +28,19 @@ There are two ways you can build the CDFF:
 
     ```
     /path/to/CDFF/build$ cmake [-D CMAKE_INSTALL_PREFIX=/path/to/CDFF/install/] /path/to/CDFF/
+    /path/to/CDFF/build$ make
+    ```
+
+* You can compile it using CMake and a C++ compiler **in a directory on your computer**.
+
+    In that case, you will have installed the **dependencies** of the CDFF yourself on your computer, and the dependencies of these dependencies, and the necessary build tools. To do so, you can use a combination of your distribution's software package manager and/or compiling from source. The dependencies you compile from source do not need to be installed in your system's local hierarchy (`/usr/local/`): you may want to put them there, or you may prefer to put them in a dedicated directory next to the CDFF's source (`External/install/`), which is the **recommended** location for now as it makes uninstalling them easy.
+
+    The documentation about the [dependencies of the CDFF](/External/Readme.md) describes this topic in detail.
+
+    Once you have installed all the dependencies and build tools, you can build the CDFF:
+
+    ```
+    /path/to/CDFF/build$ cmake [-D USE_BUNDLED_DEPENDENCIES=ON] [-D CMAKE_INSTALL_PREFIX=/path/to/CDFF/install/] /path/to/CDFF/
     /path/to/CDFF/build$ make
     ```
 

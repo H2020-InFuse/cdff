@@ -1,5 +1,7 @@
 ## Dependencies (third-party libraries)
 
+The following dependencies are already installed in the Docker images `h2020infuse/cdff-core:latest` and `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>`.
+
 ### Libraries
 
 The CDFF currently requires the following libraries (**direct dependencies**):
@@ -84,7 +86,9 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
     $ sudo docker pull h2020infuse/cdff-core:latest
     ```
 
-2. Span a Docker container from that image, mounting your code repository inside it at the same time:
+2. Create a Docker container from that image, mounting your code repository inside it at the same time.
+
+    It is worth defining an alias for this long command in one of your shell startup files, for instance `~/.bashrc` if you use `bash`. Have a look at the file [`Tools/Docker/docker_aliases.template`](/Tools/Docker/docker_aliases.template) for a suggested solution that you can copy-paste into one of your shell startup files.
 
     ```shell
     $ sudo docker run
@@ -114,6 +118,12 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
 
       # And finally: image to use and shell to start
       h2020infuse/cdff-core:latest bash
+    ```
+
+    or with an adequately-defined alias:
+
+    ```shell
+    $ docker cdff [--name=container-name] [--hostname=container-hostname]
     ```
 
 You can then build and test the CDFF. See the [main readme file](/Readme.md#download-and-compile) at the root of the repository for information on how to do that.
