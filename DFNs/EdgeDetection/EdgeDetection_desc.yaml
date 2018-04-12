@@ -1,0 +1,15 @@
+name: EdgeDetection
+input_ports:
+    - name: image
+      type: Frame
+      doc: a 2D undistorted camera image
+output_ports:
+    - name: edgeMap
+      type: Frame
+      doc: the edge map output
+implementations:
+    - CannyDetector
+   
+     
+
+
