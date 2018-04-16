@@ -1,0 +1,18 @@
+name: SobelDerivative
+input_ports:
+    - name: image
+      type: Frame
+      doc: a 2D  camera image
+output_ports:
+    - name: sobelGradx
+      type: Frame
+      doc: the image gradient in x-direction output
+    - name: sobelGrady
+      type: Frame
+      doc: the image gradient in y-direction output
+implementations:
+    - SobelScharr
+   
+     
+
+
