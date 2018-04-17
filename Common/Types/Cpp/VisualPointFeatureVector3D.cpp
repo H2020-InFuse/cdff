@@ -90,11 +90,11 @@ void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, floa
 	int currentIndex = featuresVector.list.nCount;
 	if (currentIndex == 0)
 		{
-		featuresVector.type = ALL_POSITIONS_VECTOR;
+		featuresVector.list_type = ALL_POSITIONS_VECTOR;
 		}
-	else if (featuresVector.type != ALL_POSITIONS_VECTOR)
+	else if (featuresVector.list_type != ALL_POSITIONS_VECTOR)
 		{
-		featuresVector.type = HYBRID_VECTOR;
+		featuresVector.list_type = HYBRID_VECTOR;
 		}
 
 	featuresVector.list.arr[currentIndex].point.kind = VisualPoint::position_PRESENT;
@@ -111,11 +111,11 @@ void AddPoint(VisualPointFeatureVector3D& featuresVector, BaseTypesWrapper::T_UI
 	int currentIndex = featuresVector.list.nCount;
 	if (currentIndex == 0)
 		{
-		featuresVector.type = ALL_REFERENCES_VECTOR;
+		featuresVector.list_type = ALL_REFERENCES_VECTOR;
 		}
-	else if (featuresVector.type != ALL_REFERENCES_VECTOR)
+	else if (featuresVector.list_type != ALL_REFERENCES_VECTOR)
 		{
-		featuresVector.type = HYBRID_VECTOR;
+		featuresVector.list_type = HYBRID_VECTOR;
 		}
 
 	featuresVector.list.arr[currentIndex].point.kind = VisualPoint::reference_PRESENT;
@@ -132,7 +132,7 @@ void ClearPoints(VisualPointFeatureVector3D& featuresVector)
 
 VisualPointFeatureVector3DType GetVectorType(const VisualPointFeatureVector3D& featuresVector)
 	{
-	return featuresVector.type;
+	return featuresVector.list_type;
 	}
 
 int GetNumberOfPoints(const VisualPointFeatureVector3D& featuresVector)

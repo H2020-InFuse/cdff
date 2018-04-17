@@ -38,7 +38,7 @@ descriptor2DNameLength T-UInt32 ::= 128
 VisualPointFeature2D ::= SEQUENCE
 	{
 	point		Point2D,
-	descriptor	SEQUENCE (SIZE(0..descriptor2DNameLength)) OF REAL
+	descriptor	SEQUENCE (SIZE(0..descriptor2DNameLength)) OF T-Float
 	}
 
 VisualPointFeatureVector2D ::= SEQUENCE (SIZE(0..features2DElementsMax)) OF VisualPointFeature2D
