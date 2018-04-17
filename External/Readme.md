@@ -68,11 +68,11 @@ The dependency installation script (see further) additionally requires Bash, GNU
 
 ### Available images
 
-The CDFF's direct dependencies are ready to use in the Docker images `h2020infuse/cdff-core:latest` and `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>`. They have been compiled from source and installed in the images' `/usr/local` (which is otherwise empty).
+The CDFF's direct dependencies are ready to use in the Docker images `h2020infuse/cdff:latest` and `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>`. They have been compiled from source and installed in the images' `/usr/local` (which is otherwise empty).
 
-* `h2020infuse/cdff-core:latest` is meant for helping you build and test the CDFF on your computer. It includes a version of OpenCV compiled with GTK+ 2 support so that the GUI features of the `cv::highgui` module work.
+* `h2020infuse/cdff:latest` is meant for helping you build and test the CDFF's core and support components on your computer. It includes a version of OpenCV compiled with GTK+ 2 support so that the GUI features of the `cv::highgui` module work. It can also be used for using the CDFF's dev component (as an alternative to installing it on your computer).
 
-* `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` is meant for the continuous integration pipeline on the GitLab server. GUI features are not available. In that sense, it is an environment that is closer to our target systems than `h2020infuse/cdff-core:latest` and our desktop computers are.
+* `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` is meant for the continuous integration pipeline on the GitLab server. GUI features are not available. In that sense, it is an environment that is closer to our target systems than `h2020infuse/cdff:latest` and our desktop computers are.
 
 The recurse dependencies have been installed from Ubuntu 16.04's software package repositories using the system's package management tools (both images are build on Ubuntu 16.04), prior to compiling the direct dependencies of course. Please let us know if you spot a dependency we forgot. All the above-mentioned build tools are also available in the images.
 
@@ -83,7 +83,7 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
 1. Make sure you have the most up-to-date Docker image:
 
     ```shell
-    $ sudo docker pull h2020infuse/cdff-core:latest
+    $ sudo docker pull h2020infuse/cdff:latest
     ```
 
 2. Create a Docker container from that image, mounting your code repository inside it at the same time.
@@ -110,14 +110,17 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
       # Recommended: delete your container when you exit it
       --init --rm \
 
-      # Mandatory: mount the CDFF's code repository inside your container
-      --volume=/absolute/path/to/my/git/repository:/where/i/want/it/in/the/container \
+      # Mandatory: mount your local CDFF repository inside your container
+      --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
+
+      # Optional: also mount your local CDFF-dev repository if you want to use it
+      --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
 
       # Mandatory: interactively use a terminal in your container
       --interactive --tty \
 
-      # And finally: image to use and shell to start
-      h2020infuse/cdff-core:latest bash
+      # And finally: image to use and shell to start (default bash)
+      h2020infuse/cdff:latest [bash]
     ```
 
     or with an adequately-defined alias:

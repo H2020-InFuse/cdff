@@ -3,8 +3,8 @@
 # The following shell function, that you can copy-paste into one of your shell
 # startup files:
 #
-# * Defines "docker cdff" as shorthand for a long CDFF-specific "docker run"
-#   command
+# * Defines "docker cdff" and "docker cdff-dev" as shorthands for long
+#   CDFF-specific "docker run" commands
 # * Replaces the "alias docker='sudo /usr/bin/docker'" line that is commonly
 #   put in ~/.bashrc or ~/.bash_aliases
 #
@@ -19,9 +19,11 @@
 # ~/.profile, which is read by login shells, and add "export docker" afterwards
 # so that non-login shells inherit that function as part of their environment.
 #
-# Usage: docker cdff [--name=container-name] [--hostname=container-hostname] \
-#                    [--other-docker-run-options]
-#        docker subcommand [...]
+# Usage:
+#
+# docker cdff|cdff-dev [--name=container-name] [--hostname=container-hostname] \
+#                      [--other-docker-run-options]
+# docker subcommand [...]
 
 docker() {
   case ${1} in
@@ -35,10 +37,25 @@ docker() {
         --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
         --user=my-UID:my-GID \
         --init --rm \
-        --volume=/absolute/path/to/my/git/repository:/where/i/want/it/in/the/container \
+        --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
         --interactive --tty \
         "${@}" \
-        h2020infuse/cdff-core:latest bash ;;
+        h2020infuse/cdff:latest bash ;;
+    cdff-dev)
+      shift
+      sudo /usr/bin/docker run \
+        --name=cdff-dev --hostname=cdff-dev \
+        --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
+        --volume=/dev/log:/dev/log \
+        --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
+        --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
+        --user=my-UID:my-GID \
+        --init --rm \
+        --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
+        --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
+        --interactive --tty \
+        "${@}" \
+        h2020infuse/cdff:latest bash ;;
     *)
       sudo /usr/bin/docker "${@}" ;;
   esac
@@ -63,8 +80,15 @@ docker() {
 # Recommended: delete your container when you exit it
 # --init --rm
 #
-# Recommended: mount the CDFF's code repository inside your container
-# --volume=/absolute/path/to/my/git/repository:/where/i/want/it/in/the/container
+# Recommended: mount your local code repositories inside your container
+# --volume=/absolute/path/to/code/repository:/where/i/want/it/in/the/container
+#
+#   Mount either CDFF-core+support only, for instance:
+# --volume=/home/me/InFuse/CDFF:/opt/cdff
+#
+#   Or mount both CDFF-core+support and CDFF-dev, for instance:
+# --volume=/home/me/InFuse/CDFF:/opt/cdff
+# --volume=/home/me/InFuse/CDFF_dev:/opt/cdff-dev
 #
 # Mandatory: interactively use a terminal in your container
 # --interactive --tty
@@ -72,5 +96,5 @@ docker() {
 # Additional command-line options to pass to "docker run", if any
 # "${@}"
 #
-# Image to use and shell to start
-# h2020infuse/cdff-core:latest bash
+# Image to use and shell to start (default bash)
+# h2020infuse/cdff:latest [bash]
