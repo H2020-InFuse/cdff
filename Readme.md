@@ -74,7 +74,7 @@ If this directory isn't present, rather than compiling the ASN.1 data types loca
 You may still compile the data types yourself if you wish, and you should do so if:
 
 * The download fails (**warning:** currently happens if running CMake in a new branch *and* the types haven't been downloaded before; fixing in progress; a workaround is to run CMake once in the `master` branch before, or compile the types yourself).
-* You hack a data type or you add a new data type in `Common/Types/ASN.1/`.
+* You modify or create a new data type in `Common/Types/ASN.1/`.
 
 See the [ASNtoC documentation](/Tools/ASNtoC/Readme.md) for more information.
 
