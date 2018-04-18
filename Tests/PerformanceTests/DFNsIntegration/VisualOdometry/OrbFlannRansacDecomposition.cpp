@@ -102,7 +102,8 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		EssentialMatrixDecomposition* decomposition;
 
 		Aggregator* groundPositionDistanceAggregator;
-		Aggregator* groundOrientationDistanceAggregator;
+		Aggregator* groundOrientationDistanceAggregator1;
+		Aggregator* groundOrientationDistanceAggregator2;
 		std::vector<std::string> imageFileNamesList;
 		std::vector<Pose3D> posesList;
 		std::vector<double> imageTimesList;
@@ -143,9 +144,11 @@ OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath,
 	SetupMocksAndStubs();
 
 	groundPositionDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("GroundPositionDistance", groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
-	groundOrientationDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("GroundOrientationDistance", groundOrientationDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	AddAggregator("PositionDistance", groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	groundOrientationDistanceAggregator1 = new Aggregator( Aggregator::AVERAGE );
+	AddAggregator("AngleDistace1", groundOrientationDistanceAggregator1, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	groundOrientationDistanceAggregator2 = new Aggregator( Aggregator::AVERAGE );
+	AddAggregator("AngleDistace2", groundOrientationDistanceAggregator2, FIXED_PARAMETERS_VARIABLE_INPUTS);
 
 	leftFrame = NULL;
 	rightFrame = NULL;
@@ -455,21 +458,22 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 
 	if (decompositionSuccess)
 		{
-		/**** The output pose roll pitch and yaw seem to be opposite of the ground truth *****/
-		float absolutePoseX = GetXOrientation(*pose) + initialX;
-		float absolutePoseY = GetYOrientation(*pose) + initialY;
-		float absolutePoseZ = GetZOrientation(*pose) + initialZ;
-		Eigen::Quaternionf poseQuaternion(GetWOrientation(*pose), GetXOrientation(*pose), GetYOrientation(*pose), GetZOrientation(*pose));
-		float absolutePoseRoll = M_PI - poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0] + initialRoll;
-		float absolutePosePitch = M_PI - poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1] + initialPitch;
-		float absolutePoseYaw = M_PI - poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2] + initialYaw;
+		Pose3D& leftPose = imagePosesList.at(inputId);
 
-		Pose3D& groundTruth = imagePosesList.at(inputId);
-		float differenceX = GetXPosition(groundTruth) - absolutePoseX;
-		float differenceY = GetYPosition(groundTruth) - absolutePoseY;
-		float differenceZ = GetZPosition(groundTruth) - absolutePoseZ;
-		float gx = GetXPosition(groundTruth);
-		float diffx = gx - absolutePoseX;
+		/**** The output pose roll pitch and yaw seem to be opposite of the ground truth *****/
+		float absolutePoseX = GetXPosition(*pose) + GetXPosition(leftPose);
+		float absolutePoseY = GetYPosition(*pose) + GetYPosition(leftPose);
+		float absolutePoseZ = GetZPosition(*pose) + GetZPosition(leftPose);
+		Eigen::Quaternionf poseQuaternion(GetWOrientation(*pose), GetXOrientation(*pose), GetYOrientation(*pose), GetZOrientation(*pose));
+		Eigen::Quaternionf leftPoseQuaternion(GetWOrientation(leftPose), GetXOrientation(leftPose), GetYOrientation(leftPose), GetZOrientation(leftPose));
+		float absolutePoseRoll = poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0] + leftPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0];
+		float absolutePosePitch = poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1] + leftPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0];
+		float absolutePoseYaw = poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2] + leftPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0];
+
+		Pose3D& rightPose = imagePosesList.at(inputId+1);
+		float differenceX = GetXPosition(rightPose) - absolutePoseX;
+		float differenceY = GetYPosition(rightPose) - absolutePoseY;
+		float differenceZ = GetZPosition(rightPose) - absolutePoseZ;
 		float squaredDistance = differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ;
 		measuresMap["PositionDistance"] = std::sqrt(squaredDistance);
 
@@ -478,16 +482,16 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 			Eigen::AngleAxisf(absolutePosePitch, Eigen::Vector3f::UnitY()) * 
 			Eigen::AngleAxisf(absolutePoseYaw, Eigen::Vector3f::UnitZ());
 		float scalarProduct =
-			GetXOrientation(groundTruth) *	absolutePoseQuaternion.x() +
-			GetYOrientation(groundTruth) *	absolutePoseQuaternion.y() +
-			GetZOrientation(groundTruth) *	absolutePoseQuaternion.z() +
-			GetWOrientation(groundTruth) *	absolutePoseQuaternion.w();
+			GetXOrientation(rightPose) *	absolutePoseQuaternion.x() +
+			GetYOrientation(rightPose) *	absolutePoseQuaternion.y() +
+			GetZOrientation(rightPose) *	absolutePoseQuaternion.z() +
+			GetWOrientation(rightPose) *	absolutePoseQuaternion.w();
 		measuresMap["AngleDistace1"] = 1 - scalarProduct*scalarProduct;				
 
-		Eigen::Quaternionf groundTruthQuaternion(GetWOrientation(groundTruth), GetXOrientation(groundTruth), GetYOrientation(groundTruth), GetZOrientation(groundTruth));
-		float differenceRoll = 1 - std::cos(groundTruthQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0] - absolutePoseRoll);
-		float differencePitch = 1 - std::cos(groundTruthQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1] - absolutePosePitch);
-		float differenceYaw = 1 - std::cos(groundTruthQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2] - absolutePoseYaw);
+		Eigen::Quaternionf rightPoseQuaternion(GetWOrientation(rightPose), GetXOrientation(rightPose), GetYOrientation(rightPose), GetZOrientation(rightPose));
+		float differenceRoll = 1 - std::cos(rightPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0] - absolutePoseRoll);
+		float differencePitch = 1 - std::cos(rightPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1] - absolutePosePitch);
+		float differenceYaw = 1 - std::cos(rightPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2] - absolutePoseYaw);
 		measuresMap["AngleDistace2"] = differenceRoll + differencePitch + differenceYaw;
 		}
 

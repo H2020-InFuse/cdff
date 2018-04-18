@@ -240,3 +240,14 @@ target_link_libraries(
 	reconstruction_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp reconstruction_3d_stub_observed_scene dfpc_configurator ${VTK_LIBRARIES}
 )
 
+add_executable(
+    RegistrationFromStereoGuiTest
+    DFPCs/Reconstruction3D/RegistrationFromStereo.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
+)
+set_target_properties(RegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+	RegistrationFromStereoGuiTest
+	registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp reconstruction_3d_stub_observed_scene dfpc_configurator ${VTK_LIBRARIES}
+)
+
