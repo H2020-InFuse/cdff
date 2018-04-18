@@ -31,7 +31,7 @@ docker() {
   case ${1} in
     cdff)
       shift
-      sudo /usr/bin/docker run \
+      sudo -H /usr/bin/docker run \
         --name=cdff --hostname=cdff \
         --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
         --volume=/dev/log:/dev/log \
@@ -44,11 +44,13 @@ docker() {
         "${@}" \
         h2020infuse/cdff:latest bash ;;
     cdff-dev)
+      shift
       docker cdff \
         --name=cdff-dev --hostname=cdff-dev \
-        --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container ;;
+        --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
+        "${@}" ;;
     *)
-      sudo /usr/bin/docker "${@}" ;;
+      sudo -H /usr/bin/docker "${@}" ;;
   esac
 }
 
@@ -85,3 +87,11 @@ docker() {
 #
 # Image to use and shell to start (default bash)
 # h2020infuse/cdff:latest [bash]
+#
+# The -H option after sudo sets HOME to the home directory of the target user
+# (root) instead of the invoking user (you). Consequently, any configuration is
+# read or written by /usr/bin/docker in ~root/.docker/ instead of ~you/.docker/.
+# This only matters if you have non-default configuration (for instance docker
+# login credentials) and would like to avoid having a hidden directory owned by
+# root:root in your home directory (if you don't mind you can leave the -H
+# option out). See also docker-config-json(5).

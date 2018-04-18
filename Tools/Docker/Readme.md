@@ -31,6 +31,6 @@ This directory contains the `Dockerfiles` and the necessary build context requir
     Password: nfAGk9lQjG
     ```
 
-    The command stores the encoded credentials in `~/.docker/config.json` for future logins, so it's a one-time-only operation (that can be undone by `docker logout`).
+    The command stores the encoded credentials in `$HOME/.docker/config.json` for future logins, so it's a one-time-only operation (that can be undone by `docker logout`). `HOME` is the home directory of `root` if you run the Docker client through `sudo -H|--set-home`, or it is the home directory of the current user if you don't use the `-H` option. Either way, the `.docker/` directory and the `config.json` file are created with `root:root` ownership. See also `docker-config-json(5)`.
 
 All the files in this directory and recursive subdirectories are sent to the Docker daemon as the build context for inclusion into the resulting image according to the `COPY` instructions of the `Dockerfiles`.

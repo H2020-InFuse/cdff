@@ -83,7 +83,7 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
 1. Make sure you have the most up-to-date Docker image (list [here](https://hub.docker.com/r/h2020infuse/cdff/)):
 
     ```shell
-    $ sudo docker pull h2020infuse/cdff:latest
+    $ sudo -H docker pull h2020infuse/cdff:latest
     ```
 
 2. Create a Docker container from that image, mounting your code repository inside it at the same time.
@@ -91,7 +91,7 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
     It is worth defining an alias for this long command in one of your shell startup files, for instance `~/.bashrc` if you use `bash`. Have a look at the file [`Tools/Docker/docker_aliases.template`](/Tools/Docker/docker_aliases.template) for a suggested solution that you can copy-paste into one of your shell startup files.
 
     ```shell
-    $ sudo docker run
+    $ sudo -H docker run
 
       # Optional: your choice of identifiers
       --name=container-name --hostname=container-hostname \
