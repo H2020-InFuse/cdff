@@ -10,13 +10,13 @@ To develop a Data Fusion Node (DFN) or a Data Fusion Processing Compound (DFPC),
 
 ### Download and compile
 
-Let's assume you've downloaded the CDFF's code, for instance by cloning the `CDFF` repository somewhere on your computer (if you leave the path out, a `CDFF` directory will be created in your current directory):
+Let's assume you've downloaded the CDFF's code (Core and Support components), for instance by cloning the `CDFF` repository somewhere on your computer (if you leave the path out in the following command line, a `CDFF` directory will be created in your current directory):
 
 ```
 $ git clone git@gitlab.spaceapplications.com:InFuse/CDFF.git [/path/to/where/I/want/the/CDFF]
 ```
 
-There are two ways you can build the CDFF:
+There are two ways you can build the CDFF (Core and Support components):
 
 * You can compile it using CMake and a C++ compiler **in a Docker container**.
 
@@ -24,7 +24,7 @@ There are two ways you can build the CDFF:
 
     We have documentation about [using Docker and the InFuse Docker image](https://drive.google.com/open?id=1aW3_giavOZdvOljEEfun4W0Cq2tlnDvb8S3y2bysjpw), please see also [this short section](/External/Readme.md#option-1-get-the-cdffs-dependencies-packaged-in-a-docker-image) in the documentation about the dependencies of the CDFF.
 
-    Once you have mounted the directory containing the CDFF's source code inside your Docker container, you can build the CDFF:
+    Once you have mounted the directory containing the CDFF's source code inside your Docker container, you can build the CDFF (Core and Support):
 
     ```
     /path/to/CDFF/build$ cmake [-D CMAKE_INSTALL_PREFIX=/path/to/CDFF/install/] /path/to/CDFF/
@@ -37,7 +37,7 @@ There are two ways you can build the CDFF:
 
     The documentation about the [dependencies of the CDFF](/External/Readme.md) describes this topic in detail.
 
-    Once you have installed all the dependencies and build tools, you can build the CDFF:
+    Once you have installed all the dependencies and build tools, you can build the CDFF (Core and Support):
 
     ```
     /path/to/CDFF/build$ cmake [-D USE_BUNDLED_DEPENDENCIES=ON] [-D CMAKE_INSTALL_PREFIX=/path/to/CDFF/install/] /path/to/CDFF/
@@ -69,12 +69,12 @@ CMake variables given using the `-D` option are written to the CMake cache (`/pa
 
 CMake checks whether there is a directory called `Common/Types/C/`, meant to contain `.h` and `.c` files generated ("compiled") from the ASN.1 data types present in `Common/Types/ASN.1/`.
 
-If this directory isn't present, rather than compiling the ASN.1 data types locally, CMake downloads precompiled types from Space Apps' GitLab server (this task is executed by the script `Tools/ASNToC/FetcherScript.sh`). This is so as to avoid the user to compile the data types themselves, as the ASN.1 compiler has a heavy dependency on Mono and isn't typically run more than once.
+If this directory isn't present, rather than compiling the ASN.1 data types locally, CMake runs the script `Tools/ASNToC/FetcherScript.sh` to download precompiled types from Space Apps' GitLab server. This is so as to avoid the user to compile the data types themselves, as the ASN.1 compiler has a heavy dependency on Mono and isn't typically run more than once.
 
 You may still compile the data types yourself if you wish, and you should do so if:
 
 * The download fails (**warning:** currently happens if running CMake in a new branch *and* the types haven't been downloaded before; fixing in progress; a workaround is to run CMake once in the `master` branch before, or compile the types yourself).
-* You add a new data type in `Common/Types/ASN.1/`.
+* You modify or create a new data type in `Common/Types/ASN.1/`.
 
 See the [ASNtoC documentation](/Tools/ASNtoC/Readme.md) for more information.
 
@@ -115,7 +115,7 @@ Git will never delete a branch by itself, hence why we have to do it ourselves, 
 
 * [Dependencies of the CDFF (extended version)](https://drive.google.com/open?id=1Lv1ryzOCpTKXPyYZ77M07PNrthuIvzkSY2At1ib6FX8)
 * [Description of the repository filesystem hierarchy](https://drive.google.com/open?id=1ppECSp_fz4f23C0t9v5XJkrxQOHpKud0CJxJu4E5LpI)
-* [Help with Git and guidelines](https://drive.google.com/open?id=1b9SNJDLAeYy8wc-1ryeyGpYzZKl0vcmHSz0IqaAfmLI)
+* [Help with Git and its jargon](https://drive.google.com/open?id=1b9SNJDLAeYy8wc-1ryeyGpYzZKl0vcmHSz0IqaAfmLI)
 * [Coding standard for the CDFF](https://drive.google.com/open?id=1jQ8I3lRKLel6BT5Fac5twtjzZ0SiQrc9rK23v-3NOLM)
 * [Tutorial on writing DFNs](https://drive.google.com/open?id=1hFTRKgJNN3n_brT3aajMA03AR_jQ2eCo-ZM33ggY5cE)
 * [Tutorial on writing DFPCs](https://drive.google.com/open?id=1ZUhZPnedd1mO42y-q4N7USltOnKeZzbyyZz_yzpLsmk)

@@ -3,8 +3,8 @@
 # The following shell function, that you can copy-paste into one of your shell
 # startup files:
 #
-# * Defines "docker cdff" as shorthand for a long CDFF-specific "docker run"
-#   command
+# * Defines "docker cdff" and "docker cdff-dev" as shorthands for long
+#   CDFF-specific "docker run" commands
 # * Replaces the "alias docker='sudo /usr/bin/docker'" line that is commonly
 #   put in ~/.bashrc or ~/.bash_aliases
 #
@@ -19,15 +19,19 @@
 # ~/.profile, which is read by login shells, and add "export docker" afterwards
 # so that non-login shells inherit that function as part of their environment.
 #
-# Usage: docker cdff [--name=container-name] [--hostname=container-hostname] \
-#                    [--other-docker-run-options]
-#        docker subcommand [...]
+# Usage:
+#
+# docker cdff|cdff-dev [--name=container-name] [--hostname=container-hostname] \
+#                      [--other-docker-run-options]
+# docker subcommand [...]
+#
+# Maintainer: Romain Michalec <romain.michalec@strath.ac.uk>
 
 docker() {
   case ${1} in
     cdff)
       shift
-      sudo /usr/bin/docker run \
+      sudo -H /usr/bin/docker run \
         --name=cdff --hostname=cdff \
         --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
         --volume=/dev/log:/dev/log \
@@ -35,12 +39,18 @@ docker() {
         --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
         --user=my-UID:my-GID \
         --init --rm \
-        --volume=/absolute/path/to/my/git/repository:/where/i/want/it/in/the/container \
+        --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
         --interactive --tty \
         "${@}" \
-        h2020infuse/cdff-core:latest bash ;;
+        h2020infuse/cdff:latest bash ;;
+    cdff-dev)
+      shift
+      docker cdff \
+        --name=cdff-dev --hostname=cdff-dev \
+        --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
+        "${@}" ;;
     *)
-      sudo /usr/bin/docker "${@}" ;;
+      sudo -H /usr/bin/docker "${@}" ;;
   esac
 }
 
@@ -60,11 +70,14 @@ docker() {
 # --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro
 # --user=my-UID:my-GID
 #
-# Recommended: delete your container when you exit it
+# Recommended: use an init process and delete your container when you exit it
 # --init --rm
 #
-# Recommended: mount the CDFF's code repository inside your container
-# --volume=/absolute/path/to/my/git/repository:/where/i/want/it/in/the/container
+# Mandatory: mount your local CDFF-core+support repository inside your container
+# --volume=/home/me/InFuse/CDFF:/opt/cdff
+#
+# Optional: also mount your local CDFF-dev repository if you want to use CDFF-dev
+# --volume=/home/me/InFuse/CDFF_dev:/opt/cdff-dev
 #
 # Mandatory: interactively use a terminal in your container
 # --interactive --tty
@@ -72,5 +85,13 @@ docker() {
 # Additional command-line options to pass to "docker run", if any
 # "${@}"
 #
-# Image to use and shell to start
-# h2020infuse/cdff-core:latest bash
+# Image to use and shell to start (default bash)
+# h2020infuse/cdff:latest [bash]
+#
+# The -H option after sudo sets HOME to the home directory of the target user
+# (root) instead of the invoking user (you). Consequently, any configuration is
+# read or written by /usr/bin/docker in ~root/.docker/ instead of ~you/.docker/.
+# This only matters if you have non-default configuration (for instance docker
+# login credentials) and would like to avoid having a hidden directory owned by
+# root:root in your home directory (if you don't mind you can leave the -H
+# option out). See also docker-config-json(5).
