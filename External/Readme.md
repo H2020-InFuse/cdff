@@ -1,6 +1,6 @@
 ## Dependencies (third-party libraries)
 
-The following dependencies are already installed in the Docker images `h2020infuse/cdff-core:latest` and `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>`.
+The following dependencies are already installed in the Docker images `h2020infuse/cdff:latest` and `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>`.
 
 ### Libraries
 
@@ -80,7 +80,7 @@ The recurse dependencies have been installed from Ubuntu 16.04's software packag
 
 We have documentation about [using Docker and the InFuse Docker image](https://drive.google.com/open?id=1aW3_giavOZdvOljEEfun4W0Cq2tlnDvb8S3y2bysjpw). The shortest possible summary is:
 
-1. Make sure you have the most up-to-date Docker image:
+1. Make sure you have the most up-to-date Docker image (list [here](https://hub.docker.com/r/h2020infuse/cdff/)):
 
     ```shell
     $ sudo docker pull h2020infuse/cdff:latest
@@ -107,13 +107,13 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
       --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
       --user=my-UID:my-GID \
 
-      # Recommended: delete your container when you exit it
+      # Recommended: use an init process and delete your container when you exit it
       --init --rm \
 
-      # Mandatory: mount your local CDFF repository inside your container
+      # Mandatory: mount your local CDFF-core+support repository inside your container
       --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
 
-      # Optional: also mount your local CDFF-dev repository if you want to use it
+      # Optional: also mount your local CDFF-dev repository if you want to use CDFF-dev
       --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
 
       # Mandatory: interactively use a terminal in your container
@@ -141,7 +141,7 @@ You can use a combination of your distribution's software package manager and/or
 
     It is currently **recommended** to compile the CDFF's direct dependencies from source, rather than relying on the precompiled versions available in your distribution's software package manager. The reason for that is that they are specialist libraries (mathematics, robotics, computer vision) that the CDFF relies heavily on, and relying on the compilation and packaging choices of a particular package maintainer can be uncertain: those choices are often different for different distributions, as is the version number too. Our current policy is to **use the official upstream sources in fixed versions and choose our own compilation options**.
 
-    That said, you are free to install these dependencies from whatever source you prefer in whatever version you want, and link the CDFF against them. In that case, please make sure that the features you contribute to the CDFF also work as you intend in a CDFF linked against direct dependencies compiled from source in the versions listed above. You can use the `h2020infuse/cdff-core` Docker image for that: the whole point of that image is to provide a common reference environment. Please also be aware that the `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` running the continuous integration pipeline on the GitLab server also uses direct dependencies compiled from source in the versions listed above.
+    That said, you are free to install these dependencies from whatever source you prefer in whatever version you want, and link the CDFF against them. In that case, please make sure that the features you contribute to the CDFF also work as you intend in a CDFF linked against direct dependencies compiled from source in the versions listed above. You can use the `h2020infuse/cdff` Docker image for that: the whole point of that image is to provide a common reference environment. Please also be aware that the `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` running the continuous integration pipeline on the GitLab server also uses direct dependencies compiled from source in the versions listed above.
 
     A helper script is provided in `External/`. It downloads the sources of the CDFF's direct dependencies, builds them, and installs the result in `External/install/{bin,include,lib,share}` by default. Of course you can do all that manually if you prefer. In that case, check out our currently-selected build options in the various `External/installers/*.sh` scripts.
 

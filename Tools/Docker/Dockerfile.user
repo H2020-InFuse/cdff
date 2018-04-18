@@ -79,9 +79,8 @@ RUN apt-get update && apt-get install -y \
 
 # Automatically build and install CDFF-dev at container creation time
 # from its sources mounted by the user (if any)
-COPY entrypoint.sh /tmp/CDFF/Tools/Docker/
-COPY cdff-dev.sh   /tmp/CDFF/Tools/Docker/
-COPY sudoers.txt   /etc/sudoers.d/cdff-dev
+COPY entrypoint.sh cdff-dev.sh /tmp/CDFF/Tools/Docker/
+COPY sudoers.txt /etc/sudoers.d/cdff-dev
 
 RUN chmod 0755 /tmp/CDFF/Tools/Docker/entrypoint.sh && \
     chmod 0755 /tmp/CDFF/Tools/Docker/cdff-dev.sh && \

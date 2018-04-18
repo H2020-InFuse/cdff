@@ -24,6 +24,8 @@
 # docker cdff|cdff-dev [--name=container-name] [--hostname=container-hostname] \
 #                      [--other-docker-run-options]
 # docker subcommand [...]
+#
+# Maintainer: Romain Michalec <romain.michalec@strath.ac.uk>
 
 docker() {
   case ${1} in
@@ -42,20 +44,9 @@ docker() {
         "${@}" \
         h2020infuse/cdff:latest bash ;;
     cdff-dev)
-      shift
-      sudo /usr/bin/docker run \
+      docker cdff \
         --name=cdff-dev --hostname=cdff-dev \
-        --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
-        --volume=/dev/log:/dev/log \
-        --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
-        --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
-        --user=my-UID:my-GID \
-        --init --rm \
-        --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
-        --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
-        --interactive --tty \
-        "${@}" \
-        h2020infuse/cdff:latest bash ;;
+        --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container ;;
     *)
       sudo /usr/bin/docker "${@}" ;;
   esac
@@ -77,17 +68,13 @@ docker() {
 # --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro
 # --user=my-UID:my-GID
 #
-# Recommended: delete your container when you exit it
+# Recommended: use an init process and delete your container when you exit it
 # --init --rm
 #
-# Recommended: mount your local code repositories inside your container
-# --volume=/absolute/path/to/code/repository:/where/i/want/it/in/the/container
-#
-#   Mount either CDFF-core+support only, for instance:
+# Mandatory: mount your local CDFF-core+support repository inside your container
 # --volume=/home/me/InFuse/CDFF:/opt/cdff
 #
-#   Or mount both CDFF-core+support and CDFF-dev, for instance:
-# --volume=/home/me/InFuse/CDFF:/opt/cdff
+# Optional: also mount your local CDFF-dev repository if you want to use CDFF-dev
 # --volume=/home/me/InFuse/CDFF_dev:/opt/cdff-dev
 #
 # Mandatory: interactively use a terminal in your container

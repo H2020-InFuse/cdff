@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # This script is intended to be run as root in a Docker container as part of
-# that container's startup. See entrypoint script.
+# that container's startup. It performs the installation of CDFF-dev as root.
+# See entrypoint script.
 #
 # arg1  /path/to/CDFF
 # arg2  /path/to/CDFF-dev
