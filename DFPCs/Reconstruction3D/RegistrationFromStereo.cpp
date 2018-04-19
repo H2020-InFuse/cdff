@@ -55,6 +55,8 @@ using namespace PointCloudWrapper;
  */
 RegistrationFromStereo::RegistrationFromStereo()
 	{
+	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
+
 	filteredLeftImage = NULL;
 	filteredRightImage = NULL;
 	pointCloud = NULL;
@@ -64,8 +66,8 @@ RegistrationFromStereo::RegistrationFromStereo()
 	cameraPoseInScene = NULL;
 	previousCameraPoseInScene = NewPose3D();
 
-	leftFilter = NULL;
-	rightFilter = NULL;
+	optionalLeftFilter = NULL;
+	optionalRightFilter = NULL;
 	reconstructor3D = NULL;
 	featuresExtractor3d = NULL;
 	optionalFeaturesDescriptor3d = NULL;
@@ -79,8 +81,14 @@ RegistrationFromStereo::RegistrationFromStereo()
 
 RegistrationFromStereo::~RegistrationFromStereo()
 	{
-	DELETE_PREVIOUS(filteredLeftImage);
-	DELETE_PREVIOUS(filteredRightImage);
+	if (optionalLeftFilter != NULL)
+		{
+		DELETE_PREVIOUS(filteredLeftImage);
+		}
+	if (optionalRightFilter != NULL)
+		{
+		DELETE_PREVIOUS(filteredRightImage);
+		}
 	if (optionalFeaturesDescriptor3d != NULL)
 		{
 		DELETE_PREVIOUS(pointCloudFeaturesVector);
@@ -110,21 +118,18 @@ void RegistrationFromStereo::run()
 
 	if (firstInput)
 		{
-		outSuccess = true;
 		firstInput = false;
+
 		ExtractPointCloudFeatures();
 		DescribePointCloudFeatures();
-
-		pointCloudMap.AddPointCloud(pointCloud, pointCloudFeaturesVector, previousCameraPoseInScene);
-		outPointCloud = pointCloudMap.GetScenePointCloud(previousCameraPoseInScene, searchRadius);
-
-		Pose3DPtr newOutPose = NewPose3D();
-		Copy(*previousCameraPoseInScene, *newOutPose);
-		outPose = newOutPose;
-		return;
+		cameraPoseInScene = NewPose3D();	
+		outSuccess = true;
+		}
+	else
+		{
+		outSuccess = ComputeCameraMovement();
 		}
 
-	outSuccess = ComputeCameraMovement();
 	if (outSuccess)
 		{
 		pointCloudMap.AddPointCloud(pointCloud, pointCloudFeaturesVector, cameraPoseInScene);
@@ -136,6 +141,7 @@ void RegistrationFromStereo::run()
 		outPose = newOutPose;
 
 		Copy(*cameraPoseInScene, *previousCameraPoseInScene);
+		DEBUG_PRINT_TO_LOG("Pose ", ToString(*outPose) );
 		}
 	else
 		{
@@ -148,7 +154,20 @@ void RegistrationFromStereo::setup()
 	{
 	configurator.configure(configurationFilePath);
 	AssignDfnsAlias();
+	ConfigureExtraParameters();
 	}
+
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Variables
+ *
+ * --------------------------------------------------------------------------
+ */
+
+const RegistrationFromStereo::RegistrationFromStereoOptionsSet RegistrationFromStereo::DEFAULT_PARAMETERS = 
+	{
+	.pointCloudMapResolution = 1e-2
+	};
 
 /* --------------------------------------------------------------------------
  *
@@ -156,6 +175,27 @@ void RegistrationFromStereo::setup()
  *
  * --------------------------------------------------------------------------
  */
+void RegistrationFromStereo::ConfigureExtraParameters()
+	{
+	parametersHelper.ReadFile( configurator.GetExtraParametersConfigurationFilePath() );
+
+	ASSERT(parameters.pointCloudMapResolution > 0, "RegistrationFromStereo Error, Point Cloud Map resolution is not positive");
+	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
+	}
+
+void RegistrationFromStereo::AssignDfnsAlias()
+	{
+	optionalLeftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) );
+	optionalRightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) );
+	reconstructor3D = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") );
+	featuresExtractor3d = static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") );
+	optionalFeaturesDescriptor3d = static_cast<FeaturesDescription3DInterface*>( configurator.GetDfn("featuresDescriptor3d", true) );
+	featuresMatcher3d = static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") );
+
+	ASSERT(reconstructor3D != NULL, "DFPC Registration from stereo error: reconstructor3D DFN configured incorrectly");
+	ASSERT(featuresMatcher3d != NULL, "DFPC Registration from stereo error: featuresMatcher3d DFN configured incorrectly");
+	ASSERT(featuresExtractor3d != NULL, "DFPC Registration from stereo error: featuresExtractor3d DFN configured incorrectly");
+	}
 
 /**
 * The method filters the left and right images, and uses them for the computation of a point cloud.
@@ -187,40 +227,38 @@ bool RegistrationFromStereo::ComputeCameraMovement()
 	return success;
 	}
 
-void RegistrationFromStereo::AssignDfnsAlias()
-	{
-	leftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter") );
-	rightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter") );
-	reconstructor3D = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") );
-	featuresExtractor3d = static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") );
-	optionalFeaturesDescriptor3d = static_cast<FeaturesDescription3DInterface*>( configurator.GetDfn("featuresDescriptor3d", true) );
-	featuresMatcher3d = static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") );
-
-	ASSERT(leftFilter != NULL, "DFPC Registration from stereo error: left filter DFN configured incorrectly");
-	ASSERT(rightFilter != NULL, "DFPC Registration from stereo error: right filter DFN configured incorrectly");
-	ASSERT(reconstructor3D != NULL, "DFPC Registration from stereo error: reconstructor3D DFN configured incorrectly");
-	ASSERT(featuresMatcher3d != NULL, "DFPC Registration from stereo error: featuresMatcher3d DFN configured incorrectly");
-	ASSERT(featuresExtractor3d != NULL, "DFPC Registration from stereo error: featuresExtractor3d DFN configured incorrectly");
-	}
-
 void RegistrationFromStereo::FilterLeftImage()
 	{
-	leftFilter->imageInput(leftImage);
-	leftFilter->process();
-	DELETE_PREVIOUS(filteredLeftImage);
-	filteredLeftImage = leftFilter->filteredImageOutput();
-	DEBUG_PRINT_TO_LOG("Filtered Frame", "");
-	DEBUG_SHOW_IMAGE(filteredLeftImage);
+	if (optionalLeftFilter != NULL)
+		{
+		optionalLeftFilter->imageInput(leftImage);
+		optionalLeftFilter->process();
+		DELETE_PREVIOUS(filteredLeftImage);
+		filteredLeftImage = optionalLeftFilter->filteredImageOutput();
+		DEBUG_PRINT_TO_LOG("Filtered Frame", "");
+		DEBUG_SHOW_IMAGE(filteredLeftImage);
+		}
+	else
+		{
+		filteredLeftImage = leftImage;
+		}
 	}
 
 void RegistrationFromStereo::FilterRightImage()
 	{
-	rightFilter->imageInput(rightImage);
-	rightFilter->process();
-	DELETE_PREVIOUS(filteredRightImage);
-	filteredRightImage = rightFilter->filteredImageOutput();
-	DEBUG_PRINT_TO_LOG("Filtered Right Frame", "");
-	DEBUG_SHOW_IMAGE(filteredRightImage);
+	if (optionalRightFilter != NULL)
+		{
+		optionalRightFilter->imageInput(rightImage);
+		optionalRightFilter->process();
+		DELETE_PREVIOUS(filteredRightImage);
+		filteredRightImage = optionalRightFilter->filteredImageOutput();
+		DEBUG_PRINT_TO_LOG("Filtered Right Frame", "");
+		DEBUG_SHOW_IMAGE(filteredRightImage);
+		}
+	else
+		{
+		filteredRightImage = rightImage;
+		}	
 	}
 
 void RegistrationFromStereo::ComputeStereoPointCloud()

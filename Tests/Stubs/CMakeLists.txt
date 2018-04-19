@@ -5,8 +5,3 @@ add_library(
 target_link_libraries(
 	StubFeaturesExtraction2D feature_extraction_2d
 )
-
-add_library(
-    reconstruction_3d_stub_observed_scene
-    DFPCs/Reconstruction3D/ObservedScene.cpp
-)

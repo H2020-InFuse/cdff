@@ -37,7 +37,7 @@
  * --------------------------------------------------------------------------
  */
 #include <Catch/catch.h>
-#include <Stubs/DFPCs/Reconstruction3D/ObservedScene.hpp>
+#include <Reconstruction3D/ObservedScene.hpp>
 #include <Errors/Assert.hpp>
 
 #include <opencv2/highgui/highgui.hpp>

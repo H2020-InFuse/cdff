@@ -87,6 +87,15 @@ namespace dfpc_ci {
 		*/
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr GetSceneFeaturesVector(PoseWrapper::Pose3DConstPtr origin,  float radius);
 
+
+		/*
+		* @brief Set the resolution of the point cloud
+		*
+		* @param resolution, the resolution of the point cloud
+		*
+		*/
+		void SetResolution(float resolution);		
+
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
@@ -100,23 +109,29 @@ namespace dfpc_ci {
 	 */	
 	private:
 		static const unsigned MAX_DESCRIPTOR_LENGTH = 352;
-		static const float RESOLUTION;
+		static const float DEFAULT_RESOLUTION;
 		typedef float Descriptor[MAX_DESCRIPTOR_LENGTH];
+		typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
 
 		struct FeaturePoint
 			{
-			uint64_t pointCloudIndex;
+			pcl::PointXYZ point;
 			Descriptor descriptor;
 			};
 
+		float resolution;
 		unsigned descriptorLength;
 		std::vector<FeaturePoint> featuresList;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud;
 	
-		float PointDistance(pcl::PointXYZ p, pcl::PointXYZ q);
-		pcl::PointXYZ TransformPoint(pcl::PointXYZ point, PoseWrapper::Pose3DConstPtr cloudPoseInMap);
-		bool AddPointToMap(pcl::PointXYZ point);
-		bool IndexNotCotainedInVector(uint64_t index, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr pointCloudFeaturesVector);
+		void AddPointCloud(PointCloudWrapper::PointCloudConstPtr pointCloudInput, const AffineTransform& affineTransform);
+		void AddFeatureCloud(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr pointCloudFeaturesVector, const AffineTransform& affineTransform);
+
+		AffineTransform ConvertCloudPoseToInversionTransform(PoseWrapper::Pose3DConstPtr cloudPoseInMap);
+		pcl::PointXYZ TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform);
+		float PointDistance(const pcl::PointXYZ& p, const pcl::PointXYZ& q);
+
+		bool NoCloseFeature(const pcl::PointXYZ& point);
     };
 }
 #endif

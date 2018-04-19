@@ -81,8 +81,17 @@ namespace dfpc_ci {
 		float searchRadius;
 		bool firstInput;
 
-		dfn_ci::ImageFilteringInterface* leftFilter;
-		dfn_ci::ImageFilteringInterface* rightFilter;
+		struct RegistrationFromStereoOptionsSet
+			{
+			float pointCloudMapResolution;
+			};
+
+		Helpers::ParametersListHelper parametersHelper;
+		RegistrationFromStereoOptionsSet parameters;
+		static const RegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
+
+		dfn_ci::ImageFilteringInterface* optionalLeftFilter;
+		dfn_ci::ImageFilteringInterface* optionalRightFilter;
 		dfn_ci::StereoReconstructionInterface* reconstructor3D;
 		dfn_ci::FeaturesExtraction3DInterface* featuresExtractor3d;
 		dfn_ci::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
@@ -99,11 +108,11 @@ namespace dfpc_ci {
 		PoseWrapper::Pose3DConstPtr cameraPoseInScene;
 		PoseWrapper::Pose3DPtr previousCameraPoseInScene;
 
+		void ConfigureExtraParameters();
 		void AssignDfnsAlias();
 
 		bool ComputeCameraMovement();
 		void ComputePointCloud();
-		void UpdateScene();
 
 		void FilterLeftImage();
 		void FilterRightImage();

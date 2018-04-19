@@ -10,6 +10,7 @@ target_link_libraries(
 add_library(
     reconstruction_from_motion
     ReconstructionFromMotion.cpp
+    ObservedScene.cpp
 )
 target_link_libraries(
     reconstruction_from_motion
@@ -19,6 +20,7 @@ target_link_libraries(
 add_library(
     reconstruction_from_stereo
     ReconstructionFromStereo.cpp
+    ObservedScene.cpp
 )
 target_link_libraries(
     reconstruction_from_stereo

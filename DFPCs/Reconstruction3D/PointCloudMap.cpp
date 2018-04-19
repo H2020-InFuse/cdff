@@ -46,7 +46,7 @@ using namespace BaseTypesWrapper;
 PointCloudMap::PointCloudMap() :
 	pointCloud( new pcl::PointCloud<pcl::PointXYZ>() )
 	{
-
+	resolution = DEFAULT_RESOLUTION;
 	}
 
 PointCloudMap::~PointCloudMap()
@@ -64,33 +64,11 @@ void PointCloudMap::AddPointCloud(PointCloudConstPtr pointCloudInput, VisualPoin
 		{
 		ASSERT( descriptorLength == GetNumberOfDescriptorComponents(*pointCloudFeaturesVector, 0), "PointCloudMap Error, Descriptor size mismatch");
 		}
-	ASSERT( GetVectorType(*pointCloudFeaturesVector) == ALL_POSITIONS_VECTOR, "PointCloudMap Error, added features vector does not contain all references");
+	ASSERT( GetVectorType(*pointCloudFeaturesVector) == ALL_POSITIONS_VECTOR, "PointCloudMap Error, added features vector does not contain all positions");
 
-	//Try new method only filter manually features vector and use voxel grid for point cloud.
-
-	for(unsigned featureIndex = 0; featureIndex < GetNumberOfPoints(*pointCloudFeaturesVector); featureIndex++)
-		{
-		pcl::PointXYZ point(GetXCoordinate(*pointCloudFeaturesVector, featureIndex),GetYCoordinate(*pointCloudFeaturesVector, featureIndex),GetZCoordinate(*pointCloudFeaturesVector, featureIndex));
-		pcl::PointXYZ transformedPoint = TransformPoint(point, cloudPoseInMap);
-		bool pointAdded = AddPointToMap(transformedPoint);
-		if (pointAdded)
-			{
-			FeaturePoint featurePoint;
-			featurePoint.pointCloudIndex = pointCloud->points.size()-1;
-			for(unsigned componentIndex = 0; componentIndex < descriptorLength; componentIndex++)
-				{
-				featurePoint.descriptor[componentIndex] = GetDescriptorComponent(*pointCloudFeaturesVector, featureIndex, componentIndex);
-				}
-			featuresList.push_back(featurePoint);
-			}
-		}
-
-	for(uint64_t pointIndex = 0; pointIndex < GetNumberOfPoints(*pointCloudInput); pointIndex++)
-		{
-		pcl::PointXYZ point( GetXCoordinate(*pointCloudInput, pointIndex), GetYCoordinate(*pointCloudInput, pointIndex), GetZCoordinate(*pointCloudInput, pointIndex));
-		pcl::PointXYZ transformedPoint = TransformPoint(point, cloudPoseInMap);
-		AddPointToMap(transformedPoint);						
-		}
+	AffineTransform affineTransform = ConvertCloudPoseToInversionTransform(cloudPoseInMap);
+	AddFeatureCloud(pointCloudFeaturesVector, affineTransform);
+	AddPointCloud(pointCloudInput, affineTransform);
 	}
 
 PointCloudConstPtr PointCloudMap::GetScenePointCloud(Pose3DConstPtr origin,  float radius)
@@ -122,12 +100,11 @@ VisualPointFeatureVector3DConstPtr PointCloudMap::GetSceneFeaturesVector(Pose3DC
 	uint64_t featureCounter = 0;
 	for(uint64_t featureIndex = 0; featureIndex < featuresList.size(); featureIndex++)
 		{
-		FeaturePoint& featurePoint = featuresList.at(featureIndex); 
-		pcl::PointXYZ cloudPoint = pointCloud->points.at( featurePoint.pointCloudIndex);
-		float featureToOriginDistance = PointDistance(pclOrigin, cloudPoint);
+		FeaturePoint featurePoint = featuresList.at(featureIndex); 
+		float featureToOriginDistance = PointDistance(pclOrigin, featurePoint.point);
 		if ( featureToOriginDistance <= radius )
 			{
-			AddPoint(*featuresVector, cloudPoint.x, cloudPoint.y, cloudPoint.z);
+			AddPoint(*featuresVector, featurePoint.point.x, featurePoint.point.y, featurePoint.point.z);
 			for(unsigned componentIndex = 0; componentIndex < descriptorLength; componentIndex++)
 				{
 				AddDescriptorComponent(*featuresVector, featureCounter, featurePoint.descriptor[componentIndex]);
@@ -139,13 +116,18 @@ VisualPointFeatureVector3DConstPtr PointCloudMap::GetSceneFeaturesVector(Pose3DC
 	return featuresVector;
 	}
 
+void PointCloudMap::SetResolution(float resolution)
+	{
+	this->resolution = resolution;
+	}
+
 /* --------------------------------------------------------------------------
  *
  * Private Member Variables
  *
  * --------------------------------------------------------------------------
  */
-const float PointCloudMap::RESOLUTION = 1e-2;
+const float PointCloudMap::DEFAULT_RESOLUTION = 0.01;
 
 /* --------------------------------------------------------------------------
  *
@@ -153,22 +135,56 @@ const float PointCloudMap::RESOLUTION = 1e-2;
  *
  * --------------------------------------------------------------------------
  */
-float PointCloudMap::PointDistance(pcl::PointXYZ p, pcl::PointXYZ q)
+void PointCloudMap::AddPointCloud(PointCloudConstPtr pointCloudInput, const AffineTransform& affineTransform)
 	{
-	float differenceX = p.x - q.x;
-	float differenceY = p.y - q.y;
-	float differenceZ = p.z - q.z;
-	return std::sqrt( differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ);
+	unsigned previousPointCloudSize = pointCloud->points.size();
+	unsigned numberOfNewPoints = GetNumberOfPoints(*pointCloudInput);
+	pointCloud->points.resize( previousPointCloudSize + numberOfNewPoints );
+
+	for(unsigned pointIndex = 0; pointIndex < numberOfNewPoints; pointIndex++)
+		{
+		pcl::PointXYZ newPoint( GetXCoordinate(*pointCloudInput, pointIndex), GetYCoordinate(*pointCloudInput, pointIndex), GetZCoordinate(*pointCloudInput, pointIndex) );
+		pcl::PointXYZ transformedNewPoint = TransformPoint(newPoint, affineTransform);
+		pointCloud->points.at(pointIndex + previousPointCloudSize) = transformedNewPoint;		
+		}
+
+	pcl::VoxelGrid<pcl::PointXYZ> grid;
+	grid.setInputCloud(pointCloud);
+	grid.setLeafSize(resolution, resolution, resolution);
+	grid.filter(*pointCloud);
 	}
 
-pcl::PointXYZ PointCloudMap::TransformPoint(pcl::PointXYZ point, PoseWrapper::Pose3DConstPtr cloudPoseInMap)
+void PointCloudMap::AddFeatureCloud(VisualPointFeatureVector3DConstPtr pointCloudFeaturesVector, const AffineTransform& affineTransform)
+	{
+	for(unsigned featureIndex = 0; featureIndex < GetNumberOfPoints(*pointCloudFeaturesVector); featureIndex++)
+		{
+		pcl::PointXYZ point(GetXCoordinate(*pointCloudFeaturesVector, featureIndex),GetYCoordinate(*pointCloudFeaturesVector, featureIndex),GetZCoordinate(*pointCloudFeaturesVector, featureIndex));
+		pcl::PointXYZ transformedPoint = TransformPoint(point, affineTransform);
+		if (NoCloseFeature(transformedPoint))
+			{
+			FeaturePoint featurePoint;
+			featurePoint.point = transformedPoint;
+			for(unsigned componentIndex = 0; componentIndex < descriptorLength; componentIndex++)
+				{
+				featurePoint.descriptor[componentIndex] = GetDescriptorComponent(*pointCloudFeaturesVector, featureIndex, componentIndex);
+				}
+			featuresList.push_back(featurePoint);			
+			}
+		}
+	}
+
+PointCloudMap::AffineTransform PointCloudMap::ConvertCloudPoseToInversionTransform(PoseWrapper::Pose3DConstPtr cloudPoseInMap)
 	{
 	Eigen::Quaternion<float> rotation(GetWRotation(*cloudPoseInMap), GetXRotation(*cloudPoseInMap), GetYRotation(*cloudPoseInMap), GetZRotation(*cloudPoseInMap));
 	Eigen::Translation<float, 3> translation( GetXPosition(*cloudPoseInMap), GetYPosition(*cloudPoseInMap), GetZPosition(*cloudPoseInMap));
-	Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> affineTransform = rotation * translation;
+	AffineTransform affineTransform = rotation * translation;
+	return affineTransform.inverse();
+	}
 
+pcl::PointXYZ PointCloudMap::TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform)
+	{
 	Eigen::Vector3f eigenPoint(point.x, point.y, point.z);
-	Eigen::Vector3f eigenTransformedPoint = affineTransform.inverse() * eigenPoint;
+	Eigen::Vector3f eigenTransformedPoint = affineTransform * eigenPoint;
 	pcl::PointXYZ transformedPoint;
 	transformedPoint.x = eigenTransformedPoint.x();
 	transformedPoint.y = eigenTransformedPoint.y();
@@ -176,30 +192,20 @@ pcl::PointXYZ PointCloudMap::TransformPoint(pcl::PointXYZ point, PoseWrapper::Po
 	return transformedPoint;
 	}
 
-bool PointCloudMap::AddPointToMap(pcl::PointXYZ point)
+float PointCloudMap::PointDistance(const pcl::PointXYZ& p, const pcl::PointXYZ& q)
 	{
-	bool noClosePoint = true;
-	for(unsigned pointIndex = 0; pointIndex < pointCloud->points.size() && noClosePoint; pointIndex++)
-		{
-		pcl::PointXYZ cloudPoint = pointCloud->points.at(pointIndex);
-		float distance = PointDistance(point, cloudPoint);
-		noClosePoint = (distance > RESOLUTION);
-		}
-
-	if (noClosePoint)
-		{
-		pointCloud->points.push_back(point);
-		}	
-
-	return noClosePoint;
+	float differenceX = p.x - q.x;
+	float differenceY = p.y - q.y;
+	float differenceZ = p.z - q.z;
+	return std::sqrt( differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ);
 	}
 
-bool PointCloudMap::IndexNotCotainedInVector(uint64_t index, VisualPointFeatureVector3DConstPtr pointCloudFeaturesVector)
+bool PointCloudMap::NoCloseFeature(const pcl::PointXYZ& point)
 	{
-	for(unsigned featureIndex = 0; featureIndex < GetNumberOfPoints(*pointCloudFeaturesVector); featureIndex++)
+	for(unsigned featureIndex = 0; featureIndex < featuresList.size(); featureIndex++)
 		{
-		uint64_t pointIndex = GetReferenceIndex(*pointCloudFeaturesVector, featureIndex);
-		if (pointIndex == index)
+		float distance = PointDistance(point, featuresList.at(featureIndex).point);
+		if (distance < resolution)
 			{
 			return false;
 			}

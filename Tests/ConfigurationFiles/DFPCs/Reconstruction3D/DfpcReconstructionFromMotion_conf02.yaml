@@ -8,6 +8,8 @@
     OrientationY: 0
     OrientationZ: 0
     OrientationW: 1
+  - Name: GeneralParameters
+    PointCloudMapResolution: 0.01
 - Name: filter
   Type: ImageFiltering
   Implementation: ImageUndistortion

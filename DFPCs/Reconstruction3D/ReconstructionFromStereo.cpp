@@ -55,9 +55,19 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-ReconstructionFromStereo::ReconstructionFromStereo(Map* map) :
-	map(map)
+ReconstructionFromStereo::ReconstructionFromStereo(Map* map)
 	{
+	if (map == NULL)
+		{
+		this->map = new ObservedScene();
+		}
+	else
+		{
+		this->map = map;
+		}
+
+	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
+
 	filteredCurrentLeftImage = NULL;
 	filteredPastLeftImage = NULL;
 	filteredCurrentRightImage = NULL;
@@ -137,7 +147,20 @@ void ReconstructionFromStereo::setup()
 	{
 	configurator.configure(configurationFilePath);
 	AssignDfnsAlias();
+	ConfigureExtraParameters();
 	}
+
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Variables
+ *
+ * --------------------------------------------------------------------------
+ */
+
+const ReconstructionFromStereo::ReconstructionFromStereoOptionsSet ReconstructionFromStereo::DEFAULT_PARAMETERS = 
+	{
+	.pointCloudMapResolution = 1e-2
+	};
 
 /* --------------------------------------------------------------------------
  *
@@ -145,6 +168,33 @@ void ReconstructionFromStereo::setup()
  *
  * --------------------------------------------------------------------------
  */
+void ReconstructionFromStereo::ConfigureExtraParameters()
+	{
+	parametersHelper.ReadFile( configurator.GetExtraParametersConfigurationFilePath() );
+
+	ASSERT(parameters.pointCloudMapResolution > 0, "RegistrationFromStereo Error, Point Cloud Map resolution is not positive");
+	map->SetPointCloudMapResolution(parameters.pointCloudMapResolution);
+	}
+
+void ReconstructionFromStereo::AssignDfnsAlias()
+	{
+	leftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter") );
+	rightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter") );
+	featuresExtractor = static_cast<FeaturesExtraction2DInterface*>( configurator.GetDfn("featureExtractor") );
+	featuresMatcher = static_cast<FeaturesMatching2DInterface*>( configurator.GetDfn("featuresMatcher") );
+	fundamentalMatrixComputer = static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") );
+	cameraTransformEstimator = static_cast<CamerasTransformEstimationInterface*>( configurator.GetDfn("cameraTransformEstimator") );
+	reconstructor3D = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") );
+	optionalFeaturesDescriptor = static_cast<FeaturesDescription2DInterface*>( configurator.GetDfn("featuresDescriptor", true) );
+
+	ASSERT(leftFilter != NULL, "DFPC Structure from motion error: left filter DFN configured incorrectly");
+	ASSERT(rightFilter != NULL, "DFPC Structure from motion error: right filter DFN configured incorrectly");
+	ASSERT(featuresExtractor != NULL, "DFPC Structure from motion error: featuresExtractor DFN configured incorrectly");
+	ASSERT(featuresMatcher != NULL, "DFPC Structure from motion error: featuresMatcher DFN configured incorrectly");
+	ASSERT(fundamentalMatrixComputer != NULL, "DFPC Structure from motion error: fundamentalMatrixComputer DFN configured incorrectly");
+	ASSERT(cameraTransformEstimator != NULL, "DFPC Structure from motion error: cameraTransformEstimator DFN configured incorrectly");
+	ASSERT(reconstructor3D != NULL, "DFPC Structure from motion error: reconstructor3D DFN configured incorrectly");
+	}
 
 /**
 * The ComputeCameraMovement Method performs the following operation
@@ -214,26 +264,6 @@ void ReconstructionFromStereo::UpdateScene()
 
 	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*outPointCloud));
 	DEBUG_SHOW_POINT_CLOUD(outPointCloud);
-	}
-
-void ReconstructionFromStereo::AssignDfnsAlias()
-	{
-	leftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter") );
-	rightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter") );
-	featuresExtractor = static_cast<FeaturesExtraction2DInterface*>( configurator.GetDfn("featureExtractor") );
-	featuresMatcher = static_cast<FeaturesMatching2DInterface*>( configurator.GetDfn("featuresMatcher") );
-	fundamentalMatrixComputer = static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") );
-	cameraTransformEstimator = static_cast<CamerasTransformEstimationInterface*>( configurator.GetDfn("cameraTransformEstimator") );
-	reconstructor3D = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") );
-	optionalFeaturesDescriptor = static_cast<FeaturesDescription2DInterface*>( configurator.GetDfn("featuresDescriptor", true) );
-
-	ASSERT(leftFilter != NULL, "DFPC Structure from motion error: left filter DFN configured incorrectly");
-	ASSERT(rightFilter != NULL, "DFPC Structure from motion error: right filter DFN configured incorrectly");
-	ASSERT(featuresExtractor != NULL, "DFPC Structure from motion error: featuresExtractor DFN configured incorrectly");
-	ASSERT(featuresMatcher != NULL, "DFPC Structure from motion error: featuresMatcher DFN configured incorrectly");
-	ASSERT(fundamentalMatrixComputer != NULL, "DFPC Structure from motion error: fundamentalMatrixComputer DFN configured incorrectly");
-	ASSERT(cameraTransformEstimator != NULL, "DFPC Structure from motion error: cameraTransformEstimator DFN configured incorrectly");
-	ASSERT(reconstructor3D != NULL, "DFPC Structure from motion error: reconstructor3D DFN configured incorrectly");
 	}
 
 void ReconstructionFromStereo::FilterCurrentLeftImage()

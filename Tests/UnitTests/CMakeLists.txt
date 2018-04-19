@@ -264,6 +264,6 @@ add_executable(
 )
 target_link_libraries(
 	ObservedSceneTest
-	cdff_helpers cdff_logger cdff_types converters_opencv opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock reconstruction_3d_stub_observed_scene
+	cdff_helpers cdff_logger cdff_types converters_opencv opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock reconstruction_from_stereo
 )
 add_test(ObservedSceneTest ObservedSceneTest)

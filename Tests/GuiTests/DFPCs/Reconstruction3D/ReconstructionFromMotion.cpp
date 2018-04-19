@@ -27,7 +27,6 @@
  * --------------------------------------------------------------------------
  */
 #include "GuiTestReconstruction3D.hpp"
-#include <Stubs/DFPCs/Reconstruction3D/ObservedScene.hpp>
 #include <Visualizers/OpencvVisualizer.hpp>
 #include <Visualizers/PclVisualizer.hpp>
 #include <Reconstruction3D/ReconstructionFromMotion.hpp>
@@ -80,8 +79,7 @@ int main(int argc, char** argv)
 		StringToImageFilesType(imageFilesType)
 		);
 
-	Map* map = new ObservedScene();
-	ReconstructionFromMotion reconstructionFromMotion(map);
+	ReconstructionFromMotion reconstructionFromMotion;
 
 	guiReconstruction3d.Run(reconstructionFromMotion);
  

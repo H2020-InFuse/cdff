@@ -111,12 +111,19 @@ namespace dfpc_ci {
 		* @param radius, the reference distance from the current camera pose, if radius is negative all points are selected.
 		*/
 		virtual PointCloudWrapper::PointCloudConstPtr GetPartialScene(float radius) = 0;
+
+		/*
+		* @brief Set the point cloud map resolution
+		*
+		*/
+		void SetPointCloudMapResolution(float resolution) { this->resolution = resolution; }
+
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
 	 */
         protected:
-		
+		float resolution;
 
 	/* --------------------------------------------------------------------
 	 * Private

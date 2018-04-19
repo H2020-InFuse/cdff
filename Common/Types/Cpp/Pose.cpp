@@ -74,6 +74,14 @@ void Reset(Pose3D& pose)
 	SetOrientation(pose, 0, 0, 0, 0);
 	}
 
+std::string ToString(const Pose3D& pose)
+	{
+	std::stringstream poseStream;
+	poseStream << "Position: (" << GetXPosition(pose) << ", " << GetYPosition(pose) << ", " << GetZPosition(pose) << ") ";
+	poseStream << "Orientation: (" << GetXOrientation(pose) << ", " << GetYOrientation(pose) << ", " << GetZOrientation(pose) << ", " << GetWOrientation(pose) << ")";
+	return poseStream.str();
+	}
+
 T_Double GetXPosition(const Pose3D& pose)
 	{
 	return pose.pos.arr[0];
@@ -186,6 +194,14 @@ void Reset(Pose2D& pose)
 	{
 	SetPosition(pose, 0, 0);
 	SetOrientation(pose, 0);
+	}
+
+std::string ToString(const Pose2D& pose)
+	{
+	std::stringstream poseStream;
+	poseStream << "Position: (" << GetXPosition(pose) << ", " << GetYPosition(pose) << ") ";
+	poseStream << "Orientation: " << GetOrientation(pose);
+	return poseStream.str();
 	}
 
 void SetPosition(Pose2D& pose, T_Double x, T_Double y)

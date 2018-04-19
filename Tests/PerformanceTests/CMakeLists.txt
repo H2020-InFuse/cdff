@@ -87,5 +87,5 @@ add_executable(
 )
 target_link_libraries(
 	reconstruction_from_stereo_performance_test
-	reconstruction_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp reconstruction_3d_stub_observed_scene dfpc_configurator performance_dfpc_test_interface
+	reconstruction_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator performance_dfpc_test_interface
 )

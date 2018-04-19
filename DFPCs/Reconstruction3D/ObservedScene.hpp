@@ -84,6 +84,7 @@ namespace dfpc_ci {
 			bool validTransform;
 			};
 		
+		static const float DEFAULT_RESOLUTION;
 		std::vector<FrameNode> framesMap;
 		unsigned referenceFrameId;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr scene;	
