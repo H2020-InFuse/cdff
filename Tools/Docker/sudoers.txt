@@ -1,0 +1,3 @@
+# Allow any user to install CDFF-dev as root in a Docker container
+# without authenticating themselves
+ALL ALL = NOPASSWD: /tmp/CDFF/Tools/Docker/cdff-dev.sh

@@ -1,6 +1,6 @@
 ## Dependencies (third-party libraries)
 
-The following dependencies are already installed in the Docker images `h2020infuse/cdff-core:latest` and `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>`.
+The following dependencies are already installed in the Docker images `h2020infuse/cdff:latest` and `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>`.
 
 ### Libraries
 
@@ -68,11 +68,11 @@ The dependency installation script (see further) additionally requires Bash, GNU
 
 ### Available images
 
-The CDFF's direct dependencies are ready to use in the Docker images `h2020infuse/cdff-core:latest` and `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>`. They have been compiled from source and installed in the images' `/usr/local` (which is otherwise empty).
+The CDFF's direct dependencies are ready to use in the Docker images `h2020infuse/cdff:latest` and `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>`. They have been compiled from source and installed in the images' `/usr/local` (which is otherwise empty).
 
-* `h2020infuse/cdff-core:latest` is meant for helping you build and test the CDFF on your computer. It includes a version of OpenCV compiled with GTK+ 2 support so that the GUI features of the `cv::highgui` module work.
+* `h2020infuse/cdff:latest` is meant for helping you build and test the CDFF's core and support components on your computer. It includes a version of OpenCV compiled with GTK+ 2 support so that the GUI features of the `cv::highgui` module work. It can also be used for using the CDFF's dev component (as an alternative to installing it on your computer).
 
-* `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` is meant for the continuous integration pipeline on the GitLab server. GUI features are not available. In that sense, it is an environment that is closer to our target systems than `h2020infuse/cdff-core:latest` and our desktop computers are.
+* `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` is meant for the continuous integration pipeline on the GitLab server. GUI features are not available. In that sense, it is an environment that is closer to our target systems than `h2020infuse/cdff:latest` and our desktop computers are.
 
 The recurse dependencies have been installed from Ubuntu 16.04's software package repositories using the system's package management tools (both images are build on Ubuntu 16.04), prior to compiling the direct dependencies of course. Please let us know if you spot a dependency we forgot. All the above-mentioned build tools are also available in the images.
 
@@ -80,10 +80,10 @@ The recurse dependencies have been installed from Ubuntu 16.04's software packag
 
 We have documentation about [using Docker and the InFuse Docker image](https://drive.google.com/open?id=1aW3_giavOZdvOljEEfun4W0Cq2tlnDvb8S3y2bysjpw). The shortest possible summary is:
 
-1. Make sure you have the most up-to-date Docker image:
+1. Make sure you have the most up-to-date Docker image (list [here](https://hub.docker.com/r/h2020infuse/cdff/)):
 
     ```shell
-    $ sudo docker pull h2020infuse/cdff-core:latest
+    $ sudo -H docker pull h2020infuse/cdff:latest
     ```
 
 2. Create a Docker container from that image, mounting your code repository inside it at the same time.
@@ -91,7 +91,7 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
     It is worth defining an alias for this long command in one of your shell startup files, for instance `~/.bashrc` if you use `bash`. Have a look at the file [`Tools/Docker/docker_aliases.template`](/Tools/Docker/docker_aliases.template) for a suggested solution that you can copy-paste into one of your shell startup files.
 
     ```shell
-    $ sudo docker run
+    $ sudo -H docker run
 
       # Optional: your choice of identifiers
       --name=container-name --hostname=container-hostname \
@@ -107,17 +107,20 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
       --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
       --user=my-UID:my-GID \
 
-      # Recommended: delete your container when you exit it
+      # Recommended: use an init process and delete your container when you exit it
       --init --rm \
 
-      # Mandatory: mount the CDFF's code repository inside your container
-      --volume=/absolute/path/to/my/git/repository:/where/i/want/it/in/the/container \
+      # Mandatory: mount your local CDFF-core+support repository inside your container
+      --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
+
+      # Optional: also mount your local CDFF-dev repository if you want to use CDFF-dev
+      --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
 
       # Mandatory: interactively use a terminal in your container
       --interactive --tty \
 
-      # And finally: image to use and shell to start
-      h2020infuse/cdff-core:latest bash
+      # And finally: image to use and shell to start (default bash)
+      h2020infuse/cdff:latest [bash]
     ```
 
     or with an adequately-defined alias:
@@ -138,7 +141,7 @@ You can use a combination of your distribution's software package manager and/or
 
     It is currently **recommended** to compile the CDFF's direct dependencies from source, rather than relying on the precompiled versions available in your distribution's software package manager. The reason for that is that they are specialist libraries (mathematics, robotics, computer vision) that the CDFF relies heavily on, and relying on the compilation and packaging choices of a particular package maintainer can be uncertain: those choices are often different for different distributions, as is the version number too. Our current policy is to **use the official upstream sources in fixed versions and choose our own compilation options**.
 
-    That said, you are free to install these dependencies from whatever source you prefer in whatever version you want, and link the CDFF against them. In that case, please make sure that the features you contribute to the CDFF also work as you intend in a CDFF linked against direct dependencies compiled from source in the versions listed above. You can use the `h2020infuse/cdff-core` Docker image for that: the whole point of that image is to provide a common reference environment. Please also be aware that the `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` running the continuous integration pipeline on the GitLab server also uses direct dependencies compiled from source in the versions listed above.
+    That said, you are free to install these dependencies from whatever source you prefer in whatever version you want, and link the CDFF against them. In that case, please make sure that the features you contribute to the CDFF also work as you intend in a CDFF linked against direct dependencies compiled from source in the versions listed above. You can use the `h2020infuse/cdff` Docker image for that: the whole point of that image is to provide a common reference environment. Please also be aware that the `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` running the continuous integration pipeline on the GitLab server also uses direct dependencies compiled from source in the versions listed above.
 
     A helper script is provided in `External/`. It downloads the sources of the CDFF's direct dependencies, builds them, and installs the result in `External/install/{bin,include,lib,share}` by default. Of course you can do all that manually if you prefer. In that case, check out our currently-selected build options in the various `External/installers/*.sh` scripts.
 

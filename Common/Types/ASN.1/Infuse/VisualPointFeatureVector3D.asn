@@ -43,7 +43,7 @@ Point3DReference ::= SEQUENCE
 VisualPointFeature3D ::= SEQUENCE
 	{
 	point		CHOICE { position Point3D, reference Point3DReference },
-	descriptor	SEQUENCE (SIZE(0..descriptor3DNameLength)) OF REAL
+	descriptor	SEQUENCE (SIZE(0..descriptor3DNameLength)) OF T-Float
 	}
 
 VisualPointFeatureVector3DType ::= ENUMERATED
@@ -56,6 +56,6 @@ VisualPointFeatureVector3DType ::= ENUMERATED
 VisualPointFeatureVector3D ::= SEQUENCE
 	{
 	list		SEQUENCE (SIZE(0..features3DElementsMax)) OF VisualPointFeature3D,
-	type		VisualPointFeatureVector3DType
+	list-type	VisualPointFeatureVector3DType
 	}
 END

@@ -21,6 +21,7 @@ autogeneration:
   artifacts:
     paths:
       - Common/Types/C/
+    expire_in: 4 weeks
 
 build:
   stage: build
@@ -33,6 +34,7 @@ build:
   artifacts:
     paths:
       - build/
+    expire_in: 4 weeks
 
 cmake test:
   stage: test
