@@ -51,6 +51,9 @@ class DisparityMappingTestInterface : public PerformanceTestInterface
 	public:
 		DisparityMappingTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName);
 		~DisparityMappingTestInterface();
+
+		void SetImageFilesPath(std::string leftImageFilePath, std::string rightImageFilePath);
+		void SetReferenceDisparity(std::string referenceDisparityFilePath);
 	protected:
 
 	private:
@@ -63,6 +66,8 @@ class DisparityMappingTestInterface : public PerformanceTestInterface
 		cv::Mat referenceDisparity;
 		cv::Mat normalizedReferenceDisparity;
 		bool saveDisparity;
+		std::string leftImageFilePath;
+		std::string rightImageFilePath;
 
 		HirschmullerDisparityMapping* disparityMapping;
 		void SetupMocksAndStubs();
@@ -78,16 +83,11 @@ DisparityMappingTestInterface::DisparityMappingTestInterface(std::string folderP
 	SetDfn(disparityMapping);
 	SetupMocksAndStubs();
 
-	//referenceDisparity = cv::imread("../tests/Data/Images/ReferenceDisparity.png", cv::IMREAD_COLOR);
-	cv::FileStorage file("../tests/Data/Images/chairDepth40.yml", cv::FileStorage::READ);
-	file["depth"] >> referenceDisparity; //reference disparity type is CV_16UC1
-
-	cv::normalize(referenceDisparity, normalizedReferenceDisparity, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-	std::stringstream stream;
-	stream << "../tests/ConfigurationFiles/DFNs/StereoReconstruction/ReferenceDisparity.jpg"; 
-	cv::imwrite(stream.str(), normalizedReferenceDisparity);
-
+	SetReferenceDisparity("../tests/Data/Images/chairDepth40.yml");
 	saveDisparity = true;
+
+	leftImageFilePath = "../tests/Data/Images/RectifiedChair40Left.png";
+	rightImageFilePath = "../tests/Data/Images/RectifiedChair40Right.png";
 	}
 
 DisparityMappingTestInterface::~DisparityMappingTestInterface()
@@ -95,6 +95,23 @@ DisparityMappingTestInterface::~DisparityMappingTestInterface()
 	delete(stubInputCache);
 	delete(mockInputConverter);
 	delete(disparityMapping);
+	}
+
+void DisparityMappingTestInterface::SetImageFilesPath(std::string leftImageFilePath, std::string rightImageFilePath)
+	{
+	this->leftImageFilePath = leftImageFilePath;
+	this->rightImageFilePath = rightImageFilePath;
+	}
+
+void DisparityMappingTestInterface::SetReferenceDisparity(std::string referenceDisparityFilePath)
+	{
+	cv::FileStorage file(referenceDisparityFilePath, cv::FileStorage::READ);
+	file["depth"] >> referenceDisparity;
+
+	cv::normalize(referenceDisparity, normalizedReferenceDisparity, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+	std::stringstream stream;
+	stream << "../tests/ConfigurationFiles/DFNs/StereoReconstruction/ReferenceDisparity.jpg"; 
+	cv::imwrite(stream.str(), normalizedReferenceDisparity);
 	}
 
 void DisparityMappingTestInterface::SetupMocksAndStubs()
@@ -114,8 +131,8 @@ bool DisparityMappingTestInterface::SetNextInputs()
 
 	if (time == 0)
 		{
-		cv::Mat cvLeftImage = cv::imread("../tests/Data/Images/RectifiedChair40Left.png", cv::IMREAD_COLOR);
-		cv::Mat cvRightImage = cv::imread("../tests/Data/Images/RectifiedChair40Right.png", cv::IMREAD_COLOR);
+		cv::Mat cvLeftImage = cv::imread(leftImageFilePath, cv::IMREAD_COLOR);
+		cv::Mat cvRightImage = cv::imread(rightImageFilePath, cv::IMREAD_COLOR);
 		ASSERT( cvLeftImage.size() == cvRightImage.size(), "Performance Test Error: input images do not have same size");
 		ASSERT( referenceDisparity.size() == cvRightImage.size(), "Performance Test Error: reference disparity does not have same size as input images");
 
@@ -206,7 +223,20 @@ DisparityMappingTestInterface::MeasuresMap DisparityMappingTestInterface::Extrac
 
 int main(int argc, char** argv)
 	{
-	DisparityMappingTestInterface interface("../tests/ConfigurationFiles/DFNs/StereoReconstruction", "HirschmullerDisparityMapping_Performance1.yaml", "HirschmullerOutput.txt");
+	std::string configurationFileName = "HirschmullerDisparityMapping_Performance1.yaml";
+	if (argc >= 2)
+		{
+		configurationFileName = argv[1];
+		}
+
+	DisparityMappingTestInterface interface("../tests/ConfigurationFiles/DFNs/StereoReconstruction", configurationFileName, "HirschmullerOutput.txt");
+	
+	if (argc >= 5)
+		{
+		interface.SetImageFilesPath(argv[2], argv[3]);
+		interface.SetReferenceDisparity(argv[4]);
+		}
+
 	interface.Run();
 	};
 
