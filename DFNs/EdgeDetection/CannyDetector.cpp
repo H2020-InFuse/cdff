@@ -57,6 +57,10 @@ CannyDetector::CannyDetector()
 	
 	configurationFilePath = "";
 	}
+CannyDetector::~CannyDetector()
+	{
+
+	}
 
 
 void CannyDetector::configure()
@@ -78,8 +82,8 @@ const CannyDetector::CannyDetectorOptionsSet CannyDetector::DEFAULT_PARAMETERS =
 	{
 	.cannyParameters =
 		{
-		.lowThreshold =50,
-		.highThreshold=80,
+		.lowThreshold =50.0,
+		.highThreshold=80.0,
 		.kernelSize = 3,
 		
 		}
@@ -106,7 +110,6 @@ cv::Mat CannyDetector::Canny(cv::Mat inputImage)
 void CannyDetector::ValidateParameters()
 	{
 	ASSERT(parameters.cannyParameters.lowThreshold > 0 && parameters.cannyParameters.highThreshold > 0, "Canny Detector Configuration error: thresholds have to be positive");
-	ASSERT(parameters.cannyParameters.lowThreshold < parameters.cannyParameters.highThreshold, "Canny Detector Configuration error: Low threshold is greater than High threshold");
 	
 	}
 

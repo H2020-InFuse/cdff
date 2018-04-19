@@ -40,17 +40,43 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
+
 FrameConstPtr MatToFrameConverter::Convert(const cv::Mat& image)
 	{
 	FramePtr frame = new Frame();
 
 	SetFrameSize(*frame, image.cols, image.rows);
+
+	if (image.rows == 0 && image.cols == 0)
+		return frame;
+         
+        
+	ASSERT(image.type() ==  CV_8UC1 || image.type()==CV_8UC3, "MatToFrameConverter: Only CV_8UC1 and CV_8UC1 type are supported in this conversion/function");
+
+	if(image.type()==CV_8UC1)	
+	 {
+	  SetFrameMode(*frame, MODE_GRAYSCALE);
+	  for(int rowIndex = 0; rowIndex < image.rows; rowIndex++)
+		{
+		for(int columnIndex = 0; columnIndex < image.cols; columnIndex++)
+			{
+			int pixel = (int)image.at<uchar>(rowIndex, columnIndex);
+			AddDataByte(*frame, (uint8_t) pixel);
+			
+			
+			}
+		}
+	 return frame;
+	}
+
+	if(image.type()==CV_8UC3)
+	{
+
 	SetFrameMode(*frame, MODE_RGB);
 
 	if (image.rows == 0 && image.cols == 0)
 		return frame;		
-	ASSERT(image.type() ==  CV_8UC3, "MatToFrameConverter: Only CV_8UC3 type is supported for this conversion at the moment");
-
+	
 	for(int rowIndex = 0; rowIndex < image.rows; rowIndex++)
 		{
 		for(int columnIndex = 0; columnIndex < image.cols; columnIndex++)
@@ -63,7 +89,12 @@ FrameConstPtr MatToFrameConverter::Convert(const cv::Mat& image)
 		}
 
 	return frame;
+
 	}
+
+	 
+	}
+
 
 FrameSharedConstPtr MatToFrameConverter::ConvertShared(const cv::Mat& image)
 	{

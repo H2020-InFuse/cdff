@@ -267,3 +267,24 @@ target_link_libraries(
 	cdff_helpers cdff_logger cdff_types converters_opencv opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock reconstruction_3d_stub_observed_scene
 )
 add_test(ObservedSceneTest ObservedSceneTest)
+
+add_executable(
+    CannyDetectorTest
+    DFNs/EdgeDetection/CannyDetector.cpp
+)
+target_link_libraries(
+	CannyDetectorTest
+	mock cdff_logger cdff_types canny_detector  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+)
+add_test(CannyDetectorTest CannyDetectorTest)
+
+add_executable(
+    SobelScharrTest
+    DFNs/SobelDerivative/SobelScharr.cpp
+)
+target_link_libraries(
+	SobelScharrTest
+	mock cdff_logger cdff_types sobel_scharr  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+)
+add_test(SobelScharrTest SobelScharrTest)
+

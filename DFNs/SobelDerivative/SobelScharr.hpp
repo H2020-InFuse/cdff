@@ -39,6 +39,7 @@
 #include <Frame.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <yaml-cpp/yaml.h>
 #include <Helpers/ParametersListHelper.hpp>
 
@@ -118,8 +119,8 @@ namespace dfn_ci {
 
 		struct SobelScharrOptionsSet
 			{
- 			 BorderMode borderMode;
 			 float constantBorderValue;
+ 			 BorderMode borderMode;
 			 DepthMode depthMode;
 			 SobelParameters sobelParameters;
 				

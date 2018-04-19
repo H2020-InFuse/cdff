@@ -37,7 +37,7 @@
  * --------------------------------------------------------------------------
  */
 #include <Catch/catch.h>
-#include <CannyDetection/CannyDetector.hpp>
+#include <EdgeDetection/CannyDetector.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <FrameToMatConverter.hpp>
@@ -67,10 +67,10 @@ TEST_CASE( "Call to process", "[process]" )
 	Mocks::MatToFrameConverter* mockOutputConverter = new Mocks::MatToFrameConverter();
 	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubOutputCache, mockOutputConverter);
 
-	cv::Mat inputImage;
-	cv::Mat testImage = cv::imread("../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
- 	cvtColor(testImage, inputImage, COLOR_BGR2GRAY );
-		
+	//cv::Mat inputImage;
+	//cv::Mat testImage = cv::imread("../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR); 
+ 	//cv::cvtColor(testImage, inputImage, COLOR_BGR2GRAY);
+	cv::Mat inputImage(500, 500, CV_8UC1, cv::Scalar(100));	
 	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputImage) );
 
 	FrameConstPtr outputImage = new Frame();

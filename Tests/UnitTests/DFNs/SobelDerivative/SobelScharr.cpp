@@ -69,7 +69,7 @@ TEST_CASE( "Call to process", "[process]" )
 
 	cv::Mat inputImage;
 	cv::Mat testImage = cv::imread("../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
- 	cvtColor(testImage, inputImage, COLOR_BGR2GRAY );
+ 	cvtColor(testImage, inputImage, cv::COLOR_BGR2GRAY );
 		
 	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputImage) );
 

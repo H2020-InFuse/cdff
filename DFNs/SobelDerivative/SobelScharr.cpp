@@ -66,7 +66,9 @@ SobelScharr::~SobelScharr()
 
 void SobelScharr::configure()
 	{
-	parametersHelper.ReadFile(configurationFilePath);
+
+	 //TODO: debug ReadFile(configurationFilePath)!
+	//parametersHelper.ReadFile(configurationFilePath);
 	ValidateParameters();
 	}
 
@@ -143,13 +145,13 @@ SobelScharr::DepthMode SobelScharr::DepthModeHelper::Convert(const std::string& 
 
 const SobelScharr::SobelScharrOptionsSet SobelScharr::DEFAULT_PARAMETERS =
 	{
-	.borderMode = CONSTANT,
 	.constantBorderValue = 0,
+	.borderMode = CONSTANT,
 	.depthMode = SIGNED16,
 	.sobelParameters =
 		{
-		.scale =1,
-		.delta=0
+		.scale = 1.0,
+		.delta = 0
 		}
 	
      };
@@ -234,6 +236,7 @@ void SobelScharr::ValidateInputs(cv::Mat inputImage)
 	{
 	ASSERT(inputImage.type() == CV_8UC1, "Sobel Scharr derivativeerror: input image is not of type CV_8UC1");
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "Sobel Scharr derivative error: input image is empty");
+	ASSERT(!inputImage.empty(), "Sobel Scharr derivative error: input image is empty");
 	}
 
 }

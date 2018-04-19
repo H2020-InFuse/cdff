@@ -2,7 +2,6 @@ add_library(
     sobel_derivative
     SobelDerivativeInterface.cpp
 )
-
 add_library(
     sobel_scharr
     SobelScharr.cpp
