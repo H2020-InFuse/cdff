@@ -62,6 +62,16 @@ namespace dfn_ci {
             * @param image, the edge Map output.
             */
             virtual FrameWrapper::FrameConstPtr edgeMapOutput();
+	   /**
+            * Receive value from output port sobelGradientX
+            * @return sobelGradx, the image gradient in x-direction output
+            */
+            virtual FrameWrapper::FrameConstPtr sobelGradientXOutput();
+            /**
+            * Receive value from output port sobelGradientY
+            * @return sobelGrady, the image gradient in y-direction output
+            */
+            virtual FrameWrapper::FrameConstPtr sobelGradientYOutput();
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -70,6 +80,9 @@ namespace dfn_ci {
         protected:
             FrameWrapper::FrameConstPtr inImage;
             FrameWrapper::FrameConstPtr outEdgeMap;
+   	    FrameWrapper::FrameConstPtr outSobelGradientX;
+            FrameWrapper::FrameConstPtr outSobelGradientY;
+
 
 	/* --------------------------------------------------------------------
 	 * Private

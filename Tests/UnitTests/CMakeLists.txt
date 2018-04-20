@@ -279,12 +279,12 @@ target_link_libraries(
 add_test(CannyDetectorTest CannyDetectorTest)
 
 add_executable(
-    SobelScharrTest
-    DFNs/SobelDerivative/SobelScharr.cpp
+    SobelDerivativeTest
+    DFNs/EdgeDetection/SobelDerivative.cpp
 )
 target_link_libraries(
-	SobelScharrTest
-	mock cdff_logger cdff_types sobel_scharr  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+	SobelDerivativeTest
+	mock cdff_logger cdff_types sobel_derivative  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
 )
-add_test(SobelScharrTest SobelScharrTest)
+add_test(SobelDerivativeTest SobelDerivativeTest)
 

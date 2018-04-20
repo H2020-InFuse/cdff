@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file CannyDetector.cpp
+ * @file SobelDerivative.cpp
  * @date 16/04/2018
  * @author Nassir W. Oumer
  */
@@ -37,7 +37,7 @@
  * --------------------------------------------------------------------------
  */
 #include <Catch/catch.h>
-#include <SobelDerivative/SobelScharr.hpp>
+#include <EdgeDetection/SobelDerivative.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <FrameToMatConverter.hpp>
@@ -77,14 +77,14 @@ TEST_CASE( "Call to process", "[process]" )
 	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&outputImage) );
 
 	
-	SobelScharr sobelgrad;
+	SobelDerivative sobelGradient;
 	
 	FrameConstPtr input = new Frame();
-	sobelgrad.imageInput(input);
-	sobelgrad.process();
+	sobelGradient.imageInput(input);
+	sobelGradient.process();
 
-	FrameConstPtr outputx = sobelgrad.sobelGradxOutput();
-	FrameConstPtr outputy = sobelgrad.sobelGradyOutput();
+	FrameConstPtr outputx = sobelGradient.sobelGradientXOutput();
+	FrameConstPtr outputy = sobelGradient.sobelGradientYOutput();
 	
 	delete(input);
 	delete(outputx);
@@ -93,9 +93,9 @@ TEST_CASE( "Call to process", "[process]" )
 
 TEST_CASE( "Call to configure", "[configure]" )
 	{
-	SobelScharr sobelgrad;
-	sobelgrad.setConfigurationFile("../tests/ConfigurationFiles/DFNs/SobelDerivative/SobelScharr_Conf.yaml");
-	sobelgrad.configure();	
+	SobelDerivative sobelGradient;
+	sobelGradient.setConfigurationFile("../tests/ConfigurationFiles/DFNs/SobelDerivative/SobelDerivative_Conf.yaml");
+	sobelGradient.configure();	
 	}
 
 /** @} */

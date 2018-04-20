@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file SobelScharr.cpp
+ * @file SobelDerivative.cpp
  * @date 12/04/2018
  * @author Nassir W. Oumer
  */
@@ -26,7 +26,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include "SobelScharr.hpp"
+#include "SobelDerivative.hpp"
 #include <Errors/Assert.hpp>
 #include <FrameToMatConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -49,7 +49,7 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
-SobelScharr::SobelScharr()
+SobelDerivative::SobelDerivative()
 	{
 	parametersHelper.AddParameter<float>("GeneralParameters", "ConstantBorderValue", parameters.constantBorderValue, DEFAULT_PARAMETERS.constantBorderValue);
 	parametersHelper.AddParameter<BorderMode, BorderModeHelper>("GeneralParameters", "BorderMode", parameters.borderMode, DEFAULT_PARAMETERS.borderMode);
@@ -59,12 +59,12 @@ SobelScharr::SobelScharr()
 	
 	configurationFilePath = "";
 	}
-SobelScharr::~SobelScharr()
+SobelDerivative::~SobelDerivative()
 {
 
 }
 
-void SobelScharr::configure()
+void SobelDerivative::configure()
 	{
 
 	 //TODO: debug ReadFile(configurationFilePath)!
@@ -73,26 +73,26 @@ void SobelScharr::configure()
 	}
 
 
-void SobelScharr::process() 
+void SobelDerivative::process() 
 	{
 	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
 	ValidateInputs(inputImage);
 	
 	cv::Mat  scharrGradx= sobelx(inputImage);
-	outSobelGradx = ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Convert(scharrGradx);
+	outSobelGradientX = ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Convert(scharrGradx);
 
 	cv::Mat  scharrGrady= sobely(inputImage);
-	outSobelGrady = ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Convert(scharrGrady);
+	outSobelGradientY = ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Convert(scharrGrady);
 	}
 
 
-SobelScharr::BorderModeHelper::BorderModeHelper(const std::string& parameterName, BorderMode& boundVariable, const BorderMode& defaultValue) :
+SobelDerivative::BorderModeHelper::BorderModeHelper(const std::string& parameterName, BorderMode& boundVariable, const BorderMode& defaultValue) :
 	ParameterHelper(parameterName, boundVariable, defaultValue)
 	{
 
 	}
 
-SobelScharr::BorderMode SobelScharr::BorderModeHelper::Convert(const std::string& outputFormat)
+SobelDerivative::BorderMode SobelDerivative::BorderModeHelper::Convert(const std::string& outputFormat)
 	{
 	if (outputFormat == "Constant" || outputFormat == "0")
 		{
@@ -114,13 +114,13 @@ SobelScharr::BorderMode SobelScharr::BorderModeHelper::Convert(const std::string
 	return CONSTANT;
 	}
 
-SobelScharr::DepthModeHelper::DepthModeHelper(const std::string& parameterName, DepthMode& depthVariable, const DepthMode& defaultValue) :
+SobelDerivative::DepthModeHelper::DepthModeHelper(const std::string& parameterName, DepthMode& depthVariable, const DepthMode& defaultValue) :
 	ParameterHelper(parameterName, depthVariable, defaultValue)
 	{
 
 	}
 
-SobelScharr::DepthMode SobelScharr::DepthModeHelper::Convert(const std::string& outputFormat)
+SobelDerivative::DepthMode SobelDerivative::DepthModeHelper::Convert(const std::string& outputFormat)
 	{
 	if (outputFormat == "Source" || outputFormat == "0")
 		{
@@ -143,7 +143,7 @@ SobelScharr::DepthMode SobelScharr::DepthModeHelper::Convert(const std::string& 
 	return SIGNED16;
 	}
 
-const SobelScharr::SobelScharrOptionsSet SobelScharr::DEFAULT_PARAMETERS =
+const SobelDerivative::SobelDerivativeOptionsSet SobelDerivative::DEFAULT_PARAMETERS =
 	{
 	.constantBorderValue = 0,
 	.borderMode = CONSTANT,
@@ -157,7 +157,7 @@ const SobelScharr::SobelScharrOptionsSet SobelScharr::DEFAULT_PARAMETERS =
      };
 
 
-cv::Mat SobelScharr::sobelx(cv::Mat inputImage)
+cv::Mat SobelDerivative::sobelx(cv::Mat inputImage)
 {
 	int borderMode;
  switch(parameters.borderMode)
@@ -183,15 +183,15 @@ cv::Mat SobelScharr::sobelx(cv::Mat inputImage)
   double param_scale=(double)parameters.sobelParameters.scale; 
   double param_delta=(double)parameters.sobelParameters.delta; 
 
-  cv::Mat grad_x, abs_grad_x;
+  cv::Mat gradientX, abs_gradientX;
   
-  cv::Scharr(inputImage, grad_x, depthMode, 1, 0, param_scale, param_delta,borderMode);
-  convertScaleAbs(grad_x, abs_grad_x );
+  cv::Scharr(inputImage, gradientX, depthMode, 1, 0, param_scale, param_delta,borderMode);
+  convertScaleAbs(gradientX, abs_gradientX );
 
- return abs_grad_x;
+ return abs_gradientX;
 }
 
-cv::Mat SobelScharr::sobely(cv::Mat inputImage)
+cv::Mat SobelDerivative::sobely(cv::Mat inputImage)
 {
 	int borderMode;
  switch(parameters.borderMode)
@@ -217,24 +217,24 @@ cv::Mat SobelScharr::sobely(cv::Mat inputImage)
   double param_scale=(double)parameters.sobelParameters.scale; 
   double param_delta=(double)parameters.sobelParameters.delta; 
  
-  cv::Mat grad_y, abs_grad_y;
+  cv::Mat gradientY, abs_gradientY;
   
-  cv::Scharr(inputImage, grad_y, depthMode, 0, 1, param_scale, param_delta,borderMode);
-  convertScaleAbs(grad_y, abs_grad_y );
+  cv::Scharr(inputImage, gradientY, depthMode, 0, 1, param_scale, param_delta,borderMode);
+  convertScaleAbs(gradientY, abs_gradientY );
 
- return abs_grad_y;
+ return abs_gradientY;
 }
 
 
-void SobelScharr::ValidateParameters()
+void SobelDerivative::ValidateParameters()
 	{
 	ASSERT(parameters.sobelParameters.scale > 0 , "Sobel Scharr derivative Configuration error: scale must be positive");
 
 	}
 
-void SobelScharr::ValidateInputs(cv::Mat inputImage)
+void SobelDerivative::ValidateInputs(cv::Mat inputImage)
 	{
-	ASSERT(inputImage.type() == CV_8UC1, "Sobel Scharr derivativeerror: input image is not of type CV_8UC1");
+	ASSERT(inputImage.type() == CV_8UC1, "Sobel Scharr derivative error: input image is not of type CV_8UC1");
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "Sobel Scharr derivative error: input image is empty");
 	ASSERT(!inputImage.empty(), "Sobel Scharr derivative error: input image is empty");
 	}

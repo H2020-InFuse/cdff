@@ -58,6 +58,15 @@ FrameConstPtr EdgeDetectionInterface::edgeMapOutput()
 	{
     	return outEdgeMap;
 	}
+FrameConstPtr EdgeDetectionInterface::sobelGradientXOutput() 
+	{
+    	return outSobelGradientX;
+	}
+
+FrameConstPtr EdgeDetectionInterface::sobelGradientYOutput() 
+	{
+    	return outSobelGradientY;
+	}
 
 
 

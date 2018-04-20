@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file SobelScharr.hpp
+ * @file SobelDerivative.hpp
  * @date 12/04/2018
  * @author Nassir W. Oumer
  */
@@ -14,9 +14,9 @@
 /*!
  * @addtogroup DFNs
  * 
- *  @brief This DFN implements a Sobel image gradient (Scharr derivative).
+ *  @brief This DFN implements a Sobel image gradient (e.g Scharr derivative).
  *  
- * This DFN is Sobel implementation (Scharr operator) of OpenCV .
+ * This DFN is Sobel implementation (e.g Scharr operator) of OpenCV .
  * 
  * This DFN implementation requires the following parameters:
  * @param scaleDerivative, optional scale factor for the computed derivative values
@@ -26,8 +26,8 @@
  * @{
  */
 
-#ifndef SOBEL_SCHARR_HPP
-#define SOBEL_SCHARR_HPP
+#ifndef SOBEL_DERIVATIVE_HPP
+#define SOBEL_DERIVATIVE_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -35,7 +35,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <SobelDerivative/SobelDerivativeInterface.hpp>
+#include <EdgeDetection/EdgeDetectionInterface.hpp>
 #include <Frame.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -52,15 +52,15 @@ namespace dfn_ci {
  *
  * --------------------------------------------------------------------------
  */
-    class SobelScharr : public SobelDerivativeInterface
+    class SobelDerivative : public EdgeDetectionInterface
     {
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
         public:
-            SobelScharr();
-            ~SobelScharr();
+            SobelDerivative();
+            ~SobelDerivative();
             void process();
             void configure();
 
@@ -117,7 +117,7 @@ namespace dfn_ci {
 			};		
 		
 
-		struct SobelScharrOptionsSet
+		struct SobelDerivativeOptionsSet
 			{
 			 float constantBorderValue;
  			 BorderMode borderMode;
@@ -127,9 +127,9 @@ namespace dfn_ci {
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
-		SobelScharrOptionsSet parameters;
+		SobelDerivativeOptionsSet parameters;
 		
-		static const SobelScharrOptionsSet DEFAULT_PARAMETERS;
+		static const SobelDerivativeOptionsSet DEFAULT_PARAMETERS;
 
 		cv::Mat sobelx(cv::Mat inputImage);
 		cv::Mat sobely(cv::Mat inputImage);
@@ -141,5 +141,5 @@ namespace dfn_ci {
     };
 }
 #endif
-/* SOBEL_SCHARR_HPP */
+/* SOBEL_DERIVATIVE */
 /** @} */

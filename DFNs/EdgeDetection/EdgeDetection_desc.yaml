@@ -2,13 +2,20 @@ name: EdgeDetection
 input_ports:
     - name: image
       type: Frame
-      doc: a 2D undistorted camera image
+      doc: a 2D camera image
 output_ports:
     - name: edgeMap
       type: Frame
       doc: the edge map output
+    - name: sobelGradientX
+      type: Frame
+      doc: the image gradient in x-direction output
+    - name: sobelGradientY
+      type: Frame
+      doc: the image gradient in y-direction output
 implementations:
     - CannyDetector
+    - SobelDerivative
    
      
 
