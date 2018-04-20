@@ -66,6 +66,7 @@ class DisparityMappingTestInterface : public PerformanceTestInterface
 		cv::Mat referenceDisparity;
 		cv::Mat normalizedReferenceDisparity;
 		bool saveDisparity;
+		bool noReferenceDisparity;
 		std::string leftImageFilePath;
 		std::string rightImageFilePath;
 
@@ -88,6 +89,8 @@ DisparityMappingTestInterface::DisparityMappingTestInterface(std::string folderP
 
 	leftImageFilePath = "../tests/Data/Images/RectifiedChair40Left.png";
 	rightImageFilePath = "../tests/Data/Images/RectifiedChair40Right.png";
+
+	noReferenceDisparity = false;
 	}
 
 DisparityMappingTestInterface::~DisparityMappingTestInterface()
@@ -105,6 +108,12 @@ void DisparityMappingTestInterface::SetImageFilesPath(std::string leftImageFileP
 
 void DisparityMappingTestInterface::SetReferenceDisparity(std::string referenceDisparityFilePath)
 	{
+	if (referenceDisparityFilePath == "NULL" || referenceDisparityFilePath == "null" || referenceDisparityFilePath == "Null")
+		{
+		noReferenceDisparity = true;
+		return;
+		}
+
 	cv::FileStorage file(referenceDisparityFilePath, cv::FileStorage::READ);
 	file["depth"] >> referenceDisparity;
 
@@ -133,8 +142,9 @@ bool DisparityMappingTestInterface::SetNextInputs()
 		{
 		cv::Mat cvLeftImage = cv::imread(leftImageFilePath, cv::IMREAD_COLOR);
 		cv::Mat cvRightImage = cv::imread(rightImageFilePath, cv::IMREAD_COLOR);
+		ASSERT( cvLeftImage.cols > 0 && cvLeftImage.rows > 0, "Performance Test Error: bad input images");
 		ASSERT( cvLeftImage.size() == cvRightImage.size(), "Performance Test Error: input images do not have same size");
-		ASSERT( referenceDisparity.size() == cvRightImage.size(), "Performance Test Error: reference disparity does not have same size as input images");
+		ASSERT(noReferenceDisparity || referenceDisparity.size() == cvRightImage.size(), "Performance Test Error: reference disparity does not have same size as input images");
 
 		MatToFrameConverter converter;
 		FrameConstPtr leftFrame = converter.Convert(cvLeftImage);
@@ -187,24 +197,29 @@ DisparityMappingTestInterface::MeasuresMap DisparityMappingTestInterface::Extrac
 		}
 	measuresMap["OutputQuality"] = badOutput ? 0 : 1;	
 
-	//This loop computes the difference between the computed disparity and the reference disparity after normalization of both disparities in the interval [0, 255]
-	uint64_t cost = 0;
-	unsigned pixelsNumber = 0;
-	for(unsigned row = 0; row < normalizedReferenceDisparity.rows; row++)
+	if (!noReferenceDisparity)
 		{
-		for(unsigned column = 0; column < normalizedReferenceDisparity.cols; column++)
+
+		//This loop computes the difference between the computed disparity and the reference disparity after normalization of both disparities in the interval [0, 255]
+		uint64_t cost = 0;
+		unsigned pixelsNumber = 0;
+		for(unsigned row = 0; row < normalizedReferenceDisparity.rows; row++)
 			{
-			uint8_t referenceDisparityValue = normalizedReferenceDisparity.at<uint8_t>(row, column);
-			if (referenceDisparityValue > 0)
+			for(unsigned column = 0; column < normalizedReferenceDisparity.cols; column++)
 				{
-				unsigned validColumn = firstValidColumn + (column * numberOfValidColumns / normalizedReferenceDisparity.cols );
-				uint8_t disparityValue = normalizedDisparity.at<uint8_t>(row, validColumn);
-				cost += std::abs(static_cast<int16_t>(disparityValue) - static_cast<int16_t>(255 - referenceDisparityValue));	
-				pixelsNumber++;
+				uint8_t referenceDisparityValue = normalizedReferenceDisparity.at<uint8_t>(row, column);
+				if (referenceDisparityValue > 0)
+					{
+					unsigned validColumn = firstValidColumn + (column * numberOfValidColumns / normalizedReferenceDisparity.cols );
+					uint8_t disparityValue = normalizedDisparity.at<uint8_t>(row, validColumn);
+					cost += std::abs(static_cast<int16_t>(disparityValue) - static_cast<int16_t>(255 - referenceDisparityValue));	
+					pixelsNumber++;
+					}
 				}
 			}
+		measuresMap["DisparityCost"] = static_cast<double>(cost) / static_cast<double>(pixelsNumber);
+
 		}
-	measuresMap["DisparityCost"] = static_cast<double>(cost) / static_cast<double>(pixelsNumber);
 
 
 	if (saveDisparity)

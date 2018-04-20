@@ -11,15 +11,15 @@
     UseFullScaleTwoPassAlgorithm: false
     UseDisparityToDepthMap: false
   - Name: Prefilter
-    Maximum: 5
+    Maximum: 11
   - Name: Disparities
     Minimum: 0
-    NumberOfIntervals: 128
+    NumberOfIntervals: 256
     UseMaximumDifference: true
     MaximumDifference: 10
-    SpeckleRange: 50
+    SpeckleRange: 8
     SpeckleWindow: 10
-    SmoothnessParameter1: 600z
+    SmoothnessParameter1: 600
     SmoothnessParameter2: 10000
   - Name: BlocksMatching
     BlockSize: 11
