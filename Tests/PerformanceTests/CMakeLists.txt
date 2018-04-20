@@ -51,6 +51,15 @@ target_link_libraries(
 	mock cdff_helpers cdff_logger cdff_types orb_detector_descriptor flann_matcher fundamental_matrix_ransac essential_matrix_decomposition performance_integration_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
 )
 
+add_executable(
+    harris_shot_icp
+    DFNsIntegration/Odometry3D/HarrisShotIcp.cpp
+)
+target_link_libraries(
+	harris_shot_icp
+	mock cdff_helpers cdff_logger cdff_types harris_detector_3d shot_descriptor_3d icp_3d performance_integration_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
+)
+
 
 ## DFN performance Tests
 add_library(
