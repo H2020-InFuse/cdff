@@ -55,9 +55,17 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-ReconstructionFromMotion::ReconstructionFromMotion(Map* map) :
-	map(map)
+ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
 	{
+	if (map == NULL)
+		{
+		this->map = new ObservedScene();
+		}
+	else
+		{
+		this->map = map;
+		}
+
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "PositionX", parameters.rightToLeftCameraPose.positionX, DEFAULT_PARAMETERS.rightToLeftCameraPose.positionX);
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "PositionY", parameters.rightToLeftCameraPose.positionY, DEFAULT_PARAMETERS.rightToLeftCameraPose.positionY);
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "PositionZ", parameters.rightToLeftCameraPose.positionZ, DEFAULT_PARAMETERS.rightToLeftCameraPose.positionZ);
@@ -66,6 +74,8 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map) :
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "OrientationY", parameters.rightToLeftCameraPose.orientationY, DEFAULT_PARAMETERS.rightToLeftCameraPose.orientationY);
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "OrientationZ", parameters.rightToLeftCameraPose.orientationZ, DEFAULT_PARAMETERS.rightToLeftCameraPose.orientationZ);
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "OrientationW", parameters.rightToLeftCameraPose.orientationW, DEFAULT_PARAMETERS.rightToLeftCameraPose.orientationW);
+
+	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 
 	filteredCurrentLeftImage = NULL;
 	filteredPastLeftImage = NULL;
@@ -160,6 +170,7 @@ void ReconstructionFromMotion::setup()
 
 const ReconstructionFromMotion::ReconstructionFromMotionOptionsSet ReconstructionFromMotion::DEFAULT_PARAMETERS = 
 	{
+	.pointCloudMapResolution = 1e-2,
 	.rightToLeftCameraPose = 
 		{
 		.positionX = 0.122,
@@ -186,6 +197,9 @@ void ReconstructionFromMotion::ConfigureExtraParameters()
 	SetPosition(*rightToLeftCameraPose, parameters.rightToLeftCameraPose.positionX, parameters.rightToLeftCameraPose.positionY, parameters.rightToLeftCameraPose.positionZ);
 	SetOrientation(*rightToLeftCameraPose, parameters.rightToLeftCameraPose.orientationX, parameters.rightToLeftCameraPose.orientationY, 
 			parameters.rightToLeftCameraPose.orientationZ, parameters.rightToLeftCameraPose.orientationW);
+
+	ASSERT(parameters.pointCloudMapResolution > 0, "RegistrationFromStereo Error, Point Cloud Map resolution is not positive");
+	map->SetPointCloudMapResolution(parameters.pointCloudMapResolution);
 	}
 
 /**

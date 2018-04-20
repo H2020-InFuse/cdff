@@ -80,58 +80,6 @@
     Element_2_0: 0.0025628031195234
     Element_2_1: -0.0019717317600811
     Element_2_2: 0.99999477214335
-- Name: featureExtractor
-  Type: FeaturesExtraction2D
-  Implementation: OrbDetectorDescriptor
-  Parameters:
-  - Name: GeneralParameters
-    EdgeThreshold: 39
-    FastThreshold: 20
-    FirstLevel: 0
-    MaxFeaturesNumber: 1024
-    LevelsNumber: 4
-    PatchSize: 51
-    ScaleFactor: 1.20
-    ScoreType: 0
-    SizeOfBrightnessTestSet: 2
-- Name: featuresMatcher
-  Type: FeaturesMatching2D
-  Implementation: FlannMatcher
-  Parameters:
-  - Name: GeneralParameters
-    DistanceThreshold: 0.2
-    NumberOfChecks: 16
-    SortedSearch: false
-    Epsilon: 0
-    MatcherMethod: 4
-    AcceptanceRatio: 0.75
-  - Name: LocalitySensitiveHashingParameters
-    TableNumber: 1
-    KeySize: 4
-    MultiProbeLevel: 2
-- Name: fundamentalMatrixComputer
-  Type: FundamentalMatrixComputation
-  Implementation: FundamentalMatrixRansac
-  Parameters:
-  - Name: GeneralParameters
-    OutlierThreshold: 1 
-    Confidence: 0.90
-- Name: cameraTransformEstimator
-  Type: CamerasTransformEstimation
-  Implementation: EssentialMatrixDecomposition
-  Parameters:
-  - Name: GeneralParameters
-    NumberOfTestPoints: 20
-  - Name: FirstCameraMatrix
-    FocalLengthX: 693.4181807813
-    FocalLengthY: 690.36629049483
-    PrinciplePointX: 671.7716154809
-    PrinciplePointY: 391.33378485796
-  - Name: SecondCameraMatrix
-    FocalLengthX: 693.70228594399
-    FocalLengthY: 691.5964653592
-    PrinciplePointX: 672.36931687204
-    PrinciplePointY: 393.60885185491
 - Name: reconstructor3D
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
@@ -180,3 +128,40 @@
     LimitX: 10
     LimitY: 10
     LimitZ: 3
+- Name: featuresExtractor3d
+  Type: FeaturesExtraction3D
+  Implementation: HarrisDetector3D
+  Parameters:
+  - Name: GeneralParameters
+    Radius: 0.01
+    SearchRadius: 0.01
+    NonMaxSuppression: true
+    DetectionThreshold: 0.001
+    EnableRefinement: false
+    NumberOfThreads: 0
+    HarrisMethod: Harris
+    OutputFormat: References
+- Name: featuresDescriptor3d
+  Type: FeaturesDescription3D
+  Implementation: ShotDescriptor3D
+  Parameters:
+  - Name: GeneralParameters
+    LocalReferenceFrameEstimationRadius: 0.10
+    SearchRadius: 0.1
+    OutputFormat: Positions
+    EnableNormalsEstimation: true
+    ForceNormalsEstimation: true
+  - Name: NormalEstimationParameters
+    SearchRadius: 0.1
+    NeighboursSetSize: 0
+- Name: featuresMatcher3d
+  Type: FeaturesMatching3D
+  Implementation: Ransac3D
+  Parameters:
+  - Name: GeneralParameters
+    SimilarityThreshold: 0.50
+    InlierFraction: 0.50
+    CorrespondenceRandomness: 25
+    NumberOfSamples: 3
+    MaximumIterations: 95000
+    MaxCorrespondenceDistance: 0.010

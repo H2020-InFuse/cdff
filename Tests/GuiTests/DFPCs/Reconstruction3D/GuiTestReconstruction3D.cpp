@@ -34,6 +34,7 @@ using namespace dfpc_ci;
 using namespace FrameWrapper;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
 using namespace PoseWrapper;
 using namespace Common;
 using namespace PointCloudWrapper;
@@ -83,6 +84,12 @@ GuiTestReconstruction3D::~GuiTestReconstruction3D()
 
 	delete(stubOutputCache);
 	delete(mockOutputConverter);
+
+	delete(stubVector3dCache);
+	delete(mockVector3dConverter);
+
+	delete(stubTransform3dCache);
+	delete(mockTransform3dConverter);
 	}
 
 void GuiTestReconstruction3D::Run(dfpc_ci::Reconstruction3DInterface& reconstructor3d)
@@ -158,6 +165,14 @@ void GuiTestReconstruction3D::SetUpMocksAndStubs()
 	stubOutputCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
 	mockOutputConverter = new Mocks::EigenTransformToTransform3DConverter();
 	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, Mocks::EigenTransformToTransform3DConverter>::Instance(stubOutputCache, mockOutputConverter);
+
+	stubVector3dCache = new Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>();
+	mockVector3dConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
+	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubVector3dCache, mockVector3dConverter);
+
+	stubTransform3dCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
+	mockTransform3dConverter = new Mocks::EigenTransformToTransform3DConverter();
+	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubTransform3dCache, mockTransform3dConverter);
 	}
 
 void GuiTestReconstruction3D::LoadImagesList(std::string imagesListFileName)

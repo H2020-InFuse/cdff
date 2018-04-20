@@ -56,7 +56,6 @@
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Mocks/Common/Converters/PointCloudToPclNormalsCloudConverter.hpp>
 #include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.cpp>
-#include <Stubs/DFPCs/Reconstruction3D/ObservedScene.hpp>
 
 #include <PerformanceTests/DFPCs/PerformanceTestInterface.hpp>
 
@@ -116,8 +115,7 @@ class ReconstructionFromStereoTestInterface : public PerformanceTestInterface
 ReconstructionFromStereoTestInterface::ReconstructionFromStereoTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName)
 	: PerformanceTestInterface(folderPath, baseConfigurationFileName, performanceMeasuresFileName)
 	{
-	map = new ObservedScene();
-	reconstructionFromStereo = new ReconstructionFromStereo(map);
+	reconstructionFromStereo = new ReconstructionFromStereo;
 	SetDfpc(reconstructionFromStereo);
 	SetupMocksAndStubs();
 

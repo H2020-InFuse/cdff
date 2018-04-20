@@ -27,7 +27,6 @@
  * --------------------------------------------------------------------------
  */
 #include "GuiTestReconstruction3D.hpp"
-#include <Stubs/DFPCs/Reconstruction3D/ObservedScene.hpp>
 #include <Visualizers/OpencvVisualizer.hpp>
 #include <Visualizers/PclVisualizer.hpp>
 #include <Reconstruction3D/ReconstructionFromStereo.hpp>
@@ -82,8 +81,7 @@ int main(int argc, char** argv)
 		StringToImageFilesType(imageFilesType)
 		);
 
-	Map* map = new ObservedScene();
-	ReconstructionFromStereo reconstructionFromStereo(map);
+	ReconstructionFromStereo reconstructionFromStereo;
 
 	guiReconstruction3d.Run(reconstructionFromStereo);
 

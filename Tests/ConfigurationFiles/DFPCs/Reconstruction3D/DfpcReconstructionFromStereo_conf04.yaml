@@ -1,3 +1,7 @@
+- Name: DFNsChain
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudMapResolution: 0.01
 - Name: leftFilter
   Type: ImageFiltering
   Implementation: ImageUndistortionRectification

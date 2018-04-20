@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file RecomstructionFromMotion.cpp
- * @date 08/03/2018
+ * @file RegistrationFromStereo.cpp
+ * @date 18/04/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DFPCsTest
  * 
- * Testing application for the DFPC ReconstructionFromMotion.
+ * Testing application for the DFPC RegistrationFromStereo.
  * 
  * 
  * @{
@@ -29,12 +29,13 @@
 #include "GuiTestReconstruction3D.hpp"
 #include <Visualizers/OpencvVisualizer.hpp>
 #include <Visualizers/PclVisualizer.hpp>
-#include <Reconstruction3D/ReconstructionFromMotion.hpp>
+#include <Reconstruction3D/RegistrationFromStereo.hpp>
 #include <Errors/Assert.hpp>
+
 
 using namespace dfpc_ci;
 
-const std::string CONFIGURATION_FILE_PATH = "../../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcReconstructionFromMotion_conf02.yaml";
+const std::string CONFIGURATION_FILE_PATH = "../../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcRegistrationFromStereo_conf01.yaml";
 const std::string IMAGE_FILES_FOLDER = "../../tests/Data/Images/";
 const std::string IMAGES_LIST_FILE_NAME = "imagesListStereo.txt";
 const std::string IMAGE_FILES_TYPE = "stereocamera_oneimage";
@@ -43,6 +44,7 @@ GuiTestReconstruction3D::ImageFilesType StringToImageFilesType(std::string strin
 	{
 	if (string == "monocamera" || string == "mono" || string == "camera" || string == "singlecamera" || string == "Monocamera" || string == "Mono" || string == "Camera")
 		{
+		ASSERT(false, "This gui test does not support the use of monocamera. Choose one of: stereocamera_oneimage, or stereocamera_twoimages");
 		return GuiTestReconstruction3D::MONO_CAMERA;
 		}
 	else if (string == "stereocamera_oneimage" || string == "stereo_one" || string == "stereocamera_one" || string == "stereo_oneimage")
@@ -79,10 +81,10 @@ int main(int argc, char** argv)
 		StringToImageFilesType(imageFilesType)
 		);
 
-	ReconstructionFromMotion reconstructionFromMotion;
+	RegistrationFromStereo registrationFromStereo;
 
-	guiReconstruction3d.Run(reconstructionFromMotion);
- 
+	guiReconstruction3d.Run(registrationFromStereo);
+
 	return 0;
 	};
 

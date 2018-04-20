@@ -36,8 +36,10 @@
 #include <MatToFrameConverter.hpp>
 #include <Frame.hpp>
 #include <VisualPointFeatureVector2D.hpp>
+#include <VisualPointFeatureVector3D.hpp>
 #include <Pose.hpp>
 #include <PointCloud.hpp>
+#include <SupportTypes.hpp>
 
 #include <Converters/SupportTypes.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -54,6 +56,7 @@
 #include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Mocks/Common/Converters/PointCloudToPclNormalsCloudConverter.hpp>
 #include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.hpp>
+#include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -128,6 +131,12 @@ class GuiTestReconstruction3D
 
 		Stubs::CacheHandler<Eigen::Matrix4f, PoseWrapper::Transform3DConstPtr>* stubOutputCache;
 		Mocks::EigenTransformToTransform3DConverter* mockOutputConverter;
+
+		Stubs::CacheHandler<VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr, Converters::SupportTypes::PointCloudWithFeatures >* stubVector3dCache;
+		Mocks::VisualPointFeatureVector3DToPclPointCloudConverter* mockVector3dConverter;
+
+		Stubs::CacheHandler<Eigen::Matrix4f, PoseWrapper::Transform3DConstPtr>* stubTransform3dCache;
+		Mocks::EigenTransformToTransform3DConverter* mockTransform3dConverter;
 
 		std::string imageFilesFolder;
 		std::string configurationFilePath;
