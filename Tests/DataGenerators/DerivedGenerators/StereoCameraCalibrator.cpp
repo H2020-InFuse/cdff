@@ -128,6 +128,13 @@ void StereoCameraCalibrator::RectifyCameras()
 	PRINT_TO_LOG("Rectified Left Projection Matrix \n", leftRectifiedProjectionMatrix);
 	PRINT_TO_LOG("Rectified Right Projection Matrix \n", rightRectifiedProjectionMatrix);	
 	PrintDisparityToDepthMatrix(disparityToDepthMatrix);
+
+	double baseline = std::sqrt(
+			translationMatrix.at<double>(0,0)*translationMatrix.at<double>(0,0) +
+			translationMatrix.at<double>(1,0)*translationMatrix.at<double>(1,0) +
+			translationMatrix.at<double>(2,0)*translationMatrix.at<double>(2,0)
+			);
+	PRINT_TO_LOG("Baseline \n", baseline);
 	}
 
 void StereoCameraCalibrator::ComputeUndistortionRectificationMap()

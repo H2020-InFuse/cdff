@@ -80,6 +80,16 @@ target_link_libraries(
 	mock cdff_helpers cdff_logger cdff_types hirschmuller_disparity_mapping performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
 )
 
+add_executable(
+	image_undistortion_rectification_performance_test
+	DFNs/ImageFiltering/ImageUndistortionRectification.cpp
+)
+target_link_libraries(
+	image_undistortion_rectification_performance_test
+	mock cdff_helpers cdff_logger cdff_types image_undistortion_rectification performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
+)
+
+
 ## DFPC performance tests
 add_library(
     performance_dfpc_test_interface

@@ -74,6 +74,8 @@ class HarrisShotIcp : public PerformanceTestInterface
 	public:
 		HarrisShotIcp(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName);
 		~HarrisShotIcp();
+
+		void SetInputCloud(std::string inputCloudFile, float voxelGridFilterSize);
 	protected:
 
 	private:
@@ -123,6 +125,8 @@ class HarrisShotIcp : public PerformanceTestInterface
 		MeasuresMap ExtractMeasures();
 
 		int long inputId;
+		std::string inputCloudFile;
+		float voxelGridFilterSize;
 	};
 
 HarrisShotIcp::HarrisShotIcp(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName)
@@ -151,6 +155,8 @@ HarrisShotIcp::HarrisShotIcp(std::string folderPath, std::vector<std::string> ba
 	icpSuccess = false;
 
 	inputId = -1;
+	inputCloudFile = "../tests/Data/PointClouds/bunny0.ply";
+	voxelGridFilterSize = 0.001;
 	LoadSceneCloud();
 	}
 
@@ -197,10 +203,17 @@ HarrisShotIcp::~HarrisShotIcp()
 		}
 	}
 
+void HarrisShotIcp::SetInputCloud(std::string inputCloudFile, float voxelGridFilterSize)
+	{
+	this->inputCloudFile = inputCloudFile;
+	this->voxelGridFilterSize = voxelGridFilterSize;
+	LoadSceneCloud();
+	}
+
 void HarrisShotIcp::LoadSceneCloud()
 	{
 	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::io::loadPLYFile("../tests/Data/PointClouds/bunny0.ply", *basePclCloud);
+	pcl::io::loadPLYFile(inputCloudFile, *basePclCloud);
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr finitePointsPclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(unsigned pointIndex = 0; pointIndex < basePclCloud->points.size(); pointIndex++)
@@ -214,7 +227,7 @@ void HarrisShotIcp::LoadSceneCloud()
 
 	pcl::VoxelGrid<pcl::PointXYZ> grid;
 	grid.setInputCloud(finitePointsPclCloud);
-	grid.setLeafSize(0.001, 0.001, 0.001);
+	grid.setLeafSize(voxelGridFilterSize, voxelGridFilterSize, voxelGridFilterSize);
 
 	sceneCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	grid.filter(*sceneCloud);
@@ -359,6 +372,14 @@ int main(int argc, char** argv)
 		"Icp3d_PerformanceTest_1.yaml"
 		};
 	HarrisShotIcp interface("../tests/ConfigurationFiles/DFNsIntegration/Odometry3D", baseConfigurationFiles, "Harris_Shot_Icp.txt");
+
+	if (argc >= 3)
+		{
+		std::string inputCloudFile = argv[1];
+		float voxelGridFilterSize = std::stof(argv[2]);
+		interface.SetInputCloud(inputCloudFile, voxelGridFilterSize);
+		}
+
 	interface.Run();
 	};
 
