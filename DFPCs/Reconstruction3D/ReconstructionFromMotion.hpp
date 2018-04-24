@@ -105,7 +105,8 @@ namespace dfpc_ci {
 		float searchRadius;
 		PoseWrapper::Pose3DPtr rightToLeftCameraPose;
 
-		dfn_ci::ImageFilteringInterface* filter;
+		dfn_ci::ImageFilteringInterface* leftFilter;
+		dfn_ci::ImageFilteringInterface* rightFilter;		
 		dfn_ci::FeaturesExtraction2DInterface* featuresExtractor;
 		dfn_ci::FeaturesDescription2DInterface* optionalFeaturesDescriptor;
 		dfn_ci::FeaturesMatching2DInterface* featuresMatcher;	

@@ -76,6 +76,7 @@ class HarrisShotIcp : public PerformanceTestInterface
 		~HarrisShotIcp();
 
 		void SetInputCloud(std::string inputCloudFile, float voxelGridFilterSize);
+		void SetModelsCloud(std::string groundTruthTransformFilePath, std::vector<std::string> modelsCloudFilesList); 
 	protected:
 
 	private:
@@ -116,6 +117,7 @@ class HarrisShotIcp : public PerformanceTestInterface
 		Aggregator* groundPositionDistanceAggregator;
 		Aggregator* groundOrientationDistanceAggregator;
 
+		void LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string cloudFile);
 		void LoadSceneCloud();
 		void LoadModelCloud(int long inputId);
 
@@ -126,7 +128,10 @@ class HarrisShotIcp : public PerformanceTestInterface
 
 		int long inputId;
 		std::string inputCloudFile;
+		std::string groundTruthTransformFilePath;
 		float voxelGridFilterSize;
+		std::vector<std::string> modelsCloudFilesList;
+		std::vector<Pose3D> posesList;
 	};
 
 HarrisShotIcp::HarrisShotIcp(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName)
@@ -156,6 +161,7 @@ HarrisShotIcp::HarrisShotIcp(std::string folderPath, std::vector<std::string> ba
 
 	inputId = -1;
 	inputCloudFile = "../tests/Data/PointClouds/bunny0.ply";
+	groundTruthTransformFilePath = "NULL";
 	voxelGridFilterSize = 0.001;
 	LoadSceneCloud();
 	}
@@ -210,13 +216,40 @@ void HarrisShotIcp::SetInputCloud(std::string inputCloudFile, float voxelGridFil
 	LoadSceneCloud();
 	}
 
-void HarrisShotIcp::LoadSceneCloud()
+void HarrisShotIcp::SetModelsCloud(std::string groundTruthTransformFilePath, std::vector<std::string> modelsCloudFilesList)
+	{
+	this->groundTruthTransformFilePath = groundTruthTransformFilePath;
+	this->modelsCloudFilesList = modelsCloudFilesList;
+
+	std::ifstream transformsFile( groundTruthTransformFilePath.c_str() );
+	ASSERT(transformsFile.good(), "Error transforms file could not be opened");
+
+	while (!transformsFile.eof())
+		{
+		Pose3D newPose;
+		float positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW;
+		transformsFile >> positionX;
+		transformsFile >> positionY;
+		transformsFile >> positionZ;
+		transformsFile >> rotationX;
+		transformsFile >> rotationY;
+		transformsFile >> rotationZ;
+		transformsFile >> rotationW;
+		SetPosition(newPose, positionX, positionY, positionZ);
+		SetOrientation(newPose, rotationX, rotationY, rotationZ, rotationW);
+		posesList.push_back(newPose);
+		}
+
+	transformsFile.close();
+	}
+
+void HarrisShotIcp::LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string cloudFile)
 	{
 	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::io::loadPLYFile(inputCloudFile, *basePclCloud);
+	pcl::io::loadPLYFile(cloudFile, *basePclCloud);
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr finitePointsPclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	for(unsigned pointIndex = 0; pointIndex < basePclCloud->points.size(); pointIndex++)
+	for(unsigned pointIndex = 0; pointIndex < basePclCloud->points.size() && finitePointsPclCloud->points.size() <= MAX_CLOUD_SIZE; pointIndex++)
 		{
 		pcl::PointXYZ point = basePclCloud->points.at(pointIndex);
 		if (point.x == point.x && point.y == point.y && point.z == point.z)
@@ -229,9 +262,13 @@ void HarrisShotIcp::LoadSceneCloud()
 	grid.setInputCloud(finitePointsPclCloud);
 	grid.setLeafSize(voxelGridFilterSize, voxelGridFilterSize, voxelGridFilterSize);
 
-	sceneCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	grid.filter(*sceneCloud);
+	grid.filter(*cloud);
+	}
 
+void HarrisShotIcp::LoadSceneCloud()
+	{
+	sceneCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	LoadCloud(sceneCloud, this->inputCloudFile);
 	scenePointCloud = pointCloudConverter.Convert(sceneCloud);
 	}
 
@@ -242,10 +279,12 @@ void HarrisShotIcp::LoadModelCloud(int long inputId)
 		delete(modelPointCloud);
 		}
 
+	modelCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	LoadCloud(modelCloud, modelsCloudFilesList.at(inputId));
+	modelPointCloud = pointCloudConverter.Convert(sceneCloud);	
+
 	SetPosition(groundTruthPose, 0, 0, 0);
 	SetOrientation(groundTruthPose, 0, 0, 0, 1);
-
-	modelPointCloud = pointCloudConverter.Convert(sceneCloud);	
 	}
 
 void HarrisShotIcp::SetupMocksAndStubs()
@@ -274,7 +313,7 @@ void HarrisShotIcp::SetupMocksAndStubs()
 bool HarrisShotIcp::SetNextInputs()
 	{
 	inputId++;
-	if (inputId > 0)
+	if (inputId >= modelsCloudFilesList.size())
 		{
 		return false;
 		}
@@ -378,6 +417,17 @@ int main(int argc, char** argv)
 		std::string inputCloudFile = argv[1];
 		float voxelGridFilterSize = std::stof(argv[2]);
 		interface.SetInputCloud(inputCloudFile, voxelGridFilterSize);
+		}
+
+	if (argc >= 5)
+		{
+		std::string transformsFile = argv[3];
+		std::vector<std::string> modelsFilesList;
+		for(unsigned argvIndex = 4; argvIndex < argc; argvIndex++)
+			{
+			modelsFilesList.push_back(argv[argvIndex]);
+			}
+		interface.SetModelsCloud(transformsFile, modelsFilesList);
 		}
 
 	interface.Run();

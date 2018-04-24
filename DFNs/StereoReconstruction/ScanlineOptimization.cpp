@@ -71,9 +71,9 @@ ScanlineOptimization::ScanlineOptimization()
 	parametersHelper.AddParameter<int>("Matching", "RatioFilter", parameters.matchingOptionsSet.ratioFilter, DEFAULT_PARAMETERS.matchingOptionsSet.ratioFilter);
 	parametersHelper.AddParameter<int>("Matching", "PeakFilter", parameters.matchingOptionsSet.peakFilter, DEFAULT_PARAMETERS.matchingOptionsSet.peakFilter);
 	parametersHelper.AddParameter<bool>("Matching", "UsePreprocessing", parameters.matchingOptionsSet.usePreprocessing, DEFAULT_PARAMETERS.matchingOptionsSet.usePreprocessing);
-	parametersHelper.AddParameter<bool>("Matching", "useLeftRightConsistencyCheck", 
+	parametersHelper.AddParameter<bool>("Matching", "UseLeftRightConsistencyCheck", 
 			parameters.matchingOptionsSet.useLeftRightConsistencyCheck, DEFAULT_PARAMETERS.matchingOptionsSet.useLeftRightConsistencyCheck);
-	parametersHelper.AddParameter<int>("Matching", "NumberOfDisparities", 
+	parametersHelper.AddParameter<int>("Matching", "LeftRightConsistencyThreshold", 
 			parameters.matchingOptionsSet.leftRightConsistencyThreshold, DEFAULT_PARAMETERS.matchingOptionsSet.leftRightConsistencyThreshold);
 
 	parametersHelper.AddParameter<float>("StereoCamera", "LeftPrinciplePointX", parameters.cameraParameters.leftPrinciplePointX, DEFAULT_PARAMETERS.cameraParameters.leftPrinciplePointX);
@@ -162,6 +162,7 @@ ScanlineOptimization::PclPointCloudPtr ScanlineOptimization::ComputePointCloud(P
 	
 	PclImagePtr visualMap(new PclImage);
 	stereo.getVisualMap(visualMap);
+	SAVE_DISPARITY_MATRIX(visualMap);
 	DEBUG_SHOW_PCL_IMAGE(visualMap);
 
 	PclPointCloudPtr pointCloud(new PclPointCloud);
@@ -231,6 +232,22 @@ void ScanlineOptimization::ValidateParameters()
 	ASSERT( parameters.reconstructionSpace.limitX > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
 	ASSERT( parameters.reconstructionSpace.limitY > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
 	ASSERT( parameters.reconstructionSpace.limitZ > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
+	}
+
+cv::Mat ScanlineOptimization::PclImageToCvMatrix(PclImagePtr pclImage)
+	{
+	cv::Mat cvImage(pclImage->height, pclImage->width, CV_8UC3);
+	for(unsigned columnIndex = 0; columnIndex < cvImage.cols; columnIndex++)
+		{
+		for(unsigned rowIndex = 0; rowIndex < cvImage.rows; rowIndex++)
+			{
+			unsigned pclIndex = rowIndex * pclImage->width + columnIndex;
+			cvImage.at<cv::Vec3b>(rowIndex, columnIndex)[0] = pclImage->points.at(pclIndex).r;
+			cvImage.at<cv::Vec3b>(rowIndex, columnIndex)[1] = pclImage->points.at(pclIndex).g;
+			cvImage.at<cv::Vec3b>(rowIndex, columnIndex)[2] = pclImage->points.at(pclIndex).b;
+			}
+		} 
+	return cvImage;
 	}
 
 

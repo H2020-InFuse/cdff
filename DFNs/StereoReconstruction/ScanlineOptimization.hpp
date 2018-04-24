@@ -67,6 +67,7 @@
 #include <PointCloud.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
+#include "opencv2/calib3d.hpp"
 #include <stdlib.h>
 #include <string>
 #include <pcl/keypoints/harris_3d.h>
@@ -161,6 +162,31 @@ namespace dfn_ci {
 		PointCloudWrapper::PointCloudConstPtr SampleCloud(PclPointCloudConstPtr pointCloud);
 
 		void ValidateParameters();
+		cv::Mat PclImageToCvMatrix(PclImagePtr pclImage);
+
+
+	/* --------------------------------------------------------------------
+	 * Private Testing 
+	 * --------------------------------------------------------------------
+	 */
+	#ifdef TESTING
+		cv::Mat disparityMatrix;
+		#define SAVE_DISPARITY_MATRIX(visualMap) disparityMatrix = PclImageToCvMatrix(visualMap);
+	#else
+		#define SAVE_DISPARITY_MATRIX(visualMap)
+	#endif
+
+	public:
+	/* --------------------------------------------------------------------
+	 * Public Testing 
+	 * --------------------------------------------------------------------
+	 */
+	#ifdef TESTING
+		cv::Mat disparityMatrixOutput()
+			{
+			return disparityMatrix;
+			}
+	#endif
     };
 }
 #endif

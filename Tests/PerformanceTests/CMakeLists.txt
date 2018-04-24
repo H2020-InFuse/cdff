@@ -81,6 +81,15 @@ target_link_libraries(
 )
 
 add_executable(
+	scanline_optimization_performance_test
+	DFNs/StereoReconstruction/ScanlineOptimization.cpp
+)
+target_link_libraries(
+	scanline_optimization_performance_test
+	mock cdff_helpers cdff_logger cdff_types scanline_optimization performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
+)
+
+add_executable(
 	image_undistortion_rectification_performance_test
 	DFNs/ImageFiltering/ImageUndistortionRectification.cpp
 )

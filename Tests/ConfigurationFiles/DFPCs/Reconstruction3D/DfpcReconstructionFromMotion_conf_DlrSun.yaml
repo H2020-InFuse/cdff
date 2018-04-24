@@ -1,7 +1,7 @@
 - Name: DFNsChain
   Parameters:
   - Name: RightToLeftCameraPose
-    PositionX: 0.122
+    PositionX: 0.0603776
     PositionY: 0
     PositionZ: 0
     OrientationX: 0
@@ -15,41 +15,41 @@
   Implementation: ImageUndistortion
   Parameters:
   - Name: CameraMatrix
-    FocalLengthX: 693.4181807813
-    FocalLengthY: 690.36629049483
-    PrinciplePointX: 671.7716154809
-    PrinciplePointY: 391.33378485796
+    FocalLengthX: 725.107
+    FocalLengthY: 724.660
+    PrinciplePointX: 391.125
+    PrinciplePointY: 270.606
   - Name: Distortion
-    UseK3: true
-    UseK4ToK6: true
-    K1: 0.39160333319788
-    K2: -67.273810332838
-    P1: 0.00056073969847596
-    P2: -0.0035917800798291
-    K3: 237.61237318275
-    K4: 0.35372515932617
-    K5: -66.934609418439
-    K6: 236.75743075463
+    UseK3: false 
+    UseK4ToK6: false 
+    K1: -0.191755
+    K2: 0.156979
+    P1: 0.0
+    P2: 0.0
+    K3: 0.0
+    K4: 0.0
+    K5: 0.0
+    K6: 0.0
 - Name: rightFilter
   Type: ImageFiltering
   Implementation: ImageUndistortion
   Parameters:
   - Name: CameraMatrix
-    FocalLengthX: 693.4181807813
-    FocalLengthY: 690.36629049483
-    PrinciplePointX: 671.7716154809
-    PrinciplePointY: 391.33378485796
+    FocalLengthX: 727.082
+    FocalLengthY: 726.947
+    PrinciplePointX: 388.801
+    PrinciplePointY: 272.886
   - Name: Distortion
-    UseK3: true
-    UseK4ToK6: true
-    K1: 0.39160333319788
-    K2: -67.273810332838
-    P1: 0.00056073969847596
-    P2: -0.0035917800798291
-    K3: 237.61237318275
-    K4: 0.35372515932617
-    K5: -66.934609418439
-    K6: 236.75743075463
+    UseK3: false 
+    UseK4ToK6: false 
+    K1: -0.193231
+    K2: 0.191304
+    P1: 0.0
+    P2: 0.0
+    K3: 0.0
+    K4: 0.0
+    K5: 0.0
+    K6: 0.0
 - Name: featureExtractor
   Type: FeaturesExtraction2D
   Implementation: OrbDetectorDescriptor
@@ -90,26 +90,26 @@
   - Name: GeneralParameters
     NumberOfTestPoints: 20
   - Name: FirstCameraMatrix
-    FocalLengthX: 693.4181807813
-    FocalLengthY: 690.36629049483
-    PrinciplePointX: 671.7716154809
-    PrinciplePointY: 391.33378485796
+    FocalLengthX: 725.107
+    FocalLengthY: 724.660
+    PrinciplePointX: 391.125
+    PrinciplePointY: 270.606
   - Name: SecondCameraMatrix
-    FocalLengthX: 693.4181807813
-    FocalLengthY: 690.36629049483
-    PrinciplePointX: 671.7716154809
-    PrinciplePointY: 391.33378485796
+    FocalLengthX: 727.082
+    FocalLengthY: 726.947
+    PrinciplePointX: 388.801
+    PrinciplePointY: 272.886
 - Name: reconstructor3D
   Type: PointCloudReconstruction2DTo3D
   Implementation: Triangulation
   Parameters:
   - Name: FirstCameraMatrix
-    FocalLengthX: 693.4181807813
-    FocalLengthY: 690.36629049483
-    PrinciplePointX: 671.7716154809
-    PrinciplePointY: 391.33378485796
+    FocalLengthX: 725.107
+    FocalLengthY: 724.660
+    PrinciplePointX: 391.125
+    PrinciplePointY: 270.606
   - Name: SecondCameraMatrix
-    FocalLengthX: 693.4181807813
-    FocalLengthY: 690.36629049483
-    PrinciplePointX: 671.7716154809
-    PrinciplePointY: 391.33378485796
+    FocalLengthX: 727.082
+    FocalLengthY: 726.947
+    PrinciplePointX: 388.801
+    PrinciplePointY: 272.886
