@@ -68,6 +68,10 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 	public:
 		OrbFlannRansacDecomposition(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName);
 		~OrbFlannRansacDecomposition();
+
+		void SetInputFiles(std::string imageFileNamesFolder, std::string imagesFileContainer, std::string posesFileContainer);
+		void LoadInputFiles();
+		void SetImageLimit(unsigned imageLimit);
 	protected:
 
 	private:
@@ -110,9 +114,6 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		std::vector<double> poseTimesList;
 		std::vector<Pose3D> imagePosesList;
 
-		static const std::string imageFileNamesFolder;
-		static const std::string imagesFileContainer;
-		static const std::string posesFileContainer;
 		void LoadImageFileNames();
 		void LoadPoses();
 		void ComputeImagePoses();
@@ -128,6 +129,10 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		MeasuresMap ExtractMeasures();
 
 		int long inputId;
+		std::string imageFileNamesFolder;
+		std::string imagesFileContainer;
+		std::string posesFileContainer;
+		unsigned imageLimit;
 	};
 
 OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName)
@@ -162,10 +167,9 @@ OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath,
 	decompositionSuccess = false;
 	inputId = -1;
 
-	LoadImageFileNames();
-	LoadPoses();
-	ComputeImagePoses();
-	ASSERT(imageFileNamesList.size() == imagePosesList.size(), "Number of displacement different from number of images");
+	imageFileNamesFolder = "../tests/Data/Images";
+	imagesFileContainer = "../tests/Data/Images/imagesList.txt";
+	posesFileContainer = "../tests/Data/Images/posesList.txt";
 	}
 
 OrbFlannRansacDecomposition::~OrbFlannRansacDecomposition()
@@ -209,9 +213,32 @@ OrbFlannRansacDecomposition::~OrbFlannRansacDecomposition()
 		}
 	}
 
-const std::string OrbFlannRansacDecomposition::imageFileNamesFolder = "/media/alexander/Agridrive/rgbd_dataset_freiburg1_plant"; //"../tests/Data/Images";
-const std::string OrbFlannRansacDecomposition::imagesFileContainer = "/media/alexander/Agridrive/rgbd_dataset_freiburg1_plant/rgb.txt"; //"../tests/Data/Images/imagesList.txt";
-const std::string OrbFlannRansacDecomposition::posesFileContainer = "/media/alexander/Agridrive/rgbd_dataset_freiburg1_plant/groundtruth.txt"; //"../tests/Data/Images/posesList.txt";
+void OrbFlannRansacDecomposition::SetInputFiles(std::string imageFileNamesFolder, std::string imagesFileContainer, std::string posesFileContainer)
+	{
+	this->imageFileNamesFolder = imageFileNamesFolder;
+	this->imagesFileContainer = imagesFileContainer;
+	this->posesFileContainer = posesFileContainer;
+	}
+
+void OrbFlannRansacDecomposition::LoadInputFiles()
+	{
+	LoadImageFileNames();
+	LoadPoses();
+	ComputeImagePoses();
+	ASSERT(imageFileNamesList.size() == imagePosesList.size(), "Number of displacement different from number of images");
+	}
+
+void OrbFlannRansacDecomposition::SetImageLimit(unsigned imageLimit)
+	{
+	if (imageLimit < imageFileNamesList.size())
+		{
+		this->imageLimit = imageLimit;
+		}
+	else
+		{
+		this->imageLimit = imageFileNamesList.size();
+		}
+	}
 
 void OrbFlannRansacDecomposition::LoadImageFileNames()
 	{
@@ -277,7 +304,7 @@ void OrbFlannRansacDecomposition::ComputeImagePoses()
 				{
 				afterPoseIndex = index;
 				}
-			}
+			}				
 		ASSERT(afterPoseFound, "Error: No after pose found");
 		ASSERT(afterPoseIndex > 0, "Error: No before pose found");
 		unsigned beforePoseIndex = afterPoseIndex-1;
@@ -365,7 +392,7 @@ void OrbFlannRansacDecomposition::SetupMocksAndStubs()
 bool OrbFlannRansacDecomposition::SetNextInputs()
 	{
 	inputId++;
-	if (inputId+1 >= imageFileNamesList.size())
+	if (inputId+1 >= imageLimit)
 		{
 		return false;
 		}
@@ -509,6 +536,26 @@ int main(int argc, char** argv)
 		"EssentialMatrixDecomposition_PerformanceTest_2.yaml"
 		};
 	OrbFlannRansacDecomposition interface("../tests/ConfigurationFiles/DFNsIntegration/VisualOdometry", baseConfigurationFiles, "Orb_Flann_Ransac_Decomposition.txt");
+
+	if (argc >= 4)
+		{
+		std::string imageFileNamesFolder = argv[1];
+		std::string imagesFileName = argv[2];
+		std::string posesFileName = argv[3];
+		std::stringstream imagesFileContainer, posesFileContainer;
+		imagesFileContainer << imageFileNamesFolder << "/" << imagesFileName;
+		posesFileContainer << imageFileNamesFolder << "/" << posesFileName;		
+		interface.SetInputFiles(imageFileNamesFolder, imagesFileContainer.str(), posesFileContainer.str());
+		}
+	
+	interface.LoadInputFiles();
+
+	if (argc >= 5)
+		{
+		unsigned imageLimit = std::stoi(argv[4]);
+		interface.SetImageLimit(imageLimit);
+		}
+
 	interface.Run();
 	};
 

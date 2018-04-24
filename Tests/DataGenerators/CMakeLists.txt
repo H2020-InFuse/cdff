@@ -31,6 +31,15 @@ target_link_libraries(
 )
 
 add_executable(
+    data_set_transformer
+    SyntheticGenerators/TransformDataSet.cpp
+)
+target_link_libraries(
+	data_set_transformer
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES} boost_system cdff_pcl_visualizer
+)
+
+add_executable(
 	calibrate_stereo_camera
 	DerivedGenerators/CalibrateStereoCamera.cpp
 )

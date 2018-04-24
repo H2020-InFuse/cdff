@@ -35,8 +35,10 @@
 #include <Mocks/Common/Converters/FrameToMatConverter.hpp>
 #include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <MatToFrameConverter.hpp>
+#include <PointCloudToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNs/PerformanceTestInterface.hpp>
+#include <pcl/io/ply_io.h>
 
 
 using namespace dfn_ci;
@@ -54,6 +56,7 @@ class DisparityMappingTestInterface : public PerformanceTestInterface
 
 		void SetImageFilesPath(std::string leftImageFilePath, std::string rightImageFilePath);
 		void SetReferenceDisparity(std::string referenceDisparityFilePath);
+		void SetOutputFile(std::string outputFileBasePath, std::string outputFileExtension);
 	protected:
 
 	private:
@@ -69,6 +72,10 @@ class DisparityMappingTestInterface : public PerformanceTestInterface
 		bool noReferenceDisparity;
 		std::string leftImageFilePath;
 		std::string rightImageFilePath;
+
+		bool saveOutput;
+		std::string outputFileBasePath;
+		std::string outputFileExtension;
 
 		HirschmullerDisparityMapping* disparityMapping;
 		void SetupMocksAndStubs();
@@ -91,6 +98,7 @@ DisparityMappingTestInterface::DisparityMappingTestInterface(std::string folderP
 	rightImageFilePath = "../tests/Data/Images/RectifiedChair40Right.png";
 
 	noReferenceDisparity = false;
+	saveOutput = false;
 	}
 
 DisparityMappingTestInterface::~DisparityMappingTestInterface()
@@ -104,6 +112,13 @@ void DisparityMappingTestInterface::SetImageFilesPath(std::string leftImageFileP
 	{
 	this->leftImageFilePath = leftImageFilePath;
 	this->rightImageFilePath = rightImageFilePath;
+	}
+
+void DisparityMappingTestInterface::SetOutputFile(std::string outputFileBasePath, std::string outputFileExtension)
+	{
+	saveOutput = true;
+	this->outputFileBasePath = outputFileBasePath;
+	this->outputFileExtension = outputFileExtension;
 	}
 
 void DisparityMappingTestInterface::SetReferenceDisparity(std::string referenceDisparityFilePath)
@@ -230,6 +245,17 @@ DisparityMappingTestInterface::MeasuresMap DisparityMappingTestInterface::Extrac
 		}
 
 	PointCloudConstPtr outputCloud = disparityMapping->pointCloudOutput();
+	if (saveOutput)
+		{
+		std::stringstream stream;
+		stream << outputFileBasePath << testId << outputFileExtension; 
+
+		PointCloudToPclPointCloudConverter pclConverter;
+		pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclCloud = pclConverter.Convert(outputCloud);
+
+		pcl::PLYWriter writer;
+		writer.write(stream.str(), *pclCloud);
+		}
 	delete(outputCloud);
 
 	return measuresMap;
@@ -250,6 +276,11 @@ int main(int argc, char** argv)
 		{
 		interface.SetImageFilesPath(argv[2], argv[3]);
 		interface.SetReferenceDisparity(argv[4]);
+		}
+
+	if (argc >= 7)
+		{
+		interface.SetOutputFile(argv[5], argv[6]);
 		}
 
 	interface.Run();

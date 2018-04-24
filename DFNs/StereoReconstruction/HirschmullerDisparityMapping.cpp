@@ -267,7 +267,7 @@ cv::Mat HirschmullerDisparityMapping::ComputePointCloudFromDisparity(cv::Mat dis
 		{
 		for(unsigned column = 0; column < disparity.cols; column++)
 			{
-			float disparityValue = ( static_cast<float>(disparity.at<int16_t>(row, column)) ) / 16;	
+			float disparityValue = ( static_cast<float>(disparity.at<int16_t>(row, column)) ) / 16;
 			if (disparityValue > 0)
 				{	
 				float depth = depthScale / disparityValue;
