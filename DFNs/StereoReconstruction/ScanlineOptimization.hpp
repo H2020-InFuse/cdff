@@ -106,6 +106,8 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		static const float EPSILON;
+
 		typedef pcl::PointCloud<pcl::RGB> PclImage;
 		typedef pcl::PointCloud<pcl::RGB>::Ptr PclImagePtr;
 		typedef pcl::PointCloud<pcl::RGB>::ConstPtr PclImageConstPtr;
@@ -148,6 +150,7 @@ namespace dfn_ci {
 			int strongSmoothnessPenalty;
 			int weakSmoothnessPenalty;
 			float pointCloudSamplingDensity;
+			float voxelGridLeafSize;
 			MatchingOptionsSet matchingOptionsSet;
 			CameraParameters cameraParameters;
 			ReconstructionSpace reconstructionSpace;
@@ -160,6 +163,8 @@ namespace dfn_ci {
 		PclPointCloudPtr ComputePointCloud(PclImagePtr leftImage, PclImagePtr rightImage);
 		PclImagePtr Convert(FrameWrapper::FrameConstPtr frame);
 		PointCloudWrapper::PointCloudConstPtr SampleCloud(PclPointCloudConstPtr pointCloud);
+		PointCloudWrapper::PointCloudConstPtr SampleCloudWithPeriodicSampling(PclPointCloudConstPtr pointCloud);
+		PointCloudWrapper::PointCloudConstPtr SampleCloudWithVoxelGrid(PclPointCloudConstPtr pointCloud);
 
 		void ValidateParameters();
 		cv::Mat PclImageToCvMatrix(PclImagePtr pclImage);
@@ -170,22 +175,9 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */
 	#ifdef TESTING
-		cv::Mat disparityMatrix;
 		#define SAVE_DISPARITY_MATRIX(visualMap) disparityMatrix = PclImageToCvMatrix(visualMap);
 	#else
 		#define SAVE_DISPARITY_MATRIX(visualMap)
-	#endif
-
-	public:
-	/* --------------------------------------------------------------------
-	 * Public Testing 
-	 * --------------------------------------------------------------------
-	 */
-	#ifdef TESTING
-		cv::Mat disparityMatrixOutput()
-			{
-			return disparityMatrix;
-			}
 	#endif
     };
 }

@@ -42,9 +42,9 @@
     Element_3_2: 3.3436329786051
     Element_3_3: -0
   - Name: StereoCamera
-    LeftFocalLength: 387.599884033
-    LeftPrinciplePointX: 253.755615234
-    LeftPrinciplePointY: 185.114852905
+    LeftFocalLength: 968.999694824
+    LeftPrinciplePointX: 635.139038086
+    LeftPrinciplePointY: 463.537109375
     Baseline: 0.239977002
   - Name: ReconstructionSpace
     LimitX: 30

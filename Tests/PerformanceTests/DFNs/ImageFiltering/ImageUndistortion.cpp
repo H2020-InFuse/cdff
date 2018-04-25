@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file ImageUndistortionRectification.cpp
- * @date 23/04/2018
+ * @file ImageUndistortion.cpp
+ * @date 25/04/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DFNsTest
  * 
- * Performance Test for the DFN Image Undistortion Rectification.
+ * Performance Test for the DFN Image Undistortion.
  * 
  * 
  * @{
@@ -27,20 +27,19 @@
  * --------------------------------------------------------------------------
  */
 #include "ImageFiltering.hpp"
-#include <ImageFiltering/ImageUndistortionRectification.hpp>
-
+#include <ImageFiltering/ImageUndistortion.hpp>
 
 using namespace dfn_ci;
 
 int main(int argc, char** argv)
 	{
-	std::string configurationFileName = "ImageUndistortionRectification_Conf1.yaml";
+	std::string configurationFileName = "ImageUndistortion_Conf1.yaml";
 	if (argc >= 2)
 		{
 		configurationFileName = argv[1];
 		}
 
-	ImageFilteringInterface* filter = new ImageUndistortionRectification;
+	ImageFilteringInterface* filter = new ImageUndistortion;
 	ImageFilteringTestInterface interface("../tests/ConfigurationFiles/DFNs/ImageFiltering", configurationFileName, "ImageUndistortionOutput.txt", filter);
 	
 	if (argc >= 4)

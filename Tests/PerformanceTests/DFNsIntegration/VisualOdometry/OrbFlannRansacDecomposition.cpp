@@ -106,8 +106,10 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		EssentialMatrixDecomposition* decomposition;
 
 		Aggregator* groundPositionDistanceAggregator;
-		Aggregator* groundOrientationDistanceAggregator1;
-		Aggregator* groundOrientationDistanceAggregator2;
+		Aggregator* groundOrientationDistanceAggregator;
+		Aggregator* leftKeypointsAggregator;
+		Aggregator* rightKeypointsAggregator;
+		Aggregator* correspondencesAggregator;
 		std::vector<std::string> imageFileNamesList;
 		std::vector<Pose3D> posesList;
 		std::vector<double> imageTimesList;
@@ -150,10 +152,15 @@ OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath,
 
 	groundPositionDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
 	AddAggregator("PositionDistance", groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
-	groundOrientationDistanceAggregator1 = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("AngleDistace1", groundOrientationDistanceAggregator1, FIXED_PARAMETERS_VARIABLE_INPUTS);
-	groundOrientationDistanceAggregator2 = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("AngleDistace2", groundOrientationDistanceAggregator2, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	groundOrientationDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
+	AddAggregator("AngleDistace", groundOrientationDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+
+	leftKeypointsAggregator = new Aggregator( Aggregator::AVERAGE );
+	AddAggregator("NumberOfLeftKeypoints", leftKeypointsAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	rightKeypointsAggregator = new Aggregator( Aggregator::AVERAGE );
+	AddAggregator("NumberOfRightKeypoints", rightKeypointsAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	correspondencesAggregator = new Aggregator( Aggregator::AVERAGE );
+	AddAggregator("NumberOfCorrespondences", correspondencesAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
 
 	leftFrame = NULL;
 	rightFrame = NULL;
@@ -482,6 +489,9 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 
 	measuresMap["RansacSuccess"] = ransacSuccess;
 	measuresMap["DecompositionSuccess"] = decompositionSuccess;
+	measuresMap["NumberOfLeftKeypoints"] = GetNumberOfPoints(*leftFeaturesVector);
+	measuresMap["NumberOfRightKeypoints"] = GetNumberOfPoints(*rightFeaturesVector);
+	measuresMap["NumberOfCorrespondences"] = GetNumberOfCorrespondences(*correspondenceMap);
 
 	if (decompositionSuccess)
 		{
@@ -513,13 +523,7 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 			GetYOrientation(rightPose) *	absolutePoseQuaternion.y() +
 			GetZOrientation(rightPose) *	absolutePoseQuaternion.z() +
 			GetWOrientation(rightPose) *	absolutePoseQuaternion.w();
-		measuresMap["AngleDistace1"] = 1 - scalarProduct*scalarProduct;				
-
-		Eigen::Quaternionf rightPoseQuaternion(GetWOrientation(rightPose), GetXOrientation(rightPose), GetYOrientation(rightPose), GetZOrientation(rightPose));
-		float differenceRoll = 1 - std::cos(rightPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0] - absolutePoseRoll);
-		float differencePitch = 1 - std::cos(rightPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1] - absolutePosePitch);
-		float differenceYaw = 1 - std::cos(rightPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2] - absolutePoseYaw);
-		measuresMap["AngleDistace2"] = differenceRoll + differencePitch + differenceYaw;
+		measuresMap["AngleDistace"] = 1 - scalarProduct*scalarProduct;
 		}
 
 	return measuresMap;
@@ -528,20 +532,26 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 
 int main(int argc, char** argv)
 	{
+	std::string essentialMatrixConfigurationFile = "EssentialMatrixDecomposition_PerformanceTest_2.yaml";
+	if (argc >= 2)
+		{
+		essentialMatrixConfigurationFile = argv[1];
+		}
+
 	std::vector<std::string> baseConfigurationFiles =
 		{
 		"OrbExtractorDescriptor_PerformanceTest_1.yaml",
 		"FlannMatcher_PerformanceTest_1.yaml",
 		"FundamentalMatrixRansac_PerformanceTest_1.yaml",
-		"EssentialMatrixDecomposition_PerformanceTest_2.yaml"
+		essentialMatrixConfigurationFile
 		};
 	OrbFlannRansacDecomposition interface("../tests/ConfigurationFiles/DFNsIntegration/VisualOdometry", baseConfigurationFiles, "Orb_Flann_Ransac_Decomposition.txt");
 
-	if (argc >= 4)
+	if (argc >= 5)
 		{
-		std::string imageFileNamesFolder = argv[1];
-		std::string imagesFileName = argv[2];
-		std::string posesFileName = argv[3];
+		std::string imageFileNamesFolder = argv[2];
+		std::string imagesFileName = argv[3];
+		std::string posesFileName = argv[4];
 		std::stringstream imagesFileContainer, posesFileContainer;
 		imagesFileContainer << imageFileNamesFolder << "/" << imagesFileName;
 		posesFileContainer << imageFileNamesFolder << "/" << posesFileName;		
@@ -550,9 +560,9 @@ int main(int argc, char** argv)
 	
 	interface.LoadInputFiles();
 
-	if (argc >= 5)
+	if (argc >= 6)
 		{
-		unsigned imageLimit = std::stoi(argv[4]);
+		unsigned imageLimit = std::stoi(argv[5]);
 		interface.SetImageLimit(imageLimit);
 		}
 

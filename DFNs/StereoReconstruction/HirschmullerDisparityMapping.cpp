@@ -36,6 +36,7 @@
 #include <FrameToMatConverter.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <Visualizers/OpencvVisualizer.hpp>
+#include <pcl/filters/voxel_grid.h>
 
 #include <stdlib.h>
 #include <fstream>
@@ -79,6 +80,7 @@ HirschmullerDisparityMapping::HirschmullerDisparityMapping()
 	parametersHelper.AddParameter<int>("BlocksMatching", "UniquenessRatio", parameters.blocksMatching.uniquenessRatio, DEFAULT_PARAMETERS.blocksMatching.uniquenessRatio);
 
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudSamplingDensity", parameters.pointCloudSamplingDensity, DEFAULT_PARAMETERS.pointCloudSamplingDensity);
+	parametersHelper.AddParameter<float>("GeneralParameters", "VoxelGridLeafSize", parameters.voxelGridLeafSize, DEFAULT_PARAMETERS.voxelGridLeafSize);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseFullScaleTwoPassAlgorithm", parameters.useFullScaleTwoPassAlgorithm, DEFAULT_PARAMETERS.useFullScaleTwoPassAlgorithm);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDisparityToDepthMap", parameters.useDisparityToDepthMap, DEFAULT_PARAMETERS.useDisparityToDepthMap);
 
@@ -123,6 +125,14 @@ void HirschmullerDisparityMapping::process()
 	outPointCloud = Convert(pointCloud);
 	}
 
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Variables
+ *
+ * --------------------------------------------------------------------------
+ */
+const float HirschmullerDisparityMapping::EPSILON = 0.0001;
+
 const HirschmullerDisparityMapping::HirschmullerDisparityMappingOptionsSet HirschmullerDisparityMapping::DEFAULT_PARAMETERS =
 	{
 	.reconstructionSpace =
@@ -159,6 +169,7 @@ const HirschmullerDisparityMapping::HirschmullerDisparityMappingOptionsSet Hirsc
 		0, 0, -1, 0
 		},
 	.pointCloudSamplingDensity = 1,
+	.voxelGridLeafSize = 0,
 	.useFullScaleTwoPassAlgorithm = false,
 	.useDisparityToDepthMap = false,
 	.stereoCameraParameters =
@@ -170,6 +181,13 @@ const HirschmullerDisparityMapping::HirschmullerDisparityMappingOptionsSet Hirsc
 		}
 	};
 
+
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Functions
+ *
+ * --------------------------------------------------------------------------
+ */
 cv::Mat HirschmullerDisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage)
 	{	
 	cv::Ptr<cv::StereoSGBM> stereo = cv::StereoSGBM::create
@@ -211,6 +229,18 @@ cv::Mat HirschmullerDisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::M
 
 PointCloudConstPtr HirschmullerDisparityMapping::Convert(cv::Mat cvPointCloud)
 	{
+	if (parameters.pointCloudSamplingDensity > EPSILON)
+		{
+		return ConvertWithPeriodicSampling(cvPointCloud);
+		}
+	else
+		{
+		return ConvertWithVoxelFilter(cvPointCloud);
+		}
+	}
+
+PointCloudConstPtr HirschmullerDisparityMapping::ConvertWithPeriodicSampling(cv::Mat cvPointCloud)
+	{
 	PointCloudPtr pointCloud = new PointCloud();
 
 	unsigned validPointCount = 0;
@@ -233,6 +263,42 @@ PointCloudConstPtr HirschmullerDisparityMapping::Convert(cv::Mat cvPointCloud)
 					}
 				}
 			}
+		}
+
+	return pointCloud;
+	}
+
+PointCloudConstPtr HirschmullerDisparityMapping::ConvertWithVoxelFilter(cv::Mat cvPointCloud)
+	{
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud(new pcl::PointCloud<pcl::PointXYZ>);
+	
+	for(unsigned row = 0; row < cvPointCloud.rows; row++)
+		{
+		for(unsigned column = 0; column < cvPointCloud.cols; column++)
+			{
+			cv::Vec3f point = cvPointCloud.at<cv::Vec3f>(row, column);
+
+			bool validPoint = (point[0] == point[0] && point[1] == point[1] && point[2] == point[2]);
+			validPoint = validPoint && ( std::abs(point[0]) <= parameters.reconstructionSpace.limitX ) && ( std::abs(point[1]) <= parameters.reconstructionSpace.limitY );
+			validPoint = validPoint && ( point[2] >= 0 ) && ( point[2] <= parameters.reconstructionSpace.limitZ );
+			if (validPoint)
+				{
+				pcl::PointXYZ newPoint(point[0], point[1], point[2]); 
+				pclPointCloud->points.push_back(newPoint);
+				}
+			}
+		}
+
+	pcl::VoxelGrid<pcl::PointXYZ> grid;
+	grid.setInputCloud(pclPointCloud);
+	grid.setLeafSize(parameters.voxelGridLeafSize, parameters.voxelGridLeafSize, parameters.voxelGridLeafSize);
+	grid.filter(*pclPointCloud);
+
+	PointCloudPtr pointCloud = new PointCloud();
+	for(unsigned pointIndex = 0; pointIndex < pclPointCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ& point = pclPointCloud->points.at(pointIndex);
+		AddPoint(*pointCloud, point.x, point.y, point.z); 		
 		}
 
 	return pointCloud;
@@ -291,7 +357,6 @@ void HirschmullerDisparityMapping::ValidateParameters()
 	ASSERT(parameters.disparities.numberOfIntervals % 16 == 0, "HirschmullerDisparityMapping Configuration Error: number of disparities needs to be multiple of 16");
 	ASSERT(parameters.blocksMatching.blockSize % 2 == 1, "HirschmullerDisparityMapping Configuration Error: blockSize needs to be odd");
 	ASSERT(!parameters.disparities.useMaximumDifference || parameters.disparities.maximumDifference >= 0, "DisparityMapping Configuration, maximum disparity difference used but not set positive");
-	ASSERT(parameters.pointCloudSamplingDensity > 0 && parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
 	ASSERT( (parameters.disparities.smoothnessParameter2 > parameters.disparities.smoothnessParameter1) ||
 		(parameters.disparities.smoothnessParameter2 == 0 && parameters.disparities.smoothnessParameter1 == 0), 
 		"HirschmullerDisparityMapping Configuration Error: SmoothnessParameters2 has to be greater than SmoothnessParameters1 or both parameters need to be zero");
@@ -300,6 +365,11 @@ void HirschmullerDisparityMapping::ValidateParameters()
 	ASSERT( parameters.reconstructionSpace.limitZ > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
 	ASSERT( parameters.stereoCameraParameters.leftFocalLength > 0, "DisparityMapping Configuration Error: Focal Length has to be positive");
 	ASSERT( parameters.stereoCameraParameters.baseline > 0, "DisparityMapping Configuration Error: Baseline has to be positive");
+
+	ASSERT( (parameters.voxelGridLeafSize > EPSILON && parameters.pointCloudSamplingDensity <= EPSILON) ||
+		(parameters.voxelGridLeafSize <= EPSILON && parameters.pointCloudSamplingDensity > EPSILON), 
+		"DisparityMapping Configuration Error: Only one between voxelGridLeafSize and pointCloudSamplingDensity can be greater than 0");
+	ASSERT(parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
 	}
 
 

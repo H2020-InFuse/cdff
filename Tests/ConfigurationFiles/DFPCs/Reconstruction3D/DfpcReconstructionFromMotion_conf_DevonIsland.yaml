@@ -50,26 +50,26 @@
   - Name: GeneralParameters
     NumberOfTestPoints: 20
   - Name: FirstCameraMatrix
-    FocalLengthX: 387.599884033
-    FocalLengthY: 387.599884033
-    PrinciplePointX: 253.755615234
-    PrinciplePointY: 185.114852905
+    FocalLengthX: 968.999694824
+    FocalLengthY: 968.999694824
+    PrinciplePointX: 635.139038086
+    PrinciplePointY: 463.537109375
   - Name: SecondCameraMatrix
-    FocalLengthX: 387.599884033
-    FocalLengthY: 387.599884033
-    PrinciplePointX: 253.755615234
-    PrinciplePointY: 185.114852905
+    FocalLengthX: 968.999694824
+    FocalLengthY: 968.999694824
+    PrinciplePointX: 635.139038086
+    PrinciplePointY: 463.537109375
 - Name: reconstructor3D
   Type: PointCloudReconstruction2DTo3D
   Implementation: Triangulation
   Parameters:
   - Name: FirstCameraMatrix
-    FocalLengthX: 387.599884033
-    FocalLengthY: 387.599884033
-    PrinciplePointX: 253.755615234
-    PrinciplePointY: 185.114852905
+    FocalLengthX: 968.999694824
+    FocalLengthY: 968.999694824
+    PrinciplePointX: 635.139038086
+    PrinciplePointY: 463.537109375
   - Name: SecondCameraMatrix
-    FocalLengthX: 387.599884033
-    FocalLengthY: 387.599884033
-    PrinciplePointX: 253.755615234
-    PrinciplePointY: 185.114852905
+    FocalLengthX: 968.999694824
+    FocalLengthY: 968.999694824
+    PrinciplePointX: 635.139038086
+    PrinciplePointY: 463.537109375

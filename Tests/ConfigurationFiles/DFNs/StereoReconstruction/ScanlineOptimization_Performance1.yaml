@@ -1,0 +1,24 @@
+- Name: GeneralParameters
+  CostAggregationRadius: 5 10
+  SpatialBandwidth: 25 50
+  ColorBandwidth: 15 30
+  StrongSmoothnessPenalty: 1
+  WeakSmoothnessPenalty: 1
+  PointCloudSamplingDensity: 1
+- Name: Matching
+  NumberOfDisparities: 64 128
+  HorizontalOffset: 0
+  RatioFilter: 5 15
+  PeakFilter: 0
+  UsePreprocessing: false
+  UseLeftRightConsistencyCheck: false
+  LeftRightConsistencyThreshold: 1 
+- Name: StereoCamera
+  LeftFocalLength: 693.4181807813
+  LeftPrinciplePointX: 671.7716154809
+  LeftPrinciplePointY: 391.33378485796
+  Baseline: 0.012
+- Name: ReconstructionSpace
+  LimitX: 3
+  LimitY: 3
+  LimitZ: 0.5

@@ -27,6 +27,10 @@
  *
  * --------------------------------------------------------------------------
  */
+#ifdef TESTING
+	#include <opencv2/imgproc/imgproc.hpp>
+#endif
+
 #include <DFNCommonInterface.hpp>
 #include <PointCloud.hpp>
 #include <Frame.hpp>
@@ -82,6 +86,28 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */
 	private:
+
+
+	/* --------------------------------------------------------------------
+	 * Protected Testing 
+	 * --------------------------------------------------------------------
+	 */
+	protected:
+	#ifdef TESTING
+		cv::Mat disparityMatrix;
+	#endif
+
+	public:
+	/* --------------------------------------------------------------------
+	 * Public Testing 
+	 * --------------------------------------------------------------------
+	 */
+	#ifdef TESTING
+		cv::Mat disparityMatrixOutput()
+			{
+			return disparityMatrix;
+			}
+	#endif
     };
 }
 #endif
