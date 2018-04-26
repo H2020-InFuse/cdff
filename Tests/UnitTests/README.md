@@ -15,7 +15,7 @@ Read the [tutorial](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/tutori
 
     Only define `CATCH_CONFIG_MAIN` in **one** CPP file. There is no need to compile the whole of Catch into every translation unit that defines unit tests. This is useless and slow. See [this documentation page](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/slow-compiles.md) for more information.
 
-    **In the CDFF**&emsp;The unit-test master file is `Tests/UnitTests/UnitTests.cpp`.
+    **In the CDFF**&emsp;The unit-test master file is [`Tests/UnitTests/UnitTests.cpp`](/Tests/UnitTests/UnitTests.cpp).
 
 2. **In general**&emsp;Write your unit tests in other CPP files (or HPP+CPP files), let's say `factorial.cpp` and `square.cpp`:
 
@@ -51,7 +51,7 @@ Read the [tutorial](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/tutori
 
     These code snippets obviously assume that the Catch single-include header is available unqualified on the include directory path (i.e. in system include directories or in directories specified by `-I` to the compiler), but you may need to prefix it with a directory name if necessary.
 
-    **In the CDFF**&emsp;This is the part that you have to do. Put your unit test files in the subdirectories of `Tests/UnitTests/`. The CMake build system is parameterized so that the Catch header file is available unqualified: just use `#include <catch.hpp>`.
+    **In the CDFF**&emsp;This is the part that you have to do. Put your unit test files in the subdirectories of [`Tests/UnitTests/`](/Tests/UnitTests/). The CMake build system is parameterized so that the Catch header file is available unqualified: just use `#include <catch.hpp>`.
 
 3. **In general**&emsp;Separately compile all source files to object files, then link them together into a unique test executable, let's say `unit-tests`:
 
@@ -60,7 +60,7 @@ Read the [tutorial](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/tutori
     $ g++ -o unit-tests unit-tests.o factorial.o square.o
     ```
 
-    **In the CDFF**&emsp;This task is performed by CMake. Follow the instructions in `Tests/UnitTests/CMakeLists.txt`.
+    **In the CDFF**&emsp;This task is performed by CMake. Follow the instructions in [`Tests/UnitTests/CMakeLists.txt`](/Tests/UnitTests/CMakeLists.txt).
 
 4. **In general**&emsp;Unit tests are ready to be run with:
 
@@ -68,7 +68,7 @@ Read the [tutorial](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/tutori
     $ ./unit-tests
     ```
 
-    **In the CDFF**&emsp;The unit test executable is `Tests/UnitTests/cdff-unit-tests`. The CMake build system is parameterized so that it is also available through CTest (see ctest(1)), but by default CTest reports less.
+    **In the CDFF**&emsp;The unit test executable is `Tests/UnitTests/cdff-unit-tests`. The CMake build system is parameterized so that it is also available through CTest (see `ctest(1)`), but by default CTest reports less.
 
     ```shell
     /path/to/CDFF/build/Tests/UnitTests:~$ ./cdff-unit-tests
