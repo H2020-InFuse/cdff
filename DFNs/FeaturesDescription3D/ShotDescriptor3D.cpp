@@ -85,6 +85,12 @@ void ShotDescriptor3D::configure()
 
 void ShotDescriptor3D::process() 
 	{
+	if ( GetNumberOfPoints(*inFeaturesSet) == 0)
+		{
+		outFeaturesSetWithDescriptors = NewVisualPointFeatureVector3D();
+		return;
+		}
+
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputPointCloud = 
 		ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inPointCloud);
 	pcl::IndicesConstPtr indicesList = Convert(inFeaturesSet);
@@ -228,6 +234,7 @@ VisualPointFeatureVector3DConstPtr ShotDescriptor3D::Convert
 	static const unsigned SHOT_DESCRIPTOR_SIZE = 352;
 	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
 	ClearPoints(*featuresVector);
+	bool computedNanFeature = false;
 	for(unsigned pointIndex = 0; pointIndex < indicesList->size(); pointIndex++)
 		{
 		if (parameters.baseOptions.outputFormat == POSITIONS_OUTPUT)
@@ -245,11 +252,15 @@ VisualPointFeatureVector3DConstPtr ShotDescriptor3D::Convert
 			{
 			if (feature.descriptor[componentIndex] != feature.descriptor[componentIndex])
 				{
-				DEBUG_PRINT_TO_LOG("Shot 3d problem: A NaN feature was computed", "");
+				computedNanFeature = true;
 				feature.descriptor[componentIndex] = LARGE_NUMBER_THAT_REPLACES_NAN;
 				}
 			AddDescriptorComponent(*featuresVector, pointIndex, feature.descriptor[componentIndex]);
 			} 
+		}
+	if (computedNanFeature)
+		{
+		DEBUG_PRINT_TO_LOG("Shot 3d problem: A NaN feature was computed", "");
 		}
 	return featuresVector;
 	}

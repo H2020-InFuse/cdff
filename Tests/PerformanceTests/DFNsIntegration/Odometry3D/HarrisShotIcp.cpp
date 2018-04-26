@@ -117,7 +117,7 @@ class HarrisShotIcp : public PerformanceTestInterface
 		Aggregator* groundPositionDistanceAggregator;
 		Aggregator* groundOrientationDistanceAggregator;
 
-		void LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string cloudFile);
+		void LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string cloudFile);
 		void LoadSceneCloud();
 		void LoadModelCloud(int long inputId);
 
@@ -243,8 +243,9 @@ void HarrisShotIcp::SetModelsCloud(std::string groundTruthTransformFilePath, std
 	transformsFile.close();
 	}
 
-void HarrisShotIcp::LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string cloudFile)
+void HarrisShotIcp::LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string cloudFile)
 	{
+	const float EPSILON = 0.00001;
 	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(cloudFile, *basePclCloud);
 
@@ -258,16 +259,23 @@ void HarrisShotIcp::LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::st
 			}
 		}
 
-	pcl::VoxelGrid<pcl::PointXYZ> grid;
-	grid.setInputCloud(finitePointsPclCloud);
-	grid.setLeafSize(voxelGridFilterSize, voxelGridFilterSize, voxelGridFilterSize);
-
-	grid.filter(*cloud);
+	if (voxelGridFilterSize > EPSILON)
+		{
+		pcl::VoxelGrid<pcl::PointXYZ> grid;
+		grid.setInputCloud(finitePointsPclCloud);
+		grid.setLeafSize(voxelGridFilterSize, voxelGridFilterSize, voxelGridFilterSize);
+		
+		cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+		grid.filter(*cloud);
+		}
+	else
+		{
+		cloud = finitePointsPclCloud;
+		}
 	}
 
 void HarrisShotIcp::LoadSceneCloud()
 	{
-	sceneCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	LoadCloud(sceneCloud, this->inputCloudFile);
 	scenePointCloud = pointCloudConverter.Convert(sceneCloud);
 	}

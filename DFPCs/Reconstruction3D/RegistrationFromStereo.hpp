@@ -78,11 +78,11 @@ namespace dfpc_ci {
 	private:
 		DfpcConfigurator configurator;
 		PointCloudMap pointCloudMap;
-		float searchRadius;
 		bool firstInput;
 
 		struct RegistrationFromStereoOptionsSet
 			{
+			float searchRadius;
 			float pointCloudMapResolution;
 			};
 

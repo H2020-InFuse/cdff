@@ -81,10 +81,10 @@ namespace dfpc_ci {
 	private:
 		DfpcConfigurator configurator;
 		Map* map;
-		float searchRadius;
 
 		struct ReconstructionFromStereoOptionsSet
 			{
+			float searchRadius;
 			float pointCloudMapResolution;
 			};
 

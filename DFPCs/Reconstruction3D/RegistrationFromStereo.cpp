@@ -56,6 +56,7 @@ using namespace PointCloudWrapper;
 RegistrationFromStereo::RegistrationFromStereo()
 	{
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
+	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 
 	filteredLeftImage = NULL;
 	filteredRightImage = NULL;
@@ -72,8 +73,6 @@ RegistrationFromStereo::RegistrationFromStereo()
 	featuresExtractor3d = NULL;
 	optionalFeaturesDescriptor3d = NULL;
 	featuresMatcher3d = NULL;
-
-	searchRadius = 20;
 
 	configurationFilePath = "";
 	firstInput = true;
@@ -133,7 +132,7 @@ void RegistrationFromStereo::run()
 	if (outSuccess)
 		{
 		pointCloudMap.AddPointCloud(pointCloud, pointCloudFeaturesVector, cameraPoseInScene);
-		outPointCloud = pointCloudMap.GetScenePointCloud(cameraPoseInScene, searchRadius);
+		outPointCloud = pointCloudMap.GetScenePointCloud(cameraPoseInScene, parameters.searchRadius);
 		DEBUG_SHOW_POINT_CLOUD(outPointCloud);
 
 		Pose3DPtr newOutPose = NewPose3D();
@@ -166,6 +165,7 @@ void RegistrationFromStereo::setup()
 
 const RegistrationFromStereo::RegistrationFromStereoOptionsSet RegistrationFromStereo::DEFAULT_PARAMETERS = 
 	{
+	.searchRadius = 20,
 	.pointCloudMapResolution = 1e-2
 	};
 
@@ -219,7 +219,7 @@ void RegistrationFromStereo::ComputePointCloud()
 bool RegistrationFromStereo::ComputeCameraMovement()
 	{
 	DELETE_PREVIOUS(sceneFeaturesVector);
-	sceneFeaturesVector = pointCloudMap.GetSceneFeaturesVector(previousCameraPoseInScene, searchRadius);
+	sceneFeaturesVector = pointCloudMap.GetSceneFeaturesVector(previousCameraPoseInScene, parameters.searchRadius);
 
 	ExtractPointCloudFeatures();
 	DescribePointCloudFeatures();

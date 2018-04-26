@@ -92,6 +92,7 @@ namespace dfpc_ci {
 
 		struct ReconstructionFromMotionOptionsSet
 			{
+			float searchRadius;
 			float pointCloudMapResolution;
 			CameraPose rightToLeftCameraPose;
 			};
@@ -102,7 +103,6 @@ namespace dfpc_ci {
 
 		DfpcConfigurator configurator;
 		Map* map;
-		float searchRadius;
 		PoseWrapper::Pose3DPtr rightToLeftCameraPose;
 
 		dfn_ci::ImageFilteringInterface* leftFilter;

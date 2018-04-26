@@ -149,6 +149,7 @@ TEST_CASE( "Failed processing for invalid normal cloud and disabled estimation",
 
 	VisualPointFeatureVector3DPtr featuresSet = new VisualPointFeatureVector3D();
 	shot.featuresSetInput(featuresSet);
+	AddPoint(*featuresSet, 0);
 
 	PointCloudPtr normalsCloud = new PointCloud();	
 	ClearPoints(*normalsCloud);

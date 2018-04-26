@@ -76,6 +76,7 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "OrientationW", parameters.rightToLeftCameraPose.orientationW, DEFAULT_PARAMETERS.rightToLeftCameraPose.orientationW);
 
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
+	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 
 	filteredCurrentLeftImage = NULL;
 	filteredPastLeftImage = NULL;
@@ -100,8 +101,6 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
 	cameraTransformEstimator = NULL;
 	reconstructor3D = NULL;
 	optionalFeaturesDescriptor = NULL;
-
-	searchRadius = -1;
 
 	configurationFilePath = "";
 
@@ -177,6 +176,7 @@ void ReconstructionFromMotion::setup()
 
 const ReconstructionFromMotion::ReconstructionFromMotionOptionsSet ReconstructionFromMotion::DEFAULT_PARAMETERS = 
 	{
+	.searchRadius = -1,
 	.pointCloudMapResolution = 1e-2,
 	.rightToLeftCameraPose = 
 		{
@@ -280,7 +280,7 @@ void ReconstructionFromMotion::UpdateScene()
 	map->AddPointCloudInLastReference(pointCloud);
 
 	outPose = map->GetCurrentFramePoseInOrigin();
-	outPointCloud = map->GetPartialScene(searchRadius);
+	outPointCloud = map->GetPartialScene(parameters.searchRadius);
 
 	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*outPointCloud));
 	DEBUG_SHOW_POINT_CLOUD(outPointCloud);
