@@ -67,7 +67,7 @@
 #include <PointCloud.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include "opencv2/calib3d.hpp"
+#include <opencv2/calib3d/calib3d.hpp>
 #include <stdlib.h>
 #include <string>
 #include <pcl/keypoints/harris_3d.h>

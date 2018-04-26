@@ -1,5 +1,6 @@
 - Name: GeneralParameters
-  PointCloudSamplingDensity: 0.1
+  PointCloudSamplingDensity: 0
+  VoxelGridLeafSize: 0.1
   UseFullScaleTwoPassAlgorithm: false
   UseDisparityToDepthMap: false
 - Name: Prefilter
