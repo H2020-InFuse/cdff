@@ -100,6 +100,7 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		static const float EPSILON;
 
 		enum PrefilterType
 			{
@@ -173,6 +174,7 @@ namespace dfn_ci {
 			BlocksMatchingOptionsSet blocksMatching;
 			DisparityToDepthMap disparityToDepthMap;
 			float pointCloudSamplingDensity;
+			float voxelGridLeafSize;
 			bool useDisparityToDepthMap;
 			StereoCameraParameters stereoCameraParameters;
 			};
@@ -185,10 +187,22 @@ namespace dfn_ci {
 
 		cv::Mat ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage);
 		PointCloudWrapper::PointCloudConstPtr Convert(cv::Mat cvPointCloud);
+		PointCloudWrapper::PointCloudConstPtr ConvertWithPeriodicSampling(cv::Mat cvPointCloud);
+		PointCloudWrapper::PointCloudConstPtr ConvertWithVoxelFilter(cv::Mat cvPointCloud);
 		cv::Mat Convert(DisparityToDepthMap disparityToDepthMap);
 		cv::Mat ComputePointCloudFromDisparity(cv::Mat disparity);
 
 		void ValidateParameters();
+
+	/* --------------------------------------------------------------------
+	 * Private Testing 
+	 * --------------------------------------------------------------------
+	 */
+	#ifdef TESTING
+		#define SAVE_DISPARITY_MATRIX(disparity) disparityMatrix = disparity
+	#else
+		#define SAVE_DISPARITY_MATRIX(disparity)
+	#endif
     };
 }
 #endif

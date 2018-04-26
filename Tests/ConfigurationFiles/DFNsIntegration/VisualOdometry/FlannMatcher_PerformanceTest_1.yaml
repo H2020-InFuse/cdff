@@ -3,7 +3,7 @@
   NumberOfChecks: 16 64
   Epsilon: 0
   SortedSearch: false
-  AcceptanceRatio: 0.75
+  AcceptanceRatio: 0.75 0.85 0.95
   MatcherMethod: LocalitySensitiveHashing
 - Name: LocalitySensitiveHashingParameters
   TableNumber: 1 2 3

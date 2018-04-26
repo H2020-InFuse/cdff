@@ -1,0 +1,16 @@
+- Name: CameraMatrix
+  FocalLengthX: 727.082
+  FocalLengthY: 726.947
+  PrinciplePointX: 388.801
+  PrinciplePointY: 272.886
+- Name: Distortion
+  UseK3: false
+  UseK4ToK6: false 
+  K1: -0.193231
+  K2: 0.191304
+  P1: 0.0
+  P2: 0.0
+  K3: 0.0
+  K4: 0.0
+  K5: 0.0
+  K6: 0.0

@@ -36,6 +36,7 @@
 #include <FrameToMatConverter.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <Visualizers/OpencvVisualizer.hpp>
+#include <pcl/filters/voxel_grid.h>
 
 #include <stdlib.h>
 #include <fstream>
@@ -90,6 +91,7 @@ DisparityMapping::DisparityMapping()
 	parametersHelper.AddParameter<int>("BlocksMatching", "TextureThreshold", parameters.blocksMatching.textureThreshold, DEFAULT_PARAMETERS.blocksMatching.textureThreshold);
 	parametersHelper.AddParameter<int>("BlocksMatching", "UniquenessRatio", parameters.blocksMatching.uniquenessRatio, DEFAULT_PARAMETERS.blocksMatching.uniquenessRatio);
 
+	parametersHelper.AddParameter<float>("GeneralParameters", "VoxelGridLeafSize", parameters.voxelGridLeafSize, DEFAULT_PARAMETERS.voxelGridLeafSize);
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudSamplingDensity", parameters.pointCloudSamplingDensity, DEFAULT_PARAMETERS.pointCloudSamplingDensity);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDisparityToDepthMap", parameters.useDisparityToDepthMap, DEFAULT_PARAMETERS.useDisparityToDepthMap);
 
@@ -153,6 +155,13 @@ DisparityMapping::PrefilterType DisparityMapping::PrefilterTypeHelper::Convert(c
 	ASSERT(false, "StereoTriangulation Error: unhandled prefilter type");
 	return XSOBEL;
 	}
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Variables
+ *
+ * --------------------------------------------------------------------------
+ */
+const float DisparityMapping::EPSILON = 0.0001;
 
 const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PARAMETERS =
 	{
@@ -206,6 +215,7 @@ const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PAR
 		0, 0, -1, 0
 		},
 	.pointCloudSamplingDensity = 1,
+	.voxelGridLeafSize = 0,
 	.useDisparityToDepthMap = false,
 	.stereoCameraParameters =
 		{
@@ -216,6 +226,13 @@ const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PAR
 		}
 	};
 
+
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Functions
+ *
+ * --------------------------------------------------------------------------
+ */
 cv::Mat DisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage)
 	{
 	cv::Ptr<cv::StereoBM> stereo = cv::StereoBM::create(parameters.disparities.numberOfIntervals, parameters.blocksMatching.blockSize);
@@ -244,6 +261,7 @@ cv::Mat DisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImag
 	cv::Mat disparity;
 	stereo->compute(greyLeftImage, greyRightImage, disparity);
 	DEBUG_SHOW_DISPARITY(disparity);
+	SAVE_DISPARITY_MATRIX(disparity);
 
 	cv::Mat pointCloud;
 	if (parameters.useDisparityToDepthMap)
@@ -259,6 +277,18 @@ cv::Mat DisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImag
 	}
 
 PointCloudConstPtr DisparityMapping::Convert(cv::Mat cvPointCloud)
+	{
+	if (parameters.pointCloudSamplingDensity > EPSILON)
+		{
+		return ConvertWithPeriodicSampling(cvPointCloud);
+		}
+	else
+		{
+		return ConvertWithVoxelFilter(cvPointCloud);
+		}
+	}
+
+PointCloudConstPtr DisparityMapping::ConvertWithPeriodicSampling(cv::Mat cvPointCloud)
 	{
 	PointCloudPtr pointCloud = new PointCloud();
 
@@ -282,6 +312,42 @@ PointCloudConstPtr DisparityMapping::Convert(cv::Mat cvPointCloud)
 					}
 				}
 			}
+		}
+
+	return pointCloud;
+	}
+
+PointCloudConstPtr DisparityMapping::ConvertWithVoxelFilter(cv::Mat cvPointCloud)
+	{
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud(new pcl::PointCloud<pcl::PointXYZ>);
+	
+	for(unsigned row = 0; row < cvPointCloud.rows; row++)
+		{
+		for(unsigned column = 0; column < cvPointCloud.cols; column++)
+			{
+			cv::Vec3f point = cvPointCloud.at<cv::Vec3f>(row, column);
+
+			bool validPoint = (point[0] == point[0] && point[1] == point[1] && point[2] == point[2]);
+			validPoint = validPoint && ( std::abs(point[0]) <= parameters.reconstructionSpace.limitX ) && ( std::abs(point[1]) <= parameters.reconstructionSpace.limitY );
+			validPoint = validPoint && ( point[2] >= 0 ) && ( point[2] <= parameters.reconstructionSpace.limitZ );
+			if (validPoint)
+				{
+				pcl::PointXYZ newPoint(point[0], point[1], point[2]); 
+				pclPointCloud->points.push_back(newPoint);
+				}
+			}
+		}
+
+	pcl::VoxelGrid<pcl::PointXYZ> grid;
+	grid.setInputCloud(pclPointCloud);
+	grid.setLeafSize(parameters.voxelGridLeafSize, parameters.voxelGridLeafSize, parameters.voxelGridLeafSize);
+	grid.filter(*pclPointCloud);
+
+	PointCloudPtr pointCloud = new PointCloud();
+	for(unsigned pointIndex = 0; pointIndex < pclPointCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ& point = pclPointCloud->points.at(pointIndex);
+		AddPoint(*pointCloud, point.x, point.y, point.z); 		
 		}
 
 	return pointCloud;
@@ -340,13 +406,17 @@ void DisparityMapping::ValidateParameters()
 	ASSERT(parameters.disparities.numberOfIntervals % 16 == 0, "DisparityMapping Configuration Error: number of disparities needs to be multiple of 16");
 	ASSERT(parameters.blocksMatching.blockSize % 2 == 1, "DisparityMapping Configuration Error: blockSize needs to be odd");
 	ASSERT(!parameters.disparities.useMaximumDifference || parameters.disparities.maximumDifference >= 0, "DisparityMapping Configuration, maximum disparity difference used but not set positive");
-	ASSERT(parameters.pointCloudSamplingDensity > 0 && parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
 	ASSERT( parameters.reconstructionSpace.limitX > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
 	ASSERT( parameters.reconstructionSpace.limitY > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
 	ASSERT( parameters.reconstructionSpace.limitZ > 0, "DisparityMapping Configuration Error: Limits for reconstruction space have to be positive");
 
 	ASSERT( parameters.stereoCameraParameters.leftFocalLength > 0, "DisparityMapping Configuration Error: Focal Length has to be positive");
 	ASSERT( parameters.stereoCameraParameters.baseline > 0, "DisparityMapping Configuration Error: Baseline has to be positive");
+
+	ASSERT( (parameters.voxelGridLeafSize > EPSILON && parameters.pointCloudSamplingDensity <= EPSILON) ||
+		(parameters.voxelGridLeafSize <= EPSILON && parameters.pointCloudSamplingDensity > EPSILON), 
+		"DisparityMapping Configuration Error: Only one between voxelGridLeafSize and pointCloudSamplingDensity can be greater than 0");
+	ASSERT(parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
 	}
 
 

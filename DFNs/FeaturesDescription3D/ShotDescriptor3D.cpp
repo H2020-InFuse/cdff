@@ -85,6 +85,12 @@ void ShotDescriptor3D::configure()
 
 void ShotDescriptor3D::process() 
 	{
+	if ( GetNumberOfPoints(*inFeaturesSet) == 0)
+		{
+		outFeaturesSetWithDescriptors = NewVisualPointFeatureVector3D();
+		return;
+		}
+
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputPointCloud = 
 		ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inPointCloud);
 	pcl::IndicesConstPtr indicesList = Convert(inFeaturesSet);
@@ -224,9 +230,11 @@ VisualPointFeatureVector3DConstPtr ShotDescriptor3D::Convert
 		const pcl::PointCloud<pcl::SHOT352>::ConstPtr shotPointCloud
 		)
 	{
+	static const float LARGE_NUMBER_THAT_REPLACES_NAN = 1000;
 	static const unsigned SHOT_DESCRIPTOR_SIZE = 352;
 	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
 	ClearPoints(*featuresVector);
+	bool computedNanFeature = false;
 	for(unsigned pointIndex = 0; pointIndex < indicesList->size(); pointIndex++)
 		{
 		if (parameters.baseOptions.outputFormat == POSITIONS_OUTPUT)
@@ -242,8 +250,17 @@ VisualPointFeatureVector3DConstPtr ShotDescriptor3D::Convert
 		pcl::SHOT352 feature = shotPointCloud->points.at(pointIndex);
 		for(unsigned componentIndex = 0; componentIndex < SHOT_DESCRIPTOR_SIZE; componentIndex++)
 			{
+			if (feature.descriptor[componentIndex] != feature.descriptor[componentIndex])
+				{
+				computedNanFeature = true;
+				feature.descriptor[componentIndex] = LARGE_NUMBER_THAT_REPLACES_NAN;
+				}
 			AddDescriptorComponent(*featuresVector, pointIndex, feature.descriptor[componentIndex]);
 			} 
+		}
+	if (computedNanFeature)
+		{
+		DEBUG_PRINT_TO_LOG("Shot 3d problem: A NaN feature was computed", "");
 		}
 	return featuresVector;
 	}
