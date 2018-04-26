@@ -22,24 +22,14 @@
 
 /* --------------------------------------------------------------------------
  *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
-
-/* --------------------------------------------------------------------------
- *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
+#include <catch.hpp>
 #include <VisualPointFeatureVector3DToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
 #include <VisualPointFeatureVector3D.hpp>
-#include <Catch/catch.h>
 #include <Errors/Assert.hpp>
 
 using namespace Converters;
@@ -149,7 +139,7 @@ TEST_CASE( "Attempt conversion of a Bad VisualPointFeatureVector3D", "[BadVisual
 	asnVector.reset();		
 	}
 
-TEST_CASE( "Points with empty descriptors", "[EmptyDescriptors3D]")
+TEST_CASE( "3D points with empty descriptors", "[EmptyDescriptors3D]")
 	{
 	MatToVisualPointFeatureVector3DConverter firstConverter;
 	VisualPointFeatureVector3DToMatConverter secondConverter;

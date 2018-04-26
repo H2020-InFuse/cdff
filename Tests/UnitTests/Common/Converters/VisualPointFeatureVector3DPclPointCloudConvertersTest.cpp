@@ -22,24 +22,14 @@
 
 /* --------------------------------------------------------------------------
  *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
-
-/* --------------------------------------------------------------------------
- *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
+#include <catch.hpp>
 #include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <PclPointCloudToVisualPointFeatureVector3DConverter.hpp>
 #include <VisualPointFeatureVector3D.hpp>
-#include <Catch/catch.h>
 #include <Errors/Assert.hpp>
 #include <boost/smart_ptr.hpp>
 
@@ -196,7 +186,7 @@ TEST_CASE("Empty Point Cloud conversion", "[EmptyPointCloud]")
 	outputCloud.reset();
 	}
 
-TEST_CASE("Reference Features Conversion", "[ReferenceFeaturesConversion]")
+TEST_CASE("Reference Features Conversion (Visual)", "[ReferenceFeaturesConversion]")
 	{
 	VisualPointFeatureVector3DToPclPointCloudConverter converter;
 
@@ -209,7 +199,7 @@ TEST_CASE("Reference Features Conversion", "[ReferenceFeaturesConversion]")
 	delete(featuresVector);				
 	}
 
-TEST_CASE("Hybrid Features Conversion", "[HybridFeaturesConversion]")
+TEST_CASE("Hybrid Features Conversion (Visual)", "[HybridFeaturesConversion]")
 	{
 	VisualPointFeatureVector3DToPclPointCloudConverter converter;
 

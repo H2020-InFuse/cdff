@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -58,7 +48,7 @@ using namespace VisualPointFeatureVector2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process", "[process]" ) 
+TEST_CASE( "Call to process (2D Harris detector)", "[process]" ) 
 	{
 	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
 	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
@@ -84,7 +74,7 @@ TEST_CASE( "Call to process", "[process]" )
 	delete(output);
 	}
 
-TEST_CASE( "Call to configure", "[configure]" )
+TEST_CASE( "Call to configure (2D Harris detector)", "[configure]" )
 	{
 	HarrisDetector2D harris;
 	harris.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesExtraction2D/HarrisDetector2D_Conf1.yaml");

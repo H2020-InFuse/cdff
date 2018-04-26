@@ -22,24 +22,14 @@
 
 /* --------------------------------------------------------------------------
  *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
-
-/* --------------------------------------------------------------------------
- *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
+#include <catch.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
 #include <PointCloud.hpp>
-#include <Catch/catch.h>
 #include <Errors/Assert.hpp>
 #include <boost/smart_ptr.hpp>
 
@@ -80,7 +70,7 @@ TEST_CASE( "PclPointCloud to PointCloud and Back", "[PclPointCloudToPointCloud]"
 	asnPointCloud.reset();
 	} 
 
-TEST_CASE( "PointCloud3D to PclPointCloud and Back", "[PointCloud3DToPclPointCloud]" )
+TEST_CASE( "PointCloud3D to PclPointCloud and Back (Pcl)", "[PointCloud3DToPclPointCloud]" )
 	{
 	PclPointCloudToPointCloudConverter firstConverter;
 	PointCloudToPclPointCloudConverter secondConverter;
@@ -108,7 +98,7 @@ TEST_CASE( "PointCloud3D to PclPointCloud and Back", "[PointCloud3DToPclPointClo
 	outputCloud.reset();
 	} 
 
-TEST_CASE("Empty Point Cloud conversion", "[EmptyPointCloud]")
+TEST_CASE("Empty Point Cloud conversion (Pcl)", "[EmptyPointCloud]")
 	{
 	PclPointCloudToPointCloudConverter firstConverter;
 	PointCloudToPclPointCloudConverter secondConverter;

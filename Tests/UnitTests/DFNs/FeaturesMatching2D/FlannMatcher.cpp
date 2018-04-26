@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <FeaturesMatching2D/FlannMatcher.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -56,7 +46,7 @@ using namespace VisualPointFeatureVector2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process", "[process]" ) 
+TEST_CASE( "Call to process (FLANN registration)", "[process]" ) 
 	{
 	Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat >* stubInputCache = new Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>();
 	Mocks::VisualPointFeatureVector2DToMatConverter* mockInputConverter = new Mocks::VisualPointFeatureVector2DToMatConverter();
@@ -87,7 +77,7 @@ TEST_CASE( "Call to process", "[process]" )
 	delete(output);
 	}
 
-TEST_CASE( "Call to configure", "[configure]" )
+TEST_CASE( "Call to configure (FLANN registration)", "[configure]" )
 	{
 	FlannMatcher flann;
 	flann.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesMatching2D/FlannMatcher_Conf1.yaml");
