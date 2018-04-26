@@ -11,15 +11,15 @@
     UseFullScaleTwoPassAlgorithm: false
     UseDisparityToDepthMap: false
   - Name: Prefilter
-    Maximum: 5
+    Maximum: 11
   - Name: Disparities
     Minimum: 0
-    NumberOfIntervals: 128
+    NumberOfIntervals: 256
     UseMaximumDifference: true
     MaximumDifference: 10
-    SpeckleRange: 50
+    SpeckleRange: 8
     SpeckleWindow: 10
-    SmoothnessParameter1: 600z
+    SmoothnessParameter1: 600
     SmoothnessParameter2: 10000
   - Name: BlocksMatching
     BlockSize: 11
@@ -47,18 +47,18 @@
     LeftPrinciplePointY: 463.537109375
     Baseline: 0.239977002
   - Name: ReconstructionSpace
-    LimitX: 10
-    LimitY: 10
-    LimitZ: 3
+    LimitX: 30
+    LimitY: 20
+    LimitZ: 15
 - Name: featuresExtractor3d
   Type: FeaturesExtraction3D
   Implementation: HarrisDetector3D
   Parameters:
   - Name: GeneralParameters
     Radius: 0.01
-    SearchRadius: 0.01
+    SearchRadius: 0.1
     NonMaxSuppression: true
-    DetectionThreshold: 0.001
+    DetectionThreshold: 0.01
     EnableRefinement: false
     NumberOfThreads: 0
     HarrisMethod: Harris

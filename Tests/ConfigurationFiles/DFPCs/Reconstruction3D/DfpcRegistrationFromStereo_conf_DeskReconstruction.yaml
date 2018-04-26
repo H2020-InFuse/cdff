@@ -13,34 +13,34 @@
     CameraConfigurationMode: Internal
     TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsLeft.yaml
   - Name: CameraMatrix
-    FocalLengthX: 1421.164784144771
-    FocalLengthY: 1429.543764232347
-    PrinciplePointX: 654.6392455477960
-    PrinciplePointY: 471.6953010174994
+    FocalLengthX: 469.69335866537415
+    FocalLengthY: 469.60523335676896
+    PrinciplePointX: 375.81156688000374
+    PrinciplePointY: 235.67220812847538
   - Name: Distortion
     UseK3: false 
     UseK4ToK6: false 
-    K1: -0.264454651171983
-    K2: 0.262569280554075
-    P1: 0.0
-    P2: 0.0
+    K1: 0.011018735172905199
+    K2: -0.037267274003120264
+    P1: 0.09069148825172853
+    P2: -0.07022513948532011
     K3: 0.0
     K4: 0.0
     K5: 0.0
     K6: 0.0
   - Name: ImageSize
-    Width: 1280
-    Height: 960
+    Width: 752
+    Height: 480
   - Name: RectificationMatrix
-    Element_0_0: 0.99995895922369
-    Element_0_1: -0.0041695268292587
-    Element_0_2: 0.0080433148822507
-    Element_1_0: 0.0042087796053244
-    Element_1_1: 0.99997928716904
-    Element_1_2: -0.0048694360175071
-    Element_2_0: -0.0080228450383109
-    Element_2_1: 0.0049030887117084
-    Element_2_2: 0.99995579586229
+    Element_0_0: 0.99995969673454
+    Element_0_1: -0.00084899398552592
+    Element_0_2: 0.008937791437225
+    Element_1_0: 0.00085911728769465
+    Element_1_1: 0.99999899379377
+    Element_1_2: -0.0011288617854337
+    Element_2_0: -0.0089368240470973
+    Element_2_1: 0.0011364948997551
+    Element_2_2: 0.99995941995428
 - Name: rightFilter
   Type: ImageFiltering
   Implementation: ImageUndistortionRectification
@@ -52,34 +52,34 @@
     TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsRight.yaml
     CameraConfigurationMode: Internal
   - Name: CameraMatrix
-    FocalLengthX: 1446.127580127209
-    FocalLengthY: 1455.132570727606
-    PrinciplePointX: 661.1432907851638
-    PrinciplePointY: 475.6841065984696
+    FocalLengthX: 465.0032830522287
+    FocalLengthY: 464.9075708089721
+    PrinciplePointX: 380.2015168346912
+    PrinciplePointY: 237.28253518748602
   - Name: Distortion
     UseK3: false
     UseK4ToK6: false 
-    K1: -0.258184878424111
-    K2: 0.210614154325684
-    P1: 0.0
-    P2: 0.0
+    K1: -0.026124377673622322
+    K2: 0.11400438353263162
+    P1: -0.20012391836901924
+    P2: 0.12731091825454674
     K3: 0.0
     K4: 0.0
     K5: 0.0
     K6: 0.0
   - Name: ImageSize
-    Width: 1280
-    Height: 960
+    Width: 752
+    Height: 480
   - Name: RectificationMatrix
-    Element_0_0: 0.99995358261158
-    Element_0_1: -0.0030699915941334
-    Element_0_2: 0.0091327856585394
-    Element_1_0: 0.0030253287808502
-    Element_1_1: 0.999983417652
-    Element_1_2: 0.0049001843630765
-    Element_2_0: -0.0091476777403138
-    Element_2_1: -0.0048723272300135
-    Element_2_2: 0.99994628876721
+    Element_0_0: 0.99993678961866
+    Element_0_1: -0.0037979429421517
+    Element_0_2: 0.010582646008354
+    Element_1_0: 0.0037859534615732
+    Element_1_1: 0.99999216884163
+    Element_1_2: 0.0011527409910873
+    Element_2_0: -0.010586941178488
+    Element_2_1: -0.0011126027206017
+    Element_2_2: 0.99994333779053
 - Name: reconstructor3D
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
@@ -103,27 +103,28 @@
     BlockSize: 11
     UniquenessRatio: 1
   - Name: DisparityToDepthMap
+DisparityToDepthMatrix: 
     Element_0_0: 1
     Element_0_1: 0
     Element_0_2: 0
-    Element_0_3: -644.5276260376
+    Element_0_3: -454.19430691004
     Element_1_0: 0
     Element_1_1: 1
     Element_1_2: 0
-    Element_1_3: -473.75882720947
+    Element_1_3: -150.43810141087
     Element_2_0: 0
     Element_2_1: 0
     Element_2_2: 0
-    Element_2_3: 1311.1486643517
+    Element_2_3: 453.72658667713
     Element_3_0: 0
     Element_3_1: 0
-    Element_3_2: 0.0019902763856726
-    Element_3_3: -0
+    Element_3_2: -9.0345403374863
+    Element_3_3: 0
   - Name: StereoCamera
-    LeftFocalLength: 1421.16478144771
-    LeftPrinciplePointX: 654.6392455477960
-    LeftPrinciplePointY: 471.6953010174994
-    Baseline: 0.50
+    LeftFocalLength: 465.0032830522287
+    LeftPrinciplePointX: 380.2015168346912
+    LeftPrinciplePointY: 237.28253518748602
+    Baseline: 0.110686
   - Name: ReconstructionSpace
     LimitX: 10
     LimitY: 10

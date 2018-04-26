@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file HirschmullerDisparityMapping.cpp
- * @date 19/03/2018
+ * @file ScanlineOptimization.cpp
+ * @date 24/04/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DFNsTest
  * 
- * Performance Test for the DFN Hirschmuller Disparity Mapping.
+ * Performance Test for the DFN Scanline Optimization.
  * 
  * 
  * @{
@@ -27,20 +27,20 @@
  * --------------------------------------------------------------------------
  */
 #include "StereoReconstruction.hpp"
-#include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
+#include <StereoReconstruction/ScanlineOptimization.hpp>
 
 using namespace dfn_ci;
 
 int main(int argc, char** argv)
 	{
-	std::string configurationFileName = "HirschmullerDisparityMapping_Performance1.yaml";
+	std::string configurationFileName = "ScanlineOptimization_Performance1.yaml";
 	if (argc >= 2)
 		{
 		configurationFileName = argv[1];
 		}
 
-	StereoReconstructionInterface* reconstructor = new HirschmullerDisparityMapping();
-	StereoReconstructionTestInterface interface("../tests/ConfigurationFiles/DFNs/StereoReconstruction", configurationFileName, "HirschmullerOutput.txt", reconstructor);
+	StereoReconstructionInterface* reconstructor = new ScanlineOptimization();
+	StereoReconstructionTestInterface interface("../tests/ConfigurationFiles/DFNs/StereoReconstruction", configurationFileName, "ScanlineOptimization.txt", reconstructor);
 	
 	if (argc >= 5)
 		{

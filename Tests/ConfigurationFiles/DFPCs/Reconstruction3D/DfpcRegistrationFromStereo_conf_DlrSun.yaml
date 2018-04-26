@@ -1,0 +1,167 @@
+- Name: DFNsChain
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudMapResolution: 0.01
+- Name: leftFilter
+  Type: ImageFiltering
+  Implementation: ImageUndistortionRectification
+  Parameters:
+  - Name: GeneralParameters
+    InterpolationMethod: Linear
+    BorderMode: Constant
+    ConstantBorderValue: 0
+    CameraConfigurationMode: Internal
+    TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsLeft.yaml
+  - Name: CameraMatrix
+    FocalLengthX: 725.107
+    FocalLengthY: 724.660
+    PrinciplePointX: 391.125
+    PrinciplePointY: 270.606
+  - Name: Distortion
+    UseK3: false 
+    UseK4ToK6: false 
+    K1: -0.191755
+    K2: 0.156979
+    P1: 0.0
+    P2: 0.0
+    K3: 0.0
+    K4: 0.0
+    K5: 0.0
+    K6: 0.0
+  - Name: ImageSize
+    Width: 780
+    Height: 582
+  - Name: RectificationMatrix
+    Element_0_0: 0.99998028733246
+    Element_0_1: -0.006271919469049
+    Element_0_2: 0.00029660185564084
+    Element_1_0: 0.0062714049872005
+    Element_1_1: 0.99997888130847
+    Element_1_2: 0.0017048215575941
+    Element_2_0: -0.00030728809531608
+    Element_2_1: -0.0017029278406568
+    Element_2_2: 0.99999850280428
+- Name: rightFilter
+  Type: ImageFiltering
+  Implementation: ImageUndistortionRectification
+  Parameters:
+  - Name: GeneralParameters
+    InterpolationMethod: Linear
+    BorderMode: Constant
+    ConstantBorderValue: 0
+    TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsRight.yaml
+    CameraConfigurationMode: Internal
+  - Name: CameraMatrix
+    FocalLengthX: 727.082
+    FocalLengthY: 726.947
+    PrinciplePointX: 388.801
+    PrinciplePointY: 272.886
+  - Name: Distortion
+    UseK3: false
+    UseK4ToK6: false 
+    K1: -0.193231
+    K2: 0.191304
+    P1: 0.0
+    P2: 0.0
+    K3: 0.0
+    K4: 0.0
+    K5: 0.0
+    K6: 0.0
+  - Name: ImageSize
+    Width: 780
+    Height: 582
+  - Name: RectificationMatrix
+    Element_0_0: 0.99971853651052
+    Element_0_1: 0.0050549712125588
+    Element_0_2: 0.023179625176066
+    Element_1_0: -0.0050154657227492
+    Element_1_1: 0.99998586988416
+    Element_1_2: -0.0017621394933802
+    Element_2_0: -0.023188205209688
+    Element_2_1: 0.0016453868999127
+    Element_2_2: 0.99972976340664
+- Name: reconstructor3D
+  Type: StereoReconstruction
+  Implementation: HirschmullerDisparityMapping
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudSamplingDensity: 0.1
+    UseFullScaleTwoPassAlgorithm: false
+    UseDisparityToDepthMap: false
+  - Name: Prefilter
+    Maximum: 5
+  - Name: Disparities
+    Minimum: 0
+    NumberOfIntervals: 128
+    UseMaximumDifference: true
+    MaximumDifference: 10
+    SpeckleRange: 50
+    SpeckleWindow: 10
+    SmoothnessParameter1: 600
+    SmoothnessParameter2: 10000
+  - Name: BlocksMatching
+    BlockSize: 11
+    UniquenessRatio: 1
+  - Name: DisparityToDepthMap
+    Element_0_0: 1
+    Element_0_1: 0
+    Element_0_2: 0
+    Element_0_3: -379.75352478027
+    Element_1_0: 0
+    Element_1_1: 1
+    Element_1_2: 0
+    Element_1_3: -272.34271621704
+    Element_2_0: 0
+    Element_2_1: 0
+    Element_2_2: 0
+    Element_2_3: 662.00449168576
+    Element_3_0: 0
+    Element_3_1: 0
+    Element_3_2: 16.562435371923
+    Element_3_3: -0
+  - Name: StereoCamera
+    LeftFocalLength: 727.082
+    LeftPrinciplePointX: 388.801
+    LeftPrinciplePointY: 272.886
+    Baseline:  0.0603776
+  - Name: ReconstructionSpace
+    LimitX: 10
+    LimitY: 10
+    LimitZ: 3
+- Name: featuresExtractor3d
+  Type: FeaturesExtraction3D
+  Implementation: HarrisDetector3D
+  Parameters:
+  - Name: GeneralParameters
+    Radius: 0.01
+    SearchRadius: 0.01
+    NonMaxSuppression: true
+    DetectionThreshold: 0.001
+    EnableRefinement: false
+    NumberOfThreads: 0
+    HarrisMethod: Harris
+    OutputFormat: References
+- Name: featuresDescriptor3d
+  Type: FeaturesDescription3D
+  Implementation: ShotDescriptor3D
+  Parameters:
+  - Name: GeneralParameters
+    LocalReferenceFrameEstimationRadius: 0.10
+    SearchRadius: 0.1
+    OutputFormat: Positions
+    EnableNormalsEstimation: true
+    ForceNormalsEstimation: true
+  - Name: NormalEstimationParameters
+    SearchRadius: 0.1
+    NeighboursSetSize: 0
+- Name: featuresMatcher3d
+  Type: FeaturesMatching3D
+  Implementation: Ransac3D
+  Parameters:
+  - Name: GeneralParameters
+    SimilarityThreshold: 0.50
+    InlierFraction: 0.50
+    CorrespondenceRandomness: 25
+    NumberOfSamples: 3
+    MaximumIterations: 95000
+    MaxCorrespondenceDistance: 0.010

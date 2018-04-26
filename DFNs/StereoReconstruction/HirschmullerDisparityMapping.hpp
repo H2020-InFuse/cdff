@@ -100,6 +100,7 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		static const float EPSILON;
 
 		struct ReconstructionSpace
 			{
@@ -148,6 +149,7 @@ namespace dfn_ci {
 			BlocksMatchingOptionsSet blocksMatching;
 			DisparityToDepthMap disparityToDepthMap;
 			float pointCloudSamplingDensity;
+			float voxelGridLeafSize;
 			bool useFullScaleTwoPassAlgorithm;
 			bool useDisparityToDepthMap;
 			StereoCameraParameters stereoCameraParameters;
@@ -161,6 +163,8 @@ namespace dfn_ci {
 
 		cv::Mat ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage);
 		PointCloudWrapper::PointCloudConstPtr Convert(cv::Mat cvPointCloud);
+		PointCloudWrapper::PointCloudConstPtr ConvertWithPeriodicSampling(cv::Mat cvPointCloud);
+		PointCloudWrapper::PointCloudConstPtr ConvertWithVoxelFilter(cv::Mat cvPointCloud);
 		cv::Mat Convert(DisparityToDepthMap disparityToDepthMap);
 		cv::Mat ComputePointCloudFromDisparity(cv::Mat disparity);
 
@@ -172,22 +176,9 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */
 	#ifdef TESTING
-		cv::Mat disparityMatrix;
 		#define SAVE_DISPARITY_MATRIX(disparity) disparityMatrix = disparity
 	#else
 		#define SAVE_DISPARITY_MATRIX(disparity)
-	#endif
-
-	public:
-	/* --------------------------------------------------------------------
-	 * Public Testing 
-	 * --------------------------------------------------------------------
-	 */
-	#ifdef TESTING
-		cv::Mat disparityMatrixOutput()
-			{
-			return disparityMatrix;
-			}
 	#endif
     };
 }

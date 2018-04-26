@@ -92,7 +92,8 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
 	pastToCurrentCameraTransform = NULL;
 	pointCloud = NULL;
 
-	filter = NULL;
+	leftFilter = NULL;
+	rightFilter = NULL;
 	featuresExtractor = NULL;
 	featuresMatcher = NULL;
 	fundamentalMatrixComputer = NULL;
@@ -109,9 +110,15 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
 
 ReconstructionFromMotion::~ReconstructionFromMotion()
 	{
-	DELETE_PREVIOUS(filteredCurrentLeftImage);
-	DELETE_PREVIOUS(filteredPastLeftImage);
-	DELETE_PREVIOUS(filteredCurrentRightImage);
+	if (leftFilter != NULL)
+		{
+		DELETE_PREVIOUS(filteredCurrentLeftImage);
+		DELETE_PREVIOUS(filteredPastLeftImage);
+		}
+	if (rightFilter != NULL)
+		{
+		DELETE_PREVIOUS(filteredCurrentRightImage);
+		}
 	DELETE_PREVIOUS(currentLeftKeypointsVector);
 	DELETE_PREVIOUS(pastLeftKeypointsVector);
 	DELETE_PREVIOUS(currentRightKeypointsVector);
@@ -281,7 +288,8 @@ void ReconstructionFromMotion::UpdateScene()
 
 void ReconstructionFromMotion::AssignDfnsAlias()
 	{
-	filter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("filter") );
+	leftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) );
+	rightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) );
 	featuresExtractor = static_cast<FeaturesExtraction2DInterface*>( configurator.GetDfn("featureExtractor") );
 	featuresMatcher = static_cast<FeaturesMatching2DInterface*>( configurator.GetDfn("featuresMatcher") );
 	fundamentalMatrixComputer = static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") );
@@ -289,7 +297,6 @@ void ReconstructionFromMotion::AssignDfnsAlias()
 	reconstructor3D = static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3D") );
 	optionalFeaturesDescriptor = static_cast<FeaturesDescription2DInterface*>( configurator.GetDfn("featuresDescriptor", true) );
 
-	ASSERT(filter != NULL, "DFPC Structure from motion error: filter DFN configured incorrectly");
 	ASSERT(featuresExtractor != NULL, "DFPC Structure from motion error: featuresExtractor DFN configured incorrectly");
 	ASSERT(featuresMatcher != NULL, "DFPC Structure from motion error: featuresMatcher DFN configured incorrectly");
 	ASSERT(fundamentalMatrixComputer != NULL, "DFPC Structure from motion error: fundamentalMatrixComputer DFN configured incorrectly");
@@ -299,29 +306,50 @@ void ReconstructionFromMotion::AssignDfnsAlias()
 
 void ReconstructionFromMotion::FilterCurrentLeftImage()
 	{
-	filter->imageInput(currentLeftImage);
-	filter->process();
-	DELETE_PREVIOUS(filteredCurrentLeftImage);
-	filteredCurrentLeftImage = filter->filteredImageOutput();
-	DEBUG_PRINT_TO_LOG("Filtered Current Frame", "");
+	if (leftFilter != NULL)
+		{
+		leftFilter->imageInput(currentLeftImage);
+		leftFilter->process();
+		DELETE_PREVIOUS(filteredCurrentLeftImage);
+		filteredCurrentLeftImage = leftFilter->filteredImageOutput();
+		DEBUG_PRINT_TO_LOG("Filtered Current Frame", "");
+		}
+	else
+		{
+		filteredCurrentLeftImage = currentLeftImage;
+		}
 	}
 
 void ReconstructionFromMotion::FilterPastLeftImage()
 	{
-	filter->imageInput(pastLeftImage);
-	filter->process();
-	DELETE_PREVIOUS(filteredPastLeftImage);
-	filteredPastLeftImage = filter->filteredImageOutput();
-	DEBUG_PRINT_TO_LOG("Filtered Past Frame", "");
+	if (leftFilter != NULL)
+		{
+		leftFilter->imageInput(pastLeftImage);
+		leftFilter->process();
+		DELETE_PREVIOUS(filteredPastLeftImage);
+		filteredPastLeftImage = leftFilter->filteredImageOutput();
+		DEBUG_PRINT_TO_LOG("Filtered Past Frame", "");
+		}
+	else
+		{
+		filteredPastLeftImage = pastLeftImage;
+		}
 	}
 
 void ReconstructionFromMotion::FilterCurrentRightImage()
 	{
-	filter->imageInput(currentRightImage);
-	filter->process();
-	DELETE_PREVIOUS(filteredCurrentRightImage);
-	filteredCurrentRightImage = filter->filteredImageOutput();
-	DEBUG_PRINT_TO_LOG("Filtered Current Right Frame", "");
+	if (rightFilter != NULL)
+		{
+		rightFilter->imageInput(currentRightImage);
+		rightFilter->process();
+		DELETE_PREVIOUS(filteredCurrentRightImage);
+		filteredCurrentRightImage = rightFilter->filteredImageOutput();
+		DEBUG_PRINT_TO_LOG("Filtered Current Right Frame", "");
+		}
+	else
+		{
+		filteredCurrentRightImage = currentRightImage;
+		}
 	}
 
 void ReconstructionFromMotion::ExtractCurrentLeftFeatures()
