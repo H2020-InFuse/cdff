@@ -71,13 +71,15 @@ Read the [tutorial](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/tutori
     **In the CDFF**&emsp;The unit test executable is `Tests/UnitTests/cdff-unit-tests`. The CMake build system is parameterized so that it is also available through CTest (see ctest(1)), but by default CTest reports less.
 
     ```shell
-    /path/to/CDFF/build:~$ Tests/UnitTests/cdff-unit-tests
+    /path/to/CDFF/build/Tests/UnitTests:~$ ./cdff-unit-tests
 
     /path/to/CDFF/build:~$ ctest [--verbose]
     /path/to/CDFF/build:~$ make test # same as ctest --force-new-ctest-process
     ```
 
     Use options `-?, -h, --help` with `cdff-unit-tests`, and [this documentation page](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/command-line.md), for usage information.
+
+    **Warning:** the test executable can only be run from its own directory; it fails if you run `/path/to/cdff-unit-tests`. This is a bug that needs fixing.
 
 ### How to write tests? What are the available assertion macros?
 
