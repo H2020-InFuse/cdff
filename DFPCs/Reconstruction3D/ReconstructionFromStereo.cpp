@@ -67,6 +67,7 @@ ReconstructionFromStereo::ReconstructionFromStereo(Map* map)
 		}
 
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
+	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 
 	filteredCurrentLeftImage = NULL;
 	filteredPastLeftImage = NULL;
@@ -91,8 +92,6 @@ ReconstructionFromStereo::ReconstructionFromStereo(Map* map)
 	cameraTransformEstimator = NULL;
 	reconstructor3D = NULL;
 	optionalFeaturesDescriptor = NULL;
-
-	searchRadius = -1;
 
 	configurationFilePath = "";
 	}
@@ -165,6 +164,7 @@ void ReconstructionFromStereo::setup()
 
 const ReconstructionFromStereo::ReconstructionFromStereoOptionsSet ReconstructionFromStereo::DEFAULT_PARAMETERS = 
 	{
+	.searchRadius = -1,
 	.pointCloudMapResolution = 1e-2
 	};
 
@@ -263,7 +263,7 @@ void ReconstructionFromStereo::UpdateScene()
 	map->AddFramePoseInReference(pastToCurrentCameraTransform);
 	map->AddPointCloudInLastReference(pointCloud);
 
-	outPointCloud = map->GetPartialScene(searchRadius);
+	outPointCloud = map->GetPartialScene(parameters.searchRadius);
 	outPose = map->GetCurrentFramePoseInOrigin();
 
 	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*outPointCloud));
