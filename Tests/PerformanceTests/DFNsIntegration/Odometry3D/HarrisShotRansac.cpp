@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNsTest
  * 
- * Performance Test for the integration of Harris 3d detector, Shot 3d descriptor, and Icp matcher 3d.
+ * Performance Test for the integration of Harris 3d detector, Shot 3d descriptor, and Ransac matcher 3d.
  * 
  * 
  * @{
@@ -30,7 +30,7 @@
 
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
-#include <FeaturesMatching3D/Icp3D.hpp>
+#include <FeaturesMatching3D/Ransac3D.hpp>
 
 
 using namespace dfn_ci;
@@ -41,14 +41,14 @@ int main(int argc, char** argv)
 		{
 		"HarrisDetector3d_PerformanceTest_1.yaml",
 		"ShotDescriptor3d_PerformanceTest_1.yaml",
-		"Icp3d_PerformanceTest_1.yaml"
+		"Ransac3d_PerformanceTest_1.yaml"
 		};
 
 	DetectionDescriptionMatching3DTestInterface::DFNsSet dfnsSet;
 	dfnsSet.extractor = new HarrisDetector3D();
 	dfnsSet.descriptor = new ShotDescriptor3D();
-	dfnsSet.matcher = new Icp3D();
-	DetectionDescriptionMatching3DTestInterface interface("../tests/ConfigurationFiles/DFNsIntegration/Odometry3D", baseConfigurationFiles, "Harris_Shot_Icp.txt", dfnsSet);
+	dfnsSet.matcher = new Ransac3D();
+	DetectionDescriptionMatching3DTestInterface interface("../tests/ConfigurationFiles/DFNsIntegration/Odometry3D", baseConfigurationFiles, "Harris_Shot_Ransac.txt", dfnsSet);
 
 	if (argc >= 3)
 		{
