@@ -77,10 +77,10 @@ SEQUENCE
 
 ---  Frame sizes (manually defined)
 
--- 1024(width) x 768(height) x 3(bytes-per-pixel)
-frameMaxBytes            T-UInt32 ::= 2359296
-frameMaxRows             T-UInt32 ::= 768
-frameMaxCols             T-UInt32 ::= 1024
+-- 3840(width) x 2160(height) x 3(bytes-per-pixel)
+frameMaxBytes            T-UInt32 ::= 24883200
+frameMaxRows             T-UInt32 ::= 2160
+frameMaxCols             T-UInt32 ::= 3840
 frameMaxAttributes       T-UInt32 ::= 5
 
 ---  END of frame sizes
