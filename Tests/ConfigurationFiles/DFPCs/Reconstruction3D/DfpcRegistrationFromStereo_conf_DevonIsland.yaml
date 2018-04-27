@@ -59,7 +59,7 @@
     Radius: 0.01
     SearchRadius: 0.1
     NonMaxSuppression: true
-    DetectionThreshold: 0.01
+    DetectionThreshold: 0.001
     EnableRefinement: false
     NumberOfThreads: 0
     HarrisMethod: Harris
@@ -69,20 +69,20 @@
   Implementation: ShotDescriptor3D
   Parameters:
   - Name: GeneralParameters
-    LocalReferenceFrameEstimationRadius: 0.50
-    SearchRadius: 0.5
+    LocalReferenceFrameEstimationRadius: 0.1
+    SearchRadius: 0.1
     OutputFormat: Positions
     EnableNormalsEstimation: true
     ForceNormalsEstimation: true
   - Name: NormalEstimationParameters
-    SearchRadius: 0.5
+    SearchRadius: 0.1
     NeighboursSetSize: 0
 - Name: featuresMatcher3d
   Type: FeaturesMatching3D
   Implementation: Icp3D
   Parameters:
   - Name: GeneralParameters
-    MaxCorrespondenceDistance: 10.0
+    MaxCorrespondenceDistance: 0.1
     MaximumIterations: 200
     TransformationEpsilon: 1e-8
-    EuclideanFitnessEpsilon: 5.0
+    EuclideanFitnessEpsilon: 1
