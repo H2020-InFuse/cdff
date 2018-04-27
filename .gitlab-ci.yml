@@ -36,11 +36,11 @@ build:
       - build/
     expire_in: 4 weeks
 
-cmake test:
+unit tests:
   stage: test
   script:
-      - cd build
-      - make test
+      - cd build/Tests/UnitTests
+      - ./cdff-unit-tests
 
 deploy_staging:
   stage: deploy
