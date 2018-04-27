@@ -109,6 +109,7 @@ BaseTypesWrapper::T_Double GetXPosition(const Pose3D& pose);
 BaseTypesWrapper::T_Double GetYPosition(const Pose3D& pose);
 BaseTypesWrapper::T_Double GetZPosition(const Pose3D& pose);
 
+
 void SetOrientation(Pose3D& pose, BaseTypesWrapper::T_Double x, BaseTypesWrapper::T_Double y, BaseTypesWrapper::T_Double z, BaseTypesWrapper::T_Double w);
 BaseTypesWrapper::T_Double GetXOrientation(const Pose3D& pose);
 BaseTypesWrapper::T_Double GetYOrientation(const Pose3D& pose);

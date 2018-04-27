@@ -288,3 +288,13 @@ target_link_libraries(
 )
 add_test(SobelDerivativeTest SobelDerivativeTest)
 
+add_executable(
+    KalmanPredictorTest
+    DFNs/KFPrediction/KalmanPredictor.cpp
+)
+target_link_libraries(
+	KalmanPredictorTest
+	mock cdff_logger cdff_types kalman_predictor opencv_core opencv_imgproc opencv_imgcodecs opencv_video 
+)
+add_test(KalmanPredictorTest KalmanPredictorTest)
+

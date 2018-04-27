@@ -1,0 +1,19 @@
+name: KFPrediction
+input_ports:
+    - name: previousState
+      type: RigidBodyState
+      doc: initial or previous rigid body state
+    - name: currentTime
+      type: Time
+      doc: current time stamp 
+output_ports:
+    - name: predictedState
+      type: RigidBodyState
+      doc: predicted rigid body state   
+    - name: predictedStateCovariance
+      type: RigidBodyState
+      doc: predicted state covariance  
+implementations:
+    - KalmanPredictor
+    
+   
