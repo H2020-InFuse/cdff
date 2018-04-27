@@ -36,8 +36,9 @@ set(BUNDLED_DEPENDENCIES_PREFIX External/install CACHE PATH
 
 add_definitions(-DTESTING)
 
-# Generate targets for tests added by the CMake command add_test()
-# Run these tests with ctest
+# Generate tests for CTest. Each test defined with the CMake command add_test()
+# will be registered as a CTest test. Run these tests with ctest(1). The enable_
+# testing() command must be in the top-level source directory.
 
 enable_testing()
 
@@ -154,7 +155,7 @@ if(Boost_FOUND)
   #     #include <boost/...>
   #
   # * In your CMakeLists file:
-  #     include_directories(${Boost_INCLUDE_DIRS})
+  #     include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
   #     add_library(mylib src1.cpp src2.cpp ...)
   #
   # To use compiled libraries:
@@ -184,7 +185,7 @@ if(Boost_FOUND)
   # TODO: kept for compatibility with the existing CDFF code base: to be removed
   # when all CMakeLists that define targets feature the appropriate [target_]
   # include_directories()
-  include_directories("${Boost_INCLUDE_DIRS}")
+  include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
 else()
 
@@ -218,7 +219,7 @@ endif()
 
 # TODO: remove, use imported target Eigen3::Eigen instead
 include_directories(
-  "${_DEPENDENCIES_PREFIX}/include/eigen3"
+  SYSTEM "${_DEPENDENCIES_PREFIX}/include/eigen3"
 )
 
 ## Don't look for FLANN, QHull, yaml-cpp ---------------------------------------
@@ -231,7 +232,7 @@ include_directories(
 # CMake's pkg-config module
 
 include_directories(
-  "${_DEPENDENCIES_PREFIX}/include"
+  SYSTEM "${_DEPENDENCIES_PREFIX}/include"
 )
 
 ## Look for VTK, PCL, OpenCV ---------------------------------------------------
@@ -248,7 +249,7 @@ find_package(OpenCV 3.4.0 REQUIRED)
 find_package_mode(OpenCV)
 
 include_directories(
-  "${_DEPENDENCIES_PREFIX}/include/pcl-1.8"
+  SYSTEM "${_DEPENDENCIES_PREFIX}/include/pcl-1.8"
 )
 
 ## Dependencies: compiled libraries --------------------------------------------
