@@ -23,5 +23,7 @@ maxSize-T-String T-UInt32 ::= 256
 
 T-String ::= OCTET STRING (SIZE(0..maxSize-T-String))
 
+T-StringN{INTEGER: size} ::= OCTET STRING (SIZE(0..size))
+
 END
 
