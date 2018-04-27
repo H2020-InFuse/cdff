@@ -22,24 +22,14 @@
 
 /* --------------------------------------------------------------------------
  *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
-
-/* --------------------------------------------------------------------------
- *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
+#include <catch.hpp>
 #include <Transform3DToEigenTransformConverter.hpp>
 #include <EigenTransformToTransform3DConverter.hpp>
 #include <Pose.hpp>
-#include <Catch/catch.h>
 #include <Errors/Assert.hpp>
 #include <boost/smart_ptr.hpp>
 #include <Eigen/Geometry>
@@ -126,7 +116,7 @@ TEST_CASE( "Transform3D to Eigen Transform and Back", "[Transform3DToEigenTransf
 	outputTransform.reset();
 	} 
 
-TEST_CASE("Bad Transform conversion 1", "[Bad Transform 1]")
+TEST_CASE("Bad Transform conversion 1 (Eigen Transform)", "[Bad Transform 1]")
 	{
 	EigenTransformToTransform3DConverter firstConverter;
 
@@ -135,7 +125,7 @@ TEST_CASE("Bad Transform conversion 1", "[Bad Transform 1]")
 	REQUIRE_THROWS( firstConverter.ConvertShared(inputTransform1) );
 	}
 
-TEST_CASE("Bad Transform conversion 2", "[Bad Transform 2]")
+TEST_CASE("Bad Transform conversion 2 (Eigen Transform)", "[Bad Transform 2]")
 	{
 	EigenTransformToTransform3DConverter firstConverter;
 

@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <PointCloudModelLocalisation/FeaturesMatching3D.hpp>
 #include <Errors/Assert.hpp>
 
@@ -74,14 +64,14 @@ using namespace Converters::SupportTypes;
  * --------------------------------------------------------------------------
  */
 
-TEST_CASE( "Success Call to Configure", "[configureSuccess]" ) 
+TEST_CASE( "Success Call to Configure (3D feature registration)", "[configureSuccess]" ) 
 	{
 	FeaturesMatching3D featuresMatching3d;
 	featuresMatching3d.setConfigurationFile("../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcFeaturesMatching3D_conf01.yaml");
 	featuresMatching3d.setup();
 	}
 
-TEST_CASE( "Success Call to Process", "[processSuccess]" ) 
+TEST_CASE( "Success Call to Process (3D feature registration)", "[processSuccess]" ) 
 	{
 	Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>* stubEssentialPoseCache = new Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>();
 	Mocks::MatToPose3DConverter* mockEssentialPoseConverter = new Mocks::MatToPose3DConverter();

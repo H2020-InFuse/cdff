@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -59,7 +49,7 @@ using namespace PointCloudWrapper;
  * --------------------------------------------------------------------------
  */
 
-TEST_CASE( "Call to process", "[process]" ) 
+TEST_CASE( "Call to process (3D Harris detector)", "[process]" ) 
 	{
 	Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInputCache = 
 		new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
@@ -90,7 +80,7 @@ TEST_CASE( "Call to process", "[process]" )
 	delete(output);
 	}
 
-TEST_CASE( "Call to configure", "[configure]" )
+TEST_CASE( "Call to configure (3D Harris detector)", "[configure]" )
 	{
 	HarrisDetector3D harris;
 	harris.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesExtraction3D/HarrisDetector3D_Conf1.yaml");

@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -57,7 +47,7 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Success Call to process", "[process]" ) 
+TEST_CASE( "Success Call to process (Hirschmueller disparity mapping)", "[process]" ) 
 	{
 	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
 	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
@@ -78,7 +68,7 @@ TEST_CASE( "Success Call to process", "[process]" )
 	delete(outputCloud);
 	}
 
-TEST_CASE( "Success Call to configure", "[configure]" ) 
+TEST_CASE( "Success Call to configure (Hirschmueller disparity mapping)", "[configure]" ) 
 	{
 	HirschmullerDisparityMapping disparityMapping;
 	disparityMapping.setConfigurationFile("../tests/ConfigurationFiles/DFNs/StereoReconstruction/HirschmullerDisparityMapping_Conf1.yaml");

@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -60,7 +50,7 @@ using namespace PointCloudWrapper;
  * --------------------------------------------------------------------------
  */
 
-TEST_CASE( "Call to process", "[process]" ) 
+TEST_CASE( "Call to process (3D SHOT descriptor)", "[process]" ) 
 	{
 	Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInputCache = 
 		new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
@@ -115,7 +105,7 @@ TEST_CASE( "Call to process", "[process]" )
 	delete(featuresVector);
 	}
 
-TEST_CASE( "Call to configure", "[configure]" )
+TEST_CASE( "Call to configure (3D SHOT descriptor)", "[configure]" )
 	{
 	ShotDescriptor3D shot;
 	shot.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesDescription3D/ShotDescriptor3D_Conf1.yaml");
