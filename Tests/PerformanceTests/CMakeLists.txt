@@ -54,10 +54,21 @@ target_link_libraries(
 add_executable(
     harris_shot_icp
     DFNsIntegration/Odometry3D/HarrisShotIcp.cpp
+    DFNsIntegration/Odometry3D/DetectionDescriptionMatching3D.cpp
 )
 target_link_libraries(
 	harris_shot_icp
 	mock cdff_helpers cdff_logger cdff_types harris_detector_3d shot_descriptor_3d icp_3d performance_integration_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
+)
+
+add_executable(
+    harris_shot_ransac
+    DFNsIntegration/Odometry3D/HarrisShotRansac.cpp
+    DFNsIntegration/Odometry3D/DetectionDescriptionMatching3D.cpp
+)
+target_link_libraries(
+	harris_shot_ransac
+	mock cdff_helpers cdff_logger cdff_types harris_detector_3d shot_descriptor_3d ransac_3d performance_integration_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
 )
 
 
