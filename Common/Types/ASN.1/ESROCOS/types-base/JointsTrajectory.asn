@@ -27,7 +27,7 @@ JointTrajectory ::= SEQUENCE (SIZE(1..maxJointTrajectorySize)) OF JointState
 JointsTrajectory   ::= 
 SEQUENCE
 {
-    vector-name             T-String,
+    vector-name             SEQUENCE (SIZE(1..maxJointsTrajectorySize)) OF T-String,
     timetags				SEQUENCE (SIZE(1..maxJointsTrajectorySize)) OF Time,
     trajectory              SEQUENCE (SIZE(1..maxJointsTrajectorySize)) OF JointTrajectory
 }

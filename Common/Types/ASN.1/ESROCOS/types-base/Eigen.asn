@@ -40,7 +40,7 @@ Isometry3d ::= SEQUENCE (SIZE(1..4)) OF SEQUENCE (SIZE(1..4)) OF T-Double
 Matrix2d ::= SEQUENCE (SIZE(1..2)) OF SEQUENCE (SIZE(1..2)) OF T-Double
 
 ---- Type: Vector2d defined as Eigen::Matrix translated according to configuration
-Vector2d ::= SEQUENCE (SIZE(1..3)) OF T-Double
+Vector2d ::= SEQUENCE (SIZE(1..2)) OF T-Double
 
 ---- Type: Matrix4d defined as Eigen::Matrix translated according to configuration
 Matrix4d ::= SEQUENCE (SIZE(1..4)) OF SEQUENCE (SIZE(1..4)) OF T-Double
