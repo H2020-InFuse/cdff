@@ -1,0 +1,115 @@
+- Name: DFNsChain
+  Parameters:
+  - Name: RightToLeftCameraPose
+    PositionX: 0.0603776
+    PositionY: 0
+    PositionZ: 0
+    OrientationX: 0
+    OrientationY: 0
+    OrientationZ: 0
+    OrientationW: 1
+  - Name: GeneralParameters
+    PointCloudMapResolution: 0.01
+- Name: leftFilter
+  Type: ImageFiltering
+  Implementation: ImageUndistortion
+  Parameters:
+  - Name: CameraMatrix
+    FocalLengthX: 725.107
+    FocalLengthY: 724.660
+    PrinciplePointX: 391.125
+    PrinciplePointY: 270.606
+  - Name: Distortion
+    UseK3: false 
+    UseK4ToK6: false 
+    K1: -0.191755
+    K2: 0.156979
+    P1: 0.0
+    P2: 0.0
+    K3: 0.0
+    K4: 0.0
+    K5: 0.0
+    K6: 0.0
+- Name: rightFilter
+  Type: ImageFiltering
+  Implementation: ImageUndistortion
+  Parameters:
+  - Name: CameraMatrix
+    FocalLengthX: 727.082
+    FocalLengthY: 726.947
+    PrinciplePointX: 388.801
+    PrinciplePointY: 272.886
+  - Name: Distortion
+    UseK3: false 
+    UseK4ToK6: false 
+    K1: -0.193231
+    K2: 0.191304
+    P1: 0.0
+    P2: 0.0
+    K3: 0.0
+    K4: 0.0
+    K5: 0.0
+    K6: 0.0
+- Name: featureExtractor
+  Type: FeaturesExtraction2D
+  Implementation: OrbDetectorDescriptor
+  Parameters:
+  - Name: GeneralParameters
+    EdgeThreshold: 31
+    FastThreshold: 20
+    FirstLevel: 0
+    MaxFeaturesNumber: 500
+    LevelsNumber: 8
+    PatchSize: 31
+    ScaleFactor: 1.20
+    ScoreType: HarrisScore
+    SizeOfBrightnessTestSet: 2
+- Name: featuresMatcher
+  Type: FeaturesMatching2D
+  Implementation: FlannMatcher
+  Parameters:
+  - Name: GeneralParameters
+    DistanceThreshold: 0.02
+    MatcherMethod: 4
+    AcceptanceRatio: 0.75
+  - Name: LocalitySensitiveHashingParameters
+    TableNumber: 6
+    KeySize: 12
+    MultiProbeLevel: 1
+- Name: fundamentalMatrixComputer
+  Type: FundamentalMatrixComputation
+  Implementation: FundamentalMatrixRansac
+  Parameters:
+  - Name: GeneralParameters
+    OutlierThreshold: 1 
+    Confidence: 0.90
+- Name: cameraTransformEstimator
+  Type: CamerasTransformEstimation
+  Implementation: EssentialMatrixDecomposition
+  Parameters:
+  - Name: GeneralParameters
+    NumberOfTestPoints: 20
+  - Name: FirstCameraMatrix
+    FocalLengthX: 725.107
+    FocalLengthY: 724.660
+    PrinciplePointX: 391.125
+    PrinciplePointY: 270.606
+  - Name: SecondCameraMatrix
+    FocalLengthX: 727.082
+    FocalLengthY: 726.947
+    PrinciplePointX: 388.801
+    PrinciplePointY: 272.886
+- Name: reconstructor3D
+  Type: PointCloudReconstruction2DTo3D
+  Implementation: Triangulation
+  Parameters:
+  - Name: FirstCameraMatrix
+    FocalLengthX: 725.107
+    FocalLengthY: 724.660
+    PrinciplePointX: 391.125
+    PrinciplePointY: 270.606
+  - Name: SecondCameraMatrix
+    FocalLengthX: 727.082
+    FocalLengthY: 726.947
+    PrinciplePointX: 388.801
+    PrinciplePointY: 272.886

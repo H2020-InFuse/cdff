@@ -43,6 +43,7 @@
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
 
 #include "Map.hpp"
+#include "ObservedScene.hpp"
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
 
@@ -62,7 +63,7 @@ namespace dfpc_ci {
 	 * --------------------------------------------------------------------
 	 */
         public:
-		ReconstructionFromMotion(Map* map);
+		ReconstructionFromMotion(Map* map = NULL);
 		~ReconstructionFromMotion();
 		void run();
 		void setup();
@@ -91,6 +92,8 @@ namespace dfpc_ci {
 
 		struct ReconstructionFromMotionOptionsSet
 			{
+			float searchRadius;
+			float pointCloudMapResolution;
 			CameraPose rightToLeftCameraPose;
 			};
 
@@ -98,14 +101,12 @@ namespace dfpc_ci {
 		ReconstructionFromMotionOptionsSet parameters;
 		static const ReconstructionFromMotionOptionsSet DEFAULT_PARAMETERS;
 
-		void ConfigureExtraParameters();
-
 		DfpcConfigurator configurator;
 		Map* map;
-		float searchRadius;
 		PoseWrapper::Pose3DPtr rightToLeftCameraPose;
 
-		dfn_ci::ImageFilteringInterface* filter;
+		dfn_ci::ImageFilteringInterface* leftFilter;
+		dfn_ci::ImageFilteringInterface* rightFilter;		
 		dfn_ci::FeaturesExtraction2DInterface* featuresExtractor;
 		dfn_ci::FeaturesDescription2DInterface* optionalFeaturesDescriptor;
 		dfn_ci::FeaturesMatching2DInterface* featuresMatcher;	
@@ -131,6 +132,7 @@ namespace dfpc_ci {
 		PoseWrapper::Pose3DConstPtr pastToCurrentCameraTransform;
 		PointCloudWrapper::PointCloudConstPtr pointCloud;
 
+		void ConfigureExtraParameters();
 		void AssignDfnsAlias();
 
 		bool ComputeCameraMovement();

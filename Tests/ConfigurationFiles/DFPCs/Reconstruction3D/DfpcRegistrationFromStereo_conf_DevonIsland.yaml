@@ -1,0 +1,88 @@
+- Name: DFNsChain
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudMapResolution: 0.1
+    SearchRadius: 80
+- Name: reconstructor3D
+  Type: StereoReconstruction
+  Implementation: HirschmullerDisparityMapping
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudSamplingDensity: 0.1
+    UseFullScaleTwoPassAlgorithm: false
+    UseDisparityToDepthMap: false
+  - Name: Prefilter
+    Maximum: 11
+  - Name: Disparities
+    Minimum: 0
+    NumberOfIntervals: 256
+    UseMaximumDifference: true
+    MaximumDifference: 10
+    SpeckleRange: 8
+    SpeckleWindow: 10
+    SmoothnessParameter1: 600
+    SmoothnessParameter2: 10000
+  - Name: BlocksMatching
+    BlockSize: 11
+    UniquenessRatio: 1
+  - Name: DisparityToDepthMap
+    Element_0_0: 1
+    Element_0_1: 0
+    Element_0_2: 0
+    Element_0_3: -279.0498046875
+    Element_1_0: 0
+    Element_1_1: 1
+    Element_1_2: 0
+    Element_1_3: 29.868621826172
+    Element_2_0: 0
+    Element_2_1: 0
+    Element_2_2: 0
+    Element_2_3: -8192.8300337838
+    Element_3_0: 0
+    Element_3_1: 0
+    Element_3_2: 3.3436329786051
+    Element_3_3: -0
+  - Name: StereoCamera
+    LeftFocalLength: 968.999694824
+    LeftPrinciplePointX: 635.139038086
+    LeftPrinciplePointY: 463.537109375
+    Baseline: 0.239977002
+  - Name: ReconstructionSpace
+    LimitX: 80
+    LimitY: 80
+    LimitZ: 80
+- Name: featuresExtractor3d
+  Type: FeaturesExtraction3D
+  Implementation: HarrisDetector3D
+  Parameters:
+  - Name: GeneralParameters
+    Radius: 0.01
+    SearchRadius: 0.1
+    NonMaxSuppression: true
+    DetectionThreshold: 0.001
+    EnableRefinement: false
+    NumberOfThreads: 0
+    HarrisMethod: Harris
+    OutputFormat: References
+- Name: featuresDescriptor3d
+  Type: FeaturesDescription3D
+  Implementation: ShotDescriptor3D
+  Parameters:
+  - Name: GeneralParameters
+    LocalReferenceFrameEstimationRadius: 0.1
+    SearchRadius: 0.1
+    OutputFormat: Positions
+    EnableNormalsEstimation: true
+    ForceNormalsEstimation: true
+  - Name: NormalEstimationParameters
+    SearchRadius: 0.1
+    NeighboursSetSize: 0
+- Name: featuresMatcher3d
+  Type: FeaturesMatching3D
+  Implementation: Icp3D
+  Parameters:
+  - Name: GeneralParameters
+    MaxCorrespondenceDistance: 0.1
+    MaximumIterations: 200
+    TransformationEpsilon: 1e-8
+    EuclideanFitnessEpsilon: 1

@@ -31,6 +31,7 @@
 #include <PclPointCloudToPointCloudConverter.hpp>
 #include <Transform3DToEigenTransformConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
+#include <pcl/filters/voxel_grid.h>
 
 namespace dfpc_ci {
 
@@ -50,7 +51,7 @@ using namespace BaseTypesWrapper;
 ObservedScene::ObservedScene() : 
 	scene( pcl::PointCloud<pcl::PointXYZ>::Ptr( new pcl::PointCloud<pcl::PointXYZ>() ) )
 	{
-
+	this->resolution = DEFAULT_RESOLUTION;
 	}
 
 ObservedScene::~ObservedScene()
@@ -118,6 +119,11 @@ void ObservedScene::AddPointCloudInLastReference(PointCloudConstPtr pointCloudIn
 		pcl::PointXYZ pointInOrigin = TransformPoint(point, transformInOrigin);
 		scene->points.push_back(pointInOrigin);
 		}
+
+	pcl::VoxelGrid<pcl::PointXYZ> grid;
+	grid.setInputCloud(scene);
+	grid.setLeafSize(resolution, resolution, resolution);
+	grid.filter(*scene);
 	}
 
 PointCloudConstPtr ObservedScene::GetPartialScene(Point3D origin, float radius)
@@ -153,6 +159,14 @@ PointCloudWrapper::PointCloudConstPtr ObservedScene::GetPartialScene(float radiu
 
 	return GetPartialScene(origin, radius);
 	}
+
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Variables
+ *
+ * --------------------------------------------------------------------------
+ */
+const float ObservedScene::DEFAULT_RESOLUTION = 1e-2;
 
 /* --------------------------------------------------------------------------
  *

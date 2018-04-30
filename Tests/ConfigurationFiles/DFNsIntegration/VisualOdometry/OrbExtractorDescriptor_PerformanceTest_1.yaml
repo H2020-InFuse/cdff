@@ -1,10 +1,10 @@
 - Name: GeneralParameters
-  EdgeThreshold: 39
-  FastThreshold: 20
+  EdgeThreshold: 11 39 69
+  FastThreshold: 10 20 30
   FirstLevel: 0
   MaxFeaturesNumber: 1024
   LevelsNumber: 4
-  PatchSize: 51
+  PatchSize: 11 31 51
   ScaleFactor: 1.20
   ScoreType: 0
   SizeOfBrightnessTestSet: 2

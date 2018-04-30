@@ -67,6 +67,7 @@
 #include <PointCloud.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
+#include <opencv2/calib3d/calib3d.hpp>
 #include <stdlib.h>
 #include <string>
 #include <pcl/keypoints/harris_3d.h>
@@ -105,6 +106,8 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		static const float EPSILON;
+
 		typedef pcl::PointCloud<pcl::RGB> PclImage;
 		typedef pcl::PointCloud<pcl::RGB>::Ptr PclImagePtr;
 		typedef pcl::PointCloud<pcl::RGB>::ConstPtr PclImageConstPtr;
@@ -147,6 +150,7 @@ namespace dfn_ci {
 			int strongSmoothnessPenalty;
 			int weakSmoothnessPenalty;
 			float pointCloudSamplingDensity;
+			float voxelGridLeafSize;
 			MatchingOptionsSet matchingOptionsSet;
 			CameraParameters cameraParameters;
 			ReconstructionSpace reconstructionSpace;
@@ -159,8 +163,22 @@ namespace dfn_ci {
 		PclPointCloudPtr ComputePointCloud(PclImagePtr leftImage, PclImagePtr rightImage);
 		PclImagePtr Convert(FrameWrapper::FrameConstPtr frame);
 		PointCloudWrapper::PointCloudConstPtr SampleCloud(PclPointCloudConstPtr pointCloud);
+		PointCloudWrapper::PointCloudConstPtr SampleCloudWithPeriodicSampling(PclPointCloudConstPtr pointCloud);
+		PointCloudWrapper::PointCloudConstPtr SampleCloudWithVoxelGrid(PclPointCloudConstPtr pointCloud);
 
 		void ValidateParameters();
+		cv::Mat PclImageToCvMatrix(PclImagePtr pclImage);
+
+
+	/* --------------------------------------------------------------------
+	 * Private Testing 
+	 * --------------------------------------------------------------------
+	 */
+	#ifdef TESTING
+		#define SAVE_DISPARITY_MATRIX(visualMap) disparityMatrix = PclImageToCvMatrix(visualMap);
+	#else
+		#define SAVE_DISPARITY_MATRIX(visualMap)
+	#endif
     };
 }
 #endif

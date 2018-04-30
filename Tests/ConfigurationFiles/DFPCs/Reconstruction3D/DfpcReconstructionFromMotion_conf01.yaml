@@ -8,7 +8,29 @@
     OrientationY: 0
     OrientationZ: 0
     OrientationW: 1
-- Name: filter
+  - Name: GeneralParameters
+    PointCloudMapResolution: 0.01
+- Name: leftFilter
+  Type: ImageFiltering
+  Implementation: ImageUndistortion
+  Parameters:
+  - Name: CameraMatrix
+    FocalLengthX: 1408.899186439272
+    FocalLengthY: 1403.116708010621
+    PrinciplePointX: 1053.351342078365
+    PrinciplePointY: 588.8342842821718
+  - Name: Distortion
+    UseK3: true
+    UseK4ToK6: true
+    K1: 0.8010323519594021
+    K2: 104.7894482598434
+    P1: -6.223427196342877e-05
+    P2: -0.002209798328517273
+    K3: -70.73535010082334
+    K4: 0.8556124926892613
+    K5: 105.9684960970509
+    K6: -60.88515255428263
+- Name: rightFilter
   Type: ImageFiltering
   Implementation: ImageUndistortion
   Parameters:

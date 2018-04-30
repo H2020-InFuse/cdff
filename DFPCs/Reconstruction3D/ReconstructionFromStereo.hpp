@@ -43,6 +43,7 @@
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
 
 #include "Map.hpp"
+#include "ObservedScene.hpp"
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
 
@@ -62,7 +63,7 @@ namespace dfpc_ci {
 	 * --------------------------------------------------------------------
 	 */
         public:
-		ReconstructionFromStereo(Map* map);
+		ReconstructionFromStereo(Map* map = NULL);
 		~ReconstructionFromStereo();
 		void run();
 		void setup();
@@ -80,7 +81,16 @@ namespace dfpc_ci {
 	private:
 		DfpcConfigurator configurator;
 		Map* map;
-		float searchRadius;
+
+		struct ReconstructionFromStereoOptionsSet
+			{
+			float searchRadius;
+			float pointCloudMapResolution;
+			};
+
+		Helpers::ParametersListHelper parametersHelper;
+		ReconstructionFromStereoOptionsSet parameters;
+		static const ReconstructionFromStereoOptionsSet DEFAULT_PARAMETERS;
 
 		dfn_ci::ImageFilteringInterface* leftFilter;
 		dfn_ci::ImageFilteringInterface* rightFilter;
@@ -109,6 +119,7 @@ namespace dfpc_ci {
 		PoseWrapper::Pose3DConstPtr pastToCurrentCameraTransform;
 		PointCloudWrapper::PointCloudConstPtr pointCloud;
 
+		void ConfigureExtraParameters();
 		void AssignDfnsAlias();
 
 		bool ComputeCameraMovement();

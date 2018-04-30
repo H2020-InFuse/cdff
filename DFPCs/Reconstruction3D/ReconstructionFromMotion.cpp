@@ -55,9 +55,17 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-ReconstructionFromMotion::ReconstructionFromMotion(Map* map) :
-	map(map)
+ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
 	{
+	if (map == NULL)
+		{
+		this->map = new ObservedScene();
+		}
+	else
+		{
+		this->map = map;
+		}
+
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "PositionX", parameters.rightToLeftCameraPose.positionX, DEFAULT_PARAMETERS.rightToLeftCameraPose.positionX);
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "PositionY", parameters.rightToLeftCameraPose.positionY, DEFAULT_PARAMETERS.rightToLeftCameraPose.positionY);
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "PositionZ", parameters.rightToLeftCameraPose.positionZ, DEFAULT_PARAMETERS.rightToLeftCameraPose.positionZ);
@@ -66,6 +74,9 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map) :
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "OrientationY", parameters.rightToLeftCameraPose.orientationY, DEFAULT_PARAMETERS.rightToLeftCameraPose.orientationY);
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "OrientationZ", parameters.rightToLeftCameraPose.orientationZ, DEFAULT_PARAMETERS.rightToLeftCameraPose.orientationZ);
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "OrientationW", parameters.rightToLeftCameraPose.orientationW, DEFAULT_PARAMETERS.rightToLeftCameraPose.orientationW);
+
+	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
+	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 
 	filteredCurrentLeftImage = NULL;
 	filteredPastLeftImage = NULL;
@@ -82,15 +93,14 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map) :
 	pastToCurrentCameraTransform = NULL;
 	pointCloud = NULL;
 
-	filter = NULL;
+	leftFilter = NULL;
+	rightFilter = NULL;
 	featuresExtractor = NULL;
 	featuresMatcher = NULL;
 	fundamentalMatrixComputer = NULL;
 	cameraTransformEstimator = NULL;
 	reconstructor3D = NULL;
 	optionalFeaturesDescriptor = NULL;
-
-	searchRadius = -1;
 
 	configurationFilePath = "";
 
@@ -99,9 +109,15 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map) :
 
 ReconstructionFromMotion::~ReconstructionFromMotion()
 	{
-	DELETE_PREVIOUS(filteredCurrentLeftImage);
-	DELETE_PREVIOUS(filteredPastLeftImage);
-	DELETE_PREVIOUS(filteredCurrentRightImage);
+	if (leftFilter != NULL)
+		{
+		DELETE_PREVIOUS(filteredCurrentLeftImage);
+		DELETE_PREVIOUS(filteredPastLeftImage);
+		}
+	if (rightFilter != NULL)
+		{
+		DELETE_PREVIOUS(filteredCurrentRightImage);
+		}
 	DELETE_PREVIOUS(currentLeftKeypointsVector);
 	DELETE_PREVIOUS(pastLeftKeypointsVector);
 	DELETE_PREVIOUS(currentRightKeypointsVector);
@@ -160,6 +176,8 @@ void ReconstructionFromMotion::setup()
 
 const ReconstructionFromMotion::ReconstructionFromMotionOptionsSet ReconstructionFromMotion::DEFAULT_PARAMETERS = 
 	{
+	.searchRadius = -1,
+	.pointCloudMapResolution = 1e-2,
 	.rightToLeftCameraPose = 
 		{
 		.positionX = 0.122,
@@ -186,6 +204,9 @@ void ReconstructionFromMotion::ConfigureExtraParameters()
 	SetPosition(*rightToLeftCameraPose, parameters.rightToLeftCameraPose.positionX, parameters.rightToLeftCameraPose.positionY, parameters.rightToLeftCameraPose.positionZ);
 	SetOrientation(*rightToLeftCameraPose, parameters.rightToLeftCameraPose.orientationX, parameters.rightToLeftCameraPose.orientationY, 
 			parameters.rightToLeftCameraPose.orientationZ, parameters.rightToLeftCameraPose.orientationW);
+
+	ASSERT(parameters.pointCloudMapResolution > 0, "RegistrationFromStereo Error, Point Cloud Map resolution is not positive");
+	map->SetPointCloudMapResolution(parameters.pointCloudMapResolution);
 	}
 
 /**
@@ -259,7 +280,7 @@ void ReconstructionFromMotion::UpdateScene()
 	map->AddPointCloudInLastReference(pointCloud);
 
 	outPose = map->GetCurrentFramePoseInOrigin();
-	outPointCloud = map->GetPartialScene(searchRadius);
+	outPointCloud = map->GetPartialScene(parameters.searchRadius);
 
 	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*outPointCloud));
 	DEBUG_SHOW_POINT_CLOUD(outPointCloud);
@@ -267,7 +288,8 @@ void ReconstructionFromMotion::UpdateScene()
 
 void ReconstructionFromMotion::AssignDfnsAlias()
 	{
-	filter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("filter") );
+	leftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) );
+	rightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) );
 	featuresExtractor = static_cast<FeaturesExtraction2DInterface*>( configurator.GetDfn("featureExtractor") );
 	featuresMatcher = static_cast<FeaturesMatching2DInterface*>( configurator.GetDfn("featuresMatcher") );
 	fundamentalMatrixComputer = static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") );
@@ -275,7 +297,6 @@ void ReconstructionFromMotion::AssignDfnsAlias()
 	reconstructor3D = static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3D") );
 	optionalFeaturesDescriptor = static_cast<FeaturesDescription2DInterface*>( configurator.GetDfn("featuresDescriptor", true) );
 
-	ASSERT(filter != NULL, "DFPC Structure from motion error: filter DFN configured incorrectly");
 	ASSERT(featuresExtractor != NULL, "DFPC Structure from motion error: featuresExtractor DFN configured incorrectly");
 	ASSERT(featuresMatcher != NULL, "DFPC Structure from motion error: featuresMatcher DFN configured incorrectly");
 	ASSERT(fundamentalMatrixComputer != NULL, "DFPC Structure from motion error: fundamentalMatrixComputer DFN configured incorrectly");
@@ -285,29 +306,50 @@ void ReconstructionFromMotion::AssignDfnsAlias()
 
 void ReconstructionFromMotion::FilterCurrentLeftImage()
 	{
-	filter->imageInput(currentLeftImage);
-	filter->process();
-	DELETE_PREVIOUS(filteredCurrentLeftImage);
-	filteredCurrentLeftImage = filter->filteredImageOutput();
-	DEBUG_PRINT_TO_LOG("Filtered Current Frame", "");
+	if (leftFilter != NULL)
+		{
+		leftFilter->imageInput(currentLeftImage);
+		leftFilter->process();
+		DELETE_PREVIOUS(filteredCurrentLeftImage);
+		filteredCurrentLeftImage = leftFilter->filteredImageOutput();
+		DEBUG_PRINT_TO_LOG("Filtered Current Frame", "");
+		}
+	else
+		{
+		filteredCurrentLeftImage = currentLeftImage;
+		}
 	}
 
 void ReconstructionFromMotion::FilterPastLeftImage()
 	{
-	filter->imageInput(pastLeftImage);
-	filter->process();
-	DELETE_PREVIOUS(filteredPastLeftImage);
-	filteredPastLeftImage = filter->filteredImageOutput();
-	DEBUG_PRINT_TO_LOG("Filtered Past Frame", "");
+	if (leftFilter != NULL)
+		{
+		leftFilter->imageInput(pastLeftImage);
+		leftFilter->process();
+		DELETE_PREVIOUS(filteredPastLeftImage);
+		filteredPastLeftImage = leftFilter->filteredImageOutput();
+		DEBUG_PRINT_TO_LOG("Filtered Past Frame", "");
+		}
+	else
+		{
+		filteredPastLeftImage = pastLeftImage;
+		}
 	}
 
 void ReconstructionFromMotion::FilterCurrentRightImage()
 	{
-	filter->imageInput(currentRightImage);
-	filter->process();
-	DELETE_PREVIOUS(filteredCurrentRightImage);
-	filteredCurrentRightImage = filter->filteredImageOutput();
-	DEBUG_PRINT_TO_LOG("Filtered Current Right Frame", "");
+	if (rightFilter != NULL)
+		{
+		rightFilter->imageInput(currentRightImage);
+		rightFilter->process();
+		DELETE_PREVIOUS(filteredCurrentRightImage);
+		filteredCurrentRightImage = rightFilter->filteredImageOutput();
+		DEBUG_PRINT_TO_LOG("Filtered Current Right Frame", "");
+		}
+	else
+		{
+		filteredCurrentRightImage = currentRightImage;
+		}
 	}
 
 void ReconstructionFromMotion::ExtractCurrentLeftFeatures()

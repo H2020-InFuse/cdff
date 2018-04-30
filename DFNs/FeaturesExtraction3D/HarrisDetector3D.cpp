@@ -79,6 +79,12 @@ void HarrisDetector3D::configure()
 
 void HarrisDetector3D::process() 
 	{
+	if (GetNumberOfPoints(*inPointCloud) == 0)
+		{
+		outFeaturesSet = NewVisualPointFeatureVector3D();
+		return;
+		}
+
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputPointCloud = 
 		ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(inPointCloud);
 	ValidateInputs(inputPointCloud);

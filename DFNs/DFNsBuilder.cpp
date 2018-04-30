@@ -127,7 +127,7 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(std::string dfnImplem
 		{
 		return new ImageUndistortionRectification();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 
@@ -137,7 +137,7 @@ PointCloudReconstruction2DTo3DInterface* DFNsBuilder::CreatePointCloudReconstruc
 		{
 		return new Triangulation();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 
@@ -147,7 +147,7 @@ FeaturesMatching2DInterface* DFNsBuilder::CreateFeaturesMatching2D(std::string d
 		{
 		return new FlannMatcher();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 
@@ -161,7 +161,7 @@ FeaturesExtraction2DInterface* DFNsBuilder::CreateFeaturesExtraction2D(std::stri
 		{
 		return new OrbDetectorDescriptor();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 
@@ -171,7 +171,7 @@ FeaturesDescription2DInterface* DFNsBuilder::CreateFeaturesDescription2D(std::st
 		{
 		return new OrbDescriptor();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 
@@ -181,7 +181,7 @@ FundamentalMatrixComputationInterface* DFNsBuilder::CreateFundamentalMatrixCompu
 		{
 		return new FundamentalMatrixRansac();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 
@@ -191,7 +191,7 @@ CamerasTransformEstimationInterface* DFNsBuilder::CreateCamerasTransformEstimati
 		{
 		return new EssentialMatrixDecomposition();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 
@@ -201,7 +201,7 @@ PerspectiveNPointSolvingInterface* DFNsBuilder::CreatePerspectiveNPointSolving(s
 		{
 		return new IterativePnpSolver();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 
@@ -211,7 +211,7 @@ FeaturesExtraction3DInterface* DFNsBuilder::CreateFeaturesExtraction3D(std::stri
 		{
 		return new HarrisDetector3D();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 
@@ -221,7 +221,7 @@ FeaturesDescription3DInterface* DFNsBuilder::CreateFeaturesDescription3D(std::st
 		{
 		return new ShotDescriptor3D();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 
@@ -235,7 +235,7 @@ FeaturesMatching3DInterface* DFNsBuilder::CreateFeaturesMatching3D(std::string d
 		{
 		return new Ransac3D();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 
@@ -249,7 +249,7 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(std::stri
 		{
 		return new HirschmullerDisparityMapping();
 		}
-	ASSERT(false, "DFNsBuilder Error: unhandled dfn implenentation");
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}
 

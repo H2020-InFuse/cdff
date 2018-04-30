@@ -22,24 +22,14 @@
 
 /* --------------------------------------------------------------------------
  *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
-
-/* --------------------------------------------------------------------------
- *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
+#include <catch.hpp>
 #include <FrameToMatConverter.hpp>
 #include <MatToFrameConverter.hpp>
 #include <Frame.hpp>
-#include <Catch/catch.h>
 #include <Errors/Assert.hpp>
 
 using namespace Converters;

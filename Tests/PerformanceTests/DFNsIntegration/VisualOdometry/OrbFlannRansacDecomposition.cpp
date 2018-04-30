@@ -68,6 +68,10 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 	public:
 		OrbFlannRansacDecomposition(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName);
 		~OrbFlannRansacDecomposition();
+
+		void SetInputFiles(std::string imageFileNamesFolder, std::string imagesFileContainer, std::string posesFileContainer);
+		void LoadInputFiles();
+		void SetImageLimit(unsigned imageLimit);
 	protected:
 
 	private:
@@ -103,15 +107,15 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 
 		Aggregator* groundPositionDistanceAggregator;
 		Aggregator* groundOrientationDistanceAggregator;
+		Aggregator* leftKeypointsAggregator;
+		Aggregator* rightKeypointsAggregator;
+		Aggregator* correspondencesAggregator;
 		std::vector<std::string> imageFileNamesList;
 		std::vector<Pose3D> posesList;
 		std::vector<double> imageTimesList;
 		std::vector<double> poseTimesList;
 		std::vector<Pose3D> imagePosesList;
 
-		static const std::string imageFileNamesFolder;
-		static const std::string imagesFileContainer;
-		static const std::string posesFileContainer;
 		void LoadImageFileNames();
 		void LoadPoses();
 		void ComputeImagePoses();
@@ -127,6 +131,10 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		MeasuresMap ExtractMeasures();
 
 		int long inputId;
+		std::string imageFileNamesFolder;
+		std::string imagesFileContainer;
+		std::string posesFileContainer;
+		unsigned imageLimit;
 	};
 
 OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName)
@@ -143,9 +151,16 @@ OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath,
 	SetupMocksAndStubs();
 
 	groundPositionDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("GroundPositionDistance", groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	AddAggregator("PositionDistance", groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
 	groundOrientationDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("GroundOrientationDistance", groundOrientationDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	AddAggregator("AngleDistace", groundOrientationDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+
+	leftKeypointsAggregator = new Aggregator( Aggregator::AVERAGE );
+	AddAggregator("NumberOfLeftKeypoints", leftKeypointsAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	rightKeypointsAggregator = new Aggregator( Aggregator::AVERAGE );
+	AddAggregator("NumberOfRightKeypoints", rightKeypointsAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	correspondencesAggregator = new Aggregator( Aggregator::AVERAGE );
+	AddAggregator("NumberOfCorrespondences", correspondencesAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
 
 	leftFrame = NULL;
 	rightFrame = NULL;
@@ -159,10 +174,9 @@ OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath,
 	decompositionSuccess = false;
 	inputId = -1;
 
-	LoadImageFileNames();
-	LoadPoses();
-	ComputeImagePoses();
-	ASSERT(imageFileNamesList.size() == imagePosesList.size(), "Number of displacement different from number of images");
+	imageFileNamesFolder = "../tests/Data/Images";
+	imagesFileContainer = "../tests/Data/Images/imagesList.txt";
+	posesFileContainer = "../tests/Data/Images/posesList.txt";
 	}
 
 OrbFlannRansacDecomposition::~OrbFlannRansacDecomposition()
@@ -206,9 +220,32 @@ OrbFlannRansacDecomposition::~OrbFlannRansacDecomposition()
 		}
 	}
 
-const std::string OrbFlannRansacDecomposition::imageFileNamesFolder = "/media/alexander/Agridrive/rgbd_dataset_freiburg1_plant"; //"../tests/Data/Images";
-const std::string OrbFlannRansacDecomposition::imagesFileContainer = "/media/alexander/Agridrive/rgbd_dataset_freiburg1_plant/rgb.txt"; //"../tests/Data/Images/imagesList.txt";
-const std::string OrbFlannRansacDecomposition::posesFileContainer = "/media/alexander/Agridrive/rgbd_dataset_freiburg1_plant/groundtruth.txt"; //"../tests/Data/Images/posesList.txt";
+void OrbFlannRansacDecomposition::SetInputFiles(std::string imageFileNamesFolder, std::string imagesFileContainer, std::string posesFileContainer)
+	{
+	this->imageFileNamesFolder = imageFileNamesFolder;
+	this->imagesFileContainer = imagesFileContainer;
+	this->posesFileContainer = posesFileContainer;
+	}
+
+void OrbFlannRansacDecomposition::LoadInputFiles()
+	{
+	LoadImageFileNames();
+	LoadPoses();
+	ComputeImagePoses();
+	ASSERT(imageFileNamesList.size() == imagePosesList.size(), "Number of displacement different from number of images");
+	}
+
+void OrbFlannRansacDecomposition::SetImageLimit(unsigned imageLimit)
+	{
+	if (imageLimit < imageFileNamesList.size())
+		{
+		this->imageLimit = imageLimit;
+		}
+	else
+		{
+		this->imageLimit = imageFileNamesList.size();
+		}
+	}
 
 void OrbFlannRansacDecomposition::LoadImageFileNames()
 	{
@@ -274,7 +311,7 @@ void OrbFlannRansacDecomposition::ComputeImagePoses()
 				{
 				afterPoseIndex = index;
 				}
-			}
+			}				
 		ASSERT(afterPoseFound, "Error: No after pose found");
 		ASSERT(afterPoseIndex > 0, "Error: No before pose found");
 		unsigned beforePoseIndex = afterPoseIndex-1;
@@ -362,7 +399,7 @@ void OrbFlannRansacDecomposition::SetupMocksAndStubs()
 bool OrbFlannRansacDecomposition::SetNextInputs()
 	{
 	inputId++;
-	if (inputId+1 >= imageFileNamesList.size())
+	if (inputId+1 >= imageLimit)
 		{
 		return false;
 		}
@@ -452,24 +489,28 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 
 	measuresMap["RansacSuccess"] = ransacSuccess;
 	measuresMap["DecompositionSuccess"] = decompositionSuccess;
+	measuresMap["NumberOfLeftKeypoints"] = GetNumberOfPoints(*leftFeaturesVector);
+	measuresMap["NumberOfRightKeypoints"] = GetNumberOfPoints(*rightFeaturesVector);
+	measuresMap["NumberOfCorrespondences"] = GetNumberOfCorrespondences(*correspondenceMap);
 
 	if (decompositionSuccess)
 		{
-		/**** The output pose roll pitch and yaw seem to be opposite of the ground truth *****/
-		float absolutePoseX = GetXOrientation(*pose) + initialX;
-		float absolutePoseY = GetYOrientation(*pose) + initialY;
-		float absolutePoseZ = GetZOrientation(*pose) + initialZ;
-		Eigen::Quaternionf poseQuaternion(GetWOrientation(*pose), GetXOrientation(*pose), GetYOrientation(*pose), GetZOrientation(*pose));
-		float absolutePoseRoll = M_PI - poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0] + initialRoll;
-		float absolutePosePitch = M_PI - poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1] + initialPitch;
-		float absolutePoseYaw = M_PI - poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2] + initialYaw;
+		Pose3D& leftPose = imagePosesList.at(inputId);
 
-		Pose3D& groundTruth = imagePosesList.at(inputId);
-		float differenceX = GetXPosition(groundTruth) - absolutePoseX;
-		float differenceY = GetYPosition(groundTruth) - absolutePoseY;
-		float differenceZ = GetZPosition(groundTruth) - absolutePoseZ;
-		float gx = GetXPosition(groundTruth);
-		float diffx = gx - absolutePoseX;
+		/**** The output pose roll pitch and yaw seem to be opposite of the ground truth *****/
+		float absolutePoseX = GetXPosition(*pose) + GetXPosition(leftPose);
+		float absolutePoseY = GetYPosition(*pose) + GetYPosition(leftPose);
+		float absolutePoseZ = GetZPosition(*pose) + GetZPosition(leftPose);
+		Eigen::Quaternionf poseQuaternion(GetWOrientation(*pose), GetXOrientation(*pose), GetYOrientation(*pose), GetZOrientation(*pose));
+		Eigen::Quaternionf leftPoseQuaternion(GetWOrientation(leftPose), GetXOrientation(leftPose), GetYOrientation(leftPose), GetZOrientation(leftPose));
+		float absolutePoseRoll = poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0] + leftPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0];
+		float absolutePosePitch = poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1] + leftPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0];
+		float absolutePoseYaw = poseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2] + leftPoseQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0];
+
+		Pose3D& rightPose = imagePosesList.at(inputId+1);
+		float differenceX = GetXPosition(rightPose) - absolutePoseX;
+		float differenceY = GetYPosition(rightPose) - absolutePoseY;
+		float differenceZ = GetZPosition(rightPose) - absolutePoseZ;
 		float squaredDistance = differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ;
 		measuresMap["PositionDistance"] = std::sqrt(squaredDistance);
 
@@ -478,17 +519,11 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 			Eigen::AngleAxisf(absolutePosePitch, Eigen::Vector3f::UnitY()) * 
 			Eigen::AngleAxisf(absolutePoseYaw, Eigen::Vector3f::UnitZ());
 		float scalarProduct =
-			GetXOrientation(groundTruth) *	absolutePoseQuaternion.x() +
-			GetYOrientation(groundTruth) *	absolutePoseQuaternion.y() +
-			GetZOrientation(groundTruth) *	absolutePoseQuaternion.z() +
-			GetWOrientation(groundTruth) *	absolutePoseQuaternion.w();
-		measuresMap["AngleDistace1"] = 1 - scalarProduct*scalarProduct;				
-
-		Eigen::Quaternionf groundTruthQuaternion(GetWOrientation(groundTruth), GetXOrientation(groundTruth), GetYOrientation(groundTruth), GetZOrientation(groundTruth));
-		float differenceRoll = 1 - std::cos(groundTruthQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[0] - absolutePoseRoll);
-		float differencePitch = 1 - std::cos(groundTruthQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[1] - absolutePosePitch);
-		float differenceYaw = 1 - std::cos(groundTruthQuaternion.toRotationMatrix().eulerAngles(0, 1, 2)[2] - absolutePoseYaw);
-		measuresMap["AngleDistace2"] = differenceRoll + differencePitch + differenceYaw;
+			GetXOrientation(rightPose) *	absolutePoseQuaternion.x() +
+			GetYOrientation(rightPose) *	absolutePoseQuaternion.y() +
+			GetZOrientation(rightPose) *	absolutePoseQuaternion.z() +
+			GetWOrientation(rightPose) *	absolutePoseQuaternion.w();
+		measuresMap["AngleDistace"] = 1 - scalarProduct*scalarProduct;
 		}
 
 	return measuresMap;
@@ -497,14 +532,40 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 
 int main(int argc, char** argv)
 	{
+	std::string essentialMatrixConfigurationFile = "EssentialMatrixDecomposition_PerformanceTest_2.yaml";
+	if (argc >= 2)
+		{
+		essentialMatrixConfigurationFile = argv[1];
+		}
+
 	std::vector<std::string> baseConfigurationFiles =
 		{
 		"OrbExtractorDescriptor_PerformanceTest_1.yaml",
 		"FlannMatcher_PerformanceTest_1.yaml",
 		"FundamentalMatrixRansac_PerformanceTest_1.yaml",
-		"EssentialMatrixDecomposition_PerformanceTest_2.yaml"
+		essentialMatrixConfigurationFile
 		};
 	OrbFlannRansacDecomposition interface("../tests/ConfigurationFiles/DFNsIntegration/VisualOdometry", baseConfigurationFiles, "Orb_Flann_Ransac_Decomposition.txt");
+
+	if (argc >= 5)
+		{
+		std::string imageFileNamesFolder = argv[2];
+		std::string imagesFileName = argv[3];
+		std::string posesFileName = argv[4];
+		std::stringstream imagesFileContainer, posesFileContainer;
+		imagesFileContainer << imageFileNamesFolder << "/" << imagesFileName;
+		posesFileContainer << imageFileNamesFolder << "/" << posesFileName;		
+		interface.SetInputFiles(imageFileNamesFolder, imagesFileContainer.str(), posesFileContainer.str());
+		}
+	
+	interface.LoadInputFiles();
+
+	if (argc >= 6)
+		{
+		unsigned imageLimit = std::stoi(argv[5]);
+		interface.SetImageLimit(imageLimit);
+		}
+
 	interface.Run();
 	};
 

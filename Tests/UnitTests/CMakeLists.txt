@@ -1,267 +1,38 @@
 add_definitions(-DTEST_CONFIGURATIONS="${TEST_CONFIGURATIONS}")
 add_definitions(-DTEST_DATA="${TEST_DATA}")
 
-add_executable(
-    ParametersHelperTest
-    Common/Helpers/ParametersHelper.cpp
-)
-target_link_libraries(
-	ParametersHelperTest
-	cdff_helpers cdff_logger
-)
-add_test(ParametersHelperTest ParametersHelperTest)
+# Path to the directory containing Catch's single-include header (catch.hpp)
+set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/Tools/Catch")
 
-add_executable(
-    ImageUndistortionTest
-    DFNs/ImageFiltering/ImageUndistortion.cpp
-)
-target_link_libraries(
-	ImageUndistortionTest
-	mock cdff_logger cdff_types image_undistortion  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
-)
-add_test(ImageUndistortionTest ImageUndistortionTest)
+# Define the Catch library
+add_library(Catch INTERFACE)
+target_include_directories(Catch SYSTEM INTERFACE "${CATCH_INCLUDE_DIR}")
 
-
-add_executable(
-    HarrisDetector2DTest
-    DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
-)
-target_link_libraries(
-	HarrisDetector2DTest
-	mock cdff_logger cdff_types harris_detector_2d  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
-)
-add_test(HarrisDetector2DTest HarrisDetector2DTest)
-
-add_executable(
-    OrbDetectorDescriptorTest
-    DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
-)
-target_link_libraries(
-	OrbDetectorDescriptorTest
-	mock cdff_logger cdff_types orb_detector_descriptor  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
-)
-add_test(OrbDetectorDescriptorTest OrbDetectorDescriptorTest)
-
-add_executable(
-    OrbDescriptorTest
-    DFNs/FeaturesDescription2D/OrbDescriptor.cpp
-)
-target_link_libraries(
-	OrbDescriptorTest
-	mock cdff_logger cdff_types orb_descriptor  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
-)
-add_test(OrbDescriptorTest OrbDescriptorTest)
-
-add_executable(
-    IterativePnpSolverTest
-    DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
-)
-target_link_libraries(
-	IterativePnpSolverTest
-	mock cdff_logger cdff_types iterative_pnp_solver  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
-)
-add_test(IterativePnpSolverTest IterativePnpSolverTest)
-
-add_executable(
-    FundamentalMatrixRansacTest
-    DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
-)
-target_link_libraries(
-	FundamentalMatrixRansacTest
-	mock cdff_logger cdff_types fundamental_matrix_ransac  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs synthetic_generators
-)
-add_test(FundamentalMatrixRansacTest FundamentalMatrixRansacTest)
-
-add_executable(
-    EssentialMatrixDecompositionTest
-    DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
-)
-target_link_libraries(
-	EssentialMatrixDecompositionTest
-	mock cdff_logger cdff_types cdff_helpers essential_matrix_decomposition  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs synthetic_generators
-)
-add_test(EssentialMatrixDecompositionTest EssentialMatrixDecompositionTest)
-
-add_executable(
-    FlannMatcherTest
-    DFNs/FeaturesMatching2D/FlannMatcher.cpp
-)
-target_link_libraries(
-	FlannMatcherTest
-	mock cdff_logger cdff_types flann_matcher  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
-)
-add_test(FlannMatcherTest FlannMatcherTest)
-
-add_executable(
-    TriangulationTest
-    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
-)
-target_link_libraries(
-	TriangulationTest
-	mock cdff_logger cdff_types triangulation  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs synthetic_generators
-)
-add_test(TriangulationTest TriangulationTest)
-
-add_executable(
-    DisparityMappingTest
-    DFNs/StereoReconstruction/DisparityMapping.cpp
-)
-target_link_libraries(
-	DisparityMappingTest
-	mock cdff_logger cdff_types disparity_mapping  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs synthetic_generators
-)
-add_test(DisparityMappingTest DisparityMappingTest)
-
-add_executable(
-    HirschmullerDisparityMappingTest
-    DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
-)
-target_link_libraries(
-	HirschmullerDisparityMappingTest
-	mock cdff_logger cdff_types hirschmuller_disparity_mapping  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs synthetic_generators
-)
-add_test(HirschmullerDisparityMappingTest HirschmullerDisparityMappingTest)
-
-add_executable(
-    HarrisDetector3DTest
-    DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
-)
-target_link_libraries(
-	HarrisDetector3DTest
-	mock cdff_logger cdff_types harris_detector_3d  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
-)
-add_test(HarrisDetector3DTest HarrisDetector3DTest)
-
-add_executable(
-    ShotDescriptor3DTest
-    DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
-)
-target_link_libraries(
-	ShotDescriptor3DTest
-	mock cdff_logger cdff_types shot_descriptor_3d  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
-)
-add_test(ShotDescriptor3DTest ShotDescriptor3DTest)
-
-add_executable(
-    Ransac3DTest
-    DFNs/FeaturesMatching3D/Ransac3D.cpp
-)
-target_link_libraries(
-	Ransac3DTest
-	mock cdff_logger cdff_types ransac_3d  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
-)
-add_test(Ransac3DTest Ransac3DTest)
-
-add_executable(
-    Icp3DTest
-    DFNs/FeaturesMatching3D/Icp3D.cpp
-)
-target_link_libraries(
-	Icp3DTest
-	mock cdff_logger cdff_types icp_3d  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
-)
-add_test(Icp3DTest Icp3DTest)
-
-add_executable(
-    MatFrameConvertersTest
+# Source files containing Catch test cases. They will be linked together to
+# produce the test executable. Add any additional file in ALPHABETICAL ORDER.
+set(UNITTEST_SOURCES UnitTests.cpp
     Common/Converters/MatFrameConvertersTest.cpp
-)
-target_link_libraries(
-	MatFrameConvertersTest cdff_types converters_opencv cdff_logger opencv_core opencv_imgproc opencv_imgcodecs 
-)
-add_test(MatFrameConvertersTest MatFrameConvertersTest)
-
-add_executable(
-    MatVisualPointFeatureVector2DConvertersTest
     Common/Converters/MatVisualPointFeatureVector2DConvertersTest.cpp
-)
-target_link_libraries(
-	MatVisualPointFeatureVector2DConvertersTest cdff_types converters_opencv cdff_logger  opencv_core opencv_imgproc opencv_imgcodecs 
-)
-add_test(MatVisualPointFeatureVector2DConvertersTest
-         MatVisualPointFeatureVector2DConvertersTest)
-
-add_executable(
-    MatVisualPointFeatureVector3DConvertersTest
     Common/Converters/MatVisualPointFeatureVector3DConvertersTest.cpp
-)
-target_link_libraries(
-	MatVisualPointFeatureVector3DConvertersTest cdff_types converters_opencv cdff_logger  opencv_core opencv_imgproc opencv_imgcodecs
-)
-add_test(MatVisualPointFeatureVector3DConvertersTest
-         MatVisualPointFeatureVector3DConvertersTest)
-
-add_executable(
-    PointCloudPclPointCloudConvertersTest
-    Common/Converters/PointCloudPclPointCloudConvertersTest.cpp
-)
-target_link_libraries(
-	PointCloudPclPointCloudConvertersTest cdff_types converters_opencv cdff_logger opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
-)
-add_test(PointCloudPclPointCloudConvertersTest PointCloudPclPointCloudConvertersTest)
-
-add_executable(
-    PointCloudPclNormalsCloudConvertersTest
     Common/Converters/PointCloudPclNormalsCloudConvertersTest.cpp
-)
-target_link_libraries(
-	PointCloudPclNormalsCloudConvertersTest cdff_types converters_opencv cdff_logger opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
-)
-add_test(PointCloudPclNormalsCloudConvertersTest PointCloudPclNormalsCloudConvertersTest)
-
-add_executable(
-    VisualPointFeatureVector3DPclPointCloudConvertersTest
-    Common/Converters/VisualPointFeatureVector3DPclPointCloudConvertersTest.cpp
-)
-target_link_libraries(
-	VisualPointFeatureVector3DPclPointCloudConvertersTest cdff_types converters_opencv cdff_logger opencv_core opencv_imgproc opencv_imgcodecs pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo 
-)
-add_test(VisualPointFeatureVector3DPclPointCloudConvertersTest VisualPointFeatureVector3DPclPointCloudConvertersTest)
-
-add_executable(
-    Transform3DEigenTransformConvertersTest
+    Common/Converters/PointCloudPclPointCloudConvertersTest.cpp
     Common/Converters/Transform3DEigenTransformConvertersTest.cpp
-)
-target_link_libraries(
-	Transform3DEigenTransformConvertersTest cdff_types converters_opencv cdff_logger
-)
-add_test(Transform3DEigenTransformConvertersTest Transform3DEigenTransformConvertersTest)
-
-add_executable(
-    Transform3DMatConvertersTest
     Common/Converters/Transform3DMatConvertersTest.cpp
-)
-target_link_libraries(
-	Transform3DMatConvertersTest cdff_types converters_opencv cdff_logger
-)
-add_test(Transform3DMatConvertersTest Transform3DMatConvertersTest)
-
-
-add_executable(
-    DfpcConfiguratorTest
+    Common/Converters/VisualPointFeatureVector3DPclPointCloudConvertersTest.cpp
+    Common/Helpers/ParametersHelper.cpp
+    DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
+    DFNs/FeaturesDescription2D/OrbDescriptor.cpp
+    DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
+    DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
+    DFNs/FeaturesMatching2D/FlannMatcher.cpp
+    DFNs/FeaturesMatching3D/Icp3D.cpp
+    DFNs/FeaturesMatching3D/Ransac3D.cpp
+    DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
+    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFPCs/DfpcConfigurator.cpp
-)
-target_link_libraries(
-	DfpcConfiguratorTest
-	cdff_helpers cdff_logger dfpc_configurator
-)
-add_test(DfpcConfiguratorTest DfpcConfiguratorTest)
-
-
-add_executable(
-    FeaturesMatching3DTest
-    DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
-)
-target_link_libraries(
-	FeaturesMatching3DTest
-	cdff_helpers cdff_logger dfpc_implementation_features_matching_3d opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock boost_system dfpc_configurator
-)
-add_test(FeaturesMatching3DTest FeaturesMatching3DTest)
-
-add_executable(
-    ObservedSceneTest
     DFPCs/Reconstruction3D/ObservedScene.cpp
 )
+<<<<<<< HEAD
 target_link_libraries(
 	ObservedSceneTest
 	cdff_helpers cdff_logger cdff_types converters_opencv opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock reconstruction_3d_stub_observed_scene
@@ -298,3 +69,85 @@ target_link_libraries(
 )
 add_test(KalmanPredictorTest KalmanPredictorTest)
 
+=======
+
+# TODO: including these files in UNITTEST_SOURCES makes the test executable
+# report a failure due to an unexpected exception:
+#   DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
+#   DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
+#   DFNs/ImageFiltering/ImageUndistortion.cpp
+#   DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
+#   DFNs/StereoReconstruction/DisparityMapping.cpp
+#   DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+#
+# TODO: including this file in UNITTEST_SOURCES makes the test executable
+# report a failure due to a segmentation fault:
+#   DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
+
+# Libraries used by the aforementioned source files. They will be linked in the
+# test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
+# list the necessary ones.
+set(UNITTEST_LIBRARIES Catch
+    boost_system
+    cdff_helpers
+    cdff_logger
+    cdff_types
+    converters_opencv
+    dfpc_configurator
+    dfpc_implementation_features_matching_3d
+    disparity_mapping
+    essential_matrix_decomposition
+    flann_matcher
+    fundamental_matrix_ransac
+    harris_detector_2d
+    harris_detector_3d
+    hirschmuller_disparity_mapping
+    icp_3d
+    image_undistortion
+    iterative_pnp_solver
+    mock
+    opencv_core
+    opencv_highgui
+    opencv_imgcodecs
+    opencv_imgproc
+    orb_detector_descriptor
+    orb_descriptor
+    pcl_common
+    pcl_features
+    pcl_filters
+    pcl_io
+    pcl_io_ply
+    pcl_kdtree
+    pcl_keypoints
+    pcl_ml
+    pcl_octree
+    pcl_outofcore
+    pcl_people
+    pcl_recognition
+    pcl_registration
+    pcl_sample_consensus
+    pcl_search
+    pcl_segmentation
+    pcl_stereo
+    pcl_surface
+    pcl_tracking
+    pcl_visualization
+    ransac_3d
+    reconstruction_from_stereo
+    shot_descriptor_3d
+    synthetic_generators
+    triangulation
+)
+
+# Make the Catch executable that runs the unit tests
+add_executable(cdff-unit-tests ${UNITTEST_SOURCES})
+target_link_libraries(cdff-unit-tests ${UNITTEST_LIBRARIES})
+
+# Register the Catch executable as a CTest test
+#
+# Working directory for this test: if WORKING_DIRECTORY is not specified the
+# test will be run with the current working directory set to the build directory
+# corresponding to the current source directory (i.e. corresponding to
+# ${CMAKE_CURRENT_SOURCE_DIR}).
+add_test(NAME unit-tests COMMAND cdff-unit-tests)
+>>>>>>> origin/master

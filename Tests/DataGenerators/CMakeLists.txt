@@ -21,6 +21,25 @@ target_link_libraries(
 )
 
 add_executable(
+    point_cloud_transformer
+    SyntheticGenerators/TransformPointCloud.cpp
+    SyntheticGenerators/PointCloudTransformer.cpp
+)
+target_link_libraries(
+	point_cloud_transformer
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters boost_system yaml-cpp ${VTK_LIBRARIES} boost_system cdff_pcl_visualizer
+)
+
+add_executable(
+    data_set_transformer
+    SyntheticGenerators/TransformDataSet.cpp
+)
+target_link_libraries(
+	data_set_transformer
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_common pcl_filters boost_system yaml-cpp ${VTK_LIBRARIES} boost_system cdff_pcl_visualizer
+)
+
+add_executable(
 	calibrate_stereo_camera
 	DerivedGenerators/CalibrateStereoCamera.cpp
 )

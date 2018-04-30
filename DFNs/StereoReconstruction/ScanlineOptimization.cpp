@@ -35,6 +35,7 @@
 #include <pcl/stereo/stereo_matching.h>
 #include <PclPointCloudToPointCloudConverter.hpp>
 #include <Visualizers/PclVisualizer.hpp>
+#include <pcl/filters/voxel_grid.h>
 
 #include <stdlib.h>
 #include <fstream>
@@ -64,6 +65,7 @@ ScanlineOptimization::ScanlineOptimization()
 	parametersHelper.AddParameter<int>("GeneralParameters", "ColorBandwidth", parameters.colorBandwidth, DEFAULT_PARAMETERS.colorBandwidth);
 	parametersHelper.AddParameter<int>("GeneralParameters", "StrongSmoothnessPenalty", parameters.strongSmoothnessPenalty, DEFAULT_PARAMETERS.strongSmoothnessPenalty);
 	parametersHelper.AddParameter<int>("GeneralParameters", "WeakSmoothnessPenalty", parameters.weakSmoothnessPenalty, DEFAULT_PARAMETERS.weakSmoothnessPenalty);
+	parametersHelper.AddParameter<float>("GeneralParameters", "VoxelGridLeafSize", parameters.voxelGridLeafSize, DEFAULT_PARAMETERS.voxelGridLeafSize);
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudSamplingDensity", parameters.pointCloudSamplingDensity, DEFAULT_PARAMETERS.pointCloudSamplingDensity);
 
 	parametersHelper.AddParameter<int>("Matching", "NumberOfDisparities", parameters.matchingOptionsSet.numberOfDisparities, DEFAULT_PARAMETERS.matchingOptionsSet.numberOfDisparities);
@@ -71,9 +73,9 @@ ScanlineOptimization::ScanlineOptimization()
 	parametersHelper.AddParameter<int>("Matching", "RatioFilter", parameters.matchingOptionsSet.ratioFilter, DEFAULT_PARAMETERS.matchingOptionsSet.ratioFilter);
 	parametersHelper.AddParameter<int>("Matching", "PeakFilter", parameters.matchingOptionsSet.peakFilter, DEFAULT_PARAMETERS.matchingOptionsSet.peakFilter);
 	parametersHelper.AddParameter<bool>("Matching", "UsePreprocessing", parameters.matchingOptionsSet.usePreprocessing, DEFAULT_PARAMETERS.matchingOptionsSet.usePreprocessing);
-	parametersHelper.AddParameter<bool>("Matching", "useLeftRightConsistencyCheck", 
+	parametersHelper.AddParameter<bool>("Matching", "UseLeftRightConsistencyCheck", 
 			parameters.matchingOptionsSet.useLeftRightConsistencyCheck, DEFAULT_PARAMETERS.matchingOptionsSet.useLeftRightConsistencyCheck);
-	parametersHelper.AddParameter<int>("Matching", "NumberOfDisparities", 
+	parametersHelper.AddParameter<int>("Matching", "LeftRightConsistencyThreshold", 
 			parameters.matchingOptionsSet.leftRightConsistencyThreshold, DEFAULT_PARAMETERS.matchingOptionsSet.leftRightConsistencyThreshold);
 
 	parametersHelper.AddParameter<float>("StereoCamera", "LeftPrinciplePointX", parameters.cameraParameters.leftPrinciplePointX, DEFAULT_PARAMETERS.cameraParameters.leftPrinciplePointX);
@@ -108,6 +110,14 @@ void ScanlineOptimization::process()
 	outPointCloud = SampleCloud(pointCloud);
 	}
 
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Variables
+ *
+ * --------------------------------------------------------------------------
+ */
+const float ScanlineOptimization::EPSILON = 0.0001;
+
 const ScanlineOptimization::ScanlineOptimizationOptionsSet ScanlineOptimization::DEFAULT_PARAMETERS =
 	{
 	.costAggregationRadius = 5,
@@ -116,6 +126,7 @@ const ScanlineOptimization::ScanlineOptimizationOptionsSet ScanlineOptimization:
 	.strongSmoothnessPenalty = 1,
 	.weakSmoothnessPenalty = 1,
 	.pointCloudSamplingDensity = 1,
+	.voxelGridLeafSize = 0,
 	.matchingOptionsSet =
 		{
 		.numberOfDisparities = 60,
@@ -141,6 +152,13 @@ const ScanlineOptimization::ScanlineOptimizationOptionsSet ScanlineOptimization:
 		}
 	};
 
+
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Functions
+ *
+ * --------------------------------------------------------------------------
+ */
 ScanlineOptimization::PclPointCloudPtr ScanlineOptimization::ComputePointCloud(PclImagePtr leftImage, PclImagePtr rightImage)
 	{
 	pcl::AdaptiveCostSOStereoMatching stereo;
@@ -162,6 +180,7 @@ ScanlineOptimization::PclPointCloudPtr ScanlineOptimization::ComputePointCloud(P
 	
 	PclImagePtr visualMap(new PclImage);
 	stereo.getVisualMap(visualMap);
+	SAVE_DISPARITY_MATRIX(visualMap);
 	DEBUG_SHOW_PCL_IMAGE(visualMap);
 
 	PclPointCloudPtr pointCloud(new PclPointCloud);
@@ -200,6 +219,18 @@ ScanlineOptimization::PclImagePtr ScanlineOptimization::Convert(FrameConstPtr fr
 
 PointCloudConstPtr ScanlineOptimization::SampleCloud(PclPointCloudConstPtr pointCloud)
 	{
+	if (parameters.pointCloudSamplingDensity > EPSILON)
+		{
+		return SampleCloudWithPeriodicSampling(pointCloud);
+		}
+	else
+		{
+		return SampleCloudWithVoxelGrid(pointCloud);
+		}
+	}
+
+PointCloudConstPtr ScanlineOptimization::SampleCloudWithPeriodicSampling(PclPointCloudConstPtr pointCloud)
+	{
 	PointCloudPtr sampledPointCloud = new PointCloud();
 
 	unsigned validPointCount = 0;
@@ -224,13 +255,59 @@ PointCloudConstPtr ScanlineOptimization::SampleCloud(PclPointCloudConstPtr point
 	return sampledPointCloud;
 	}
 
+PointCloudConstPtr ScanlineOptimization::SampleCloudWithVoxelGrid(PclPointCloudConstPtr pointCloud)
+	{
+	pcl::VoxelGrid<pcl::PointXYZ> grid;
+	grid.setInputCloud(pointCloud);
+	grid.setLeafSize(parameters.voxelGridLeafSize, parameters.voxelGridLeafSize, parameters.voxelGridLeafSize);
+
+	PclPointCloudPtr filteredCloud(new PclPointCloud);
+	grid.filter(*filteredCloud);
+
+	PointCloudPtr sampledPointCloud = new PointCloud();
+	for(unsigned pointIndex = 0; pointIndex < filteredCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ point = filteredCloud->points.at(pointIndex);
+
+		bool validPoint = (point.x == point.x && point.y == point.y && point.z == point.z);
+		validPoint = validPoint && ( std::abs(point.x) <= parameters.reconstructionSpace.limitX ) && ( std::abs(point.y) <= parameters.reconstructionSpace.limitY );
+		validPoint = validPoint && ( point.z >= 0 ) && ( point.z <= parameters.reconstructionSpace.limitZ );
+		if (validPoint)
+			{
+			AddPoint(*sampledPointCloud, point.x, point.y, point.z); 
+			}
+		}
+
+	return sampledPointCloud;
+	}
+
 void ScanlineOptimization::ValidateParameters()
 	{
 	ASSERT(parameters.matchingOptionsSet.numberOfDisparities > 0, "ScanlineOptimization Configuration Error: number of disparities needs to be positive");
-	ASSERT(parameters.pointCloudSamplingDensity > 0 && parameters.pointCloudSamplingDensity <= 1, "ScanlineOptimization Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
 	ASSERT( parameters.reconstructionSpace.limitX > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
 	ASSERT( parameters.reconstructionSpace.limitY > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
 	ASSERT( parameters.reconstructionSpace.limitZ > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
+
+	ASSERT( (parameters.voxelGridLeafSize > EPSILON && parameters.pointCloudSamplingDensity <= EPSILON) ||
+		(parameters.voxelGridLeafSize <= EPSILON && parameters.pointCloudSamplingDensity > EPSILON), 
+		"DisparityMapping Configuration Error: Only one between voxelGridLeafSize and pointCloudSamplingDensity can be greater than 0");
+	ASSERT(parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
+	}
+
+cv::Mat ScanlineOptimization::PclImageToCvMatrix(PclImagePtr pclImage)
+	{
+	cv::Mat cvImage(pclImage->height, pclImage->width, CV_8UC3);
+	for(unsigned columnIndex = 0; columnIndex < cvImage.cols; columnIndex++)
+		{
+		for(unsigned rowIndex = 0; rowIndex < cvImage.rows; rowIndex++)
+			{
+			unsigned pclIndex = rowIndex * pclImage->width + columnIndex;
+			cvImage.at<cv::Vec3b>(rowIndex, columnIndex)[0] = pclImage->points.at(pclIndex).r;
+			cvImage.at<cv::Vec3b>(rowIndex, columnIndex)[1] = pclImage->points.at(pclIndex).g;
+			cvImage.at<cv::Vec3b>(rowIndex, columnIndex)[2] = pclImage->points.at(pclIndex).b;
+			}
+		} 
+	return cvImage;
 	}
 
 

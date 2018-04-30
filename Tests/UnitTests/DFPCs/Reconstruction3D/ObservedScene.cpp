@@ -20,24 +20,14 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
-#include <Stubs/DFPCs/Reconstruction3D/ObservedScene.hpp>
+#include <catch.hpp>
+#include <Reconstruction3D/ObservedScene.hpp>
 #include <Errors/Assert.hpp>
 
 #include <opencv2/highgui/highgui.hpp>
