@@ -36,12 +36,9 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
     DFPCs/DfpcConfigurator.cpp
+    DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
     DFPCs/Reconstruction3D/ObservedScene.cpp
 )
-
-# TODO: including this file in UNITTEST_SOURCES makes the test executable
-# report a failure due to a segmentation fault:
-#   DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
 
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
