@@ -23,27 +23,22 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
+    DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
+    DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     DFNs/FeaturesMatching2D/FlannMatcher.cpp
     DFNs/FeaturesMatching3D/Icp3D.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
-    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
-    DFPCs/DfpcConfigurator.cpp
-    DFPCs/Reconstruction3D/ObservedScene.cpp
-    DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
-    DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
-    DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
+    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    DFPCs/DfpcConfigurator.cpp
+    DFPCs/Reconstruction3D/ObservedScene.cpp
 )
 
-# TODO: including these files in UNITTEST_SOURCES makes the test executable
-# report a failure due to an unexpected exception:
-
-#
 # TODO: including this file in UNITTEST_SOURCES makes the test executable
 # report a failure due to a segmentation fault:
 #   DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
