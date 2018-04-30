@@ -151,7 +151,7 @@ PointCloudConstPtr ObservedScene::GetPartialScene(Point3D origin, float radius)
 
 	if (pointIndex < scene->points.size())
 		{
-		DEBUG_PRINT_TO_LOG("Stored point cloud is too large, only a part will be used for matching", "");
+		PRINT_TO_LOG("Stored point cloud is too large, only a part will be used for matching", "");
 		}
 
 	return ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Convert(partialScene);

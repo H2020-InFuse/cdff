@@ -92,7 +92,7 @@ PointCloudConstPtr PointCloudMap::GetScenePointCloud(Pose3DConstPtr origin,  flo
 
 	if (pointIndex < pointCloud->points.size())
 		{
-		DEBUG_PRINT_TO_LOG("Stored point cloud is too large, only a part will be used for matching", "");
+		PRINT_TO_LOG("Stored point cloud is too large, only a part will be used for matching", "");
 		}
 
 	return pointCloudOutput;
@@ -125,7 +125,7 @@ VisualPointFeatureVector3DConstPtr PointCloudMap::GetSceneFeaturesVector(Pose3DC
 
 	if (featureIndex < featuresList.size())
 		{
-		DEBUG_PRINT_TO_LOG("Stored feature vector is too large, only a part will be used for matching", "");
+		PRINT_TO_LOG("Stored feature vector is too large, only a part will be used for matching", "");
 		}
 
 	return featuresVector;
