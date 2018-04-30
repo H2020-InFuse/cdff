@@ -1,0 +1,14 @@
+#
+#
+#
+0.1 Rectified1/color-rectified-left-000001.ppm Rectified1/color-rectified-right-000001.ppm
+0.2 Rectified1/color-rectified-left-000002.ppm Rectified1/color-rectified-right-000002.ppm
+0.3 Rectified1/color-rectified-left-000003.ppm Rectified1/color-rectified-right-000003.ppm
+0.4 Rectified1/color-rectified-left-000004.ppm Rectified1/color-rectified-right-000004.ppm
+0.5 Rectified1/color-rectified-left-000005.ppm Rectified1/color-rectified-right-000005.ppm
+0.6 Rectified1/color-rectified-left-000006.ppm Rectified1/color-rectified-right-000006.ppm
+0.7 Rectified1/color-rectified-left-000007.ppm Rectified1/color-rectified-right-000007.ppm
+0.8 Rectified1/color-rectified-left-000008.ppm Rectified1/color-rectified-right-000008.ppm
+0.9 Rectified1/color-rectified-left-000009.ppm Rectified1/color-rectified-right-000009.ppm
+0.10 Rectified1/color-rectified-left-000010.ppm Rectified1/color-rectified-right-000010.ppm
+0.11 Rectified1/color-rectified-left-000011.ppm Rectified1/color-rectified-right-000011.ppm

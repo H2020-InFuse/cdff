@@ -1,0 +1,117 @@
+# DLR-RMC camera calibration file by DLR CalLab.
+# Parameters for describing the geometry of pinhole images.
+# Created: Thu Apr 16 07:57:05 2015
+# 
+# NOTE:
+# This file defines the parameters of one camera or multiple cameras.
+# In the case of multiple cameras, "camera." becomes "camera.<id>.".
+# The keys of parameters of the left and right cameras of a stereo
+# system would start with "camera.0." and "camera.1." respectively.
+
+# Version number of the parameter file.
+
+version=2
+
+# Image coordinate origin at the center of the upper-left pixel (center)
+# or at the upper-left corner of the upper-left pixel (corner).
+
+origin=center
+
+# The extrinsic parameters describe the transformation of a point Pc in the
+# camera coordinate system into a point Pw in the world coordinate system,
+# e.g. the tool-center-point frame at the top of a robotic manipulator.
+# NOTE: This is inverse to OpenCV.
+#
+# Pw = R*Pc + T
+#
+# Default: [1 0 0; 0 1 0; 0 0 1] [0 0 0]
+
+camera.0.R=[ -0.999893 -0.0118413 -0.00864175; 0.00867270 -0.00256487 -0.999959; 0.0118187 -0.999927 0.00266729]
+camera.0.T=[ -76.1022 -57.1832 141.168]
+
+# The point Pc in the camera coordinate system is projected and transformed
+# into distored coordinates [u v]. All parameters are used in the same way as
+# in OpenCV.
+#
+# Pc = [X Y Z]^T with Z > 0
+# x = X/Z
+# y = Y/Z
+#
+# r2 = x2 + y2
+# u = x*(1 + k1*r2 + k2*r4 + k3*r6) + 2*p1*x*y + p2*(r2+2*x2)
+# v = y*(1 + k1*r2 + k2*r4 + k3*r6) + p1*(r2+2*y2) + 2*p2*x*y
+#
+# Default: 0 for all parameters that are not given
+
+camera.0.k1= -0.191755
+camera.0.k2= 0.156979
+
+# The linear intrinsic parameters are given as matrix:
+#
+# A=[fx skew principal_x; 0 fy principal_y; 0 0 1]
+#
+# [i k 1]^T = A*[u v 1]^T
+
+camera.0.A=[ 725.107 1.58387 391.125; 0.00000 724.660 270.606; 0.00000 0.00000 1.00000]
+
+# Image size in pixel
+
+camera.0.width= 780
+camera.0.height= 582
+
+
+# Next: camera.1.
+
+# The extrinsic parameters describe the transformation of a point Pc in the
+# camera coordinate system into a point Pw in the world coordinate system,
+# e.g. the tool-center-point frame at the top of a robotic manipulator.
+# NOTE: This is inverse to OpenCV.
+#
+# Pw = R*Pc + T
+#
+# Default: [1 0 0; 0 1 0; 0 0 1] [0 0 0]
+
+camera.1.R=[ -0.999899 -0.000564419 0.0142186; -0.0142192 0.000947575 -0.999898; 0.000550887 -0.999999 -0.000955505]
+camera.1.T=[ -15.7324 -56.3064 140.756]
+
+# With respect to camera.0 the transformation reads
+# camera.0_R_camera.1=[ 0.999674 -0.0112460 -0.0229002; 0.0113257 0.999930 0.00335168; 0.0228609 -0.00360995 0.999732]
+# camera.0_T_camera.1=[ -60.3606 -0.305207 -1.39953]
+
+# NOTE THAT when using stereo cameras, the rotation matrix R between
+# cameras is similar to inv(R) so that your code could still work,
+# even if the inverted rotation is used by mistake.  E.g. OpenCV's
+# rectification functions require inv(R) and T.
+# camera.1_R_camera.0=[ 0.999675 0.0113257 0.0228609; -0.0112460 0.999930 -0.00360995; -0.0229002 0.00335168 0.999732]
+
+# The point Pc in the camera coordinate system is projected and transformed
+# into distored coordinates [u v]. All parameters are used in the same way as
+# in OpenCV.
+#
+# Pc = [X Y Z]^T with Z > 0
+# x = X/Z
+# y = Y/Z
+#
+# r2 = x2 + y2
+# u = x*(1 + k1*r2 + k2*r4 + k3*r6) + 2*p1*x*y + p2*(r2+2*x2)
+# v = y*(1 + k1*r2 + k2*r4 + k3*r6) + p1*(r2+2*y2) + 2*p2*x*y
+#
+# Default: 0 for all parameters that are not given
+
+camera.1.k1= -0.193231
+camera.1.k2= 0.191304
+
+# The linear intrinsic parameters are given as matrix:
+#
+# A=[fx skew principal_x; 0 fy principal_y; 0 0 1]
+#
+# [i k 1]^T = A*[u v 1]^T
+
+camera.1.A=[ 727.082 0.146150 388.801; 0.00000 726.947 272.886; 0.00000 0.00000 1.00000]
+
+# Image size in pixel
+
+camera.1.width= 780
+camera.1.height= 582
+
+# End of file.

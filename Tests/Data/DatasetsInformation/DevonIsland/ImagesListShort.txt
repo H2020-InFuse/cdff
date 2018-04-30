@@ -1,0 +1,3 @@
+Rectified1/color-rectified-left-000001.ppm Rectified1/color-rectified-right-000001.ppm
+Rectified1/color-rectified-left-000002.ppm Rectified1/color-rectified-right-000002.ppm
+Rectified1/color-rectified-left-000003.ppm Rectified1/color-rectified-right-000003.ppm

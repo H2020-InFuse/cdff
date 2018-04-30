@@ -1,0 +1,11 @@
+Camera calibration, Rectified, 1280x960
+Baseline: 	0.239977002
+Focal Length: 	968.999694824
+ImageCenter (row, col): 	463.537109375 635.139038086
+Resolution (rows, cols): 	960 1280
+
+Camera calibration, Rectified, 512x384
+Baseline: 	0.239977002
+Focal Length: 	387.599884033
+ImageCenter (row, col): 	185.114852905 253.755615234
+Resolution (rows, cols): 	384 512 
