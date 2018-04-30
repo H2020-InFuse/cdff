@@ -50,12 +50,10 @@ using namespace VisualPointFeatureVector2DWrapper;
  */
 TEST_CASE( "Call to process (2D Harris detector)", "[process]" ) 
 	{
-	PRINT_TO_LOG("before", "");
 	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
 	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
 	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
 
-	PRINT_TO_LOG("after", "");
 	Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
 	Mocks::MatToVisualPointFeatureVector2DConverter* mockOutputConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
 	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubOutputCache, mockOutputConverter);
@@ -66,7 +64,6 @@ TEST_CASE( "Call to process (2D Harris detector)", "[process]" )
 	VisualPointFeatureVector2DConstPtr featuresVector = new VisualPointFeatureVector2D();
 	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
 
-	PRINT_TO_LOG("after", "be");
 	HarrisDetector2D harris;
 	harris.imageInput(new Frame());
 	harris.process();

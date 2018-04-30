@@ -114,7 +114,7 @@ class ConversionCache
 			{
 			if (instance != NULL)
 				{
-				PRINT_TO_LOG("Deleting cache", "");
+				// Delete cache
 				delete(instance);
 				}
 			instance = new ConversionCache<FromType, ToType, Converter>(cacheHandler, converter);
