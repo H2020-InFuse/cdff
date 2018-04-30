@@ -32,6 +32,7 @@
 #include <Transform3DToEigenTransformConverter.hpp>
 #include <ConversionCache/ConversionCache.hpp>
 #include <pcl/filters/voxel_grid.h>
+#include <Visualizers/PclVisualizer.hpp>
 
 namespace dfpc_ci {
 
@@ -124,13 +125,16 @@ void ObservedScene::AddPointCloudInLastReference(PointCloudConstPtr pointCloudIn
 	grid.setInputCloud(scene);
 	grid.setLeafSize(resolution, resolution, resolution);
 	grid.filter(*scene);
+
+	DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(scene, 500);
 	}
 
 PointCloudConstPtr ObservedScene::GetPartialScene(Point3D origin, float radius)
 	{
 	pcl::PointCloud<pcl::PointXYZ>::Ptr partialScene(new pcl::PointCloud<pcl::PointXYZ>() );
 	
-	for(unsigned pointIndex = 0; pointIndex < scene->points.size(); pointIndex++)
+	unsigned pointIndex = 0;
+	for(unsigned pointIndex = 0; pointIndex < scene->points.size() && pointIndex < PointCloudWrapper::MAX_CLOUD_SIZE; pointIndex++)
 		{
 		pcl::PointXYZ currentPoint = scene->points.at(pointIndex);
 		float distanceX = currentPoint.x - origin.x;
@@ -142,6 +146,12 @@ PointCloudConstPtr ObservedScene::GetPartialScene(Point3D origin, float radius)
 			{
 			partialScene->points.push_back(currentPoint);
 			}
+		}
+
+
+	if (pointIndex < scene->points.size())
+		{
+		PRINT_TO_LOG("Stored point cloud is too large, only a part will be used for matching", "");
 		}
 
 	return ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Convert(partialScene);
