@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <EdgeDetection/SobelDerivative.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -57,7 +47,7 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process", "[process]" ) 
+TEST_CASE( "Call to process ( sobel derivatives )", "[process]" ) 
 	{
 	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
 	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
@@ -91,7 +81,7 @@ TEST_CASE( "Call to process", "[process]" )
 	delete(outputy);
 	}
 
-TEST_CASE( "Call to configure", "[configure]" )
+TEST_CASE( "Call to configure ( sobel derivatives )", "[configure]" )
 	{
 	SobelDerivative sobelGradient;
 	sobelGradient.setConfigurationFile("../tests/ConfigurationFiles/DFNs/SobelDerivative/SobelDerivative_Conf.yaml");

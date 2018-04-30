@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <KFPrediction/KalmanPredictor.hpp>
 #include <Errors/Assert.hpp>
 
@@ -49,7 +39,7 @@ using namespace dfn_ci;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process", "[process]" ) 
+TEST_CASE( "Call to process (Kalman prediction)", "[process]" ) 
 	{
 	
 	cv::Mat pose(6,1,CV_32F);
@@ -91,7 +81,7 @@ TEST_CASE( "Call to process", "[process]" )
 	}
 
 
-TEST_CASE( "Call to configure", "[configure]" )
+TEST_CASE( "Call to configure (Kalman prediction)", "[configure]" )
 	{
 	KalmanPredictor simplePredictor;
 	simplePredictor.setConfigurationFile("../tests/ConfigurationFiles/DFNs/KFPrediction/KalmanPredictor_Conf.yaml");

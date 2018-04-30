@@ -31,45 +31,11 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/Reconstruction3D/ObservedScene.cpp
-)
-<<<<<<< HEAD
-target_link_libraries(
-	ObservedSceneTest
-	cdff_helpers cdff_logger cdff_types converters_opencv opencv_highgui opencv_core opencv_imgproc opencv_imgcodecs mock reconstruction_3d_stub_observed_scene
-)
-add_test(ObservedSceneTest ObservedSceneTest)
-
-add_executable(
-    CannyDetectorTest
     DFNs/EdgeDetection/CannyDetector.cpp
-)
-target_link_libraries(
-	CannyDetectorTest
-	mock cdff_logger cdff_types canny_detector  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
-)
-add_test(CannyDetectorTest CannyDetectorTest)
-
-add_executable(
-    SobelDerivativeTest
     DFNs/EdgeDetection/SobelDerivative.cpp
-)
-target_link_libraries(
-	SobelDerivativeTest
-	mock cdff_logger cdff_types sobel_derivative  converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
-)
-add_test(SobelDerivativeTest SobelDerivativeTest)
-
-add_executable(
-    KalmanPredictorTest
     DFNs/KFPrediction/KalmanPredictor.cpp
-)
-target_link_libraries(
-	KalmanPredictorTest
-	mock cdff_logger cdff_types kalman_predictor opencv_core opencv_imgproc opencv_imgcodecs opencv_video 
-)
-add_test(KalmanPredictorTest KalmanPredictorTest)
 
-=======
+)
 
 # TODO: including these files in UNITTEST_SOURCES makes the test executable
 # report a failure due to an unexpected exception:
@@ -137,6 +103,10 @@ set(UNITTEST_LIBRARIES Catch
     shot_descriptor_3d
     synthetic_generators
     triangulation
+    canny_detector
+    sobel_derivative
+    kalman_predictor
+    opencv_video
 )
 
 # Make the Catch executable that runs the unit tests
@@ -150,4 +120,4 @@ target_link_libraries(cdff-unit-tests ${UNITTEST_LIBRARIES})
 # corresponding to the current source directory (i.e. corresponding to
 # ${CMAKE_CURRENT_SOURCE_DIR}).
 add_test(NAME unit-tests COMMAND cdff-unit-tests)
->>>>>>> origin/master
+

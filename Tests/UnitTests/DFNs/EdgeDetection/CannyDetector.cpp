@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <EdgeDetection/CannyDetector.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -57,7 +47,7 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process", "[process]" ) 
+TEST_CASE( "Call to process (canny detector)", "[process]" ) 
 	{
 	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
 	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
@@ -87,7 +77,7 @@ TEST_CASE( "Call to process", "[process]" )
 	delete(output);
 	}
 
-TEST_CASE( "Call to configure", "[configure]" )
+TEST_CASE( "Call to configure (canny detector)", "[configure]" )
 	{
 	CannyDetector detector;
 	detector.setConfigurationFile("../tests/ConfigurationFiles/DFNs/EdgeDetection/CannyDetector_Conf.yaml");
