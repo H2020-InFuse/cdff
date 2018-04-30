@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <DfpcConfigurator.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
@@ -57,7 +47,7 @@ using namespace dfn_ci;
 	REQUIRE( variable < value + EPSILON ); \
 	REQUIRE( variable > value - EPSILON );
 
-TEST_CASE( "Success Call to Configure", "[configureSuccess]" ) 
+TEST_CASE( "Success Call to Configure (DFPC configurator)", "[configureSuccess]" ) 
 	{
 	DfpcConfigurator configurator;
 	configurator.configure("../tests/ConfigurationFiles/DFPCs/dfns_chain_conf01.yaml");
@@ -95,7 +85,7 @@ TEST_CASE( "Success Call to Configure", "[configureSuccess]" )
 	}
 
 
-TEST_CASE( "Success Call to Configure With Chain Parameters", "[configureSuccessChainParameters]" ) 
+TEST_CASE( "Success Call to Configure With Chain Parameters (DFPC configurator)", "[configureSuccessChainParameters]" ) 
 	{
 	DfpcConfigurator configurator;
 	configurator.configure("../tests/ConfigurationFiles/DFPCs/dfns_chain_conf02.yaml");

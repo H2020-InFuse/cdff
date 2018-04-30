@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <FeaturesMatching3D/Icp3D.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -59,7 +49,7 @@ using namespace SupportTypes;
  * --------------------------------------------------------------------------
  */
 
-TEST_CASE( "Call to process", "[process]" ) 
+TEST_CASE( "Call to process (3D ICP)", "[process]" ) 
 	{
 	Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>* stubInputCache = 
 		new Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>();
@@ -120,7 +110,7 @@ TEST_CASE( "Call to process", "[process]" )
 	delete(output);
 	}
 
-TEST_CASE( "Call to configure", "[configure]" )
+TEST_CASE( "Call to configure (3D ICP)", "[configure]" )
 	{
 	Icp3D icp;
 	icp.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesMatching3D/Icp3D_Conf1.yaml");

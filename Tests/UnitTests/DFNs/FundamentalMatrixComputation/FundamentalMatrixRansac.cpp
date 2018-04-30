@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -162,12 +152,12 @@ void FundamentalMatrixTest::ValidateOutput(Matrix3dConstPtr output, cv::Mat cvFu
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Fail Call to process", "[processFail]" ) 
+TEST_CASE( "Fail Call to process (RANSAC fundamental matrix)", "[processFail]" ) 
 	{
 	FundamentalMatrixTest::FailureTest();
 	}
 
-TEST_CASE( "Call to configure", "[configure]" )
+TEST_CASE( "Call to configure (RANSAC fundamental matrix)", "[configure]" )
 	{
 	FundamentalMatrixRansac ransac;
 	ransac.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac_Conf1.yaml");

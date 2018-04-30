@@ -20,23 +20,13 @@
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Definitions
- * Catch definition must be before the includes, otherwise catch will not compile.
- *
- * --------------------------------------------------------------------------
- */
-#define CATCH_CONFIG_MAIN
-
 /* --------------------------------------------------------------------------
  *
  * Includes
  *
  * --------------------------------------------------------------------------
  */
-#include <Catch/catch.h>
+#include <catch.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <ConversionCache/ConversionCache.hpp>
@@ -59,7 +49,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process", "[process]" ) 
+TEST_CASE( "Call to process (iterative PnP solver)", "[process]" ) 
 	{
 	Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>();
 	Mocks::VisualPointFeatureVector2DToMatConverter* mockInputConverter = new Mocks::VisualPointFeatureVector2DToMatConverter();
@@ -110,7 +100,7 @@ TEST_CASE( "Call to process", "[process]" )
 	delete(pose);
 	}
 
-TEST_CASE( "Call to configure", "[configure]" )
+TEST_CASE( "Call to configure (iterative PnP solver)", "[configure]" )
 	{
 	IterativePnpSolver pnp;
 	pnp.setConfigurationFile("../tests/ConfigurationFiles/DFNs/PerspectiveNPointSolving/IterativePnpSolver_Conf1.yaml");
