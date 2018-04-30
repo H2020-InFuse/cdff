@@ -30,6 +30,7 @@
 
 #include <ConversionCache/ConversionCache.hpp>
 #include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <pcl/io/ply_io.h>
 
 using namespace PointCloudWrapper;
 using namespace Converters;
@@ -39,6 +40,12 @@ using namespace PoseWrapper;
 
 #define RETURN_IF_DISABLED \
 	if (!enabled) \
+		{ \
+		return; \
+		}
+
+#define RETURN_IF_SAVING_DISABLED \
+	if (!enabledSaving) \
 		{ \
 		return; \
 		}
@@ -182,6 +189,31 @@ void PclVisualizer::PlacePointCloud(PointCloudConstPtr sceneCloud, PointCloudCon
 	ShowPointClouds(pointsCloudList);
 	}
 
+void PclVisualizer::SavePointCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, unsigned period)
+	{
+	static unsigned time = 1;
+	RETURN_IF_SAVING_DISABLED
+	if (time % period != 0)
+		{
+		return;
+		}
+
+	std::stringstream cloudOutputPath;
+	cloudOutputPath << SAVE_FILE_BASE_NAME << time << SAVE_FILE_EXTENSION;
+
+	pcl::PLYWriter writer;
+	writer.write(cloudOutputPath.str(), *pointCloud);
+
+	time++;
+	}
+	
+void PclVisualizer::SavePointCloud(PointCloudConstPtr pointCloud, unsigned period)
+	{
+	RETURN_IF_SAVING_DISABLED
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclPointCloud = ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Convert(pointCloud);
+	SavePointCloud(pclPointCloud, period);
+	}
+
 void PclVisualizer::Enable()
 	{
 	enabled = true;
@@ -190,6 +222,16 @@ void PclVisualizer::Enable()
 void PclVisualizer::Disable()
 	{
 	enabled = false;
+	}
+
+void PclVisualizer::EnableSaving()
+	{
+	enabledSaving = true;
+	}
+
+void PclVisualizer::DisableSaving()
+	{
+	enabledSaving = false;
 	}
 
 /* --------------------------------------------------------------------------
@@ -210,6 +252,8 @@ PclVisualizer::PclVisualizer()
  * --------------------------------------------------------------------------
  */
 const std::string PclVisualizer::WINDOW_NAME = "PCL Visualizer";
+const std::string PclVisualizer::SAVE_FILE_BASE_NAME = "VisualizerCloud";
+const std::string PclVisualizer::SAVE_FILE_EXTENSION = ".ply";
 const PclVisualizer::Color PclVisualizer::COLORS_LIST[MAX_POINT_CLOUDS] = 
 	{
 	{.r = 255, .g = 255, .b = 255},
@@ -224,6 +268,7 @@ const PclVisualizer::Color PclVisualizer::COLORS_LIST[MAX_POINT_CLOUDS] =
 	{.r = 100, .g = 100, .b = 200}
 	};
 bool PclVisualizer::enabled = false;
+bool PclVisualizer::enabledSaving = false;
 
 
 /* --------------------------------------------------------------------------
