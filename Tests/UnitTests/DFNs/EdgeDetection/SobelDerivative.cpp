@@ -47,6 +47,9 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
+
+/*
+
 TEST_CASE( "Call to process ( sobel derivatives )", "[process]" ) 
 	{
 	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
@@ -80,6 +83,7 @@ TEST_CASE( "Call to process ( sobel derivatives )", "[process]" )
 	delete(outputx);
 	delete(outputy);
 	}
+*/
 
 TEST_CASE( "Call to configure ( sobel derivatives )", "[configure]" )
 	{

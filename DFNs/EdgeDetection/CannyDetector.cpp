@@ -34,6 +34,7 @@
 
 #include <stdlib.h>
 #include <fstream>
+#include <iostream>
 
 using namespace Helpers;
 using namespace Converters;
@@ -101,9 +102,30 @@ cv::Mat CannyDetector::Canny(cv::Mat inputImage)
 	t2= (double)parameters.cannyParameters.highThreshold;
 	k_size=parameters.cannyParameters.kernelSize;
 
-	cv::Mat edges;
-	cv::Canny(inputImage,edges, t1, t2, k_size );
+	cv::Mat edges(inputImage.rows,inputImage.cols,CV_8UC1);
+	cv::Mat grayInputImage(inputImage.rows,inputImage.cols,CV_8UC1);
+	if(inputImage.type()==CV_8UC3)
+	{
+	 cv::cvtColor(grayInputImage, inputImage, cv::COLOR_BGR2GRAY);
+	 cv::Canny(grayInputImage,edges, t1, t2, k_size );
+		std::cout<<"rows "<<grayInputImage.rows<<"colmns "<<grayInputImage.cols<<"\n";
+		std::cout<<"type "<<grayInputImage.type()<<"\n";
+		std::cout<<"threshold low "<<t1<<" threshold low "<<t2<<"\n";
+		std::cout<<"k_size "<<k_size<<" \n";
+	}
+
+	if(inputImage.type()==CV_8UC1)
+	{
+	 cv::Canny(inputImage,edges, t1, t2, k_size );
+	
+		std::cout<<"rows "<<grayInputImage.rows<<"colmns "<<grayInputImage.cols<<"\n";
+		std::cout<<"type "<<grayInputImage.type()<<"\n";
+		std::cout<<"threshold low "<<t1<<" threshold low "<<t2<<"\n";
+		std::cout<<"k_size "<<k_size<<" \n";
+	}
+	
 	return edges;
+		
 	}
 
 
@@ -115,7 +137,7 @@ void CannyDetector::ValidateParameters()
 
 void CannyDetector::ValidateInputs(cv::Mat inputImage)
 	{
-	ASSERT(inputImage.type() == CV_8UC1, "Canny Detector error: input image is not of type CV_8UC1");
+	ASSERT(inputImage.type() == CV_8UC1 || inputImage.type() == CV_8UC3, "Canny Detector error: input image is not of type CV_8UC1 or CV_8UC3 ");
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "Canny Detector error: input image is empty");
 	}
 

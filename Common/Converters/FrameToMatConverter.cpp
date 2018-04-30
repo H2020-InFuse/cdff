@@ -46,7 +46,7 @@ const cv::Mat FrameToMatConverter::Convert(const FrameWrapper::FrameConstPtr& fr
        	ASSERT(frame,"FrameToMatConverter: an empty asn frame!");
   	if(GetFrameMode(*frame)==MODE_RGB)
 	{
-	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame) * 3) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image 		data size does not match image dimensions.");
+	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame) * 3) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image data size does not match image dimensions.");
 
 	cv::Mat cvImage( GetFrameHeight(*frame), GetFrameWidth(*frame), CV_8UC3, cv::Scalar(0,0,0) );
 	ASSERT(!cvImage.empty(), "FrameToMatConverter:  RGB  images are currently supported");
@@ -66,7 +66,7 @@ const cv::Mat FrameToMatConverter::Convert(const FrameWrapper::FrameConstPtr& fr
 	
 	if(GetFrameMode(*frame)==MODE_GRAYSCALE)
 	{
-       	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame)) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image 		data size does not match image dimensions.");
+       	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame)) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image 	data size does not match image dimensions.");
 
 	cv::Mat cvImage( GetFrameHeight(*frame), GetFrameWidth(*frame), CV_8UC1, cv::Scalar(0) );
 	ASSERT(!cvImage.empty(), "FrameToMatConverter:  Gray scale  images are currently supported");

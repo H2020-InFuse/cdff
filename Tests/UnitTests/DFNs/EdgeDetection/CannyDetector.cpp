@@ -47,6 +47,8 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
+
+
 TEST_CASE( "Call to process (canny detector)", "[process]" ) 
 	{
 	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
@@ -57,10 +59,10 @@ TEST_CASE( "Call to process (canny detector)", "[process]" )
 	Mocks::MatToFrameConverter* mockOutputConverter = new Mocks::MatToFrameConverter();
 	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubOutputCache, mockOutputConverter);
 
-	//cv::Mat inputImage;
-	//cv::Mat testImage = cv::imread("../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR); 
- 	//cv::cvtColor(testImage, inputImage, COLOR_BGR2GRAY);
-	cv::Mat inputImage(500, 500, CV_8UC1, cv::Scalar(100));	
+	cv::Mat inputImage;
+	cv::Mat testImage = cv::imread("../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR); 
+ 	//cv::cvtColor(testImage, inputImage, cv::COLOR_BGR2GRAY);
+	//cv::Mat inputImage(500, 500, CV_8UC3, cv::Scalar(100));	
 	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputImage) );
 
 	FrameConstPtr outputImage = new Frame();
@@ -76,6 +78,7 @@ TEST_CASE( "Call to process (canny detector)", "[process]" )
 	delete(input);
 	delete(output);
 	}
+
 
 TEST_CASE( "Call to configure (canny detector)", "[configure]" )
 	{
