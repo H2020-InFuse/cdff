@@ -1,0 +1,3 @@
+Bag files at
+
+http://www.v4rl.ethz.ch/research/datasets-code/V4RL-Dense-Reconstruction-Dataset.html
