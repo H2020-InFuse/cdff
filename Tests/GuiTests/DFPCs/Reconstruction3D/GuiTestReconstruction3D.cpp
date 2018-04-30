@@ -216,7 +216,11 @@ bool GuiTestReconstruction3D::LoadNextImages(FrameConstPtr& leftImage, FrameCons
 	std::stringstream nextImageFileName;
 	nextImageFileName << imageFilesFolder << "/" << imageFileNamesList.at(time);
 	cv::Mat cvLeftImage, cvRightImage;
-	PRINT_TO_LOG("input", time);
+
+	std::stringstream inputStream;
+	inputStream << (time+1) << "/" << imageFileNamesList.size();
+	std::string inputString = inputStream.str();
+	PRINT_TO_LOG("input", inputString);
 
 	if (imageFilesType == MONO_CAMERA)
 		{

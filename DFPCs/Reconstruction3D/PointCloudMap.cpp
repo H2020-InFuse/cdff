@@ -29,6 +29,7 @@
 #include "PointCloudMap.hpp"
 #include "Errors/Assert.hpp"
 #include <pcl/filters/voxel_grid.h>
+#include <Visualizers/PclVisualizer.hpp>
 
 namespace dfpc_ci {
 
@@ -69,6 +70,8 @@ void PointCloudMap::AddPointCloud(PointCloudConstPtr pointCloudInput, VisualPoin
 	AffineTransform affineTransform = ConvertCloudPoseToInversionTransform(cloudPoseInMap);
 	AddFeatureCloud(pointCloudFeaturesVector, affineTransform);
 	AddPointCloud(pointCloudInput, affineTransform);
+
+	DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(pointCloud, 500);
 	}
 
 PointCloudConstPtr PointCloudMap::GetScenePointCloud(Pose3DConstPtr origin,  float radius)
