@@ -79,7 +79,8 @@ PointCloudConstPtr PointCloudMap::GetScenePointCloud(Pose3DConstPtr origin,  flo
 	pcl::PointXYZ pclOrigin( GetXPosition(*origin), GetYPosition(*origin), GetZPosition(*origin));
 	PointCloudPtr pointCloudOutput = NewPointCloud();
 
-	for(uint64_t pointIndex = 0; pointIndex < pointCloud->points.size(); pointIndex++)
+	uint64_t pointIndex = 0;
+	for(pointIndex = 0; pointIndex < pointCloud->points.size() && pointIndex < PointCloudWrapper::MAX_CLOUD_SIZE; pointIndex++)
 		{
 		pcl::PointXYZ cloudPoint = pointCloud->points.at(pointIndex);
 		float pointToOriginDistance = PointDistance(pclOrigin, cloudPoint);
@@ -87,6 +88,11 @@ PointCloudConstPtr PointCloudMap::GetScenePointCloud(Pose3DConstPtr origin,  flo
 			{
 			AddPoint(*pointCloudOutput, cloudPoint.x, cloudPoint.y, cloudPoint.z);
 			}
+		}
+
+	if (pointIndex < pointCloud->points.size())
+		{
+		DEBUG_PRINT_TO_LOG("Stored point cloud is too large, only a part will be used for matching", "");
 		}
 
 	return pointCloudOutput;
@@ -101,7 +107,8 @@ VisualPointFeatureVector3DConstPtr PointCloudMap::GetSceneFeaturesVector(Pose3DC
 	VisualPointFeatureVector3DPtr featuresVector = NewVisualPointFeatureVector3D();
 
 	uint64_t featureCounter = 0;
-	for(uint64_t featureIndex = 0; featureIndex < featuresList.size(); featureIndex++)
+	uint64_t featureIndex = 0;
+	for(featureIndex = 0; featureIndex < featuresList.size() && featureCounter<VisualPointFeatureVector3DWrapper::MAX_FEATURE_3D_POINTS; featureIndex++)
 		{
 		FeaturePoint featurePoint = featuresList.at(featureIndex); 
 		float featureToOriginDistance = PointDistance(pclOrigin, featurePoint.point);
@@ -114,6 +121,11 @@ VisualPointFeatureVector3DConstPtr PointCloudMap::GetSceneFeaturesVector(Pose3DC
 				}
 			featureCounter++;
 			}
+		}
+
+	if (featureIndex < featuresList.size())
+		{
+		DEBUG_PRINT_TO_LOG("Stored feature vector is too large, only a part will be used for matching", "");
 		}
 
 	return featuresVector;
