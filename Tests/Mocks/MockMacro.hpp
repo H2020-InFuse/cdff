@@ -41,10 +41,9 @@
  */
 #define MOCK_METHOD(baseClass, methodName, outputType, inputParameters) \
 	{ \
-	static unsigned time = 0; \
-	time++; \
+	countersMap["methodName"]++; \
 	 \
-	outputType* plannedOutput = (outputType*) Mock::GetBehaviour(#methodName, time); \
+	outputType* plannedOutput = (outputType*) Mock::GetBehaviour(#methodName, countersMap["methodName"]); \
 	 \
 	if (plannedOutput == NULL) \
 		{ \
@@ -58,10 +57,9 @@
 
 #define MOCK_STATIC_METHOD(baseClass, methodName, outputType, inputParameters) \
 	{ \
-	static unsigned time = 0; \
-	time++; \
+	staticCountersMap["methodName"]; \
 	 \
-	outputType* plannedOutput = (outputType*) Mock::GetStaticBehaviour(#methodName, time); \
+	outputType* plannedOutput = (outputType*) Mock::GetStaticBehaviour(#methodName, staticCountersMap["methodName"]); \
 	 \
 	if (plannedOutput == NULL) \
 		{ \
@@ -75,10 +73,9 @@
 
 #define MOCK_VOID_METHOD(baseClass, methodName, outputType, inputParameter, outputParameter) \
 	{ \
-	static unsigned time = 0; \
-	time++; \
+	countersMap["methodName"]++; \
 	 \
-	outputType* plannedOutput = (outputType*) Mock::GetBehaviour(#methodName, time); \
+	outputType* plannedOutput = (outputType*) Mock::GetBehaviour(#methodName, countersMap["methodName"]); \
 	 \
 	if (plannedOutput == NULL) \
 		{ \
