@@ -53,4 +53,14 @@ void StandardOutputLogger::Print()
 		}	
 	}
 
+void StandardOutputLogger::SetColorRed()
+	{
+	std::cout<<"\033[1;31m";
+	}
+
+void StandardOutputLogger::SetColorNormal()
+	{
+	std::cout<<"\033[0m";
+	}
+
 /** @} */

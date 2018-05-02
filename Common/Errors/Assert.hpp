@@ -63,12 +63,19 @@ class AssertException: public std::exception
 	#define ABORT_PROGRAM() throw AssertException();
 #endif
 
+#define PRINT_ABORT_MESSAGE_TO_LOG(message) \
+	{ \
+	LoggerFactory::GetLogger()->AddEntry(message); \
+	LoggerFactory::GetLogger()->SetColorRed(); \
+	LoggerFactory::GetLogger()->Print(); \
+	LoggerFactory::GetLogger()->SetColorNormal(); \
+	}
+
 #define ASSERT(condition, message) \
 	{ \
 	if( !(condition) ) \
 		{ \
-		LoggerFactory::GetLogger()->AddEntry(message); \
-		LoggerFactory::GetLogger()->Print(); \
+		PRINT_ABORT_MESSAGE_TO_LOG(message) \
 		ABORT_PROGRAM() \
 		} \
 	}
@@ -85,8 +92,8 @@ class AssertException: public std::exception
 		{ \
 		std::stringstream stream; \
 		stream << #expression1 <<" evaluates to "<<(expression1)<<", "<<#expression2<<" evaluates to "<<(expression2)<<", message: "<<message;\
-		LoggerFactory::GetLogger()->AddEntry(stream.str()); \
-		LoggerFactory::GetLogger()->Print(); \
+		std::string abortMessage = stream.str(); \
+		PRINT_ABORT_MESSAGE_TO_LOG(abortMessage) \
 		ABORT_PROGRAM() \
 		} \
 	}
@@ -97,8 +104,8 @@ class AssertException: public std::exception
 		{ \
 		std::stringstream stream; \
 		stream << #expression1 <<" evaluates to "<<(expression1)<<", "<<#expression2<<" evaluates to "<<(expression2)<<", message: "<<message;\
-		LoggerFactory::GetLogger()->AddEntry(stream.str()); \
-		LoggerFactory::GetLogger()->Print(); \
+		std::string abortMessage = stream.str(); \
+		PRINT_ABORT_MESSAGE_TO_LOG(abortMessage) \
 		ABORT_PROGRAM() \
 		} \
 	}	

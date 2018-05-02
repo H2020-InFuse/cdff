@@ -51,6 +51,8 @@ class StandardOutputLogger : public Logger
 		~StandardOutputLogger();
 
 		void Print();
+		void SetColorRed();
+		void SetColorNormal();
 
 	/* --------------------------------------------------------------------
 	 * Protected
