@@ -192,19 +192,23 @@ void PclVisualizer::PlacePointCloud(PointCloudConstPtr sceneCloud, PointCloudCon
 void PclVisualizer::SavePointCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, unsigned period)
 	{
 	static unsigned time = 1;
+	static unsigned saveTime = 0;
+
 	RETURN_IF_SAVING_DISABLED
 	if (time % period != 0)
 		{
+		time++;
 		return;
 		}
 
 	std::stringstream cloudOutputPath;
-	cloudOutputPath << SAVE_FILE_BASE_NAME << time << SAVE_FILE_EXTENSION;
+	cloudOutputPath << SAVE_FILE_BASE_NAME << saveTime << SAVE_FILE_EXTENSION;
 
 	pcl::PLYWriter writer;
 	writer.write(cloudOutputPath.str(), *pointCloud);
 
-	time++;
+	saveTime++;
+	time = 0;
 	}
 	
 void PclVisualizer::SavePointCloud(PointCloudConstPtr pointCloud, unsigned period)

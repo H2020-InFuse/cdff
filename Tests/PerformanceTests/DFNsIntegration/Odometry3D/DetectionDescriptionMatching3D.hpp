@@ -109,7 +109,7 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneFeaturesVector;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelFeaturesVector;
 		bool icpSuccess;
-		PoseWrapper::Pose3DConstPtr modePoseInScene;
+		PoseWrapper::Pose3DConstPtr modelPoseInScene;
 
 		dfn_ci::FeaturesExtraction3DInterface* extractor;
 		dfn_ci::FeaturesDescription3DInterface* descriptor;
@@ -118,7 +118,7 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 		Aggregator* groundPositionDistanceAggregator;
 		Aggregator* groundOrientationDistanceAggregator;
 
-		void LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string cloudFile);
+		void LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string cloudFile);
 		void LoadSceneCloud();
 		void LoadModelCloud(int long inputId);
 

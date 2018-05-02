@@ -64,7 +64,7 @@ DetectionDescriptionMatching3DTestInterface::DetectionDescriptionMatching3DTestI
 	modelKeypointsVector = NULL;
 	sceneFeaturesVector = NULL;
 	modelFeaturesVector = NULL;
-	modePoseInScene = NULL;
+	modelPoseInScene = NULL;
 	icpSuccess = false;
 
 	inputId = -1;
@@ -111,9 +111,9 @@ DetectionDescriptionMatching3DTestInterface::~DetectionDescriptionMatching3DTest
 		{
 		delete(modelFeaturesVector);
 		}
-	if (modePoseInScene != NULL)
+	if (modelPoseInScene != NULL)
 		{
-		delete(modePoseInScene);
+		delete(modelPoseInScene);
 		}
 	}
 
@@ -157,7 +157,7 @@ void DetectionDescriptionMatching3DTestInterface::SetModelsCloud(std::string gro
  *
  * --------------------------------------------------------------------------
  */
-void DetectionDescriptionMatching3DTestInterface::LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string cloudFile)
+void DetectionDescriptionMatching3DTestInterface::LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string cloudFile)
 	{
 	const float EPSILON = 0.00001;
 	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
@@ -179,7 +179,6 @@ void DetectionDescriptionMatching3DTestInterface::LoadCloud(pcl::PointCloud<pcl:
 		grid.setInputCloud(finitePointsPclCloud);
 		grid.setLeafSize(voxelGridFilterSize, voxelGridFilterSize, voxelGridFilterSize);
 		
-		cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 		grid.filter(*cloud);
 		}
 	else
@@ -190,6 +189,7 @@ void DetectionDescriptionMatching3DTestInterface::LoadCloud(pcl::PointCloud<pcl:
 
 void DetectionDescriptionMatching3DTestInterface::LoadSceneCloud()
 	{
+	sceneCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();	
 	LoadCloud(sceneCloud, this->inputCloudFile);
 	scenePointCloud = pointCloudConverter.Convert(sceneCloud);
 	}
@@ -203,7 +203,7 @@ void DetectionDescriptionMatching3DTestInterface::LoadModelCloud(int long inputI
 
 	modelCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	LoadCloud(modelCloud, modelsCloudFilesList.at(inputId));
-	modelPointCloud = pointCloudConverter.Convert(sceneCloud);	
+	modelPointCloud = pointCloudConverter.Convert(modelCloud);	
 
 	SetPosition(groundTruthPose, 0, 0, 0);
 	SetOrientation(groundTruthPose, 0, 0, 0, 1);
@@ -280,15 +280,15 @@ void DetectionDescriptionMatching3DTestInterface::ExecuteDfns()
 	descriptor->process();
 	modelFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
 
-	if (modePoseInScene != NULL)
+	if (modelPoseInScene != NULL)
 		{
-		delete(modePoseInScene);
+		delete(modelPoseInScene);
 		}
 	matcher->sourceFeaturesVectorInput(modelFeaturesVector);
 	matcher->sinkFeaturesVectorInput(sceneFeaturesVector);
 	matcher->process();
 	icpSuccess = matcher->successOutput();
-	modePoseInScene = matcher->transformOutput();
+	modelPoseInScene = matcher->transformOutput();
 	}
 
 DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMatching3DTestInterface::ExtractMeasures()
@@ -301,17 +301,17 @@ DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMat
 
 	if (icpSuccess)
 		{
-		float differenceX = GetXPosition(groundTruthPose) - GetXPosition(*modePoseInScene);
-		float differenceY = GetYPosition(groundTruthPose) - GetYPosition(*modePoseInScene);
-		float differenceZ = GetZPosition(groundTruthPose) - GetZPosition(*modePoseInScene);
+		float differenceX = GetXPosition(groundTruthPose) - GetXPosition(*modelPoseInScene);
+		float differenceY = GetYPosition(groundTruthPose) - GetYPosition(*modelPoseInScene);
+		float differenceZ = GetZPosition(groundTruthPose) - GetZPosition(*modelPoseInScene);
 		float squaredDistance = differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ;
 		measuresMap["PositionDistance"] = std::sqrt(squaredDistance);
 
 		float scalarProduct =
-			GetXOrientation(groundTruthPose) * GetXOrientation(*modePoseInScene) +
-			GetYOrientation(groundTruthPose) * GetYOrientation(*modePoseInScene) +
-			GetZOrientation(groundTruthPose) * GetZOrientation(*modePoseInScene) +
-			GetWOrientation(groundTruthPose) * GetWOrientation(*modePoseInScene);
+			GetXOrientation(groundTruthPose) * GetXOrientation(*modelPoseInScene) +
+			GetYOrientation(groundTruthPose) * GetYOrientation(*modelPoseInScene) +
+			GetZOrientation(groundTruthPose) * GetZOrientation(*modelPoseInScene) +
+			GetWOrientation(groundTruthPose) * GetWOrientation(*modelPoseInScene);
 		measuresMap["AngleDistace"] = 1 - scalarProduct*scalarProduct;				
 		}
 	else
