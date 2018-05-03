@@ -49,7 +49,7 @@ namespace DataGenerators {
 	 * --------------------------------------------------------------------
 	 */
         public:
-        	PointCloudTransformer(bool enableVisualizer = true);
+        	PointCloudTransformer();
         	~PointCloudTransformer();
 
 		void LoadPointCloud(std::string pointCloudFilePath);

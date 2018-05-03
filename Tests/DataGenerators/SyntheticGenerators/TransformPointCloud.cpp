@@ -41,13 +41,7 @@ int main(int argc, char** argv)
 		pointCloudFilePath = argv[1];
 		}
 
-	bool enableVisualizer = false;
-	if (argc >= 3)
-		{
-		enableVisualizer = true;
-		}
-
-	PointCloudTransformer pointCloudTransformer(enableVisualizer);
+	PointCloudTransformer pointCloudTransformer;
 	PRINT_TO_LOG("Loading Point Cloud", "");
 	pointCloudTransformer.LoadPointCloud(pointCloudFilePath);
 

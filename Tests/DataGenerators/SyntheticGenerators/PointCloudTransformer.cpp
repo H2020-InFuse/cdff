@@ -41,13 +41,10 @@ namespace DataGenerators
  *
  * --------------------------------------------------------------------------
  */
-PointCloudTransformer::PointCloudTransformer(bool enableVisualizer) :
+PointCloudTransformer::PointCloudTransformer() :
 	pointCloud( new pcl::PointCloud<pcl::PointXYZ> ), transformedCloud( new pcl::PointCloud<pcl::PointXYZ> )
 	{
-	if (enableVisualizer)
-		{
-		Visualizers::PclVisualizer::Enable();
-		}
+
 	}
 
 PointCloudTransformer::~PointCloudTransformer()
@@ -107,7 +104,9 @@ void PointCloudTransformer::SavePointCloud(std::string outputFilePath)
 
 void PointCloudTransformer::ViewPointCloud()
 	{
+	Visualizers::PclVisualizer::Enable();
 	Visualizers::PclVisualizer::ShowPointCloud(transformedCloud);
+	Visualizers::PclVisualizer::Disable();
 	}
 
 /* --------------------------------------------------------------------------
