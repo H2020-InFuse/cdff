@@ -1,0 +1,13 @@
+#
+#
+#
+0 train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic000.0.png train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic000.1.png
+0.1 train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic001.0.png train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic001.1.png
+0.2 train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic002.0.png train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic002.1.png
+0.3 train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic003.0.png train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic003.1.png
+0.4 train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic004.0.png train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic004.1.png
+0.5 train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic005.0.png train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic005.1.png
+0.6 train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic006.0.png train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic006.1.png
+0.7 train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic007.0.png train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic007.1.png
+0.8 train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic008.0.png train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic008.1.png
+0.9 train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic009.0.png train_sun0/focus20_shutter0.01_noreflector/LIF0_0/Undistorted/pic009.1.png

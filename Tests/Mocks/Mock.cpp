@@ -41,11 +41,19 @@ namespace Mocks {
 void Mock::AddBehaviour(std::string functionName, std::string time, void* value)	
 	{
 	AddBehaviour(behavioursMap, functionName, time, value);
+	if (countersMap.find(functionName) != countersMap.end())
+		{
+		countersMap[functionName] = 0;
+		}
 	}
 
 void* Mock::GetBehaviour(std::string functionName, unsigned time)
 	{
 	return GetBehaviour(behavioursMap, functionName, time);
+	if (staticCountersMap.find(functionName) != countersMap.end())
+		{
+		countersMap[functionName] = 0;
+		}
 	}
 
 void Mock::AddStaticBehaviour(std::string functionName, std::string time, void* value)	

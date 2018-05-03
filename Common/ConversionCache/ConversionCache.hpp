@@ -112,10 +112,12 @@ class ConversionCache
 	public:
 	static ConversionCache<FromType, ToType, Converter>& Instance(CacheHandler<FromType, ToType>* cacheHandler, Converter* converter) 
 			{
-			if (instance == NULL)
+			if (instance != NULL)
 				{
-				instance = new ConversionCache<FromType, ToType, Converter>(cacheHandler, converter);
+				// Delete cache
+				delete(instance);
 				}
+			instance = new ConversionCache<FromType, ToType, Converter>(cacheHandler, converter);
 			return *instance;
 			}
 

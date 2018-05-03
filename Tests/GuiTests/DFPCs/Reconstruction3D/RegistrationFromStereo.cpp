@@ -66,12 +66,12 @@ int main(int argc, char** argv)
 	Visualizers::OpencvVisualizer::Enable();
 	Visualizers::PclVisualizer::Enable();
 
-	ASSERT(argc == 1 || argc == 5, "Please provide four paramters: ConfigurationFilePath, ImageFilesFolder, ImagesListFileName and ImageFilesType");
+	ASSERT(argc == 1 || argc >= 5, "Please provide four paramters: ConfigurationFilePath, ImageFilesFolder, ImagesListFileName and ImageFilesType");
 
-	std::string configurationFilePath = (argc == 5) ? argv[1] : CONFIGURATION_FILE_PATH;
-	std::string imageFilesFolder = (argc == 5) ? argv[2] : IMAGE_FILES_FOLDER;
-	std::string imagesListFileName = (argc == 5) ? argv[3] : IMAGES_LIST_FILE_NAME;
-	std::string imageFilesType = (argc == 5) ? argv[4] : IMAGE_FILES_TYPE;
+	std::string configurationFilePath = (argc >= 5) ? argv[1] : CONFIGURATION_FILE_PATH;
+	std::string imageFilesFolder = (argc >= 5) ? argv[2] : IMAGE_FILES_FOLDER;
+	std::string imagesListFileName = (argc >= 5) ? argv[3] : IMAGES_LIST_FILE_NAME;
+	std::string imageFilesType = (argc >= 5) ? argv[4] : IMAGE_FILES_TYPE;
 
 	GuiTestReconstruction3D guiReconstruction3d
 		(
@@ -81,8 +81,26 @@ int main(int argc, char** argv)
 		StringToImageFilesType(imageFilesType)
 		);
 
-	RegistrationFromStereo registrationFromStereo;
+	if (argc >= 6)
+		{
+		std::string enableVisualization = argv[5];
+		if (enableVisualization == "FALSE" || enableVisualization == "False" || enableVisualization == "false")
+			{
+			Visualizers::OpencvVisualizer::Disable();
+			Visualizers::PclVisualizer::Disable();	
+			}
+		}
+	
+	if (argc >= 7)
+		{
+		std::string enableSaving = argv[6];
+		if (enableSaving == "True" || enableSaving == "True" || enableSaving == "true")
+			{
+			Visualizers::PclVisualizer::EnableSaving();
+			}		
+		}
 
+	RegistrationFromStereo registrationFromStereo;
 	guiReconstruction3d.Run(registrationFromStereo);
 
 	return 0;

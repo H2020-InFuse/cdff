@@ -56,3 +56,12 @@ target_link_libraries(
 	calibrate_single_camera
 	derived_generators
 )
+
+add_executable(
+	images_scapper
+	SyntheticGenerators/ImagesScrapper.cpp
+)
+target_link_libraries(
+	images_scapper
+	cdff_logger
+)

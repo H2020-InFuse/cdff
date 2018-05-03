@@ -20,10 +20,10 @@
   - Name: Distortion
     UseK3: false 
     UseK4ToK6: false 
-    K1: 0.011018735172905199
-    K2: -0.037267274003120264
-    P1: 0.09069148825172853
-    P2: -0.07022513948532011
+    K1: 0.0
+    K2: 0.0
+    P1: 0.0
+    P2: 0.0
     K3: 0.0
     K4: 0.0
     K5: 0.0
@@ -59,10 +59,10 @@
   - Name: Distortion
     UseK3: false
     UseK4ToK6: false 
-    K1: -0.026124377673622322
-    K2: 0.11400438353263162
-    P1: -0.20012391836901924
-    P2: 0.12731091825454674
+    K1: 0.0
+    K2: 0.0
+    P1: 0.0
+    P2: 0.0
     K3: 0.0
     K4: 0.0
     K5: 0.0
@@ -103,7 +103,6 @@
     BlockSize: 11
     UniquenessRatio: 1
   - Name: DisparityToDepthMap
-DisparityToDepthMatrix: 
     Element_0_0: 1
     Element_0_1: 0
     Element_0_2: 0

@@ -75,6 +75,14 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 	protected:
 
 	private:
+		struct SingleCorrespondence
+			{
+			unsigned sourceX;
+			unsigned sinkX;
+			unsigned sourceY;
+			unsigned sinkY;
+			};
+
 		Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat >* stubVisualFeaturesCache;
 		Mocks::VisualPointFeatureVector2DToMatConverter* mockVisualFeaturesConverter;
 
@@ -130,11 +138,17 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		void ExecuteDfns();
 		MeasuresMap ExtractMeasures();
 
+		float ComputeMixedOrderPixelIndex();
+
 		int long inputId;
 		std::string imageFileNamesFolder;
 		std::string imagesFileContainer;
 		std::string posesFileContainer;
 		unsigned imageLimit;
+
+		static int SourceCompare(const void* c1, const void* c2);
+		static int SourceCompare(const SingleCorrespondence& correspondence1, const SingleCorrespondence& correspondence2);
+		static int SinkCompare(const SingleCorrespondence& correspondence1, const SingleCorrespondence& correspondence2);
 	};
 
 OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName)
@@ -492,6 +506,7 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 	measuresMap["NumberOfLeftKeypoints"] = GetNumberOfPoints(*leftFeaturesVector);
 	measuresMap["NumberOfRightKeypoints"] = GetNumberOfPoints(*rightFeaturesVector);
 	measuresMap["NumberOfCorrespondences"] = GetNumberOfCorrespondences(*correspondenceMap);
+	measuresMap["MixedOrderPixelIndex"] = ComputeMixedOrderPixelIndex();
 
 	if (decompositionSuccess)
 		{
@@ -525,8 +540,110 @@ OrbFlannRansacDecomposition::MeasuresMap OrbFlannRansacDecomposition::ExtractMea
 			GetWOrientation(rightPose) *	absolutePoseQuaternion.w();
 		measuresMap["AngleDistace"] = 1 - scalarProduct*scalarProduct;
 		}
+	else
+		{
+		measuresMap["PositionDistance"] = 1;
+		measuresMap["AngleDistance"] = 1;
+		}
 
 	return measuresMap;
+	}
+
+float OrbFlannRansacDecomposition::ComputeMixedOrderPixelIndex()
+	{
+	SingleCorrespondence correspondencesList[MAX_CORRESPONDENCES_2D];
+
+	for(unsigned correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(*correspondenceMap); correspondenceIndex++)
+		{
+		BaseTypesWrapper::Point2D source = GetSource(*correspondenceMap, correspondenceIndex);
+		BaseTypesWrapper::Point2D sink = GetSink(*correspondenceMap, correspondenceIndex);
+		correspondencesList[correspondenceIndex].sourceX = source.x;
+		correspondencesList[correspondenceIndex].sourceY = source.y;
+		correspondencesList[correspondenceIndex].sinkX = sink.x;
+		correspondencesList[correspondenceIndex].sinkX = sink.y;
+		}
+	
+	std::qsort(correspondencesList, GetNumberOfCorrespondences(*correspondenceMap), sizeof(SingleCorrespondence), OrbFlannRansacDecomposition::SourceCompare);
+
+	unsigned swapCounter = 0;
+	for(unsigned loopIndex = 0; loopIndex < GetNumberOfCorrespondences(*correspondenceMap); loopIndex++)
+		{
+		for(unsigned correspondenceIndex = loopIndex; correspondenceIndex < GetNumberOfCorrespondences(*correspondenceMap)-1; correspondenceIndex++)
+			{
+			int compareScore = SinkCompare(correspondencesList[correspondenceIndex], correspondencesList[correspondenceIndex+1]);
+			if (compareScore > 0)
+				{
+				SingleCorrespondence temporary = correspondencesList[correspondenceIndex];
+				correspondencesList[correspondenceIndex] = correspondencesList[correspondenceIndex+1];
+				correspondencesList[correspondenceIndex+1] = temporary;
+				swapCounter++;
+				}
+			}
+		}
+
+	return swapCounter;
+	}
+
+int OrbFlannRansacDecomposition::SourceCompare(const void* c1, const void* c2)
+	{
+	SingleCorrespondence* correspondence1 = (SingleCorrespondence*)c1;
+	SingleCorrespondence* correspondence2 = (SingleCorrespondence*)c2;
+
+	return OrbFlannRansacDecomposition::SourceCompare( *correspondence1, *correspondence2);
+	}
+
+int OrbFlannRansacDecomposition::SourceCompare(const SingleCorrespondence& correspondence1, const SingleCorrespondence& correspondence2)
+	{
+	if (correspondence1.sourceX < correspondence2.sourceX)
+		{
+		return -1;
+		}
+	else if (correspondence1.sourceX == correspondence2.sourceX)
+		{
+		if (correspondence1.sourceY < correspondence2.sourceY)
+			{
+			return -1;
+			}
+		else if (correspondence1.sourceY == correspondence2.sourceY)
+			{
+			return 0;
+			}
+		else
+			{
+			return 1;
+			}
+		}
+	else
+		{
+		return 1;
+		}
+	}
+
+int OrbFlannRansacDecomposition::SinkCompare(const SingleCorrespondence& correspondence1, const SingleCorrespondence& correspondence2)
+	{
+	if (correspondence1.sinkX < correspondence2.sinkX)
+		{
+		return -1;
+		}
+	else if (correspondence1.sinkX == correspondence2.sinkX)
+		{
+		if (correspondence1.sinkY < correspondence2.sinkY)
+			{
+			return -1;
+			}
+		else if (correspondence1.sinkY == correspondence2.sinkY)
+			{
+			return 0;
+			}
+		else
+			{
+			return 1;
+			}
+		}
+	else
+		{
+		return 1;
+		}
 	}
 
 

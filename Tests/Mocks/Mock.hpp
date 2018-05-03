@@ -65,7 +65,8 @@ class Mock
 	 * --------------------------------------------------------------------
 	 */
         protected:
-
+		std::map<std::string, unsigned> countersMap;
+		static std::map<std::string, unsigned> staticCountersMap;
 	/* --------------------------------------------------------------------
 	 * Private
 	 * --------------------------------------------------------------------
@@ -73,6 +74,7 @@ class Mock
 	private:
 		std::map<std::string, std::map<std::string, void*> > behavioursMap;
 		static std::map<std::string, std::map<std::string, void*> > staticBehavioursMap;
+
 
 		static void AddBehaviour(std::map<std::string, std::map<std::string, void*> >& map, std::string functionName, std::string time, void* value);	
 		static void* GetBehaviour(std::map<std::string, std::map<std::string, void*> >& map, std::string functionName, unsigned time);

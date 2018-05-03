@@ -61,8 +61,13 @@ class PclVisualizer
 
 		static void PlacePointCloud(PointCloudWrapper::PointCloudConstPtr sceneCloud, PointCloudWrapper::PointCloudConstPtr objectCloud, PoseWrapper::Pose3DConstPtr objectPoseInScene);
 
+		static void SavePointCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, unsigned period = 1);
+		static void SavePointCloud(PointCloudWrapper::PointCloudConstPtr pointCloud, unsigned period = 1);
+
 		static void Enable();
 		static void Disable();
+		static void EnableSaving();
+		static void DisableSaving();
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
@@ -83,9 +88,12 @@ class PclVisualizer
 			};
 
 		static const std::string WINDOW_NAME;
+		static const std::string SAVE_FILE_BASE_NAME;
+		static const std::string SAVE_FILE_EXTENSION;
 		static const unsigned MAX_POINT_CLOUDS = 10;
 		static const Color COLORS_LIST[MAX_POINT_CLOUDS];
 		static bool enabled;
+		static bool enabledSaving;
 
 		static pcl::PointXYZ TransformPoint(pcl::PointXYZ point, PoseWrapper::Transform3DConstPtr transform);
 	};
@@ -104,12 +112,16 @@ class PclVisualizer
 		#define DEBUG_SHOW_3D_VISUAL_FEATURES(pointCloud, featuresVector)
 		#define DEBUG_PLACE_POINT_CLOUD(scene, object, objectPose)
 		#define DEBUG_SHOW_PCL_IMAGE(image)
+		#define DEBUG_SAVE_POINT_CLOUD(pointCloud)
+		#define DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(pointCloud, period)
 	#else
 		#define DEBUG_SHOW_POINT_CLOUD(pointCloud) Visualizers::PclVisualizer::ShowPointCloud(pointCloud)
 		#define DEBUG_SHOW_POINT_CLOUDS(pointCloudsList) Visualizers::PclVisualizer::ShowPointClouds(pointCloudsList)
 		#define DEBUG_SHOW_3D_VISUAL_FEATURES(pointCloud, featuresVector) Visualizers::PclVisualizer::ShowVisualFeatures(pointCloud, featuresVector)
 		#define DEBUG_PLACE_POINT_CLOUD(scene, object, objectPose) Visualizers::PclVisualizer::PlacePointCloud(scene, object, objectPose)
 		#define DEBUG_SHOW_PCL_IMAGE(image) Visualizers::PclVisualizer::ShowImage(image)
+		#define DEBUG_SAVE_POINT_CLOUD(pointCloud) Visualizers::PclVisualizer::SavePointCloud(pointCloud)
+		#define DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(pointCloud, period) Visualizers::PclVisualizer::SavePointCloud(pointCloud, period)
 	#endif
 
 #endif

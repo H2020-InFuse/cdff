@@ -1,0 +1,37 @@
+	leftCameraMatrix.at<double>(0,0) = 1421.164784144771;
+	leftCameraMatrix.at<double>(1,1) = 1429.543764232347;
+	leftCameraMatrix.at<double>(0,2) = 654.6392455477960;
+	leftCameraMatrix.at<double>(1,2) = 471.6953010174994;
+
+	leftDistortionCoefficients = cv::Mat(1, 4, CV_64FC1);
+	leftDistortionCoefficients.at<double>(0,0) = -0.264454651171983;
+	leftDistortionCoefficients.at<double>(0,1) = 0.262569280554075;
+	leftDistortionCoefficients.at<double>(0,2) = 0.0;
+	leftDistortionCoefficients.at<double>(0,3) = 0.0;
+
+	rightCameraMatrix.at<double>(0,0) = 1446.127580127209;
+	rightCameraMatrix.at<double>(1,1) = 1455.132570727606;
+	rightCameraMatrix.at<double>(0,2) = 661.1432907851638;
+	rightCameraMatrix.at<double>(1,2) = 475.6841065984696;
+
+	rightDistortionCoefficients = cv::Mat(1, 4, CV_64FC1);
+	rightDistortionCoefficients.at<double>(0,0) = -0.258184878424111;
+	rightDistortionCoefficients.at<double>(0,1) = 0.210614154325684;
+	rightDistortionCoefficients.at<double>(0,2) = 0.0;
+	rightDistortionCoefficients.at<double>(0,3) = 0.0;
+
+	rotationMatrix.at<double>(0,0) = 1.0;
+	rotationMatrix.at<double>(0,1) = -0.001183484604993;
+	rotationMatrix.at<double>(0,2) = -0.001124897140541;
+	rotationMatrix.at<double>(1,0) = 0.001183484604993;
+	rotationMatrix.at<double>(1,1) = 1.0;
+	rotationMatrix.at<double>(1,2) = -0.009765973126693;
+	rotationMatrix.at<double>(2,0) = 0.001124897140541;
+	rotationMatrix.at<double>(2,1) = 0.009765973126693;
+	rotationMatrix.at<double>(2,2) = 1.0;
+
+	translationMatrix.at<double>(0,0) = -502.419457825028 * 0.001;
+	translationMatrix.at<double>(1,0) = 1.542495110847325 * 0.001;
+	translationMatrix.at<double>(2,0) = -4.588702214570369 * 0.001;
+
+	imageSize = cv::Size(1280, 960);
