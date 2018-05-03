@@ -133,6 +133,8 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 		float voxelGridFilterSize;
 		std::vector<std::string> modelsCloudFilesList;
 		std::vector<PoseWrapper::Pose3D> posesList;
+
+		void ComputeDistanceToGroundTruth(float& positionDistance, float& angleDistance);
 	};
 
 #endif

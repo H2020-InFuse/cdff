@@ -57,6 +57,7 @@ namespace DataGenerators {
 		void TransformCloud(float positionX, float positionY, float positionZ, float rotationX, float rotationY, float rotationZ, float rotationW);
 		void AddGaussianNoise(float mean, float standardDeviation);
 		void SavePointCloud(std::string outputFilePath);
+		void ViewPointCloud();
 
 	/* --------------------------------------------------------------------
 	 * Protected

@@ -51,8 +51,6 @@ class StandardOutputLogger : public Logger
 		~StandardOutputLogger();
 
 		void Print();
-		void SetColorRed();
-		void SetColorNormal();
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -65,6 +63,7 @@ class StandardOutputLogger : public Logger
 	 * --------------------------------------------------------------------
 	 */
 	private:
+		std::string MessageTypeToColorCode(MessageType messageType);
 
 	};
 

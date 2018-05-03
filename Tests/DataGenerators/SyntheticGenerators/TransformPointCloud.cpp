@@ -92,6 +92,10 @@ int main(int argc, char** argv)
 			PRINT_TO_LOG("Saving Point Cloud", "");
 			pointCloudTransformer.SavePointCloud(outputFile);			
 			}
+		else if (command == "view")
+			{
+			pointCloudTransformer.ViewPointCloud();
+			}
 		}
 
 	return 0;

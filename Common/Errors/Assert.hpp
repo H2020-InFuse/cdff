@@ -65,10 +65,8 @@ class AssertException: public std::exception
 
 #define PRINT_ABORT_MESSAGE_TO_LOG(message) \
 	{ \
-	LoggerFactory::GetLogger()->AddEntry(message); \
-	LoggerFactory::GetLogger()->SetColorRed(); \
+	LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::ERROR); \
 	LoggerFactory::GetLogger()->Print(); \
-	LoggerFactory::GetLogger()->SetColorNormal(); \
 	}
 
 #define ASSERT(condition, message) \

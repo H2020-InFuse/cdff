@@ -35,14 +35,16 @@
  * --------------------------------------------------------------------------
  */
 
-void Logger::AddEntry(std::string logEntry)
+void Logger::AddEntry(std::string logEntry, MessageType messageType)
 	{
 	logEntriesVector.push_back(logEntry);
+	logEntriesTypeVector.push_back(messageType);
 	}
 
 void Logger::Clear()
 	{
 	logEntriesVector.clear();
+	logEntriesTypeVector.clear();
 	}
 
 
