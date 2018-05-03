@@ -71,7 +71,6 @@ void PointCloudTransformer::Resize(unsigned minIndex, unsigned maxIndex)
 		{
 		transformedCloud->points.at(pointIndex - minIndex) = pointCloud->points.at(pointIndex);
 		}
-	DEBUG_SHOW_POINT_CLOUD(transformedCloud);
 	}
 
 void PointCloudTransformer::TransformCloud(float positionX, float positionY, float positionZ, float rotationX, float rotationY, float rotationZ, float rotationW)
@@ -98,13 +97,17 @@ void PointCloudTransformer::AddGaussianNoise(float mean, float standardDeviation
 		point.y += gaussianNoiseSource(randomEngine);
 		point.z += gaussianNoiseSource(randomEngine);
 		}
-	DEBUG_SHOW_POINT_CLOUD(transformedCloud);
 	}
 
 void PointCloudTransformer::SavePointCloud(std::string outputFilePath)
 	{
 	pcl::PLYWriter writer;
 	writer.write(outputFilePath, *transformedCloud);
+	}
+
+void PointCloudTransformer::ViewPointCloud()
+	{
+	Visualizers::PclVisualizer::ShowPointCloud(transformedCloud);
 	}
 
 /* --------------------------------------------------------------------------

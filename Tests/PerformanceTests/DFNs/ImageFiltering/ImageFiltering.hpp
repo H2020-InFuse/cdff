@@ -80,6 +80,8 @@ class ImageFilteringTestInterface : public PerformanceTestInterface
 		std::string imagesOutputExtension;
 		std::vector<std::string> imageFileNamesList;
 
+		FrameWrapper::FrameConstPtr inputFrame;
+
 		dfn_ci::ImageFilteringInterface* filter;
 		void ReadImageFileNamesList();
 		void SetupMocksAndStubs();

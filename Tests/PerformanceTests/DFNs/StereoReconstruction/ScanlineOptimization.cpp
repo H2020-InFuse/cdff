@@ -31,6 +31,21 @@
 
 using namespace dfn_ci;
 
+const std::string USAGE =
+	"This method takes up to eight optional parameters: \n \
+	(i) The name of the configuration file of the DFN (the configuration file should be put in Tests/ConfigurationFiles/DFNs/StereoReconstruction/ folder) \n \
+	(ii) The base folder containing the file list of images to process \n \
+	(iii) the name of the file list of images (each line of the file should contain the path to two or three images from the base folder, two stareo images and \
+	one optional disparity reference)) \n \
+	(iv) whether you are using a disparity image as a reference, this option should be either UseReferenceDisparity or NoReferenceDisparity \n \
+	(v) the path from the base folder representing the first part of the output disparity file name without the extension \n \
+	(vi) the extension of the output disparity images \n \
+	(vii) the path from the base folder representing the first part of the output point cloud file name without the extension \n \
+	(viii) the extension of the output point cloud file, only '.ply' is currently supported \n \n \
+	Example Usage: ./scanline_optimization_performance_test HirschmullerDisparityMapping_Performance_DeskReconstruction.yaml \
+	/path/DataSetReconstruction/Desk ImagesListSingle.txt noReferenceDisparity Disparities/firstImage .jpg Clouds/outputCloud .ply \n \n \
+	Note: if you do specify the output point cloud file, no point cloud will be saved. Likewise if you do no specify any image save file, no disparity image will be saved. \n";
+
 int main(int argc, char** argv)
 	{
 	std::string configurationFileName = "ScanlineOptimization_Performance1.yaml";
