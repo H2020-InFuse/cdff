@@ -49,7 +49,7 @@ namespace DataGenerators {
 	 * --------------------------------------------------------------------
 	 */
         public:
-        	PointCloudTransformer(bool enableVisualizer = true);
+        	PointCloudTransformer();
         	~PointCloudTransformer();
 
 		void LoadPointCloud(std::string pointCloudFilePath);
@@ -76,6 +76,9 @@ namespace DataGenerators {
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr transformedCloud;
 
+		bool transformedCloudWasInitialized;
+
+		void InitTransformedCloud();
 		pcl::PointXYZ TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform);
 
     };

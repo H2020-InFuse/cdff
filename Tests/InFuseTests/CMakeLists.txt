@@ -1,5 +1,4 @@
-
-## AsnTypesSize Printer
+#DFNs
 add_executable(
     regularity_harris_detector_3d
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
@@ -8,4 +7,16 @@ add_executable(
 target_link_libraries(
 	regularity_harris_detector_3d
 	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_3d feature_extraction_3d mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+)
+
+
+#DFNs Integration
+add_executable(
+    correctness_harris_shot_icp
+    DFNsIntegration/Odometry3D/HarrisShotIcp.cpp
+    DFNsIntegration/Odometry3D/CorrectLocalizationTester.cpp
+)
+target_link_libraries(
+	correctness_harris_shot_icp
+	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_3d feature_extraction_3d shot_descriptor_3d feature_description_3d icp_3d feature_matching_3d mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
