@@ -76,6 +76,9 @@ namespace DataGenerators {
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr transformedCloud;
 
+		bool transformedCloudWasInitialized;
+
+		void InitTransformedCloud();
 		pcl::PointXYZ TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform);
 
     };
