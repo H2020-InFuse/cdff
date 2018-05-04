@@ -1,5 +1,15 @@
 #DFNs
 add_executable(
+    validity_harris_detector_2d
+    DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
+    DFNs/FeaturesExtraction2D/SelectionTester.cpp
+)
+target_link_libraries(
+	validity_harris_detector_2d
+	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_2d feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system
+)
+
+add_executable(
     regularity_harris_detector_3d
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     DFNs/FeaturesExtraction3D/RegularityTester.cpp

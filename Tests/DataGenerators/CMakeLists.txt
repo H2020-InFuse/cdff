@@ -65,3 +65,13 @@ target_link_libraries(
 	images_scapper
 	cdff_logger
 )
+
+add_executable(
+    paint_image
+    SyntheticGenerators/PaintImage.cpp
+    SyntheticGenerators/ImagePainter.cpp
+)
+target_link_libraries(
+	paint_image
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+)
