@@ -33,10 +33,20 @@
 
 using namespace DataGenerators;
 
+const std::string INSTRUCTIONS = 
+	"press keys A-W-S-D to navigate into the image \n \
+	press keys O-P to zoom in or out \n \
+	press the left mouse button to mark a keypoint down \n \
+	press the right mouse button to unmark a keypoint \n \
+	press m to save the image to file \n \
+	press q to quit \n \n";
+
 int main(int argc, char** argv)
 	{
-	ASSERT(argc >= 3, "This method requires the input image file path, and the output image file path");
+	ASSERT(argc >= 3, "This method requires two inputs: the input image file path, and the output image file path");
 	
+	PRINT_TO_LOG("", INSTRUCTIONS);
+
 	ImagePainter painter(argv[1], argv[2]);
 	painter.Run();
 
