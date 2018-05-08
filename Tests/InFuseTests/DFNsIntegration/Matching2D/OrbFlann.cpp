@@ -6,8 +6,8 @@
 */
 
 /*!
- * @file HarrisDetector2D.cpp
- * @date 04/05/2017
+ * @file OrbFlann.cpp
+ * @date 07/05/2017
  * @author Alessandro Bianco
  */
 

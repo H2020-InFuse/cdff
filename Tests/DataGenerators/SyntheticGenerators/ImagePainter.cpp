@@ -46,16 +46,19 @@ ImagePainter::ImagePainter(std::string inputImageFilePath, std::string outputIma
 	this->inputImageFilePath = inputImageFilePath;
 	this->outputImageFilePath = outputImageFilePath;
 
+	imageZooming = NULL;
 	LoadImage();
 
 	cv::namedWindow("Image Painter", 1);
 	cv::setMouseCallback("Image Painter", ImagePainter::MouseCallback, this);
-
 	}
 
 ImagePainter::~ImagePainter()
-	{
-
+	{	
+	if (imageZooming != NULL)
+		{
+		delete(imageZooming);
+		}
 	}
 
 void ImagePainter::Run()
@@ -98,13 +101,13 @@ const int ImagePainter::BASE_WINDOW_HEIGHT = 900;
 void ImagePainter::LoadImage()
 	{
 	originalImage = cv::imread(inputImageFilePath, CV_LOAD_IMAGE_COLOR);
-	overlayImage = cv::Mat(originalImage.rows, originalImage.cols, CV_8UC3, cv::Scalar(255, 255, 255));
+	overlayImage = cv::Mat(originalImage.rows, originalImage.cols, CV_8UC4, cv::Scalar(255, 255, 255, 0));
 
-	windowWidth = BASE_WINDOW_WIDTH;
-	windowHeight = BASE_WINDOW_HEIGHT;
-	scale = 1;
-	offsetWidth = 0;
-	offsetHeight = 0;
+	if (imageZooming != NULL)
+		{
+		delete(imageZooming);
+		}
+	imageZooming = new ImageZooming(originalImage.cols, originalImage.rows, BASE_WINDOW_WIDTH, BASE_WINDOW_HEIGHT);
 	}
 
 void ImagePainter::MouseCallback(int event, int x, int y, int flags, void* userdata)
@@ -121,17 +124,23 @@ void ImagePainter::MouseCallback(int event, int x, int y)
 		return;
 		}
 
-	int effectiveColumn = x / scale + offsetWidth;
-	int effectiveRow = y / scale + offsetHeight;
+	int effectiveColumn, effectiveRow;
+	imageZooming->WindowToImagePixel(x, y, effectiveColumn, effectiveRow);
 
 	if (event == cv::EVENT_LBUTTONDOWN || (leftButtonDown && event ==  cv::EVENT_MOUSEMOVE) )
 		{
-		overlayImage.at<cv::Vec3b>(effectiveRow, effectiveColumn)[0] = 0;
+		cv::Vec3b originalPixel = originalImage.at<cv::Vec3b>(effectiveRow, effectiveColumn);
+		uint8_t grayColorValue = ( originalPixel[0] + originalPixel[1] + originalPixel[2] >= 510 ) ? 0 : 255;
+
+		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[0] = grayColorValue;
+		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[1] = grayColorValue;
+		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[2] = grayColorValue;
+		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[3] = 255;
 		leftButtonDown = true;
 		}
 	else if (event == cv::EVENT_RBUTTONDOWN || (rightButtonDown && event == cv::EVENT_MOUSEMOVE) )
 		{
-		overlayImage.at<cv::Vec3b>(effectiveRow, effectiveColumn)[0] = 255;
+		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[0] = 0;
 		rightButtonDown = true;
 		}
 	else if (event == cv::EVENT_LBUTTONUP)
@@ -146,37 +155,7 @@ void ImagePainter::MouseCallback(int event, int x, int y)
 
 void ImagePainter::DrawImage()
 	{
-	imageToDraw = cv::Mat( scale*windowHeight, scale*windowWidth, CV_8UC3);
-
-	for(unsigned row = offsetHeight; row < offsetHeight + windowHeight; row++)
-		{
-		for(unsigned column = offsetWidth; column < offsetWidth + windowWidth; column++)
-			{
-			cv::Vec3b originalPixel = originalImage.at<cv::Vec3b>(row, column);
-			cv::Vec3b overlayPixel = overlayImage.at<cv::Vec3b>(row, column);
-			cv::Vec3b drawPixel;
-			if (overlayPixel[0] == 255 && overlayPixel[1] == 255 && overlayPixel[2] == 255)
-				{
-				drawPixel = originalPixel;
-				}
-			else
-				{
-				unsigned sumOfPixelValues = originalPixel[0] + originalPixel[1] + originalPixel[2];
-				drawPixel[0] = (sumOfPixelValues > 510 ? 0 : 255);
-				drawPixel[1] = drawPixel[0];
-				drawPixel[2] = drawPixel[0];
-				}
-			
-			for(unsigned scaleIndexX = 0; scaleIndexX < scale; scaleIndexX++)
-				{
-				for(unsigned scaleIndexY = 0; scaleIndexY < scale; scaleIndexY++)
-					{
-					imageToDraw.at<cv::Vec3b>( (row-offsetHeight)*scale + scaleIndexX, (column - offsetWidth)*scale + scaleIndexY ) = drawPixel; 
-					}
-				}
-			}
-		}
-
+	cv::Mat imageToDraw = imageZooming->ExtractZoomedWindow(originalImage, overlayImage);
 	cv::imshow("Image Painter", imageToDraw);
 	}
 
@@ -184,37 +163,27 @@ void ImagePainter::ExecuteCommand(char command)
 	{
 	if (command == 'w')
 		{
-		int candidateOffset = offsetHeight - windowHeight;
-		offsetHeight = (candidateOffset >= 0 ? candidateOffset : 0);
+		imageZooming->MoveFocusUp();
 		}
 	else if (command == 's')
 		{
-		int candidateOffset = offsetHeight + windowHeight;
-		offsetHeight = (candidateOffset + windowHeight <= originalImage.rows ? candidateOffset : (originalImage.rows - windowHeight) );
+		imageZooming->MoveFocusDown();
 		}
 	else if (command == 'a')
 		{
-		int candidateOffset = offsetWidth - windowWidth;
-		offsetWidth = (candidateOffset >= 0 ? candidateOffset : 0);
+		imageZooming->MoveFocusLeft();
 		}
 	else if (command == 'd')
 		{
-		int candidateOffset = offsetWidth + windowWidth;
-		offsetWidth = (candidateOffset + windowWidth <= originalImage.cols ? candidateOffset : (originalImage.cols - windowWidth) );
+		imageZooming->MoveFocusRight();
 		}
-	else if (command == 'o' && scale < 4)
+	else if (command == 'o')
 		{
-		scale++;
-		windowHeight = BASE_WINDOW_HEIGHT / scale;
-		windowWidth = BASE_WINDOW_WIDTH / scale;
+		imageZooming->ZoomIn();
 		}
-	else if (command == 'p' && scale > 1)
+	else if (command == 'p')
 		{
-		scale--;
-		windowHeight = BASE_WINDOW_HEIGHT / scale;
-		windowWidth = BASE_WINDOW_WIDTH / scale;
-		offsetHeight = (offsetHeight + windowHeight <= originalImage.cols ? offsetHeight : (originalImage.rows - windowHeight) );
-		offsetWidth = (offsetWidth + windowWidth <= originalImage.rows ? offsetWidth : (originalImage.cols - windowWidth) );
+		imageZooming->ZoomOut();
 		}
 	else if (command == 'm')
 		{
@@ -226,9 +195,9 @@ void ImagePainter::SaveImage()
 	{
 	cv::Mat imageToSave = originalImage.clone();
 
-	for(unsigned row = 0; row < imageToSave.rows; row++)
+	for(int row = 0; row < imageToSave.rows; row++)
 		{
-		for (unsigned column = 0; column < imageToSave.cols; column++)
+		for (int column = 0; column < imageToSave.cols; column++)
 			{
 			cv::Vec3b originalPixel = imageToSave.at<cv::Vec3b>(row, column);
 			cv::Vec3b overlayPixel = overlayImage.at<cv::Vec3b>(row, column);

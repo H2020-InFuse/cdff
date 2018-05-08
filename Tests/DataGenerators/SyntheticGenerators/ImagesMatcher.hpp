@@ -6,22 +6,22 @@
 */
 
 /*!
- * @file ImagePainter.hpp
- * @date 04/05/2018
+ * @file ImagesMatcher.hpp
+ * @date 07/05/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DataGenerators
  * 
- *  This class is used to paint keypoints on an image.
+ *  This class is used to paint keypoints matches betwee two images.
  *  
  *
  * @{
  */
 
-#ifndef IMAGE_PAINTER_HPP
-#define IMAGE_PAINTER_HPP
+#ifndef IMAGES_MATCHER_HPP
+#define IMAGES_MATCHER_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -43,15 +43,15 @@ namespace DataGenerators {
  *
  * --------------------------------------------------------------------------
  */
-    class ImagePainter
+    class ImagesMatcher
     {
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
         public:
-        	ImagePainter(std::string inputImageFilePath, std::string outputImageFilePath);
-        	~ImagePainter();
+        	ImagesMatcher(std::string inputSourceImageFilePath, std::string inputSinkImageFilePath, std::string outputCorrespondencesFilePath);
+        	~ImagesMatcher();
 
 		void Run();
 	/* --------------------------------------------------------------------
@@ -65,26 +65,47 @@ namespace DataGenerators {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		enum SelectionType
+			{
+			NOT_SELECTED,
+			SELECTED_FROM_SOURCE,
+			SELECTED_FROM_SINK,
+			SELECTED_FROM_BOTH
+			};
+
+		struct Correspondence
+			{
+			int sourceX;
+			int sourceY;
+			int sinkX;
+			int sinkY;
+			SelectionType selection;
+			};
+
 		static const int BASE_WINDOW_WIDTH;
 		static const int BASE_WINDOW_HEIGHT;
+		static const std::vector<cv::Scalar> COLORS_LIST;
 
-		ImageZooming* imageZooming;
+		ImageZooming* sourceImageZooming;
+		ImageZooming* sinkImageZooming;
 
-		cv::Mat originalImage;
-		cv::Mat overlayImage;
+		cv::Mat originalSourceImage, originalSinkImage;
+		std::vector<Correspondence> correspondencesVector;
 
-		std::string inputImageFilePath;
-		std::string outputImageFilePath;
+		std::string inputSourceImageFilePath, inputSinkImageFilePath;
+		std::string outputCorrespondencesFilePath;
 
-		void LoadImage();
+		void LoadImages();
 		static void MouseCallback(int event, int x, int y, int flags, void* userdata);
 		void MouseCallback(int event, int x, int y);
-		void DrawImage();
+		void DrawImages();
+		void DrawCorrespondences(cv::Mat imageToDraw);
+		void DrawLastSelectedPoint(cv::Mat imageToDraw, int nextColorIndex);
 		void ExecuteCommand(char command);
-		void SaveImage();
+		void SaveCorrespondences();
     };
 
 }
 #endif
-/* ImagePainter.hpp */
+/* ImagesMatcher.hpp */
 /** @} */

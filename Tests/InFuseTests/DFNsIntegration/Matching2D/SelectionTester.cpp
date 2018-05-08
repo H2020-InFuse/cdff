@@ -63,6 +63,9 @@ SelectionTester::SelectionTester()
 	outputCorrespondenceMap = NULL;
 	referenceCorrespondenceMap = NULL;
 
+	matcher = NULL;
+	descriptor = NULL;
+
 	dfnsWereLoaded = false;
 	inputImagesWereLoaded = false;
 	inputKeypointsWereLoaded = false;
@@ -163,7 +166,7 @@ bool SelectionTester::AreCorrespondencesValid(float percentageThreshold)
 	bool correspondencesAreValid = ValidateCorrespondences(percentageThreshold);
 	if (!correspondencesAreValid)
 		{
-		PRINT_TO_LOG("Correspondences are not valid according reference admissible correspondences", "");
+		PRINT_TO_LOG("Correspondences are not valid according to percentage threshold", percentageThreshold);
 		}
 
 	return correspondencesAreValid;
@@ -205,7 +208,7 @@ void SelectionTester::LoadInputImage(const std::string& imageFilePath, FrameWrap
 
 void SelectionTester::LoadReferenceCorrespondenceMap()
 	{
-	cv::FileStorage opencvFile(featuresMatcherConfigurationFilePath, cv::FileStorage::READ);
+	cv::FileStorage opencvFile(correspondencesImageFilePath, cv::FileStorage::READ);
 
 	cv::Mat cvCorrespondenceMap;
 	opencvFile["CorrespondenceMap"] >> cvCorrespondenceMap;
@@ -265,6 +268,7 @@ bool SelectionTester::ValidateCorrespondences(float percentageThreshold)
 			}
 		}
 	float correctMatchesPercentage = ((float)correctMatchesNumber) / ((float)referenceCorrespondencesNumber);
+	PRINT_TO_LOG("Percentage of correct matches", correctMatchesPercentage);
 
 	return (correctMatchesPercentage >= percentageThreshold);
 	}

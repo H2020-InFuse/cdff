@@ -6,22 +6,22 @@
 */
 
 /*!
- * @file ImagePainter.hpp
- * @date 04/05/2018
+ * @file ImageZooming.hpp
+ * @date 07/05/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DataGenerators
  * 
- *  This class is used to paint keypoints on an image.
+ *  This class is used to zoom in a part of an image.
  *  
  *
  * @{
  */
 
-#ifndef IMAGE_PAINTER_HPP
-#define IMAGE_PAINTER_HPP
+#ifndef IMAGE_ZOOMING_HPP
+#define IMAGE_ZOOMING_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -29,7 +29,6 @@
  *
  * --------------------------------------------------------------------------
  */
-#include "ImageZooming.hpp"
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -43,17 +42,28 @@ namespace DataGenerators {
  *
  * --------------------------------------------------------------------------
  */
-    class ImagePainter
+    class ImageZooming
     {
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
         public:
-        	ImagePainter(std::string inputImageFilePath, std::string outputImageFilePath);
-        	~ImagePainter();
+        	ImageZooming(int imageWidth, int imageHeight, int displayWidth, int displayHeight);
+        	~ImageZooming();
 
-		void Run();
+		cv::Mat ExtractZoomedWindow(cv::Mat inputImage);
+		cv::Mat ExtractZoomedWindow(cv::Mat inputImage, cv::Mat overlayImage);
+		cv::Mat ExtractZoomedWindow(cv::Mat inputImage, cv::Mat overlayImage, float alpha);
+		void ZoomIn();
+		void ZoomOut();
+		void MoveFocusLeft();
+		void MoveFocusRight();
+		void MoveFocusUp();
+		void MoveFocusDown();
+		void WindowToImagePixel(int windowX, int windowY, int& imageX, int& imageY); 
+		bool ImageToWindowPixel(int imageX, int imageY, int& windowX, int& windowY); 
+		bool PixelIsWithinZoomedWindow(int imageX, int imageY);
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
@@ -65,26 +75,20 @@ namespace DataGenerators {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
-		static const int BASE_WINDOW_WIDTH;
-		static const int BASE_WINDOW_HEIGHT;
+		static const int MAXIMUM_SCALE;		
 
-		ImageZooming* imageZooming;
+		int imageWidth, imageHeight;
+		int displayWidth, displayHeight;
+		int zoomWindowWidth, zoomWindowHeight;
 
-		cv::Mat originalImage;
-		cv::Mat overlayImage;
+		int scale;
+		int offsetWidth;
+		int offsetHeight;
 
-		std::string inputImageFilePath;
-		std::string outputImageFilePath;
-
-		void LoadImage();
-		static void MouseCallback(int event, int x, int y, int flags, void* userdata);
-		void MouseCallback(int event, int x, int y);
-		void DrawImage();
-		void ExecuteCommand(char command);
-		void SaveImage();
+		void DrawZoomPixel(cv::Mat zoomWindow, int scaledRowIndex, int scaledColumnIndex, const cv::Vec3b& originalPixel);
     };
 
 }
 #endif
-/* ImagePainter.hpp */
+/* ImageZooming.hpp */
 /** @} */
