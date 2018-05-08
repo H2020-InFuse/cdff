@@ -30,3 +30,13 @@ target_link_libraries(
 	correctness_harris_shot_icp
 	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_3d feature_extraction_3d shot_descriptor_3d feature_description_3d icp_3d feature_matching_3d mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
+
+add_executable(
+    validity_orb_flann
+    DFNsIntegration/Matching2D/OrbFlann.cpp
+    DFNsIntegration/Matching2D/SelectionTester.cpp
+)
+target_link_libraries(
+	validity_orb_flann
+	cdff_helpers cdff_logger cdff_types converters_opencv orb_descriptor flann_matcher mock opencv_core opencv_imgproc opencv_highgui boost_system
+)
