@@ -53,7 +53,7 @@ namespace DataGenerators {
         public:
 		/* @brief, the constructor takes as input the path to the input image, and the path to the output image file. Loseless png and ppm formats are preferred in output. 
 		*/
-        	ImagePainter(std::string inputImageFilePath, std::string outputImageFilePath);
+        	ImagePainter(std::string inputImageFilePath, std::string outputKeypointsFilePath);
         	~ImagePainter();
 
 		/* @brief, this method is called to start the window engine. 
@@ -70,23 +70,32 @@ namespace DataGenerators {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		struct Point
+			{
+			int x;
+			int y;
+			};
+
 		static const int BASE_WINDOW_WIDTH;
 		static const int BASE_WINDOW_HEIGHT;
+		static const std::vector<cv::Scalar> COLORS_LIST;
 
 		ImageZooming* imageZooming;
 
 		cv::Mat originalImage;
-		cv::Mat overlayImage;
+		std::vector<Point> keypointsList;
 
 		std::string inputImageFilePath;
-		std::string outputImageFilePath;
+		std::string outputKeypointsFilePath;
 
 		void LoadImage();
 		static void MouseCallback(int event, int x, int y, int flags, void* userdata);
 		void MouseCallback(int event, int x, int y);
 		void DrawImage();
+		void DrawKeypoints(cv::Mat imageToDraw);
 		void ExecuteCommand(char command);
-		void SaveImage();
+		void SaveKeypointsImage();
+		void LoadKeypointsImage();
     };
 
 }

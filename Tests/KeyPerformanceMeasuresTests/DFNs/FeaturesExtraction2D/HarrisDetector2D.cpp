@@ -47,8 +47,8 @@ const std::string USAGE =
 	"You should provide at least three parameters: \n \
 	(i) the configuration file path; \n \
 	(ii) the input image file path; \n \
-	(iii) the number reference image file path containing the number of best keypoints that we would expect to detect. \n \
-	(iv) the precision reference image file path containing all the admissible keypoints \n \n \
+	(iii) the number reference file path containing the number of best keypoints that we would expect to detect. It has to be in opencv xml format. \n \
+	(iv) the precision reference file path containing all the admissible keypoints. It has to be in opencv xml format. \n \n \
 	Optionally you can add up to three other parameters: \n \
 	(i) the percentage within which the number of detected keypoints should be when compared to the number of keypoints detected in a reference case. It must be a number between 0 and 1; \
 	The default is 0.10. \n \

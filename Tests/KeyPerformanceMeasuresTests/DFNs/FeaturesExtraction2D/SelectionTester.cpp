@@ -163,22 +163,16 @@ void SelectionTester::LoadInputImage()
 
 void SelectionTester::LoadReferenceFeatures(std::string& filePath, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& featuresVector)
 	{
-	cv::Mat cvImage = cv::imread(inputImageFilePath, CV_LOAD_IMAGE_COLOR);
-	ASSERT(cvImage.cols > 0 && cvImage.rows >0, "Error: Loaded reference image is empty");
-	ASSERT(cvImage.type() == CV_8UC3, "Error: Reference Image format should be CV_8UC3");
-
+	cv::Mat keypointsMatrix;
+	cv::FileStorage opencvFile(filePath, cv::FileStorage::READ);
+	opencvFile["KeypointsMatrix"] >> keypointsMatrix;
+	opencvFile.release();
+	ASSERT(keypointsMatrix.rows > 0 && keypointsMatrix.cols == 2 && keypointsMatrix.type() == CV_16UC1, "Error: reference keypoints are invalid");
 
 	VisualPointFeatureVector2DPtr newFeaturesVector = NewVisualPointFeatureVector2D();
-	for(unsigned rowIndex = 0; rowIndex < cvImage.rows; rowIndex++)
+	for(int pointIndex = 0; pointIndex < keypointsMatrix.rows; pointIndex++)
 		{
-		for(unsigned columnIndex = 0; columnIndex < cvImage.cols; columnIndex++)
-			{
-			cv::Vec3b pixel = cvImage.at<cv::Vec3b>(rowIndex, columnIndex);
-			if (pixel[0] == 0 && pixel[1] == 0 && pixel[2] == 0)
-				{
-				AddPoint(*newFeaturesVector, columnIndex, rowIndex);
-				}
-			}
+		AddPoint(*newFeaturesVector, keypointsMatrix.at<uint16_t>(pointIndex, 0), keypointsMatrix.at<uint16_t>(pointIndex, 1));
 		}
 
 	DELETE_IF_NOT_NULL(featuresVector);

@@ -41,13 +41,14 @@ namespace DataGenerators
  *
  * --------------------------------------------------------------------------
  */
-ImagePainter::ImagePainter(std::string inputImageFilePath, std::string outputImageFilePath)
+ImagePainter::ImagePainter(std::string inputImageFilePath, std::string outputKeypointsFilePath)
 	{
 	this->inputImageFilePath = inputImageFilePath;
-	this->outputImageFilePath = outputImageFilePath;
+	this->outputKeypointsFilePath = outputKeypointsFilePath;
 
 	imageZooming = NULL;
 	LoadImage();
+	LoadKeypointsImage();
 
 	cv::namedWindow("Image Painter", 1);
 	cv::setMouseCallback("Image Painter", ImagePainter::MouseCallback, this);
@@ -90,7 +91,27 @@ void ImagePainter::Run()
  */
 const int ImagePainter::BASE_WINDOW_WIDTH = 1200;
 const int ImagePainter::BASE_WINDOW_HEIGHT = 900;
-
+const std::vector<cv::Scalar> ImagePainter::COLORS_LIST =
+	{
+	cv::Scalar(0, 0, 255),
+	cv::Scalar(0, 255, 0),
+	cv::Scalar(255, 0, 0),
+	cv::Scalar(0, 255, 255),
+	cv::Scalar(255, 255, 0),
+	cv::Scalar(255, 0, 255),
+	cv::Scalar(128, 128, 255),
+	cv::Scalar(128, 255, 128),
+	cv::Scalar(255, 128, 128),
+	cv::Scalar(128, 255, 255),
+	cv::Scalar(255, 255, 128),
+	cv::Scalar(255, 128, 255),
+	cv::Scalar(0, 0, 128),
+	cv::Scalar(0, 128, 0),
+	cv::Scalar(128, 0, 0),
+	cv::Scalar(0, 128, 128),
+	cv::Scalar(128, 128, 0),
+	cv::Scalar(128, 0, 128)
+	};
 
 /* --------------------------------------------------------------------------
  *
@@ -101,7 +122,6 @@ const int ImagePainter::BASE_WINDOW_HEIGHT = 900;
 void ImagePainter::LoadImage()
 	{
 	originalImage = cv::imread(inputImageFilePath, CV_LOAD_IMAGE_COLOR);
-	overlayImage = cv::Mat(originalImage.rows, originalImage.cols, CV_8UC4, cv::Scalar(255, 255, 255, 0));
 
 	if (imageZooming != NULL)
 		{
@@ -117,49 +137,56 @@ void ImagePainter::MouseCallback(int event, int x, int y, int flags, void* userd
 
 void ImagePainter::MouseCallback(int event, int x, int y)
 	{
-	static bool leftButtonDown = false;
-	static bool rightButtonDown = false;
-	if (event != cv::EVENT_LBUTTONDOWN && event != cv::EVENT_RBUTTONDOWN && !leftButtonDown && !rightButtonDown)
+	if (event != cv::EVENT_LBUTTONDOWN && event != cv::EVENT_RBUTTONDOWN)
 		{
 		return;
 		}
 
+	//If right mouse button is pressed remove last added keypoint
+	if (event == cv::EVENT_RBUTTONDOWN)
+		{
+		if (keypointsList.size() > 0)
+			{
+			keypointsList.pop_back();
+			}
+		return;
+		}
+
 	//Compute the effective position of the selected point coordinates in the image matrix.
-	int effectiveColumn, effectiveRow;
-	imageZooming->WindowToImagePixel(x, y, effectiveColumn, effectiveRow);
+	int effectiveX, effectiveY;
+	bool validPoint = imageZooming->WindowToImagePixel(x, y, effectiveX, effectiveY);
+	if (!validPoint)
+		{
+		return;
+		}
 
-	//When the left mouse button is pressed, a new keypoint is selected and added to the overlay with an appropriate color that allows it to be more visible.
-	if (event == cv::EVENT_LBUTTONDOWN || (leftButtonDown && event ==  cv::EVENT_MOUSEMOVE) )
-		{
-		cv::Vec3b originalPixel = originalImage.at<cv::Vec3b>(effectiveRow, effectiveColumn);
-		uint8_t grayColorValue = ( originalPixel[0] + originalPixel[1] + originalPixel[2] >= 510 ) ? 0 : 255;
-
-		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[0] = grayColorValue;
-		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[1] = grayColorValue;
-		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[2] = grayColorValue;
-		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[3] = 255;
-		leftButtonDown = true;
-		}
-	//When the right mouse button is pressed, a keypoint selection is cancelled and it is removed from the overlay
-	else if (event == cv::EVENT_RBUTTONDOWN || (rightButtonDown && event == cv::EVENT_MOUSEMOVE) )
-		{
-		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[0] = 0;
-		rightButtonDown = true;
-		}
-	else if (event == cv::EVENT_LBUTTONUP)
-		{
-		leftButtonDown = false;
-		}
-	else if (event == cv::EVENT_RBUTTONUP)
-		{
-		rightButtonDown = false;
-		}
+	//Add a new point
+	Point newPoint;
+	newPoint.x = effectiveX;
+	newPoint.y = effectiveY;
+	keypointsList.push_back(newPoint);
 	}
 
 void ImagePainter::DrawImage()
 	{
-	cv::Mat imageToDraw = imageZooming->ExtractZoomedWindow(originalImage, overlayImage);
+	cv::Mat imageToDraw = imageZooming->ExtractZoomedWindow(originalImage);
+	DrawKeypoints(imageToDraw);
 	cv::imshow("Image Painter", imageToDraw);
+	}
+
+void ImagePainter::DrawKeypoints(cv::Mat imageToDraw)
+	{
+	for(int pointIndex = 0; pointIndex < keypointsList.size(); pointIndex++)
+		{
+		Point& point = keypointsList.at(pointIndex);
+		int windowX, windowY;
+		bool pointIsVisible = imageZooming->ImageToWindowPixel(point.x, point.y, windowX, windowY);
+		if (pointIsVisible)
+			{
+			const cv::Scalar& nextColor = COLORS_LIST.at(pointIndex % COLORS_LIST.size());
+			cv::circle(imageToDraw, cv::Point2d(windowX, windowY), 3, nextColor, -1);
+			}			
+		}
 	}
 
 void ImagePainter::ExecuteCommand(char command)
@@ -190,34 +217,52 @@ void ImagePainter::ExecuteCommand(char command)
 		}
 	else if (command == 'm')
 		{
-		SaveImage();
+		SaveKeypointsImage();
 		}
 	}
 
-void ImagePainter::SaveImage()
+void ImagePainter::SaveKeypointsImage()
 	{
-	cv::Mat imageToSave = originalImage.clone();
-
-	for(int row = 0; row < imageToSave.rows; row++)
+	cv::Mat keypointsMatrix(keypointsList.size(), 2, CV_16UC1);
+	for(int pointIndex = 0; pointIndex < keypointsList.size(); pointIndex++)
 		{
-		for (int column = 0; column < imageToSave.cols; column++)
-			{
-			cv::Vec3b originalPixel = imageToSave.at<cv::Vec3b>(row, column);
-			cv::Vec3b overlayPixel = overlayImage.at<cv::Vec3b>(row, column);
-			if (overlayPixel[0] != 255 || overlayPixel[1] != 255 || overlayPixel[2] != 255)
-				{
-				cv::Vec3b substitutePixel(255, 255, 255);
-				imageToSave.at<cv::Vec3b>(row, column) = substitutePixel;
-				}
-			else if (originalPixel[0] == 255 && originalPixel[1] == 255 && originalPixel[2] == 255)
-				{
-				cv::Vec3b substitutePixel(254, 254, 254);
-				imageToSave.at<cv::Vec3b>(row, column) = substitutePixel;
-				}
-			}
+		keypointsMatrix.at<uint16_t>(pointIndex, 0) = keypointsList.at(pointIndex).x;
+		keypointsMatrix.at<uint16_t>(pointIndex, 1) = keypointsList.at(pointIndex).y;
 		}
 
-	cv::imwrite(outputImageFilePath, imageToSave);
+	cv::FileStorage opencvFile(outputKeypointsFilePath, cv::FileStorage::WRITE);
+	opencvFile << "KeypointsMatrix" << keypointsMatrix;
+	opencvFile.release();
+	}
+
+void ImagePainter::LoadKeypointsImage()
+	{
+	cv::Mat keypointsMatrix;
+	try 
+		{
+		cv::FileStorage opencvFile(outputKeypointsFilePath, cv::FileStorage::READ);
+		opencvFile["KeypointsMatrix"] >> keypointsMatrix;
+		opencvFile.release();
+		}
+	catch (...)
+		{
+		//If reading fails, just overwrite the file.
+		return;
+		}
+
+	if (keypointsMatrix.rows == 0)
+		{
+		return;
+		}
+	ASSERT(keypointsMatrix.cols == 2 && keypointsMatrix.type() == CV_16UC1, "Error, output xml file contains some data but the format is incorrect");
+
+	for(int pointIndex = 0; pointIndex < keypointsMatrix.rows; pointIndex++)
+		{
+		Point newPoint;
+		newPoint.x = keypointsMatrix.at<uint16_t>(pointIndex, 0);
+		newPoint.y = keypointsMatrix.at<uint16_t>(pointIndex, 1);
+		keypointsList.push_back(newPoint);
+		}	
 	}
 
 
