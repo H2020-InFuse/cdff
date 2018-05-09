@@ -124,9 +124,11 @@ void ImagePainter::MouseCallback(int event, int x, int y)
 		return;
 		}
 
+	//Compute the effective position of the selected point coordinates in the image matrix.
 	int effectiveColumn, effectiveRow;
 	imageZooming->WindowToImagePixel(x, y, effectiveColumn, effectiveRow);
 
+	//When the left mouse button is pressed, a new keypoint is selected and added to the overlay with an appropriate color that allows it to be more visible.
 	if (event == cv::EVENT_LBUTTONDOWN || (leftButtonDown && event ==  cv::EVENT_MOUSEMOVE) )
 		{
 		cv::Vec3b originalPixel = originalImage.at<cv::Vec3b>(effectiveRow, effectiveColumn);
@@ -138,6 +140,7 @@ void ImagePainter::MouseCallback(int event, int x, int y)
 		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[3] = 255;
 		leftButtonDown = true;
 		}
+	//When the right mouse button is pressed, a keypoint selection is cancelled and it is removed from the overlay
 	else if (event == cv::EVENT_RBUTTONDOWN || (rightButtonDown && event == cv::EVENT_MOUSEMOVE) )
 		{
 		overlayImage.at<cv::Vec4b>(effectiveRow, effectiveColumn)[0] = 0;

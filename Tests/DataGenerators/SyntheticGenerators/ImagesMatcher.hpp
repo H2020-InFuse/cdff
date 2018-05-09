@@ -50,9 +50,13 @@ namespace DataGenerators {
 	 * --------------------------------------------------------------------
 	 */
         public:
+		/* @brief, the constructor takes as input the paths to the input source and sink images, and the path to the output file which should have xml extension. 
+		*/
         	ImagesMatcher(std::string inputSourceImageFilePath, std::string inputSinkImageFilePath, std::string outputCorrespondencesFilePath);
         	~ImagesMatcher();
 
+		/* @brief, this method is called to start the window engine. 
+		*/
 		void Run();
 	/* --------------------------------------------------------------------
 	 * Protected
