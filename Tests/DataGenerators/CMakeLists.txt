@@ -70,8 +70,20 @@ add_executable(
     paint_image
     SyntheticGenerators/PaintImage.cpp
     SyntheticGenerators/ImagePainter.cpp
+    SyntheticGenerators/ImageZooming.cpp
 )
 target_link_libraries(
 	paint_image
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+)
+
+add_executable(
+    match_images
+    SyntheticGenerators/MatchImages.cpp
+    SyntheticGenerators/ImagesMatcher.cpp
+    SyntheticGenerators/ImageZooming.cpp
+)
+target_link_libraries(
+	match_images
 	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
 )
