@@ -33,6 +33,11 @@
 
 using namespace DataGenerators;
 
+const std::string USAGE =
+" \n \
+This program requires two inputs: the input image file path, and the output keypoint file path in xml format. \n \n \
+Example usage: ./match_images ../tests/Data/Images/DevonIslandRoadLeft.ppm ../tests/Data/Images/DevonIslandRoadLeftKeypoints.xml \n \n";
+
 const std::string INSTRUCTIONS = 
 	"press keys A-W-S-D to navigate into the image \n \
 	press keys O-P to zoom in or out \n \
@@ -43,7 +48,7 @@ const std::string INSTRUCTIONS =
 
 int main(int argc, char** argv)
 	{
-	ASSERT(argc >= 3, "This method requires two inputs: the input image file path, and the output image file path");
+	ASSERT(argc >= 3, USAGE);
 	
 	PRINT_TO_LOG("", INSTRUCTIONS);
 

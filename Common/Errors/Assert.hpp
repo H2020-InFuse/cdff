@@ -131,7 +131,17 @@ class AssertException: public std::exception
 	{ \
 	if( !(condition) ) \
 		{ \
-		LoggerFactory::GetLogger()->AddEntry(message); \
+		LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::WARNING); \
+		LoggerFactory::GetLogger()->Print(); \
+		LoggerFactory::GetLogger()->Clear(); \
+		} \
+	}
+
+#define VERIFY_REQUIREMENT(condition, message) \
+	{ \
+	if( !(condition) ) \
+		{ \
+		LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::ERROR); \
 		LoggerFactory::GetLogger()->Print(); \
 		LoggerFactory::GetLogger()->Clear(); \
 		} \

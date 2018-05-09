@@ -44,17 +44,20 @@ using namespace dfn_ci;
  */
 
 const std::string USAGE =
-	"You should provide at least three parameters: \n \
-	(i) the configuration file path; \n \
-	(ii) the input image file path; \n \
-	(iii) the number reference file path containing the number of best keypoints that we would expect to detect. It has to be in opencv xml format. \n \
-	(iv) the precision reference file path containing all the admissible keypoints. It has to be in opencv xml format. \n \n \
-	Optionally you can add up to three other parameters: \n \
-	(i) the percentage within which the number of detected keypoints should be when compared to the number of keypoints detected in a reference case. It must be a number between 0 and 1; \
-	The default is 0.10. \n \
-	(ii) the distance threshold between a feature and a reference feature beyond which the detected feature is considered incorrect. This is measured in pixels and has to be a non negative integer; \
-	The default is 5. \n \
-	(iii) the percentage of detected features whose distance from a reference feature should be withing the distance threshold. It must be a number between 0 and 1. The default is 0.90. \n \n"; 
+" \n \
+You should provide at least four parameters: \n \
+(i) the configuration file path; \n \
+(ii) the input image file path; \n \
+(iii) the number reference file path containing the number of best keypoints that we would expect to detect. It has to be in opencv xml format. \n \
+(iv) the precision reference file path containing all the admissible keypoints. It has to be in opencv xml format. It should be the output of the dataGenerator/paint_image tool.\n \n \
+Optionally you can add up to three other parameters: \n \
+(i) the percentage within which the number of detected keypoints should be when compared to the number of keypoints detected in a reference case. It must be a number between 0 and 1; \
+The default is 0.10. \n \
+(ii) the distance threshold between a feature and a reference feature beyond which the detected feature is considered incorrect. This is measured in pixels and has to be a non negative integer; \
+The default is 5. \n \
+(iii) the percentage of detected features whose distance from a reference feature should be withing the distance threshold. It must be a number between 0 and 1. The default is 0.90. \n \n \
+Example Usage: ./validity_harris_detector_2d ../tests/ConfigurationFiles/DFNs/FeaturesExtraction2D/HarrisDetector2D_DevonIsland.yaml \
+../tests/Data/Images/devonIsland.png ../tests/Data/Images/devonIslandKeypoints.xml ../tests/Data/Images/devonIslandKeypoints.xml \n \n"; 
 
 float ExtractNumberPercentageThreshold(char* argument)
 	{
@@ -146,7 +149,7 @@ int main(int argc, char** argv)
 	tester.ExecuteDfn();
 	bool success = tester.IsSelectionValid(numberPercentageThreshold, pixelOutlierThreshold, outliersPercentageThreshold);
 
-	ASSERT(success, "Regularity requirement 4.1.1.2 failed on the input point cloud");
+	VERIFY_REQUIREMENT(success, "Regularity requirement 4.1.1.2 failed on the input point cloud");
 	return 0;
 	}
 

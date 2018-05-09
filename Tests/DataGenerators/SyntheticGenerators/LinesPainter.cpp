@@ -278,7 +278,7 @@ void LinesPainter::LoadLines()
 	ASSERT(minLineIndex == 0, "Error, output xml file contains some data but the format is incorrect");	
 
 	//Add one more line tha needed
-	for(int lineIndex = 0; lineIndex < maxLineIndex + 1; lineIndex++)
+	for(int lineIndex = 0; lineIndex <= maxLineIndex + 1; lineIndex++)
 		{
 		Line newLine;
 		linesList.push_back(newLine);

@@ -10,6 +10,16 @@ target_link_libraries(
 )
 
 add_executable(
+    linearity_image_undistortion
+    DFNs/ImageFiltering/ImageUndistortion.cpp
+    DFNs/ImageFiltering/LinearityTester.cpp
+)
+target_link_libraries(
+	linearity_image_undistortion
+	cdff_helpers cdff_logger cdff_types converters_opencv image_undistortion image_filtering mock opencv_core opencv_imgproc opencv_highgui boost_system
+)
+
+add_executable(
     regularity_harris_detector_3d
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     DFNs/FeaturesExtraction3D/RegularityTester.cpp

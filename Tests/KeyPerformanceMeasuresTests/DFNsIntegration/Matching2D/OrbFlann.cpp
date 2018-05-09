@@ -44,14 +44,16 @@ using namespace dfn_ci;
  */
 
 const std::string USAGE =
-	"You should provide at least five parameters: \n \
-	(i) the features descriptor dfn configuration file path; \n \
-	(ii) the features matching dfn configuration file path; \n \
-	(iii) the source input image file path; \n \
-	(iv) the sink input image file path; \n \
-	(v) the correspondence map xml file path. \n \n \
-	Optionally you can add one more parameter: \n \
-	(i) the minimum percentage of detected correct correspondences. It must be a number between 0 and 1. The default is 0.90. \n \n"; 
+" \n \
+You should provide at least five parameters: \n \
+(i) the features descriptor dfn configuration file path; \n \
+(ii) the features matching dfn configuration file path; \n \
+(iii) the source input image file path; \n \
+(iv) the sink input image file path; \n \
+(v) the correspondence map file path in xml format. This is the result of using the tool DataGenerator/match_images. \n \n \
+Optionally you can add one more parameter: \n \
+(i) the minimum percentage of detected correct correspondences. It must be a number between 0 and 1. The default is 0.90. \n \n \
+Example Usage: ./validity_orb_flann ../tests/ConfigurationFiles/DFNs/FeaturesDescriptor2D/OrbDescriptor_DevonIsland.yaml ../tests/ConfigurationFiles/DFNs/FeaturesMatching2D/FlannMatcher_DevonIsland.yaml ../tests/Data/Images/DevonIslandRoadLeft.yaml ../tests/Data/Images/DevonIslandRoadRight.yaml ../tests/Data/Images/DevonIslandRoadMatches.xml \n \n"; 
 
 float ExtractPercentageThreshold(char* argument)
 	{
@@ -105,7 +107,7 @@ int main(int argc, char** argv)
 	tester.ExecuteDfns();
 	bool success = tester.AreCorrespondencesValid(percentageThreshold);
 
-	ASSERT(success, "Regularity requirement 4.1.1.3 failed on the input point cloud");
+	VERIFY_REQUIREMENT(success, "Regularity requirement 4.1.1.3 failed on the input point cloud");
 	return 0;
 	}
 
