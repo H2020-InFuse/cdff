@@ -57,6 +57,7 @@ ImagesMatcher::ImagesMatcher(std::string inputSourceImageFilePath, std::string i
 	sourceImageZooming = NULL;
 	sinkImageZooming = NULL;
 	LoadImages();
+	LoadCorrespondences();
 
 	cv::namedWindow("Images Matcher", 1);
 	cv::setMouseCallback("Images Matcher", ImagesMatcher::MouseCallback, this);
@@ -165,17 +166,19 @@ void ImagesMatcher::MouseCallback(int event, int x, int y)
 
 	//Computes the effective coordinates on the image (due to zoom level the window coordinates and the image coordinates are different).
 	int effectiveX, effectiveY;
+	bool validPoint;
 	if (currentSelection == SELECTED_FROM_SOURCE)
 		{
-		sourceImageZooming->WindowToImagePixel(x, y, effectiveX, effectiveY);
-		ASSERT(effectiveX < originalSourceImage.cols && effectiveY < originalSourceImage.rows, "Computation error in effective coordinates: coordinates exceed source limit");
+		validPoint = sourceImageZooming->WindowToImagePixel(x, y, effectiveX, effectiveY);
 		}
 	else
 		{
-		sinkImageZooming->WindowToImagePixel(x - BASE_WINDOW_WIDTH, y, effectiveX, effectiveY);
-		ASSERT(effectiveX < originalSinkImage.cols && effectiveY < originalSinkImage.rows, "Computation error in effective coordinates: coordinates exceed sink limit");
+		validPoint = sinkImageZooming->WindowToImagePixel(x - BASE_WINDOW_WIDTH, y, effectiveX, effectiveY);
 		}
-	ASSERT(effectiveX >= 0 && effectiveY >= 0, "Computation error in effective coordinates: coordinates are negative");
+	if (!validPoint)
+		{
+		return;
+		}
 
 	
 	//Add one selected point at the bottom of the correspondencesVector in case the vector is empty or the last correspondence is complete.
@@ -333,7 +336,13 @@ void ImagesMatcher::ExecuteCommand(char command)
 
 void ImagesMatcher::SaveCorrespondences()
 	{
-	cv::Mat correspondenceMatrix( correspondencesVector.size(), 4, CV_16UC1);
+	int validCorrespondences = correspondencesVector.size();
+	if ( validCorrespondences > 0 && (correspondencesVector.end()-1)->selection != SELECTED_FROM_BOTH)
+		{
+		validCorrespondences--;
+		}
+
+	cv::Mat correspondenceMatrix( validCorrespondences, 4, CV_16UC1);
 	for(int row = 0; row < correspondenceMatrix.rows; row++)
 		{
 		correspondenceMatrix.at<uint16_t>(row, 0) = correspondencesVector.at(row).sourceX;
@@ -345,6 +354,34 @@ void ImagesMatcher::SaveCorrespondences()
 	cv::FileStorage opencvFile(outputCorrespondencesFilePath, cv::FileStorage::WRITE);
 	opencvFile << "CorrespondenceMap" << correspondenceMatrix;
 	opencvFile.release();
+	}
+
+void ImagesMatcher::LoadCorrespondences()
+	{
+	cv::Mat correspondenceMatrix;
+
+	try 
+		{
+		cv::FileStorage opencvFile(outputCorrespondencesFilePath, cv::FileStorage::READ);
+		opencvFile["CorrespondenceMap"] >> correspondenceMatrix;
+		opencvFile.release();
+		}
+	catch (...)
+		{
+		//If reading fails, just overwrite the file.
+		return;
+		}
+
+	for(int row = 0; row < correspondenceMatrix.rows; row++)
+		{
+		Correspondence newCorrespondence;
+		newCorrespondence.sourceX = correspondenceMatrix.at<uint16_t>(row, 0);
+		newCorrespondence.sourceY = correspondenceMatrix.at<uint16_t>(row, 1);
+		newCorrespondence.sinkX = correspondenceMatrix.at<uint16_t>(row, 2);
+		newCorrespondence.sinkY = correspondenceMatrix.at<uint16_t>(row, 3);
+		newCorrespondence.selection = SELECTED_FROM_BOTH;
+		correspondencesVector.push_back(newCorrespondence);
+		}
 	}
 
 

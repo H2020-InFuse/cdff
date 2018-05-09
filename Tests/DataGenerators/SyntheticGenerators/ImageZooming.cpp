@@ -74,11 +74,18 @@ cv::Mat ImageZooming::ExtractZoomedWindow(cv::Mat inputImage)
 		{
 		for(int column = offsetWidth; column < offsetWidth + zoomWindowWidth; column++)
 			{
-			cv::Vec3b originalPixel = inputImage.at<cv::Vec3b>(row, column);
+			cv::Vec3b pixelToDraw;
 			int scaledRowIndex	= (row-offsetHeight)*scale;
 			int scaledColumnIndex = (column - offsetWidth)*scale;
-
-			DrawZoomPixel(zoomWindow, scaledRowIndex, scaledColumnIndex, originalPixel); 
+			if (row < imageHeight && column < imageWidth)
+				{
+				pixelToDraw = inputImage.at<cv::Vec3b>(row, column);
+				}
+			else
+				{
+				pixelToDraw = cv::Vec3b(0, 0, 0);
+				}
+			DrawZoomPixel(zoomWindow, scaledRowIndex, scaledColumnIndex, pixelToDraw);
 			}
 		}
 	
@@ -172,10 +179,12 @@ void ImageZooming::MoveFocusDown()
 	offsetHeight = MINIMUM(offsetHeight + zoomWindowHeight, MAXIMUM(imageHeight - zoomWindowHeight, 0) );
 	}
 
-void ImageZooming::WindowToImagePixel(int windowX, int windowY, int& imageX, int& imageY)
+bool ImageZooming::WindowToImagePixel(int windowX, int windowY, int& imageX, int& imageY)
 	{
 	imageX = windowX / scale + offsetWidth;
 	imageY = windowY / scale + offsetHeight;
+
+	return (imageX < imageWidth && imageY < imageHeight);
 	}
 
 bool ImageZooming::ImageToWindowPixel(int imageX, int imageY, int& windowX, int& windowY)

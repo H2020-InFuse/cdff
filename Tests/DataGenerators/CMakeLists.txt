@@ -87,3 +87,14 @@ target_link_libraries(
 	match_images
 	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
 )
+
+add_executable(
+    paint_lines
+    SyntheticGenerators/PaintLines.cpp
+    SyntheticGenerators/LinesPainter.cpp
+    SyntheticGenerators/ImageZooming.cpp
+)
+target_link_libraries(
+	paint_lines
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+)

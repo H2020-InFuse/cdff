@@ -6,22 +6,23 @@
 */
 
 /*!
- * @file ImagesMatcher.hpp
- * @date 07/05/2018
+ * @file LinesPainter.hpp
+ * @date 09/05/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DataGenerators
  * 
- *  This class is used to paint keypoints matches betwee two images.
+ *  This class is used to paint line keypoints on an image. It will create a window where a user can select keypoints that are supposed to lay on the same line. 
+ *  By pressing keys it is possible to change the focus on the input image and save the current selected keypoints to file.
  *  
  *
  * @{
  */
 
-#ifndef IMAGES_MATCHER_HPP
-#define IMAGES_MATCHER_HPP
+#ifndef LINES_PAINTER_HPP
+#define LINES_PAINTER_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -43,17 +44,17 @@ namespace DataGenerators {
  *
  * --------------------------------------------------------------------------
  */
-    class ImagesMatcher
+    class LinesPainter
     {
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
         public:
-		/* @brief, the constructor takes as input the paths to the input source and sink images, and the path to the output file which should have xml extension. 
+		/* @brief, the constructor takes as input the path to the input image, and the path to the output file in xml format. 
 		*/
-        	ImagesMatcher(std::string inputSourceImageFilePath, std::string inputSinkImageFilePath, std::string outputCorrespondencesFilePath);
-        	~ImagesMatcher();
+        	LinesPainter(std::string inputImageFilePath, std::string outputLinesFilePath);
+        	~LinesPainter();
 
 		/* @brief, this method is called to start the window engine. 
 		*/
@@ -69,48 +70,38 @@ namespace DataGenerators {
 	 * --------------------------------------------------------------------
 	 */	
 	private:
-		enum SelectionType
+		struct Point
 			{
-			NOT_SELECTED,
-			SELECTED_FROM_SOURCE,
-			SELECTED_FROM_SINK,
-			SELECTED_FROM_BOTH
+			int x;
+			int y;
 			};
 
-		struct Correspondence
-			{
-			int sourceX;
-			int sourceY;
-			int sinkX;
-			int sinkY;
-			SelectionType selection;
-			};
+		typedef std::vector<Point> Line;
 
 		static const int BASE_WINDOW_WIDTH;
 		static const int BASE_WINDOW_HEIGHT;
 		static const std::vector<cv::Scalar> COLORS_LIST;
 
-		ImageZooming* sourceImageZooming;
-		ImageZooming* sinkImageZooming;
+		ImageZooming* imageZooming;
 
-		cv::Mat originalSourceImage, originalSinkImage;
-		std::vector<Correspondence> correspondencesVector;
+		cv::Mat originalImage;
+		std::vector<Line> linesList;
 
-		std::string inputSourceImageFilePath, inputSinkImageFilePath;
-		std::string outputCorrespondencesFilePath;
+		std::string inputImageFilePath;
+		std::string outputLinesFilePath;
 
-		void LoadImages();
+		void LoadImage();
 		static void MouseCallback(int event, int x, int y, int flags, void* userdata);
 		void MouseCallback(int event, int x, int y);
-		void DrawImages();
-		void DrawCorrespondences(cv::Mat imageToDraw);
-		void DrawLastSelectedPoint(cv::Mat imageToDraw, int nextColorIndex);
+		void DrawImage();
 		void ExecuteCommand(char command);
-		void SaveCorrespondences();
-		void LoadCorrespondences();
+		void SaveLines();
+		void LoadLines();
+		int ComputeNumberOfPoints();
+		void DrawLinesOnImage(cv::Mat imageToDraw);
     };
 
 }
 #endif
-/* ImagesMatcher.hpp */
+/* LinesPainter.hpp */
 /** @} */

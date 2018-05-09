@@ -101,8 +101,9 @@ namespace DataGenerators {
 		*
 		* @param (windowX, windowY), input coordinates on the extracted image;
  		* @param (imageX, imageY), output coordinates on the input image;
+		* @output valid, the boolwan value determines whether the output coordinates point is really within the input image.If the output is false (imageX, imageY) is meaningless.
 		*/		
-		void WindowToImagePixel(int windowX, int windowY, int& imageX, int& imageY); 
+		bool WindowToImagePixel(int windowX, int windowY, int& imageX, int& imageY); 
 
 		/* @brief the method converts the coordinate of a pixel on the input image, to the coordinates of the corresponding pixel in the extracted image.
 		*
