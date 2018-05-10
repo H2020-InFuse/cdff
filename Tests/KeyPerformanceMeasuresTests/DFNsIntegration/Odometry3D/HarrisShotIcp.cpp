@@ -43,18 +43,20 @@ using namespace dfn_ci;
  */
 
 const std::string USAGE =
-	"You should provide at least seven parameters: \n \
-	(i) the configuration file path of Harris Detector 3D; \n \
-	(ii) the configuration file path of Shot Descriptor 3D; \n \
-	(iii) the configuration file path of Icp 3D; \n \
-	(iv) the scene input cloud file path, the input cloud file should be in ply format; \n \
-	(v) the model input cloud file path, the input cloud file should be in ply format; \n \
-	(vi) the text file containing the ground truth pose on one line with format x y z qx qy qz qw \n \
-	(vii) the operating distance expressed in meters; \n \
-	Optionally you can add up to three float parameters: \n \
-	(i) relativeLocationError: the maximum position error expressed as ratio to the size of the model, it needs to be in the interval [0,1]. The default is 0.10; \n \
-	(ii) relativeOrientationError: the maximum orientation error expressed as ratio to the size of the model, it needs to be in the interval [0,1]. The default is 0.10; \n \
-	(iii) errorRatioComparedToOperatingDistance: the maximum position error expressed as ratio to the operating distance. The default is 0.05. \n \n";
+" \n \
+You should provide at least seven parameters: \n \
+(i) the configuration file path of Harris Detector 3D; \n \
+(ii) the configuration file path of Shot Descriptor 3D; \n \
+(iii) the configuration file path of Icp 3D; \n \
+(iv) the scene input cloud file path, the input cloud file should be in ply format; \n \
+(v) the model input cloud file path, the input cloud file should be in ply format; \n \
+(vi) the text file containing the ground truth pose on one line with format x y z qx qy qz qw \n \
+(vii) the operating distance expressed in meters; \n \
+Optionally you can add up to three float parameters: \n \
+(i) relativeLocationError: the maximum position error expressed as ratio to the size of the model, it needs to be in the interval [0,1]. The default is 0.10; \n \
+(ii) relativeOrientationError: the maximum orientation error expressed as ratio to the size of the model, it needs to be in the interval [0,1]. The default is 0.10; \n \
+(iii) errorRatioComparedToOperatingDistance: the maximum position error expressed as ratio to the operating distance. The default is 0.05. \n \n \
+Example Usage: ./correctness_harris_shot_icp ../tests/ConfigurationFiles/DFNs/FeaturesExtractor3D/HarrisDetector3D_DevonIsland.yaml ../tests/ConfigurationFiles/DFNs/FeaturesDescriptor3D/ShotDescriptor3D_DevonIsland.yaml ../tests/ConfigurationFiles/DFNs/FeaturesMatcher3D/Icp3D_DevonIsland.yaml ../tests/Data/PointClouds/DevonIslandRoad.ply ../tests/Data/PointClouds/DevonIslandRoadTransformed.ply ../tests/Data/PointClouds/DevonIslandRoadTransform.txt 20 \n \n";
 
 
 float ExtractOperatingDistance(char* argument)
@@ -173,7 +175,7 @@ int main(int argc, char** argv)
 	float absoluteLocationError = operatingDistance * errorRatioComparedToOperatingDistance;
 	bool success = tester.IsOutputCorrect(relativeLocationError, relativeOrientationError, absoluteLocationError);
 
-	ASSERT(success, "Correctness requirement 4.1.1.9 failed on the input scene and model point cloud");
+	VERIFY_REQUIREMENT(success, "Correctness requirement 4.1.1.9 failed on the input scene and model point cloud");
 	return 0;
 	}
 

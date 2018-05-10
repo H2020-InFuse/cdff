@@ -41,11 +41,13 @@ using namespace dfn_ci;
  */
 
 const std::string USAGE =
-	"You should provide at least three parameters: \n \
-	(i) the configuration file path; \n \
-	(ii) the input cloud file path, the input cloud file should be in ply format; \n \
-	(iii) the average separation type: one of EveryPair or ClosestNeighbour. \n \
-	Optionally you can add as fourth parameter a regularity float number between 0 and 1 \n"; 
+" \n \
+You should provide at least three parameters: \n \
+(i) the configuration file path; \n \
+(ii) the input cloud file path, the input cloud file should be in ply format; \n \
+(iii) the average separation type: one of EveryPair or ClosestNeighbour. \n \
+Optionally you can add as fourth parameter a regularity float number between 0 and 1 \n \n \
+Example Usage: ./regularity_harris_detector_3d ../tests/ConfigurationFiles/DFNs/HarrisDetector3D_DevonIsland.yaml ../tests/Data/PointClouds/DevonIslandRoad.ply EveryPair \n \n"; 
 
 RegularityTester::AverageSeparationType FromString(std::string averageSeparationTypeString)
 	{
@@ -95,7 +97,7 @@ int main(int argc, char** argv)
 	tester.ExecuteDfn();
 	bool success = tester.IsOutputRegular(regularity);
 
-	ASSERT(success, "Regularity requirement 4.1.1.7 failed on the input point cloud");
+	VERIFY_REQUIREMENT(success, "Regularity requirement 4.1.1.7 failed on the input point cloud");
 	return 0;
 	}
 
