@@ -28,16 +28,9 @@
  */
 #include <catch.hpp>
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Errors/Assert.hpp>
+#include <MatToFrameConverter.hpp>
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
@@ -49,36 +42,33 @@ using namespace VisualPointFeatureVector2DWrapper;
  * --------------------------------------------------------------------------
  */
 TEST_CASE( "Call to process (2D Harris detector)", "[process]" ) 
-	{
-	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
+{
+	// Prepare input data
+	cv::Mat inputImage(500, 500, CV_8UC3, cv::Scalar(100, 100, 100));
+	MatToFrameConverter matToFrame;
+	FrameConstPtr inputFrame = matToFrame.Convert(inputImage);
 
-	Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
-	Mocks::MatToVisualPointFeatureVector2DConverter* mockOutputConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubOutputCache, mockOutputConverter);
+	// Instantiate DFN
+	HarrisDetector2D* harris = new HarrisDetector2D;
 
-	cv::Mat inputImage(500, 500, CV_8UC3, cv::Scalar(100, 100, 100));	
-	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputImage) );
+	// Send input data to DFN
+	harris->frameInput(*inputFrame);
 
-	VisualPointFeatureVector2DConstPtr featuresVector = new VisualPointFeatureVector2D();
-	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
+	// Run DFN
+	harris->process();
 
-	HarrisDetector2D harris;
-	harris.imageInput(new Frame());
-	harris.process();
-
-	VisualPointFeatureVector2DConstPtr output = harris.featuresSetOutput();
-	
-	REQUIRE(GetNumberOfPoints(*output) == GetNumberOfPoints(*featuresVector));
-	delete(output);
-	}
+	// Query output data from DFN
+	const VisualPointFeatureVector2D& output = harris->featuresOutput();
+}
 
 TEST_CASE( "Call to configure (2D Harris detector)", "[configure]" )
-	{
-	HarrisDetector2D harris;
-	harris.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesExtraction2D/HarrisDetector2D_Conf1.yaml");
-	harris.configure();	
-	}
+{
+	// Instantiate DFN
+	HarrisDetector2D* harris = new HarrisDetector2D;
+
+	// Setup DFN
+	harris->setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesExtraction2D/HarrisDetector2D_Conf1.yaml");
+	harris->configure();
+}
 
 /** @} */

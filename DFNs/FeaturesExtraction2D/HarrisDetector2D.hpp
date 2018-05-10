@@ -46,6 +46,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 #include <Helpers/ParametersListHelper.hpp>
+#include <FrameToMatConverter.hpp>
+#include <MatToVisualPointFeatureVector2DConverter.hpp>
 
 
 namespace dfn_ci {
@@ -106,6 +108,9 @@ namespace dfn_ci {
 		Helpers::ParametersListHelper parametersHelper;
 		HarryOptionsSet parameters;
 		static const HarryOptionsSet DEFAULT_PARAMETERS;
+
+		Converters::FrameToMatConverter frameToMat;
+		Converters::MatToVisualPointFeatureVector2DConverter matToVisualPointFeatureVector2D;
 
 		cv::Mat ComputeHarrisImage(cv::Mat inputImage);
 		cv::Mat ExtractHarrisPoints(cv::Mat harrisImage);

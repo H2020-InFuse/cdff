@@ -30,7 +30,6 @@
 #include <Errors/Assert.hpp>
 #include <FrameToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <ConversionCache/ConversionCache.hpp>
 #include <Macros/YamlcppMacros.hpp>
 
 #include <stdlib.h>
@@ -38,7 +37,6 @@
 
 using namespace Helpers;
 using namespace Converters;
-using namespace Common;
 
 namespace dfn_ci {
 
@@ -83,11 +81,18 @@ void HarrisDetector2D::configure()
 
 void HarrisDetector2D::process() 
 	{
-	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
+	// Read data from input port
+	cv::Mat inputImage = frameToMat.Convert(&inFrame);
+
+	// Process data
 	ValidateInputs(inputImage);
 	cv::Mat harrisImage = ComputeHarrisImage(inputImage);
 	cv::Mat harrisPoints = ExtractHarrisPoints(harrisImage);
-	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(harrisPoints);
+
+	// Write data to output port
+	VisualPointFeatureVector2DConstPtr tmp = matToVisualPointFeatureVector2D.Convert(harrisPoints);
+	Copy(*tmp, outFeatures);
+	delete(tmp);
 	}
 
 const HarrisDetector2D::HarryOptionsSet HarrisDetector2D::DEFAULT_PARAMETERS =
