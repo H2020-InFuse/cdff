@@ -2,13 +2,11 @@ name: FeaturesExtraction2D
 input_ports:
     - name: frame
       type: Frame
-      doc: a 2D image taken from camera
+      doc: 2D image captured by a camera
 output_ports:
-    - name: featuresSet
+    - name: features
       type: VisualPointFeatureVector2D
-      doc: This is the set of the points extracted from the image, a descriptor may or may not be provided.
+      doc: keypoints extracted from the image, may include descriptors
 implementations:
     - HarrisDetector2D
-    - OrbDetectorDescritor
-
-
+    - OrbDetectorDescriptor
