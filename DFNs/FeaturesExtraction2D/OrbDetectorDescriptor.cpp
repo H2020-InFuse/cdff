@@ -30,13 +30,11 @@
 #include <Errors/Assert.hpp>
 #include <FrameToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <ConversionCache/ConversionCache.hpp>
 
 #include <stdlib.h>
 #include <fstream>
 
 using namespace Converters;
-using namespace Common;
 
 namespace dfn_ci {
 
@@ -80,10 +78,17 @@ void OrbDetectorDescriptor::configure()
 
 void OrbDetectorDescriptor::process() 
 	{
-	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
+	// Read data from input port
+	cv::Mat inputImage = frameToMat.Convert(&inFrame);
+
+	// Process data
 	ValidateInputs(inputImage);
 	cv::Mat orbFeatures = ComputeOrbFeatures(inputImage);
-	outFeaturesSet = ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(orbFeatures);
+
+	// Write data to output port
+	VisualPointFeatureVector2DConstPtr tmp = matToVisualPointFeatureVector2D.Convert(orbFeatures);
+	Copy(*tmp, outFeatures);
+	delete(tmp);
 	}
 
 const OrbDetectorDescriptor::OrbOptionsSet OrbDetectorDescriptor::DEFAULT_PARAMETERS = 

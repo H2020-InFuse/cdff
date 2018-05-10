@@ -48,6 +48,8 @@
 #include <yaml-cpp/yaml.h>
 #include <opencv2/features2d.hpp>
 #include <Helpers/ParametersListHelper.hpp>
+#include <FrameToMatConverter.hpp>
+#include <MatToVisualPointFeatureVector2DConverter.hpp>
 
 namespace dfn_ci {
 
@@ -97,6 +99,9 @@ namespace dfn_ci {
 		Helpers::ParametersListHelper parametersHelper;
 		OrbOptionsSet parameters;
 		static const OrbOptionsSet DEFAULT_PARAMETERS;
+
+		Converters::FrameToMatConverter frameToMat;
+		Converters::MatToVisualPointFeatureVector2DConverter matToVisualPointFeatureVector2D;
 
 		cv::Mat ComputeOrbFeatures(cv::Mat inputImage);
 
