@@ -283,7 +283,6 @@ include_directories(
   Common/Types/CPP
   Common/Converters
   DFNs
-  DFPCs
   Tests
   Tools
 )
@@ -292,7 +291,6 @@ include_directories(
 
 add_subdirectory(Common)
 add_subdirectory(DFNs)
-add_subdirectory(DFPCs)
 add_subdirectory(Tests)
 
 # TODO: is there an initial, default value for the directories that are searched
