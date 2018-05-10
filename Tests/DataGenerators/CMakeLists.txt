@@ -98,3 +98,13 @@ target_link_libraries(
 	paint_lines
 	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
 )
+
+add_executable(
+    match_clouds
+    SyntheticGenerators/MatchClouds.cpp
+    SyntheticGenerators/CloudsMatcher.cpp
+)
+target_link_libraries(
+	match_clouds
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters boost_system yaml-cpp ${VTK_LIBRARIES} boost_system cdff_pcl_visualizer
+)
