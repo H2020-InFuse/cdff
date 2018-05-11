@@ -123,7 +123,7 @@ cv::Mat HarrisDetector2D::ExtractHarrisPoints(cv::Mat harrisImage)
 	int numberOfAllowedPoints = (numberOfPoints < VisualPointFeatureVector2DWrapper::MAX_FEATURE_2D_POINTS) ? numberOfPoints : VisualPointFeatureVector2DWrapper::MAX_FEATURE_2D_POINTS;
 
 	cv::Mat harrisPointsList(numberOfAllowedPoints, 3, CV_32FC1, cv::Scalar(0));
-	unsigned point = 0;
+	int point = 0;
 	bool extractionComplete = false;
 
 	for (int row = 0; row < harrisImage.rows && !extractionComplete; row++)
