@@ -80,7 +80,7 @@ HarrisDetector2DTestInterface::HarrisDetector2DTestInterface(std::string dfnName
 	SetDFN(harris);
 
 	MatToFrameConverter converter;
-	cvImage = cv::imread("../../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
+	cvImage = cv::imread("../../tests/Data/Images/DevonIslandLeft.ppm", cv::IMREAD_COLOR);
 	inputImage = converter.Convert(cvImage);
 	harris->imageInput(inputImage);
 	outputWindowName = "Harris Detector 2D Result";

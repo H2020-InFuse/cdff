@@ -226,7 +226,7 @@ float LinearityTester::ComputeErrorOnLine(const Line& line)
 		float differenceY = line.at(pointIndex).y - lineModel[3];
 		float lineOriginToPointDistance = std::sqrt(differenceX*differenceX + differenceY*differenceY);
 		float lineVectorProductOriginToPointVector = lineModel[0]*differenceX + lineModel[1]*differenceY;
-		float lineToPointDistance = lineVectorProductOriginToPointVector / lineOriginToPointDistance;
+		float lineToPointDistance = std::abs(lineVectorProductOriginToPointVector / lineOriginToPointDistance);
 		totalError += lineToPointDistance;
 		}
 
