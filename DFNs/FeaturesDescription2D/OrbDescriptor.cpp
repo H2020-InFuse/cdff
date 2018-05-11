@@ -30,13 +30,11 @@
 #include <Errors/Assert.hpp>
 #include <FrameToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <ConversionCache/ConversionCache.hpp>
 
 #include <stdlib.h>
 #include <fstream>
 
 using namespace Converters;
-using namespace Common;
 
 namespace dfn_ci {
 
@@ -80,11 +78,18 @@ void OrbDescriptor::configure()
 
 void OrbDescriptor::process() 
 	{
-	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
-	std::vector<cv::KeyPoint> keypointsVector = Convert(inFeaturesSet);
+	// Read data from input port
+	cv::Mat inputImage = frameToMat.Convert(&inFrame);
+	std::vector<cv::KeyPoint> keypointsVector = Convert(inFeatures);
+
+	// Process data
 	ValidateInputs(inputImage, keypointsVector);
 	cv::Mat orbFeatures = ComputeOrbFeatures(inputImage, keypointsVector);
-	outFeaturesSetWithDescriptors = ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Convert(orbFeatures);
+
+	// Write data to output port
+	VisualPointFeatureVector2DConstPtr tmp = matToVisualPointFeatureVector2D.Convert(orbFeatures);
+	Copy(*tmp, outFeatures);
+	delete(tmp);
 	}
 
 const OrbDescriptor::OrbOptionsSet OrbDescriptor::DEFAULT_PARAMETERS = 
@@ -137,23 +142,23 @@ cv::Mat OrbDescriptor::ComputeOrbFeatures(cv::Mat inputImage, std::vector<cv::Ke
 	return orbFeaturesMatrix;
 	}
 
-std::vector<cv::KeyPoint> OrbDescriptor::Convert(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featuresVector)
+std::vector<cv::KeyPoint> OrbDescriptor::Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& featuresVector)
 	{
 	std::vector<cv::KeyPoint> keypointsVector;
-	for(int featureIndex = 0; featureIndex < GetNumberOfPoints(*featuresVector); featureIndex++)
+	for(int featureIndex = 0; featureIndex < GetNumberOfPoints(featuresVector); featureIndex++)
 		{
-		int descriptorSize = GetNumberOfDescriptorComponents(*featuresVector, featureIndex);
+		int descriptorSize = GetNumberOfDescriptorComponents(featuresVector, featureIndex);
 
-		float size = (descriptorSize > 0) ? GetDescriptorComponent(*featuresVector, featureIndex, 0) : 1;		
-		float angle = (descriptorSize > 1) ? GetDescriptorComponent(*featuresVector, featureIndex, 1) : -1;	
-		float response = (descriptorSize > 2) ? GetDescriptorComponent(*featuresVector, featureIndex, 2) : 0;		
-		float octave = (descriptorSize > 3) ? GetDescriptorComponent(*featuresVector, featureIndex, 3) : 0;		
-		float id = (descriptorSize > 4) ? GetDescriptorComponent(*featuresVector, featureIndex, 4) : -1;			
+		float size = (descriptorSize > 0) ? GetDescriptorComponent(featuresVector, featureIndex, 0) : 1;		
+		float angle = (descriptorSize > 1) ? GetDescriptorComponent(featuresVector, featureIndex, 1) : -1;	
+		float response = (descriptorSize > 2) ? GetDescriptorComponent(featuresVector, featureIndex, 2) : 0;		
+		float octave = (descriptorSize > 3) ? GetDescriptorComponent(featuresVector, featureIndex, 3) : 0;		
+		float id = (descriptorSize > 4) ? GetDescriptorComponent(featuresVector, featureIndex, 4) : -1;			
 
 		cv::KeyPoint newPoint
 				( 
-				GetXCoordinate(*featuresVector, featureIndex), 
-				GetYCoordinate(*featuresVector, featureIndex),
+				GetXCoordinate(featuresVector, featureIndex), 
+				GetYCoordinate(featuresVector, featureIndex),
 				size,
 				angle,
 				response,

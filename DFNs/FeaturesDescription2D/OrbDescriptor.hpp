@@ -42,6 +42,8 @@
 #include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
 #include <Frame.hpp>
 #include <VisualPointFeatureVector2D.hpp>
+#include <FrameToMatConverter.hpp>
+#include <MatToVisualPointFeatureVector2DConverter.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
@@ -97,8 +99,11 @@ namespace dfn_ci {
 		OrbOptionsSet parameters;
 		static const OrbOptionsSet DEFAULT_PARAMETERS;
 
+		Converters::FrameToMatConverter frameToMat;
+		Converters::MatToVisualPointFeatureVector2DConverter matToVisualPointFeatureVector2D;
+
 		cv::Mat ComputeOrbFeatures(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector);
-		std::vector<cv::KeyPoint> Convert(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featuresVector);
+		std::vector<cv::KeyPoint> Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& featuresVector);
 
 		void ValidateParameters();
 		void ValidateInputs(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector);

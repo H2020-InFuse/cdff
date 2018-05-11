@@ -20,6 +20,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     Common/Converters/Transform3DMatConvertersTest.cpp
     Common/Converters/VisualPointFeatureVector3DPclPointCloudConvertersTest.cpp
     Common/Helpers/ParametersHelper.cpp
+    DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
     DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
 )
@@ -40,6 +41,7 @@ set(UNITTEST_LIBRARIES Catch
     opencv_imgproc
     opencv_video
     orb_detector_descriptor
+    orb_descriptor
     pcl_common
     pcl_features
     pcl_filters
