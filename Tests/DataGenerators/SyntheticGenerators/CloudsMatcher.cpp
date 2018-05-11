@@ -128,6 +128,13 @@ const std::vector<cv::Scalar> CloudsMatcher::COLORS_LIST =
  *
  * --------------------------------------------------------------------------
  */
+#define PRINT_CLOUD_LOCATION_INFO(location, center, radius) \
+	{ \
+	std::stringstream locationStream; \
+	locationStream << location << "   Center: (" << center.x << ", " << center.y << ", " << center.z << ")  3D Radius: " << radius; \
+	PRINT_TO_LOG(locationStream.str(), ""); \
+	}
+
 void CloudsMatcher::LoadClouds()
 	{
 	pcl::io::loadPLYFile(inputSourceCloudFilePath, *originalSourceCloud);
@@ -144,7 +151,12 @@ void CloudsMatcher::LoadClouds()
 
 	float sourceMinimumDistance = ComputeMinimumDistanceBetweenPoints(originalSourceCloud);
 	float sinkMinimumDistance = ComputeMinimumDistanceBetweenPoints(originalSinkCloud);
-	visualizationCircleSize = (sourceMinimumDistance > sinkMinimumDistance) ? sinkMinimumDistance/2 : sourceMinimumDistance/2;
+	visualizationCircleSize = (sourceMinimumDistance < sinkMinimumDistance) ? sinkMinimumDistance : sourceMinimumDistance;
+	PRINT_TO_LOG("Minimum Source keypoint distance:", sourceMinimumDistance);
+	PRINT_TO_LOG("Minimum Sink keypoint distance:", sinkMinimumDistance);
+
+	PRINT_CLOUD_LOCATION_INFO("Source", sourceVisualizationCenter, sourceVisualizationRadius);
+	PRINT_CLOUD_LOCATION_INFO("Sink", sinkVisualizationCenter, sinkVisualizationRadius);	
 	}
 
 void CloudsMatcher::PointPickingCallback(const pcl::visualization::PointPickingEvent& event, void* userdata)
@@ -236,86 +248,103 @@ void CloudsMatcher::KeyboardButtonCallback(const pcl::visualization::KeyboardEve
 	else if (command == 13) //Ctrl+M
 		{
 		SaveCorrespondences();
+		PRINT_TO_LOG("Data Saved", "");
 		}
 	else if (command == 23) //Ctrl+W
 		{
 		sourceVisualizationCenter.y += sourceVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Source", sourceVisualizationCenter, sourceVisualizationRadius);
 		}
 	else if (command == 24) //Ctrl+X
 		{
 		sourceVisualizationCenter.y -= sourceVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Source", sourceVisualizationCenter, sourceVisualizationRadius);
 		}
 	else if (command == 1) //Ctrl+A
 		{
 		sourceVisualizationCenter.x -= sourceVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Source", sourceVisualizationCenter, sourceVisualizationRadius);
 		}
 	else if (command == 4) //Ctrl+D
 		{
 		sourceVisualizationCenter.x += sourceVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Source", sourceVisualizationCenter, sourceVisualizationRadius);
 		}
 	else if (command == 5) //Ctrl+E
 		{
 		sourceVisualizationCenter.z += sourceVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Source", sourceVisualizationCenter, sourceVisualizationRadius);
 		}
 	else if (command == 26) //Ctrl+Z
 		{
 		sourceVisualizationCenter.z -= sourceVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Source", sourceVisualizationCenter, sourceVisualizationRadius);
 		}
 	else if (command == 20) //Ctrl+T
 		{
 		sinkVisualizationCenter.y += sinkVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Sink", sinkVisualizationCenter, sinkVisualizationRadius);	
 		}
 	else if (command == 2) //Ctrl+B
 		{
 		sinkVisualizationCenter.y -= sinkVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Sink", sinkVisualizationCenter, sinkVisualizationRadius);	
 		}
 	else if (command == 6) //Ctrl+F
 		{
 		sinkVisualizationCenter.x -= sinkVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Sink", sinkVisualizationCenter, sinkVisualizationRadius);	
 		}
 	else if (command == 8) //Ctrl+H
 		{
 		sinkVisualizationCenter.x += sinkVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Sink", sinkVisualizationCenter, sinkVisualizationRadius);	
 		}
 	else if (command == 25) //Ctrl+Y
 		{
 		sinkVisualizationCenter.z += sinkVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Sink", sinkVisualizationCenter, sinkVisualizationRadius);	
 		}
 	else if (command == 22) //Ctrl+V
 		{
 		sinkVisualizationCenter.z -= sinkVisualizationRadius/2;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Sink", sinkVisualizationCenter, sinkVisualizationRadius);	
 		}
 	else if (command == 15) //Ctrl+O
 		{
 		sourceVisualizationRadius = sourceVisualizationRadius * 1.5;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Source", sourceVisualizationCenter, sourceVisualizationRadius);
 		}
 	else if (command == 16) //Ctrl+P
 		{
 		sourceVisualizationRadius = sourceVisualizationRadius / 1.5;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Source", sourceVisualizationCenter, sourceVisualizationRadius);
 		}
 	else if (command == 11) //Ctrl+K
 		{
 		sinkVisualizationRadius = sinkVisualizationRadius * 1.5;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Sink", sinkVisualizationCenter, sinkVisualizationRadius);	
 		}
 	else if (command == 12) //Ctrl+L
 		{
 		sinkVisualizationRadius = sinkVisualizationRadius / 1.5;
 		cloudsChangedSinceLastVisualization = true;
+		PRINT_CLOUD_LOCATION_INFO("Sink", sinkVisualizationCenter, sinkVisualizationRadius);	
 		}	
 	}
 

@@ -149,7 +149,7 @@ int main(int argc, char** argv)
 	tester.ExecuteDfn();
 	bool success = tester.IsSelectionValid(numberPercentageThreshold, pixelOutlierThreshold, outliersPercentageThreshold);
 
-	VERIFY_REQUIREMENT(success, "Regularity requirement 4.1.1.2 failed on the input point cloud");
+	VERIFY_REQUIREMENT(success, "Validity of extracted feature requirement 4.1.1.2 failed on the input image");
 	return 0;
 	}
 
