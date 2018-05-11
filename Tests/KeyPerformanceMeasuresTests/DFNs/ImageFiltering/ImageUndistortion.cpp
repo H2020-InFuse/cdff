@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 	else
 		{
 		bool success = tester.IsResultLinear(referenceLinesFilePath, relativeDistortionDifference);
-		VERIFY_REQUIREMENT(success, "Regularity requirement 4.1.1.1 failed on the input point cloud");
+		VERIFY_REQUIREMENT(success, "Linearity requirement 4.1.1.1 failed on the input image");
 		}
 
 	return 0;
