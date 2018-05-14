@@ -284,6 +284,7 @@ bool RegularityTester::ThereAreNoGaps(float distanceThreshold)
 		return true;
 		}
 
+	float largestGap = 0;
 	//This loops iterates through all the cluster, for each cluster it computes the closest cluster neighbour.
 	//If the distance to the closest cluster neighbour is greater than the input distanceThreshold, the gap is found and function gives true as output.
 	for(int clusterIndex1 = 0; clusterIndex1 < clustersList.size(); clusterIndex1++)
@@ -317,30 +318,34 @@ bool RegularityTester::ThereAreNoGaps(float distanceThreshold)
 				}
 			}
 
+		if (largestGap < closestClusterDistance)
+			{
+			largestGap = closestClusterDistance;
+			}
 		//Chcking distance threshold
 		if (closestClusterDistance > distanceThreshold)
 			{
 			PRINT_TO_LOG("We found an isolated cluster containing this number of points: ", clusterSize);
-			PRINT_TO_LOG("Its distance from the closest neighbour cluster is equal to: ", closestClusterDistance);
-			return false;
 			}
 		}
 
-	return true;
+	PRINT_TO_LOG("The largest gap is:", largestGap);
+	return (largestGap <= distanceThreshold);
 	}
 
 bool RegularityTester::ThereAreNoClusters(float distanceThreshold)
 	{
+	float largestClusterSize = 0;
 	for(int clusterIndex = 0; clusterIndex < clustersList.size(); clusterIndex++)
 		{
 		float clusterSize = ComputeClusterSize( clustersList.at(clusterIndex) );
-		if (clusterSize > distanceThreshold)
+		if (largestClusterSize < clusterSize)
 			{
-			PRINT_TO_LOG("We found a cluster of size: ", clusterSize);
-			return false;
+			largestClusterSize = clusterSize;
 			}
 		}
-	return true;
+	PRINT_TO_LOG("Largest Cluster has size:", largestClusterSize);
+	return (largestClusterSize <= distanceThreshold);
 	}
 
 float RegularityTester::ComputeDistance(int pointIndex1, int pointIndex2)

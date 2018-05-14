@@ -169,6 +169,8 @@ bool CorrectLocalizationTester::IsOutputCorrect(float relativeLocationError, flo
 	PRINT_TO_LOG("The model size is: ", modelSize);
 	PRINT_TO_LOG("The location error is: ", locationError);
 	PRINT_TO_LOG("The orientation error is: ", orientationError);
+	PRINT_TO_LOG("Relative location error: ", (locationError / modelSize) );
+	PRINT_TO_LOG("Relative orientation error: ", (orientationError / modelSize) );
 
 	bool WithinRelativeLocationError = (locationError <= relativeLocationError * modelSize);
 	bool WithinRelatibeOrientationError  = (orientationError <= relativeOrientationError * modelSize);
