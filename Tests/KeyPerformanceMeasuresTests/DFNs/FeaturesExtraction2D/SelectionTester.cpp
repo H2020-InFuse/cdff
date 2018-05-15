@@ -56,8 +56,6 @@ SelectionTester::SelectionTester(std::string configurationFilePath, dfn_ci::Feat
 
 	inputFrame = NULL;
 	outputFeaturesVector = NULL;
-	numberReferenceFeaturesVector = NULL;
-	precisionReferenceFeaturesVector = NULL;
 
 	inputImageWasLoaded = false;
 	numberReferenceWasLoaded = false;
@@ -80,8 +78,6 @@ SelectionTester::~SelectionTester()
 	
 	DELETE_IF_NOT_NULL(inputFrame);
 	DELETE_IF_NOT_NULL(outputFeaturesVector);
-	DELETE_IF_NOT_NULL(numberReferenceFeaturesVector);
-	DELETE_IF_NOT_NULL(precisionReferenceFeaturesVector);
 	}
 
 void SelectionTester::SetFilesPaths(std::string inputImageFilePath, std::string numberReferenceFilePath, std::string precisionReferenceFilePath)
@@ -92,9 +88,9 @@ void SelectionTester::SetFilesPaths(std::string inputImageFilePath, std::string 
 
 	LoadInputImage();
 	inputImageWasLoaded = true;
-	LoadReferenceFeatures(numberReferenceFilePath, numberReferenceFeaturesVector);
+	LoadReferenceFeatures(numberReferenceFilePath, numberKeypointsMatrix);
 	numberReferenceWasLoaded = true;
-	LoadReferenceFeatures(precisionReferenceFilePath, precisionReferenceFeaturesVector);
+	LoadReferenceFeatures(precisionReferenceFilePath, precisionKeypointsMatrix);
 	precisionReferenceWasLoaded = true;
 	}
 
@@ -113,8 +109,8 @@ bool SelectionTester::IsSelectionValid(float numberPercentageThreshold, unsigned
 	{
 	ASSERT(inputImageWasLoaded && numberReferenceWasLoaded && precisionReferenceWasLoaded, "Error: some inputs were not correctly loaded");
 
-	PRINT_TO_LOG("Numerosity Image Keypoints are", GetNumberOfPoints(*numberReferenceFeaturesVector));
-	PRINT_TO_LOG("Precision Image Keypoints are", GetNumberOfPoints(*precisionReferenceFeaturesVector));
+	PRINT_TO_LOG("Numerosity Image Keypoints are", numberKeypointsMatrix.rows);
+	PRINT_TO_LOG("Precision Image Keypoints are", precisionKeypointsMatrix.rows);
 
 	bool numberOfKeypointsIsValid = ValidateNumberOfKeypoints(numberPercentageThreshold);
 	bool keypointsAreValid = ValidateKeypoints(pixelOutlierThreshold, outliersPercentageThreshold);
@@ -161,22 +157,12 @@ void SelectionTester::LoadInputImage()
 	inputFrame = frameConverter.Convert(cvImage);
 	}
 
-void SelectionTester::LoadReferenceFeatures(std::string& filePath, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& featuresVector)
+void SelectionTester::LoadReferenceFeatures(std::string& filePath, cv::Mat& keypointsMatrix)
 	{
-	cv::Mat keypointsMatrix;
 	cv::FileStorage opencvFile(filePath, cv::FileStorage::READ);
 	opencvFile["KeypointsMatrix"] >> keypointsMatrix;
 	opencvFile.release();
 	ASSERT(keypointsMatrix.rows > 0 && keypointsMatrix.cols == 2 && keypointsMatrix.type() == CV_16UC1, "Error: reference keypoints are invalid");
-
-	VisualPointFeatureVector2DPtr newFeaturesVector = NewVisualPointFeatureVector2D();
-	for(int pointIndex = 0; pointIndex < keypointsMatrix.rows; pointIndex++)
-		{
-		AddPoint(*newFeaturesVector, keypointsMatrix.at<uint16_t>(pointIndex, 0), keypointsMatrix.at<uint16_t>(pointIndex, 1));
-		}
-
-	DELETE_IF_NOT_NULL(featuresVector);
-	featuresVector = newFeaturesVector;
 	}
 
 void SelectionTester::ConfigureDfn()
@@ -187,11 +173,12 @@ void SelectionTester::ConfigureDfn()
 
 bool SelectionTester::ValidateNumberOfKeypoints(float numberPercentageThreshold)
 	{
-	float expectedNumberOfKeypoints = GetNumberOfPoints(*numberReferenceFeaturesVector);
+	float expectedNumberOfKeypoints = numberKeypointsMatrix.rows;
 	float actualNumberOfKeypoints = GetNumberOfPoints(*outputFeaturesVector);
 	float minNumberOfKeypoints = expectedNumberOfKeypoints * (1 - numberPercentageThreshold);
 	float maxNumberOfKeypoints = expectedNumberOfKeypoints * (1 + numberPercentageThreshold);
 
+	PRINT_TO_LOG("keypoints number: ", actualNumberOfKeypoints);
 	return (actualNumberOfKeypoints >= minNumberOfKeypoints && actualNumberOfKeypoints <= maxNumberOfKeypoints);
 	}
 
@@ -203,7 +190,7 @@ bool SelectionTester::ValidateKeypoints(unsigned pixelOutlierThreshold, float ou
 	for(unsigned keypointIndex = 0; keypointIndex < numberOfKeypoints; keypointIndex++)
 		{
 		bool pointIsValid = false;
-		for(unsigned referenceIndex = 0; referenceIndex < GetNumberOfPoints(*precisionReferenceFeaturesVector) && !pointIsValid; referenceIndex++)
+		for(unsigned referenceIndex = 0; referenceIndex < precisionKeypointsMatrix.rows && !pointIsValid; referenceIndex++)
 			{
 			unsigned pixelDistance = ComputePixelDistance(keypointIndex, referenceIndex);
 			if (pixelDistance <= pixelOutlierThreshold)
@@ -215,6 +202,7 @@ bool SelectionTester::ValidateKeypoints(unsigned pixelOutlierThreshold, float ou
 		}
 
 	float percentageOfValidKeypoints = (float)numberOfValidKeypoints / (float)numberOfKeypoints;
+	PRINT_TO_LOG("Percentage of valid keypoints: ", percentageOfValidKeypoints);
 	return (percentageOfValidKeypoints >= outliersPercentageThreshold);
 	}
 
@@ -222,8 +210,8 @@ unsigned SelectionTester::ComputePixelDistance(unsigned outputKeypointIndex, uns
 	{
 	float x1 = GetXCoordinate(*outputFeaturesVector, outputKeypointIndex);
 	float y1 = GetYCoordinate(*outputFeaturesVector, outputKeypointIndex);
-	float x2 = GetXCoordinate(*precisionReferenceFeaturesVector, precisionReferenceKeypointIndex);
-	float y2 = GetYCoordinate(*precisionReferenceFeaturesVector, precisionReferenceKeypointIndex);
+	float x2 = precisionKeypointsMatrix.at<uint16_t>(precisionReferenceKeypointIndex, 0);
+	float y2 = precisionKeypointsMatrix.at<uint16_t>(precisionReferenceKeypointIndex, 1);
 
 	float distanceX = std::abs(x1-x2);
 	float distanceY = std::abs(y1-y2);

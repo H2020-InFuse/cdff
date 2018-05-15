@@ -100,8 +100,8 @@ class SelectionTester
 		std::string precisionReferenceFilePath;
 		FrameWrapper::FrameConstPtr inputFrame;
 		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr outputFeaturesVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr numberReferenceFeaturesVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr precisionReferenceFeaturesVector;
+		cv::Mat numberKeypointsMatrix;
+		cv::Mat precisionKeypointsMatrix;
 
 		Converters::MatToFrameConverter frameConverter;
 		dfn_ci::FeaturesExtraction2DInterface* dfn;
@@ -112,7 +112,7 @@ class SelectionTester
 
 		void SetUpMocksAndStubs();
 		void LoadInputImage();
-		void LoadReferenceFeatures(std::string& filePath, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& featuresVector);
+		void LoadReferenceFeatures(std::string& filePath, cv::Mat& keypointsMatrix);
 		void ConfigureDfn();
 
 		bool ValidateNumberOfKeypoints(float numberPercentageThreshold);

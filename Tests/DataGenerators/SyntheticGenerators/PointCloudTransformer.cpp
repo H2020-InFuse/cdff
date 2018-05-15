@@ -106,7 +106,7 @@ void PointCloudTransformer::SavePointCloud(std::string outputFilePath)
 	{
 	ASSERT(transformedCloudWasInitialized, "You did not apply any transform, there is no need to save this cloud");
 	pcl::PLYWriter writer;
-	writer.write(outputFilePath, *transformedCloud);
+	writer.write(outputFilePath, *transformedCloud, true);
 	}
 
 void PointCloudTransformer::ViewPointCloud()
