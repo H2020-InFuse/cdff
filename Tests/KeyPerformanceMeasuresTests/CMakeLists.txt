@@ -29,6 +29,16 @@ target_link_libraries(
 	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_3d feature_extraction_3d mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
 
+add_executable(
+    quality_hirschmuller
+    DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    DFNs/StereoReconstruction/QualityTester.cpp
+)
+target_link_libraries(
+	quality_hirschmuller
+	cdff_helpers cdff_logger cdff_types converters_opencv stereoReconstruction hirschmuller_disparity_mapping mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters opencv_core opencv_imgproc opencv_highgui boost_system
+)
+
 
 #DFNs Integration
 add_executable(
