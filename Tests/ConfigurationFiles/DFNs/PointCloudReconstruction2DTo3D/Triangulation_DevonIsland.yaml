@@ -1,0 +1,10 @@
+- Name: FirstCameraMatrix
+  FocalLengthX: 968.999694824
+  FocalLengthY: 968.999694824
+  PrinciplePointX: 635.139038086
+  PrinciplePointY: 463.537109375
+- Name: SecondCameraMatrix
+  FocalLengthX: 968.999694824
+  FocalLengthY: 968.999694824
+  PrinciplePointX: 635.139038086
+  PrinciplePointY: 463.537109375
