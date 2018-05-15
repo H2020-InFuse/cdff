@@ -80,3 +80,13 @@ target_link_libraries(
 	validity_shot_icp
 	cdff_helpers cdff_logger cdff_types converters_opencv shot_descriptor_3d feature_description_3d icp_3d feature_matching_3d mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
+
+add_executable(
+    ransac_essential_triangulation_test
+    DFNsIntegration/FeaturesReconstruction/EssentialMatrixDecompositionTriangulation.cpp
+    DFNsIntegration/FeaturesReconstruction/ReconstructionTester.cpp
+)
+target_link_libraries(
+	ransac_essential_triangulation_test
+	cdff_helpers cdff_logger cdff_types converters_opencv fundamental_matrix_ransac essential_matrix_decomposition triangulation mock opencv_core opencv_imgproc opencv_highgui boost_system pcl_common
+)
