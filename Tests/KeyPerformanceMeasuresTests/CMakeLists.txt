@@ -39,6 +39,16 @@ target_link_libraries(
 	cdff_helpers cdff_logger cdff_types converters_opencv stereoReconstruction hirschmuller_disparity_mapping mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters opencv_core opencv_imgproc opencv_highgui boost_system
 )
 
+add_executable(
+    fundamental_matrix_ransac_test
+    DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
+    DFNs/FundamentalMatrixComputation/FundamentalMatrixTester.cpp
+)
+target_link_libraries(
+	fundamental_matrix_ransac_test
+	cdff_helpers cdff_logger cdff_types converters_opencv fundamental_matrix_computation fundamental_matrix_ransac mock opencv_core opencv_imgproc opencv_highgui boost_system
+)
+
 
 #DFNs Integration
 add_executable(
