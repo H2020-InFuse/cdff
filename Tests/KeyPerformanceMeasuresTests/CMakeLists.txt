@@ -90,3 +90,15 @@ target_link_libraries(
 	ransac_essential_triangulation_test
 	cdff_helpers cdff_logger cdff_types converters_opencv fundamental_matrix_ransac essential_matrix_decomposition triangulation mock opencv_core opencv_imgproc opencv_highgui boost_system pcl_common
 )
+
+
+#DFPC
+add_executable(
+    quality_registration_from_stereo
+    DFPCs/Reconstruction3D/RegistrationFromStereo.cpp
+    DFPCs/Reconstruction3D/ReconstructionExecutor.cpp
+)
+target_link_libraries(
+	quality_registration_from_stereo
+	registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator
+)

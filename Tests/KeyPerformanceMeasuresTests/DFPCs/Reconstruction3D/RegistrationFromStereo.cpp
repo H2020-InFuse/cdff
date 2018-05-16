@@ -6,8 +6,8 @@
 */
 
 /*!
- * @file HirschmullerDisparityMapping.cpp
- * @date 14/05/2017
+ * @file RegistrationFromStereo.cpp
+ * @date 16/05/2017
  * @author Alessandro Bianco
  */
 
@@ -29,11 +29,11 @@
  *
  * --------------------------------------------------------------------------
  */
-#include "QualityTester.hpp"
-#include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
+#include "ReconstructionExecutor.hpp"
+#include <Reconstruction3D/RegistrationFromStereo.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfn_ci;
+using namespace dfpc_ci;
 
 /* --------------------------------------------------------------------------
  *
@@ -186,24 +186,24 @@ float ExtractComponentSizeThreshold(char* argument)
 	return componentSizeThreshold;
 	}
 
-int mainComputePointCloudMode(int argc, char** argv, StereoReconstructionInterface* dfn)
+int mainComputePointCloudMode(int argc, char** argv, Reconstruction3DInterface* dfpc)
 	{
 	std::string configurationFilePath;
-	std::string inputLeftImageFilePath;
-	std::string inputRightImageFilePath;
+	std::string inputImagesFolder;
+	std::string inputImagesListFileName;
 	std::string outputPointCloudFilePath;
 
 	ASSERT(argc == 6, USAGE);
 	configurationFilePath = argv[2];
-	inputLeftImageFilePath = argv[3];
-	inputRightImageFilePath = argv[4];
+	inputImagesFolder = argv[3];
+	inputImagesListFileName = argv[4];
 	outputPointCloudFilePath = argv[5];
 
 
-	QualityTester tester;
-	tester.SetDfn(configurationFilePath, dfn);
-	tester.SetInputFilesPaths(inputLeftImageFilePath, inputRightImageFilePath);
-	tester.ExecuteDfn();
+	ReconstructionExecutor tester;
+	tester.SetDfpc(configurationFilePath, dfpc);
+	tester.SetInputFilesPaths(inputImagesFolder, inputImagesListFileName);
+	tester.ExecuteDfpc();
 	tester.SaveOutputPointCloud(outputPointCloudFilePath);
 
 	return 0;
@@ -223,7 +223,7 @@ int mainEvaluateOutliersMode(int argc, char** argv)
 		outliersPercentageThreshold = ExtractOutliersPercentageThreshold(argv[4]);
 		}
 
-	QualityTester tester;
+	ReconstructionExecutor tester;
 	tester.SetOutputFilePath(outputPointCloudFilePath);
 	tester.SetOutliersFilePath(outliersReferenceFilePath);
 	bool success = tester.IsOutliersQualitySufficient(outliersPercentageThreshold);
@@ -248,7 +248,7 @@ int mainEvaluateDistanceToCamera(int argc, char** argv)
 		cameraDistanceError = ExtractCameraDistanceError(argv[5]);
 		}
 
-	QualityTester tester;
+	ReconstructionExecutor tester;
 	tester.SetOutputFilePath(outputPointCloudFilePath);
 	tester.SetMeasuresFilePath(outliersMeasuresFilePath);
 	bool success = tester.IsCameraDistanceQualitySufficient(cameraOperationDistance, cameraDistanceError);
@@ -281,7 +281,7 @@ int mainEvaluateDimensions(int argc, char** argv)
 		componentSizeThreshold = ExtractComponentSizeThreshold(argv[6]);
 		}
 
-	QualityTester tester;
+	ReconstructionExecutor tester;
 	tester.SetOutputFilePath(outputPointCloudFilePath);
 	tester.SetMeasuresFilePath(outliersMeasuresFilePath);
 	bool success = tester.IsDimensionsQualitySufficient(shapeSimilarityThreshold, dimensionalErrorThreshold, componentSizeThreshold);
@@ -297,8 +297,8 @@ int main(int argc, char** argv)
 	std::string mode = argv[1];
 	if (mode == "ComputePointCloud")
 		{
-		HirschmullerDisparityMapping* hirschmuller = new HirschmullerDisparityMapping();
-		return mainComputePointCloudMode(argc, argv, hirschmuller);
+		RegistrationFromStereo* registrationFromStereo = new RegistrationFromStereo();
+		return mainComputePointCloudMode(argc, argv, registrationFromStereo);
 		}
 	else if (mode == "EvaluateOutliers")
 		{

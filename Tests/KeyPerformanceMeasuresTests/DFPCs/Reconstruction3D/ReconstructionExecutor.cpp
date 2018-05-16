@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file QualityTester.cpp
- * @date 14/05/2018
+ * @file ReconstructionExecutor.cpp
+ * @date 16/05/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup GuiTests
  * 
- * Implementation of the QualityTester class.
+ * Implementation of the ReconstructionExecutor class.
  * 
  * 
  * @{
@@ -27,15 +27,18 @@
  *
  * --------------------------------------------------------------------------
  */
-#include "QualityTester.hpp"
+#include "ReconstructionExecutor.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <pcl/io/ply_io.h>
 
-using namespace dfn_ci;
+using namespace dfpc_ci;
 using namespace Converters;
 using namespace PointCloudWrapper;
+using namespace PoseWrapper;
 using namespace FrameWrapper;
 using namespace Common;
+using namespace VisualPointFeatureVector3DWrapper;
+using namespace SupportTypes;
 
 #define DELETE_IF_NOT_NULL(pointer) \
 	if (pointer != NULL) \
@@ -49,23 +52,24 @@ using namespace Common;
  *
  * --------------------------------------------------------------------------
  */
-QualityTester::QualityTester() 
+ReconstructionExecutor::ReconstructionExecutor() 
 	{
 	inputLeftFrame = NULL;
 	inputRightFrame = NULL;
 	outputPointCloud = NULL;
+	outputCameraPose = NULL;
 
 	inputImagesWereLoaded = false;
 	outputPointCloudWasLoaded = false;
 	outliersReferenceWasLoaded = false;
 	measuresReferenceWasLoaded = false;
-	dfnExecuted = false;
-	dfnWasLoaded = false;
+	dfpcExecuted = false;
+	dfpcWasLoaded = false;
 
 	SetUpMocksAndStubs();
 	}
 
-QualityTester::~QualityTester()
+ReconstructionExecutor::~ReconstructionExecutor()
 	{
 	delete(stubFrameCache);
 	delete(mockFrameConverter);
@@ -75,32 +79,47 @@ QualityTester::~QualityTester()
 
 	delete(stubCloudCache);
 	delete(mockCloudConverter);
+
+	delete(stubVector3dCache);
+	delete(mockVector3dConverter);
+
+	delete(stubNormalsCache);
+	delete(mockNormalsConverter);
+
+	delete(stubFeaturesCloudCache);
+	delete(mockFeaturesCloudConverter);
+
+	delete(stubInverseCloudCache);
+	delete(mockInverseCloudConverter);
+
+	delete(stubTransformCache);
+	delete(mockTransformConverter);
 	
 	DELETE_IF_NOT_NULL(inputLeftFrame);
 	DELETE_IF_NOT_NULL(inputRightFrame);
 	DELETE_IF_NOT_NULL(outputPointCloud);
+	DELETE_IF_NOT_NULL(outputCameraPose);
 	}
 
-void QualityTester::SetDfn(std::string configurationFilePath, dfn_ci::StereoReconstructionInterface* dfn)
+void ReconstructionExecutor::SetDfpc(std::string configurationFilePath, dfpc_ci::Reconstruction3DInterface* dfpc)
 	{
 	this->configurationFilePath = configurationFilePath;
-	this->dfn = dfn;
+	this->dfpc = dfpc;
 
-	ConfigureDfn();
-	dfnWasLoaded = true;
+	ConfigureDfpc();
+	dfpcWasLoaded = true;
 	}
 
-void QualityTester::SetInputFilesPaths(std::string inputLeftImageFilePath, std::string inputRightImageFilePath)
+void ReconstructionExecutor::SetInputFilesPaths(std::string inputImagesFolder, std::string inputImagesListFileName)
 	{
-	this->inputLeftImageFilePath = inputLeftImageFilePath;
-	this->inputRightImageFilePath = inputRightImageFilePath;
+	this->inputImagesFolder = inputImagesFolder;
+	this->inputImagesListFileName = inputImagesListFileName;
 
-	LoadInputImage(inputLeftImageFilePath, inputLeftFrame);
-	LoadInputImage(inputRightImageFilePath, inputRightFrame);
+	LoadInputImagesList();
 	inputImagesWereLoaded = true;
 	}
 
-void QualityTester::SetOutputFilePath(std::string outputPointCloudFilePath)
+void ReconstructionExecutor::SetOutputFilePath(std::string outputPointCloudFilePath)
 	{
 	this->outputPointCloudFilePath = outputPointCloudFilePath;
 
@@ -113,7 +132,7 @@ void QualityTester::SetOutputFilePath(std::string outputPointCloudFilePath)
 	outputPointCloudWasLoaded = true;
 	}
 
-void QualityTester::SetOutliersFilePath(std::string outliersReferenceFilePath)
+void ReconstructionExecutor::SetOutliersFilePath(std::string outliersReferenceFilePath)
 	{
 	this->outliersReferenceFilePath = outliersReferenceFilePath;
 
@@ -121,7 +140,7 @@ void QualityTester::SetOutliersFilePath(std::string outliersReferenceFilePath)
 	outliersReferenceWasLoaded = true;
 	}
 
-void QualityTester::SetMeasuresFilePath(std::string measuresReferenceFilePath)
+void ReconstructionExecutor::SetMeasuresFilePath(std::string measuresReferenceFilePath)
 	{
 	this->measuresReferenceFilePath = measuresReferenceFilePath;
 
@@ -129,21 +148,41 @@ void QualityTester::SetMeasuresFilePath(std::string measuresReferenceFilePath)
 	measuresReferenceWasLoaded = true;
 	}
 
-void QualityTester::ExecuteDfn()
+void ReconstructionExecutor::ExecuteDfpc()
 	{
-	ASSERT(inputImagesWereLoaded && dfnWasLoaded, "Cannot execute DFN if input images or the dfn itself are not loaded");
-	dfn->leftImageInput(inputLeftFrame);
-	dfn->rightImageInput(inputRightFrame);
-	dfn->process();
+	ASSERT(inputImagesWereLoaded && dfpcWasLoaded, "Cannot execute DFPC if input images or the DFPC itself are not loaded");
+	ASSERT(leftImageFileNamesList.size() == rightImageFileNamesList.size(), "Left images list and right images list do not have same dimensions");
 
-	DELETE_IF_NOT_NULL(outputPointCloud);
-	outputPointCloud = dfn->pointCloudOutput();
+	int successCounter = 0;
+	for(int imageIndex = 0; imageIndex < leftImageFileNamesList.size(); imageIndex++)
+		{
+		std::stringstream leftImageFilePath, rightImageFilePath;
+		leftImageFilePath << inputImagesFolder << "/" << leftImageFileNamesList.at(imageIndex);
+		rightImageFilePath << inputImagesFolder << "/" << rightImageFileNamesList.at(imageIndex);
+		LoadInputImage(leftImageFilePath.str(), inputLeftFrame);
+		LoadInputImage(rightImageFilePath.str(), inputRightFrame);
 
-	PRINT_TO_LOG("Point cloud size is", GetNumberOfPoints(*outputPointCloud));
-	dfnExecuted = true;
+		dfpc->leftImageInput(inputLeftFrame);
+		dfpc->rightImageInput(inputRightFrame);
+		dfpc->run();
+
+		DELETE_IF_NOT_NULL(outputPointCloud);
+		outputPointCloud = dfpc->pointCloudOutput();
+
+		DELETE_IF_NOT_NULL(outputCameraPose);
+		outputCameraPose = dfpc->poseOutput();
+
+		outputSuccess = dfpc->successOutput();
+		successCounter = (outputSuccess ? successCounter+1 : successCounter);
+		}
+
+	PRINT_TO_LOG("The reconstruction was successful on this number of images:", successCounter);
+	PRINT_TO_LOG("The final point cloud has size:", GetNumberOfPoints(*outputPointCloud));
+	PRINT_TO_LOG("The final pose of the camera is:", ToString(*outputCameraPose));
+	dfpcExecuted = true;
 	}
 
-bool QualityTester::IsOutliersQualitySufficient(float outliersPercentageThreshold)
+bool ReconstructionExecutor::IsOutliersQualitySufficient(float outliersPercentageThreshold)
 	{
 	ASSERT(outputPointCloudWasLoaded && outliersReferenceWasLoaded, "Error: you have to load cloud and outliers");
 
@@ -163,7 +202,7 @@ bool QualityTester::IsOutliersQualitySufficient(float outliersPercentageThreshol
 	return (withinOutliersThreshold);
 	}
 
-bool QualityTester::IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage)
+bool ReconstructionExecutor::IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage)
 	{
 	ASSERT(outputPointCloudWasLoaded && measuresReferenceWasLoaded, "Error: you have to load cloud and measures");
 	
@@ -178,7 +217,7 @@ bool QualityTester::IsCameraDistanceQualitySufficient(float cameraOperationDista
 	return withinCameraError;
 	}
 
-bool QualityTester::IsDimensionsQualitySufficient(float shapeSimilarityPercentange, float dimensionalErrorPercentage, float componentSizeThresholdPercentage)
+bool ReconstructionExecutor::IsDimensionsQualitySufficient(float shapeSimilarityPercentange, float dimensionalErrorPercentage, float componentSizeThresholdPercentage)
 	{
 	ASSERT(outputPointCloudWasLoaded && measuresReferenceWasLoaded, "Error: you have to load cloud and measures");
 
@@ -198,9 +237,9 @@ bool QualityTester::IsDimensionsQualitySufficient(float shapeSimilarityPercentan
 	return (validShape && validDimensions);
 	}
 
-void QualityTester::SaveOutputPointCloud(std::string outliersReferenceFilePath)
+void ReconstructionExecutor::SaveOutputPointCloud(std::string outputPointCloudFilePath)
 	{
-	ASSERT(dfnExecuted, "Cannot save output cloud if DFN was not executed before");
+	ASSERT(dfpcExecuted, "Cannot save output cloud if DFPC was not executed before");
 	
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclPointCloud = pointCloudConverter.Convert(outputPointCloud);
 
@@ -214,7 +253,7 @@ void QualityTester::SaveOutputPointCloud(std::string outliersReferenceFilePath)
  *
  * --------------------------------------------------------------------------
  */
-void QualityTester::SetUpMocksAndStubs()
+void ReconstructionExecutor::SetUpMocksAndStubs()
 	{
 	stubFrameCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>;
 	mockFrameConverter = new Mocks::MatToFrameConverter();
@@ -227,9 +266,29 @@ void QualityTester::SetUpMocksAndStubs()
 	stubCloudCache = new Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr>();
 	mockCloudConverter = new Mocks::PclPointCloudToPointCloudConverter();
 	ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Instance(stubCloudCache, mockCloudConverter);
+
+	stubVector3dCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>();
+	mockVector3dConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
+	ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubVector3dCache, mockVector3dConverter);
+
+	stubNormalsCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr>();
+	mockNormalsConverter = new Mocks::PointCloudToPclNormalsCloudConverter();
+	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr, PointCloudToPclNormalsCloudConverter>::Instance(stubNormalsCache, mockNormalsConverter);
+
+	stubInverseCloudCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>;
+	mockInverseCloudConverter = new Mocks::PointCloudToPclPointCloudConverter();
+	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInverseCloudCache, mockInverseCloudConverter);
+
+	stubFeaturesCloudCache = new Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>();
+	mockFeaturesCloudConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
+	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubFeaturesCloudCache, mockFeaturesCloudConverter);
+
+	stubTransformCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
+	mockTransformConverter = new Mocks::EigenTransformToTransform3DConverter();
+	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubTransformCache, mockTransformConverter);
 	}
 
-void QualityTester::LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame)
+void ReconstructionExecutor::LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame)
 	{
 	cv::Mat cvImage = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
 	ASSERT(cvImage.cols > 0 && cvImage.rows >0, "Error: Loaded input image is empty");
@@ -238,7 +297,31 @@ void QualityTester::LoadInputImage(std::string filePath, FrameWrapper::FrameCons
 	frame = frameConverter.Convert(cvImage);
 	}
 
-void QualityTester::LoadOutliersReference()
+void ReconstructionExecutor::LoadInputImagesList()
+	{
+	std::stringstream imagesListFilePath;
+	imagesListFilePath << inputImagesFolder << "/" << inputImagesListFileName;
+	std::ifstream imagesListFile(imagesListFilePath.str().c_str());
+	ASSERT(imagesListFile.good(), "Error it was not possible to open the images list file");
+	
+	std::string line;
+	std::getline(imagesListFile, line);
+	std::getline(imagesListFile, line);
+	std::getline(imagesListFile, line);
+	while (std::getline(imagesListFile, line))
+		{
+		std::vector<std::string> stringsList;
+		boost::split(stringsList, line, boost::is_any_of(" "));
+		ASSERT(stringsList.size() == 3, "Error reading file, bad line");
+		
+		leftImageFileNamesList.push_back( std::string(stringsList.at(1)) );
+		rightImageFileNamesList.push_back( std::string(stringsList.at(2)) );
+		}
+
+	imagesListFile.close();
+	}
+
+void ReconstructionExecutor::LoadOutliersReference()
 	{
 	cv::FileStorage opencvFile(outliersReferenceFilePath, cv::FileStorage::READ);
 	opencvFile["OutliersMatrix"] >> outliersMatrix;
@@ -246,7 +329,7 @@ void QualityTester::LoadOutliersReference()
 	ASSERT(outliersMatrix.rows > 0 && outliersMatrix.cols == 1 && outliersMatrix.type() == CV_32SC1, "Error: reference outliers are invalid");
 	}
 
-void QualityTester::LoadMeasuresReference()
+void ReconstructionExecutor::LoadMeasuresReference()
 	{
 	cv::Mat objectsMatrix;
 
@@ -275,13 +358,13 @@ void QualityTester::LoadMeasuresReference()
 		}
 	}
 
-void QualityTester::ConfigureDfn()
+void ReconstructionExecutor::ConfigureDfpc()
 	{
-	dfn->setConfigurationFile(configurationFilePath);
-	dfn->configure();
+	dfpc->setConfigurationFile(configurationFilePath);
+	dfpc->setup();
 	}
 
-float QualityTester::ComputeCameraDistanceError()
+float ReconstructionExecutor::ComputeCameraDistanceError()
 	{
 	float cameraDistanceError = 0;
 	for(int pointIndex = 0; pointIndex < pointsToCameraMatrix.rows; pointIndex++)
@@ -303,7 +386,7 @@ float QualityTester::ComputeCameraDistanceError()
 	return averageError;
 	}
 
-float QualityTester::ComputeShapeSimilarity()
+float ReconstructionExecutor::ComputeShapeSimilarity()
 	{
 	float totalShapeSimilarity = 0;
 	for(int objectIndex = 0; objectIndex < objectsList.size(); objectIndex++)
@@ -319,7 +402,7 @@ float QualityTester::ComputeShapeSimilarity()
 	return averageShapeSimilarity;
 	}
 
-bool QualityTester::EvaluateDimensionalError(float dimensionalErrorPercentage, float componentSizeThresholdPercentage)
+bool ReconstructionExecutor::EvaluateDimensionalError(float dimensionalErrorPercentage, float componentSizeThresholdPercentage)
 	{
 	for(int objectIndex = 0; objectIndex < objectsList.size(); objectIndex++)
 		{
@@ -345,7 +428,7 @@ bool QualityTester::EvaluateDimensionalError(float dimensionalErrorPercentage, f
 	return true;
 	}
 
-float QualityTester::ComputeObjectDimension(int objectIndex)
+float ReconstructionExecutor::ComputeObjectDimension(int objectIndex)
 	{
 	float maxDimension = 0;
 	for(int lineIndex = 0; lineIndex < objectsList.at(objectIndex).size(); lineIndex++)
@@ -359,7 +442,7 @@ float QualityTester::ComputeObjectDimension(int objectIndex)
 	return maxDimension;
 	}
 
-float QualityTester::ComputeLineAbsoluteError(const Line& line)
+float ReconstructionExecutor::ComputeLineAbsoluteError(const Line& line)
 	{
 	float sourceX = GetXCoordinate(*outputPointCloud, line.sourceIndex);
 	float sourceY = GetYCoordinate(*outputPointCloud, line.sourceIndex);
@@ -375,7 +458,7 @@ float QualityTester::ComputeLineAbsoluteError(const Line& line)
 	return absoluteError;
 	}
 
-float QualityTester::ComputeObjectShapeSimilarity(int objectIndex)
+float ReconstructionExecutor::ComputeObjectShapeSimilarity(int objectIndex)
 	{
 	float dimension = ComputeObjectDimension(objectIndex);
 	
