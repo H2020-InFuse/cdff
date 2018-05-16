@@ -118,3 +118,13 @@ target_link_libraries(
 	detect_outliers
 	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters boost_system yaml-cpp ${VTK_LIBRARIES} boost_system cdff_pcl_visualizer
 )
+
+add_executable(
+    measures_lines
+    SyntheticGenerators/MeasureLines.cpp
+    SyntheticGenerators/ShapesProfiler.cpp
+)
+target_link_libraries(
+	measures_lines
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters boost_system yaml-cpp ${VTK_LIBRARIES} boost_system cdff_pcl_visualizer
+)
