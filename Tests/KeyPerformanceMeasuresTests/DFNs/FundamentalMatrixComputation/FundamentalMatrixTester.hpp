@@ -42,6 +42,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <boost/make_shared.hpp>
 
 /* --------------------------------------------------------------------------
  *
