@@ -72,6 +72,7 @@ ShapesProfiler::ShapesProfiler(std::string inputCloudFilePath, std::string shape
 	profilerIsActive = true;
 	cloudChangedSinceLastVisualization = true;
 	focusChangedSinceLastVisualization = true;
+	cameraCoordinatesWereSet = false;
 	activeObject = -1;
 	profilerMode = PROFILE_DISTANCES_TO_CAMERA;
 	profilerState = START_STATE;
@@ -251,6 +252,7 @@ void ShapesProfiler::HandleObjectsModePointPicking(int32_t originalPointIndex)
 			(objectsList.at(activeObject).end()-1)->sinkIndex = originalPointIndex;
 			profilerState = SECOND_LINE_POINT_PICKED;
 			PRINT_TO_LOG("line added, ending at:", originalPointIndex);
+			PRINT_TO_LOG("On this point cloud the line has dimension:", ComputeLineLength( (objectsList.at(activeObject).end()-1)->sourceIndex, originalPointIndex) );
 			}
 		cloudChangedSinceLastVisualization = true;
 		}
@@ -270,6 +272,10 @@ void ShapesProfiler::HandlePointsModePointPicking(int32_t originalPointIndex)
 		profilerState = POINT_TO_CAMERA_PICKED;
 		PRINT_TO_LOG("Point added: ", originalPointIndex);
 		cloudChangedSinceLastVisualization = true;
+		if (cameraCoordinatesWereSet)
+			{
+			PRINT_TO_LOG("On this point cloud the point-camera distance is:", ComputeDistanceToCameraCoordinates(originalPointIndex) );
+			}
 		}
 	else
 		{
@@ -496,6 +502,12 @@ void ShapesProfiler::KeyboardButtonCallback(const pcl::visualization::KeyboardEv
 			{
 			PRINT_TO_LOG("plese complete your selection before switching to inspection state", "");
 			}
+		}
+	else if (command == 6) //Ctr+F
+		{
+		std::cout << "Please input the three coordinates of the camera (x, y, z):" <<std::endl;		
+		cin >> cameraCoordinates.x >> cameraCoordinates.y >> cameraCoordinates.z;
+		cameraCoordinatesWereSet = true;
 		}
 	}
 
@@ -778,6 +790,26 @@ float ShapesProfiler::ComputeMinimumDistanceBetweenPoints(pcl::PointCloud<pcl::P
 			}		
 		}
 	return minimumDistance;
+	}
+
+float ShapesProfiler::ComputeLineLength(int32_t sourceIndex, int32_t sinkIndex)
+	{
+	pcl::PointXYZ& sourcePoint = originalCloud->points.at(sourceIndex);
+	pcl::PointXYZ& sinkPoint = originalCloud->points.at(sinkIndex);
+	float distanceX = sourcePoint.x - sinkPoint.x;
+	float distanceY = sourcePoint.y - sinkPoint.y;
+	float distanceZ = sourcePoint.z - sinkPoint.z;
+	return std::sqrt(distanceX*distanceX + distanceY*distanceY + distanceZ*distanceZ);
+	}
+
+float ShapesProfiler::ComputeDistanceToCameraCoordinates(int32_t index)
+	{
+	ASSERT(cameraCoordinatesWereSet, "Tried to compute distance to camera, but camera was not set");
+	pcl::PointXYZ& point = originalCloud->points.at(index);
+	float distanceX = point.x - cameraCoordinates.x;
+	float distanceY = point.y - cameraCoordinates.y;
+	float distanceZ = point.z - cameraCoordinates.z;
+	return std::sqrt(distanceX*distanceX + distanceY*distanceY + distanceZ*distanceZ);
 	}
 
 }

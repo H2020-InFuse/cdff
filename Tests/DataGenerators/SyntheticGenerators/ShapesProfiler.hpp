@@ -127,6 +127,9 @@ namespace DataGenerators {
 		ProfilerMode profilerMode;
 		ProfilerState profilerState;
 
+		pcl::PointXYZ cameraCoordinates;
+		bool cameraCoordinatesWereSet;
+
 		std::string inputCloudFilePath;
 		std::string shapesFilePath;
 
@@ -156,6 +159,8 @@ namespace DataGenerators {
 		void ComputeCloudCenter(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, pcl::PointXYZ& center);
 		float ComputeCloudRadius(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const pcl::PointXYZ& center);
 		float ComputeMinimumDistanceBetweenPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
+		float ComputeLineLength(int32_t sourceIndex, int32_t sinkIndex);
+		float ComputeDistanceToCameraCoordinates(int32_t index);
     };
 
 }

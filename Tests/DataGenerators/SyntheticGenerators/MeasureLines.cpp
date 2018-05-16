@@ -49,6 +49,7 @@ const std::string INSTRUCTIONS =
 	press Ctrl+J to input the length of a line or (point - to camera) distance in the standard input \n \
 	press Ctrl+M to save the outliers to file \n \
 	press Ctrl+Z to switch in and out of inspection mode \n \
+	press Ctrl+F to input the coordinates of a camera (for measuring its distance from the selected points in point-to-camera mode)\n \
 	press Ctrl+Q or E to quit \n \n";
 
 int main(int argc, char** argv)
