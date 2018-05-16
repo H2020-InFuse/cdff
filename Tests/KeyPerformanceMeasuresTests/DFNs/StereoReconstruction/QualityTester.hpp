@@ -52,6 +52,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <boost/make_shared.hpp>
 
 /* --------------------------------------------------------------------------
  *
@@ -73,8 +74,11 @@ class QualityTester
 		void SetInputFilesPaths(std::string inputLeftImageFilePath, std::string inputRightImageFilePath);
 		void SetOutputFilePath(std::string outputPointCloudFilePath);
 		void SetOutliersFilePath(std::string outliersReferenceFilePath);
+		void SetMeasuresFilePath(std::string measuresReferenceFilePath);
 		void ExecuteDfn();
-		bool IsQualitySufficient(float outliersPercentageThreshold);
+		bool IsOutliersQualitySufficient(float outliersPercentageThreshold);
+		bool IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage);
+		bool IsDimensionsQualitySufficient(float shapeSimilarityPercentange, float dimensionalErrorPercentage, float componentSizeThresholdPercentage);
 
 		void SaveOutputPointCloud();
 
@@ -90,6 +94,15 @@ class QualityTester
 	 * --------------------------------------------------------------------
 	 */
 	private:
+		struct Line
+			{
+			int32_t sourceIndex;
+			int32_t sinkIndex;
+			float length;
+			};
+
+		typedef std::vector<Line> Object;
+
 		Stubs::CacheHandler<cv::Mat, FrameWrapper::FrameConstPtr>* stubFrameCache;
 		Mocks::MatToFrameConverter* mockFrameConverter;
 
@@ -104,11 +117,14 @@ class QualityTester
 		std::string inputRightImageFilePath;
 		std::string outputPointCloudFilePath;
 		std::string outliersReferenceFilePath;
+		std::string measuresReferenceFilePath;
 
 		FrameWrapper::FrameConstPtr inputLeftFrame;
 		FrameWrapper::FrameConstPtr inputRightFrame;
 		PointCloudWrapper::PointCloudConstPtr outputPointCloud;
 		cv::Mat outliersMatrix;
+		cv::Mat pointsToCameraMatrix;
+		std::vector<Object> objectsList;
 
 		Converters::MatToFrameConverter frameConverter;
 		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
@@ -118,6 +134,7 @@ class QualityTester
 		bool inputImagesWereLoaded;
 		bool outputPointCloudWasLoaded;
 		bool outliersReferenceWasLoaded;
+		bool measuresReferenceWasLoaded;
 		bool dfnExecuted;
 		bool dfnWasLoaded;
 
@@ -125,7 +142,15 @@ class QualityTester
 		void LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame);
 		void LoadOutputPointCloud();
 		void LoadOutliersReference();
+		void LoadMeasuresReference();
 		void ConfigureDfn();
+
+		float ComputeCameraDistanceError();
+		float ComputeShapeSimilarity();
+		bool EvaluateDimensionalError(float dimensionalErrorPercentage, float componentSizeThresholdPercentage);
+		float ComputeObjectDimension(int objectIndex);
+		float ComputeLineAbsoluteError(const Line& line);
+		float ComputeObjectShapeSimilarity(int objectIndex);
 	};
 
 #endif
