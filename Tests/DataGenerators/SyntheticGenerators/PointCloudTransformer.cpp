@@ -79,7 +79,23 @@ void PointCloudTransformer::TransformCloud(float positionX, float positionY, flo
 	InitTransformedCloud();
 	Eigen::Quaternion<float> rotation(rotationW, rotationX, rotationY, rotationZ);
 	Eigen::Translation<float, 3> translation(positionX, positionY, positionZ);
+
 	AffineTransform affineTransform = rotation * translation;
+	
+	for(unsigned pointIndex = 0; pointIndex < transformedCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ transformedPoint = TransformPoint( pointCloud->points.at(pointIndex), affineTransform );
+		transformedCloud->points.at(pointIndex) = transformedPoint;
+		}
+	}
+
+void PointCloudTransformer::TransformCamera(float positionX, float positionY, float positionZ, float rotationX, float rotationY, float rotationZ, float rotationW)
+	{
+	InitTransformedCloud();
+	Eigen::Quaternion<float> rotation(rotationW, rotationX, rotationY, rotationZ);
+	Eigen::Translation<float, 3> translation(-positionX, -positionY, -positionZ);
+
+	AffineTransform affineTransform = InvertQuaternion(rotation) * translation;
 	
 	for(unsigned pointIndex = 0; pointIndex < transformedCloud->points.size(); pointIndex++)
 		{
@@ -147,6 +163,12 @@ pcl::PointXYZ PointCloudTransformer::TransformPoint(const pcl::PointXYZ& point, 
 	transformedPoint.y = eigenTransformedPoint.y();
 	transformedPoint.z = eigenTransformedPoint.z();
 	return transformedPoint;
+	}
+
+Eigen::Quaternion<float> PointCloudTransformer::InvertQuaternion(Eigen::Quaternion<float> input)
+	{
+	float sum = std::abs( input.x() * input.x() + input.y() * input.y() + input.z() * input.z() + input.w() * input.w() );
+	return Eigen::Quaternion<float>( input.w() / sum, -input.x() / sum, -input.y() / sum, -input.z() / sum); 
 	}
 
 }
