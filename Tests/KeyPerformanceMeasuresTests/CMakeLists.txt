@@ -10,6 +10,16 @@ target_link_libraries(
 )
 
 add_executable(
+    validity_orb_detector_2d
+    DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
+    DFNs/FeaturesExtraction2D/SelectionTester.cpp
+)
+target_link_libraries(
+	validity_orb_detector_2d
+	cdff_helpers cdff_logger cdff_types converters_opencv orb_detector_descriptor feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system
+)
+
+add_executable(
     linearity_image_undistortion
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/ImageFiltering/LinearityTester.cpp
