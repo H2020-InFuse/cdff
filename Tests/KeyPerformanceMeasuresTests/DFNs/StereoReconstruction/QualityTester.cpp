@@ -198,7 +198,7 @@ bool QualityTester::IsDimensionsQualitySufficient(float shapeSimilarityPercentan
 	return (validShape && validDimensions);
 	}
 
-void QualityTester::SaveOutputPointCloud(std::string outliersReferenceFilePath)
+void QualityTester::SaveOutputPointCloud(std::string outputPointCloudFilePath)
 	{
 	ASSERT(dfnExecuted, "Cannot save output cloud if DFN was not executed before");
 	

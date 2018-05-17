@@ -19,6 +19,6 @@
   LeftPrinciplePointY: 463.537109375
   Baseline: 0.239977002
 - Name: ReconstructionSpace
-  LimitX: 3
-  LimitY: 3
-  LimitZ: 0.5
+  LimitX: 5
+  LimitY: 5
+  LimitZ: 5
