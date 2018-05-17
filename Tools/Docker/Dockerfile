@@ -1,8 +1,5 @@
 FROM ubuntu:16.04
 
-LABEL version="1.7"
-LABEL maintainer="xma@spaceapplications.com,romain.michalec@strath.ac.uk"
-LABEL description="Image providing the CDFF's dependencies compiled from source and installed in /usr/local"
 
 # Install the basic tools that are not already available in the base image
 RUN apt-get update && apt-get install -y \
@@ -48,3 +45,7 @@ RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /u
 
 COPY installers/pcl.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s pcl
+
+LABEL version="1.7.1"
+LABEL maintainer="xma@spaceapplications.com,romain.michalec@strath.ac.uk"
+LABEL description="Image providing the CDFF's dependencies compiled from source and installed in /usr/local"
