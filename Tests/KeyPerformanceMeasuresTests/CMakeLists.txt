@@ -50,6 +50,16 @@ target_link_libraries(
 )
 
 add_executable(
+    quality_scanline
+    DFNs/StereoReconstruction/ScanlineOptimization.cpp
+    DFNs/StereoReconstruction/QualityTester.cpp
+)
+target_link_libraries(
+	quality_scanline
+	cdff_helpers cdff_logger cdff_types converters_opencv stereoReconstruction scanline_optimization mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters opencv_core opencv_imgproc opencv_highgui boost_system
+)
+
+add_executable(
     fundamental_matrix_ransac_test
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixTester.cpp
