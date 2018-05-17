@@ -1,5 +1,5 @@
 - Name: GeneralParameters
-  CostAggregationRadius: 5
+  CostAggregationRadius: 10
   SpatialBandwidth: 25
   ColorBandwidth: 15
   StrongSmoothnessPenalty: 1
