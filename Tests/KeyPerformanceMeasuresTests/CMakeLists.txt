@@ -10,6 +10,16 @@ target_link_libraries(
 )
 
 add_executable(
+    validity_orb_detector_2d
+    DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
+    DFNs/FeaturesExtraction2D/SelectionTester.cpp
+)
+target_link_libraries(
+	validity_orb_detector_2d
+	cdff_helpers cdff_logger cdff_types converters_opencv orb_detector_descriptor feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system
+)
+
+add_executable(
     linearity_image_undistortion
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/ImageFiltering/LinearityTester.cpp
@@ -89,4 +99,16 @@ add_executable(
 target_link_libraries(
 	ransac_essential_triangulation_test
 	cdff_helpers cdff_logger cdff_types converters_opencv fundamental_matrix_ransac essential_matrix_decomposition triangulation mock opencv_core opencv_imgproc opencv_highgui boost_system pcl_common
+)
+
+
+#DFPC
+add_executable(
+    quality_registration_from_stereo
+    DFPCs/Reconstruction3D/RegistrationFromStereo.cpp
+    DFPCs/Reconstruction3D/ReconstructionExecutor.cpp
+)
+target_link_libraries(
+	quality_registration_from_stereo
+	registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator
 )

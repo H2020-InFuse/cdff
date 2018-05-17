@@ -6,25 +6,21 @@
 */
 
 /*!
- * @file QualityTester.hpp
- * @date 14/05/2018
+ * @file ReconstructionExecutor.hpp
+ * @date 16/05/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup GuiTests
  * 
- * This class will test requirement 4.1.1.6 of deliverable 5.5.
- * "Resulting point cloud should be within the expected bounds of error described in D5.2", and
- * "Expected performance is no more than 10% outliers as estimated by a human inspecting the point cloud", and 
- * "position estimation less than 1% of R, where R is the maximum operational distance of the camera/sensor", and 
- * "90% similarity in shape to the object viewed with less than 10% error in dimensional analysis (only for components larger than 10% of the total size of the object)"
+ * This class is used for execution of the DFPC StereoReconstruction on a sequence of input images
  *
  * @{
  */
 
-#ifndef QUALITY_TESTER_HPP
-#define QUALITY_TESTER_HPP
+#ifndef RECONSTRUCTION_EXECUTOR_HPP
+#define RECONSTRUCTION_EXECUTOR_HPP
 
 
 /* --------------------------------------------------------------------------
@@ -33,7 +29,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <StereoReconstruction/StereoReconstructionInterface.hpp>
+#include <Reconstruction3D/Reconstruction3DInterface.hpp>
 #include <Errors/Assert.hpp>
 
 #include <Frame.hpp>
@@ -47,6 +43,11 @@
 #include <Mocks/Common/Converters/MatToFrameConverter.hpp>
 #include <Mocks/Common/Converters/FrameToMatConverter.hpp>
 #include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
+#include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.hpp>
+#include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Mocks/Common/Converters/PointCloudToPclNormalsCloudConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -60,27 +61,27 @@
  *
  * --------------------------------------------------------------------------
  */
-class QualityTester
+class ReconstructionExecutor
 	{
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		QualityTester();
-		~QualityTester();
+		ReconstructionExecutor();
+		~ReconstructionExecutor();
 
-		void SetDfn(std::string configurationFilePath, dfn_ci::StereoReconstructionInterface* dfn);
-		void SetInputFilesPaths(std::string inputLeftImageFilePath, std::string inputRightImageFilePath);
+		void SetDfpc(std::string configurationFilePath, dfpc_ci::Reconstruction3DInterface* dfpc);
+		void SetInputFilesPaths(std::string inputImagesFolder, std::string inputImagesListFileName);
 		void SetOutputFilePath(std::string outputPointCloudFilePath);
 		void SetOutliersFilePath(std::string outliersReferenceFilePath);
 		void SetMeasuresFilePath(std::string measuresReferenceFilePath);
-		void ExecuteDfn();
+		void ExecuteDfpc();
 		bool IsOutliersQualitySufficient(float outliersPercentageThreshold);
 		bool IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage);
 		bool IsDimensionsQualitySufficient(float shapeSimilarityPercentange, float dimensionalErrorPercentage, float componentSizeThresholdPercentage);
 
-		void SaveOutputPointCloud(std::string outliersReferenceFilePath);
+		void SaveOutputPointCloud(std::string outputPointCloudFilePath);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -112,16 +113,35 @@ class QualityTester
 		Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr>* stubCloudCache;
 		Mocks::PclPointCloudToPointCloudConverter* mockCloudConverter;
 
+		Stubs::CacheHandler<PointCloudWrapper::PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInverseCloudCache;
+		Mocks::PointCloudToPclPointCloudConverter* mockInverseCloudConverter;
+
+		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr>* stubVector3dCache;
+		Mocks::MatToVisualPointFeatureVector3DConverter* mockVector3dConverter;
+
+		Stubs::CacheHandler<PointCloudWrapper::PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr >* stubNormalsCache;
+		Mocks::PointCloudToPclNormalsCloudConverter* mockNormalsConverter;
+
+		Stubs::CacheHandler<VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr, Converters::SupportTypes::PointCloudWithFeatures >* stubFeaturesCloudCache;
+		Mocks::VisualPointFeatureVector3DToPclPointCloudConverter* mockFeaturesCloudConverter;
+
+		Stubs::CacheHandler<Eigen::Matrix4f, PoseWrapper::Transform3DConstPtr>* stubTransformCache;
+		Mocks::EigenTransformToTransform3DConverter* mockTransformConverter;
+
 		std::string configurationFilePath;
-		std::string inputLeftImageFilePath;
-		std::string inputRightImageFilePath;
+		std::string inputImagesFolder;
+		std::string inputImagesListFileName;
 		std::string outputPointCloudFilePath;
 		std::string outliersReferenceFilePath;
 		std::string measuresReferenceFilePath;
+		std::vector<std::string> leftImageFileNamesList;
+		std::vector<std::string> rightImageFileNamesList;
 
 		FrameWrapper::FrameConstPtr inputLeftFrame;
 		FrameWrapper::FrameConstPtr inputRightFrame;
 		PointCloudWrapper::PointCloudConstPtr outputPointCloud;
+		PoseWrapper::Pose3DConstPtr outputCameraPose;
+		bool outputSuccess;
 		cv::Mat outliersMatrix;
 		cv::Mat pointsToCameraMatrix;
 		std::vector<Object> objectsList;
@@ -129,21 +149,22 @@ class QualityTester
 		Converters::MatToFrameConverter frameConverter;
 		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 		Converters::PclPointCloudToPointCloudConverter inverseCloudConverter;
-		dfn_ci::StereoReconstructionInterface* dfn;
+		dfpc_ci::Reconstruction3DInterface* dfpc;
 
 		bool inputImagesWereLoaded;
 		bool outputPointCloudWasLoaded;
 		bool outliersReferenceWasLoaded;
 		bool measuresReferenceWasLoaded;
-		bool dfnExecuted;
-		bool dfnWasLoaded;
+		bool dfpcExecuted;
+		bool dfpcWasLoaded;
 
 		void SetUpMocksAndStubs();
 		void LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame);
+		void LoadInputImagesList();
 		void LoadOutputPointCloud();
 		void LoadOutliersReference();
 		void LoadMeasuresReference();
-		void ConfigureDfn();
+		void ConfigureDfpc();
 
 		float ComputeCameraDistanceError();
 		float ComputeShapeSimilarity();
@@ -155,5 +176,5 @@ class QualityTester
 
 #endif
 
-/* QualityTester.hpp */
+/* ReconstructionExecutor.hpp */
 /** @} */

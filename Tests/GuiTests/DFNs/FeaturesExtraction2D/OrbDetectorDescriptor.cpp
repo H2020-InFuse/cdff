@@ -88,7 +88,7 @@ OrbDetectorDescriptorTestInterface::OrbDetectorDescriptorTestInterface(std::stri
 	saveFeaturesToFile = true;
 
 	MatToFrameConverter converter;
-	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/Scene10.png", cv::IMREAD_COLOR);
+	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/DevonIslandLeft.ppm", cv::IMREAD_COLOR);
 	cvImage = doubleImage( cv::Rect(0, 0, doubleImage.cols/2, doubleImage.rows) );
 	inputImage = converter.Convert(cvImage);
 	orb->imageInput(inputImage);
