@@ -82,6 +82,16 @@ target_link_libraries(
 )
 
 add_executable(
+    correctness_harris_shot_ransac
+    DFNsIntegration/Odometry3D/HarrisShotRansac.cpp
+    DFNsIntegration/Odometry3D/CorrectLocalizationTester.cpp
+)
+target_link_libraries(
+	correctness_harris_shot_ransac
+	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_3d feature_extraction_3d shot_descriptor_3d feature_description_3d ransac_3d feature_matching_3d mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+)
+
+add_executable(
     validity_orb_flann
     DFNsIntegration/Matching2D/OrbFlann.cpp
     DFNsIntegration/Matching2D/SelectionTester.cpp
@@ -99,6 +109,16 @@ add_executable(
 target_link_libraries(
 	validity_shot_icp
 	cdff_helpers cdff_logger cdff_types converters_opencv shot_descriptor_3d feature_description_3d icp_3d feature_matching_3d mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+)
+
+add_executable(
+    validity_shot_ransac
+    DFNsIntegration/Matching3D/ShotRansac.cpp
+    DFNsIntegration/Matching3D/SelectionTester.cpp
+)
+target_link_libraries(
+	validity_shot_ransac
+	cdff_helpers cdff_logger cdff_types converters_opencv shot_descriptor_3d feature_description_3d ransac_3d feature_matching_3d mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
 
 add_executable(
