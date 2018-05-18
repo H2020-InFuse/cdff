@@ -175,11 +175,14 @@ PointCloudConstPtr Triangulation::Convert(cv::Mat homogeneousPointCloudMatrix)
 		float homogeneousPointFactor = homogeneousPointCloudMatrix.at<float>(3, pointIndex);
 		if ( std::abs(homogeneousPointFactor) < EPSILON)
 			{
-			AddPoint(*pointCloud, 0, 0, 0);
+			//AddPoint(*pointCloud, 0, 0, 0);
 			}
 		else
 			{
-			AddPoint(*pointCloud, homogeneousPointX/homogeneousPointFactor, homogeneousPointY/homogeneousPointFactor, homogeneousPointZ/homogeneousPointFactor);
+			if (homogeneousPointZ/homogeneousPointFactor > 0)
+				{
+				AddPoint(*pointCloud, homogeneousPointX/homogeneousPointFactor, homogeneousPointY/homogeneousPointFactor, homogeneousPointZ/homogeneousPointFactor);
+				}
 			}
 		}
 	return pointCloud;
