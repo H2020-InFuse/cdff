@@ -301,26 +301,13 @@ DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMat
 
 	if (icpSuccess)
 		{
-<<<<<<< HEAD
-		float differenceX = GetXPosition(groundTruthPose) - GetXPosition(*modelPoseInScene);
-		float differenceY = GetYPosition(groundTruthPose) - GetYPosition(*modelPoseInScene);
-		float differenceZ = GetZPosition(groundTruthPose) - GetZPosition(*modelPoseInScene);
-		float squaredDistance = differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ;
-		measuresMap["PositionDistance"] = std::sqrt(squaredDistance);
 
-		float scalarProduct =
-			GetXOrientation(groundTruthPose) * GetXOrientation(*modelPoseInScene) +
-			GetYOrientation(groundTruthPose) * GetYOrientation(*modelPoseInScene) +
-			GetZOrientation(groundTruthPose) * GetZOrientation(*modelPoseInScene) +
-			GetWOrientation(groundTruthPose) * GetWOrientation(*modelPoseInScene);
-		measuresMap["AngleDistace"] = 1 - scalarProduct*scalarProduct;				
-=======
 		float positionDistance, angleDistance;
 		ComputeDistanceToGroundTruth(positionDistance, angleDistance);
 
 		measuresMap["PositionDistance"] = positionDistance;
 		measuresMap["AngleDistace"] = angleDistance;				
->>>>>>> origin/master
+
 		}
 	else
 		{
