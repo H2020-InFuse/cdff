@@ -208,11 +208,9 @@ void PclVisualizer::SavePointCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr poin
 	writer.write(cloudOutputPath.str(), *pointCloud);
 
 	saveTime++;
-<<<<<<< HEAD
-	time = 0;
-=======
+
 	time = 1;
->>>>>>> origin/master
+
 	}
 	
 void PclVisualizer::SavePointCloud(PointCloudConstPtr pointCloud, unsigned period)

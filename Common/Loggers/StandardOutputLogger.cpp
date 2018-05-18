@@ -62,16 +62,6 @@ void StandardOutputLogger::Print()
 		}	
 	}
 
-<<<<<<< HEAD
-void StandardOutputLogger::SetColorRed()
-	{
-	std::cout<<"\033[1;31m";
-	}
-
-void StandardOutputLogger::SetColorNormal()
-	{
-	std::cout<<"\033[0m";
-=======
 /* --------------------------------------------------------------------------
  *
  * Private Member Functions
@@ -100,7 +90,7 @@ std::string StandardOutputLogger::MessageTypeToColorCode(MessageType messageType
 			}
 		}
 	return "";
->>>>>>> origin/master
+
 	}
 
 /** @} */

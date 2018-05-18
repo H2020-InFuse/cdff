@@ -65,8 +65,6 @@ target_link_libraries(
 	images_scapper
 	cdff_logger
 )
-<<<<<<< HEAD
-=======
 
 add_executable(
     paint_image
@@ -130,4 +128,4 @@ target_link_libraries(
 	measures_lines
 	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters boost_system yaml-cpp ${VTK_LIBRARIES} boost_system cdff_pcl_visualizer
 )
->>>>>>> origin/master
+
