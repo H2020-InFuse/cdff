@@ -31,6 +31,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
+    DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
@@ -38,8 +39,6 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
     DFPCs/Reconstruction3D/ObservedScene.cpp
-    DFNs/KFPrediction/KalmanPredictor.cpp
-
 )
 
 # Libraries used by the aforementioned source files. They will be linked in the
@@ -63,11 +62,13 @@ set(UNITTEST_LIBRARIES Catch
     icp_3d
     image_undistortion
     iterative_pnp_solver
+    kalman_predictor
     mock
     opencv_core
     opencv_highgui
     opencv_imgcodecs
     opencv_imgproc
+    opencv_video
     orb_detector_descriptor
     orb_descriptor
     pcl_common
@@ -95,9 +96,7 @@ set(UNITTEST_LIBRARIES Catch
     shot_descriptor_3d
     synthetic_generators
     triangulation
-    kalman_predictor
-    opencv_video
-)
+   )
 
 # Make the Catch executable that runs the unit tests
 add_executable(cdff-unit-tests ${UNITTEST_SOURCES})

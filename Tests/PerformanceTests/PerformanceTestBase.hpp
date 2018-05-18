@@ -118,6 +118,7 @@ class PerformanceTestBase
 			{
 			unsigned configurationFileIndex;
 			unsigned groupIndex;
+			std::string groupName;
 			std::string name;
 			unsigned optionsNumber;
 			unsigned currentOption;

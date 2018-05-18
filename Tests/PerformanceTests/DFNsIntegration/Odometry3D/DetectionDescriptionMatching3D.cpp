@@ -301,6 +301,7 @@ DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMat
 
 	if (icpSuccess)
 		{
+<<<<<<< HEAD
 		float differenceX = GetXPosition(groundTruthPose) - GetXPosition(*modelPoseInScene);
 		float differenceY = GetYPosition(groundTruthPose) - GetYPosition(*modelPoseInScene);
 		float differenceZ = GetZPosition(groundTruthPose) - GetZPosition(*modelPoseInScene);
@@ -313,6 +314,13 @@ DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMat
 			GetZOrientation(groundTruthPose) * GetZOrientation(*modelPoseInScene) +
 			GetWOrientation(groundTruthPose) * GetWOrientation(*modelPoseInScene);
 		measuresMap["AngleDistace"] = 1 - scalarProduct*scalarProduct;				
+=======
+		float positionDistance, angleDistance;
+		ComputeDistanceToGroundTruth(positionDistance, angleDistance);
+
+		measuresMap["PositionDistance"] = positionDistance;
+		measuresMap["AngleDistace"] = angleDistance;				
+>>>>>>> origin/master
 		}
 	else
 		{
@@ -321,6 +329,22 @@ DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMat
 		}
 
 	return measuresMap;
+	}
+
+void DetectionDescriptionMatching3DTestInterface::ComputeDistanceToGroundTruth(float& positionDistance, float& angleDistance)
+	{
+	float differenceX = GetXPosition(groundTruthPose) - GetXPosition(*modelPoseInScene);
+	float differenceY = GetYPosition(groundTruthPose) - GetYPosition(*modelPoseInScene);
+	float differenceZ = GetZPosition(groundTruthPose) - GetZPosition(*modelPoseInScene);
+	float squaredDistance = differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ;
+	positionDistance = std::sqrt(squaredDistance);
+
+	float scalarProduct =
+		GetXOrientation(groundTruthPose) * GetXOrientation(*modelPoseInScene) +
+		GetYOrientation(groundTruthPose) * GetYOrientation(*modelPoseInScene) +
+		GetZOrientation(groundTruthPose) * GetZOrientation(*modelPoseInScene) +
+		GetWOrientation(groundTruthPose) * GetWOrientation(*modelPoseInScene);	
+	angleDistance = 1 - scalarProduct*scalarProduct;
 	}
 
 /** @} */

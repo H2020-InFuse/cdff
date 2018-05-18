@@ -65,10 +65,15 @@ class AssertException: public std::exception
 
 #define PRINT_ABORT_MESSAGE_TO_LOG(message) \
 	{ \
+<<<<<<< HEAD
 	LoggerFactory::GetLogger()->AddEntry(message); \
 	LoggerFactory::GetLogger()->SetColorRed(); \
 	LoggerFactory::GetLogger()->Print(); \
 	LoggerFactory::GetLogger()->SetColorNormal(); \
+=======
+	LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::ERROR); \
+	LoggerFactory::GetLogger()->Print(); \
+>>>>>>> origin/master
 	}
 
 #define ASSERT(condition, message) \
@@ -133,7 +138,17 @@ class AssertException: public std::exception
 	{ \
 	if( !(condition) ) \
 		{ \
-		LoggerFactory::GetLogger()->AddEntry(message); \
+		LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::WARNING); \
+		LoggerFactory::GetLogger()->Print(); \
+		LoggerFactory::GetLogger()->Clear(); \
+		} \
+	}
+
+#define VERIFY_REQUIREMENT(condition, message) \
+	{ \
+	if( !(condition) ) \
+		{ \
+		LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::ERROR); \
 		LoggerFactory::GetLogger()->Print(); \
 		LoggerFactory::GetLogger()->Clear(); \
 		} \

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<CorrespondenceMap type_id="opencv-matrix">
+  <rows>2</rows>
+  <cols>4</cols>
+  <dt>w</dt>
+  <data>
+    90 300 121 303 167 376 200 378</data></CorrespondenceMap>
+</opencv_storage>

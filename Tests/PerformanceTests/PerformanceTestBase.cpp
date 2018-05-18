@@ -171,6 +171,7 @@ void PerformanceTestBase::ReadPerformanceConfigurationFiles()
 					parameter.optionsNumber = parameterValuesList.size();
 					parameter.currentOption = 0;
 					parameter.optionsList = parameterValuesList;
+					parameter.groupName = group["Name"].as<std::string>();
 					group[parameterName] = parameterValuesList.at(0);
 					changingParametersList.push_back(parameter);
 					}
@@ -266,6 +267,8 @@ void PerformanceTestBase::SaveMeasures(MeasuresMap measuresMap)
 		measuresFile << "Identifier ";
 		for(unsigned parameterIndex = 0; parameterIndex < changingParametersList.size(); parameterIndex++)
 			{
+			measuresFile << changingParametersList.at(parameterIndex).configurationFileIndex << ".";
+			measuresFile << changingParametersList.at(parameterIndex).groupName <<".";
 			measuresFile << changingParametersList.at(parameterIndex).name << " ";
 			}
 		for(MeasuresMap::iterator iterator = measuresMap.begin(); iterator != measuresMap.end(); iterator++)

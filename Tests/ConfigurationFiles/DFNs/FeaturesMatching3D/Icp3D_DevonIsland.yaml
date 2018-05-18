@@ -1,0 +1,5 @@
+- Name: GeneralParameters
+  MaxCorrespondenceDistance: 100
+  MaximumIterations: 200
+  TransformationEpsilon: 1e-8
+  EuclideanFitnessEpsilon: 1

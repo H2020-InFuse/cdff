@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<KeypointsMatrix type_id="opencv-matrix">
+  <rows>25</rows>
+  <cols>2</cols>
+  <dt>w</dt>
+  <data>
+    489 117 130 85 671 1 570 77 51 29 303 730 409 696 689 417 618 428
+    824 703 780 737 734 674 781 825 725 867 446 875 208 613 651 403 382
+    653 317 672 1062 669 682 852 723 520 750 502 680 502 455 541</data></KeypointsMatrix>
+</opencv_storage>

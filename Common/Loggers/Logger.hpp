@@ -46,7 +46,15 @@ class Logger
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		void AddEntry(std::string logEntry);
+		enum MessageType
+			{
+			DIAGNOSTIC,
+			WARNING,
+			ERROR,
+			SUCCESS
+			};
+
+		void AddEntry(std::string logEntry, MessageType messageType = DIAGNOSTIC);
 		void Clear();
 
 		virtual void Print() = 0;
@@ -59,6 +67,7 @@ class Logger
 	 */
 	protected:
 		std::vector<std::string> logEntriesVector;
+		std::vector<MessageType> logEntriesTypeVector;
 
 		Logger();
 		~Logger();

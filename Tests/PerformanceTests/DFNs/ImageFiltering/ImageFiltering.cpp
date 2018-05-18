@@ -134,10 +134,14 @@ bool ImageFilteringTestInterface::SetNextInputs()
 		cv::Mat cvImage = cv::imread(imageFilePath.str(), cv::IMREAD_COLOR);
 		ASSERT( cvImage.cols > 0 && cvImage.rows > 0, "Performance Test Error: bad input images");
 
+		if (inputFrame != NULL)
+			{
+			delete(inputFrame);
+			}
 		MatToFrameConverter converter;
-		FrameConstPtr frame = converter.Convert(cvImage);
+		inputFrame = converter.Convert(cvImage);
 
-		filter->imageInput(frame);
+		filter->imageInput(inputFrame);
 
 		time++;
 		return true;

@@ -65,6 +65,7 @@ class StandardOutputLogger : public Logger
 	 * --------------------------------------------------------------------
 	 */
 	private:
+		std::string MessageTypeToColorCode(MessageType messageType);
 
 	};
 

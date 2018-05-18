@@ -296,7 +296,7 @@ void StereoReconstructionTestInterface::SaveOutputCloud(PointCloudWrapper::Point
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclCloud = pclConverter.Convert(pointCloud);
 
 	pcl::PLYWriter writer;
-	writer.write(cloudOutputPath.str(), *pclCloud);
+	writer.write(cloudOutputPath.str(), *pclCloud, true);
 	}
 
 /** @} */

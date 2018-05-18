@@ -41,13 +41,7 @@ int main(int argc, char** argv)
 		pointCloudFilePath = argv[1];
 		}
 
-	bool enableVisualizer = false;
-	if (argc >= 3)
-		{
-		enableVisualizer = true;
-		}
-
-	PointCloudTransformer pointCloudTransformer(enableVisualizer);
+	PointCloudTransformer pointCloudTransformer;
 	PRINT_TO_LOG("Loading Point Cloud", "");
 	pointCloudTransformer.LoadPointCloud(pointCloudFilePath);
 
@@ -77,6 +71,19 @@ int main(int argc, char** argv)
 			PRINT_TO_LOG("Applying Transform", positionX)
 			pointCloudTransformer.TransformCloud(positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW);		
 			}
+		else if (command == "camera_transform")
+			{
+			float positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW;
+			std::cin >> positionX;
+			std::cin >> positionY;
+			std::cin >> positionZ;
+			std::cin >> rotationX;
+			std::cin >> rotationY;
+			std::cin >> rotationZ;
+			std::cin >> rotationW;	
+			PRINT_TO_LOG("Applying Transform", positionX)
+			pointCloudTransformer.TransformCamera(positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW);
+			}
 		else if (command == "noise")
 			{
 			float mean, standardDeviation;
@@ -91,6 +98,10 @@ int main(int argc, char** argv)
 			std::cin >> outputFile;
 			PRINT_TO_LOG("Saving Point Cloud", "");
 			pointCloudTransformer.SavePointCloud(outputFile);			
+			}
+		else if (command == "view")
+			{
+			pointCloudTransformer.ViewPointCloud();
 			}
 		}
 

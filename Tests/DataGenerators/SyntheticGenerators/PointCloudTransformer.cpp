@@ -41,13 +41,10 @@ namespace DataGenerators
  *
  * --------------------------------------------------------------------------
  */
-PointCloudTransformer::PointCloudTransformer(bool enableVisualizer) :
+PointCloudTransformer::PointCloudTransformer() :
 	pointCloud( new pcl::PointCloud<pcl::PointXYZ> ), transformedCloud( new pcl::PointCloud<pcl::PointXYZ> )
 	{
-	if (enableVisualizer)
-		{
-		Visualizers::PclVisualizer::Enable();
-		}
+	transformedCloudWasInitialized = false;
 	}
 
 PointCloudTransformer::~PointCloudTransformer()
@@ -63,22 +60,42 @@ void PointCloudTransformer::LoadPointCloud(std::string pointCloudFilePath)
 
 void PointCloudTransformer::Resize(unsigned minIndex, unsigned maxIndex)
 	{
-	ASSERT(minIndex >= 0 && minIndex <= maxIndex && maxIndex < pointCloud->points.size(), "Error, indices out of range");
+	InitTransformedCloud();
+	ASSERT(minIndex >= 0 && minIndex <= maxIndex && maxIndex < transformedCloud->points.size(), "Error, indices out of range");
 
-	transformedCloud->points.resize( maxIndex - minIndex + 1);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr newTransformedCloud( new pcl::PointCloud<pcl::PointXYZ> );	
 
+	newTransformedCloud->points.resize( maxIndex - minIndex + 1);
 	for(unsigned pointIndex = minIndex; pointIndex <= maxIndex; pointIndex++)
 		{
-		transformedCloud->points.at(pointIndex - minIndex) = pointCloud->points.at(pointIndex);
+		newTransformedCloud->points.at(pointIndex - minIndex) = transformedCloud->points.at(pointIndex);
 		}
-	DEBUG_SHOW_POINT_CLOUD(transformedCloud);
+	
+	transformedCloud = newTransformedCloud;
 	}
 
 void PointCloudTransformer::TransformCloud(float positionX, float positionY, float positionZ, float rotationX, float rotationY, float rotationZ, float rotationW)
 	{
+	InitTransformedCloud();
 	Eigen::Quaternion<float> rotation(rotationW, rotationX, rotationY, rotationZ);
 	Eigen::Translation<float, 3> translation(positionX, positionY, positionZ);
+
 	AffineTransform affineTransform = rotation * translation;
+	
+	for(unsigned pointIndex = 0; pointIndex < transformedCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ transformedPoint = TransformPoint( pointCloud->points.at(pointIndex), affineTransform );
+		transformedCloud->points.at(pointIndex) = transformedPoint;
+		}
+	}
+
+void PointCloudTransformer::TransformCamera(float positionX, float positionY, float positionZ, float rotationX, float rotationY, float rotationZ, float rotationW)
+	{
+	InitTransformedCloud();
+	Eigen::Quaternion<float> rotation(rotationW, rotationX, rotationY, rotationZ);
+	Eigen::Translation<float, 3> translation(-positionX, -positionY, -positionZ);
+
+	AffineTransform affineTransform = InvertQuaternion(rotation) * translation;
 	
 	for(unsigned pointIndex = 0; pointIndex < transformedCloud->points.size(); pointIndex++)
 		{
@@ -89,6 +106,7 @@ void PointCloudTransformer::TransformCloud(float positionX, float positionY, flo
 
 void PointCloudTransformer::AddGaussianNoise(float mean, float standardDeviation)
 	{
+	InitTransformedCloud();
 	std::normal_distribution<double> gaussianNoiseSource(mean, standardDeviation);
 	
 	for(unsigned pointIndex = 0; pointIndex < transformedCloud->points.size(); pointIndex++)
@@ -98,13 +116,21 @@ void PointCloudTransformer::AddGaussianNoise(float mean, float standardDeviation
 		point.y += gaussianNoiseSource(randomEngine);
 		point.z += gaussianNoiseSource(randomEngine);
 		}
-	DEBUG_SHOW_POINT_CLOUD(transformedCloud);
 	}
 
 void PointCloudTransformer::SavePointCloud(std::string outputFilePath)
 	{
+	ASSERT(transformedCloudWasInitialized, "You did not apply any transform, there is no need to save this cloud");
 	pcl::PLYWriter writer;
-	writer.write(outputFilePath, *transformedCloud);
+	writer.write(outputFilePath, *transformedCloud, true);
+	}
+
+void PointCloudTransformer::ViewPointCloud()
+	{
+	std::vector< pcl::PointCloud<pcl::PointXYZ>::ConstPtr > cloudsList = { pointCloud, transformedCloud };
+	Visualizers::PclVisualizer::Enable();
+	Visualizers::PclVisualizer::ShowPointClouds(cloudsList);
+	Visualizers::PclVisualizer::Disable();
 	}
 
 /* --------------------------------------------------------------------------
@@ -113,6 +139,20 @@ void PointCloudTransformer::SavePointCloud(std::string outputFilePath)
  *
  * --------------------------------------------------------------------------
  */
+void PointCloudTransformer::InitTransformedCloud()
+	{
+	if (transformedCloudWasInitialized)
+		{
+		return;
+		}
+
+	transformedCloud->points.resize( pointCloud->points.size() );
+	for(unsigned pointIndex = 0; pointIndex < pointCloud->points.size(); pointIndex++)
+		{
+		transformedCloud->points.at(pointIndex) = pointCloud->points.at(pointIndex);
+		}
+	transformedCloudWasInitialized = true;
+	}
 
 pcl::PointXYZ PointCloudTransformer::TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform)
 	{
@@ -123,6 +163,12 @@ pcl::PointXYZ PointCloudTransformer::TransformPoint(const pcl::PointXYZ& point, 
 	transformedPoint.y = eigenTransformedPoint.y();
 	transformedPoint.z = eigenTransformedPoint.z();
 	return transformedPoint;
+	}
+
+Eigen::Quaternion<float> PointCloudTransformer::InvertQuaternion(Eigen::Quaternion<float> input)
+	{
+	float sum = std::abs( input.x() * input.x() + input.y() * input.y() + input.z() * input.z() + input.w() * input.w() );
+	return Eigen::Quaternion<float>( input.w() / sum, -input.x() / sum, -input.y() / sum, -input.z() / sum); 
 	}
 
 }

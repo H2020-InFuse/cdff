@@ -65,3 +65,69 @@ target_link_libraries(
 	images_scapper
 	cdff_logger
 )
+<<<<<<< HEAD
+=======
+
+add_executable(
+    paint_image
+    SyntheticGenerators/PaintImage.cpp
+    SyntheticGenerators/ImagePainter.cpp
+    SyntheticGenerators/ImageZooming.cpp
+)
+target_link_libraries(
+	paint_image
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+)
+
+add_executable(
+    match_images
+    SyntheticGenerators/MatchImages.cpp
+    SyntheticGenerators/ImagesMatcher.cpp
+    SyntheticGenerators/ImageZooming.cpp
+)
+target_link_libraries(
+	match_images
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+)
+
+add_executable(
+    paint_lines
+    SyntheticGenerators/PaintLines.cpp
+    SyntheticGenerators/LinesPainter.cpp
+    SyntheticGenerators/ImageZooming.cpp
+)
+target_link_libraries(
+	paint_lines
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+)
+
+add_executable(
+    match_clouds
+    SyntheticGenerators/MatchClouds.cpp
+    SyntheticGenerators/CloudsMatcher.cpp
+)
+target_link_libraries(
+	match_clouds
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters boost_system yaml-cpp ${VTK_LIBRARIES} boost_system cdff_pcl_visualizer
+)
+
+add_executable(
+    detect_outliers
+    SyntheticGenerators/DetectOutliers.cpp
+    SyntheticGenerators/OutliersDetector.cpp
+)
+target_link_libraries(
+	detect_outliers
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters boost_system yaml-cpp ${VTK_LIBRARIES} boost_system cdff_pcl_visualizer
+)
+
+add_executable(
+    measures_lines
+    SyntheticGenerators/MeasureLines.cpp
+    SyntheticGenerators/ShapesProfiler.cpp
+)
+target_link_libraries(
+	measures_lines
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters boost_system yaml-cpp ${VTK_LIBRARIES} boost_system cdff_pcl_visualizer
+)
+>>>>>>> origin/master
