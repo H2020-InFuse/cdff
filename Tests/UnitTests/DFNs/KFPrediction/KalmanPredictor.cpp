@@ -29,6 +29,7 @@
 #include <catch.hpp>
 #include <KFPrediction/KalmanPredictor.hpp>
 #include <Errors/Assert.hpp>
+#include <iostream>
 
 using namespace dfn_ci;
 //using namespace Common;
@@ -39,6 +40,42 @@ using namespace dfn_ci;
  *
  * --------------------------------------------------------------------------
  */
+enum states{ORIENTATION, POSITION, ANGULAR_VELOCITY,VELOCITY};
+void printState(RigidBodyState output,states filterState)
+{
+      if(filterState==ORIENTATION)
+	{
+	std::cout<<"orientation: ";
+	
+	for(int i=0;i<3;i++)
+	 std::cout<<output.orient.arr[i]<<"\t";
+	 std::cout<<std::endl;	
+		
+	}
+	else if(filterState==POSITION)
+	{
+	 std::cout<<"position: ";
+	 for(int i=0;i<3;i++)
+	 std::cout<<output.pos.arr[i]<<"\t";
+	 std::cout<<std::endl;
+	}
+	else if(filterState==ANGULAR_VELOCITY)
+	{
+	 std::cout<<"angular velocity: ";
+	 for(int i=0;i<3;i++)
+	 std::cout<<output.angular_velocity.arr[i]<<"\t";
+ 	 std::cout<<std::endl;
+	}
+	else if(filterState==VELOCITY)
+	{
+	 std::cout<<"velocity: ";
+	 for(int i=0;i<3;i++)
+	 std::cout<<output.velocity.arr[i]<<"\t";
+	}
+
+	std::cout<<"Predited state plausible for given motion model \n";
+
+}
 TEST_CASE( "Call to process (Kalman prediction)", "[process]" ) 
 	{
 	
@@ -50,6 +87,7 @@ TEST_CASE( "Call to process (Kalman prediction)", "[process]" )
 	{
 	pose.at<float>(i,0)= 2*i;
 	vel0.at<float>(i,0)= 0.8*i;
+	
 	}
 
 	//convert intput to ASN format
@@ -77,8 +115,12 @@ TEST_CASE( "Call to process (Kalman prediction)", "[process]" )
 
 	RigidBodyState outputStatePre= simplePredictor.predictedStateOutput();
 	RigidBodyState outputerrCovPre = simplePredictor.predictedStateCovarianceOutput();
-		
-	}
+	
+       printState(outputStatePre,ORIENTATION);
+       printState(outputStatePre,POSITION);
+
+       
+}
 
 
 TEST_CASE( "Call to configure (Kalman prediction)", "[configure]" )
