@@ -55,6 +55,7 @@ namespace DataGenerators {
 		void LoadPointCloud(std::string pointCloudFilePath);
 		void Resize(unsigned minIndex, unsigned maxIndex);
 		void TransformCloud(float positionX, float positionY, float positionZ, float rotationX, float rotationY, float rotationZ, float rotationW);
+		void TransformCamera(float positionX, float positionY, float positionZ, float rotationX, float rotationY, float rotationZ, float rotationW);
 		void AddGaussianNoise(float mean, float standardDeviation);
 		void SavePointCloud(std::string outputFilePath);
 		void ViewPointCloud();
@@ -80,6 +81,7 @@ namespace DataGenerators {
 
 		void InitTransformedCloud();
 		pcl::PointXYZ TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform);
+		Eigen::Quaternion<float> InvertQuaternion(Eigen::Quaternion<float> input);
 
     };
 

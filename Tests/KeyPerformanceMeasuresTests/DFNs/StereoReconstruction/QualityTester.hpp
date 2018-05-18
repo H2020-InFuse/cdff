@@ -80,7 +80,7 @@ class QualityTester
 		bool IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage);
 		bool IsDimensionsQualitySufficient(float shapeSimilarityPercentange, float dimensionalErrorPercentage, float componentSizeThresholdPercentage);
 
-		void SaveOutputPointCloud(std::string outliersReferenceFilePath);
+		void SaveOutputPointCloud(std::string outputPointCloudFilePath);
 
 	/* --------------------------------------------------------------------
 	 * Protected
