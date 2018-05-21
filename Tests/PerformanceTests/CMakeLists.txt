@@ -136,6 +136,7 @@ target_link_libraries(
 add_executable(
     reconstruction_from_stereo_performance_test
     DFPCs/Reconstruction3D/ReconstructionFromStereo.cpp
+    DFPCs/Reconstruction3D/Reconstruction3D.cpp
 )
 target_link_libraries(
 	reconstruction_from_stereo_performance_test
