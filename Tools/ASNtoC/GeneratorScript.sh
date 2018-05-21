@@ -41,9 +41,9 @@ echo "Output directory (C):    ${ASN1_OUT_DIR}"
 # The ASN1SCC compiler can be built from its sources cloned from https://github.
 # com/ttsiodras/asn1scc or downloaded in precompiled form from https://download.
 # tuxfamily.org/taste/ASN1SCC
-ASN1SCC=asn1scc/asn1.exe
-if [[ -f "$ASN1SCC" ]]; then
-  echo "ASN1SCC compiler: ${ASN1SCC}"
+ASN1_COMPILER=asn1scc/asn1.exe
+if [[ -f "${ASN1_COMPILER}" ]]; then
+  echo "ASN1SCC compiler: ${ASN1_COMPILER}"
 else
   echo "ASN1SCC compiler not found in current directory"
   echo "Downloading ASN1SCC compiler"
@@ -56,7 +56,10 @@ else
 fi
 
 # Compile ASN.1 files to C files
+ASN1_PREFIX=asn1Scc
 echo "Compiling ASN.1 data types to C"
 find "${ASN1_DIR}" -name \*.asn -print0 |
-  xargs -0 mono "${ASN1SCC}" -c -uPER -o "${ASN1_OUT_DIR}" "${ASN1_FILES}"
+  xargs -0 mono "${ASN1_COMPILER}" \
+    -c -typePrefix ${ASN1_PREFIX} -uPER -wordSize 8 -ACN -o "${ASN1_OUT_DIR}" \
+    "${ASN1_FILES}"
 echo "Compiling ASN.1 data types to C: done"
