@@ -1,6 +1,5 @@
 FROM ubuntu:16.04
 
-
 # Install the basic tools that are not already available in the base image
 RUN apt-get update && apt-get install -y \
   build-essential \
