@@ -53,6 +53,7 @@ Paths and options:
   - Default: this is always the current directory.
 
 * `CMAKE_INSTALL_PREFIX`: Directory where you would like to optionally install the CDFF (in `{bin,lib}` subdirectories).
+  - **Warning** don't even try to install for now, our current `make install` rule is very incomplete, sorry. Only building works, not installing. Instructions in this bullet point are provided for future usage only.
   - For instance: `$HOME/.local/` is specified by [systemd's file-hierarchy specification](https://www.freedesktop.org/software/systemd/man/file-hierarchy.html), an extension of the [XDG Base Directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html), so `$HOME/.local/bin` is normally on the `PATH` of all systemd-compatible distributions.
   - Default: `/usr/local/`, and `/usr/local/bin` is on the `PATH` in all known distributions.
   - **Not recommended** to use the default for now, because I'm not sure we have a `make uninstall` rule.
@@ -80,10 +81,15 @@ See the [ASNtoC documentation](/Tools/ASNtoC/Readme.md) for more information.
 
 ### Test and (optionally) install
 
-Once the CDFF is built you can run the unit tests and/or install the CDFF in your selected `CMAKE_INSTALL_PREFIX` with, respectively:
+Once the CDFF (Core and Support) is built you can run the unit tests with:
 
 ```
 /path/to/CDFF/build$ make test
+```
+
+**Warning** don't even try to install for now, our current `make install` rule is very incomplete, sorry. Only building works, not installing. This is because we are focusing on developing the CDFF at the moment, not on installing (or uninstalling) it. In the future, one will be able to install the CDFF (Core and Support components) in their selected `CMAKE_INSTALL_PREFIX` (in `{bin,lib}` subdirectories) with:
+
+```
 /path/to/CDFF/build$ [sudo] make install
 ```
 
