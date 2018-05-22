@@ -9,8 +9,5 @@ add_subdirectory(UnitTests)
 add_subdirectory(GuiTests)
 add_subdirectory(PerformanceTests)
 add_subdirectory(DataGenerators)
-#<<<<<<< HEAD
-#add_subdirectory(InFuseTests)
-#=======
 add_subdirectory(KeyPerformanceMeasuresTests)
-#>>>>>>> origin/master
+

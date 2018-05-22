@@ -39,7 +39,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
     DFPCs/Reconstruction3D/ObservedScene.cpp
-)
+   )
 
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
