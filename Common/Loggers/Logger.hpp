@@ -58,7 +58,6 @@ class Logger
 		void Clear();
 
 		virtual void Print() = 0;
-		
 
 	/* --------------------------------------------------------------------
 	 * Protected
