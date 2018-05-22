@@ -8,7 +8,7 @@
 /*!
  * @file FrameToMatConverter.cpp
  * @date 14/04/2018
- * @author Nassir W. Oumer and Alessandro Bianco (origin, RGB only suport)
+ * @author Alessandro Bianco  and  Nassir W. Oumer 
  */
 
 /*!
@@ -29,6 +29,7 @@
 
 #include "FrameToMatConverter.hpp"
 #include <Errors/Assert.hpp>
+#include<iostream>
 
 namespace Converters {
 
@@ -43,10 +44,13 @@ using namespace FrameWrapper;
 
 const cv::Mat FrameToMatConverter::Convert(const FrameWrapper::FrameConstPtr& frame)
 	{
-       	ASSERT(frame,"FrameToMatConverter: an empty asn frame!");
+	      	
+		
   	if(GetFrameMode(*frame)==MODE_RGB)
 	{
-	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame) * 3) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image data size does not match image dimensions.");
+
+	ASSERT(frame,"FrameToMatConverter: an empty asn frame!");
+	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame) * 3) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image data size does not 		match image dimensions.");
 
 	cv::Mat cvImage( GetFrameHeight(*frame), GetFrameWidth(*frame), CV_8UC3, cv::Scalar(0,0,0) );
 	ASSERT(!cvImage.empty(), "FrameToMatConverter:  RGB  images are currently supported");
@@ -66,10 +70,11 @@ const cv::Mat FrameToMatConverter::Convert(const FrameWrapper::FrameConstPtr& fr
 	
 	if(GetFrameMode(*frame)==MODE_GRAYSCALE)
 	{
-       	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame)) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image 	data size does not match image dimensions.");
+	ASSERT(frame,"FrameToMatConverter: an empty asn frame!");
+       	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame)) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image data size does not match image dimensions.");
 
 	cv::Mat cvImage( GetFrameHeight(*frame), GetFrameWidth(*frame), CV_8UC1, cv::Scalar(0) );
-	ASSERT(!cvImage.empty(), "FrameToMatConverter:  Gray scale  images are currently supported");
+	ASSERT(!cvImage.empty(), "FrameToMatConverter:  Empty image, Gray scale  images are currently supported");
 	for(int rowIndex = 0; rowIndex < cvImage.rows; rowIndex++)
 		{
 		for(int columnIndex = 0; columnIndex < cvImage.cols; columnIndex++)
