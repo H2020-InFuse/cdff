@@ -58,8 +58,7 @@ class Logger
 		void Clear();
 
 		virtual void Print() = 0;
-		//virtual void SetColorRed() = 0;
-		//virtual void SetColorNormal() = 0;
+		
 
 	/* --------------------------------------------------------------------
 	 * Protected
