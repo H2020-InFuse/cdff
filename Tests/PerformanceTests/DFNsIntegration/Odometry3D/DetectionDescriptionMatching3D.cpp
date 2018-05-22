@@ -72,6 +72,9 @@ DetectionDescriptionMatching3DTestInterface::DetectionDescriptionMatching3DTestI
 	groundTruthTransformFilePath = "NULL";
 	voxelGridFilterSize = 0.001;
 	LoadSceneCloud();
+
+	SetPosition(groundTruthPose, 0, 0, 0);
+	SetOrientation(groundTruthPose, 0, 0, 0, 1);
 	}
 
 DetectionDescriptionMatching3DTestInterface::~DetectionDescriptionMatching3DTestInterface()
@@ -143,12 +146,17 @@ void DetectionDescriptionMatching3DTestInterface::SetModelsCloud(std::string gro
 		transformsFile >> rotationY;
 		transformsFile >> rotationZ;
 		transformsFile >> rotationW;
-		SetPosition(newPose, positionX, positionY, positionZ);
-		SetOrientation(newPose, rotationX, rotationY, rotationZ, rotationW);
-		posesList.push_back(newPose);
+		if (!transformsFile.eof())
+			{
+			SetPosition(newPose, positionX, positionY, positionZ);
+			SetOrientation(newPose, rotationX, rotationY, rotationZ, rotationW);
+			posesList.push_back(newPose);
+			}
 		}
 
 	transformsFile.close();
+
+	ASSERT(posesList.size() == modelsCloudFilesList.size(), "Poses List size does not match the number of models");
 	}
 
 /* --------------------------------------------------------------------------
@@ -203,10 +211,9 @@ void DetectionDescriptionMatching3DTestInterface::LoadModelCloud(int long inputI
 
 	modelCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	LoadCloud(modelCloud, modelsCloudFilesList.at(inputId));
-	modelPointCloud = pointCloudConverter.Convert(modelCloud);	
+	modelPointCloud = pointCloudConverter.Convert(modelCloud);
 
-	SetPosition(groundTruthPose, 0, 0, 0);
-	SetOrientation(groundTruthPose, 0, 0, 0, 1);
+	Copy(posesList.at(inputId), groundTruthPose);
 	}
 
 void DetectionDescriptionMatching3DTestInterface::SetupMocksAndStubs()

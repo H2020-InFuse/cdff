@@ -78,6 +78,7 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 
 		void SetInputCloud(std::string inputCloudFile, float voxelGridFilterSize);
 		void SetModelsCloud(std::string groundTruthTransformFilePath, std::vector<std::string> modelsCloudFilesList); 
+		void SetGroundTruth(float positionX, float positionY, float positionZ, float orientationX, float orientationY, float orientationZ, float orientationW);
 	protected:
 
 	private:
