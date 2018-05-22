@@ -1,9 +1,5 @@
 FROM ubuntu:16.04
 
-LABEL version="0.1"
-LABEL maintainer="Romain Michalec <romain.michalec@strath.ac.uk>"
-LABEL description="A self-contained environment for building and testing CDFF-core and CDFF-support, and for using CDFF-dev"
-
 # Install the basic tools that are not already available in the base image
 RUN apt-get update && apt-get install -y \
   build-essential \
@@ -65,7 +61,7 @@ RUN pip3 install pyyaml jinja2 cython numpy msgpack-python pydot nose nose2
 
 # Additional software useful to development
 RUN apt-get update && apt-get install -y \
-  sudo dpkg-dev \
+  sudo dpkg-dev gdb \
   bc \
   ed sed nano vim emacs-nox emacs-goodies-el \
   info man-db manpages manpages-dev \
@@ -88,3 +84,7 @@ RUN chmod 0755 /tmp/CDFF/Tools/Docker/entrypoint.sh && \
 
 ENTRYPOINT ["/tmp/CDFF/Tools/Docker/entrypoint.sh"]
 CMD ["bash"]
+
+LABEL version="0.1.1"
+LABEL maintainer="Romain Michalec <romain.michalec@strath.ac.uk>"
+LABEL description="A self-contained environment for building and testing CDFF-core and CDFF-support, and for using CDFF-dev"
