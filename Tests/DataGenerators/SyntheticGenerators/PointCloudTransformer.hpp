@@ -30,6 +30,7 @@
  *
  * --------------------------------------------------------------------------
  */
+#include <random>
 #include <pcl/io/ply_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/filters/voxel_grid.h>
