@@ -108,7 +108,7 @@ add_executable(
 )
 target_link_libraries(
 	validity_shot_icp
-	cdff_helpers cdff_logger cdff_types converters_opencv shot_descriptor_3d feature_description_3d icp_3d feature_matching_3d mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+	cdff_helpers cdff_logger cdff_types mock converters_opencv shot_descriptor_3d feature_description_3d icp_3d feature_matching_3d  pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
 
 add_executable(
@@ -118,7 +118,7 @@ add_executable(
 )
 target_link_libraries(
 	validity_shot_ransac
-	cdff_helpers cdff_logger cdff_types converters_opencv shot_descriptor_3d feature_description_3d ransac_3d feature_matching_3d mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+	cdff_helpers cdff_logger cdff_types mock converters_opencv shot_descriptor_3d feature_description_3d ransac_3d feature_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
 
 add_executable(
