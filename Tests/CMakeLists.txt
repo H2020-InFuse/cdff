@@ -10,4 +10,3 @@ add_subdirectory(GuiTests)
 add_subdirectory(PerformanceTests)
 add_subdirectory(DataGenerators)
 add_subdirectory(KeyPerformanceMeasuresTests)
-

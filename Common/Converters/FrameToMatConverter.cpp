@@ -44,14 +44,44 @@ using namespace FrameWrapper;
 
 const cv::Mat FrameToMatConverter::Convert(const FrameWrapper::FrameConstPtr& frame)
 	{
-	      	
-		
+
+	if (GetFrameHeight(*frame) == 0 && GetFrameWidth(*frame) == 0)
+		{
+		return cv::Mat();
+		}
+
   	if(GetFrameMode(*frame)==MODE_RGB)
+		{
+		return ConvertRGB(frame);
+		}
+	else if(GetFrameMode(*frame)==MODE_GRAYSCALE)
+		{
+		return ConvertGrayscale(frame);
+		}
+	else
+		{
+		ASSERT(false, "Unhandled frame type in FrameToMatConverter");
+		}
+	return cv::Mat();
+	}
+
+
+const cv::Mat FrameToMatConverter::ConvertShared(const FrameWrapper::FrameSharedConstPtr& frame)
+	{
+	return Convert(frame.get());
+	} 
+
+/* --------------------------------------------------------------------------
+ *
+ * Private Member Functions
+ *
+ * --------------------------------------------------------------------------
+ */
+const cv::Mat FrameToMatConverter::ConvertRGB(const FrameWrapper::FrameConstPtr& frame)
 	{
 
-	ASSERT(frame,"FrameToMatConverter: an empty asn frame!");
-	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame) * 3) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image data size does not 		match image dimensions.");
-
+	ASSERT(GetFrameMode(*frame)==MODE_RGB, "ConvertRGB called on a non-rgb frame");
+	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame) * 3) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image data size does not match image dimensions.");
 	cv::Mat cvImage( GetFrameHeight(*frame), GetFrameWidth(*frame), CV_8UC3, cv::Scalar(0,0,0) );
 	ASSERT(!cvImage.empty(), "FrameToMatConverter:  RGB  images are currently supported");
 	for(int rowIndex = 0; rowIndex < cvImage.rows; rowIndex++)
@@ -67,11 +97,12 @@ const cv::Mat FrameToMatConverter::Convert(const FrameWrapper::FrameConstPtr& fr
 
 	return cvImage;
 	}
-	
-	if(GetFrameMode(*frame)==MODE_GRAYSCALE)
+
+const cv::Mat FrameToMatConverter::ConvertGrayscale(const FrameWrapper::FrameConstPtr& frame)
 	{
-	ASSERT(frame,"FrameToMatConverter: an empty asn frame!");
-       	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame)) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image data size does not match image dimensions.");
+
+	ASSERT(GetFrameMode(*frame)==MODE_GRAYSCALE, "ConvertGrayscale called on a non-grayscale frame");
+       	ASSERT( static_cast<int>( GetFrameHeight(*frame) * GetFrameWidth(*frame)) == GetNumberOfDataBytes(*frame), "FrameToMatConverter: image 	data size does not match image dimensions.");
 
 	cv::Mat cvImage( GetFrameHeight(*frame), GetFrameWidth(*frame), CV_8UC1, cv::Scalar(0) );
 	ASSERT(!cvImage.empty(), "FrameToMatConverter:  Empty image, Gray scale  images are currently supported");
@@ -85,17 +116,7 @@ const cv::Mat FrameToMatConverter::Convert(const FrameWrapper::FrameConstPtr& fr
 		}	
 
 	return cvImage;
-
 	}
-	
-
-	}
-
-
-const cv::Mat FrameToMatConverter::ConvertShared(const FrameWrapper::FrameSharedConstPtr& frame)
-	{
-	return Convert(frame.get());
-	} 
 
 }
 

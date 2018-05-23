@@ -308,13 +308,11 @@ DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMat
 
 	if (icpSuccess)
 		{
-
 		float positionDistance, angleDistance;
 		ComputeDistanceToGroundTruth(positionDistance, angleDistance);
 
 		measuresMap["PositionDistance"] = positionDistance;
 		measuresMap["AngleDistace"] = angleDistance;				
-
 		}
 	else
 		{

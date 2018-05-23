@@ -62,6 +62,8 @@ class FrameToMatConverter
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		const cv::Mat ConvertRGB(const FrameWrapper::FrameConstPtr& frame);
+		const cv::Mat ConvertGrayscale(const FrameWrapper::FrameConstPtr& frame);
 	};
 
 }

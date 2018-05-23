@@ -90,7 +90,6 @@ std::string StandardOutputLogger::MessageTypeToColorCode(MessageType messageType
 			}
 		}
 	return "";
-
 	}
 
 /** @} */

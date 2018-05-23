@@ -51,7 +51,6 @@ class StandardOutputLogger : public Logger
 		~StandardOutputLogger();
 
 		void Print();
-		
 
 	/* --------------------------------------------------------------------
 	 * Protected
