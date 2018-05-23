@@ -251,3 +251,44 @@ target_link_libraries(
 	registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
 )
 
+add_executable(
+   CannyEdgeExtractor2DGuiTest
+    DFNs/EdgeMap2D/CannyEdgeExtractor2D.cpp
+    ParametersInterface.cpp
+    ButtonsInterface.cpp
+    MainInterface.cpp
+    DFNs/DFNTestInterface.cpp
+)
+set_target_properties(CannyEdgeExtractor2DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+   CannyEdgeExtractor2DGuiTest
+    mock cdff_logger canny_edge_extractor_2d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+)
+
+add_executable(
+   NormalsExtractor2DGuiTest
+    DFNs/NormalMap2D/NormalsExtractor2D.cpp
+    ParametersInterface.cpp
+    ButtonsInterface.cpp
+    MainInterface.cpp
+    DFNs/DFNTestInterface.cpp
+)
+set_target_properties(NormalsExtractor2DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+   NormalsExtractor2DGuiTest
+    mock cdff_logger normals_extractor_2d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+)
+
+add_executable(
+   KmeansGuiTest
+    DFNs/KMeans2D/Kmeans.cpp
+    ParametersInterface.cpp
+    ButtonsInterface.cpp
+    MainInterface.cpp
+    DFNs/DFNTestInterface.cpp
+)
+set_target_properties(KmeansGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+   KmeansGuiTest
+    mock cdff_logger k_means converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+)

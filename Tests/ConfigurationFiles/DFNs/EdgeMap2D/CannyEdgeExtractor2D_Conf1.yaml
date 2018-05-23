@@ -1,0 +1,3 @@
+- Name: GeneralParameters
+  kernelSize: 3
+  threshold: 90

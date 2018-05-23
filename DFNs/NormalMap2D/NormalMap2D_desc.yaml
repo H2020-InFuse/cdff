@@ -1,0 +1,11 @@
+name: NormalMap2D
+input_ports:
+    - name: depthImg
+      type: Frame
+      doc: sensor's depth image
+output_ports:
+    - name: NormalMap
+      type: Frame
+      doc: The Matrix of extracted normals and their orientation
+implementations:
+    - NormalsExtractor2D

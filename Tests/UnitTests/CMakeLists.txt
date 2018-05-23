@@ -36,6 +36,9 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    DFNs/EdgeMap2D/CannyEdgeExtractor2D.cpp
+    DFNs/NormalMap2D/NormalsExtractor2D.cpp
+    DFNs/KMeans2D/Kmeans.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
     DFPCs/Reconstruction3D/ObservedScene.cpp
@@ -96,6 +99,9 @@ set(UNITTEST_LIBRARIES Catch
     shot_descriptor_3d
     synthetic_generators
     triangulation
+    canny_edge_extractor_2d
+    normals_extractor_2d
+    k_means
 )
 
 # Make the Catch executable that runs the unit tests
