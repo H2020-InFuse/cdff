@@ -1,5 +1,0 @@
-- Name: CannyParameters
-  LowThreshold: 100.0
-  HowThreshold: 150.0
-  KernelSize: 3
-
