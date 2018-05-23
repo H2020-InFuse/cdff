@@ -208,11 +208,10 @@ TEST_CASE( "Empty Matrix Conversion", "[EmptyMatrix]" )
 	cv::Mat outputMatrix = secondConverter.ConvertShared(asnFrame);
 	FrameSharedConstPtr outputFrame = firstConverter.ConvertShared(outputMatrix);
 
-       //TODO: debug if  the real problem is with Catch Bug
-	//REQUIRE(outputMatrix.cols == 0);
-	//REQUIRE(outputMatrix.rows == 0);
-        //REQUIRE(GetNumberOfDataBytes(*asnFrame) == 0);
-	//REQUIRE(GetNumberOfDataBytes(*outputFrame) == 0);	
+       	REQUIRE(outputMatrix.cols == 0);
+	REQUIRE(outputMatrix.rows == 0);
+        REQUIRE(GetNumberOfDataBytes(*asnFrame) == 0);
+	REQUIRE(GetNumberOfDataBytes(*outputFrame) == 0);	
 	}
 
 
