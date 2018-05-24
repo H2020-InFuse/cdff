@@ -1,45 +1,17 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file VisualPointFeatureVector2D.cpp
- * @date 15/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup VisualPointFeatureVector2DWrapper
- * 
- * Implementation of VisualPointFeatureVector2DWrapper functions.
- * 
- * 
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "VisualPointFeatureVector2D.hpp"
 #include <Errors/Assert.hpp>
 
 namespace VisualPointFeatureVector2DWrapper
 {
-
-
-/* --------------------------------------------------------------------------
- *
- * Functions
- *
- * --------------------------------------------------------------------------
- */
 
 void Copy(const VisualPointFeatureVector2D& source, VisualPointFeatureVector2D& destination)
 	{

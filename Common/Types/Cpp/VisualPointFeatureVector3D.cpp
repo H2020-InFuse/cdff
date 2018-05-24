@@ -1,45 +1,18 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file VisualPointFeatureVector3D.cpp
- * @date 15/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup VisualPointFeatureVector3DWrapper
- * 
- * Implementation of VisualPointFeatureVector3DWrapper functions.
- * 
- * 
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "VisualPointFeatureVector3D.hpp"
 #include <Errors/Assert.hpp>
 
 namespace VisualPointFeatureVector3DWrapper
 {
 
-
-/* --------------------------------------------------------------------------
- *
- * Functions
- *
- * --------------------------------------------------------------------------
- */
 void Copy(const VisualPointFeatureVector3D& source, VisualPointFeatureVector3D& destination)
 	{
 	ClearPoints(destination);

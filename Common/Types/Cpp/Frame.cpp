@@ -1,32 +1,12 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file Frame.cpp
- * @date 12/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup FrameWrapper
- * 
- * Implementation of FrameWrapper functions.
- * 
- * 
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "Frame.hpp"
 #include <Errors/Assert.hpp>
 
@@ -35,12 +15,6 @@ using namespace BaseTypesWrapper;
 namespace FrameWrapper
 {
 
-/* --------------------------------------------------------------------------
- *
- * Functions
- *
- * --------------------------------------------------------------------------
- */
 void Copy(const Frame& source, Frame& destination)
 	{
 	SetFrameTime(destination, GetFrameTime(source) );
@@ -271,8 +245,6 @@ int GetNumberOfDataBytes(const Frame& frame)
 	{
 	return frame.image.nCount;
 	}
-
-
 
 }
 

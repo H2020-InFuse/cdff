@@ -1,32 +1,12 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file Matrix.cpp
- * @date 26/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup MatrixWrapper
- * 
- * Implementation of Matrix wrapper functions.
- * 
- * 
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "Matrix.hpp"
 #include <Errors/Assert.hpp>
 
@@ -35,13 +15,6 @@ using namespace BaseTypesWrapper;
 namespace MatrixWrapper
 {
 
-
-/* --------------------------------------------------------------------------
- *
- * Functions
- *
- * --------------------------------------------------------------------------
- */
 void Copy(const Matrix3d& source, Matrix3d& destination)
 	{
 	for(unsigned rowIndex = 0; rowIndex < 3; rowIndex++)

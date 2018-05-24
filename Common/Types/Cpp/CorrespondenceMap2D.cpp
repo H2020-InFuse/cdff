@@ -1,32 +1,12 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file CorrespondenceMap2D.cpp
- * @date 26/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup CorrespondenceMap2DWrapper
- * 
- * Implementation of CorrespondenceMap2DWrapper functions.
- * 
- * 
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "CorrespondenceMap2D.hpp"
 #include <Errors/Assert.hpp>
 
@@ -35,12 +15,6 @@ namespace CorrespondenceMap2DWrapper
 
 using namespace BaseTypesWrapper;
 
-/* --------------------------------------------------------------------------
- *
- * Functions
- *
- * --------------------------------------------------------------------------
- */
 void Copy(const CorrespondenceMap2D& source, CorrespondenceMap2D& destination)
 	{
 	ClearCorrespondences(destination);

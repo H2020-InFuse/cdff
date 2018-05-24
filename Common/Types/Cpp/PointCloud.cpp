@@ -1,32 +1,12 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file PointCloud.cpp
- * @date 12/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup PointCloudWrapper
- * 
- * Implementation of PointCloud wrapper functions.
- * 
- * 
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "PointCloud.hpp"
 #include <Errors/Assert.hpp>
 
@@ -35,13 +15,6 @@ using namespace BaseTypesWrapper;
 namespace PointCloudWrapper
 {
 
-
-/* --------------------------------------------------------------------------
- *
- * Functions
- *
- * --------------------------------------------------------------------------
- */
 void Copy(const PointCloud& source, PointCloud& destination)
 	{
 	ClearPoints(destination);

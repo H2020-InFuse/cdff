@@ -1,32 +1,12 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file CorrespondenceMap3D.cpp
- * @date 17/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup CorrespondenceMap3DWrapper
- * 
- * Implementation of CorrespondenceMap3DWrapper functions.
- * 
- * 
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "CorrespondenceMap3D.hpp"
 #include <Errors/Assert.hpp>
 
@@ -35,12 +15,6 @@ namespace CorrespondenceMap3DWrapper
 
 using namespace BaseTypesWrapper;
 
-/* --------------------------------------------------------------------------
- *
- * Functions
- *
- * --------------------------------------------------------------------------
- */
 void Copy(const CorrespondenceMap3D& source, CorrespondenceMap3D& destination)
 	{
 	ClearCorrespondences(destination);

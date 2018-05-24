@@ -1,32 +1,12 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file Pose.cpp
- * @date 18/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup PoseWrapper
- * 
- * Implementation of PoseWrapper functions.
- * 
- * 
  * @{
  */
 
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "Pose.hpp"
 #include <Errors/Assert.hpp>
 
@@ -35,12 +15,6 @@ using namespace BaseTypesWrapper;
 namespace PoseWrapper
 {
 
-/* --------------------------------------------------------------------------
- *
- * Functions
- *
- * --------------------------------------------------------------------------
- */
 void Copy(const Pose3D& source, Pose3D& destination)
 	{
 	SetPosition(destination, GetXPosition(source), GetYPosition(source), GetZPosition(source) );
