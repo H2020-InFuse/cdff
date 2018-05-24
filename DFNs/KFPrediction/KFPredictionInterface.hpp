@@ -29,10 +29,9 @@
  * --------------------------------------------------------------------------
  */
 #include <DFNCommonInterface.hpp>
-extern "C"{
+
 #include "RigidBodyState.h"
 #include "Time.h"
-}
 
 namespace dfn_ci {
     class KFPredictionInterface : public DFNCommonInterface
@@ -48,29 +47,29 @@ namespace dfn_ci {
             * Send value to input port previousState
             * @param previousState, initial or previous rigid body state
             */
-            virtual void previousStateInput(const RigidBodyState& data);
+            virtual void previousStateInput(const asn1SccRigidBodyState& data);
             /**
             * Send value to input port currentTime
             * @param currentTime, current time stamp
             */
-            virtual void currentTimeInput(const Time& data);
+            virtual void currentTimeInput(const asn1SccTime& data);
 
             /**
             * Receive value from output port predictedState
             * @return predictedState, predicted rigid body state
             */
-            virtual RigidBodyState predictedStateOutput();
+            virtual asn1SccRigidBodyState predictedStateOutput();
   	   /**
             * Receive value from output port predictedStateCovariance
             * @return predictedState, predicted rigid body state covariance
             */
-            virtual RigidBodyState predictedStateCovarianceOutput();
+            virtual asn1SccRigidBodyState predictedStateCovarianceOutput();
 
         protected:
-            RigidBodyState inpreviousstate;
-            Time incurrenttime;
-            RigidBodyState outpredictedstate;
-	    RigidBodyState outpredictedStateCovariance;
+            asn1SccRigidBodyState inpreviousstate;
+            asn1SccTime incurrenttime;
+            asn1SccRigidBodyState outpredictedstate;
+            asn1SccRigidBodyState outpredictedStateCovariance;
     };
 }
 #endif

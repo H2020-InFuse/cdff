@@ -41,7 +41,7 @@ using namespace dfn_ci;
  * --------------------------------------------------------------------------
  */
 enum states{ORIENTATION, POSITION, ANGULAR_VELOCITY,VELOCITY};
-void printState(RigidBodyState output,states filterState)
+void printState(asn1SccRigidBodyState output,states filterState)
 {
       if(filterState==ORIENTATION)
 	{
@@ -92,7 +92,7 @@ TEST_CASE( "Call to process (Kalman prediction)", "[process]" )
 
 	//convert intput to ASN format
 
-	 RigidBodyState input;
+	 asn1SccRigidBodyState input;
 
 	for(int i=0;i<3;i++)
 	{
@@ -113,8 +113,8 @@ TEST_CASE( "Call to process (Kalman prediction)", "[process]" )
 	
 	simplePredictor.process();
 
-	RigidBodyState outputStatePre= simplePredictor.predictedStateOutput();
-	RigidBodyState outputerrCovPre = simplePredictor.predictedStateCovarianceOutput();
+	asn1SccRigidBodyState outputStatePre= simplePredictor.predictedStateOutput();
+	asn1SccRigidBodyState outputerrCovPre = simplePredictor.predictedStateCovarianceOutput();
 	
        printState(outputStatePre,ORIENTATION);
        printState(outputStatePre,POSITION);

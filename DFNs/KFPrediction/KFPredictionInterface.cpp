@@ -47,19 +47,19 @@ KFPredictionInterface::~KFPredictionInterface()
 {
 }
 
-void KFPredictionInterface::previousStateInput(const RigidBodyState& data) {
+void KFPredictionInterface::previousStateInput(const asn1SccRigidBodyState& data) {
     inpreviousstate = data;
 }
 
-void KFPredictionInterface::currentTimeInput(const Time& data) {
+void KFPredictionInterface::currentTimeInput(const asn1SccTime& data) {
     incurrenttime = data;
 }
 
-RigidBodyState KFPredictionInterface::predictedStateOutput() {
+asn1SccRigidBodyState KFPredictionInterface::predictedStateOutput() {
     return outpredictedstate;
 }
 
-RigidBodyState KFPredictionInterface:: predictedStateCovarianceOutput() {
+asn1SccRigidBodyState KFPredictionInterface:: predictedStateCovarianceOutput() {
     return outpredictedStateCovariance;
 }
 
