@@ -20,6 +20,7 @@ add_library(
     DFNsBuilder.cpp
 )
 target_link_libraries(
+<<<<<<< afa5767506ba8a64fb4dc44c3203457f333504b0
   dfns_builder
   cdff_helpers
   cdff_logger
@@ -39,6 +40,8 @@ target_link_libraries(
   iterative_pnp_solver
   triangulation
   harris_detector_3d
+  canny_detector
+  sobel_derivative
   kalman_predictor
   registration_icp_cc
   ceres_adjustment

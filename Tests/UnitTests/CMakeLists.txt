@@ -27,6 +27,8 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
+    DFNs/EdgeDetection/CannyDetector.cpp
+    DFNs/EdgeDetection/SobelDerivative.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
@@ -57,6 +59,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
 # list the necessary ones.
 set(UNITTEST_LIBRARIES Catch
     boost_system
+    canny_detector
     cc_core_lib
     cdff_helpers
     cdff_logger
