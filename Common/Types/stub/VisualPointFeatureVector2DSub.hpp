@@ -3,7 +3,7 @@
  */
 
 /**
- * @addtogroup CppTypes
+ * @addtogroup CPPTypes
  *
  * C++ wrapper for VisualPointFeatureVector2D: substitutive proposal
  *
@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <memory>
 
-namespace CppTypes
+namespace CPPTypes
 {
 
 // Types

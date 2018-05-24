@@ -12,7 +12,7 @@ endif()
 
 #compile everything from subfolders
 file(GLOB_RECURSE source_list
- "Cpp/*.cpp"
+ "CPP/*.cpp"
  "C/*.c"
 )
 

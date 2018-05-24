@@ -3,14 +3,14 @@
  */
 
 /**
- * @addtogroup CppTypes
+ * @addtogroup CPPTypes
  * @{
  */
 
 #include "VisualPointFeatureVector2D.hpp"
 #include <Errors/Assert.hpp>
 
-namespace CppTypes
+namespace CPPTypes
 {
 
 // Class: Iterator

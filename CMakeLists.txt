@@ -279,9 +279,8 @@ link_directories(
 
 include_directories(
   Common
-  Common/Types/C/ASNCommon
   Common/Types/C
-  Common/Types/Cpp
+  Common/Types/CPP
   Common/Converters
   DFNs
   DFPCs
