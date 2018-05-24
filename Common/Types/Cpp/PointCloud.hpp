@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <memory>
 
-namespace PointCloudWrapper 
+namespace PointCloudWrapper
 {
 
 // Types

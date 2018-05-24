@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <memory>
 
-namespace VisualPointFeatureVector3DWrapper 
+namespace VisualPointFeatureVector3DWrapper
 {
 
 // Types

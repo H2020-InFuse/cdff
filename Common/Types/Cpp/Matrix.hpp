@@ -20,7 +20,7 @@
 #include "BaseTypes.hpp"
 #include <memory>
 
-namespace MatrixWrapper 
+namespace MatrixWrapper
 {
 
 // Types

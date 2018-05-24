@@ -10,8 +10,8 @@
  * @{
  */
 
-#ifndef VISUAL_POINT_FEATURE_VECTOR_HPP
-#define VISUAL_POINT_FEATURE_VECTOR_HPP
+#ifndef VISUAL_POINT_FEATURE_VECTOR_2D_HPP
+#define VISUAL_POINT_FEATURE_VECTOR_2D_HPP
 
 #include <VisualPointFeatureVector2D.h>
 
@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <memory>
 
-namespace VisualPointFeatureVector2DWrapper 
+namespace VisualPointFeatureVector2DWrapper
 {
 
 // Types
@@ -60,6 +60,6 @@ float GetDescriptorComponent(const VisualPointFeatureVector2D& featuresVector, i
 
 }
 
-#endif // VISUAL_POINT_FEATURE_VECTOR_HPP
+#endif // VISUAL_POINT_FEATURE_VECTOR_2D_HPP
 
 /** @} */

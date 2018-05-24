@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <memory>
 
-namespace CorrespondenceMap2DWrapper 
+namespace CorrespondenceMap2DWrapper
 {
 
 // Types

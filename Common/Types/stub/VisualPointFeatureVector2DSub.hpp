@@ -10,8 +10,8 @@
  * @{
  */
 
-#ifndef VISUAL_POINT_FEATURE_VECTOR_HPP
-#define VISUAL_POINT_FEATURE_VECTOR_HPP
+#ifndef VISUAL_POINT_FEATURE_VECTOR_2D_HPP
+#define VISUAL_POINT_FEATURE_VECTOR_2D_HPP
 
 #include <VisualPointFeatureVector2D.h>
 
@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <memory>
 
-namespace CppTypes 
+namespace CppTypes
 {
 
 // Types
@@ -29,17 +29,17 @@ typedef asn1SccPoint2D Point2D
 // Classes
 
 class Iterator
-	{
+{
 	public:
 		Iterator& operator++();
 		static bool operator==(const Iterator& iterator1, const Iterator& iterator2);
 	protected:
 		int index;
 		Iterator(int index);
-	};
+};
 
 class ReadDescriptor2DIterator : public Iterator()
-	{
+{
 	friend class ReadVisualPointFeature2DIterator;
 	public:
 		ReadDescriptor2DIterator& operator++();
@@ -47,11 +47,11 @@ class ReadDescriptor2DIterator : public Iterator()
 	protected:
 		ReadDescriptorIterator(const asn1SccVisualPointFeature2D_descriptor const* descriptor, int index);
 	private:
-		const asn1SccVisualPointFeature2D_descriptor const* descriptor; 
-	};
+		const asn1SccVisualPointFeature2D_descriptor const* descriptor;
+};
 
 class WriteDescriptor2DIterator : public Iterator()
-	{
+{
 	friend class WriteVisualPointFeature2DIterator;
 	public:
 		WriteDescriptor2DIterator& operator++();
@@ -60,10 +60,10 @@ class WriteDescriptor2DIterator : public Iterator()
 		WriteDescriptorIterator(const asn1SccVisualPointFeature2D_descriptor* descriptor, int index);
 	private:
 		const asn1SccVisualPointFeature2D_descriptor* descriptor;
-	};
+};
 
 class ReadVisualPointFeature2DIterator : public Iterator()
-	{
+{
 	friend class VisualPointFeatureVector2D;
 	public:
 		ReadVisualPointFeature2DIterator& operator++();
@@ -74,10 +74,10 @@ class ReadVisualPointFeature2DIterator : public Iterator()
 		ReadVisualPointFeature2DIterator(const asn1SccVisualPointFeatureVector2D const* featuresVector, int index);
 	private:
 		const asn1SccVisualPointFeatureVector2D const* featuresVector;
-	};
+};
 
 class WriteVisualPointFeature2DIterator : public Iterator()
-	{
+{
 	friend class VisualPointFeatureVector2D;
 	public:
 		WriteVisualPointFeature2DIterator& operator++();
@@ -88,12 +88,12 @@ class WriteVisualPointFeature2DIterator : public Iterator()
 		WriteVisualPointFeature2DIterator(const asn1SccVisualPointFeatureVector2D* featuresVector, int index);
 	private:
 		const asn1SccVisualPointFeatureVector2D* featuresVector;
-	};
+};
 
 // Main class
 
 class VisualPointFeatureVector2D
-	{
+{
 	public:
 
 		typedef std::shared_ptr<VisualPointFeatureVector2D> Ptr;
@@ -101,7 +101,7 @@ class VisualPointFeatureVector2D
 
 		VisualPointFeatureVector2D(int descriptorSize);
 		~VisualPointFeatureVector2D();
-	
+
 		WriteVisualPointFeature2DIterator AddPoint(const Point2D& point);
 		void Clear();
 		int GetSize() const;
@@ -111,18 +111,16 @@ class VisualPointFeatureVector2D
 
 	private:
 
-		class 
-
 		static const int MAX_FEATURE_2D_POINTS;
 		static const int MAX_DESCRIPTOR_2D_LENGTH;
 
 		asn1SccVisualPointFeatureVector2D featuresVector;
 		int descriptorSize;
 
-	};
+};
 
 }
 
-#endif // VISUAL_POINT_FEATURE_VECTOR_HPP
+#endif // VISUAL_POINT_FEATURE_VECTOR_2D_HPP
 
 /** @} */

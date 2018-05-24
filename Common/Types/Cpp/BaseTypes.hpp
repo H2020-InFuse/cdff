@@ -22,7 +22,7 @@
 
 #include <memory>
 
-namespace BaseTypesWrapper 
+namespace BaseTypesWrapper
 {
 
 // Types

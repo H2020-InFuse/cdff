@@ -10,101 +10,101 @@
 #include "Matrix.hpp"
 #include <Errors/Assert.hpp>
 
-using namespace BaseTypesWrapper;
-
 namespace MatrixWrapper
 {
 
+using namespace BaseTypesWrapper;
+
 void Copy(const Matrix3d& source, Matrix3d& destination)
+{
+	for (unsigned rowIndex = 0; rowIndex < 3; rowIndex++)
 	{
-	for(unsigned rowIndex = 0; rowIndex < 3; rowIndex++)
+		for (unsigned columnIndex = 0; columnIndex < 3; columnIndex++)
 		{
-		for(unsigned columnIndex = 0; columnIndex < 3; columnIndex++)
-			{
-			SetElement(destination, rowIndex, columnIndex, GetElement(source, rowIndex, columnIndex) );
-			} 
+			SetElement(destination, rowIndex, columnIndex, GetElement(source, rowIndex, columnIndex));
 		}
 	}
+}
 
 Matrix3dPtr NewMatrix3d(InitializationType initializationType)
-	{
+{
 	Matrix3dPtr newMatrix = new Matrix3d();
 
 	switch(initializationType)
-		{
+	{
 		case ALL_ZEROES:
-			{
+		{
 			SetZeroMatrix(*newMatrix);
 			break;
-			}
-		case ALL_ONES:	
-			{
+		}
+		case ALL_ONES:
+		{
 			SetOneMatrix(*newMatrix);
 			break;
-			}
+		}
 		case IDENTITY:
-			{
+		{
 			SetIdentityMatrix(*newMatrix);
 			break;
-			}
-		default:
-			{
-			ASSERT(false, "Matrix3d, unhandled initialization type");
-			}
 		}
-
-	return newMatrix;	
+		default:
+		{
+			ASSERT(false, "Matrix3d, unhandled initialization type");
+		}
 	}
+
+	return newMatrix;
+}
 
 void SetZeroMatrix(Matrix3d& matrix)
+{
+	for (unsigned rowIndex = 0; rowIndex < 3; rowIndex++)
 	{
-	for(unsigned rowIndex = 0; rowIndex < 3; rowIndex++)
+		for (unsigned columnIndex = 0; columnIndex < 3; columnIndex++)
 		{
-		for(unsigned columnIndex = 0; columnIndex < 3; columnIndex++)
-			{
-			SetElement(matrix, rowIndex, columnIndex, 0 );
-			} 
+			SetElement(matrix, rowIndex, columnIndex, 0);
 		}
 	}
+}
 
 void SetOneMatrix(Matrix3d& matrix)
+{
+	for (unsigned rowIndex = 0; rowIndex < 3; rowIndex++)
 	{
-	for(unsigned rowIndex = 0; rowIndex < 3; rowIndex++)
+		for (unsigned columnIndex = 0; columnIndex < 3; columnIndex++)
 		{
-		for(unsigned columnIndex = 0; columnIndex < 3; columnIndex++)
-			{
-			SetElement(matrix, rowIndex, columnIndex, 1 );
-			} 
+			SetElement(matrix, rowIndex, columnIndex, 1);
 		}
 	}
+}
 
 void SetIdentityMatrix(Matrix3d& matrix)
+{
+	for (unsigned rowIndex = 0; rowIndex < 3; rowIndex++)
 	{
-	for(unsigned rowIndex = 0; rowIndex < 3; rowIndex++)
+		for (unsigned columnIndex = 0; columnIndex < 3; columnIndex++)
 		{
-		for(unsigned columnIndex = 0; columnIndex < 3; columnIndex++)
-			{
-			SetElement(matrix, rowIndex, columnIndex, (columnIndex == rowIndex) ? 1 : 0 );
-			} 
+			SetElement(matrix, rowIndex, columnIndex, (columnIndex == rowIndex) ? 1 : 0);
 		}
 	}
+}
 
 Matrix3dSharedPtr NewSharedMatrix3d(InitializationType initializationType)
-	{
+{
 	Matrix3dPtr newMatrix = NewMatrix3d(initializationType);
 	Matrix3dSharedPtr sharedMatrix(newMatrix);
 	return sharedMatrix;
-	}
+}
 
 T_Double GetElement(const Matrix3d& matrix, unsigned rowIndex, unsigned columnIndex)
-	{
+{
 	return matrix.arr[rowIndex].arr[columnIndex];
-	}
+}
 
 void SetElement(Matrix3d& matrix, unsigned rowIndex, unsigned columnIndex, T_Double value)
-	{
+{
 	matrix.arr[rowIndex].arr[columnIndex] = value;
-	}
+}
 
 }
 
