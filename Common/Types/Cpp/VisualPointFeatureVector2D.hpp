@@ -1,87 +1,47 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file VisualPointFeatureVector2D.hpp
- * @date 15/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup VisualPointFeatureVector2DWrapper
- * 
- * VisualPointFeatureVector2D wrapper for the VisualPointFeatureVector2D type
- * 
- * 
+ *
+ * Wrapper for the ANS.1 VisualPointFeatureVector2D type
+ *
  * @{
  */
-
-
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-namespace CTypes {
-#include <VisualPointFeatureVector2D.h>
-}
-#include "BaseTypes.hpp"
-#include <stdlib.h>
-#include <memory>
-
-
 
 #ifndef VISUAL_POINT_FEATURE_VECTOR_HPP
 #define VISUAL_POINT_FEATURE_VECTOR_HPP
 
+#include <VisualPointFeatureVector2D.h>
+
+#include "BaseTypes.hpp"
+#include <stdlib.h>
+#include <memory>
+
 namespace VisualPointFeatureVector2DWrapper 
 {
-/* --------------------------------------------------------------------------
- *
- * Cpp typedef definition
- *
- * --------------------------------------------------------------------------
- */
 
-typedef CTypes::VisualPointFeature2D_descriptor VisualPointDescriptor2D;
-typedef CTypes::VisualPointFeature2D VisualPointFeature2D;
-typedef CTypes::VisualPointFeatureVector2D VisualPointFeatureVector2D;
+// Types
 
+typedef asn1SccVisualPointFeature2D_descriptor VisualPointDescriptor2D;
+typedef asn1SccVisualPointFeature2D VisualPointFeature2D;
+typedef asn1SccVisualPointFeatureVector2D VisualPointFeatureVector2D;
 
-/* --------------------------------------------------------------------------
- *
- * Constants
- *
- * --------------------------------------------------------------------------
- */
-const int MAX_FEATURE_2D_POINTS = static_cast<int>(CTypes::features2DElementsMax);
-const int MAX_DESCRIPTOR_2D_LENGTH = static_cast<int>(CTypes::descriptor2DNameLength);
+// Global constant variables
 
+const int MAX_FEATURE_2D_POINTS = static_cast<int>(features2DElementsMax);
+const int MAX_DESCRIPTOR_2D_LENGTH = static_cast<int>(descriptor2DNameLength);
 
-/* --------------------------------------------------------------------------
- *
- * Shared Pointers definition
- *
- * --------------------------------------------------------------------------
- */
-typedef std::shared_ptr<VisualPointFeatureVector2D> VisualPointFeatureVector2DSharedPtr;
-typedef std::shared_ptr<const VisualPointFeatureVector2D> VisualPointFeatureVector2DSharedConstPtr;
+// Pointer types
+
 typedef VisualPointFeatureVector2D* VisualPointFeatureVector2DPtr;
 typedef VisualPointFeatureVector2D const* VisualPointFeatureVector2DConstPtr;
+typedef std::shared_ptr<VisualPointFeatureVector2D> VisualPointFeatureVector2DSharedPtr;
+typedef std::shared_ptr<const VisualPointFeatureVector2D> VisualPointFeatureVector2DSharedConstPtr;
 
+// Functions
 
-/* --------------------------------------------------------------------------
- *
- * Access Functions definition
- *
- * --------------------------------------------------------------------------
- */
 void Copy(const VisualPointFeatureVector2D& source, VisualPointFeatureVector2D& destination);
 VisualPointFeatureVector2DPtr NewVisualPointFeatureVector2D();
 VisualPointFeatureVector2DSharedPtr NewSharedVisualPointFeatureVector2D();
@@ -99,7 +59,7 @@ int GetNumberOfDescriptorComponents(const VisualPointFeatureVector2D& featuresVe
 float GetDescriptorComponent(const VisualPointFeatureVector2D& featuresVector, int pointIndex, int componentIndex);
 
 }
-#endif
 
-/* VisualPointFeatureVector2D.hpp */
+#endif // VISUAL_POINT_FEATURE_VECTOR_HPP
+
 /** @} */

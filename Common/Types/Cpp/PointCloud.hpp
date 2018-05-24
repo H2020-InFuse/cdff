@@ -1,85 +1,46 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file PointCloud.hpp
- * @date 12/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup PointCloudWrapper
- * 
- * Namespace wrapper for the PointCloud type
- * 
- * 
+ *
+ * Wrapper for ASN.1 PointCloud type
+ *
  * @{
  */
-
-
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-namespace CTypes {
-#include <Pointcloud.h>
-}
-#include "BaseTypes.hpp"
-#include <stdlib.h>
-#include <memory>
-
-
 
 #ifndef POINT_CLOUD_HPP
 #define POINT_CLOUD_HPP
 
+#include <Pointcloud.h>
+
+#include "BaseTypes.hpp"
+#include <stdlib.h>
+#include <memory>
+
 namespace PointCloudWrapper 
 {
-/* --------------------------------------------------------------------------
- *
- * Types definition
- *
- * --------------------------------------------------------------------------
- */
-typedef CTypes::Pointcloud_colors ColorsList;
-typedef CTypes::Pointcloud_points PointsList;
-typedef CTypes::Pointcloud PointCloud;
 
+// Types
 
-/* --------------------------------------------------------------------------
- *
- * Constants definition
- *
- * --------------------------------------------------------------------------
- */
-const int MAX_CLOUD_SIZE = static_cast<int>(CTypes::maxPointcloudSize);
+typedef asn1SccPointcloud_colors ColorsList;
+typedef asn1SccPointcloud_points PointsList;
+typedef asn1SccPointcloud PointCloud;
 
+// Global constant variables
 
-/* --------------------------------------------------------------------------
- *
- * Shared Pointers definition
- *
- * --------------------------------------------------------------------------
- */
-typedef std::shared_ptr<PointCloud> PointCloudSharedPtr;
-typedef std::shared_ptr<const PointCloud> PointCloudSharedConstPtr;
+const int MAX_CLOUD_SIZE = static_cast<int>(maxPointcloudSize);
+
+// Pointer types
+
 typedef PointCloud* PointCloudPtr;
 typedef PointCloud const* PointCloudConstPtr;
+typedef std::shared_ptr<PointCloud> PointCloudSharedPtr;
+typedef std::shared_ptr<const PointCloud> PointCloudSharedConstPtr;
 
+// Functions
 
-/* --------------------------------------------------------------------------
- *
- * Functions definition
- *
- * --------------------------------------------------------------------------
- */
 void Copy(const PointCloud& source, PointCloud& destination);
 PointCloudPtr NewPointCloud();
 PointCloudSharedPtr NewSharedPointCloud();
@@ -88,12 +49,13 @@ void Initialize(PointCloud& pointCloud);
 void AddPoint(PointCloud& pointCloud, BaseTypesWrapper::T_Double x, BaseTypesWrapper::T_Double y, BaseTypesWrapper::T_Double z);
 void ClearPoints(PointCloud& pointCloud);
 int GetNumberOfPoints(const PointCloud& pointCloud);
+
 BaseTypesWrapper::T_Double GetXCoordinate(const PointCloud& pointCloud, int pointIndex);
 BaseTypesWrapper::T_Double GetYCoordinate(const PointCloud& pointCloud, int pointIndex);
 BaseTypesWrapper::T_Double GetZCoordinate(const PointCloud& pointCloud, int pointIndex);
 
 }
-#endif
 
-/* PointCloud.hpp */
+#endif // POINT_CLOUD_HPP
+
 /** @} */

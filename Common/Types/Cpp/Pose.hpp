@@ -1,104 +1,64 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file Pose.hpp
- * @date 18/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup PoseWrapper
- * 
- * Pose namespace wrapper for Pose type
- * 
- * 
+ *
+ * Wrapper for ASN.1 Pose type
+ *
  * @{
  */
-
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-namespace CTypes {
-#include <Pose.h>
-}
-#include "BaseTypes.hpp"
-#include <stdlib.h>
-#include <memory>
 
 #ifndef POSE_HPP
 #define POSE_HPP
 
+#include <Pose.h>
 
-/* --------------------------------------------------------------------------
- *
- * Frame namespace
- *
- * --------------------------------------------------------------------------
- */
+#include "BaseTypes.hpp"
+#include <stdlib.h>
+#include <memory>
+
 namespace PoseWrapper
 {
 
-/* --------------------------------------------------------------------------
- *
- * Types definition
- *
- * --------------------------------------------------------------------------
- */
-typedef CTypes::Pose Pose3D;
-typedef CTypes::Pose Transform3D;
-typedef CTypes::Position Position3D;
-typedef CTypes::Orientation Orientation3D;
-typedef CTypes::Quaterniond Quaternion;
+// Types
 
-typedef CTypes::Pose2D Pose2D;
-typedef CTypes::Pose2D Transform2D;
-typedef CTypes::Position2D Position2D;
-typedef CTypes::T_Double Orientation2D;
+typedef asn1SccPose Pose3D;
+typedef asn1SccPose Transform3D;
+typedef asn1SccPosition Position3D;
+typedef asn1SccOrientation Orientation3D;
+typedef asn1SccQuaterniond Quaternion;
 
+typedef asn1SccPose2D Pose2D;
+typedef asn1SccPose2D Transform2D;
+typedef asn1SccPosition2D Position2D;
+typedef asn1SccT_Double Orientation2D;
 
-/* --------------------------------------------------------------------------
- *
- * Shared Pointers definition
- *
- * --------------------------------------------------------------------------
- */
-typedef std::shared_ptr<Pose3D> Pose3DSharedPtr;
-typedef std::shared_ptr<const Pose3D> Pose3DSharedConstPtr;
+// Pointer types
+
 typedef Pose3D* Pose3DPtr;
 typedef Pose3D const* Pose3DConstPtr;
+typedef std::shared_ptr<Pose3D> Pose3DSharedPtr;
+typedef std::shared_ptr<const Pose3D> Pose3DSharedConstPtr;
 
-typedef std::shared_ptr<Transform3D> Transform3DSharedPtr;
-typedef std::shared_ptr<const Transform3D> Transform3DSharedConstPtr;
 typedef Transform3D* Transform3DPtr;
 typedef Transform3D const* Transform3DConstPtr;
+typedef std::shared_ptr<Transform3D> Transform3DSharedPtr;
+typedef std::shared_ptr<const Transform3D> Transform3DSharedConstPtr;
 
-typedef std::shared_ptr<Pose2D> Pose2DSharedPtr;
-typedef std::shared_ptr<const Pose2D> Pose2DSharedConstPtr;
 typedef Pose2D* Pose2DPtr;
 typedef Pose2D const* Pose2DConstPtr;
+typedef std::shared_ptr<Pose2D> Pose2DSharedPtr;
+typedef std::shared_ptr<const Pose2D> Pose2DSharedConstPtr;
 
-typedef std::shared_ptr<Transform2D> Transform2DSharedPtr;
-typedef std::shared_ptr<const Transform2D> Transform2DSharedConstPtr;
 typedef Transform2D* Transform2DPtr;
 typedef Transform2D const* Transform2DConstPtr;
+typedef std::shared_ptr<Transform2D> Transform2DSharedPtr;
+typedef std::shared_ptr<const Transform2D> Transform2DSharedConstPtr;
 
+// Functions
 
-
-/* --------------------------------------------------------------------------
- *
- * Access Functions definition
- *
- * --------------------------------------------------------------------------
- */
 void Copy(const Pose3D& source, Pose3D& destination);
 Pose3DPtr NewPose3D();
 Pose3DSharedPtr NewSharedPose3D();
@@ -147,10 +107,8 @@ BaseTypesWrapper::T_Double GetYTranslation(const Pose2D& pose);
 void SetRotation(Pose2D& pose, BaseTypesWrapper::T_Double angle);
 BaseTypesWrapper::T_Double GetRotation(const Pose2D& pose);
 
-
 }
 
-#endif
+#endif // POSE_HPP
 
-/* TransformWithCovarianceWrapper.hpp */
 /** @} */

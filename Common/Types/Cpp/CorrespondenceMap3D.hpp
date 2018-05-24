@@ -1,85 +1,45 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file CorrespondenceMap3D.hpp
- * @date 17/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup CorrespondenceMap3DWrapper
- * 
- * CorrespondenceMap3D wrapper for the CorrespondenceMap3D type
- * 
- * 
+ *
+ * Wrapper for the ASN.1 CorrespondenceMap3D type
+ *
  * @{
  */
-
-
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-namespace CTypes {
-#include <CorrespondenceMap3D.h>
-}
-#include "BaseTypes.hpp"
-#include <stdlib.h>
-#include <memory>
-
-
 
 #ifndef CORRESPONDENCE_MAP_3D_HPP
 #define CORRESPONDENCE_MAP_3D_HPP
 
+#include <CorrespondenceMap3D.h>
+
+#include "BaseTypes.hpp"
+#include <stdlib.h>
+#include <memory>
+
 namespace CorrespondenceMap3DWrapper 
 {
-/* --------------------------------------------------------------------------
- *
- * Cpp typedef definition
- *
- * --------------------------------------------------------------------------
- */
 
-typedef CTypes::Correspondence3D Correspondence3D;
-typedef CTypes::CorrespondenceMap3D CorrespondenceMap3D;
+// Types
 
+typedef asn1SccCorrespondence3D Correspondence3D;
+typedef asn1SccCorrespondenceMap3D CorrespondenceMap3D;
 
-/* --------------------------------------------------------------------------
- *
- * Constants
- *
- * --------------------------------------------------------------------------
- */
-const int MAX_CORRESPONDENCES_3D = static_cast<int>(CTypes::correspondeceMap3DElementsMax);
+// Global constant variables
 
+const int MAX_CORRESPONDENCES_3D = static_cast<int>(correspondeceMap3DElementsMax);
 
+// Pointer types
 
-/* --------------------------------------------------------------------------
- *
- * Shared Pointers definition
- *
- * --------------------------------------------------------------------------
- */
-typedef std::shared_ptr<CorrespondenceMap3D> CorrespondenceMap3DSharedPtr;
-typedef std::shared_ptr<const CorrespondenceMap3D> CorrespondenceMap3DSharedConstPtr;
 typedef CorrespondenceMap3D* CorrespondenceMap3DPtr;
 typedef CorrespondenceMap3D const* CorrespondenceMap3DConstPtr;
+typedef std::shared_ptr<CorrespondenceMap3D> CorrespondenceMap3DSharedPtr;
+typedef std::shared_ptr<const CorrespondenceMap3D> CorrespondenceMap3DSharedConstPtr;
 
-/* --------------------------------------------------------------------------
- *
- * Access Functions definition
- *
- * --------------------------------------------------------------------------
- */
+// Functions
+
 void Copy(const CorrespondenceMap3D& source, CorrespondenceMap3D& destination);
 CorrespondenceMap3DPtr NewCorrespondenceMap3D();
 CorrespondenceMap3DSharedPtr NewSharedCorrespondenceMap3D();
@@ -93,7 +53,7 @@ BaseTypesWrapper::Point3D GetSink(const CorrespondenceMap3D& correspondenceMap, 
 BaseTypesWrapper::T_Float GetProbability(const CorrespondenceMap3D& correspondenceMap, const int correspondenceIndex);
 
 }
-#endif
 
-/* CorrespondenceMap3D.hpp */
+#endif // CORRESPONDENCE_MAP_3D_HPP
+
 /** @} */
