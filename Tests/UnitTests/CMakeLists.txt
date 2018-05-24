@@ -115,6 +115,7 @@ set(UNITTEST_LIBRARIES Catch
 #[=[registration_icp_3d]=] # FIXME: name collision, issue #56
     registration_icp_cc
     shot_descriptor_3d
+    sobel_derivative
     svd_decomposition
     synthetic_generators
     triangulation
