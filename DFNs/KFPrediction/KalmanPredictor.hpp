@@ -56,10 +56,6 @@ namespace dfn_ci {
  */
     class KalmanPredictor : public KFPredictionInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
             KalmanPredictor();
             virtual ~KalmanPredictor();
@@ -70,18 +66,8 @@ namespace dfn_ci {
 	    cv::KalmanFilter KF; 
 	    void init(cv::Mat &pose,cv::Mat &vel0,float time0);
 	    cv::Mat Tpred;
-            cv::Mat Test;		
-	
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
+            cv::Mat Test;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
 	private:
 	
 		struct KalmanParameters
@@ -100,7 +86,7 @@ namespace dfn_ci {
 		Helpers::ParametersListHelper parametersHelper;
 		KalmanPredictorOptionsSet parameters;
 		
-		static const KalmanPredictorOptionsSet DEFAULT_PARAMETERS;	
+		static const KalmanPredictorOptionsSet DEFAULT_PARAMETERS;
 		
 		cv::Mat predict(float currentTime);
 		cv::Mat predict();
@@ -108,8 +94,8 @@ namespace dfn_ci {
 		void ValidateParameters();
 		void ValidateInputs(cv::Mat inputState);
 
-		void Configure(const YAML::Node& configurationNode);			
-	
-    };
+		void Configure(const YAML::Node& configurationNode);
+
+	};
 }
 #endif
