@@ -1,89 +1,52 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file FeaturesMatching2DInterface.hpp
- * @date 29/01/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  This is the common interface of all DFNs that matches 2d features between two images.    
- *
  * @{
  */
-#ifndef FEATURES_MATCHING_2D_INTERFACE_HPP
-#define FEATURES_MATCHING_2D_INTERFACE_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <DFNCommonInterface.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <VisualPointFeatureVector2D.hpp>
+#ifndef FEATURESMATCHING2D_INTERFACE_HPP
+#define FEATURESMATCHING2D_INTERFACE_HPP
 
+#include "DFNCommonInterface.hpp"
+#include <VisualPointFeatureVector2D.h>
+#include <CorrespondenceMap2D.h>
 
-namespace dfn_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
+namespace dfn_ci
+{
+    /**
+     * DFN that matches 2D keypoints
+     */
     class FeaturesMatching2DInterface : public DFNCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
+
             FeaturesMatching2DInterface();
             virtual ~FeaturesMatching2DInterface();
-            /**
-            * Send value to input port sourceFeaturesVector
-            * @param sourceFeaturesVector, these are the extracted features of the 2D source image we would like to match with the sink.
-            */
-            virtual void sourceFeaturesVectorInput(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr data);
 
             /**
-            * Send value to input port sinkFeaturesVector
-            * @param sinkFeaturesVector, these are the extracted features of the 2D sink image we would like to match with the source.
-            */
-            virtual void sinkFeaturesVectorInput(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr data);
+             * Send value to input port "sourceFeatures"
+             * @param sourceFeatures: keypoints extracted from the source 2D image
+             */
+            virtual void sourceFeaturesInput(const asn1SccVisualPointFeatureVector2D& data);
+            /**
+             * Send value to input port "sinkFeatures"
+             * @param sinkFeatures: keypoints extracted from the sink 2D image
+             */
+            virtual void sinkFeaturesInput(const asn1SccVisualPointFeatureVector2D& data);
 
             /**
-            * Receive value from output port correspondenceMap
-            * @param correspondenceMap, This is the best set of correspondences between the source features set and the sink features set.
-            */
-            virtual CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMapOutput();
+             * Query value from output port "matches"
+             * @return matches: matches between the two sets of keypoints
+             */
+            virtual const asn1SccCorrespondenceMap2D& matchesOutput() const;
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
         protected:
-            VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inSourceFeaturesVector;
-            VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inSinkFeaturesVector;
-            CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr outCorrespondenceMap;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+            asn1SccVisualPointFeatureVector2D inSourceFeatures;
+            asn1SccVisualPointFeatureVector2D inSinkFeatures;
+            asn1SccCorrespondenceMap2D outMatches;
     };
 }
-#endif
-/* FeaturesMatching2DInterface.hpp */
+
+#endif // FEATURESMATCHING2D_INTERFACE_HPP
+
 /** @} */
