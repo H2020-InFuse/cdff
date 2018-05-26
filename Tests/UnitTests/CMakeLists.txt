@@ -20,9 +20,25 @@ set(UNITTEST_SOURCES UnitTests.cpp
     Common/Converters/Transform3DMatConvertersTest.cpp
     Common/Converters/VisualPointFeatureVector3DPclPointCloudConvertersTest.cpp
     Common/Helpers/ParametersHelper.cpp
+#[=[DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp]=]
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
+#[=[DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp]=]
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
     DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
+#[=[DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
+    DFNs/FeaturesMatching2D/FlannMatcher.cpp
+    DFNs/FeaturesMatching3D/Icp3D.cpp
+    DFNs/FeaturesMatching3D/Ransac3D.cpp
+    DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
+    DFNs/ImageFiltering/ImageUndistortion.cpp
+    DFNs/KFPrediction/KalmanPredictor.cpp
+    DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
+    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
+    DFNs/StereoReconstruction/DisparityMapping.cpp
+    DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    DFPCs/DfpcConfigurator.cpp
+    DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
+    DFPCs/Reconstruction3D/ObservedScene.cpp]=]
 )
 
 # Libraries used by the aforementioned source files. They will be linked in the
@@ -34,7 +50,20 @@ set(UNITTEST_LIBRARIES Catch
     cdff_logger
     cdff_types
     converters_opencv
+#[=[dfpc_configurator
+    dfpc_implementation_features_matching_3d
+    disparity_mapping
+    essential_matrix_decomposition
+    flann_matcher
+    fundamental_matrix_ransac]=]
     harris_detector_2d
+#[=[harris_detector_3d
+    hirschmuller_disparity_mapping
+    icp_3d
+    image_undistortion
+    iterative_pnp_solver
+    kalman_predictor
+    mock]=]
     opencv_core
     opencv_highgui
     opencv_imgcodecs
@@ -62,6 +91,11 @@ set(UNITTEST_LIBRARIES Catch
     pcl_surface
     pcl_tracking
     pcl_visualization
+#[=[ransac_3d
+    reconstruction_from_stereo
+    shot_descriptor_3d
+    synthetic_generators
+    triangulation]=]
 )
 
 # Make the Catch executable that runs the unit tests
