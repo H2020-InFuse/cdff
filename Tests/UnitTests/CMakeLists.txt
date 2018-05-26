@@ -29,9 +29,9 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/FeaturesMatching2D/FlannMatcher.cpp
 #[=[DFNs/FeaturesMatching3D/Icp3D.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
-    DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
+    DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp]=]
     DFNs/ImageFiltering/ImageUndistortion.cpp
-    DFNs/KFPrediction/KalmanPredictor.cpp
+#[=[DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
@@ -59,9 +59,9 @@ set(UNITTEST_LIBRARIES Catch
     harris_detector_2d
 #[=[harris_detector_3d
     hirschmuller_disparity_mapping
-    icp_3d
+    icp_3d]=]
     image_undistortion
-    iterative_pnp_solver
+#[=[iterative_pnp_solver
     kalman_predictor
     mock]=]
     opencv_core

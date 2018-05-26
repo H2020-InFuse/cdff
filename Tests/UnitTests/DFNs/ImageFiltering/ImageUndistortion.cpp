@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Unit Test for the DFN ImageUndistortion.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -28,16 +28,9 @@
  */
 #include <catch.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <FrameToMatConverter.hpp>
 #include <MatToFrameConverter.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
-#include <Errors/Assert.hpp>
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace FrameWrapper;
 
@@ -47,38 +40,39 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process (image undistortion)", "[process]" ) 
-	{
-	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
+TEST_CASE( "Call to process (image undistortion)", "[process]" )
+{
+	// Prepare input data
+	cv::Mat inputImage(500, 500, CV_8UC3, cv::Scalar(100, 100, 100));
+	FrameConstPtr inputFrame = MatToFrameConverter().Convert(inputImage);
 
-	Stubs::CacheHandler<cv::Mat, FrameConstPtr>* stubOutputCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>();
-	Mocks::MatToFrameConverter* mockOutputConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubOutputCache, mockOutputConverter);
+	// Instantiate DFN
+	ImageUndistortion* filter = new ImageUndistortion;
 
-	cv::Mat inputImage(500, 500, CV_8UC3, cv::Scalar(100, 100, 100));	
-	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputImage) );
+	// Send input data to DFN
+	filter->imageInput(*inputFrame);
 
-	FrameConstPtr outputImage = new Frame();
-	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&outputImage) );
+	// Run DFN
+	filter->process();
 
-	ImageUndistortion undistortion;
-	FrameConstPtr input = new Frame();
-	undistortion.imageInput(input);
-	undistortion.process();
+	// Query output data from DFN
+	const Frame& output = filter->imageOutput();
 
-	FrameConstPtr output = undistortion.filteredImageOutput();
-	
-	delete(input);
-	delete(output);
-	}
+	// Cleanup
+	delete filter;
+}
 
 TEST_CASE( "Call to configure (image undistortion)", "[configure]" )
-	{
-	ImageUndistortion undistortion;
-	undistortion.setConfigurationFile("../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortion_Conf1.yaml");
-	undistortion.configure();	
-	}
+{
+	// Instantiate DFN
+	ImageUndistortion* filter = new ImageUndistortion;
+
+	// Setup DFN
+	filter->setConfigurationFile("../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortion_Conf1.yaml");
+	filter->configure();
+
+	// Cleanup
+	delete filter;
+}
 
 /** @} */

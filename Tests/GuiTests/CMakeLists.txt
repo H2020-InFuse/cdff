@@ -40,8 +40,6 @@ target_link_libraries(
     cdff_logger flann_matcher converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
 )
 
-#[======================================================================[
-
 add_executable(
     ImageUndistortionGuiTest
     DFNs/ImageFiltering/ImageUndistortion.cpp
@@ -52,8 +50,8 @@ add_executable(
 )
 set_target_properties(ImageUndistortionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	ImageUndistortionGuiTest
-	mock cdff_logger image_undistortion converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+    ImageUndistortionGuiTest
+    cdff_logger image_undistortion converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
 )
 
 add_executable(

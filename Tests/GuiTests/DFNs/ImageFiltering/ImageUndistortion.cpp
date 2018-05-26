@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Testing application for the DFN ImageUndistortion.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -26,88 +26,63 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/core/core.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
+
 #include <FrameToMatConverter.hpp>
 #include <MatToFrameConverter.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
 #include <Errors/Assert.hpp>
+
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
 
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/core/core.hpp>
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace FrameWrapper;
 
-
 class ImageUndistortionTestInterface : public DFNTestInterface
-	{
+{
 	public:
 		ImageUndistortionTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
 		~ImageUndistortionTestInterface();
-	protected:
 
 	private:
-		Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache;
-		Mocks::FrameToMatConverter* mockInputConverter;
-		Stubs::CacheHandler<cv::Mat, FrameConstPtr>* stubOutputCache;
-		Mocks::MatToFrameConverter* mockOutputConverter;
 		ImageUndistortion* undistort;
 
 		cv::Mat cvImage;
 		FrameConstPtr inputImage;
 		std::string outputWindowName;
 
-		void SetupMocksAndStubs();
 		void SetupParameters();
 		void DisplayResult();
-	};
+};
 
 ImageUndistortionTestInterface::ImageUndistortionTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
-	{
+{
 	undistort = new ImageUndistortion();
 	SetDFN(undistort);
 
-	MatToFrameConverter converter;
 	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/SmestechLab.jpg", cv::IMREAD_COLOR);
 	cvImage = doubleImage(cv::Rect(doubleImage.cols/2,0,doubleImage.cols/2, doubleImage.rows));
-	inputImage = converter.Convert(cvImage);
-	undistort->imageInput(inputImage);
+	inputImage = MatToFrameConverter().Convert(cvImage);
+
+	undistort->imageInput(*inputImage);
 	outputWindowName = "Image Undistortion Result";
-	}
+}
 
 ImageUndistortionTestInterface::~ImageUndistortionTestInterface()
-	{
-	delete(stubInputCache);
-	delete(mockInputConverter);
-	delete(stubOutputCache);
-	delete(mockOutputConverter);
+{
 	delete(undistort);
 	delete(inputImage);
-	}
-
-void ImageUndistortionTestInterface::SetupMocksAndStubs()
-	{
-	stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
-
-	stubOutputCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>();
-	mockOutputConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubOutputCache, mockOutputConverter);
-	}
+}
 
 void ImageUndistortionTestInterface::SetupParameters()
-	{
+{
 	AddParameter("CameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 1e-5);
 	AddParameter("CameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 1e-5);
 	AddParameter("CameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 1e-5);
@@ -124,27 +99,23 @@ void ImageUndistortionTestInterface::SetupParameters()
 
 	AddParameter("Distortion", "UseK3", 1, 1);
 	AddParameter("Distortion", "UseK4ToK6", 1, 1);
-	}
+}
 
 void ImageUndistortionTestInterface::DisplayResult()
-	{
-	FrameConstPtr undistortedImage= undistort->filteredImageOutput();
-	FrameToMatConverter converter;
-	cv::Mat undistortedCvImage = converter.Convert(undistortedImage);
+{
+	const Frame& undistortedImage = undistort->imageOutput();
+	cv::Mat undistortedCvImage = FrameToMatConverter().Convert(&undistortedImage);
 
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
 	cv::imshow(outputWindowName, undistortedCvImage);
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
-
-	delete(undistortedImage);
-	}
-
+}
 
 int main(int argc, char** argv)
-	{
+{
 	ImageUndistortionTestInterface interface("ImageUndistortion", 100, 40);
 	interface.Run();
-	};
+};
 
 /** @} */
