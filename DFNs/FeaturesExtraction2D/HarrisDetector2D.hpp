@@ -45,10 +45,10 @@ namespace dfn_ci
 		public:
 
 			HarrisDetector2D();
-			~HarrisDetector2D();
+			virtual ~HarrisDetector2D();
 
-			void configure();
-			void process();
+			virtual void configure();
+			virtual void process();
 
 		private:
 

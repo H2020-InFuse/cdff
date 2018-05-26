@@ -1,11 +1,12 @@
 name: FeaturesExtraction2D
+doc: DFN that extracts 2D keypoints from a 2D image
 input_ports:
     - name: frame
-      type: Frame
+      type: asn1SccFrame
       doc: 2D image captured by a camera
 output_ports:
     - name: features
-      type: VisualPointFeatureVector2D
+      type: asn1SccVisualPointFeatureVector2D
       doc: keypoints extracted from the image, may include descriptors
 implementations:
     - HarrisDetector2D

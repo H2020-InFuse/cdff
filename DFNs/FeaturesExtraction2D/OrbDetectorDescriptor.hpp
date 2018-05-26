@@ -43,10 +43,10 @@ namespace dfn_ci
 		public:
 
 			OrbDetectorDescriptor();
-			~OrbDetectorDescriptor();
+			virtual ~OrbDetectorDescriptor();
 
-			void configure();
-			void process();
+			virtual void configure();
+			virtual void process();
 
 		private:
 

@@ -30,8 +30,8 @@
  * @{
  */
 
-#ifndef ORB_DESCRIPTOR_HPP
-#define ORB_DESCRIPTOR_HPP
+#ifndef ORBDESCRIPTOR_HPP
+#define ORBDESCRIPTOR_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -39,7 +39,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
+#include "FeaturesDescription2DInterface.hpp"
 #include <Frame.hpp>
 #include <VisualPointFeatureVector2D.hpp>
 #include <FrameToMatConverter.hpp>
@@ -50,7 +50,8 @@
 #include <opencv2/features2d.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
-namespace dfn_ci {
+namespace dfn_ci
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -65,10 +66,12 @@ namespace dfn_ci {
 	 * --------------------------------------------------------------------
 	 */
         public:
+
             OrbDescriptor();
-            ~OrbDescriptor();
-            void process();
-            void configure();
+            virtual ~OrbDescriptor();
+
+            virtual void configure();
+            virtual void process();
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -111,6 +114,7 @@ namespace dfn_ci {
 		static int ConvertToScoreType(std::string scoreType);
     };
 }
-#endif
-/* OrbDescriptor.hpp */
+
+#endif // ORBDESCRIPTOR_HPP
+
 /** @} */

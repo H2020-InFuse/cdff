@@ -7,16 +7,13 @@
 #define FEATURESEXTRACTION2D_INTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-
-namespace CTypes {
 #include <VisualPointFeatureVector2D.h>
 #include <Frame.h>
-}
 
 namespace dfn_ci
 {
     /**
-     * Common interface for all DFNs that extract 2D keypoints from a 2D image
+     * DFN that extracts 2D keypoints from a 2D image
      */
     class FeaturesExtraction2DInterface : public DFNCommonInterface
     {
@@ -27,20 +24,20 @@ namespace dfn_ci
 
             /**
              * Send value to input port "frame"
-             * @param frame, 2D image captured by a camera
+             * @param frame: 2D image captured by a camera
              */
-            virtual void frameInput(const CTypes::Frame& data);
+            virtual void frameInput(const asn1SccFrame& data);
 
             /**
              * Query value from output port "features"
-             * @return features, keypoints extracted from the image, may include descriptors
+             * @return features: keypoints extracted from the image, may include descriptors
              */
-            virtual const CTypes::VisualPointFeatureVector2D& featuresOutput() const;
+            virtual const asn1SccVisualPointFeatureVector2D& featuresOutput() const;
 
         protected:
 
-            CTypes::Frame inFrame;
-            CTypes::VisualPointFeatureVector2D outFeatures;
+            asn1SccFrame inFrame;
+            asn1SccVisualPointFeatureVector2D outFeatures;
     };
 }
 
