@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Testing application for the DFN ImageUndistortionRectification.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -26,46 +26,37 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/core/core.hpp>
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
+
 #include <FrameToMatConverter.hpp>
 #include <MatToFrameConverter.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
 #include <Errors/Assert.hpp>
+
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
 
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/core/core.hpp>
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace FrameWrapper;
 
-
 class ImageUndistortionRectificationTestInterface : public DFNTestInterface
-	{
+{
 	public:
 		ImageUndistortionRectificationTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
 		~ImageUndistortionRectificationTestInterface();
-	protected:
 
 	private:
 		enum CameraPosition
-			{
+		{
 			LEFT_CAMERA,
 			RIGHT_CAMERA,
-			};
+		};
 
-		Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache;
-		Mocks::FrameToMatConverter* mockInputConverter;
-		Stubs::CacheHandler<cv::Mat, FrameConstPtr>* stubOutputCache;
-		Mocks::MatToFrameConverter* mockOutputConverter;
 		ImageUndistortionRectification* undistort;
 
 		cv::Mat cvImage;
@@ -74,58 +65,42 @@ class ImageUndistortionRectificationTestInterface : public DFNTestInterface
 		CameraPosition cameraPosition;
 		bool saveResultToFile;
 
-		void SetupMocksAndStubs();
 		void SetupParameters();
 		void DisplayResult();
-	};
+};
 
 ImageUndistortionRectificationTestInterface::ImageUndistortionRectificationTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
-	{
+{
 	cameraPosition = LEFT_CAMERA;
 	saveResultToFile = false;
 
 	undistort = new ImageUndistortionRectification();
 	SetDFN(undistort);
 
-	MatToFrameConverter converter;
 	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/chair40.png", cv::IMREAD_COLOR);
 	if (cameraPosition == LEFT_CAMERA)
-		{
+	{
 		cvImage = doubleImage(cv::Rect(0,0,doubleImage.cols/2, doubleImage.rows));
-		}
-	else
-		{
-		cvImage = doubleImage(cv::Rect(doubleImage.cols/2,0,doubleImage.cols/2, doubleImage.rows));
-		}
-	inputImage = converter.Convert(cvImage);
-	undistort->imageInput(inputImage);
-	outputWindowName = "Image Undistortion Rectification Result";
 	}
+	else
+	{
+		cvImage = doubleImage(cv::Rect(doubleImage.cols/2,0,doubleImage.cols/2, doubleImage.rows));
+	}
+	inputImage = MatToFrameConverter().Convert(cvImage);
+
+	undistort->imageInput(*inputImage);
+	outputWindowName = "Image Undistortion Rectification Result";
+}
 
 ImageUndistortionRectificationTestInterface::~ImageUndistortionRectificationTestInterface()
-	{
-	delete(stubInputCache);
-	delete(mockInputConverter);
-	delete(stubOutputCache);
-	delete(mockOutputConverter);
+{
 	delete(undistort);
 	delete(inputImage);
-	}
-
-void ImageUndistortionRectificationTestInterface::SetupMocksAndStubs()
-	{
-	stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
-
-	stubOutputCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>();
-	mockOutputConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubOutputCache, mockOutputConverter);
-	}
+}
 
 void ImageUndistortionRectificationTestInterface::SetupParameters()
-	{
+{
 	AddParameter("GeneralParameters", "ConstantBorderValue", 0, 100, 1e-2);
 	AddParameter("GeneralParameters", "InterpolationMethod", 0, 3);
 	AddParameter("GeneralParameters", "BorderMode", 0, 2);
@@ -134,9 +109,8 @@ void ImageUndistortionRectificationTestInterface::SetupParameters()
 	AddParameter("ImageSize", "Width", 1280, 1280);
 	AddParameter("ImageSize", "Height", 720, 720);
 
-
 	if (cameraPosition == LEFT_CAMERA)
-		{
+	{
 		AddParameter("CameraMatrix", "FocalLengthX", 693.4181807813, 700, 1e-5);
 		AddParameter("CameraMatrix", "FocalLengthY", 690.36629049483, 700, 1e-5);
 		AddParameter("CameraMatrix", "PrinciplePointX", 671.7716154809, 700, 1e-5);
@@ -162,9 +136,9 @@ void ImageUndistortionRectificationTestInterface::SetupParameters()
 		AddParameter("RectificationMatrix", "Element_2_0", 0.0050930868079138, 1, 1e-8);
 		AddParameter("RectificationMatrix", "Element_2_1", 0.0019730243436088, 1, 1e-8);
 		AddParameter("RectificationMatrix", "Element_2_2", 0.99998508370961, 1, 1e-8);
-		}
+	}
 	else
-		{
+	{
 		AddParameter("CameraMatrix", "FocalLengthX", 693.702285943993, 700, 1e-5);
 		AddParameter("CameraMatrix", "FocalLengthY", 691.5964653592, 700, 1e-5);
 		AddParameter("CameraMatrix", "PrinciplePointX", 672.36931687204, 700, 1e-5);
@@ -190,14 +164,13 @@ void ImageUndistortionRectificationTestInterface::SetupParameters()
 		AddParameter("RectificationMatrix", "Element_2_0", 0.0025628031195234, 1, 1e-8);
 		AddSignedParameter("RectificationMatrix", "Element_2_1", -0.0019717317600811, 1, 1e-8);
 		AddParameter("RectificationMatrix", "Element_2_2", 0.99999477214335, 1, 1e-8);
-		}
 	}
+}
 
 void ImageUndistortionRectificationTestInterface::DisplayResult()
-	{
-	FrameConstPtr undistortedImage= undistort->filteredImageOutput();
-	FrameToMatConverter converter;
-	cv::Mat undistortedCvImage = converter.Convert(undistortedImage);
+{
+	const Frame& undistortedImage = undistort->imageOutput();
+	cv::Mat undistortedCvImage = FrameToMatConverter().Convert(&undistortedImage);
 
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
 	cv::imshow(outputWindowName, undistortedCvImage);
@@ -207,25 +180,22 @@ void ImageUndistortionRectificationTestInterface::DisplayResult()
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
 
 	if (saveResultToFile)
-		{
+	{
 		if (cameraPosition == LEFT_CAMERA)
-			{
+		{
 			cv::imwrite("../../tests/Data/Images/RectifiedChair40Left.png", undistortedCvImage);
-			}
-		else
-			{
-			cv::imwrite("../../tests/Data/Images/RectifiedChair40Right.png", undistortedCvImage);
-			}
 		}
-
-	delete(undistortedImage);
+		else
+		{
+			cv::imwrite("../../tests/Data/Images/RectifiedChair40Right.png", undistortedCvImage);
+		}
 	}
-
+}
 
 int main(int argc, char** argv)
-	{
+{
 	ImageUndistortionRectificationTestInterface interface("ImageUndistortionRectification", 100, 40);
 	interface.Run();
-	};
+};
 
 /** @} */

@@ -64,9 +64,11 @@ add_executable(
 )
 set_target_properties(ImageUndistortionRectificationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	ImageUndistortionRectificationGuiTest
-	mock cdff_logger image_undistortion_rectification converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+    ImageUndistortionRectificationGuiTest
+    cdff_logger image_undistortion_rectification converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
 )
+
+#[======================================================================[
 
 add_executable(
     DisparityMappingGuiTest
