@@ -31,6 +31,7 @@ typedef asn1SccT_Int64 T_Int64;
 typedef asn1SccT_UInt64 T_UInt64;
 typedef asn1SccT_UInt32 T_UInt32;
 typedef asn1SccT_UInt16 T_UInt16;
+typedef asn1SccT_Boolean T_Boolean;
 typedef asn1SccT_String T_String;
 typedef asn1SccT_Float T_Float;
 typedef asn1SccT_Double T_Double;
