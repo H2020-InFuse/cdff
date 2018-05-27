@@ -1,92 +1,62 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file FundamentalMatrixComputationInterface.hpp
- * @date 26/01/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  This is the common interface of all DFNs that compute a fundamental matrix from a set of 2D correspondences.    
- *
  * @{
  */
-#ifndef FUNDAMENTAL_MATRIX_COMPUTATION_INTERFACE_HPP
-#define FUNDAMENTAL_MATRIX_COMPUTATION_INTERFACE_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <DFNCommonInterface.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <Matrix.hpp>
-#include <BaseTypes.hpp>
+#ifndef FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
+#define FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
 
+#include "DFNCommonInterface.hpp"
+#include <Eigen.h>
+#include <CorrespondenceMap2D.h>
 
-namespace dfn_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
+namespace dfn_ci
+{
+    /**
+     * DFN that estimates the fundamental matrix of a camera pair
+     * from a set of 2D matches (keypoint pairs)
+     */
     class FundamentalMatrixComputationInterface : public DFNCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
+
             FundamentalMatrixComputationInterface();
             virtual ~FundamentalMatrixComputationInterface();
-            /**
-            * Send value to input port image
-            * @param correspondenceSet, this is a list coordinates of physical points in two distinct images taken from a camera. The set contains pairs of 2d coordinates ( (x1, y1), (x2, y2)), 
-            * each pair represents the same physical point. (x1, y1) is its position in the first camera image and (x2, y2) is its position in the second camera image.
-            */
-            virtual void correspondenceMapInput(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr data);
 
             /**
-            * Receive value from output port featuresSet
-            * @param fundamentalMatrix, This is the fundamental matrix of the camera that took the two images.
-            */
-            virtual MatrixWrapper::Matrix3dConstPtr fundamentalMatrixOutput();
+             * Send value to input port "matches"
+             * @param matches: keypoint pairs corresponding to the same point
+             *        found in two different images. This is a list of pairs of
+             *        2D coordinates: ((x1, y1), (x2, y2)), ... Each pair
+             *        references the same physical point: (x1, y1) is its
+             *        position in the first image and (x2, y2) is its position
+             *        in the second image.
+             */
+            virtual void matchesInput(const asn1SccCorrespondenceMap2D& data);
 
             /**
-            * Receive value from output port featuresSet
-            * @param success, This outputs tells whether the matrix computation was succesfull. The computation may fail if the inputs are not good. 
-	    * If the computation fails the first output is meaningless.
-            */
-            virtual bool successOutput();
+             * Query value from output port "fundamentalMatrix"
+             * @return fundamentalMatrix: fundamental matrix of the camera pair
+             *         that captured the two images
+             */
+            virtual const asn1SccMatrix3d& fundamentalMatrixOutput() const;
+            /**
+             * Query value from output port "success"
+             * @return success: boolean flag indicating successful matrix
+             *         computation. Fundamental matrix computation may fail if
+             *         the input is not good; in that case, the returned matrix
+             *         is meaningless.
+             */
+            virtual bool successOutput() const;
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
         protected:
-            CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inCorrespondenceMap;
-            MatrixWrapper::Matrix3dConstPtr outFundamentalMatrix;
-	    bool outSuccess;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+            asn1SccCorrespondenceMap2D inMatches;
+            asn1SccMatrix3d outFundamentalMatrix;
+            bool outSuccess;
     };
 }
-#endif
-/* FundamentalMatrixComputationInterface.hpp */
+
+#endif // FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
+
 /** @} */

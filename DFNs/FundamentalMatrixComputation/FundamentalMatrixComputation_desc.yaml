@@ -1,17 +1,22 @@
 name: FundamentalMatrixComputation
+doc: DFN that estimates the fundamental matrix of a camera pair
+     from a set of 2D matches (keypoint pairs)
 input_ports:
-    - name: correspondenceMap
-      type: CorrespondenceMap2D
-      doc: 	This is a list coordinates of physical points in two distinct images taken from a camera. The set contains pairs of 2d coordinates ( (x1, y1), (x2, y2)), each pair represents the same 
-		physical point. (x1, y1) is its position in the first camera image and (x2, y2) is its position in the second camera image.
+    - name: matches
+      type: asn1SccCorrespondenceMap2D
+      doc: "keypoint pairs corresponding to the same point found in two
+            different images. This is a list of pairs of 2D coordinates:
+            ((x1, y1), (x2, y2)), ... Each pair references the same physical
+            point: (x1, y1) is its position in the first image and (x2, y2)
+            is its position in the second image."
 output_ports:
     - name: fundamentalMatrix
-      type: Matrix3d
-      doc: This is the fundamental matrix of the camera pair that took the two images.
+      type: asn1SccMatrix3d
+      doc: fundamental matrix of the camera pair that captured the two images
     - name: success
-      type: boolean
-      doc: This outputs tells whether the matrix computation was succesfull. The computation may fail if the inputs are not good. If the computation fails the first output is meaningless.
+      type: bool
+      doc: boolean flag indicating successful matrix computation. Fundamental
+           matrix computation may fail if the input is not good; in that case,
+           the returned matrix is meaningless.
 implementations:
     - FundamentalMatrixRansac
-
-
