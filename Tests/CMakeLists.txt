@@ -6,9 +6,10 @@ FILE (COPY Data/ DESTINATION ./tests/Data/)
 #[[add_subdirectory(Stubs)
    add_subdirectory(Mocks)]]
 
+add_subdirectory(DataGenerators)
+
 add_subdirectory(UnitTests)
 add_subdirectory(GuiTests)
 
 #[[add_subdirectory(PerformanceTests)
-   add_subdirectory(DataGenerators)
    add_subdirectory(InFuseTests)]]

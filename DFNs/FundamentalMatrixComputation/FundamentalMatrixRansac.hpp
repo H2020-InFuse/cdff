@@ -1,108 +1,83 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file FundamentalMatrixRansac.hpp
- * @date 01/26/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  @brief This DFN applies the RANSAC estimation provided by OpenCV.
- * 
- * This DFN implementation requires the following parameters:
- * @param outlierThreshold, the pixel distance that determines whether an input point (represented by a match between two 2d points) is an outlier in the RANSAC model; Recommended values are 1, 2, and 3. 
- * @param confidence, the minimum acceptable probability that a RANSAC model represents the set of points defined by the correspondence set.
- *
  * @{
  */
 
-/*!
- * @addtogroup DFNs
- * 
- *  This DFN implements the Fundamental Matrix Computation with the Ransac (Randome Sample Consensus) Method.
- *  
- *
- * @{
- */
+#ifndef FUNDAMENTALMATRIXRANSAC_HPP
+#define FUNDAMENTALMATRIXRANSAC_HPP
 
-#ifndef FUNDAMENTAL_MATRIX_RANSAC_HPP
-#define FUNDAMENTAL_MATRIX_RANSAC_HPP
+#include "FundamentalMatrixComputationInterface.hpp"
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
 #include <CorrespondenceMap2D.hpp>
 #include <Matrix.hpp>
 #include <BaseTypes.hpp>
+#include <Helpers/ParametersListHelper.hpp>
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
-#include <Helpers/ParametersListHelper.hpp>
 
-
-namespace dfn_ci {
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class FundamentalMatrixRansac : public FundamentalMatrixComputationInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+namespace dfn_ci
+{
+	/**
+	 * Estimation of the fundamental matrix of a camera pair from a set of 2D
+	 * keypoint pairs, using RANSAC (RANdom SAmple Consensus, provided by
+	 * OpenCV).
+	 *
+	 * @param outlierThreshold
+	 *        Pixel distance that determines whether an input point (a keypoint
+	 *        pair, in our case) is an outlier in the RANSAC model.
+	 *        Recommended values: 1, 2, and 3.
+	 * @param confidence
+	 *        Lowest accepted value for the probability that a RANSAC model
+	 *        represents the set of points defined by the set of keypoint pairs.
 	 */
-        public:
-            FundamentalMatrixRansac();
-            ~FundamentalMatrixRansac();
-            void process();
-            void configure();
+	class FundamentalMatrixRansac : public FundamentalMatrixComputationInterface
+	{
+		public:
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
+			FundamentalMatrixRansac();
+			virtual ~FundamentalMatrixRansac();
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
-	private:
+			virtual void configure();
+			virtual void process();
 
-		struct FundamentalMatrixRansacOptionsSet
+		private:
+
+			struct FundamentalMatrixRansacOptionsSet
 			{
-			double outlierThreshold; // in pixels
-			double confidence; //probability between 0 and 1
+				double outlierThreshold; // in pixels
+				double confidence;       // probability value (in [0,1])
 			};
 
-		Helpers::ParametersListHelper parametersHelper;
-		FundamentalMatrixRansacOptionsSet parameters;
-		static const FundamentalMatrixRansacOptionsSet DEFAULT_PARAMETERS;
+			Helpers::ParametersListHelper parametersHelper;
+			FundamentalMatrixRansacOptionsSet parameters;
+			static const FundamentalMatrixRansacOptionsSet DEFAULT_PARAMETERS;
 
-		cv::Mat ComputeFundamentalMatrix(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector);
-		BaseTypesWrapper::Point2DConstPtr ComputeSecondEpipole
-			(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector, cv::Mat fundamentalMatrix);
-		void Convert(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap, std::vector<cv::Point2d>& firstImagePointsVector, std::vector<cv::Point2d>& secondImagePointsVector);
-		MatrixWrapper::Matrix3dConstPtr Convert(cv::Mat matrix);
+			cv::Mat ComputeFundamentalMatrix(
+				const std::vector<cv::Point2d>& firstImagePointsVector,
+				const std::vector<cv::Point2d>& secondImagePointsVector);
+			BaseTypesWrapper::Point2DConstPtr ComputeSecondEpipole(
+				const std::vector<cv::Point2d>& firstImagePointsVector,
+				const std::vector<cv::Point2d>& secondImagePointsVector,
+				cv::Mat fundamentalMatrix);
+			void Convert(
+				CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap,
+				std::vector<cv::Point2d>& firstImagePointsVector,
+				std::vector<cv::Point2d>& secondImagePointsVector);
+			MatrixWrapper::Matrix3dConstPtr Convert(cv::Mat matrix);
 
-		void ValidateParameters();
-		void ValidateInputs(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector);
-    };
+			void ValidateParameters();
+			void ValidateInputs(
+				const std::vector<cv::Point2d>& firstImagePointsVector,
+				const std::vector<cv::Point2d>& secondImagePointsVector);
+	};
 }
-#endif
-/* FundamentalMatrixRansac.hpp */
+
+#endif // FUNDAMENTALMATRIXRANSAC_HPP
+
 /** @} */
