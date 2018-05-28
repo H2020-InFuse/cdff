@@ -44,8 +44,8 @@ namespace dfn_ci
              * Query value from output port "success"
              * @return success: boolean flag indicating successful matrix
              *         computation. Fundamental matrix computation may fail if
-             *         the input is not good; in that case, the returned matrix
-             *         is meaningless.
+             *         the matches are not good enough; in that case, the
+             *         returned matrix is meaningless.
              */
             virtual bool successOutput() const;
 

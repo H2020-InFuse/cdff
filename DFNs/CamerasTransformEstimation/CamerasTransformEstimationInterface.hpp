@@ -1,99 +1,71 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file CamerasTransformEstimationInterface.hpp
- * @date 31/01/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  This is the common interface of all DFNs that estimate a camera transform from a set of 2D correspondences.    
- *
  * @{
  */
-#ifndef CAMERAS_TRANSFORM_ESTIMATION_INTERFACE_HPP
-#define CAMERAS_TRANSFORM_ESTIMATION_INTERFACE_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <DFNCommonInterface.hpp>
-#include <Matrix.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <Pose.hpp>
+#ifndef CAMERASTRANSFORMESTIMATION_INTERFACE_HPP
+#define CAMERASTRANSFORMESTIMATION_INTERFACE_HPP
 
+#include "DFNCommonInterface.hpp"
+#include <Pose.h>
+#include <CorrespondenceMap2D.h>
+#include <Eigen.h>
 
-namespace dfn_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
+namespace dfn_ci
+{
+    /**
+     * DFN that estimates the geometric transformation between two cameras
+     * based on matching keypoints found in a pair of images that they captured
+     */
     class CamerasTransformEstimationInterface : public DFNCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
+
             CamerasTransformEstimationInterface();
             virtual ~CamerasTransformEstimationInterface();
-            /**
-            * Send value to input port fundamentalMatrix
-            * @param fundamentalMatrix, This is the fundamental matrix of the camera pair that took the two images.
-            */
-            virtual void fundamentalMatrixInput(MatrixWrapper::Matrix3dConstPtr data);
 
             /**
-            * Send value to input port correspondenceMap
-            * @param correspondenceMap, This is a set of correspondence between points (x, y) in one image to point (x', y') in the other image. 
-	    * These are test points for the final transform, they should be as reliable as possible.
-            */
-            virtual void correspondenceMapInput(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr data);
+             * Send value to input port "fundamentalMatrix"
+             * @param fundamentalMatrix: fundamental matrix of a camera pair
+             *        that captured two images A and B
+             */
+            virtual void fundamentalMatrixInput(const asn1SccMatrix3d& data);
+            /**
+             * Send value to input port "matches"
+             * @param matches: keypoint matches between images A and B. This
+             *        is a list of pairs of 2D coordinates: ((x_A1, y_A1),
+             *        (x_B1, y_B1)), ((x_A2, y_A2), (x_B2, y_B2)), ...
+             *        The geometric transformation between the two camera
+             *        frames is deduced from these points, so the matches
+             *        should be as reliable as possible.
+             */
+            virtual void matchesInput(const asn1SccCorrespondenceMap2D& data);
 
             /**
-            * Receive value from output port transform
-            * @param transform, This is the relative pose of the camera that took the second image into the system of the camera that took the first image.
-            */
-            virtual PoseWrapper::Transform3DConstPtr transformOutput();
-
+             * Query value from output port "transform"
+             * @return transform: pose of the coordinate frame of the camera
+             *         that captured image B relatively to the coordinate frame
+             *         of the camera that captured image A
+             */
+            virtual const asn1SccPose& transformOutput() const;
             /**
-            * Receive value from output port success
-            * @param success, This outputs tells whether the computation was succesfull. The computation may fail if the inputs are not good. 
-	    * If the computation fails the first output is meaningless.
-            */
-            virtual bool successOutput();
+             * Query value from output port "success"
+             * @return success: boolean flag indicating successful computation
+             *         of the geometric transformation between the camera
+             *         frames. Computation may fail if the matches are not good
+             *         enough; in that case, the returned matrix is meaningless.
+             */
+            virtual bool successOutput() const;
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
         protected:
-            MatrixWrapper::Matrix3dConstPtr inFundamentalMatrix;
-	    CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inCorrespondenceMap;
-            PoseWrapper::Transform3DConstPtr outTransform;
-	    bool outSuccess;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+            asn1SccMatrix3d inFundamentalMatrix;
+            asn1SccCorrespondenceMap2D inMatches;
+            asn1SccPose outTransform;
+            bool outSuccess;
     };
 }
-#endif
-/* CamerasTransformEstimationInterface.hpp */
+
+#endif // CAMERASTRANSFORMESTIMATION_INTERFACE_HPP
+
 /** @} */
