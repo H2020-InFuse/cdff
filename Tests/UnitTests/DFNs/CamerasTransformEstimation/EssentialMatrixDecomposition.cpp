@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Unit Test for the DFN EssentialMatrixDecomposition.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -28,16 +28,11 @@
  */
 #include <catch.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/MatToTransform3DConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <DataGenerators/SyntheticGenerators/CameraPair.hpp>
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace BaseTypesWrapper;
 using namespace PoseWrapper;
@@ -51,7 +46,7 @@ using namespace DataGenerators;
  *
  * --------------------------------------------------------------------------
  */
-class EssentialMatrixTest 
+class EssentialMatrixTest
 	{
 	public:
 		static void RandomCorrespondencesTest(PoseWrapper::Pose3DConstPtr secondCameraPose, unsigned numberOfCorrespondences = 20);
@@ -59,48 +54,39 @@ class EssentialMatrixTest
 
 	private:
 		static const double EPSILON;
-		static Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>* stubEssentialPoseCache;
-		static Mocks::MatToPose3DConverter* mockEssentialPoseConverter;
-
-		static void SetupMocksAndStubs();
 		static MatrixWrapper::Matrix3dPtr Convert(cv::Mat cvFundamentalMatrix);
 		static void ValidateOutput(PoseWrapper::Transform3DConstPtr output, PoseWrapper::Pose3DConstPtr secondCameraPose);
 	};
 
 void EssentialMatrixTest::RandomCorrespondencesTest(PoseWrapper::Pose3DConstPtr secondCameraPose, unsigned numberOfCorrespondences)
 	{
-	SetupMocksAndStubs();
-
 	CameraPair cameraPair;
 	cameraPair.SetSecondCameraPose(secondCameraPose);
 
 	cv::Mat cvFundamentalMatrix = cameraPair.GetFundamentalMatrix();
-	CorrespondenceMap2DConstPtr input = cameraPair.GetSomeRandomCorrespondences(numberOfCorrespondences);	
+	CorrespondenceMap2DConstPtr input = cameraPair.GetSomeRandomCorrespondences(numberOfCorrespondences);
 
 	Matrix3dPtr fundamentalMatrix = Convert(cvFundamentalMatrix);
 
 	EssentialMatrixDecomposition essential;
-	essential.correspondenceMapInput(input);
-	essential.fundamentalMatrixInput(fundamentalMatrix);
+	essential.fundamentalMatrixInput(*fundamentalMatrix);
+	essential.matchesInput(*input);
 	essential.process();
 
-	Transform3DConstPtr output = essential.transformOutput();
+	const Transform3D& output = essential.transformOutput();
 	bool success = essential.successOutput();
 	REQUIRE(success == true);
-	ValidateOutput(output, secondCameraPose);
+	ValidateOutput(&output, secondCameraPose);
 
 	delete(input);
 	delete(fundamentalMatrix);
-	delete(output);
 	}
 
 void EssentialMatrixTest::FailureTest()
 	{
-	SetupMocksAndStubs();
-
 	CorrespondenceMap2DPtr input = new CorrespondenceMap2D();
-	for(unsigned index = 0; index < 15; index++)
-		{		
+	for (unsigned index = 0; index < 15; index++)
+		{
 		Point2D source = { .x = 0 , .y= 0};
 		Point2D sink = { .x = 0 , .y= 0};
 		AddCorrespondence(*input, source, sink, 1);
@@ -109,36 +95,19 @@ void EssentialMatrixTest::FailureTest()
 	Matrix3dPtr fundamentalMatrix = NewMatrix3d(IDENTITY);
 
 	EssentialMatrixDecomposition essential;
-	essential.correspondenceMapInput(input);
-	essential.fundamentalMatrixInput(fundamentalMatrix);
+	essential.fundamentalMatrixInput(*fundamentalMatrix);
+	essential.matchesInput(*input);
 	essential.process();
 
-	Transform3DConstPtr output = essential.transformOutput();
+	const Transform3D& output = essential.transformOutput();
 	bool success = essential.successOutput();
-	
+
 	REQUIRE(success == false);
-	
+
 	delete(input);
-	delete(output);
 	}
 
 const double EssentialMatrixTest::EPSILON = 0.0001;
-Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>* EssentialMatrixTest::stubEssentialPoseCache = NULL;
-Mocks::MatToPose3DConverter* EssentialMatrixTest::mockEssentialPoseConverter = NULL;
-
-void EssentialMatrixTest::SetupMocksAndStubs()
-	{
-	static bool setupDone = false;
-	if (setupDone)
-		{
-		return;
-		}
-	setupDone = true;
-
-	stubEssentialPoseCache = new Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>();
-	mockEssentialPoseConverter = new Mocks::MatToPose3DConverter();
-	ConversionCache<cv::Mat, Pose3DConstPtr, MatToPose3DConverter>::Instance(stubEssentialPoseCache, mockEssentialPoseConverter);	
-	}
 
 MatrixWrapper::Matrix3dPtr EssentialMatrixTest::Convert(cv::Mat cvFundamentalMatrix)
 	{
@@ -176,7 +145,7 @@ void EssentialMatrixTest::ValidateOutput(PoseWrapper::Transform3DConstPtr output
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Success Call to process for Translation", "[processTranslation]" ) 
+TEST_CASE( "Success Call to process for Translation", "[processTranslation]" )
 	{
 	Pose3DPtr secondCameraPose = new Pose3D();
 	SetPosition(*secondCameraPose, 1, 0, 0);
@@ -185,7 +154,7 @@ TEST_CASE( "Success Call to process for Translation", "[processTranslation]" )
 	EssentialMatrixTest::RandomCorrespondencesTest(secondCameraPose);
 	}
 
-TEST_CASE( "Success Call to process for Rototranslation", "[processRototranslation]" ) 
+TEST_CASE( "Success Call to process for Rototranslation", "[processRototranslation]" )
 	{
 	Pose3DPtr secondCameraPose = new Pose3D();
 	SetPosition(*secondCameraPose, 1, 0, 0);
@@ -194,7 +163,7 @@ TEST_CASE( "Success Call to process for Rototranslation", "[processRototranslati
 	EssentialMatrixTest::RandomCorrespondencesTest(secondCameraPose);
 	}
 
-TEST_CASE( "Success Call to process for RotoTranslation 2", "[processRototranslation2]" ) 
+TEST_CASE( "Success Call to process for RotoTranslation 2", "[processRototranslation2]" )
 	{
 	Pose3DPtr secondCameraPose = new Pose3D();
 	SetPosition(*secondCameraPose, 0, 1, 0);
@@ -203,7 +172,7 @@ TEST_CASE( "Success Call to process for RotoTranslation 2", "[processRototransla
 	EssentialMatrixTest::RandomCorrespondencesTest(secondCameraPose);
 	}
 
-TEST_CASE( "Fail Call to process (essential matrix decomposition)", "[processFail]" ) 
+TEST_CASE( "Fail Call to process (essential matrix decomposition)", "[processFail]" )
 	{
 	EssentialMatrixTest::FailureTest();
 	}
@@ -212,7 +181,7 @@ TEST_CASE( "Call to configure (essential matrix decomposition)", "[configure]" )
 	{
 	EssentialMatrixDecomposition essential;
 	essential.setConfigurationFile("../tests/ConfigurationFiles/DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition_Conf1.yaml");
-	essential.configure();	
+	essential.configure();
 	}
 
 /** @} */
