@@ -1,11 +1,12 @@
 name: KFPrediction
+doc: DFN for Kalman filtering
 input_ports:
     - name: previousState
       type: asn1SccRigidBodyState
       doc: initial or previous rigid body state
     - name: currentTime
       type: asn1SccTime
-      doc: current time stamp
+      doc: current timestamp
 output_ports:
     - name: predictedState
       type: asn1SccRigidBodyState
