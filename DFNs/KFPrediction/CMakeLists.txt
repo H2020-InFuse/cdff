@@ -9,6 +9,6 @@ add_library(
 )
 target_link_libraries(
    kalman_predictor
-   kf_prediction cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core opencv_imgcodecs opencv_video
+   kf_prediction cdff_types yaml-cpp cdff_helpers opencv_core opencv_video
 )
 
