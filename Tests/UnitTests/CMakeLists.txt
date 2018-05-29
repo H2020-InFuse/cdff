@@ -25,7 +25,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
 #[=[DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp]=]
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
     DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
-#[=[DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp]=]
+    DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     DFNs/FeaturesMatching2D/FlannMatcher.cpp
 #[=[DFNs/FeaturesMatching3D/Icp3D.cpp]=]
 #[=[DFNs/FeaturesMatching3D/Ransac3D.cpp]=]
@@ -57,7 +57,7 @@ set(UNITTEST_LIBRARIES Catch
     flann_matcher
     fundamental_matrix_ransac
     harris_detector_2d
-#[=[harris_detector_3d]=]
+    harris_detector_3d
 #[=[hirschmuller_disparity_mapping]=]
 #[=[icp_3d]=]
     image_undistortion

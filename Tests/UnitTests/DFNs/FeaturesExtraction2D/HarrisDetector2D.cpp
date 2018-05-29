@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Unit Test for the DFN HarrisDetector2D.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -41,7 +41,7 @@ using namespace VisualPointFeatureVector2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process (2D Harris detector)", "[process]" ) 
+TEST_CASE( "Call to process (2D Harris detector)", "[process]" )
 {
 	// Prepare input data
 	cv::Mat inputImage(500, 500, CV_8UC3, cv::Scalar(100, 100, 100));
@@ -59,6 +59,9 @@ TEST_CASE( "Call to process (2D Harris detector)", "[process]" )
 
 	// Query output data from DFN
 	const VisualPointFeatureVector2D& output = harris->featuresOutput();
+
+	// Cleanup
+	delete(harris);
 }
 
 TEST_CASE( "Call to configure (2D Harris detector)", "[configure]" )
@@ -69,6 +72,9 @@ TEST_CASE( "Call to configure (2D Harris detector)", "[configure]" )
 	// Setup DFN
 	harris->setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesExtraction2D/HarrisDetector2D_Conf1.yaml");
 	harris->configure();
+
+	// Cleanup
+	delete(harris);
 }
 
 /** @} */
