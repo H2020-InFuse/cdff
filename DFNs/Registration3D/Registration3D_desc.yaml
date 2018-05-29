@@ -1,0 +1,24 @@
+name: Registration3D
+doc: DFN that registers a source point cloud on a sink point cloud
+input_ports:
+    - name: sourceCloud
+      type: asn1SccPointcloud
+      doc: 3D pointcloud captured by a 3D sensor
+           or reconstructed from other perceptions
+    - name: sinkCloud
+      type: asn1SccPointcloud
+      doc: 3D pointcloud captured by a 3D sensor
+           or reconstructed from other perceptions
+output_ports:
+    - name: transform
+      type: asn1SccPose
+      doc: pose of the source point cloud relatively to the coordinate 
+           frame the sink point cloud
+    - name: success
+      type: bool
+      doc: boolean flag indicating successful computation of the geometric
+           transformation between the point clouds. Computation may fail if
+           the point clouds are not similar enough; in this case the
+           transform is meaningless.
+implementations:
+    - Icp3D

@@ -10,6 +10,7 @@ add_subdirectory(DataGenerators)
 
 add_subdirectory(UnitTests)
 add_subdirectory(GuiTests)
+add_subdirectory(KeyPerformanceMeasuresTests)
 
 #[[add_subdirectory(PerformanceTests)
    add_subdirectory(InFuseTests)]]

@@ -68,6 +68,20 @@ target_link_libraries(
     cdff_logger image_undistortion_rectification converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
 )
 
+add_executable(
+    Registration3DIcpGuiTest
+    DFNs/Registration3D/Icp3D.cpp
+    ParametersInterface.cpp
+    ButtonsInterface.cpp
+    MainInterface.cpp
+    DFNs/DFNTestInterface.cpp
+)
+set_target_properties(Registration3DIcpGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    Registration3DIcpGuiTest
+    cdff_logger cdff_pcl_visualizer registration_icp_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
 #[======================================================================[
 
 add_executable(
