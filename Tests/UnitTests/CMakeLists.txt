@@ -32,6 +32,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
+    DFNs/Registration3D/Icp3D.cpp
 #[=[DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp]=]
 #[=[DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp]=]
 #[=[DFNs/StereoReconstruction/DisparityMapping.cpp]=]
@@ -63,6 +64,7 @@ set(UNITTEST_LIBRARIES Catch
     image_undistortion
 #[=[iterative_pnp_solver]=]
     kalman_predictor
+    registration_icp_3d
 #[=[mock]=]
     opencv_core
     opencv_highgui

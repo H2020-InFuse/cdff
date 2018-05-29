@@ -118,6 +118,42 @@ void PointCloudTransformer::AddGaussianNoise(float mean, float standardDeviation
 		}
 	}
 
+void PointCloudTransformer::RemoveOutliers()
+	{
+	InitTransformedCloud();	
+	if ( transformedCloud->points.size() == 0)
+		{
+		return;
+		}
+
+	float totalDimension = 0;
+	for(unsigned pointIndex = 0; pointIndex < transformedCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ& point = transformedCloud->points.at(pointIndex);
+		if ( point.x == point.x && point.y == point.y && point.z == point.z )
+			{
+			totalDimension += (std::abs(point.x) + std::abs(point.y) + std::abs(point.z));
+			}
+		}
+	float averageDimension = totalDimension / (3 * transformedCloud->points.size());
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr newTransformedCloud(new pcl::PointCloud<pcl::PointXYZ>);
+	for(unsigned pointIndex = 0; pointIndex < transformedCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ point = transformedCloud->points.at(pointIndex);
+		if ( point.x == point.x && point.y == point.y && point.z == point.z && 
+			std::abs(point.x) <= 20 * averageDimension && std::abs(point.y) <= 20 * averageDimension && std::abs(point.z) <= 20 * averageDimension)
+			{
+			newTransformedCloud->points.push_back(point);
+			}
+		}
+
+	std::stringstream message;
+	message << "Remaining points: " << newTransformedCloud->points.size() << "/" << transformedCloud->points.size();
+	PRINT_TO_LOG(message.str(), "");
+	transformedCloud = newTransformedCloud;
+	}
+
 void PointCloudTransformer::SavePointCloud(std::string outputFilePath)
 	{
 	ASSERT(transformedCloudWasInitialized, "You did not apply any transform, there is no need to save this cloud");

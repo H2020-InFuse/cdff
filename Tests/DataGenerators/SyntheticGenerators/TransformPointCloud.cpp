@@ -103,6 +103,10 @@ int main(int argc, char** argv)
 			{
 			pointCloudTransformer.ViewPointCloud();
 			}
+		else if (command == "remove_outliers")
+			{
+			pointCloudTransformer.RemoveOutliers();
+			}
 		}
 
 	return 0;
