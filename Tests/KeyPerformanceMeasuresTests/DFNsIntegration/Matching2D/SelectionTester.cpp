@@ -29,6 +29,7 @@
  */
 #include "SelectionTester.hpp"
 #include <opencv2/highgui/highgui.hpp>
+#include <ctime>
 
 using namespace dfn_ci;
 using namespace Converters;
@@ -135,25 +136,38 @@ void SelectionTester::SetInputFilesPaths(std::string sourceImageFilePath, std::s
 	precisionReferenceWasLoaded = true;
 	}
 
+#define PROCESS_AND_MEASURE_TIME(dfn) \
+	{ \
+	beginTime = clock(); \
+	dfn->process(); \
+	endTime = clock(); \
+	processingTime += float(endTime - beginTime) / CLOCKS_PER_SEC; \
+	}
+
 void SelectionTester::ExecuteDfns()
 	{
+	clock_t beginTime, endTime;
+	float processingTime = 0;
+
 	descriptor->imageInput(inputSourceFrame);
 	descriptor->featuresSetInput(inputSourceKeypointsVector);
-	descriptor->process();
+	PROCESS_AND_MEASURE_TIME(descriptor);
 	DELETE_IF_NOT_NULL(sourceFeaturesVector);
 	sourceFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
 
 	descriptor->imageInput(inputSinkFrame);
 	descriptor->featuresSetInput(inputSinkKeypointsVector);
-	descriptor->process();
+	PROCESS_AND_MEASURE_TIME(descriptor);
 	DELETE_IF_NOT_NULL(sinkFeaturesVector);
 	sinkFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
 
 	matcher->sourceFeaturesVectorInput(sourceFeaturesVector);
 	matcher->sinkFeaturesVectorInput(sinkFeaturesVector);
-	matcher->process();
+	PROCESS_AND_MEASURE_TIME(matcher);
 	DELETE_IF_NOT_NULL(outputCorrespondenceMap);
 	outputCorrespondenceMap = matcher->correspondenceMapOutput();	
+
+	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 	}
 
 bool SelectionTester::AreCorrespondencesValid(float percentageThreshold)

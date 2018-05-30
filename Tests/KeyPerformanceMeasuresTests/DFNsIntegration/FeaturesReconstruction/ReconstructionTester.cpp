@@ -29,6 +29,7 @@
  */
 #include "ReconstructionTester.hpp"
 #include <opencv2/highgui/highgui.hpp>
+#include <ctime>
 
 using namespace dfn_ci;
 using namespace Converters;
@@ -118,12 +119,22 @@ void ReconstructionTester::SetInputFilePath(std::string inputCorrespodencesFileP
 	inputCorrespondencesWereLoaded = true;
 	}
 
+#define PROCESS_AND_MEASURE_TIME(dfn) \
+	{ \
+	beginTime = clock(); \
+	dfn->process(); \
+	endTime = clock(); \
+	processingTime += float(endTime - beginTime) / CLOCKS_PER_SEC; \
+	}
+
 void ReconstructionTester::ExecuteDfns()
 	{
 	ASSERT(dfnsWereLoaded && inputCorrespondencesWereLoaded, "Cannot execute DFNs before loading inputs and dfns");
+	clock_t beginTime, endTime;
+	float processingTime = 0;
 
 	fundamentalMatrixEstimator->correspondenceMapInput(inputCorrespondenceMap);
-	fundamentalMatrixEstimator->process();
+	PROCESS_AND_MEASURE_TIME(fundamentalMatrixEstimator)
 	DELETE_IF_NOT_NULL(fundamentalMatrix);
 	fundamentalMatrix = fundamentalMatrixEstimator->fundamentalMatrixOutput();
 	fundamentalMatrixSuccess = fundamentalMatrixEstimator->successOutput();
@@ -136,7 +147,7 @@ void ReconstructionTester::ExecuteDfns()
 
 	poseEstimator->correspondenceMapInput(inputCorrespondenceMap);
 	poseEstimator->fundamentalMatrixInput(fundamentalMatrix);
-	poseEstimator->process();
+	PROCESS_AND_MEASURE_TIME(poseEstimator)
 	DELETE_IF_NOT_NULL(cameraTransform);
 	cameraTransform = poseEstimator->transformOutput();
 	poseEstimatorWasSuccessful = poseEstimator->successOutput();
@@ -149,10 +160,12 @@ void ReconstructionTester::ExecuteDfns()
 
 	reconstructor->correspondenceMapInput(inputCorrespondenceMap);
 	reconstructor->poseInput(cameraTransform);
-	reconstructor->process();
+	PROCESS_AND_MEASURE_TIME(reconstructor)
 	DELETE_IF_NOT_NULL(outputPointCloud);
 	outputPointCloud = reconstructor->pointCloudOutput();	
 	dfnsWereExecuted = true;
+
+	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 	}
 
 bool ReconstructionTester::AreTriangulatedPointsValid(float fieldOfViewX, float fieldOfViewY)

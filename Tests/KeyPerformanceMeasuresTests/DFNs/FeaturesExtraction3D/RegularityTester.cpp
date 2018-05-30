@@ -29,6 +29,7 @@
  */
 #include "RegularityTester.hpp"
 #include<pcl/io/ply_io.h>
+#include <ctime>
 
 using namespace dfn_ci;
 using namespace Converters;
@@ -82,7 +83,12 @@ RegularityTester::~RegularityTester()
 void RegularityTester::ExecuteDfn()
 	{
 	dfn->pointCloudInput(inputCloud);
+
+	clock_t beginTime = clock();
 	dfn->process();
+	clock_t endTime = clock();
+	float processingTime = float(endTime - beginTime) / CLOCKS_PER_SEC;
+	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 
 	DELETE_IF_NOT_NULL(outputFeaturesVector);
 	outputFeaturesVector = dfn->featuresSetOutput();

@@ -30,6 +30,7 @@
 #include "ReconstructionExecutor.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <pcl/io/ply_io.h>
+#include <ctime>
 
 using namespace dfpc_ci;
 using namespace Converters;
@@ -154,6 +155,7 @@ void ReconstructionExecutor::ExecuteDfpc()
 	ASSERT(leftImageFileNamesList.size() == rightImageFileNamesList.size(), "Left images list and right images list do not have same dimensions");
 
 	int successCounter = 0;
+	float processingTime = 0;
 	for(int imageIndex = 0; imageIndex < leftImageFileNamesList.size(); imageIndex++)
 		{
 		std::stringstream leftImageFilePath, rightImageFilePath;
@@ -164,7 +166,11 @@ void ReconstructionExecutor::ExecuteDfpc()
 
 		dfpc->leftImageInput(inputLeftFrame);
 		dfpc->rightImageInput(inputRightFrame);
+
+		clock_t beginTime = clock();
 		dfpc->run();
+		clock_t endTime = clock();
+		processingTime += float(endTime - beginTime) / CLOCKS_PER_SEC;
 
 		DELETE_IF_NOT_NULL(outputPointCloud);
 		outputPointCloud = dfpc->pointCloudOutput();
@@ -176,6 +182,7 @@ void ReconstructionExecutor::ExecuteDfpc()
 		successCounter = (outputSuccess ? successCounter+1 : successCounter);
 		}
 
+	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 	PRINT_TO_LOG("The reconstruction was successful on this number of images:", successCounter);
 	PRINT_TO_LOG("The final point cloud has size:", GetNumberOfPoints(*outputPointCloud));
 	PRINT_TO_LOG("The final pose of the camera is:", ToString(*outputCameraPose));

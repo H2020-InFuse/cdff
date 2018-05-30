@@ -30,6 +30,7 @@
 #include "QualityTester.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <pcl/io/ply_io.h>
+#include <ctime>
 
 using namespace dfn_ci;
 using namespace Converters;
@@ -134,7 +135,12 @@ void QualityTester::ExecuteDfn()
 	ASSERT(inputImagesWereLoaded && dfnWasLoaded, "Cannot execute DFN if input images or the dfn itself are not loaded");
 	dfn->leftImageInput(inputLeftFrame);
 	dfn->rightImageInput(inputRightFrame);
+
+	clock_t beginTime = clock();
 	dfn->process();
+	clock_t endTime = clock();
+	float processingTime = float(endTime - beginTime) / CLOCKS_PER_SEC;
+	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 
 	DELETE_IF_NOT_NULL(outputPointCloud);
 	outputPointCloud = dfn->pointCloudOutput();
