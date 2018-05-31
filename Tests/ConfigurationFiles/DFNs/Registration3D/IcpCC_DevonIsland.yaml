@@ -1,0 +1,9 @@
+- Name: GeneralParameters
+  ConvergenceType: ErrorReduction
+  MinimumErrorReduction: 1e-5
+  MaximumNumberOfIterations: 10
+  ScaleIsAdjustable: false
+  FarthestPointsAreFilteredOut: false
+  SamplingLimit: 50000
+  FinalOverlapRatio: 1.0
+  MaximumNumberOfThreads: 0

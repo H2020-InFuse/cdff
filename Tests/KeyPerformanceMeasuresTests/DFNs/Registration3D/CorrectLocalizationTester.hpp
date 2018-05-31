@@ -61,6 +61,7 @@ class CorrectLocalizationTester
 		~CorrectLocalizationTester();
 
 		void SetInputClouds(std::string sceneCloudFilePath, std::string modelCloudFilePath, std::string groundTruthPoseFilePath);
+		void SetGuessModelPoseInScene(std::string guessPoseFilePath);
 
 		void ExecuteDfn();
 		bool IsOutputCorrect(float relativeLocationError, float relativeOrientationError, float absoluteLocationError);
@@ -79,19 +80,23 @@ class CorrectLocalizationTester
 	private:
 		std::string configurationFile;
 		std::string sceneCloudFilePath, modelCloudFilePath, groundTruthPoseFilePath;
+		std::string guessPoseFilePath;
 		dfn_ci::Registration3DInterface* dfn;
 
 		PointCloudWrapper::PointCloudConstPtr inputSceneCloud;
 		PointCloudWrapper::PointCloudConstPtr inputModelCloud;
 		PoseWrapper::Pose3DConstPtr inputTruthModelPoseInScene;
+		PoseWrapper::Pose3DConstPtr inputGuessModelPoseInScene;
 		bool outputMatcherSuccess;
 
 		Converters::PclPointCloudToPointCloudConverter pointCloudConverter;
 		bool inputsWereLoaded;
 		bool groundTruthWasLoaded;
+		bool guessPoseWasLoaded;
 
 		void LoadPointClouds();
 		void LoadGroudTruthPose();
+		void LoadGuessPose();
 		void ConfigureDfn();
 
 		float ComputeLocationError();
