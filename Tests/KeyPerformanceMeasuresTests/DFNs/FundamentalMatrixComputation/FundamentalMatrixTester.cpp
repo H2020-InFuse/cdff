@@ -28,6 +28,7 @@
  * --------------------------------------------------------------------------
  */
 #include "FundamentalMatrixTester.hpp"
+#include <ctime>
 
 
 using namespace dfn_ci;
@@ -76,7 +77,12 @@ void FundamentalMatrixTester::SetInputFilePath(std::string inputCorrespondenceFi
 void FundamentalMatrixTester::ExecuteDfn()
 	{
 	dfn->correspondenceMapInput(inputCorrespondenceMap);
+
+	clock_t beginTime = clock();
 	dfn->process();
+	clock_t endTime = clock();
+	float processingTime = float(endTime - beginTime) / CLOCKS_PER_SEC;
+	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 
 	DELETE_IF_NOT_NULL(outputFundamentalMatrix);
 	outputFundamentalMatrix = dfn->fundamentalMatrixOutput();

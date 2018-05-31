@@ -30,6 +30,7 @@
 #include "SelectionTester.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include<pcl/io/ply_io.h>
+#include <ctime>
 
 using namespace dfn_ci;
 using namespace Converters;
@@ -146,26 +147,39 @@ void SelectionTester::SetInputFilesPaths(std::string sourceCloudFilePath, std::s
 	precisionReferenceWasLoaded = true;
 	}
 
+#define PROCESS_AND_MEASURE_TIME(dfn) \
+	{ \
+	beginTime = clock(); \
+	dfn->process(); \
+	endTime = clock(); \
+	processingTime += float(endTime - beginTime) / CLOCKS_PER_SEC; \
+	}
+
 void SelectionTester::ExecuteDfns()
 	{
+	clock_t beginTime, endTime;
+	float processingTime = 0;
+
 	descriptor->pointCloudInput(inputSourceCloud);
 	descriptor->featuresSetInput(inputSourceKeypointsVector);
-	descriptor->process();
+	PROCESS_AND_MEASURE_TIME(descriptor);
 	DELETE_IF_NOT_NULL(sourceFeaturesVector);
 	sourceFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
 
 	descriptor->pointCloudInput(inputSinkCloud);
 	descriptor->featuresSetInput(inputSinkKeypointsVector);
-	descriptor->process();
+	PROCESS_AND_MEASURE_TIME(descriptor);
 	DELETE_IF_NOT_NULL(sinkFeaturesVector);
 	sinkFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
 
 	matcher->sourceFeaturesVectorInput(sourceFeaturesVector);
 	matcher->sinkFeaturesVectorInput(sinkFeaturesVector);
-	matcher->process();
+	PROCESS_AND_MEASURE_TIME(matcher);
 	DELETE_IF_NOT_NULL(sourcePoseInSink);
 	sourcePoseInSink = matcher->transformOutput();
 	matcherSuccess = matcher->successOutput();
+
+	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 	}
 
 bool SelectionTester::AreCorrespondencesValid(float percentageThreshold)

@@ -29,6 +29,7 @@
  */
 #include "CorrectLocalizationTester.hpp"
 #include<pcl/io/ply_io.h>
+#include <ctime>
 
 using namespace dfn_ci;
 using namespace Converters;
@@ -149,9 +150,11 @@ void CorrectLocalizationTester::ExecuteDfns()
 	ASSERT(dfnsWereConfigured, "Error: there was a call to ExecuteDfns before actually configuring the DFNs");
 	ASSERT(inputsWereLoaded && groundTruthWasLoaded, "Error: there was a call to ExecuteDfns before actually loading inputs");	
 
+	processingTime = 0;
 	ExtractFeatures();
 	DescribeFeatures();
 	MatchFeatures();
+	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 	}
 
 bool CorrectLocalizationTester::IsOutputCorrect(float relativeLocationError, float relativeOrientationError, float absoluteLocationError)
@@ -198,6 +201,14 @@ bool CorrectLocalizationTester::IsOutputCorrect(float relativeLocationError, flo
  *
  * --------------------------------------------------------------------------
  */
+#define PROCESS_AND_MEASURE_TIME(dfn) \
+	{ \
+	beginTime = clock(); \
+	dfn->process(); \
+	endTime = clock(); \
+	processingTime += float(endTime - beginTime) / CLOCKS_PER_SEC; \
+	}
+
 void CorrectLocalizationTester::ExtractFeatures()
 	{
 	extractor->pointCloudInput(inputSceneCloud);
@@ -208,7 +219,7 @@ void CorrectLocalizationTester::ExtractFeatures()
 	PRINT_TO_LOG("Number of scene keypoints extracted is", GetNumberOfPoints(*sceneKeypointsVector));
 
 	extractor->pointCloudInput(inputModelCloud);
-	extractor->process();
+	PROCESS_AND_MEASURE_TIME(extractor);
 
 	DELETE_IF_NOT_NULL(modelKeypointsVector);
 	modelKeypointsVector = extractor->featuresSetOutput();
@@ -227,7 +238,7 @@ void CorrectLocalizationTester::DescribeFeatures()
 
 	descriptor->pointCloudInput(inputModelCloud);
 	descriptor->featuresSetInput(modelKeypointsVector);
-	descriptor->process();
+	PROCESS_AND_MEASURE_TIME(descriptor);
 
 	DELETE_IF_NOT_NULL(modelFeaturesVector);
 	modelFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
@@ -238,7 +249,7 @@ void CorrectLocalizationTester::MatchFeatures()
 	{
 	matcher->sourceFeaturesVectorInput(modelFeaturesVector);
 	matcher->sinkFeaturesVectorInput(sceneFeaturesVector);
-	matcher->process();
+	PROCESS_AND_MEASURE_TIME(matcher);
 
 	DELETE_IF_NOT_NULL(outputModelPoseInScene);
 	outputModelPoseInScene = matcher->transformOutput();

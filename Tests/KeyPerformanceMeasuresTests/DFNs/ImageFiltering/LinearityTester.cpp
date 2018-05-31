@@ -30,6 +30,7 @@
 #include "LinearityTester.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <ctime>
 
 using namespace dfn_ci;
 using namespace Converters;
@@ -94,7 +95,12 @@ void LinearityTester::ExecuteDfn()
 	ASSERT(dfnWasSet && inputImageWasLoaded, "Error: dfn or inputs were not correctly loaded");
 
 	dfn->imageInput(inputFrame);
+
+	clock_t beginTime = clock();
 	dfn->process();
+	clock_t endTime = clock();
+	float processingTime = float(endTime - beginTime) / CLOCKS_PER_SEC;
+	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 
 	DELETE_IF_NOT_NULL(outputFrame);
 	outputFrame = dfn->filteredImageOutput();
