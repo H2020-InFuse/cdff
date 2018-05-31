@@ -98,6 +98,32 @@ PointCloudConstPtr PointCloudMap::GetScenePointCloud(Pose3DConstPtr origin,  flo
 	return pointCloudOutput;
 	}
 
+PointCloudConstPtr PointCloudMap::GetScenePointCloudInOrigin(Pose3DConstPtr origin,  float radius)
+	{
+	pcl::PointXYZ pclOrigin( GetXPosition(*origin), GetYPosition(*origin), GetZPosition(*origin));
+	PointCloudPtr pointCloudOutput = NewPointCloud();
+
+	AffineTransform affineTransform = ConvertCloudPoseToInversionTransform(origin);
+	uint64_t pointIndex = 0;
+	for(pointIndex = 0; pointIndex < pointCloud->points.size() && pointIndex < PointCloudWrapper::MAX_CLOUD_SIZE; pointIndex++)
+		{
+		pcl::PointXYZ cloudPoint = pointCloud->points.at(pointIndex);
+		float pointToOriginDistance = PointDistance(pclOrigin, cloudPoint);
+		if ( pointToOriginDistance <= radius )
+			{
+			pcl::PointXYZ transformedCloudPoint = TransformPoint(cloudPoint, affineTransform);
+			AddPoint(*pointCloudOutput, transformedCloudPoint.x, transformedCloudPoint.y, transformedCloudPoint.z);
+			}
+		}
+
+	if (pointIndex < pointCloud->points.size())
+		{
+		PRINT_TO_LOG("Stored point cloud is too large, only a part will be used for matching", "");
+		}
+
+	return pointCloudOutput;
+	}
+
 VisualPointFeatureVector3DConstPtr PointCloudMap::GetSceneFeaturesVector(Pose3DConstPtr origin,  float radius)
 	{
 	DEBUG_PRINT_TO_LOG("Number of points in stored cloud:", pointCloud->points.size());

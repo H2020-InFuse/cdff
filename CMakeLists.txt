@@ -283,7 +283,7 @@ include_directories(
   Common/Types/CPP
   Common/Converters
   DFNs
-#[[DFPCs]]
+  DFPCs
   Tests
   Tools
   CC
@@ -293,7 +293,7 @@ include_directories(
 
 add_subdirectory(Common)
 add_subdirectory(DFNs)
-#[[add_subdirectory(DFPCs)]]
+add_subdirectory(DFPCs)
 add_subdirectory(Tests)
 add_subdirectory(CC)
 

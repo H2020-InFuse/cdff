@@ -96,6 +96,17 @@ target_link_libraries(
     cdff_logger cdff_pcl_visualizer registration_icp_cc converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
+add_executable(
+    DenseRegistrationFromStereoGuiTest
+    DFPCs/Reconstruction3D/DenseRegistrationFromStereo.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
+)
+set_target_properties(DenseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+	DenseRegistrationFromStereoGuiTest
+	dense_registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
+)
+
 #[======================================================================[
 
 add_executable(
