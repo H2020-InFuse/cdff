@@ -110,6 +110,15 @@ void IcpCC::ComputeTransform(ChunkedPointCloud* sourceCloud, ChunkedPointCloud* 
 		{
 		scaledTransform = ConvertTrasformToCCTransform(inTransformGuess);
 		}
+	else
+		{
+		scaledTransform.R = SquareMatrix(3);
+		scaledTransform.R.toIdentity();
+		scaledTransform.T.x = 0;
+		scaledTransform.T.y = 0;
+		scaledTransform.T.z = 0;
+		scaledTransform.s = 1.0;
+		}
 
 	double finalRMS;
 	unsigned finalPointCount;
@@ -137,7 +146,9 @@ ChunkedPointCloud* IcpCC::Convert(PointCloudWrapper::PointCloudConstPtr cloud)
 		ccCloud->addPoint(newPoint);
 		}
 
-	ccCloud->enableScalarField();
+	unsigned fieldIndex = ccCloud->addScalarField("RegistrationDistances");
+	ASSERT(fieldIndex >= 0, "IcpCC error, it was not possible to add RegistrationDistances scalar field. Not enough memory?");
+	ccCloud->setCurrentScalarField(fieldIndex);
 	return ccCloud;
 	}
 
