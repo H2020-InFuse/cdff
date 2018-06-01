@@ -110,15 +110,6 @@ void IcpCC::ComputeTransform(ChunkedPointCloud* sourceCloud, ChunkedPointCloud* 
 		{
 		scaledTransform = ConvertTrasformToCCTransform(inTransformGuess);
 		}
-	else
-		{
-		scaledTransform.R = SquareMatrix(3);
-		scaledTransform.R.toIdentity();
-		scaledTransform.T.x = 0;
-		scaledTransform.T.y = 0;
-		scaledTransform.T.z = 0;
-		scaledTransform.s = 1.0;
-		}
 
 	double finalRMS;
 	unsigned finalPointCount;
