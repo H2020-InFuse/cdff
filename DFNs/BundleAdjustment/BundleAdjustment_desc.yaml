@@ -1,0 +1,17 @@
+name: BundleAdjustment
+doc: DFN that determines the poses of a camera from the images taken at those poses.
+input_ports:
+    - name: framesSequence
+      type: asn1SccFramesSequence
+      doc: sequence of 2D images captured by the same camera
+output_ports:
+    - name: posesSequence
+      type: asn1SccPosesSequence
+      doc: poses of the camera in the coordinate system relative
+           to the pose of the camera in the first picture.
+    - name: success
+      type: bool
+      doc: whether the estimation of the poses was successful. 
+           If this variable is false the poses sequence is meaningless.
+implementations:
+    - UdvDecomposition
