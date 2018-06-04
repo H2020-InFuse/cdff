@@ -34,11 +34,26 @@ namespace dfn_ci
              *        or reconstructed from other perceptions
              */
             virtual void sinkCloudInput(const asn1SccPointcloud& data);
+            /**
+             * Send value to input port "transformGuess"
+             * @param transformGuess: this is the initial transform estimation of the source point
+             *        cloud relatively to the coordinate frame of the sink point cloud.
+             */
+            virtual void transformGuessInput(const asn1SccPose& data);
+            /**
+             * Send value to input port "useGuess"
+             * @param useGuess: this determines whether the transform guess should be used or not.
+             *        If it is not used and the implementation requires an estimation,
+             *        the identity transform will be used as an initial guess. If the guess
+             *        is used and the implementation does not require an estimation,
+             *        an error is thrown.
+             */
+            virtual void useGuessInput(const bool& data);
 
             /**
              * Query value from output port "transform"
              * @return transform: pose of the source point cloud relatively to the coordinate 
-             *         frame the sink point cloud
+             *         frame of the sink point cloud
              */
             virtual const asn1SccPose& transformOutput() const;
             /**
@@ -54,6 +69,8 @@ namespace dfn_ci
 
             asn1SccPointcloud inSourceCloud;
             asn1SccPointcloud inSinkCloud;
+            asn1SccPose inTransformGuess;
+            bool inUseGuess;
             asn1SccPose outTransform;
             bool outSuccess;
     };

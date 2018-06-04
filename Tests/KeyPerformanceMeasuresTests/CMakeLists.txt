@@ -8,6 +8,16 @@ target_link_libraries(
 	cdff_helpers cdff_logger cdff_types converters_opencv registration_3d registration_icp_3d opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
 
+add_executable(
+    registration_3d_icp_cc_test
+    DFNs/Registration3D/IcpCC.cpp
+    DFNs/Registration3D/CorrectLocalizationTester.cpp
+)
+target_link_libraries(
+	registration_3d_icp_cc_test
+	cdff_helpers cdff_logger cdff_types converters_opencv registration_3d registration_icp_cc opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+)
+
 #[======================================================================[
 #DFNs
 add_executable(

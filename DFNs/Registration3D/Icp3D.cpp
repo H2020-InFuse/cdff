@@ -34,6 +34,7 @@ Icp3D::Icp3D()
 	parametersHelper.AddParameter<double>("GeneralParameters", "EuclideanFitnessEpsilon", parameters.euclideanFitnessEpsilon, DEFAULT_PARAMETERS.euclideanFitnessEpsilon);
 
 	configurationFilePath = "";
+	inUseGuess = false;
 }
 
 Icp3D::~Icp3D()
@@ -53,6 +54,7 @@ void Icp3D::process()
 		outSuccess = false;
 		return;
 		}
+	VERIFY(!inUseGuess, "Icp3D Warning, a transformation guess was provided but this dfn Registration3D implementation does not use one, it will be ignored");
 
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputSourceCloud =
 		pointCloudToPclPointCloudConverter.Convert(&inSourceCloud);

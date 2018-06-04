@@ -72,12 +72,22 @@ namespace dfpc_ci {
 						PoseWrapper::Pose3DConstPtr cloudPoseInMap);
 
 		/*
-		* @brief Retrieves a point cloud given by all the mapped points which are within a given radius from a center
+		* @brief Retrieves a point cloud given by all the mapped points which are within a given radius from a center, the output points coordinate are relative to the scene origin.
 		*
 		* @param origin, the reference center for the retrivial
 		* @param radius, the reference distance from the center, if radius is negative all points are selected.
+		* @output, the scene point cloud in the coordinate system relative to the very first camera pose.
 		*/
 		PointCloudWrapper::PointCloudConstPtr GetScenePointCloud(PoseWrapper::Pose3DConstPtr origin,  float radius);
+
+		/*
+		* @brief Retrieves a point cloud given by all the mapped points which are within a given radius from a center, the output points coordinates are relative to the origin input.
+		*
+		* @param origin, the reference center for the retrivial, and centre of the coordinate system for the output point cloud.
+		* @param radius, the reference distance from the center, if radius is negative all points are selected.
+		* @output, the scene point cloud in the coordinate system relative to origin.
+		*/
+		PointCloudWrapper::PointCloudConstPtr GetScenePointCloudInOrigin(PoseWrapper::Pose3DConstPtr origin,  float radius);
 
 		/*
 		* @brief Retrieves the feature points located within a given radius from a center

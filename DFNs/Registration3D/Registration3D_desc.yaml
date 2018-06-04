@@ -9,11 +9,22 @@ input_ports:
       type: asn1SccPointcloud
       doc: 3D pointcloud captured by a 3D sensor
            or reconstructed from other perceptions
+    - name: transformGuess
+      type: asn1SccPose
+      doc: this is the initial transform estimation of the source point
+           cloud relatively to the coordinate frame of the sink point cloud.
+    - name: useGuess
+      type: bool
+      doc: this determines whether the transform guess should be used or not.
+           If it is not used and the implementation requires an estimation,
+           the identity transform will be used as an initial guess. If the guess
+           is used and the implementation does not require an estimation,
+           an error is thrown.
 output_ports:
     - name: transform
       type: asn1SccPose
       doc: pose of the source point cloud relatively to the coordinate 
-           frame the sink point cloud
+           frame of the sink point cloud
     - name: success
       type: bool
       doc: boolean flag indicating successful computation of the geometric

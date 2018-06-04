@@ -28,7 +28,8 @@
  * --------------------------------------------------------------------------
  */
 #include "CorrectLocalizationTester.hpp"
-#include<pcl/io/ply_io.h>
+#include <pcl/io/ply_io.h>
+#include <ctime>
 
 using namespace dfn_ci;
 using namespace Converters;
@@ -59,10 +60,12 @@ CorrectLocalizationTester::CorrectLocalizationTester(std::string configurationFi
 	inputSceneCloud = NULL;
 	inputModelCloud = NULL;
 	inputTruthModelPoseInScene = NULL;
+	inputGuessModelPoseInScene = NULL;
 	
 	outputMatcherSuccess = false;
 	inputsWereLoaded = false;
 	groundTruthWasLoaded = false;
+	guessPoseWasLoaded = false;
 	}
 
 CorrectLocalizationTester::~CorrectLocalizationTester()
@@ -70,6 +73,7 @@ CorrectLocalizationTester::~CorrectLocalizationTester()
 	DELETE_IF_NOT_NULL(inputSceneCloud);
 	DELETE_IF_NOT_NULL(inputModelCloud);
 	DELETE_IF_NOT_NULL(inputTruthModelPoseInScene);
+	DELETE_IF_NOT_NULL(inputGuessModelPoseInScene);
 	}
 
 void CorrectLocalizationTester::SetInputClouds(std::string sceneCloudFilePath, std::string modelCloudFilePath, std::string groundTruthPoseFilePath)
@@ -82,13 +86,30 @@ void CorrectLocalizationTester::SetInputClouds(std::string sceneCloudFilePath, s
 	LoadGroudTruthPose();
 	}
 
+void CorrectLocalizationTester::SetGuessModelPoseInScene(std::string guessPoseFilePath)
+	{
+	this->guessPoseFilePath = guessPoseFilePath;
+
+	LoadGuessPose();
+	}
+
 void CorrectLocalizationTester::ExecuteDfn()
 	{
 	ASSERT(inputsWereLoaded && groundTruthWasLoaded, "Error: there was a call to ExecuteDfns before actually loading inputs");	
 
 	dfn->sourceCloudInput(*inputModelCloud);
 	dfn->sinkCloudInput(*inputSceneCloud);
+	dfn->useGuessInput(guessPoseWasLoaded);
+	if (guessPoseWasLoaded)
+		{
+		dfn->transformGuessInput(*inputGuessModelPoseInScene);
+		}
+
+	clock_t beginTime = clock();
 	dfn->process();
+	clock_t endTime = clock();
+	float processingTime = float(endTime - beginTime) / CLOCKS_PER_SEC;
+	PRINT_TO_LOG("Processing took (seconds):", processingTime);
 
 	outputMatcherSuccess = dfn->successOutput();
 
@@ -115,6 +136,10 @@ bool CorrectLocalizationTester::IsOutputCorrect(float relativeLocationError, flo
 	float orientationError = ComputeOrientationError(modelSize);
 
 	PRINT_TO_LOG("The ground truth pose is: ", ToString(*inputTruthModelPoseInScene));
+	if (guessPoseWasLoaded)
+		{
+		PRINT_TO_LOG("The guess pose is: ", ToString(*inputGuessModelPoseInScene));
+		}
 	PRINT_TO_LOG("The model size is: ", modelSize);
 	PRINT_TO_LOG("The location error is: ", locationError);
 	PRINT_TO_LOG("The orientation error is: ", orientationError);
@@ -181,6 +206,25 @@ void CorrectLocalizationTester::LoadGroudTruthPose()
 	DELETE_IF_NOT_NULL(inputTruthModelPoseInScene);
 	inputTruthModelPoseInScene = groundTruthPose;
 	groundTruthWasLoaded = true;
+	}
+
+void CorrectLocalizationTester::LoadGuessPose()
+	{
+	std::ifstream file(guessPoseFilePath.c_str());
+	ASSERT(file.good(), "Error: guessPoseFilePath is invalid");
+
+	float x, y, z, qx, qy, qz, qw;
+	file >> x >> y >> z >> qx >> qy >> qz >> qw;
+
+	Pose3DPtr guessPose = NewPose3D();
+	SetPosition(*guessPose, x, y, z);
+	SetOrientation(*guessPose, qx, qy, qz, qw);
+
+	file.close();
+
+	DELETE_IF_NOT_NULL(inputGuessModelPoseInScene);
+	inputGuessModelPoseInScene = guessPose;
+	guessPoseWasLoaded = true;
 	}
 
 void CorrectLocalizationTester::ConfigureDfn()

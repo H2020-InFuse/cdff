@@ -26,6 +26,16 @@ void Registration3DInterface::sinkCloudInput(const asn1SccPointcloud& data)
     inSinkCloud = data;
 }
 
+void Registration3DInterface::transformGuessInput(const asn1SccPose& data)
+{
+    inTransformGuess = data;
+}
+
+void Registration3DInterface::useGuessInput(const bool& data)
+{
+    inUseGuess = data;
+}
+
 const asn1SccPose& Registration3DInterface::transformOutput() const
 {
     return outTransform;

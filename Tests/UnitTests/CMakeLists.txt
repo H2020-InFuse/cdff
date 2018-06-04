@@ -33,6 +33,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/Registration3D/Icp3D.cpp
+    DFNs/Registration3D/IcpCC.cpp
 #[=[DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp]=]
 #[=[DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp]=]
 #[=[DFNs/StereoReconstruction/DisparityMapping.cpp]=]
@@ -46,6 +47,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
 set(UNITTEST_LIBRARIES Catch
+    cc_core_lib
     boost_system
     cdff_helpers
     cdff_logger
@@ -65,6 +67,7 @@ set(UNITTEST_LIBRARIES Catch
 #[=[iterative_pnp_solver]=]
     kalman_predictor
     registration_icp_3d
+    registration_icp_cc
 #[=[mock]=]
     opencv_core
     opencv_highgui

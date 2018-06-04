@@ -283,19 +283,24 @@ include_directories(
   Common/Types/CPP
   Common/Converters
   DFNs
-#[[DFPCs]]
+  DFPCs
   Tests
   Tools
+  CC
 )
 
 # Process all subdirectories containing a CMakeLists file
 
 add_subdirectory(Common)
 add_subdirectory(DFNs)
-#[[add_subdirectory(DFPCs)]]
+add_subdirectory(DFPCs)
 add_subdirectory(Tests)
+add_subdirectory(CC)
 
 # TODO: is there an initial, default value for the directories that are searched
 # for header files? There isn't, as far as I understand, but triple-check. If
 # there is and it includes system directories, we should prepend the directories
 # we currently append to this list with include_directories().
+include_directories(
+	/InFuse/CloudCompare/CC/include
+)
