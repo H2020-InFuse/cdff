@@ -312,6 +312,11 @@ void OutliersDetector::KeyboardButtonCallback(const pcl::visualization::Keyboard
 		outliersBox.clear();
 		PRINT_TO_LOG("Box selection is no longer active", "");
 		}
+	else if (command == 2) //Ctrl+B
+		{
+		SaveOutliersAsPointCloud();
+		PRINT_TO_LOG("Data Saved", "");
+		}
 	}
 
 #define COPY_WHITE_POINT(origin, center, displacementX, destination) \
@@ -369,6 +374,22 @@ void OutliersDetector::DrawOutliers()
 
 	pointCloudColorHandler = boost::make_shared<pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> >(outliersCloud);
 	visualizer->updatePointCloud< pcl::PointXYZRGB >(outliersCloud, *pointCloudColorHandler, "outliersCloud");
+	}
+
+void OutliersDetector::SaveOutliersAsPointCloud()
+	{
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud(new pcl::PointCloud<pcl::PointXYZ>);
+	for(int outlierIndex = 0; outlierIndex < outliersVector.size(); outlierIndex++)
+		{
+		int32_t pointIndex = outliersVector.at(outlierIndex);
+		pcl::PointXYZ newPoint = originalCloud->points.at(pointIndex);
+		pclCloud->points.push_back(newPoint);
+		}
+
+	std::stringstream outputFilePathStream;
+	outputFilePathStream << outliersFilePath.substr(0, outliersFilePath.size()-4) << ".ply";
+	pcl::PLYWriter writer;
+	writer.write(outputFilePathStream.str(), *pclCloud, true);
 	}
 
 void OutliersDetector::SaveOutliers()
