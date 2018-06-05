@@ -107,6 +107,17 @@ target_link_libraries(
 	dense_registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
 )
 
+add_executable(
+    SparseRegistrationFromStereoGuiTest
+    DFPCs/Reconstruction3D/SparseRegistrationFromStereo.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
+)
+set_target_properties(SparseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+	SparseRegistrationFromStereoGuiTest
+	sparse_registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
+)
+
 #[======================================================================[
 
 add_executable(
