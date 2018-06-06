@@ -45,6 +45,8 @@ const std::string INSTRUCTIONS =
 	press SHIFT + left mouse button to mark an outlier \n \
 	press Ctrl+N button to unselect a keypoint \n \
 	press Ctrl+M to save the outliers to file \n \
+	press Ctrl+B to save the outliers as a ply file (with same name as the xml file) \n \
+	press Ctrl+F to activate bounding box selection mode, press Ctrl+G to deactivate it and finalize the box selection \n \
 	press Ctrl+Q or E to quit \n \n";
 
 int main(int argc, char** argv)
