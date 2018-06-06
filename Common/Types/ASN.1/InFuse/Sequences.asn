@@ -27,14 +27,18 @@ Point2D FROM GeometryNS
 T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
 T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes
 Frame FROM Frame-Types
-Pose FROM Pose-Types;
+Pose FROM Pose-Types
+CorrespondenceMap2D FROM CorrespondenceMap2DNS;
 
 -- Max. name size
 maxFramesSequenceLength T-UInt32 ::= 10
 maxPosesSequenceLength T-UInt32 ::= 10
+maxCorrespondenceMapsSequenceLength T-UInt32 ::= 56
 
 FramesSequence ::= SEQUENCE (SIZE(0..maxFramesSequenceLength)) OF Frame
 
 PosesSequence ::= SEQUENCE (SIZE(0..maxPosesSequenceLength)) OF Pose
+
+CorrespondenceMaps2DSequence ::= SEQUENCE(SIZE(0..maxCorrespondenceMapsSequenceLength)) OF CorrespondenceMap2D
 
 END

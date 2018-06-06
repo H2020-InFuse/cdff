@@ -7,7 +7,7 @@
 #define BUNDLEADJUSTMENT_INTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <FramesSequence.hpp>
+#include <CorrespondenceMaps2DSequence.hpp>
 #include <PosesSequence.hpp>
 
 namespace dfn_ci
@@ -24,9 +24,17 @@ namespace dfn_ci
 
             /**
              * Send value to input port "framesSequence"
-             * @param framesSequence: sequence of 2D images captured by the same camera
+             * @param framesSequence: sequence of correspondence maps between pairs of features sets.
+             * the correspondence maps sequence is obtained from n features sets
+             * extracted from n images taken by a stereo camera pair.
+             * The sequence contains n*(n-1) correspondence maps between all the 
+             * possible pairs of feature sets.
+             * If we order the features set as L1, R1, L2, R2, ..., Lm, Rm, with m = n/2 then
+             * the correspondence maps are ordered as (L1-R1), (L1-L2), (L1-R2), ..., 
+             * (L1-Lm), (L1-Rm), (R1,L2), (R1,R2), ..., (R1, Lm), (R1,Rm), ..., (Lm, Rm).
+             * the maximum number of features set is n = 8, for a maximum number of 56 maps.
              */
-            virtual void framesSequenceInput(const asn1SccFramesSequence& data);
+            virtual void correspondenceMapsSequenceInput(const asn1SccCorrespondenceMaps2DSequence& data);
 
             /**
              * Query value from output port "posesSequence"
@@ -44,7 +52,7 @@ namespace dfn_ci
 
         protected:
 
-            asn1SccFramesSequence inFramesSequence;
+            asn1SccCorrespondenceMaps2DSequence inCorrespondenceMapsSequence;
             asn1SccPosesSequence outPosesSequence;
             bool outSuccess;
     };

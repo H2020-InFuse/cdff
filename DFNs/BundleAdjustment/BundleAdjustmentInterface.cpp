@@ -16,9 +16,9 @@ BundleAdjustmentInterface::~BundleAdjustmentInterface()
 {
 }
 
-void BundleAdjustmentInterface::framesSequenceInput(const asn1SccFramesSequence& data)
+void BundleAdjustmentInterface::correspondenceMapsSequenceInput(const asn1SccCorrespondenceMaps2DSequence& data)
 {
-    inFramesSequence = data;
+    inCorrespondenceMapsSequence = data;
 }
 
 const asn1SccPosesSequence& BundleAdjustmentInterface::posesSequenceOutput() const
