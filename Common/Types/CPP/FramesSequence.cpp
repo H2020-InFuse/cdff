@@ -57,6 +57,12 @@ void Initialize(FramesSequence& framesSequence)
 	Clear(framesSequence);
 }
 
+void Clear(FramesSequence& framesSequence)
+{
+	framesSequence.nCount = 0;
+}
+
+
 void AddFrame(FramesSequence& framesSequence, const Frame& frame)
 {
 	ASSERT( GetNumberOfFrames(framesSequence) < MAX_FRAMES_SEQUENCE_LENGTH, "Error, frames sequence limit reached");

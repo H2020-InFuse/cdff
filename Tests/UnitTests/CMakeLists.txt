@@ -34,6 +34,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/Registration3D/Icp3D.cpp
     DFNs/Registration3D/IcpCC.cpp
+    DFNs/BundleAdjustment/SvdDecomposition.cpp
 #[=[DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp]=]
 #[=[DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp]=]
 #[=[DFNs/StereoReconstruction/DisparityMapping.cpp]=]
@@ -64,6 +65,7 @@ set(UNITTEST_LIBRARIES Catch
 #[=[hirschmuller_disparity_mapping]=]
 #[=[icp_3d]=]
     image_undistortion
+    svd_decomposition
 #[=[iterative_pnp_solver]=]
     kalman_predictor
     registration_icp_3d

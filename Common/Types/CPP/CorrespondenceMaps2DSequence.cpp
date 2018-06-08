@@ -57,6 +57,12 @@ void Initialize(CorrespondenceMaps2DSequence& correspondenceMapsSequence)
 	Clear(correspondenceMapsSequence);
 }
 
+void Clear(CorrespondenceMaps2DSequence& correspondenceMapsSequence)
+{
+	correspondenceMapsSequence.nCount = 0;
+}
+
+
 void AddCorrespondenceMap(CorrespondenceMaps2DSequence& correspondenceMapsSequence, const CorrespondenceMap2D& correspondenceMap)
 {
 	ASSERT( GetNumberOfCorrespondenceMaps(correspondenceMapsSequence) < MAX_CORRESPONDENCE_MAPS_SEQUENCE_LENGTH, "Error, correspondenceMaps sequence limit reached");

@@ -4,10 +4,10 @@ add_library(
 )
 
 add_library(
-    udv_decomposition
-    UdvDecomposition.cpp
+    svd_decomposition
+    SvdDecomposition.cpp
 )
 target_link_libraries(
-    udv_decomposition
+    svd_decomposition
     bundle_adjustment cdff_types yaml-cpp cdff_helpers opencv_core converters_opencv
 )

@@ -57,6 +57,11 @@ void Initialize(Poses3DSequence& posesSequence)
 	Clear(posesSequence);
 }
 
+void Clear(Poses3DSequence& posesSequence)
+{
+	posesSequence.nCount = 0;
+}
+
 void AddPose(Poses3DSequence& posesSequence, const Pose3D& pose)
 {
 	ASSERT( GetNumberOfPoses3D(posesSequence) < MAX_POSES_SEQUENCE_LENGTH, "Error, poses sequence limit reached");
