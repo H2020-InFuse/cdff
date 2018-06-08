@@ -32,29 +32,29 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
-    DFNs/Registration3D/Icp3D.cpp
-    DFNs/Registration3D/IcpCC.cpp
 #[=[DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp]=]
 #[=[DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp]=]
+    DFNs/Registration3D/Icp3D.cpp
+    DFNs/Registration3D/IcpCC.cpp
 #[=[DFNs/StereoReconstruction/DisparityMapping.cpp]=]
 #[=[DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp]=]
-#[=[DFPCs/DfpcConfigurator.cpp
-    DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
-    DFPCs/Reconstruction3D/ObservedScene.cpp]=]
+#[=[DFPCs/DfpcConfigurator.cpp]=]
+#[=[DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp]=]
+#[=[DFPCs/Reconstruction3D/ObservedScene.cpp]=]
 )
 
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
 set(UNITTEST_LIBRARIES Catch
-    cc_core_lib
     boost_system
+    cc_core_lib
     cdff_helpers
     cdff_logger
     cdff_types
     converters_opencv
-#[=[dfpc_configurator
-    dfpc_implementation_features_matching_3d]=]
+#[=[dfpc_configurator]=]
+#[=[dfpc_implementation_features_matching_3d]=]
 #[=[disparity_mapping]=]
     essential_matrix_decomposition
     flann_matcher
@@ -66,8 +66,6 @@ set(UNITTEST_LIBRARIES Catch
     image_undistortion
 #[=[iterative_pnp_solver]=]
     kalman_predictor
-    registration_icp_3d
-    registration_icp_cc
 #[=[mock]=]
     opencv_core
     opencv_highgui
@@ -98,6 +96,8 @@ set(UNITTEST_LIBRARIES Catch
     pcl_visualization
 #[=[ransac_3d]=]
 #[=[reconstruction_from_stereo]=]
+    registration_icp_3d
+    registration_icp_cc
 #[=[shot_descriptor_3d]=]
     synthetic_generators
 #[=[triangulation]=]

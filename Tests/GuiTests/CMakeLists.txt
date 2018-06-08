@@ -1,3 +1,5 @@
+## Graphical tests for the DFNs ------------------------------------------------
+
 add_executable(
     HarrisDetector2DGuiTest
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
@@ -79,7 +81,8 @@ add_executable(
 set_target_properties(Registration3DIcpGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     Registration3DIcpGuiTest
-    cdff_logger cdff_pcl_visualizer registration_icp_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree boost_system yaml-cpp ${VTK_LIBRARIES}
+    cdff_logger cdff_pcl_visualizer registration_icp_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -93,8 +96,11 @@ add_executable(
 set_target_properties(Registration3DIcpCCGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     Registration3DIcpCCGuiTest
-    cdff_logger cdff_pcl_visualizer registration_icp_cc converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree boost_system yaml-cpp ${VTK_LIBRARIES}
+    cdff_logger cdff_pcl_visualizer registration_icp_cc converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree boost_system yaml-cpp ${VTK_LIBRARIES}
 )
+
+## Graphical tests for the DFPCs -----------------------------------------------
 
 add_executable(
     DenseRegistrationFromStereoGuiTest
@@ -103,8 +109,10 @@ add_executable(
 )
 set_target_properties(DenseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	DenseRegistrationFromStereoGuiTest
-	dense_registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
+    DenseRegistrationFromStereoGuiTest
+    dense_registration_from_stereo
+    mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+    boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -114,8 +122,10 @@ add_executable(
 )
 set_target_properties(SparseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	SparseRegistrationFromStereoGuiTest
-	sparse_registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
+    SparseRegistrationFromStereoGuiTest
+    sparse_registration_from_stereo
+    mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+    boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
 )
 
 #[======================================================================[
