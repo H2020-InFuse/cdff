@@ -1,58 +1,36 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file PclVisualizer.hpp
- * @date 28/02/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup Visualizers
- * 
- *  The OpencvVisualizer contains method for the visualization of point clouds and other PCL data structures
- * 
  * @{
  */
 
 #ifndef PCL_VISUALIZER_HPP
 #define PCL_VISUALIZER_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "OpencvVisualizer.hpp"
-#include<pcl/io/ply_io.h>
-#include <pcl/visualization/pcl_visualizer.h>
-#include <stdlib.h>
-#include <vector>
-
 #include <PointCloud.hpp>
 #include <VisualPointFeatureVector3D.hpp>
 #include <Pose.hpp>
 
+#include <pcl/io/ply_io.h>
+#include <pcl/visualization/pcl_visualizer.h>
+#include <stdlib.h>
+#include <vector>
+
 namespace Visualizers
 {
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
+
+/**
+ * PclVisualizer: a class for displaying pointclouds
+ *                and other PCL data structures
  */
 class PclVisualizer
-	{
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
+{
 	public:
+
 		static void ShowPointCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 		static void ShowPointClouds(std::vector< pcl::PointCloud<pcl::PointXYZ>::ConstPtr > pointCloudsList);
 		static void ShowPointCloud(PointCloudWrapper::PointCloudConstPtr pointCloud);
@@ -68,63 +46,50 @@ class PclVisualizer
 		static void Disable();
 		static void EnableSaving();
 		static void DisableSaving();
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
+
 	protected:
+
 		PclVisualizer();
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
 	private:
+
 		struct Color
-			{
-			unsigned r;
-			unsigned g;
-			unsigned b;
-			};
+		{
+			unsigned r, g, b;
+		};
 
 		static const std::string WINDOW_NAME;
 		static const std::string SAVE_FILE_BASE_NAME;
 		static const std::string SAVE_FILE_EXTENSION;
 		static const unsigned MAX_POINT_CLOUDS = 10;
 		static const Color COLORS_LIST[MAX_POINT_CLOUDS];
+
 		static bool enabled;
 		static bool enabledSaving;
 
 		static pcl::PointXYZ TransformPoint(pcl::PointXYZ point, PoseWrapper::Transform3DConstPtr transform);
-	};
+};
 
 }
 
-/* --------------------------------------------------------------------------
- *
- * Macros definition
- *
- * --------------------------------------------------------------------------
- */
-	#ifndef TESTING
-		#define DEBUG_SHOW_POINT_CLOUD(pointCloud)
-		#define DEBUG_SHOW_POINT_CLOUDS(pointCloudsList)
-		#define DEBUG_SHOW_3D_VISUAL_FEATURES(pointCloud, featuresVector)
-		#define DEBUG_PLACE_POINT_CLOUD(scene, object, objectPose)
-		#define DEBUG_SHOW_PCL_IMAGE(image)
-		#define DEBUG_SAVE_POINT_CLOUD(pointCloud)
-		#define DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(pointCloud, period)
-	#else
-		#define DEBUG_SHOW_POINT_CLOUD(pointCloud) Visualizers::PclVisualizer::ShowPointCloud(pointCloud)
-		#define DEBUG_SHOW_POINT_CLOUDS(pointCloudsList) Visualizers::PclVisualizer::ShowPointClouds(pointCloudsList)
-		#define DEBUG_SHOW_3D_VISUAL_FEATURES(pointCloud, featuresVector) Visualizers::PclVisualizer::ShowVisualFeatures(pointCloud, featuresVector)
-		#define DEBUG_PLACE_POINT_CLOUD(scene, object, objectPose) Visualizers::PclVisualizer::PlacePointCloud(scene, object, objectPose)
-		#define DEBUG_SHOW_PCL_IMAGE(image) Visualizers::PclVisualizer::ShowImage(image)
-		#define DEBUG_SAVE_POINT_CLOUD(pointCloud) Visualizers::PclVisualizer::SavePointCloud(pointCloud)
-		#define DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(pointCloud, period) Visualizers::PclVisualizer::SavePointCloud(pointCloud, period)
-	#endif
-
+#ifndef TESTING
+	#define DEBUG_SHOW_POINT_CLOUD(pointCloud)
+	#define DEBUG_SHOW_POINT_CLOUDS(pointCloudsList)
+	#define DEBUG_SHOW_3D_VISUAL_FEATURES(pointCloud, featuresVector)
+	#define DEBUG_PLACE_POINT_CLOUD(scene, object, objectPose)
+	#define DEBUG_SHOW_PCL_IMAGE(image)
+	#define DEBUG_SAVE_POINT_CLOUD(pointCloud)
+	#define DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(pointCloud, period)
+#else
+	#define DEBUG_SHOW_POINT_CLOUD(pointCloud) Visualizers::PclVisualizer::ShowPointCloud(pointCloud)
+	#define DEBUG_SHOW_POINT_CLOUDS(pointCloudsList) Visualizers::PclVisualizer::ShowPointClouds(pointCloudsList)
+	#define DEBUG_SHOW_3D_VISUAL_FEATURES(pointCloud, featuresVector) Visualizers::PclVisualizer::ShowVisualFeatures(pointCloud, featuresVector)
+	#define DEBUG_PLACE_POINT_CLOUD(scene, object, objectPose) Visualizers::PclVisualizer::PlacePointCloud(scene, object, objectPose)
+	#define DEBUG_SHOW_PCL_IMAGE(image) Visualizers::PclVisualizer::ShowImage(image)
+	#define DEBUG_SAVE_POINT_CLOUD(pointCloud) Visualizers::PclVisualizer::SavePointCloud(pointCloud)
+	#define DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(pointCloud, period) Visualizers::PclVisualizer::SavePointCloud(pointCloud, period)
 #endif
-/* PclVisualizer.hpp */
-/** @} */
 
+#endif // PCL_VISUALIZER_HPP
+
+/** @} */

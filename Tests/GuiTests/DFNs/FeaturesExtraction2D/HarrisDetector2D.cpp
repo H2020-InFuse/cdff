@@ -1,10 +1,3 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
 /*!
  * @file HarrisDetector2D.cpp
  * @date 23/11/2017
@@ -13,19 +6,13 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Testing application for the DFN HarrisDetector2D.
- * 
- * 
+ *
+ *
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
@@ -67,9 +54,9 @@ HarrisDetector2DTestInterface::HarrisDetector2DTestInterface(std::string dfnName
 	harris = new HarrisDetector2D();
 	SetDFN(harris);
 
-	MatToFrameConverter converter;
 	cvImage = cv::imread("../../tests/Data/Images/DevonIslandLeft.ppm", cv::IMREAD_COLOR);
-	inputImage = converter.Convert(cvImage);
+	inputImage = MatToFrameConverter().Convert(cvImage);
+
 	harris->frameInput(*inputImage);
 	outputWindowName = "Harris Detector 2D Result";
 	}
@@ -96,20 +83,21 @@ void HarrisDetector2DTestInterface::SetupParameters()
 void HarrisDetector2DTestInterface::DisplayResult()
 	{
 	const VisualPointFeatureVector2D& featuresVector = harris->featuresOutput();
+
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
 	cv::Mat outputImage = cvImage.clone();
 
-	for(int featureIndex = 0; featureIndex < GetNumberOfPoints(featuresVector); featureIndex++)
+	for (int featureIndex = 0; featureIndex < GetNumberOfPoints(featuresVector); featureIndex++)
 		{
 		cv::Point drawPoint(GetXCoordinate(featuresVector, featureIndex), GetYCoordinate(featuresVector, featureIndex) );
 		cv::circle(outputImage, drawPoint, 5, cv::Scalar(0, 0, 255), 2, 8, 0);
 		}
 
 	cv::imshow(outputWindowName, outputImage);
+
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
 	}
-
 
 int main(int argc, char** argv)
 	{
