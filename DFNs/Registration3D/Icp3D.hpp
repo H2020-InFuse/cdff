@@ -29,8 +29,8 @@
 namespace dfn_ci
 {
 	/**
-	 * Registration of Point clouds using the ICP algorithm
-	 * 
+	 * Registration of pointclouds using the ICP algorithm
+	 *
 	 * @param MaxCorrespondenceDistance
 	 * @param MaximumIterations
 	 * @param TransformationEpsilon
@@ -48,26 +48,26 @@ namespace dfn_ci
 
 		private:
 
-		struct IcpOptionsSet
+			struct IcpOptionsSet
 			{
-			double maxCorrespondenceDistance;
-			int maximumIterations;
-			double transformationEpsilon;
-			double euclideanFitnessEpsilon;
+				double maxCorrespondenceDistance;
+				int maximumIterations;
+				double transformationEpsilon;
+				double euclideanFitnessEpsilon;
 			};
 
-		Helpers::ParametersListHelper parametersHelper;
-		IcpOptionsSet parameters;
-		static const IcpOptionsSet DEFAULT_PARAMETERS;
+			Helpers::ParametersListHelper parametersHelper;
+			IcpOptionsSet parameters;
+			static const IcpOptionsSet DEFAULT_PARAMETERS;
 
-		Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloudConverter;
-		Converters::EigenTransformToTransform3DConverter eigenTransformToTransform3dConverter;
+			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
+			Converters::EigenTransformToTransform3DConverter eigenTransformToTransform3D;
 
-		PoseWrapper::Transform3DConstPtr ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
+			PoseWrapper::Transform3DConstPtr ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
 
-		void ValidateParameters();
-		void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
-		void ValidateCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
+			void ValidateParameters();
+			void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
+			void ValidateCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
 	};
 }
 

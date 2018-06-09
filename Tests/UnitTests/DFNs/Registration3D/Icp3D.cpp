@@ -58,16 +58,14 @@ TEST_CASE( "Call to process (Registration 3D Icp)", "[process]" )
 			inputCloud->points.push_back(spherePoint);
 		}
 	}
+	PclPointCloudToPointCloudConverter pclPointCloudToPointCloud;
+	PointCloudConstPtr sourcePointCloud = pclPointCloudToPointCloud.Convert(inputCloud);
+	PointCloudConstPtr sinkPointCloud = pclPointCloudToPointCloud.Convert(inputCloud);
 
 	// Instantiate DFN
 	Icp3D* icp = new Icp3D;
 
-	//Instantiate converter
-	PclPointCloudToPointCloudConverter pclPointCloudToPointCloudConverter;
-
 	// Send input data to DFN
-	PointCloudConstPtr sourcePointCloud = pclPointCloudToPointCloudConverter.Convert(inputCloud);
-	PointCloudConstPtr sinkPointCloud = pclPointCloudToPointCloudConverter.Convert(inputCloud);
 	icp->sourceCloudInput(*sourcePointCloud);
 	icp->sinkCloudInput(*sinkPointCloud);
 

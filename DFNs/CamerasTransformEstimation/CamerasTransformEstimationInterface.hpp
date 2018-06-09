@@ -44,7 +44,7 @@ namespace dfn_ci
             /**
              * Query value from output port "transform"
              * @return transform: pose of the coordinate frame of the camera
-             *         that captured image B relatively to the coordinate frame
+             *         that captured image B relative to the coordinate frame
              *         of the camera that captured image A
              */
             virtual const asn1SccPose& transformOutput() const;
@@ -53,7 +53,8 @@ namespace dfn_ci
              * @return success: boolean flag indicating successful computation
              *         of the geometric transformation between the camera
              *         frames. Computation may fail if the matches are not good
-             *         enough; in that case, the returned matrix is meaningless.
+             *         enough; in that case, the returned geometric
+             *         transformation is meaningless.
              */
             virtual bool successOutput() const;
 

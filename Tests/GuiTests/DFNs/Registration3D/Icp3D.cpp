@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Testing application for the DFN Icp3D.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -51,7 +51,6 @@ class Icp3DTestInterface : public DFNTestInterface
 		~Icp3DTestInterface();
 
 		static void SegmentationFaultHandler(int signal);
-	protected:
 
 	private:
 		Icp3D* icp;
@@ -62,7 +61,7 @@ class Icp3DTestInterface : public DFNTestInterface
 		PointCloudConstPtr inputSinkCloud;
 		std::string outputWindowName;
 
-		PclPointCloudToPointCloudConverter pclPointCloudToPointCloudConverter;
+		PclPointCloudToPointCloudConverter pclPointCloudToPointCloud;
 
 		void LoadInputClouds();
 		void PrepareInputs();
@@ -97,7 +96,7 @@ Icp3DTestInterface::~Icp3DTestInterface()
 	delete(inputSinkCloud);
 	}
 
-void Icp3DTestInterface::SegmentationFaultHandler(int sig) 
+void Icp3DTestInterface::SegmentationFaultHandler(int sig)
 	{
 	void *array[10];
 	size_t size;
@@ -141,19 +140,19 @@ void Icp3DTestInterface::LoadInputClouds()
 		pclSourceCloud->points.push_back( point );
 		}
 
- 	pcl::VoxelGrid<pcl::PointXYZ> grid;
-  	const float LEAFT_SIZE = 0.005f;
-  	grid.setLeafSize (LEAFT_SIZE, LEAFT_SIZE, LEAFT_SIZE);
-  	grid.setInputCloud (pclSinkCloud);
-  	grid.filter (*pclSinkCloud);
-  	grid.setInputCloud (pclSourceCloud);
-  	grid.filter (*pclSourceCloud);
+	pcl::VoxelGrid<pcl::PointXYZ> grid;
+	const float LEAFT_SIZE = 0.005f;
+	grid.setLeafSize (LEAFT_SIZE, LEAFT_SIZE, LEAFT_SIZE);
+	grid.setInputCloud (pclSinkCloud);
+	grid.filter (*pclSinkCloud);
+	grid.setInputCloud (pclSourceCloud);
+	grid.filter (*pclSourceCloud);
 	}
 
 void Icp3DTestInterface::PrepareInputs()
 	{
-	inputSourceCloud = pclPointCloudToPointCloudConverter.Convert(pclSourceCloud);
-	inputSinkCloud = pclPointCloudToPointCloudConverter.Convert(pclSinkCloud);
+	inputSourceCloud = pclPointCloudToPointCloud.Convert(pclSourceCloud);
+	inputSinkCloud = pclPointCloudToPointCloud.Convert(pclSinkCloud);
 	}
 
 void Icp3DTestInterface::SetupParameters()
@@ -166,11 +165,11 @@ void Icp3DTestInterface::SetupParameters()
 
 void Icp3DTestInterface::DisplayResult()
 	{
-	const Transform3D& outputTransform= icp->transformOutput();
+	const Transform3D& outputTransform = icp->transformOutput();
 	Transform3DPtr transform = NewPose3D();
 	Copy(outputTransform, *transform);
 
-	PrintInformation(transform);	
+	PrintInformation(transform);
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud = PrepareOutputCloud(transform);
 
 	VisualizeClouds(correspondenceCloud);
@@ -194,7 +193,7 @@ void Icp3DTestInterface::PrintInformation(Transform3DConstPtr transform)
 pcl::PointCloud<pcl::PointXYZ>::ConstPtr Icp3DTestInterface::PrepareOutputCloud(Transform3DConstPtr transform)
 	{
 	Eigen::Quaternionf eigenRotation( GetWOrientation(*transform), GetXOrientation(*transform), GetYOrientation(*transform), GetZOrientation(*transform));
-	Eigen::Translation<float, 3> eigenTranslation( GetXPosition(*transform), GetYPosition(*transform), GetZPosition(*transform));	
+	Eigen::Translation<float, 3> eigenTranslation( GetXPosition(*transform), GetYPosition(*transform), GetZPosition(*transform));
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr correspondenceCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(unsigned pointIndex = 0; pointIndex < pclSourceCloud->points.size(); pointIndex++)
