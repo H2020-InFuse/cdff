@@ -22,7 +22,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     Common/Helpers/ParametersHelper.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
-#[=[DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp]=]
+    DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
     DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
@@ -98,7 +98,7 @@ set(UNITTEST_LIBRARIES Catch
 #[=[reconstruction_from_stereo]=]
     registration_icp_3d
     registration_icp_cc
-#[=[shot_descriptor_3d]=]
+    shot_descriptor_3d
     synthetic_generators
 #[=[triangulation]=]
 )

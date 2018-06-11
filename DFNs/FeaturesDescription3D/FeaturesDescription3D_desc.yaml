@@ -1,22 +1,40 @@
 name: FeaturesDescription3D
+doc: DFN that computes descriptors for 3D keypoints
 input_ports:
-    - name: pointCloud
-      type: PointCloud
-      doc: a 3D point cloud taken from a 3D sensor or assembled by 3D reconstruction
-    - name: featuresSet
-      type: VisualPointFeatureVector3D
-      doc: this is the list of Visual Point detected by a previous processing step. Their descriptors are empty. The points are defined by a reference to the input point cloud.
-    - name: normalsCloud
-      type: PointCloud
-      doc: This is the optional cloud of estimated normals to the surface represented by the first point cloud. This input may be optional depending on DFNs, as normals may be estimated in this DFN.
-	   As a suggestion for the implementation of different DFNs, one may use two parameters ForceNormalEstimation and EnableNormalEstimation:
-           If parameter ForceNormalEstimation is set to true, this input will be ignored; otherwise:
-	   If parameter EnableNormalEstimation is set to false, an empty input or invalid input will cause an exception,
-	   If parameter EnableNormalEstimation is set to true, normals will be estimated when this input is empty or not valid.
+    - name: pointcloud
+      type: asn1SccPointcloud
+      doc: 3D pointcloud captured by a 3D sensor
+           or reconstructed from other perceptions
+    - name: features
+      type: asn1SccVisualPointFeatureVector3D
+      doc: keypoints extracted from the pointcloud, without any descriptors,
+           provided as their index into the input pointcloud
+    - name: normals
+      type: asn1SccPointcloud
+      doc: "normals to the surface described by the input pointcloud, provided
+            as a pointcloud of the same size.
+            This input is unnecessary for implementations of this DFN that
+            compute surface normals, and necessary for implementations that
+            expect surface normals to be provided. Other implementations may be
+            able to accommodate both cases: for instance, the ShotDescriptor3D
+            implementation of this DFN exposes the following parameters to let
+            its user control the estimation of normals:
+            * if ForceNormalEstimation is true:
+              surface normal estimates are computed regardless of the provided
+              normals
+            * otherwise:
+              * if EnableNormalEstimation is false:
+                the provided normals are used, unless they're grossly wrong
+                (e.g. less normals than points), in which case an exception is
+                thrown
+              * if EnableNormalEstimation is true:
+                the provided normals are used, unless they're grossly wrong
+                (e.g. less normals than points), in which case better estimates
+                are computed"
 output_ports:
-    - name: featuresSetWithDescriptors
-      type: VisualPointFeatureVector3D
-      doc: This is the same list of visual point defined above. A descriptor is associated to each point. The points may be defined by position or references according to a configuration parameter. 
+    - name: features
+      type: asn1SccVisualPointFeatureVector3D
+      doc: same keypoints, with added descriptors, returned in coordinates
+           or as their index into the input pointcloud
 implementations:
     - ShotDescriptor3D
-
