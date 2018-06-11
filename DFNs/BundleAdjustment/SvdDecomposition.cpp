@@ -325,7 +325,7 @@ void SvdDecomposition::ConvertRotationTranslationMatricesToPosesSequence(cv::Mat
 			{
 			inverseOfFirstCameraTransform = affineTransform.inverse();
 			}
-		affineTransform = affineTransform * inverseOfFirstCameraTransform;
+		affineTransform = (affineTransform * inverseOfFirstCameraTransform).inverse();
 
 		Pose3D newPose;
 		SetPosition(newPose, affineTransform.translation()(0), affineTransform.translation()(1), affineTransform.translation()(2));
