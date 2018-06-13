@@ -1,102 +1,85 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file Icp3D.hpp
- * @date 25/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  @brief This DFN executes the ICP algorithms for detecting a 3d model pose in a 3d scene, according to the implementation in PCL library. 
- * 
- * This DFN implementation requires the following parameters:
- * @param maxCorrespondenceDistance, the maximum spatial distance allowed between the transformed point model and a scene point to consider the matching acceptable.
- * @param maximumIterations, this is the maximum number of iteration of the algorithm, after these iterations the best transform (the one with more inliers) is given as output.
- * @param transformationEpsilon, 
- * @param euclideanFitnessEpsilon,
- *
  * @{
  */
 
-#ifndef ICP_3D_HPP
-#define ICP_3D_HPP
+#ifndef ICP3D_HPP
+#define ICP3D_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
+#include "FeaturesMatching3DInterface.hpp"
+
 #include <VisualPointFeatureVector3D.hpp>
+#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <Pose.hpp>
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <stdlib.h>
-#include <string>
-#include <pcl/keypoints/harris_3d.h>
-#include <yaml-cpp/yaml.h>
 #include <SupportTypes.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
-namespace dfn_ci {
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class Icp3D : public FeaturesMatching3DInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+namespace dfn_ci
+{
+	/**
+	 * 3D feature matching using ICP (provided by PCL): detect and find the
+	 * pose of a 3D model pointcloud in a 3D scene pointcloud.
+	 *
+	 * The best geometric transformation that matches the source (model)
+	 * keypoints to the sink (scene) keypoints is defined as the transformation
+	 * with the largest number of inliers.
+	 *
+	 * @param maxCorrespondenceDistance
+	 *        largest distance allowed between the transformed point from the
+	 *        model pointcloud and a point from the scene pointcloud before
+	 *        they are no longer considered an acceptable match
+	 * @param maximumIterations
+	 *        maximum number of iterations that the algorithm can run before
+	 *        returning a result
+	 * @param transformationEpsilon
+	 * @param euclideanFitnessEpsilon
 	 */
-        public:
-        	Icp3D();
-        	~Icp3D();
-        	void process();
-        	void configure();
+	class Icp3D : public FeaturesMatching3DInterface
+	{
+		public:
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
+			Icp3D();
+			virtual ~Icp3D();
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
-	private:
-		struct IcpOptionsSet
+			virtual void configure();
+			virtual void process();
+
+		private:
+
+			struct IcpOptionsSet
 			{
-			double maxCorrespondenceDistance;
-			int maximumIterations;
-			double transformationEpsilon;
-			double euclideanFitnessEpsilon;
+				double maxCorrespondenceDistance;
+				int maximumIterations;
+				double transformationEpsilon;
+				double euclideanFitnessEpsilon;
 			};
 
-		Helpers::ParametersListHelper parametersHelper;
-		IcpOptionsSet parameters;
-		static const IcpOptionsSet DEFAULT_PARAMETERS;
+			Helpers::ParametersListHelper parametersHelper;
+			IcpOptionsSet parameters;
+			static const IcpOptionsSet DEFAULT_PARAMETERS;
 
-		PoseWrapper::Transform3DConstPtr ComputeTransform(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
-		PoseWrapper::Transform3DConstPtr Convert(Eigen::Matrix4f eigenTransform);
+			Converters::VisualPointFeatureVector3DToPclPointCloudConverter
+				visualPointFeatureVector3DToPclPointCloud;
+			PoseWrapper::Pose3DConstPtr Convert(
+				Eigen::Matrix4f eigenTransform);
 
-		void ValidateParameters();
-		void ValidateInputs(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
-		void ValidateCloud(Converters::SupportTypes::PointCloudWithFeatures cloud);
-    };
+			PoseWrapper::Pose3DConstPtr ComputeTransform(
+				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
+				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
+
+			void ValidateParameters();
+			void ValidateInputs(
+				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
+				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
+			void ValidateCloud(
+				Converters::SupportTypes::PointCloudWithFeatures cloud);
+	};
 }
-#endif
-/* Icp3D.hpp */
+
+#endif // ICP3D_HPP
+
 /** @} */
