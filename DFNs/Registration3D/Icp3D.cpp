@@ -9,18 +9,15 @@
 
 #include "Icp3D.hpp"
 
+#include <PointCloud.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
-#include <MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
 #include <pcl/registration/icp.h>
-
-#include <stdlib.h>
-#include <fstream>
+#include <yaml-cpp/yaml.h>
 
 using namespace Converters;
-using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
 
@@ -50,7 +47,7 @@ void Icp3D::configure()
 
 void Icp3D::process()
 {
-	// Read data from input ports
+	// Handle empty pointclouds
 	if (GetNumberOfPoints(inSourceCloud) == 0 || GetNumberOfPoints(inSinkCloud) == 0)
 	{
 		outSuccess = false;
@@ -58,6 +55,7 @@ void Icp3D::process()
 	}
 	VERIFY(!inUseGuess, "Icp3D Warning, a transformation guess was provided but this dfn Registration3D implementation does not use one, it will be ignored");
 
+	// Read data from input ports
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputSourceCloud =
 		pointCloudToPclPointCloud.Convert(&inSourceCloud);
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputSinkCloud =
@@ -65,10 +63,11 @@ void Icp3D::process()
 
 	// Process data
 	ValidateInputs(inputSourceCloud, inputSinkCloud);
-	Transform3DConstPtr transform = ComputeTransform(inputSourceCloud, inputSinkCloud);
+	Pose3DConstPtr transform = ComputeTransform(inputSourceCloud, inputSinkCloud);
 
 	// Write data to output port
-	outTransform = *transform;
+	Copy(*transform, outTransform);
+	delete transform;
 }
 
 const Icp3D::IcpOptionsSet Icp3D::DEFAULT_PARAMETERS =
@@ -86,20 +85,25 @@ const Icp3D::IcpOptionsSet Icp3D::DEFAULT_PARAMETERS =
  *
  * Observe that in PCL terminology, the sink cloud is called target cloud.
  */
-Transform3DConstPtr Icp3D::ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud)
+Pose3DConstPtr Icp3D::ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud)
 {
+	// Setup PCL's ICP algorithm
 	pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
-	icp.setInputCloud (sourceCloud);
-	icp.setInputTarget (sinkCloud);
+	icp.setInputCloud(sourceCloud);
+	icp.setInputTarget(sinkCloud);
 
-	icp.setMaxCorrespondenceDistance (parameters.maxCorrespondenceDistance);
-	icp.setMaximumIterations (parameters.maximumIterations);
-	icp.setTransformationEpsilon (parameters.transformationEpsilon);
-	icp.setEuclideanFitnessEpsilon (parameters.euclideanFitnessEpsilon);
+	icp.setMaxCorrespondenceDistance(parameters.maxCorrespondenceDistance);
+	icp.setMaximumIterations(parameters.maximumIterations);
+	icp.setTransformationEpsilon(parameters.transformationEpsilon);
+	icp.setEuclideanFitnessEpsilon(parameters.euclideanFitnessEpsilon);
 
+	// Setup output
 	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud(new pcl::PointCloud<pcl::PointXYZ>);
-	icp.align (*outputCloud);
 
+	// Run ICP
+	icp.align(*outputCloud);
+
+	// Check convergence
 	outSuccess = icp.hasConverged();
 	if (outSuccess)
 	{
@@ -108,10 +112,9 @@ Transform3DConstPtr Icp3D::ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::Cons
 	}
 	else
 	{
-		Transform3DPtr transform = NewPose3D();
+		Pose3DPtr transform = NewPose3D();
 		return transform;
 	}
-
 }
 
 void Icp3D::ValidateParameters()

@@ -1,47 +1,27 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file Icp3D.cpp
- * @date 29/05/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
+ * Unit tests for the DFN Registration3D/Icp3D
+ */
+
+/**
  * @addtogroup DFNsTest
- *
- * Unit Test for the DFN Registration3D - Icp3D.
- *
- *
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include <catch.hpp>
 #include <Registration3D/Icp3D.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
-#include <MatToVisualPointFeatureVector3DConverter.hpp>
+#include <Errors/Assert.hpp>
+
+#include <boost/make_shared.hpp>
 
 using namespace dfn_ci;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
-
-/* --------------------------------------------------------------------------
- *
- * Test Cases
- *
- * --------------------------------------------------------------------------
- */
 
 TEST_CASE( "Call to process (Registration 3D Icp)", "[process]" )
 {
@@ -49,7 +29,7 @@ TEST_CASE( "Call to process (Registration 3D Icp)", "[process]" )
 	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for (float alpha = 0; alpha < 2 * M_PI; alpha += 0.1)
 	{
-		for (float beta = 0; beta < 2*M_PI; beta += 0.1)
+		for (float beta = 0; beta < 2 * M_PI; beta += 0.1)
 		{
 			pcl::PointXYZ spherePoint;
 			spherePoint.x = std::cos(alpha) * std::cos(beta);
@@ -63,7 +43,7 @@ TEST_CASE( "Call to process (Registration 3D Icp)", "[process]" )
 	PointCloudConstPtr sinkPointCloud = pclPointCloudToPointCloud.Convert(inputCloud);
 
 	// Instantiate DFN
-	Icp3D* icp = new Icp3D;
+	Icp3D *icp = new Icp3D;
 
 	// Send input data to DFN
 	icp->sourceCloudInput(*sourcePointCloud);
@@ -73,26 +53,26 @@ TEST_CASE( "Call to process (Registration 3D Icp)", "[process]" )
 	icp->process();
 
 	// Query output data from DFN
-	const Transform3D& transform = icp->transformOutput();
+	const Pose3D& transform = icp->transformOutput();
 	bool success = icp->successOutput();
 
 	// Cleanup
-	delete(icp);
-	delete(sourcePointCloud);
-	delete(sinkPointCloud);
+	delete icp;
+	delete sourcePointCloud;
+	delete sinkPointCloud;
 }
 
 TEST_CASE( "Call to configure (Registration 3D Icp)", "[configure]" )
 {
 	// Instantiate DFN
-	Icp3D* icp = new Icp3D;
+	Icp3D *icp = new Icp3D;
 
 	// Setup DFN
 	icp->setConfigurationFile("../tests/ConfigurationFiles/DFNs/Registration3D/Icp3D_Conf1.yaml");
 	icp->configure();
 
 	// Cleanup
-	delete(icp);
+	delete icp;
 }
 
 /** @} */

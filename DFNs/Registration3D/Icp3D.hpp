@@ -12,7 +12,6 @@
 
 #include "Registration3DInterface.hpp"
 
-#include <PointCloud.hpp>
 #include <Pose.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
 #include <EigenTransformToTransform3DConverter.hpp>
@@ -20,11 +19,6 @@
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <pcl/keypoints/harris_3d.h>
-#include <yaml-cpp/yaml.h>
-
-#include <stdlib.h>
-#include <string>
 
 namespace dfn_ci
 {
@@ -63,7 +57,7 @@ namespace dfn_ci
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 			Converters::EigenTransformToTransform3DConverter eigenTransformToTransform3D;
 
-			PoseWrapper::Transform3DConstPtr ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
+			PoseWrapper::Pose3DConstPtr ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
 
 			void ValidateParameters();
 			void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);

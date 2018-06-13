@@ -10,17 +10,13 @@
 #include "IcpCC.hpp"
 
 #include <PointCloudToPclPointCloudConverter.hpp>
-#include <MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
 #include <pcl/registration/icp.h>
-
-#include <stdlib.h>
-#include <fstream>
+#include <yaml-cpp/yaml.h>
 
 using namespace Converters;
-using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
 using namespace CCLib;
@@ -62,8 +58,8 @@ void IcpCC::process()
 		return;
 	}
 
-	ChunkedPointCloud* inputSourceCloud = Convert(&inSourceCloud);
-	ChunkedPointCloud* inputSinkCloud = Convert(&inSinkCloud);
+	ChunkedPointCloud *inputSourceCloud = Convert(&inSourceCloud);
+	ChunkedPointCloud *inputSinkCloud = Convert(&inSinkCloud);
 
 	// Process data
 	ValidateInputs(inputSourceCloud, inputSinkCloud);
@@ -73,8 +69,8 @@ void IcpCC::process()
 	// done in ComputeTransform, nothing to do here
 
 	// Cleanup
-	delete(inputSourceCloud);
-	delete(inputSinkCloud);
+	delete inputSourceCloud;
+	delete inputSinkCloud;
 }
 
 IcpCC::ConvergenceTypeHelper::ConvergenceTypeHelper(const std::string& parameterName, ConvergenceType& boundVariable, const ConvergenceType& defaultValue)
@@ -140,7 +136,7 @@ void IcpCC::ComputeTransform(ChunkedPointCloud* sourceCloud, ChunkedPointCloud* 
 	}
 }
 
-ChunkedPointCloud* IcpCC::Convert(PointCloudWrapper::PointCloudConstPtr cloud)
+ChunkedPointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
 {
 	ChunkedPointCloud* ccCloud = new ChunkedPointCloud;
 	ccCloud->reserve( GetNumberOfPoints(*cloud) );
@@ -180,7 +176,7 @@ void IcpCC::ConvertParametersToCCParametersList()
 // The required initial estimate/guess/output is the position of the source
 // cloud's frame in the frame of the sink cloud. It is the inverse of the
 // geometric transformation that brings the source cloud in the sink cloud.
-RegistrationTools::ScaledTransformation IcpCC::ConvertTrasformToCCTransform(const Transform3D& transform)
+RegistrationTools::ScaledTransformation IcpCC::ConvertTrasformToCCTransform(const Pose3D& transform)
 {
 	RegistrationTools::ScaledTransformation ccTransform;
 	ccTransform.T.x = -GetXPosition(transform);
@@ -209,18 +205,18 @@ RegistrationTools::ScaledTransformation IcpCC::ConvertTrasformToCCTransform(cons
 	return ccTransform;
 }
 
-Transform3D IcpCC::ConvertCCTransformToTranform(const RegistrationTools::ScaledTransformation& ccTransform)
+Pose3D IcpCC::ConvertCCTransformToTranform(const RegistrationTools::ScaledTransformation& ccTransform)
 {
 	ASSERT(ccTransform.s >= 0.99999 && ccTransform.s <= 1.00001, "IcpCC error, ccTransform does not have expected scale of 1");
 
-	Transform3D transform;
+	Pose3D transform;
 	SetPosition(transform, -ccTransform.T.x, -ccTransform.T.y, -ccTransform.T.z);
 
 	// We need a non-cost matrix to call the toQuatenion method. (It is not expected indeed.)
 	SquareMatrix rotationMatrixCopy = ccTransform.R.inv();
 
 	double quaternion[4];
-	bool success = 	rotationMatrixCopy.toQuaternion(quaternion);
+	bool success = rotationMatrixCopy.toQuaternion(quaternion);
 	ASSERT(success, "IcpCC error, could not convert ccTransform rotation matrix to Transform quaternion");
 
 	SetOrientation(transform, quaternion[1], quaternion[2], quaternion[3], quaternion[0]);

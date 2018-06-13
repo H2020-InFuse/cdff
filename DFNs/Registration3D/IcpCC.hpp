@@ -12,20 +12,17 @@
 
 #include "Registration3DInterface.hpp"
 
-#include <PointCloud.hpp>
 #include <Pose.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
 #include <EigenTransformToTransform3DConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
+#include <PointCloud.hpp>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <pcl/keypoints/harris_3d.h>
-#include <yaml-cpp/yaml.h>
 #include <RegistrationTools.h>
 #include <ChunkedPointCloud.h>
 
-#include <stdlib.h>
 #include <string>
 
 namespace dfn_ci
@@ -106,8 +103,8 @@ namespace dfn_ci
 			void ComputeTransform(CCLib::ChunkedPointCloud* sourceCloud, CCLib::ChunkedPointCloud* sinkCloud);
 			CCLib::ChunkedPointCloud* Convert(PointCloudWrapper::PointCloudConstPtr cloud);
 			void ConvertParametersToCCParametersList();
-			CCLib::RegistrationTools::ScaledTransformation ConvertTrasformToCCTransform(const PoseWrapper::Transform3D& transform);
-			PoseWrapper::Transform3D ConvertCCTransformToTranform(const CCLib::RegistrationTools::ScaledTransformation& ccTransform);
+			CCLib::RegistrationTools::ScaledTransformation ConvertTrasformToCCTransform(const PoseWrapper::Pose3D& transform);
+			PoseWrapper::Pose3D ConvertCCTransformToTranform(const CCLib::RegistrationTools::ScaledTransformation& ccTransform);
 
 			void ValidateParameters();
 			void ValidateInputs(CCLib::ChunkedPointCloud* sourceCloud, CCLib::ChunkedPointCloud* sinkCloud);
