@@ -1,19 +1,25 @@
 name: FeaturesMatching3D
+doc: DFN that matches 3D keypoints
 input_ports:
-    - name: sourceFeaturesVector
-      type: VisualPointFeatureVector3D
-      doc: these are the extracted features of the 3D point cloud model we would like to discover in the other point cloud.
-    - name: sinkFeaturesVector
-      type: VisualPointFeatureVector3D
-      doc: these are the extracted features of the 3D point cloud into which we are looking for the model.
+    - name: sourceFeatures
+      type: asn1SccVisualPointFeatureVector3D
+      doc: keypoints extracted from the source 3D pointcloud (a "model" whose
+           keypoints we would like to find in the other pointcloud)
+    - name: sinkFeatures
+      type: asn1SccVisualPointFeatureVector3D
+      doc: keypoints extracted from the sink 3D pointcloud (a "scene" in which
+           we are looking for the model)
 output_ports:
     - name: transform
-      type: Transform3D
-      doc: This is the best 3D trasform correspondence that matches source features to sink features.
+      type: asn1SccPose
+      doc: best geometric transformation that matches the source keypoints to
+           the sink keypoints
     - name: success
       type: bool
-      doc: This is a boolean value representing whether it was really possible to compute a valid transform. If this value is false the transform is meaningless.
+      doc: boolean flag indicating successful computation of the geometric
+           transformation between the keypoints. Computation may fail if the
+           matches are not good enough; in that case, the returned geometric
+           transformation is meaningless.
 implementations:
     - Icp3D
     - Ransac3D
-
