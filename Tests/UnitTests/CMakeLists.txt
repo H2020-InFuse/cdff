@@ -27,14 +27,14 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     DFNs/FeaturesMatching2D/FlannMatcher.cpp
-#[=[DFNs/FeaturesMatching3D/Icp3D.cpp]=]
-#[=[DFNs/FeaturesMatching3D/Ransac3D.cpp]=]
+    DFNs/FeaturesMatching3D/Icp3D.cpp
+    DFNs/FeaturesMatching3D/Ransac3D.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
 #[=[DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp]=]
 #[=[DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp]=]
-    DFNs/Registration3D/Icp3D.cpp
+#[=[DFNs/Registration3D/Icp3D.cpp]=]
     DFNs/Registration3D/IcpCC.cpp
 #[=[DFNs/StereoReconstruction/DisparityMapping.cpp]=]
 #[=[DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp]=]
@@ -62,7 +62,7 @@ set(UNITTEST_LIBRARIES Catch
     harris_detector_2d
     harris_detector_3d
 #[=[hirschmuller_disparity_mapping]=]
-#[=[icp_3d]=]
+    icp_3d
     image_undistortion
 #[=[iterative_pnp_solver]=]
     kalman_predictor
@@ -94,9 +94,9 @@ set(UNITTEST_LIBRARIES Catch
     pcl_surface
     pcl_tracking
     pcl_visualization
-#[=[ransac_3d]=]
+    ransac_3d
 #[=[reconstruction_from_stereo]=]
-    registration_icp_3d
+#[=[registration_icp_3d]=]
     registration_icp_cc
     shot_descriptor_3d
     synthetic_generators

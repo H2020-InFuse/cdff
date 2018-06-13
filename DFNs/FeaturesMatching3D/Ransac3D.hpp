@@ -1,116 +1,97 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file Ransac3D.hpp
- * @date 17/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  This DFN implements the RANSAC for matching points between two 3D point clouds.
- *  
- *
  * @{
  */
 
-/*!
- * @addtogroup DFNs
- * 
- *  @brief This DFN executes the RANSAC algorithms for detecting a 3d model pose in a 3d scene, according to the implementation in PCL library. 
- * 
- * This DFN implementation requires the following parameters:
- * @param similarityThreshold, this is the minimum amount of similarity between two features, as a condition for considering them a possible match.
- * @param inlierFraction, when the model is transformed into the coordinate system of the scene, this is the minimum fraction of model points that has to be found in the scene, as a condition for
- *				accepting the transformation.
- * @param correspondenceRandomness, 
- * @param numberOfSamples, this is the number of random samples that are selected in the intial phase of RANSAC for the construction of a model,
- * @param maximumIterations, this is the maximum number of iteration of the algorithm, after these iterations the best transform (the one with more inliers) is given as output,
- * @param maxCorrespondenceDistance.searchRadius, the maximum spatial distance allowed between the transformed point model and a scene point to consider the matching acceptable.
- *
- * @{
- */
+#ifndef RANSAC3D_HPP
+#define RANSAC3D_HPP
 
-#ifndef RANSAC_3D_HPP
-#define RANSAC_3D_HPP
+#include "FeaturesMatching3DInterface.hpp"
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <VisualPointFeatureVector3D.hpp>
+#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <Pose.hpp>
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <stdlib.h>
-#include <string>
-#include <pcl/keypoints/harris_3d.h>
-#include <yaml-cpp/yaml.h>
 #include <SupportTypes.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
-namespace dfn_ci {
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class Ransac3D : public FeaturesMatching3DInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+namespace dfn_ci
+{
+	/**
+	 * 3D feature matching using RANSAC (provided by PCL): detect and find the
+	 * pose of a 3D model pointcloud in a 3D scene pointcloud.
+	 *
+	 * The best geometric transformation that matches the source (model)
+	 * keypoints to the sink (scene) keypoints is defined as the transformation
+	 * with the largest number of inliers.
+	 *
+	 * @param similarityThreshold
+	 *        smallest amount of similarity between two keypoints to consider
+	 *        them a possible match
+	 * @param inlierFraction
+	 *        smallest fraction of points from the model pointcloud that must
+	 *        be in the scene pointcloud, after geometric transformation of the
+	 *        model pointcloud into the coordinate system of the scene
+	 *        pointcloud, to consider that transformation suitable
+	 * @param correspondenceRandomness
+	 * @param numberOfSamples
+	 *        number of random samples that are selected in the initial phase
+	 *        of RANSAC to make up a model
+	 * @param maximumIterations
+	 *        maximum number of iterations that the algorithm can run before
+	 *        returning a result
+	 * @param maxCorrespondenceDistance.searchRadius
+	 *        largest distance allowed between the transformed point from the
+	 *        model pointcloud and a point from the scene pointcloud before
+	 *        they are no longer considered an acceptable match
 	 */
-        public:
-        	Ransac3D();
-        	~Ransac3D();
-        	void process();
-        	void configure();
+	class Ransac3D : public FeaturesMatching3DInterface
+	{
+		public:
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
+			Ransac3D();
+			virtual ~Ransac3D();
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
-	private:
-		struct RansacOptionsSet
+			virtual void configure();
+			virtual void process();
+
+		private:
+
+			struct RansacOptionsSet
 			{
-			float similarityThreshold;
-			float inlierFraction;
-			int correspondenceRandomness;
-			int numberOfSamples;
-			int maximumIterations;
-			float maxCorrespondenceDistance;
+				float similarityThreshold;
+				float inlierFraction;
+				int correspondenceRandomness;
+				int numberOfSamples;
+				int maximumIterations;
+				float maxCorrespondenceDistance;
 			};
 
-		Helpers::ParametersListHelper parametersHelper;
-		RansacOptionsSet parameters;
-		static const RansacOptionsSet DEFAULT_PARAMETERS;
+			Helpers::ParametersListHelper parametersHelper;
+			RansacOptionsSet parameters;
+			static const RansacOptionsSet DEFAULT_PARAMETERS;
 
-		PoseWrapper::Transform3DConstPtr ComputeTransform(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
-		PoseWrapper::Transform3DConstPtr Convert(Eigen::Matrix4f eigenTransform);
+			Converters::VisualPointFeatureVector3DToPclPointCloudConverter
+				visualPointFeatureVector3DToPclPointCloud;
+			PoseWrapper::Pose3DConstPtr Convert(
+				Eigen::Matrix4f eigenTransform);
 
-		void ValidateParameters();
-		void ValidateInputs(Converters::SupportTypes::PointCloudWithFeatures sourceCloud, Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
-		void ValidateCloud(Converters::SupportTypes::PointCloudWithFeatures cloud);
-    };
+			PoseWrapper::Pose3DConstPtr ComputeTransform(
+				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
+				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
+
+			void ValidateParameters();
+			void ValidateInputs(
+				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
+				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
+			void ValidateCloud(
+				Converters::SupportTypes::PointCloudWithFeatures cloud);
+	};
 }
-#endif
-/* Ransac3D.hpp */
+
+#endif // RANSAC3D_HPP
+
 /** @} */
