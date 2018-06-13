@@ -143,7 +143,7 @@ function fetchsource_function {
 
 function fetchgit_function {
 	echo "Checking out $1"
-	git -C $SOURCE_DIR clone --depth 1 --single-branch --recursive -b $2 $3
+	git -C $SOURCE_DIR clone --depth 1 --single-branch --recursive -b $2 $3 $1
 	mkdir -p $BUILD_DIR/$1
 	cd $BUILD_DIR/$1
   echo "Done. $1 Checked out."
