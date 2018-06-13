@@ -80,7 +80,7 @@ void ShotDescriptor3D::process()
 		return;
 	}
 
-	// Read data from input port
+	// Read data from input ports
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputPointCloud =
 		pointCloudToPclPointCloud.Convert(&inPointcloud);
 	pcl::IndicesConstPtr indicesList = Convert(&inFeatures);

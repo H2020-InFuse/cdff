@@ -8,9 +8,11 @@
  */
 
 #include "FlannMatcher.hpp"
+
 #include <VisualPointFeatureVector2DToMatConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <Macros/YamlcppMacros.hpp>
+
 #include <stdlib.h>
 #include <fstream>
 

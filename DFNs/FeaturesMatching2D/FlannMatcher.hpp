@@ -11,9 +11,11 @@
 #define FLANNMATCHER_HPP
 
 #include "FeaturesMatching2DInterface.hpp"
+
 #include <CorrespondenceMap2D.hpp>
 #include <VisualPointFeatureVector2DToMatConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/features2d/features2d.hpp>

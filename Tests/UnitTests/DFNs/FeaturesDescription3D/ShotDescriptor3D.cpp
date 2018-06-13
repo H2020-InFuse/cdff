@@ -53,7 +53,7 @@ TEST_CASE( "DFN processing step succeeds (3D SHOT descriptor)", "[process]" )
 	AddPoint(*features, 0);
 
 	// Instantiate DFN
-	ShotDescriptor3D* shot = new ShotDescriptor3D;
+	ShotDescriptor3D *shot = new ShotDescriptor3D;
 
 	// Send input data to DFN
 	shot->pointcloudInput(*pc);
@@ -78,7 +78,7 @@ TEST_CASE( "DFN processing step succeeds (3D SHOT descriptor)", "[process]" )
 TEST_CASE( "DFN configuration succeeds (3D SHOT descriptor)", "[configure]" )
 {
 	// Instantiate DFN
-	ShotDescriptor3D* shot = new ShotDescriptor3D;
+	ShotDescriptor3D *shot = new ShotDescriptor3D;
 
 	// Setup DFN
 	shot->setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesDescription3D/ShotDescriptor3D_Conf1.yaml");
@@ -91,7 +91,7 @@ TEST_CASE( "DFN configuration succeeds (3D SHOT descriptor)", "[configure]" )
 TEST_CASE( "DFN configuration fails because of conflicting parameters: computation of surface normals is disabled and forced at the same time", "[configure][bad config]" )
 {
 	// Instantiate DFN
-	ShotDescriptor3D* shot = new ShotDescriptor3D;
+	ShotDescriptor3D *shot = new ShotDescriptor3D;
 
 	// Setup DFN
 	shot->setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesDescription3D/ShotDescriptor3D_ConflictingGeneralParameters.yaml");
@@ -104,7 +104,7 @@ TEST_CASE( "DFN configuration fails because of conflicting parameters: computati
 TEST_CASE( "DFN configuration fails because of conflicting normal estimation parameters", "[configure][bad config]" )
 {
 	// Instantiate DFN
-	ShotDescriptor3D* shot = new ShotDescriptor3D;
+	ShotDescriptor3D *shot = new ShotDescriptor3D;
 
 	// Setup DFN
 	shot->setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesDescription3D/ShotDescriptor3D_ConflictingNormalEstimationParameters.yaml");
@@ -117,7 +117,7 @@ TEST_CASE( "DFN configuration fails because of conflicting normal estimation par
 TEST_CASE( "DFN processing fails on account of the provided normals being inadequate and normal estimation being disabled", "[process][bad input]")
 {
 	// Instantiate DFN
-	ShotDescriptor3D* shot = new ShotDescriptor3D;
+	ShotDescriptor3D *shot = new ShotDescriptor3D;
 
 	// Setup DFN
 	shot->setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesDescription3D/ShotDescriptor3D_DisabledNormalEstimation.yaml");
