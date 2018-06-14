@@ -1,97 +1,63 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file PerspectiveNPointSolvingInterface.hpp
- * @date 20/02/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  This is the common interface of all DFNs that solve the Perspective N Point problem.    
- *
  * @{
  */
-#ifndef PERSPECTIVE_N_POINT_SOLVING_INTERFACE_HPP
-#define PERSPECTIVE_N_POINT_SOLVING_INTERFACE_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <DFNCommonInterface.hpp>
-#include <PointCloud.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <Pose.hpp>
+#ifndef PERSPECTIVENPOINTSOLVING_INTERFACE_HPP
+#define PERSPECTIVENPOINTSOLVING_INTERFACE_HPP
 
+#include "DFNCommonInterface.hpp"
+#include <Pose.h>
+#include <Pointcloud.h>
+#include <VisualPointFeatureVector2D.h>
 
-namespace dfn_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
+namespace dfn_ci
+{
+    /**
+     * DFN that solves the Perspective-n-Point problem
+     */
     class PerspectiveNPointSolvingInterface : public DFNCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
+
             PerspectiveNPointSolvingInterface();
             virtual ~PerspectiveNPointSolvingInterface();
-            /**
-            * Send value to input port pointCloud
-            * @param pointCloud, this is the set of 3d points representing the scene in some reference coordinate system.
-            */
-            virtual void pointCloudInput(PointCloudWrapper::PointCloudConstPtr data);
 
             /**
-            * Send value to input port cameraFeaturesVector
-            * @param cameraFeaturesVector, these are the 2d image coordinates of the 3d points as they are observed by the camera.
-            */
-            virtual void cameraFeaturesVectorInput(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr data);
+             * Send value to input port "points"
+             * @param points: a set of n 3D points in a given reference frame
+             *        (cartesian coordinates)
+             */
+            virtual void pointsInput(const asn1SccPointcloud& data);
+            /**
+             * Send value to input port "projections"
+             * @param projections: their corresponding 2D projections in an
+             *        image captured by a camera (image coordinates)
+             */
+            virtual void projectionsInput(const asn1SccVisualPointFeatureVector2D& data);
 
             /**
-            * Receive value from output port pose
-            * @param pose, This is the pose of the camera in the reference coordinate system of the point cloud.
-            */
-            virtual PoseWrapper::Pose3DConstPtr poseOutput();
-
+             * Query value from output port "camera"
+             * @return camera: the pose of the camera in the same reference frame
+             */
+            virtual const asn1SccPose& cameraOutput() const;
             /**
-            * Receive value from output port success
-            * @param success, This boolean value determines whether a valid pose could be found. If this value is false, pose is meaningless.
-            */
-            virtual bool successOutput();
+             * Query value from output port "success"
+             * @return success: boolean flag indicating successful estimation
+             *        of a valid pose for the camera. If false, the returned
+             *        pose is meaningless.
+             */
+            virtual bool successOutput() const;
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
         protected:
-            PointCloudWrapper::PointCloudConstPtr inPointCloud;
-            VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inCameraFeaturesVector;
-            PoseWrapper::Pose3DConstPtr outPose;
-	    bool outSuccess;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+            asn1SccPointcloud inPoints;
+            asn1SccVisualPointFeatureVector2D inProjections;
+            asn1SccPose outCamera;
+            bool outSuccess;
     };
 }
-#endif
-/* PerspectiveNPointSolvingInterface.hpp */
+
+#endif // PERSPECTIVENPOINTSOLVING_INTERFACE_HPP
+
 /** @} */
