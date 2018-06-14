@@ -15,7 +15,8 @@ namespace dfn_ci
 {
     /**
      * DFN that estimates the geometric transformation between two cameras
-     * based on matching keypoints found in a pair of images that they captured
+     * based on pairs of 2D matching keypoints found in two images that the
+     * cameras captured
      */
     class CamerasTransformEstimationInterface : public DFNCommonInterface
     {
@@ -32,9 +33,12 @@ namespace dfn_ci
             virtual void fundamentalMatrixInput(const asn1SccMatrix3d& data);
             /**
              * Send value to input port "matches"
-             * @param matches: keypoint matches between images A and B. This
-             *        is a list of pairs of 2D coordinates: ((x_A1, y_A1),
-             *        (x_B1, y_B1)), ((x_A2, y_A2), (x_B2, y_B2)), ...
+             * @param matches: keypoint matches between the images A and B.
+             *        This is a list of pairs of 2D coordinates: ((x^A_1,
+             *        y^A_1), (x^B_1, y^B_1)), ..., ((x^A_n, y^A_n), (x^B_n,
+             *        y^B_n)). Each pair contains the coordinates of the same
+             *        keypoint (hopefully, the same physical point) in each
+             *        image.
              *        The geometric transformation between the two camera
              *        frames is deduced from these points, so the matches
              *        should be as reliable as possible.
