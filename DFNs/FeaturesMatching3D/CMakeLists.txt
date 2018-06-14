@@ -18,5 +18,5 @@ add_library(
 )
 target_link_libraries(
     icp_3d
-    feature_matching_3d cdff_types yaml-cpp flann_cpp cdff_helpers
+    feature_matching_3d cdff_types yaml-cpp cdff_helpers
 )

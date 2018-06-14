@@ -50,13 +50,15 @@ void HarrisDetector3D::configure()
 
 void HarrisDetector3D::process()
 {
-	// Read data from input port
+	// Handle empty pointcloud
 	if (GetNumberOfPoints(inPointcloud) == 0)
 	{
 		return;
 	}
+
+	// Read data from input port
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputPointCloud =
-		pointCloudToPclPointCloudConverter.Convert(&inPointcloud);
+		pointCloudToPclPointCloud.Convert(&inPointcloud);
 
 	// Process data
 	ValidateInputs(inputPointCloud);

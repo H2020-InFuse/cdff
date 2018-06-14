@@ -1,55 +1,29 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file HarrisDetector3D.cpp
- * @date 01/12/2017
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup DFNsTest
- *
- * Unit Test for the DFN HarrisDetector3D.
- *
- *
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include <catch.hpp>
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
-#include <MatToVisualPointFeatureVector3DConverter.hpp>
 
 using namespace dfn_ci;
 using namespace Converters;
-using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
 
-/* --------------------------------------------------------------------------
- *
- * Test Cases
- *
- * --------------------------------------------------------------------------
- */
-
-TEST_CASE( "Call to process (3D Harris detector)", "[process]" )
+TEST_CASE( "DFN processing step succeeds (3D Harris detector)", "[process]" )
 {
 	// Prepare input data (a sphere)
+	/*
 	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for (float alpha = 0; alpha < 2 * M_PI; alpha += 0.1)
 	{
-		for (float beta = 0; beta < 2*M_PI; beta += 0.1)
+		for (float beta = 0; beta < 2 * M_PI; beta += 0.1)
 		{
 			pcl::PointXYZ spherePoint;
 			spherePoint.x = std::cos(alpha) * std::cos(beta);
@@ -58,12 +32,15 @@ TEST_CASE( "Call to process (3D Harris detector)", "[process]" )
 			inputCloud->points.push_back(spherePoint);
 		}
 	}
+	*/
+
+	// Prepare simpler input data (nothing)
+	PointCloudConstPtr pc = new PointCloud;
 
 	// Instantiate DFN
 	HarrisDetector3D* harris = new HarrisDetector3D;
 
 	// Send input data to DFN
-	PointCloudConstPtr pc = new PointCloud;
 	harris->pointcloudInput(*pc);
 
 	// Run DFN
@@ -73,11 +50,11 @@ TEST_CASE( "Call to process (3D Harris detector)", "[process]" )
 	const VisualPointFeatureVector3D& output = harris->featuresOutput();
 
 	// Cleanup
-	delete(harris);
-	delete(pc);
+	delete harris;
+	delete pc;
 }
 
-TEST_CASE( "Call to configure (3D Harris detector)", "[configure]" )
+TEST_CASE( "DFN configuration succeeds (3D Harris detector)", "[configure]" )
 {
 	// Instantiate DFN
 	HarrisDetector3D* harris = new HarrisDetector3D;
@@ -87,7 +64,7 @@ TEST_CASE( "Call to configure (3D Harris detector)", "[configure]" )
 	harris->configure();
 
 	// Cleanup
-	delete(harris);
+	delete harris;
 }
 
 /** @} */

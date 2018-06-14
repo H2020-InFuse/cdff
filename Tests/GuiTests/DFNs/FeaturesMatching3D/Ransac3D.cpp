@@ -1,63 +1,36 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file Ransac3D.cpp
- * @date 17/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
+ * Test application for the DFN Ransac3D
+ */
+
+/**
  * @addtogroup DFNsTest
- * 
- * Testing application for the DFN Ransac3D.
- * 
- * 
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/core/core.hpp>
 #include <FeaturesMatching3D/Ransac3D.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
 #include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <EigenTransformToTransform3DConverter.cpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
-#include<pcl/io/ply_io.h>
+
+#include <pcl/io/ply_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
-#include <signal.h>
-#include <execinfo.h>
-#include <pcl/sample_consensus/sac_model_registration.h>
-#include <pcl/registration/sample_consensus_prerejective.h>
 #include <pcl/search/search.h>
-#include <pcl/sample_consensus/sac_model_plane.h>
-#include <pcl/sample_consensus/sac_model_sphere.h>
-#include <pcl/sample_consensus/ransac.h>
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/features/fpfh_omp.h>
 #include <pcl/filters/voxel_grid.h>
-#include <EigenTransformToTransform3DConverter.cpp>
-#include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.cpp>
+#include <signal.h>
+#include <execinfo.h>
 
 using namespace dfn_ci;
 using namespace Converters;
-using namespace Common;
 using namespace PoseWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace SupportTypes;
@@ -69,13 +42,8 @@ class Ransac3DTestInterface : public DFNTestInterface
 		~Ransac3DTestInterface();
 
 		static void SegmentationFaultHandler(int signal);
-	protected:
 
 	private:
-		Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures >* stubInputCache;
-		Mocks::VisualPointFeatureVector3DToPclPointCloudConverter* mockInputConverter;
-		Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>* stubOutputCache;
-		Mocks::EigenTransformToTransform3DConverter* mockOutputConverter;
 		Ransac3D* ransac;
 
 		typedef pcl::FPFHSignature33 FeatureT;
@@ -93,7 +61,6 @@ class Ransac3DTestInterface : public DFNTestInterface
 		void ComputeFeatures();
 		void PrepareInputs();
 
-		void SetupMocksAndStubs();
 		void SetupParameters();
 		void DisplayResult();
 
@@ -112,24 +79,20 @@ Ransac3DTestInterface::Ransac3DTestInterface(std::string dfnName, int buttonWidt
 	ComputeFeatures();
 	PrepareInputs();
 
-	ransac->sourceFeaturesVectorInput(inputSourceFeaturesVector);
-	ransac->sinkFeaturesVectorInput(inputSinkFeaturesVector);
+	ransac->sourceFeaturesInput(*inputSourceFeaturesVector);
+	ransac->sinkFeaturesInput(*inputSinkFeaturesVector);
 
 	outputWindowName = "Ransac 3D Result";
 	}
 
 Ransac3DTestInterface::~Ransac3DTestInterface()
 	{
-	delete(stubInputCache);
-	delete(mockInputConverter);
-	delete(stubOutputCache);
-	delete(mockOutputConverter);
 	delete(ransac);
 	delete(inputSourceFeaturesVector);
 	delete(inputSinkFeaturesVector);
 	}
 
-void Ransac3DTestInterface::SegmentationFaultHandler(int sig) 
+void Ransac3DTestInterface::SegmentationFaultHandler(int sig)
 	{
 	void *array[10];
 	size_t size;
@@ -173,36 +136,36 @@ void Ransac3DTestInterface::LoadInputClouds()
 		pclSourceCloud->points.push_back( point );
 		}
 
- 	pcl::VoxelGrid<pcl::PointXYZ> grid;
-  	const float LEAFT_SIZE = 0.005f;
-  	grid.setLeafSize (LEAFT_SIZE, LEAFT_SIZE, LEAFT_SIZE);
-  	grid.setInputCloud (pclSinkCloud);
-  	grid.filter (*pclSinkCloud);
-  	grid.setInputCloud (pclSourceCloud);
-  	grid.filter (*pclSourceCloud);
+	pcl::VoxelGrid<pcl::PointXYZ> grid;
+	const float LEAFT_SIZE = 0.005f;
+	grid.setLeafSize (LEAFT_SIZE, LEAFT_SIZE, LEAFT_SIZE);
+	grid.setInputCloud (pclSinkCloud);
+	grid.filter (*pclSinkCloud);
+	grid.setInputCloud (pclSourceCloud);
+	grid.filter (*pclSourceCloud);
 	}
 
 void Ransac3DTestInterface::ComputeFeatures()
 	{
 	pcl::PointCloud<pcl::Normal>::Ptr pclSourceCloudNormal = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
-	pcl::PointCloud<pcl::Normal>::Ptr pclSinkCloudNormal = boost::make_shared<pcl::PointCloud<pcl::Normal> >();	
+	pcl::PointCloud<pcl::Normal>::Ptr pclSinkCloudNormal = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
 	pcl::NormalEstimationOMP<pcl::PointXYZ,pcl::Normal> normalsEstimation;
-  	normalsEstimation.setRadiusSearch (0.01);
-  	normalsEstimation.setInputCloud (pclSinkCloud);
-  	normalsEstimation.compute (*pclSinkCloudNormal);
-  	normalsEstimation.setInputCloud (pclSourceCloud);
-  	normalsEstimation.compute (*pclSourceCloudNormal);
+	normalsEstimation.setRadiusSearch (0.01);
+	normalsEstimation.setInputCloud (pclSinkCloud);
+	normalsEstimation.compute (*pclSinkCloudNormal);
+	normalsEstimation.setInputCloud (pclSourceCloud);
+	normalsEstimation.compute (*pclSourceCloudNormal);
 
 	sourceFeaturesCloud = boost::make_shared<pcl::PointCloud<FeatureT> >();
-	sinkFeaturesCloud = boost::make_shared<pcl::PointCloud<FeatureT> >();	
-  	FeatureEstimationT featureEstimation;
-  	featureEstimation.setRadiusSearch (0.025);
-  	featureEstimation.setInputCloud (pclSinkCloud);
-  	featureEstimation.setInputNormals (pclSinkCloudNormal);
-  	featureEstimation.compute (*sinkFeaturesCloud);
-  	featureEstimation.setInputCloud (pclSourceCloud);
-  	featureEstimation.setInputNormals (pclSourceCloudNormal);
-  	featureEstimation.compute (*sourceFeaturesCloud);
+	sinkFeaturesCloud = boost::make_shared<pcl::PointCloud<FeatureT> >();
+	FeatureEstimationT featureEstimation;
+	featureEstimation.setRadiusSearch (0.025);
+	featureEstimation.setInputCloud (pclSinkCloud);
+	featureEstimation.setInputNormals (pclSinkCloudNormal);
+	featureEstimation.compute (*sinkFeaturesCloud);
+	featureEstimation.setInputCloud (pclSourceCloud);
+	featureEstimation.setInputNormals (pclSourceCloudNormal);
+	featureEstimation.compute (*sourceFeaturesCloud);
 	}
 
 void Ransac3DTestInterface::PrepareInputs()
@@ -235,17 +198,6 @@ void Ransac3DTestInterface::PrepareInputs()
 		}
 	}
 
-void Ransac3DTestInterface::SetupMocksAndStubs()
-	{
-	stubInputCache = new Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>();
-	mockInputConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
-	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
-
-	stubOutputCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
-	mockOutputConverter = new Mocks::EigenTransformToTransform3DConverter();
-	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubOutputCache, mockOutputConverter);
-	}
-
 void Ransac3DTestInterface::SetupParameters()
 	{
 	AddParameter("GeneralParameters", "SimilarityThreshold", 0.91, 1.00, 0.01);
@@ -258,12 +210,10 @@ void Ransac3DTestInterface::SetupParameters()
 
 void Ransac3DTestInterface::DisplayResult()
 	{
-	Transform3DConstPtr transform= ransac->transformOutput();
-	PrintInformation(transform);	
-	pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud = PrepareOutputCloud(transform);
+	const Transform3D& transform = ransac->transformOutput();
+	PrintInformation(&transform);
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud = PrepareOutputCloud(&transform);
 	VisualizeClouds(correspondenceCloud);
-
-	delete(transform);
 	}
 
 void Ransac3DTestInterface::PrintInformation(Transform3DConstPtr transform)
@@ -282,7 +232,7 @@ void Ransac3DTestInterface::PrintInformation(Transform3DConstPtr transform)
 pcl::PointCloud<pcl::PointXYZ>::ConstPtr Ransac3DTestInterface::PrepareOutputCloud(Transform3DConstPtr transform)
 	{
 	Eigen::Quaternionf eigenRotation( GetWOrientation(*transform), GetXOrientation(*transform), GetYOrientation(*transform), GetZOrientation(*transform));
-	Eigen::Translation<float, 3> eigenTranslation( GetXPosition(*transform), GetYPosition(*transform), GetZPosition(*transform));	
+	Eigen::Translation<float, 3> eigenTranslation( GetXPosition(*transform), GetYPosition(*transform), GetZPosition(*transform));
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr correspondenceCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(unsigned pointIndex = 0; pointIndex < pclSourceCloud->points.size(); pointIndex++)
@@ -303,19 +253,19 @@ pcl::PointCloud<pcl::PointXYZ>::ConstPtr Ransac3DTestInterface::PrepareOutputClo
 void Ransac3DTestInterface::VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud)
 	{
 	pcl::visualization::PCLVisualizer viewer (outputWindowName);
-    	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclSourceCloudColor(pclSourceCloud, 255, 255, 0);
-    	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclSinkCloudColor(pclSinkCloud, 255, 255, 255);
-    	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> correspondenceCloudColor(correspondenceCloud, 255, 0, 0);
-    	viewer.addPointCloud(pclSourceCloud,pclSourceCloudColor,"input_source");
-    	viewer.addPointCloud(pclSinkCloud,pclSinkCloudColor,"input_sink");
-    	viewer.addPointCloud(correspondenceCloud,correspondenceCloudColor,"correspondences");
+	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclSourceCloudColor(pclSourceCloud, 255, 255, 0);
+	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclSinkCloudColor(pclSinkCloud, 255, 255, 255);
+	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> correspondenceCloudColor(correspondenceCloud, 255, 0, 0);
+	viewer.addPointCloud(pclSourceCloud,pclSourceCloudColor,"input_source");
+	viewer.addPointCloud(pclSinkCloud,pclSinkCloudColor,"input_sink");
+	viewer.addPointCloud(correspondenceCloud,correspondenceCloudColor,"correspondences");
 
-    	while (!viewer.wasStopped ())
-    		{
-        	viewer.spinOnce();
-        	pcl_sleep (0.01);
-    		} 
-	}
+	while (!viewer.wasStopped ())
+		{
+		viewer.spinOnce();
+		pcl_sleep (0.01);
+		}
+}
 
 int main(int argc, char** argv)
 	{

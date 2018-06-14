@@ -36,32 +36,39 @@ namespace dfn_ci
             virtual void sinkCloudInput(const asn1SccPointcloud& data);
             /**
              * Send value to input port "transformGuess"
-             * @param transformGuess: this is the initial transform estimation of the source point
-             *        cloud relatively to the coordinate frame of the sink point cloud.
+             * @param transformGuess: initial pose estimate of the coordinate
+             *        frame of the source pointcloud relative to the coordinate
+             *        frame of the sink pointcloud
              */
             virtual void transformGuessInput(const asn1SccPose& data);
             /**
              * Send value to input port "useGuess"
-             * @param useGuess: this determines whether the transform guess should be used or not.
-             *        If it is not used and the implementation requires an estimation,
-             *        the identity transform will be used as an initial guess. If the guess
-             *        is used and the implementation does not require an estimation,
-             *        an error is thrown.
+             * @param useGuess: boolean flag indicating whether the initial
+             *        estimate of the geometric transformation between the
+             *        pointclouds should be used. If it is set to not be used,
+             *        and a particular implementation of this DFN requires an
+             *        initial estimate, that implementation shall use the
+             *        identity transformation as the estimate. If it is set to
+             *        be used, and a particular implementation of this DFN does
+             *        not require an initial estimate, that implementation must
+             *        throw an error.
              */
             virtual void useGuessInput(const bool& data);
 
             /**
              * Query value from output port "transform"
-             * @return transform: pose of the source point cloud relatively to the coordinate 
-             *         frame of the sink point cloud
+             * @return transform: pose of the coordinate frame of the source
+             *         pointcloud relative to the coordinate frame of the sink
+             *         pointcloud
              */
             virtual const asn1SccPose& transformOutput() const;
             /**
              * Query value from output port "success"
-             * @return success: boolean flag indicating successful computation of the geometric
-             *         transformation between the camera frames. Computation may fail if
-             *         the point clouds are not similar enough; in this case the
-             *         transform is meaningless.
+             * @return success: boolean flag indicating successful computation
+             *         of the geometric transformation between the pointcloud
+             *         frames. Computation may fail if the pointclouds are not
+             *         similar enough; in that case, the returned geometric
+             *         transformation is meaningless.
              */
             virtual bool successOutput() const;
 

@@ -1,100 +1,176 @@
+set(GRAPHICALTEST_GUI_SOURCES MainInterface.cpp ButtonsInterface.cpp ParametersInterface.cpp)
+
+set(GRAPHICALTEST_CDFF_LIBRARIES converters_opencv cdff_logger)
+set(GRAPHICALTEST_OPENCV_LIBRARIES opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
+
+## Graphical tests for the DFNs ------------------------------------------------
+
 add_executable(
     HarrisDetector2DGuiTest
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(HarrisDetector2DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     HarrisDetector2DGuiTest
-    cdff_logger harris_detector_2d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+    harris_detector_2d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
 
 add_executable(
     OrbDetectorDescriptorGuiTest
     DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(OrbDetectorDescriptorGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     OrbDetectorDescriptorGuiTest
-    cdff_logger orb_detector_descriptor converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+    orb_detector_descriptor
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
 
 add_executable(
     FlannMatcherGuiTest
     DFNs/FeaturesMatching2D/FlannMatcher.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(FlannMatcherGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     FlannMatcherGuiTest
-    cdff_logger flann_matcher converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+    flann_matcher
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
 
 add_executable(
     ImageUndistortionGuiTest
     DFNs/ImageFiltering/ImageUndistortion.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(ImageUndistortionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     ImageUndistortionGuiTest
-    cdff_logger image_undistortion converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+    image_undistortion
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
 
 add_executable(
     ImageUndistortionRectificationGuiTest
     DFNs/ImageFiltering/ImageUndistortionRectification.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(ImageUndistortionRectificationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     ImageUndistortionRectificationGuiTest
-    cdff_logger image_undistortion_rectification converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui
+    image_undistortion_rectification
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+)
+
+add_executable(
+    HarrisDetector3DGuiTest
+    DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(HarrisDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    HarrisDetector3DGuiTest
+    harris_detector_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
 )
 
 add_executable(
     Registration3DIcpGuiTest
     DFNs/Registration3D/Icp3D.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(Registration3DIcpGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     Registration3DIcpGuiTest
-    cdff_logger cdff_pcl_visualizer registration_icp_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree boost_system yaml-cpp ${VTK_LIBRARIES}
+    registration_icp_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
     Registration3DIcpCCGuiTest
     DFNs/Registration3D/IcpCC.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(Registration3DIcpCCGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     Registration3DIcpCCGuiTest
-    cdff_logger cdff_pcl_visualizer registration_icp_cc converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree boost_system yaml-cpp ${VTK_LIBRARIES}
+    registration_icp_cc
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
+
+add_executable(
+    ShotDescriptor3DGuiTest
+    DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(ShotDescriptor3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    ShotDescriptor3DGuiTest
+    shot_descriptor_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_keypoints
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
+add_executable(
+    Icp3DGuiTest
+    DFNs/FeaturesMatching3D/Icp3D.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(Icp3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    Icp3DGuiTest
+    icp_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
+add_executable(
+    Ransac3DGuiTest
+    DFNs/FeaturesMatching3D/Ransac3D.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(Ransac3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    Ransac3DGuiTest
+    ransac_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
+## Graphical tests for the DFPCs -----------------------------------------------
 
 add_executable(
     DenseRegistrationFromStereoGuiTest
@@ -103,8 +179,25 @@ add_executable(
 )
 set_target_properties(DenseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	DenseRegistrationFromStereoGuiTest
-	dense_registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
+    DenseRegistrationFromStereoGuiTest
+    dense_registration_from_stereo
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
+add_executable(
+    SparseRegistrationFromStereoGuiTest
+    DFPCs/Reconstruction3D/SparseRegistrationFromStereo.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
+)
+set_target_properties(SparseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    SparseRegistrationFromStereoGuiTest
+    sparse_registration_from_stereo
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 #[======================================================================[
@@ -112,141 +205,95 @@ target_link_libraries(
 add_executable(
     DisparityMappingGuiTest
     DFNs/StereoReconstruction/DisparityMapping.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(DisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	DisparityMappingGuiTest
-	disparity_mapping mock cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui cdff_pcl_visualizer ${VTK_LIBRARIES}
+    DisparityMappingGuiTest
+    disparity_mapping
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
 )
 
 add_executable(
     HirschmullerDisparityMappingGuiTest
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(HirschmullerDisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	HirschmullerDisparityMappingGuiTest
-	hirschmuller_disparity_mapping mock cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui cdff_pcl_visualizer ${VTK_LIBRARIES}
+    HirschmullerDisparityMappingGuiTest
+    hirschmuller_disparity_mapping
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
 )
 
 add_executable(
     ScanlineOptimizationGuiTest
     DFNs/StereoReconstruction/ScanlineOptimization.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(ScanlineOptimizationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	ScanlineOptimizationGuiTest
-	scanline_optimization mock cdff_logger shot_descriptor_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui cdff_pcl_visualizer pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
-)
-
-add_executable(
-    HarrisDetector3DGuiTest
-    DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
-    DFNs/DFNTestInterface.cpp
-)
-set_target_properties(HarrisDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-	HarrisDetector3DGuiTest
-	 harris_detector_3d mock cdff_logger harris_detector_2d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui cdff_pcl_visualizer ${VTK_LIBRARIES}
-)
-
-add_executable(
-    ShotDescriptor3DGuiTest
-    DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
-    DFNs/DFNTestInterface.cpp
-)
-set_target_properties(ShotDescriptor3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-	ShotDescriptor3DGuiTest
-	shot_descriptor_3d mock cdff_logger shot_descriptor_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
-)
-
-add_executable(
-    Ransac3DGuiTest
-    DFNs/FeaturesMatching3D/Ransac3D.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
-    DFNs/DFNTestInterface.cpp
-)
-set_target_properties(Ransac3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-	Ransac3DGuiTest
-	ransac_3d mock cdff_logger harris_detector_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
-)
-
-add_executable(
-    Icp3DGuiTest
-    DFNs/FeaturesMatching3D/Icp3D.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
-    DFNs/DFNTestInterface.cpp
-)
-set_target_properties(Icp3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-	Icp3DGuiTest
-	icp_3d mock cdff_logger icp_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
+    ScanlineOptimizationGuiTest
+    scanline_optimization shot_descriptor_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
     TriangulationGuiTest
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(TriangulationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	TriangulationGuiTest
-	triangulation mock cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
+    TriangulationGuiTest
+    triangulation
+    ${GRAPHICALTEST_CDFF_LIBRARIES} mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
     StereoReconstruction
     DFNsIntegration/StereoReconstruction/StereoReconstruction.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNsIntegration/DFNsIntegrationTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(StereoReconstruction PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	StereoReconstruction
-	image_undistortion orb_detector_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition mock cdff_logger icp_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
+    StereoReconstruction
+    image_undistortion orb_detector_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES} mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
     StereoReconstruction2
     DFNsIntegration/StereoReconstruction/StereoReconstruction2.cpp
-    ParametersInterface.cpp
-    ButtonsInterface.cpp
-    MainInterface.cpp
     DFNsIntegration/DFNsIntegrationTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(StereoReconstruction2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	StereoReconstruction2
-	image_undistortion harris_detector_2d orb_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition mock cdff_logger icp_3d converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo boost_system yaml-cpp ${VTK_LIBRARIES}
+    StereoReconstruction2
+    image_undistortion harris_detector_2d orb_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES} mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -255,8 +302,11 @@ add_executable(
 )
 set_target_properties(FeaturesMatching3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	FeaturesMatching3DGuiTest
-	dfpc_implementation_features_matching_3d mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator  ${VTK_LIBRARIES}
+    FeaturesMatching3DGuiTest
+    dfpc_implementation_features_matching_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -266,8 +316,11 @@ add_executable(
 )
 set_target_properties(ReconstructionFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	ReconstructionFromMotionGuiTest
-	reconstruction_from_motion mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
+    ReconstructionFromMotionGuiTest
+    reconstruction_from_motion
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -277,8 +330,11 @@ add_executable(
 )
 set_target_properties(ReconstructionFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	ReconstructionFromStereoGuiTest
-	reconstruction_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
+    ReconstructionFromStereoGuiTest
+    reconstruction_from_stereo
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -288,8 +344,11 @@ add_executable(
 )
 set_target_properties(RegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
-	RegistrationFromStereoGuiTest
-	registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator ${VTK_LIBRARIES}
+    RegistrationFromStereoGuiTest
+    registration_from_stereo
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 ]======================================================================]

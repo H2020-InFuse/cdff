@@ -18,6 +18,16 @@ target_link_libraries(
 	cdff_helpers cdff_logger cdff_types converters_opencv registration_3d registration_icp_cc opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
 
+add_executable(
+    harris_icp_cc
+    DFNsIntegration/FeaturesRegistration/HarrisIcpCC.cpp
+    DFNsIntegration/FeaturesRegistration/CorrectLocalizationTester.cpp
+)
+target_link_libraries(
+	harris_icp_cc
+	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_3d registration_3d registration_icp_cc opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+)
+
 #[======================================================================[
 #DFNs
 add_executable(

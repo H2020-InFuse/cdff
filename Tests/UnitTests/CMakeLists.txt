@@ -22,41 +22,43 @@ set(UNITTEST_SOURCES UnitTests.cpp
     Common/Helpers/ParametersHelper.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
-#[=[DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp]=]
+    DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
     DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     DFNs/FeaturesMatching2D/FlannMatcher.cpp
-#[=[DFNs/FeaturesMatching3D/Icp3D.cpp]=]
-#[=[DFNs/FeaturesMatching3D/Ransac3D.cpp]=]
+    DFNs/FeaturesMatching3D/Icp3D.cpp
+    DFNs/FeaturesMatching3D/Ransac3D.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/Registration3D/Icp3D.cpp
     DFNs/Registration3D/IcpCC.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
-#    DFNs/BundleAdjustment/CeresAdjustment.cpp
-#[=[DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp]=]
+#   DFNs/BundleAdjustment/CeresAdjustment.cpp
+    DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
 #[=[DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp]=]
+#[=[DFNs/Registration3D/Icp3D.cpp]=]
+    DFNs/Registration3D/IcpCC.cpp
 #[=[DFNs/StereoReconstruction/DisparityMapping.cpp]=]
 #[=[DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp]=]
-#[=[DFPCs/DfpcConfigurator.cpp
-    DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
-    DFPCs/Reconstruction3D/ObservedScene.cpp]=]
+#[=[DFPCs/DfpcConfigurator.cpp]=]
+#[=[DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp]=]
+#[=[DFPCs/Reconstruction3D/ObservedScene.cpp]=]
 )
 
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
 set(UNITTEST_LIBRARIES Catch
-    cc_core_lib
     boost_system
+    cc_core_lib
     cdff_helpers
     cdff_logger
     cdff_types
     converters_opencv
-#[=[dfpc_configurator
-    dfpc_implementation_features_matching_3d]=]
+#[=[dfpc_configurator]=]
+#[=[dfpc_implementation_features_matching_3d]=]
 #[=[disparity_mapping]=]
     essential_matrix_decomposition
     flann_matcher
@@ -64,14 +66,12 @@ set(UNITTEST_LIBRARIES Catch
     harris_detector_2d
     harris_detector_3d
 #[=[hirschmuller_disparity_mapping]=]
-#[=[icp_3d]=]
+    icp_3d
     image_undistortion
     svd_decomposition
-#    ceres_adjustment
-#[=[iterative_pnp_solver]=]
+#   ceres_adjustment
+    iterative_pnp_solver
     kalman_predictor
-    registration_icp_3d
-    registration_icp_cc
 #[=[mock]=]
     opencv_core
     opencv_highgui
@@ -100,13 +100,15 @@ set(UNITTEST_LIBRARIES Catch
     pcl_surface
     pcl_tracking
     pcl_visualization
-#    ceres
-#    glog
-#    pthread
-#    gomp
-#[=[ransac_3d]=]
+#   ceres
+#   glog
+#   pthread
+#   gomp
+    ransac_3d
 #[=[reconstruction_from_stereo]=]
-#[=[shot_descriptor_3d]=]
+#[=[registration_icp_3d]=]
+    registration_icp_cc
+    shot_descriptor_3d
     synthetic_generators
 #[=[triangulation]=]
 )

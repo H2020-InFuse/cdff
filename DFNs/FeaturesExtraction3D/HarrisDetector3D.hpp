@@ -96,7 +96,7 @@ namespace dfn_ci
 			HarryOptionsSet parameters;
 			static const HarryOptionsSet DEFAULT_PARAMETERS;
 
-			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloudConverter;
+			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 
 			pcl::PointIndicesConstPtr ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, const pcl::PointIndicesConstPtr indicesList);

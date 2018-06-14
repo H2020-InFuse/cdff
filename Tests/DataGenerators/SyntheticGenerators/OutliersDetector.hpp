@@ -109,6 +109,7 @@ namespace DataGenerators {
 		void PrepareCloudToVisualize();
 		void DrawOutliers();
 
+		void SaveOutliersAsPointCloud();
 		void SaveOutliers();
 		void LoadOutliers();
 		void ComputeCloudCenter(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, pcl::PointXYZ& center);

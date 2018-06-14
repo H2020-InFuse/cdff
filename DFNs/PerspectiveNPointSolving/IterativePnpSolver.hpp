@@ -1,104 +1,72 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file IterativePnpSolver.hpp
- * @date 20/02/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup DFNs
- * 
- * @brief This DFN executes the iterative Perspective N Point algorithm implemented in openCV.
- *  
- *
- * This DFN implementation uses the following parameters:
- * @param cameraMatrix, the intrinsic parameter matrix of the camera that took the image, in terms of focal length and principle point coordinates.
- *
  * @{
  */
 
-#ifndef ITERATIVE_PNP_SOLVER_HPP
-#define ITERATIVE_PNP_SOLVER_HPP
+#ifndef ITERATIVEPNPSOLVER_HPP
+#define ITERATIVEPNPSOLVER_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <PerspectiveNPointSolving/PerspectiveNPointSolvingInterface.hpp>
+#include "PerspectiveNPointSolvingInterface.hpp"
+
 #include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <yaml-cpp/yaml.h>
-#include "opencv2/features2d/features2d.hpp"
+#include <VisualPointFeatureVector2DToMatConverter.hpp>
+#include <MatToTransform3DConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
+#include <opencv2/core/core.hpp>
 
-namespace dfn_ci {
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class IterativePnpSolver : public PerspectiveNPointSolvingInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+namespace dfn_ci
+{
+	/**
+	 * Iterative Perspective-n-Point algorithm (provided by OpenCV).
+	 *
+	 * @param cameraMatrix
+	 *        intrinsic camera parameters (focal length and principal points)
 	 */
-        public:
-            IterativePnpSolver();
-            ~IterativePnpSolver();
-            void process();
-            void configure();
+	class IterativePnpSolver : public PerspectiveNPointSolvingInterface
+	{
+		public:
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
+			IterativePnpSolver();
+			virtual ~IterativePnpSolver();
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
-	private:
+			virtual void configure();
+			virtual void process();
 
-		struct CameraMatrix
+		private:
+
+			struct CameraMatrix
 			{
-			float focalLengthX;
-			float focalLengthY;
-			float principlePointX;
-			float principlePointY;
+				float focalLengthX;
+				float focalLengthY;
+				float principalPointX;
+				float principalPointY;
 			};
 
-		struct IterativePnpOptionsSet
+			struct IterativePnpOptionsSet
 			{
-			CameraMatrix cameraMatrix;
+				CameraMatrix cameraMatrix;
 			};
 
-		Helpers::ParametersListHelper parametersHelper;
-		IterativePnpOptionsSet parameters;
-		static const IterativePnpOptionsSet DEFAULT_PARAMETERS;
+			Helpers::ParametersListHelper parametersHelper;
+			IterativePnpOptionsSet parameters;
+			static const IterativePnpOptionsSet DEFAULT_PARAMETERS;
 
-		cv::Mat ComputePose(cv::Mat pointCloud, cv::Mat featuresMatrix, bool& success);
-		cv::Mat Convert(PointCloudWrapper::PointCloudConstPtr pointCloud);
+			cv::Mat Convert(PointCloudWrapper::PointCloudConstPtr points);
+			Converters::VisualPointFeatureVector2DToMatConverter visualPointFeatureVector2DToMat;
+			Converters::MatToPose3DConverter matToPose3D;
 
-		void ValidateParameters();
-		void ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix);
-    };
+			cv::Mat ComputePose(cv::Mat points, cv::Mat projections, bool& success);
+
+			void ValidateParameters();
+			void ValidateInputs(cv::Mat points, cv::Mat projections);
+	};
 }
-#endif
-/* IterativePnpSolver.hpp */
+
+#endif // ITERATIVEPNPSOLVER_HPP
+
 /** @} */
