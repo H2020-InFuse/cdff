@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file SvdDecomposition.cpp
+ * @file CeresAdjustment.cpp
  * @date 06/06/2018
  * @author Alessandro Bianco
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNsTest
  *
- * Unit Test for the DFN implementation SvdDecomposition.
+ * Unit Test for the DFN implementation CeresAdjustment.
  *
  *
  * @{
@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <BundleAdjustment/SvdDecomposition.hpp>
+#include <BundleAdjustment/CeresAdjustment.hpp>
 #include <MatToFrameConverter.hpp>
 #include <Eigen/Dense>
 
@@ -43,7 +43,7 @@ using namespace BaseTypesWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process (SVD Decomposition) and fail", "[failprocess]" )
+TEST_CASE( "Call to process (Ceres Adjustment) and fail", "[failprocess]" )
 {
 	//Initialize Inputs
 	CorrespondenceMaps2DSequencePtr correspondenceMapsSequence = NewCorrespondenceMaps2DSequence(); 
@@ -54,7 +54,7 @@ TEST_CASE( "Call to process (SVD Decomposition) and fail", "[failprocess]" )
 		}
 
 	// Instantiate DFN
-	SvdDecomposition* svd = new SvdDecomposition;
+	CeresAdjustment* svd = new CeresAdjustment;
 
 	// Send input data to DFN
 	svd->correspondenceMapsSequenceInput(*correspondenceMapsSequence);
@@ -72,13 +72,13 @@ TEST_CASE( "Call to process (SVD Decomposition) and fail", "[failprocess]" )
 	delete(svd);
 }
 
-TEST_CASE( "Call to configure (SVD Decomposition)", "[configure]" )
+TEST_CASE( "Call to configure (Ceres Adjustment)", "[configure]" )
 {
 	// Instantiate DFN
-	SvdDecomposition* svd = new SvdDecomposition;
+	CeresAdjustment* svd = new CeresAdjustment;
 
 	// Setup DFN
-	svd->setConfigurationFile("../tests/ConfigurationFiles/DFNs/BundleAdjustment/SvdDecomposition_Conf1.yaml");
+	svd->setConfigurationFile("../tests/ConfigurationFiles/DFNs/BundleAdjustment/CeresAdjustment_Conf1.yaml");
 	svd->configure();
 
 	// Cleanup
@@ -93,7 +93,7 @@ TEST_CASE( "Call to configure (SVD Decomposition)", "[configure]" )
 #define CLOSE_HALF_ORIENTATION(pose, x, y, z, w) ( CLOSE(GetXOrientation(pose), x) && CLOSE(GetYOrientation(pose), y) && CLOSE(GetZOrientation(pose), z) && CLOSE(GetWOrientation(pose), w))
 #define CLOSE_ORIENTATION(pose, x, y, z, w) ( CLOSE_HALF_ORIENTATION(pose, x, y, z, w) || CLOSE_HALF_ORIENTATION(pose, -x, -y, -z, -w) )
 
-TEST_CASE( "Call to process (SVD Decomposition) Translation", "[processOnTranslation]" )
+TEST_CASE( "Call to process (Ceres Adjustment) Translation", "[processOnTranslation]" )
 {
 	//Initialize Data
 	int numberOfImages = 4;
@@ -148,10 +148,10 @@ TEST_CASE( "Call to process (SVD Decomposition) Translation", "[processOnTransla
 		}
 
 	// Instantiate DFN
-	SvdDecomposition* svd = new SvdDecomposition;
+	CeresAdjustment* svd = new CeresAdjustment;
 
 	// Setup DFN
-	svd->setConfigurationFile("../tests/ConfigurationFiles/DFNs/BundleAdjustment/SvdDecomposition_Conf1.yaml");
+	svd->setConfigurationFile("../tests/ConfigurationFiles/DFNs/BundleAdjustment/CeresAdjustment_Conf1.yaml");
 	svd->configure();
 
 	// Send input data to DFN
@@ -188,7 +188,7 @@ TEST_CASE( "Call to process (SVD Decomposition) Translation", "[processOnTransla
 	delete(svd);
 }
 
-TEST_CASE( "Call to process (SVD Decomposition) RotoTranslation", "[processOnRotoTranslation]" )
+TEST_CASE( "Call to process (Ceres Adjustment) RotoTranslation", "[processOnRotoTranslation]" )
 {	
 	return; // This test does not pass, Ceres fails to converge
 	//Initialize Data
@@ -254,10 +254,10 @@ TEST_CASE( "Call to process (SVD Decomposition) RotoTranslation", "[processOnRot
 		}
 
 	// Instantiate DFN
-	SvdDecomposition* svd = new SvdDecomposition;
+	CeresAdjustment* svd = new CeresAdjustment;
 
 	// Setup DFN
-	svd->setConfigurationFile("../tests/ConfigurationFiles/DFNs/BundleAdjustment/SvdDecomposition_Conf2.yaml");
+	svd->setConfigurationFile("../tests/ConfigurationFiles/DFNs/BundleAdjustment/CeresAdjustment_Conf2.yaml");
 	svd->configure();
 
 	// Send input data to DFN
@@ -295,7 +295,7 @@ TEST_CASE( "Call to process (SVD Decomposition) RotoTranslation", "[processOnRot
 }
 
 
-TEST_CASE( "Call to process (SVD Decomposition) Rotation", "[processOnRotation]" )
+TEST_CASE( "Call to process (Ceres Adjustment) Rotation", "[processOnRotation]" )
 {	
 	return; // This test does not pass, Ceres fails to converge
 	//Initialize Data
@@ -362,10 +362,10 @@ TEST_CASE( "Call to process (SVD Decomposition) Rotation", "[processOnRotation]"
 		}
 
 	// Instantiate DFN
-	SvdDecomposition* svd = new SvdDecomposition;
+	CeresAdjustment* svd = new CeresAdjustment;
 
 	// Setup DFN
-	svd->setConfigurationFile("../tests/ConfigurationFiles/DFNs/BundleAdjustment/SvdDecomposition_Conf1.yaml");
+	svd->setConfigurationFile("../tests/ConfigurationFiles/DFNs/BundleAdjustment/CeresAdjustment_Conf1.yaml");
 	svd->configure();
 
 	// Send input data to DFN
@@ -403,7 +403,7 @@ TEST_CASE( "Call to process (SVD Decomposition) Rotation", "[processOnRotation]"
 }
 
 
-TEST_CASE( "Call to process (SVD Decomposition) 90 Degree Rotation", "[processOn90DegreeRotation]" )
+TEST_CASE( "Call to process (Ceres Adjustment) 90 Degree Rotation", "[processOn90DegreeRotation]" )
 {
 	//Initialize Data
 	int numberOfImages = 4;
@@ -458,10 +458,10 @@ TEST_CASE( "Call to process (SVD Decomposition) 90 Degree Rotation", "[processOn
 		}
 
 	// Instantiate DFN
-	SvdDecomposition* svd = new SvdDecomposition;
+	CeresAdjustment* svd = new CeresAdjustment;
 
 	// Setup DFN
-	svd->setConfigurationFile("../tests/ConfigurationFiles/DFNs/BundleAdjustment/SvdDecomposition_Conf2.yaml");
+	svd->setConfigurationFile("../tests/ConfigurationFiles/DFNs/BundleAdjustment/CeresAdjustment_Conf2.yaml");
 	svd->configure();
 
 	// Send input data to DFN

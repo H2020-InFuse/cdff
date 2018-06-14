@@ -35,6 +35,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/Registration3D/Icp3D.cpp
     DFNs/Registration3D/IcpCC.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
+#    DFNs/BundleAdjustment/CeresAdjustment.cpp
 #[=[DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp]=]
 #[=[DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp]=]
 #[=[DFNs/StereoReconstruction/DisparityMapping.cpp]=]
@@ -66,6 +67,7 @@ set(UNITTEST_LIBRARIES Catch
 #[=[icp_3d]=]
     image_undistortion
     svd_decomposition
+    ceres_adjustment
 #[=[iterative_pnp_solver]=]
     kalman_predictor
     registration_icp_3d
@@ -98,6 +100,10 @@ set(UNITTEST_LIBRARIES Catch
     pcl_surface
     pcl_tracking
     pcl_visualization
+#    ceres
+#    glog
+#    pthread
+#    gomp
 #[=[ransac_3d]=]
 #[=[reconstruction_from_stereo]=]
 #[=[shot_descriptor_3d]=]
