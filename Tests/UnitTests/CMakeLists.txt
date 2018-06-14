@@ -67,7 +67,7 @@ set(UNITTEST_LIBRARIES Catch
 #[=[icp_3d]=]
     image_undistortion
     svd_decomposition
-    ceres_adjustment
+#    ceres_adjustment
 #[=[iterative_pnp_solver]=]
     kalman_predictor
     registration_icp_3d
