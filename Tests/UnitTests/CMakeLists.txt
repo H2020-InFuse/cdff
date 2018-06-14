@@ -33,7 +33,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
-#[=[DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp]=]
+    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
 #[=[DFNs/Registration3D/Icp3D.cpp]=]
     DFNs/Registration3D/IcpCC.cpp
 #[=[DFNs/StereoReconstruction/DisparityMapping.cpp]=]
@@ -100,7 +100,7 @@ set(UNITTEST_LIBRARIES Catch
     registration_icp_cc
     shot_descriptor_3d
     synthetic_generators
-#[=[triangulation]=]
+    triangulation
 )
 
 # Make the Catch executable that runs the unit tests

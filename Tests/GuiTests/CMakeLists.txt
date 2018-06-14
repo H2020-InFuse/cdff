@@ -170,6 +170,22 @@ target_link_libraries(
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
+add_executable(
+    TriangulationGuiTest
+    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(TriangulationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    TriangulationGuiTest
+    triangulation
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_visualization
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
 ## Graphical tests for the DFPCs -----------------------------------------------
 
 add_executable(
@@ -243,22 +259,6 @@ target_link_libraries(
     ScanlineOptimizationGuiTest
     scanline_optimization shot_descriptor_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer mock
-    ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
-    boost_system yaml-cpp ${VTK_LIBRARIES}
-)
-
-add_executable(
-    TriangulationGuiTest
-    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
-    DFNs/DFNTestInterface.cpp
-    ${GRAPHICALTEST_GUI_SOURCES}
-)
-set_target_properties(TriangulationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-    TriangulationGuiTest
-    triangulation
-    ${GRAPHICALTEST_CDFF_LIBRARIES} mock
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
     boost_system yaml-cpp ${VTK_LIBRARIES}
