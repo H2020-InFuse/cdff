@@ -1,17 +1,19 @@
 name: StereoReconstruction
+doc: DFN that turns a pair of stereo images into a reconstructed 3D scene
+     (in the form of a 3D pointcloud)
 input_ports:
-    - name: leftImage
-      type: Frame
-      doc: The left image taken by a stereo camera.
-    - name: rightImage
-      type: Frame
-      doc: The right image taken by a stereo camera.
+    - name: left
+      type: asn1SccFrame
+      doc: left image captured by a stereo camera
+    - name: right
+      type: asn1SccFrame
+      doc: right image captured by a stereo camera
 output_ports:
-    - name: pointCloud
-      type: PointCloud
-      doc: This is the 3d point cloud representing the scene in front of the stereo camera. The coordinate system is aligned with the position of the left camera.
+    - name: pointcloud
+      type: asn1SccPointcloud
+      doc: reconstructed 3D pointcloud, in the coordinate frame of the left
+           camera
 implementations:
     - DisparityMapping
     - HirschmullerDisparityMapping
     - ScanlineOptimization
-

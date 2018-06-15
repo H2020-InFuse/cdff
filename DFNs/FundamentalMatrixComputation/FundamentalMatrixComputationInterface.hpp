@@ -13,8 +13,8 @@
 namespace dfn_ci
 {
     /**
-     * DFN that estimates the fundamental matrix of a camera pair
-     * from a set of 2D matches (keypoint pairs)
+     * DFN that estimates the fundamental matrix of a camera pair based on pairs
+     * of 2D matching keypoints found in two images that the cameras captured
      */
     class FundamentalMatrixComputationInterface : public DFNCommonInterface
     {
@@ -25,12 +25,12 @@ namespace dfn_ci
 
             /**
              * Send value to input port "matches"
-             * @param matches: keypoint pairs corresponding to the same point
-             *        found in two different images. This is a list of pairs of
-             *        2D coordinates: ((x1, y1), (x2, y2)), ... Each pair
-             *        references the same physical point: (x1, y1) is its
-             *        position in the first image and (x2, y2) is its position
-             *        in the second image.
+             * @param matches: keypoint matches between two images A and B.
+             *        This is a list of pairs of 2D coordinates: ((x^A_1,
+             *        y^A_1), (x^B_1, y^B_1)), ..., ((x^A_n, y^A_n), (x^B_n,
+             *        y^B_n)). Each pair contains the coordinates of the same
+             *        keypoint (hopefully, the same physical point) in each
+             *        image.
              */
             virtual void matchesInput(const asn1SccCorrespondenceMap2D& data);
 

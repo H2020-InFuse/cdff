@@ -1,186 +1,162 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file ScanlineOptimization.hpp
- * @date 15/03/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  This DFN implementation uses the scanline optimization algorithm for the reconstruction of 3D point clouds from images taken by a stereo camera.
- *  
- *
  * @{
  */
 
-/*!
- * @addtogroup DFNs
- * 
- *  This DFN implementation uses the Adaptive Cost 2-pass Scanline Optimization disparity mapping algorithm (by Tombari) for the reconstruction of 3D point clouds from images taken by a stereo camera.
- *  
- *  This DFN implementation executes the following tasks: conversion of the input images to pcl representation, application of the Tombari disparity algorithm for the computation of a disparity map,
- *  application of reprojection algorithm for the reconstruction of a point cloud from the disparity Map, and reduction of the density of the output point cloud by position sampling.
- *
- *  This implementation requires the following parameters:
- *  @param costAggregationRadius
- *  @param spatialBandwidth
- *  @param colorBandwidth
- *  @param weakSmoothnessPenalty
- *  @param strongSmoothnessPenalty
- *  @param matchingOptionsSet.numberOfDisparities, this is the number of disparity intervals that will be detected.
- *  @param matchingOptionsSet.horizontalOffset
- *  @param matchingOptionsSet.ratioFilter
- *  @param matchingOptionsSet.peakFilter
- *  @param matchingOptionsSet.usePreprocessing
- *  @param matchingOptionsSet.useLeftRightConsistencyCheck
- *  @param matchingOptionsSet.leftRightConsistencyThreshold
- *  @param pointCloudSamplingDensity, this defines the ratio between sampled point cloud and full point cloud, it has to be a number between 0 and 1. The sampled point cloud is constructed by taking the 
- *					points at positions multiple of n where n is 1/pointCloudSamplingDensity.
- *  @param stereoCameraParameters, the camera parameter represented as left camera focal length (LeftFocalLength), Left Camera principle point coordinates (LeftPrinciplePointX and LeftPrinciplePointY),
- *					and distance between the two camera (Baseline).
- *  @param reconstructionSpace, the limits on the reconstructed 3d points coordinates as LimitX, LimitY and LimitZ. A point (x,y,z) is accepted in the output cloud if -LimitX<=x<=LimitX, -LimitY<=y<=LimitY
- *					and 0<z<=LimitZ.
- *
- *  @references, the algorithm is inspired by the paper: [1] L. Wang et al., "High Quality Real-time Stereo using Adaptive Cost Aggregation and Dynamic Programming". 
- *
- * @{
- */
+#ifndef SCANLINEOPTIMIZATION_HPP
+#define SCANLINEOPTIMIZATION_HPP
 
-#ifndef SCANLINE_OPTIMIZATION_HPP
-#define SCANLINE_OPTIMIZATION_HPP
+#include "StereoReconstructionInterface.hpp"
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <StereoReconstruction/StereoReconstructionInterface.hpp>
-#include <Pose.hpp>
 #include <PointCloud.hpp>
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <opencv2/calib3d/calib3d.hpp>
-#include <stdlib.h>
-#include <string>
-#include <pcl/keypoints/harris_3d.h>
-#include <yaml-cpp/yaml.h>
-#include <SupportTypes.hpp>
+#include <Frame.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
-namespace dfn_ci {
+#include <opencv2/core/core.hpp>
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
 
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class ScanlineOptimization : public StereoReconstructionInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+namespace dfn_ci
+{
+	/**
+	 * Scene reconstruction (as a 3D pointcloud) from 2D stereo images, using
+	 * the Adaptive-Cost 2-Pass Scanline Optimization disparity mapping
+	 * algorithm (by Tombari).
+	 *
+	 * Processing steps: (i) conversion of the images to PCL representation,
+	 * (ii) computation of a disparity map using Tombari's algorithm, (iii)
+	 * scene reconstruction based on the disparity map using a reprojection
+	 * algorithm, (iv) downsampling of the generated pointcloud.
+	 *
+	 * @param costAggregationRadius
+	 * @param spatialBandwidth
+	 * @param colorBandwidth
+	 * @param weakSmoothnessPenalty
+	 * @param strongSmoothnessPenalty
+	 *
+	 * @param matchingOptionsSet.numberOfDisparities
+	 *        number of detected disparity intervals
+	 * @param matchingOptionsSet.horizontalOffset
+	 * @param matchingOptionsSet.ratioFilter
+	 * @param matchingOptionsSet.peakFilter
+	 * @param matchingOptionsSet.usePreprocessing
+	 * @param matchingOptionsSet.useLeftRightConsistencyCheck
+	 * @param matchingOptionsSet.leftRightConsistencyThreshold
+	 *
+	 * @param pointCloudSamplingDensity
+	 *        downsampling ratio: a number between 0 and 1 that describes how
+	 *        much downsampling of the generated pointcloud is desired. The
+	 *        pointcloud is subsampled at positions that are multiples of n,
+	 *        where n = 1/pointCloudSamplingDensity.
+	 *
+	 * @param stereoCameraParameters
+	 *        camera parameters in the form of the focal length and principal
+	 *        point of the left camera and the distance between the two cameras:
+	 *        the parameters to use to provide this information are called
+	 *        LeftFocalLength, LeftPrinciplePointX, LeftPrinciplePointY, and
+	 *        Baseline, respectively
+	 *
+	 * @param reconstructionSpace
+	 *        a bounding box for the reconstructed scene, provided via
+	 *        parameters called LimitX, LimitY, LimitZ. A reconstructed point
+	 *        of coordinates (x,y,z) is accepted into the pointcloud if
+	 *        -LimitX <= x <= LimitX, -LimitY <= y <= LimitY, 0 < z <= LimitZ.
+	 *
+	 * @reference The algorithm is adapted from Liang Wang, Miao Liao, Minglun
+	 *            Gong, Ruigang Yang, and David Nister (2006), "High Quality
+	 *            Real-Time Stereo using Adaptive Cost Aggregation and Dynamic
+	 *            Programming", Third IEEE International Symposium on 3D Data
+	 *            Processing, Visualization, and Transmission, 798-805.
 	 */
-        public:
-        	ScanlineOptimization();
-        	~ScanlineOptimization();
-        	void process();
-        	void configure();
+	class ScanlineOptimization : public StereoReconstructionInterface
+	{
+		public:
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
+			ScanlineOptimization();
+			virtual ~ScanlineOptimization();
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
-	private:
-		static const float EPSILON;
+			virtual void configure();
+			virtual void process();
 
-		typedef pcl::PointCloud<pcl::RGB> PclImage;
-		typedef pcl::PointCloud<pcl::RGB>::Ptr PclImagePtr;
-		typedef pcl::PointCloud<pcl::RGB>::ConstPtr PclImageConstPtr;
+		private:
 
-		typedef pcl::PointCloud<pcl::PointXYZ> PclPointCloud;
-		typedef pcl::PointCloud<pcl::PointXYZ>::Ptr PclPointCloudPtr;
-		typedef pcl::PointCloud<pcl::PointXYZ>::ConstPtr PclPointCloudConstPtr;
+			static const float EPSILON;
 
-		struct ReconstructionSpace
+			typedef pcl::PointCloud<pcl::RGB> PclImage;
+			typedef pcl::PointCloud<pcl::RGB>::Ptr PclImagePtr;
+			typedef pcl::PointCloud<pcl::RGB>::ConstPtr PclImageConstPtr;
+
+			typedef pcl::PointCloud<pcl::PointXYZ> PclPointCloud;
+			typedef pcl::PointCloud<pcl::PointXYZ>::Ptr PclPointCloudPtr;
+			typedef pcl::PointCloud<pcl::PointXYZ>::ConstPtr PclPointCloudConstPtr;
+
+			struct ReconstructionSpace
 			{
-			float limitX;
-			float limitY;
-			float limitZ;
+				float limitX;
+				float limitY;
+				float limitZ;
 			};
 
-		struct CameraParameters
+			struct CameraParameters
 			{
-			float leftPrinciplePointX;
-			float leftPrinciplePointY;
-			float leftFocalLength;
-			float baseline;
+				float leftPrinciplePointX;
+				float leftPrinciplePointY;
+				float leftFocalLength;
+				float baseline;
 			};
 
-		struct MatchingOptionsSet
+			struct MatchingOptionsSet
 			{
-			int numberOfDisparities;
-			int horizontalOffset;
-			int ratioFilter;
-			int peakFilter;
-			bool usePreprocessing;
-			bool useLeftRightConsistencyCheck;
-			int leftRightConsistencyThreshold;
+				int numberOfDisparities;
+				int horizontalOffset;
+				int ratioFilter;
+				int peakFilter;
+				bool usePreprocessing;
+				bool useLeftRightConsistencyCheck;
+				int leftRightConsistencyThreshold;
 			};
 
-		struct ScanlineOptimizationOptionsSet
+			struct ScanlineOptimizationOptionsSet
 			{
-			int costAggregationRadius;
-			int spatialBandwidth;
-			int colorBandwidth;
-			int strongSmoothnessPenalty;
-			int weakSmoothnessPenalty;
-			float pointCloudSamplingDensity;
-			float voxelGridLeafSize;
-			MatchingOptionsSet matchingOptionsSet;
-			CameraParameters cameraParameters;
-			ReconstructionSpace reconstructionSpace;
+				int costAggregationRadius;
+				int spatialBandwidth;
+				int colorBandwidth;
+				int strongSmoothnessPenalty;
+				int weakSmoothnessPenalty;
+				float pointCloudSamplingDensity;
+				float voxelGridLeafSize;
+				MatchingOptionsSet matchingOptionsSet;
+				CameraParameters cameraParameters;
+				ReconstructionSpace reconstructionSpace;
 			};
 
-		Helpers::ParametersListHelper parametersHelper;
-		ScanlineOptimizationOptionsSet parameters;
-		static const ScanlineOptimizationOptionsSet DEFAULT_PARAMETERS;
+			Helpers::ParametersListHelper parametersHelper;
+			ScanlineOptimizationOptionsSet parameters;
+			static const ScanlineOptimizationOptionsSet DEFAULT_PARAMETERS;
 
-		PclPointCloudPtr ComputePointCloud(PclImagePtr leftImage, PclImagePtr rightImage);
-		PclImagePtr Convert(FrameWrapper::FrameConstPtr frame);
-		PointCloudWrapper::PointCloudConstPtr SampleCloud(PclPointCloudConstPtr pointCloud);
-		PointCloudWrapper::PointCloudConstPtr SampleCloudWithPeriodicSampling(PclPointCloudConstPtr pointCloud);
-		PointCloudWrapper::PointCloudConstPtr SampleCloudWithVoxelGrid(PclPointCloudConstPtr pointCloud);
+			PclPointCloudPtr ComputePointCloud(PclImagePtr leftImage, PclImagePtr rightImage);
 
-		void ValidateParameters();
-		cv::Mat PclImageToCvMatrix(PclImagePtr pclImage);
+			PclImagePtr Convert(FrameWrapper::FrameConstPtr frame);
 
+			PointCloudWrapper::PointCloudConstPtr SampleCloud(PclPointCloudConstPtr pointCloud);
+			PointCloudWrapper::PointCloudConstPtr SampleCloudWithPeriodicSampling(PclPointCloudConstPtr pointCloud);
+			PointCloudWrapper::PointCloudConstPtr SampleCloudWithVoxelGrid(PclPointCloudConstPtr pointCloud);
+			cv::Mat PclImageToCvMatrix(PclImagePtr pclImage);
 
-	/* --------------------------------------------------------------------
-	 * Private Testing 
-	 * --------------------------------------------------------------------
-	 */
-	#ifdef TESTING
-		#define SAVE_DISPARITY_MATRIX(visualMap) disparityMatrix = PclImageToCvMatrix(visualMap);
-	#else
-		#define SAVE_DISPARITY_MATRIX(visualMap)
-	#endif
-    };
+			void ValidateParameters();
+
+			#ifdef TESTING
+				#define SAVE_DISPARITY_MATRIX(visualMap) disparityMatrix = PclImageToCvMatrix(visualMap);
+			#else
+				#define SAVE_DISPARITY_MATRIX(visualMap)
+			#endif
+	};
 }
-#endif
-/* ScanlineOptimization.hpp */
+
+#endif // SCANLINEOPTIMIZATION_HPP
+
 /** @} */

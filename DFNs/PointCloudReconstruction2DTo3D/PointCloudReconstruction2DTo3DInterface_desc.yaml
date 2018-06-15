@@ -1,16 +1,23 @@
 name: PointCloudReconstruction2DTo3D
+doc: DFN that turns pairs of 2D matching keypoints into a reconstructed
+     3D pointcloud of keypoints
 input_ports:
-    - name: correspondenceMap
-      type: CorrespondenceMap2D
-      doc: 	This is a list coordinates of physical points in two distinct images taken from a camera (or cameras). The set contains pairs of 2d coordinates ( (x1, y1), (x2, y2)), each pair 
-		represents the same physical point. (x1, y1) is its position in the first camera image and (x2, y2) is its position in the second camera image.
-    - name: pose
-      type: Pose3D
-      doc: This is the pose of the second camera with respect to the first camera in.
+    - name: matches
+      type: asn1SccCorrespondenceMap2D
+      doc: "keypoint matches between two images A and B. This is a list of
+            pairs of 2D coordinates: ((x^A_1, y^A_1), (x^B_1, y^B_1)), ...,
+            ((x^A_n, y^A_n), (x^B_n, y^B_n)). Each pair contains the
+            coordinates of the same keypoint (hopefully, the same physical
+            point) in each image."
+    - name: frame
+      type: asn1SccPose
+      doc: pose of the coordinate frame of the camera that captured image B
+           relative to the coordinate frame of the camera that captured
+           image A
 output_ports:
-    - name: pointCloud
-      type: PointCloud
-      doc: This is the 3d point cloud representing the matching point in a 3D space. The system is aligned with the pose of the camera when the first image was taken.
+    - name: pointcloud
+      type: asn1SccPointcloud
+      doc: reconstructed 3D pointcloud of keypoints, in the coordinate frame of
+           the camera that captured image A
 implementations:
     - Triangulation
-

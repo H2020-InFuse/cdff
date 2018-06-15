@@ -170,6 +170,84 @@ target_link_libraries(
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
+add_executable(
+    TriangulationGuiTest
+    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(TriangulationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    TriangulationGuiTest
+    triangulation
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_visualization
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
+add_executable(
+    AdjustmentFromStereoGuiTest
+    DFPCs/Reconstruction3D/AdjustmentFromStereo.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
+)
+set_target_properties(AdjustmentFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    AdjustmentFromStereoGuiTest
+    adjustment_from_stereo
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES} ceres glog pthread gomp
+)
+
+
+
+add_executable(
+    DisparityMappingGuiTest
+    DFNs/StereoReconstruction/DisparityMapping.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(DisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    DisparityMappingGuiTest
+    disparity_mapping
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
+)
+
+add_executable(
+    HirschmullerDisparityMappingGuiTest
+    DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(HirschmullerDisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    HirschmullerDisparityMappingGuiTest
+    hirschmuller_disparity_mapping
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
+)
+
+add_executable(
+    ScanlineOptimizationGuiTest
+    DFNs/StereoReconstruction/ScanlineOptimization.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(ScanlineOptimizationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    ScanlineOptimizationGuiTest
+    scanline_optimization
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    pcl_common pcl_visualization
+    ${VTK_LIBRARIES}
+)
+
 ## Graphical tests for the DFPCs -----------------------------------------------
 
 add_executable(
@@ -201,84 +279,6 @@ target_link_libraries(
 )
 
 #[======================================================================[
-
-add_executable(
-    AdjustmentFromStereoGuiTest
-    DFPCs/Reconstruction3D/AdjustmentFromStereo.cpp
-    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
-)
-set_target_properties(AdjustmentFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-    AdjustmentFromStereoGuiTest
-    adjustment_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
-    ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES} ceres glog pthread gomp
-)
-
-
-
-add_executable(
-    DisparityMappingGuiTest
-    DFNs/StereoReconstruction/DisparityMapping.cpp
-    DFNs/DFNTestInterface.cpp
-    ${GRAPHICALTEST_GUI_SOURCES}
-)
-set_target_properties(DisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-    DisparityMappingGuiTest
-    disparity_mapping
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer mock
-    ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    ${VTK_LIBRARIES}
-)
-
-add_executable(
-    HirschmullerDisparityMappingGuiTest
-    DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
-    DFNs/DFNTestInterface.cpp
-    ${GRAPHICALTEST_GUI_SOURCES}
-)
-set_target_properties(HirschmullerDisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-    HirschmullerDisparityMappingGuiTest
-    hirschmuller_disparity_mapping
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer mock
-    ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    ${VTK_LIBRARIES}
-)
-
-add_executable(
-    ScanlineOptimizationGuiTest
-    DFNs/StereoReconstruction/ScanlineOptimization.cpp
-    DFNs/DFNTestInterface.cpp
-    ${GRAPHICALTEST_GUI_SOURCES}
-)
-set_target_properties(ScanlineOptimizationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-    ScanlineOptimizationGuiTest
-    scanline_optimization shot_descriptor_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer mock
-    ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
-    boost_system yaml-cpp ${VTK_LIBRARIES}
-)
-
-add_executable(
-    TriangulationGuiTest
-    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
-    DFNs/DFNTestInterface.cpp
-    ${GRAPHICALTEST_GUI_SOURCES}
-)
-set_target_properties(TriangulationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-    TriangulationGuiTest
-    triangulation
-    ${GRAPHICALTEST_CDFF_LIBRARIES} mock
-    ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
-    boost_system yaml-cpp ${VTK_LIBRARIES}
-)
 
 add_executable(
     StereoReconstruction

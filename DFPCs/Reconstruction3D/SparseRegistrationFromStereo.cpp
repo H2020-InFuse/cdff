@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  * Implementation of the SparseRegistrationFromStereo class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -101,13 +101,13 @@ SparseRegistrationFromStereo::~SparseRegistrationFromStereo()
 	}
 
 /**
-* The process method is split into three steps 
+* The process method is split into three steps
 * (i) computation of the point cloud from the stereo pair;
 * (ii) computation of the camera pose by 3d matching of the point cloud with the a partial scene of the original map ceneters at the camera previous pose;
 * (iii) the point cloud rover map is updated with the newly computed point cloud.
 *
 **/
-void SparseRegistrationFromStereo::run() 
+void SparseRegistrationFromStereo::run()
 	{
 	DEBUG_PRINT_TO_LOG("Sparse Registration from stereo start", "");
 
@@ -121,7 +121,7 @@ void SparseRegistrationFromStereo::run()
 		{
 		firstInput = false;
 
-		cameraPoseInScene = NewPose3D();	
+		cameraPoseInScene = NewPose3D();
 		outSuccess = true;
 		}
 	else
@@ -130,7 +130,7 @@ void SparseRegistrationFromStereo::run()
 		sceneCloudKeypointsVector = pointCloudMap.GetSceneFeaturesVector(previousCameraPoseInScene, parameters.searchRadius);
 
 		DELETE_PREVIOUS(imagesSparseCloud);
-		imagesSparseCloud = FromKeypointsToCloud(imagesCloudKeypointsVector);	
+		imagesSparseCloud = FromKeypointsToCloud(imagesCloudKeypointsVector);
 		DELETE_PREVIOUS(sceneSparseCloud);
 		sceneSparseCloud = FromKeypointsToCloud(sceneCloudKeypointsVector);
 		outSuccess = RegisterImagesCloudOnScene();
@@ -170,7 +170,7 @@ void SparseRegistrationFromStereo::setup()
  * --------------------------------------------------------------------------
  */
 
-const SparseRegistrationFromStereo::SparseRegistrationFromStereoOptionsSet SparseRegistrationFromStereo::DEFAULT_PARAMETERS = 
+const SparseRegistrationFromStereo::SparseRegistrationFromStereoOptionsSet SparseRegistrationFromStereo::DEFAULT_PARAMETERS =
 	{
 	.searchRadius = 20,
 	.pointCloudMapResolution = 1e-2
@@ -208,7 +208,7 @@ void SparseRegistrationFromStereo::AssignDfnsAlias()
 **/
 void SparseRegistrationFromStereo::ComputePointCloud()
 	{
-	FilterLeftImage();	
+	FilterLeftImage();
 	FilterRightImage();
 	ComputeStereoPointCloud();
 	}
@@ -248,16 +248,17 @@ void SparseRegistrationFromStereo::FilterRightImage()
 	else
 		{
 		filteredRightImage = rightImage;
-		}	
+		}
 	}
 
 void SparseRegistrationFromStereo::ComputeStereoPointCloud()
 	{
-	reconstructor3D->leftImageInput(filteredLeftImage);
-	reconstructor3D->rightImageInput(filteredRightImage);
+	reconstructor3D->leftInput(*filteredLeftImage);
+	reconstructor3D->rightInput(*filteredRightImage);
 	reconstructor3D->process();
 	DELETE_PREVIOUS(imagesCloud);
-	imagesCloud = reconstructor3D->pointCloudOutput();
+	const PointCloud& tmp = reconstructor3D->pointcloudOutput();
+	imagesCloud = &tmp;
 	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*imagesCloud));
 	DEBUG_SHOW_POINT_CLOUD(imagesCloud);
 	}
@@ -295,7 +296,7 @@ bool SparseRegistrationFromStereo::RegisterImagesCloudOnScene()
 	Pose3DPtr newPose = NewPose3D();
 	Copy(cloudRegistrator->transformOutput(), *newPose);
 	cameraPoseInScene = newPose;
-	bool registrationSuccess = cloudRegistrator->successOutput();	
+	bool registrationSuccess = cloudRegistrator->successOutput();
 	DEBUG_PRINT_TO_LOG("Registration 3D Success", registrationSuccess );
 	DEBUG_PRINT_TO_LOG("Transform", (registrationSuccess ? ToString(*cameraPoseInScene) : "") );
 	return registrationSuccess;

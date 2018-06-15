@@ -1,130 +1,87 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file ScanlineOptimization.cpp
- * @date 15/03/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
+ * Test application for the DFN ScanlineOptimization
+ */
+
+/**
  * @addtogroup DFNsTest
- * 
- * Testing application for the DFN Scanline Optimization.
- * 
- * 
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/core/core.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <MatToFrameConverter.hpp>
-#include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
-#include <BaseTypes.hpp>
 #include <Visualizers/PclVisualizer.hpp>
+#include <Errors/Assert.hpp>
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgcodecs/imgcodecs.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace PointCloudWrapper;
 
-
 class DisparityMappingTestInterface : public DFNTestInterface
-	{
+{
 	public:
 		DisparityMappingTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
 		~DisparityMappingTestInterface();
-	protected:
 
 	private:
-		Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr >* stubCloudCache;
-		Mocks::PointCloudToPclPointCloudConverter* mockCloudConverter;
-
-		Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr>* stubInputCache;
-		Mocks::PclPointCloudToPointCloudConverter* mockInputConverter;
-
 		ScanlineOptimization* disparityMapping;
 
 		cv::Mat cvLeftImage;
 		cv::Mat cvRightImage;
 		std::string outputWindowName;
 
-		void SetupMocksAndStubs();
 		void SetupParameters();
 		void DisplayResult();
-	};
+};
 
 DisparityMappingTestInterface::DisparityMappingTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
-	{
-	disparityMapping = new ScanlineOptimization();
+{
+	disparityMapping = new ScanlineOptimization;
 	SetDFN(disparityMapping);
 
-	cvLeftImage = cv::imread("../../tests/Data/Images/RectifiedLeft.png", cv::IMREAD_COLOR);
-	cvRightImage = cv::imread("../../tests/Data/Images/RectifiedRight.png", cv::IMREAD_COLOR);
+	cvLeftImage = cv::imread("../../tests/Data/Images/RectifiedChair40Left.png", cv::IMREAD_COLOR);
+	cvRightImage = cv::imread("../../tests/Data/Images/RectifiedChair40Right.png", cv::IMREAD_COLOR);
 
-	MatToFrameConverter converter;
-	FrameConstPtr leftFrame = converter.Convert(cvLeftImage);
-	FrameConstPtr rightFrame = converter.Convert(cvRightImage);
+	MatToFrameConverter matToFrame;
+	const Frame* left = matToFrame.Convert(cvLeftImage);
+	const Frame* right = matToFrame.Convert(cvRightImage);
 
-	disparityMapping->leftImageInput(leftFrame);
-	disparityMapping->rightImageInput(rightFrame);
+	disparityMapping->leftInput(*left);
+	disparityMapping->rightInput(*right);
 
 	outputWindowName = "Disparity Mapping Result";
 	Visualizers::PclVisualizer::Enable();
-	}
+}
 
 DisparityMappingTestInterface::~DisparityMappingTestInterface()
-	{
-	delete(stubInputCache);
-	delete(mockInputConverter);
-	delete(disparityMapping);
-	}
-
-void DisparityMappingTestInterface::SetupMocksAndStubs()
-	{
-	stubInputCache = new Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr>();
-	mockInputConverter = new Mocks::PclPointCloudToPointCloudConverter();
-	ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Instance(stubInputCache, mockInputConverter);
-
-	stubCloudCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
-	mockCloudConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubCloudCache, mockCloudConverter);
-	}
+{
+	delete disparityMapping;
+}
 
 void DisparityMappingTestInterface::SetupParameters()
-	{
+{
 		struct CameraParameters
-			{
+		{
 			float principlePointX;
 			float principlePointY;
 			float focalLength;
 			float baseline;
-			};
+		};
 
 		struct MatchingOptionsSet
-			{
+		{
 			int numberOfDisparities;
 			int horizontalOffset;
 			int ratioFilter;
@@ -132,10 +89,10 @@ void DisparityMappingTestInterface::SetupParameters()
 			bool usePreprocessing;
 			bool useLeftRightConsistencyCheck;
 			int leftRightConsistencyThreshold;
-			};
+		};
 
 		struct ScanlineOptimizationOptionsSet
-			{
+		{
 			int costAggregationRadius;
 			int spatialBandwidth;
 			int colorBandwidth;
@@ -143,7 +100,7 @@ void DisparityMappingTestInterface::SetupParameters()
 			int weakSmoothnessPenalty;
 			MatchingOptionsSet matchingOptionsSet;
 			CameraParameters cameraParameters;
-			};
+		};
 
 	AddParameter("GeneralParameters", "CostAggregationRadius", 5, 255);
 	AddParameter("GeneralParameters", "SpatialBandwidth", 25, 255);
@@ -168,27 +125,24 @@ void DisparityMappingTestInterface::SetupParameters()
 	AddParameter("ReconstructionSpace", "LimitX", 20, 100);
 	AddParameter("ReconstructionSpace", "LimitY", 20, 100);
 	AddParameter("ReconstructionSpace", "LimitZ", 1, 100);
-	}
+}
 
 void DisparityMappingTestInterface::DisplayResult()
-	{
-	PointCloudConstPtr pointCloud= disparityMapping->pointCloudOutput();
+{
+	const PointCloud& pointcloud = disparityMapping->pointcloudOutput();
 
-	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
-	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
-	PRINT_TO_LOG("Number of points: ", GetNumberOfPoints(*pointCloud) );
+	PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
+	PRINT_TO_LOG("Virtual memory used (kB): ", GetTotalVirtualMemoryUsedKB());
+	PRINT_TO_LOG("Number of points: ", GetNumberOfPoints(pointcloud));
 
 	Visualizers::PclVisualizer::Enable();
-	Visualizers::PclVisualizer::ShowPointCloud(pointCloud);
-
-	delete(pointCloud);
-	}
-
+	Visualizers::PclVisualizer::ShowPointCloud(&pointcloud);
+}
 
 int main(int argc, char** argv)
-	{
+{
 	DisparityMappingTestInterface interface("DisparityMapping", 100, 40);
 	interface.Run();
-	};
+};
 
 /** @} */
