@@ -20,6 +20,49 @@ add_library(
     DFNsBuilder.cpp
 )
 target_link_libraries(
-	dfns_builder
-	cdff_helpers cdff_logger cdff_types essential_matrix_decomposition fundamental_matrix_ransac orb_descriptor shot_descriptor_3d ransac_3d icp_3d harris_detector_2d image_undistortion image_undistortion_rectification disparity_mapping hirschmuller_disparity_mapping orb_detector_descriptor flann_matcher iterative_pnp_solver triangulation harris_detector_3d kalman_predictor registration_icp_cc converters_opencv pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
+  dfns_builder
+  cdff_helpers
+  cdff_logger
+  cdff_types
+  essential_matrix_decomposition
+  fundamental_matrix_ransac
+  orb_descriptor
+  shot_descriptor_3d
+  ransac_3d icp_3d
+  harris_detector_2d
+  image_undistortion
+  image_undistortion_rectification
+  disparity_mapping
+  hirschmuller_disparity_mapping
+  orb_detector_descriptor
+  flann_matcher
+  iterative_pnp_solver
+  triangulation
+  harris_detector_3d
+  kalman_predictor
+  registration_icp_cc
+  #ceres_adjustment
+  #svd_decomposition
+  converters_opencv
+  pcl_common
+  pcl_features
+  pcl_search
+  pcl_filters
+  pcl_visualization
+  pcl_io
+  pcl_ml
+  pcl_io_ply
+  pcl_octree
+  pcl_outofcore
+  pcl_kdtree
+  pcl_tracking
+  pcl_stereo
+  pcl_recognition
+  pcl_registration
+  pcl_people
+  pcl_keypoints
+  pcl_surface
+  pcl_segmentation
+  pcl_sample_consensus 
+  pcl_stereo
 )

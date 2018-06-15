@@ -203,6 +203,20 @@ target_link_libraries(
 #[======================================================================[
 
 add_executable(
+    AdjustmentFromStereoGuiTest
+    DFPCs/Reconstruction3D/AdjustmentFromStereo.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
+)
+set_target_properties(AdjustmentFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    AdjustmentFromStereoGuiTest
+    adjustment_from_stereo
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
+add_executable(
     DisparityMappingGuiTest
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/DFNTestInterface.cpp
