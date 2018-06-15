@@ -32,7 +32,6 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
-#    DFNs/Registration3D/Icp3D.cpp
     DFNs/Registration3D/IcpCC.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
 #   DFNs/BundleAdjustment/CeresAdjustment.cpp

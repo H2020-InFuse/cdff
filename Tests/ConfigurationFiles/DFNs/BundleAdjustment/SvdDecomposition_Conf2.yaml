@@ -1,12 +1,12 @@
 - Name: LeftCameraMatrix
   FocalLengthX: 10
   FocalLengthY: 10
-  PrinciplePointX: 0
-  PrinciplePointY: 0
+  PrincipalPointX: 0
+  PrincipalPointY: 0
 - Name: RightCameraMatrix
   FocalLengthX: 10
   FocalLengthY: 10
-  PrinciplePointX: 0
-  PrinciplePointY: 0
+  PrincipalPointX: 0
+  PrincipalPointY: 0
 - Name: GeneralParameters
   Baseline: 5

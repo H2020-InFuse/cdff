@@ -44,8 +44,8 @@ namespace dfn_ci
 			{
 				float focalLengthX;
 				float focalLengthY;
-				float principlePointX;
-				float principlePointY;
+				float principalPointX;
+				float principalPointY;
 			};
 
 			struct CeresAdjustmentOptionsSet

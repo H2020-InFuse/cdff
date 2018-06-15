@@ -27,13 +27,13 @@ SvdDecomposition::SvdDecomposition()
 {
 	parametersHelper.AddParameter<float>("LeftCameraMatrix", "FocalLengthX", parameters.leftCameraMatrix.focalLengthX, DEFAULT_PARAMETERS.leftCameraMatrix.focalLengthX);
 	parametersHelper.AddParameter<float>("LeftCameraMatrix", "FocalLengthY", parameters.leftCameraMatrix.focalLengthY, DEFAULT_PARAMETERS.leftCameraMatrix.focalLengthY);
-	parametersHelper.AddParameter<float>("LeftCameraMatrix", "PrinciplePointX", parameters.leftCameraMatrix.principlePointX, DEFAULT_PARAMETERS.leftCameraMatrix.principlePointX);
-	parametersHelper.AddParameter<float>("LeftCameraMatrix", "PrinciplePointY", parameters.leftCameraMatrix.principlePointY, DEFAULT_PARAMETERS.leftCameraMatrix.principlePointY);
+	parametersHelper.AddParameter<float>("LeftCameraMatrix", "PrincipalPointX", parameters.leftCameraMatrix.principalPointX, DEFAULT_PARAMETERS.leftCameraMatrix.principalPointX);
+	parametersHelper.AddParameter<float>("LeftCameraMatrix", "PrincipalPointY", parameters.leftCameraMatrix.principalPointY, DEFAULT_PARAMETERS.leftCameraMatrix.principalPointY);
 
 	parametersHelper.AddParameter<float>("RightCameraMatrix", "FocalLengthX", parameters.rightCameraMatrix.focalLengthX, DEFAULT_PARAMETERS.rightCameraMatrix.focalLengthX);
 	parametersHelper.AddParameter<float>("RightCameraMatrix", "FocalLengthY", parameters.rightCameraMatrix.focalLengthY, DEFAULT_PARAMETERS.rightCameraMatrix.focalLengthY);
-	parametersHelper.AddParameter<float>("RightCameraMatrix", "PrinciplePointX", parameters.rightCameraMatrix.principlePointX, DEFAULT_PARAMETERS.rightCameraMatrix.principlePointX);
-	parametersHelper.AddParameter<float>("RightCameraMatrix", "PrinciplePointY", parameters.rightCameraMatrix.principlePointY, DEFAULT_PARAMETERS.rightCameraMatrix.principlePointY);
+	parametersHelper.AddParameter<float>("RightCameraMatrix", "PrincipalPointX", parameters.rightCameraMatrix.principalPointX, DEFAULT_PARAMETERS.rightCameraMatrix.principalPointX);
+	parametersHelper.AddParameter<float>("RightCameraMatrix", "PrincipalPointY", parameters.rightCameraMatrix.principalPointY, DEFAULT_PARAMETERS.rightCameraMatrix.principalPointY);
 
 	parametersHelper.AddParameter<float>("GeneralParameters", "Baseline", parameters.baseline, DEFAULT_PARAMETERS.baseline);
 
@@ -83,15 +83,15 @@ const SvdDecomposition::SvdDecompositionOptionsSet SvdDecomposition::DEFAULT_PAR
 	{
 		.focalLengthX = 1,
 		.focalLengthY = 1,
-		.principlePointX = 0,
-		.principlePointY = 0,
+		.principalPointX = 0,
+		.principalPointY = 0,
 	},
 	.rightCameraMatrix =
 	{
 		.focalLengthX = 1,
 		.focalLengthY = 1,
-		.principlePointX = 0,
-		.principlePointY = 0,
+		.principalPointX = 0,
+		.principalPointY = 0,
 	},
 	.baseline = 1.0
 };
@@ -498,8 +498,8 @@ cv::Mat SvdDecomposition::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatri
 	cv::Mat cvCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
 	cvCameraMatrix.at<float>(0,0) = cameraMatrix.focalLengthX;
 	cvCameraMatrix.at<float>(1,1) = cameraMatrix.focalLengthY;
-	cvCameraMatrix.at<float>(2,0) = cameraMatrix.principlePointX;
-	cvCameraMatrix.at<float>(2,1) = cameraMatrix.principlePointY;
+	cvCameraMatrix.at<float>(2,0) = cameraMatrix.principalPointX;
+	cvCameraMatrix.at<float>(2,1) = cameraMatrix.principalPointY;
 	cvCameraMatrix.at<float>(2,2) = 1.0;
 
 	return cvCameraMatrix;
