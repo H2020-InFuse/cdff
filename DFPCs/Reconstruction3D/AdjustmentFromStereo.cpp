@@ -268,16 +268,16 @@ void AdjustmentFromStereo::FilterImage(FrameConstPtr image, ImageFilteringInterf
 
 void AdjustmentFromStereo::ComputeStereoPointCloud()
 	{
-	reconstructor3d->leftImageInput(filteredLeftImage);
-	reconstructor3d->rightImageInput(filteredRightImage);
+	reconstructor3d->leftInput(*filteredLeftImage);
+	reconstructor3d->rightInput(*filteredRightImage);
 	reconstructor3d->process();
 
-	//PointCloudPtr newPointCloud = NewPointCloud();
-	//Copy(reconstructor3d->pointCloudOutput(), *newPointCloud);
-	//imagesCloud = newPointCloud;
+	PointCloudPtr newPointCloud = NewPointCloud();
+	Copy(reconstructor3d->pointcloudOutput(), *newPointCloud);
+	imagesCloud = newPointCloud;
 
 	//Adding the extracted point cloud to storage
-	imagesCloud = reconstructor3d->pointCloudOutput();
+	imagesCloud = newPointCloud;
 	if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
 		{
 		pointCloudsList.at(currentInputNumber) = imagesCloud;
