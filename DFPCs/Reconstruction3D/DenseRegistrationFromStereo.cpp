@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  * Implementation of the DenseRegistrationFromStereo class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -91,13 +91,13 @@ DenseRegistrationFromStereo::~DenseRegistrationFromStereo()
 	}
 
 /**
-* The process method is split into three steps 
+* The process method is split into three steps
 * (i) computation of the point cloud from the stereo pair;
 * (ii) computation of the camera pose by 3d matching of the point cloud with the a partial scene of the original map ceneters at the camera previous pose;
 * (iii) the point cloud rover map is updated with the newly computed point cloud.
 *
 **/
-void DenseRegistrationFromStereo::run() 
+void DenseRegistrationFromStereo::run()
 	{
 	DEBUG_PRINT_TO_LOG("Dense Registration from stereo start", "");
 
@@ -110,7 +110,7 @@ void DenseRegistrationFromStereo::run()
 		{
 		firstInput = false;
 
-		cameraPoseInScene = NewPose3D();	
+		cameraPoseInScene = NewPose3D();
 		outSuccess = true;
 		}
 	else
@@ -153,7 +153,7 @@ void DenseRegistrationFromStereo::setup()
  * --------------------------------------------------------------------------
  */
 
-const DenseRegistrationFromStereo::DenseRegistrationFromStereoOptionsSet DenseRegistrationFromStereo::DEFAULT_PARAMETERS = 
+const DenseRegistrationFromStereo::DenseRegistrationFromStereoOptionsSet DenseRegistrationFromStereo::DEFAULT_PARAMETERS =
 	{
 	.searchRadius = 20,
 	.pointCloudMapResolution = 1e-2
@@ -190,7 +190,7 @@ void DenseRegistrationFromStereo::AssignDfnsAlias()
 **/
 void DenseRegistrationFromStereo::ComputePointCloud()
 	{
-	FilterLeftImage();	
+	FilterLeftImage();
 	FilterRightImage();
 	ComputeStereoPointCloud();
 	}
@@ -230,16 +230,17 @@ void DenseRegistrationFromStereo::FilterRightImage()
 	else
 		{
 		filteredRightImage = rightImage;
-		}	
+		}
 	}
 
 void DenseRegistrationFromStereo::ComputeStereoPointCloud()
 	{
-	reconstructor3D->leftImageInput(filteredLeftImage);
-	reconstructor3D->rightImageInput(filteredRightImage);
+	reconstructor3D->leftInput(*filteredLeftImage);
+	reconstructor3D->rightInput(*filteredRightImage);
 	reconstructor3D->process();
 	DELETE_PREVIOUS(imagesCloud);
-	imagesCloud = reconstructor3D->pointCloudOutput();
+	const PointCloud& tmp = reconstructor3D->pointcloudOutput();
+	imagesCloud = &tmp;
 	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*imagesCloud));
 	DEBUG_SHOW_POINT_CLOUD(imagesCloud);
 	}
@@ -255,7 +256,7 @@ bool DenseRegistrationFromStereo::RegisterPointCloudOnScene()
 	Pose3DPtr newPose = NewPose3D();
 	Copy(cloudRegistrator->transformOutput(), *newPose);
 	cameraPoseInScene = newPose;
-	bool registrationSuccess = cloudRegistrator->successOutput();	
+	bool registrationSuccess = cloudRegistrator->successOutput();
 	DEBUG_PRINT_TO_LOG("Registration 3D Success", registrationSuccess );
 	DEBUG_PRINT_TO_LOG("Transform", (registrationSuccess ? ToString(*cameraPoseInScene) : "") );
 	return registrationSuccess;

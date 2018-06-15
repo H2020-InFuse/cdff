@@ -1,115 +1,72 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file StereoReconstructionInterface.hpp
- * @date 08/03/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  This is the common interface of all DFNs that reconstruct a 3d scene from a pair of stereo images.    
- *
  * @{
  */
-#ifndef STEREO_RECONSTRUCTION_INTERFACE_HPP
-#define STEREO_RECONSTRUCTION_INTERFACE_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
+#ifndef STEREORECONSTRUCTION_INTERFACE_HPP
+#define STEREORECONSTRUCTION_INTERFACE_HPP
+
+#include "DFNCommonInterface.hpp"
+#include <Frame.h>
+#include <Pointcloud.h>
+
 #ifdef TESTING
 	#include <opencv2/imgproc/imgproc.hpp>
 #endif
 
-#include <DFNCommonInterface.hpp>
-#include <PointCloud.hpp>
-#include <Frame.hpp>
-
-
-namespace dfn_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class StereoReconstructionInterface : public DFNCommonInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+namespace dfn_ci
+{
+	/**
+	 * DFN that turns a pair of stereo images into a reconstructed 3D scene
+	 * (in the form of a 3D pointcloud)
 	 */
-        public:
-            StereoReconstructionInterface();
-            virtual ~StereoReconstructionInterface();
-            /**
-            * Send value to input port leftImage
-            * @param leftImage, The left image taken by a stereo camera.
-            */
-            virtual void leftImageInput(FrameWrapper::FrameConstPtr data);
+	class StereoReconstructionInterface : public DFNCommonInterface
+	{
+		public:
 
-            /**
-            * Send value to input port rightImage
-            * @param rightImage, The right image taken by a stereo camera.
-            */
-            virtual void rightImageInput(FrameWrapper::FrameConstPtr data);
+			StereoReconstructionInterface();
+			virtual ~StereoReconstructionInterface();
 
-            /**
-            * Receive value from output port pointCloud
-            * @param pointCloud, This is the 3d point cloud representing the scene in front of the stereo camera. The coordinate system is aligned with the position of the left camera.
-            */
-            virtual PointCloudWrapper::PointCloudConstPtr pointCloudOutput();
+			/**
+			 * Send value to input port "left"
+			 * @param left: left image captured by a stereo camera
+			 */
+			virtual void leftInput(const asn1SccFrame& data);
+			/**
+			 * Send value to input port "right"
+			 * @param right: right image captured by a stereo camera
+			 */
+			virtual void rightInput(const asn1SccFrame& data);
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
-            FrameWrapper::FrameConstPtr inLeftImage;
-	    FrameWrapper::FrameConstPtr inRightImage;
-            PointCloudWrapper::PointCloudConstPtr outPointCloud;
+			/**
+			 * Query value from output port "pointcloud"
+			 * @return pointcloud: reconstructed 3D pointcloud, in the
+			 *         coordinate frame of the left camera
+			 */
+			virtual const asn1SccPointcloud& pointcloudOutput() const;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+		protected:
 
+			asn1SccFrame inLeft;
+			asn1SccFrame inRight;
+			asn1SccPointcloud outPointcloud;
 
-	/* --------------------------------------------------------------------
-	 * Protected Testing 
-	 * --------------------------------------------------------------------
-	 */
-	protected:
-	#ifdef TESTING
-		cv::Mat disparityMatrix;
-	#endif
+		#ifdef TESTING
 
-	public:
-	/* --------------------------------------------------------------------
-	 * Public Testing 
-	 * --------------------------------------------------------------------
-	 */
-	#ifdef TESTING
-		cv::Mat disparityMatrixOutput()
-			{
-			return disparityMatrix;
-			}
-	#endif
-    };
+			protected:
+				cv::Mat disparityMatrix;
+
+			public:
+				cv::Mat disparityMatrixOutput()
+				{
+					return disparityMatrix;
+				}
+
+		#endif // TESTING
+
+	};
 }
-#endif
-/* StereoReconstructionInterface.hpp */
+
+#endif // STEREORECONSTRUCTION_INTERFACE_HPP
+
 /** @} */
