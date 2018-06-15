@@ -18,5 +18,5 @@ target_link_libraries(
 #)
 #target_link_libraries(
 #    ceres_adjustment
-#    bundle_adjustment cdff_types yaml-cpp cdff_helpers opencv_core converters_opencv
+#    bundle_adjustment cdff_types yaml-cpp cdff_helpers opencv_core converters_opencv ceres glog pthread gomp
 #)

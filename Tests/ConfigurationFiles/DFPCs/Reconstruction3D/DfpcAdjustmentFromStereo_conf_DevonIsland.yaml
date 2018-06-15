@@ -3,8 +3,8 @@
   - Name: GeneralParameters
     PointCloudMapResolution: 0.1
     SearchRadius: 80
-    NumberOfAdjustedStereoPairs: 4
-- Name: reconstructor3D
+    NumberOfAdjustedStereoPairs: 2
+- Name: reconstructor3d
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
   Parameters:
@@ -52,7 +52,7 @@
     LimitX: 80
     LimitY: 80
     LimitZ: 80
-- Name: featureExtractor2d
+- Name: featuresExtractor2d
   Type: FeaturesExtraction2D
   Implementation: OrbDetectorDescriptor
   Parameters:

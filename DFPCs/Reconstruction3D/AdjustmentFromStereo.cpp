@@ -142,13 +142,14 @@ void AdjustmentFromStereo::run()
 	ComputeStereoPointCloud();
 	ComputeVisualPointFeatures();
 
-	if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
+	if (currentInputNumber+1 < parameters.numberOfAdjustedStereoPairs)
 		{
 		currentInputNumber++;
 		outSuccess = false;
 		}
 	else
 		{
+		currentInputNumber = parameters.numberOfAdjustedStereoPairs;
 		outSuccess = ComputeCameraPoses();
 		}
 
@@ -301,32 +302,36 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures()
 	DescribeFeatures(filteredRightImage, rightKeypointsVector, rightFeaturesVector);
 
 	//Adding the extracted features to storage
-	int currentLeftCameraIndex, currentRightCameraIndex, mostRecentPastCameraIndex;
+	int currentLeftCameraIndex, currentRightCameraIndex, mostRecentPastCameraIndex, endIndex;
 	if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
 		{
 		currentLeftCameraIndex = 2 * currentInputNumber + 1;
 		currentRightCameraIndex = 2 * currentInputNumber;
-		mostRecentPastCameraIndex = 2 * currentInputNumber - 1;
+		mostRecentPastCameraIndex = (currentInputNumber > 0) ? 2 * currentInputNumber - 1 : 2 * parameters.numberOfAdjustedStereoPairs - 1;
 		oldestCameraIndex = 0;
+		endIndex = 2 * parameters.numberOfAdjustedStereoPairs - 1;
 		}
 	else
 		{
  		currentLeftCameraIndex = oldestCameraIndex + 1;
 		currentRightCameraIndex = oldestCameraIndex;
-		mostRecentPastCameraIndex = (currentRightCameraIndex - 1) % (parameters.numberOfAdjustedStereoPairs * 2);
+		mostRecentPastCameraIndex = (2 * parameters.numberOfAdjustedStereoPairs + currentRightCameraIndex - 1) % (parameters.numberOfAdjustedStereoPairs * 2);
 		oldestCameraIndex = (oldestCameraIndex + 2) % (parameters.numberOfAdjustedStereoPairs * 2);
+		endIndex = currentLeftCameraIndex;
 		}
+	DELETE_PREVIOUS( featuresVectorsList.at(currentLeftCameraIndex) );
+	DELETE_PREVIOUS( featuresVectorsList.at(currentRightCameraIndex) );
 	featuresVectorsList.at(currentLeftCameraIndex) = leftFeaturesVector;
 	featuresVectorsList.at(currentRightCameraIndex) = rightFeaturesVector;
 
 	//Computing the correspondences between current and past features and adding them to storage
 	CorrespondenceMaps2DSequencePtr newSequence = NewCorrespondenceMaps2DSequence();
-	for(int imageIndex = currentRightCameraIndex; imageIndex != currentLeftCameraIndex; imageIndex = (imageIndex - 1) % (parameters.numberOfAdjustedStereoPairs * 2) )
+	for(int imageIndex = currentRightCameraIndex; imageIndex != endIndex; imageIndex = (2 * parameters.numberOfAdjustedStereoPairs + imageIndex - 1) % (parameters.numberOfAdjustedStereoPairs * 2) )
 		{
 		CorrespondenceMap2DConstPtr newCorrespondence = MatchFeatures( leftFeaturesVector, featuresVectorsList.at(imageIndex) );
 		AddCorrespondenceMap(*newSequence, *newCorrespondence);
 		}
-	for(int imageIndex = mostRecentPastCameraIndex; imageIndex != currentLeftCameraIndex; imageIndex = (imageIndex - 1) % (parameters.numberOfAdjustedStereoPairs * 2) )
+	for(int imageIndex = mostRecentPastCameraIndex; imageIndex != endIndex; imageIndex = (2 * parameters.numberOfAdjustedStereoPairs + imageIndex - 1) % (parameters.numberOfAdjustedStereoPairs * 2) )
 		{
 		CorrespondenceMap2DConstPtr newCorrespondence = MatchFeatures( rightFeaturesVector, featuresVectorsList.at(imageIndex) );
 		AddCorrespondenceMap(*newSequence, *newCorrespondence);
@@ -340,7 +345,7 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures()
 			AddCorrespondenceMap(*newSequence, GetCorrespondenceMap(*latestCorrespondenceMaps, correspondenceIndex));
 			}
 		}
-	else if (currentInputNumber > 0);
+	else if (currentInputNumber > 0)
 		{
 		int correspondenceIndex = 0;
 		for(int sourceIndex = 0; sourceIndex < 2 * (parameters.numberOfAdjustedStereoPairs - 1); sourceIndex++)
@@ -364,7 +369,6 @@ void AdjustmentFromStereo::ExtractFeatures(FrameWrapper::FrameConstPtr filteredI
 	featuresExtractor2d->frameInput(*filteredImage);
 	featuresExtractor2d->process();
 
-	DELETE_PREVIOUS(keypointsVector);
 	VisualPointFeatureVector2DPtr newKeypointsVector = NewVisualPointFeatureVector2D();
 	Copy(featuresExtractor2d->featuresOutput(), *newKeypointsVector);
 	keypointsVector = newKeypointsVector;
@@ -380,12 +384,12 @@ void AdjustmentFromStereo::DescribeFeatures(FrameConstPtr image, VisualPointFeat
 		optionalFeaturesDescriptor2d->featuresInput(*keypointsVector);
 		optionalFeaturesDescriptor2d->process();
 
-		DELETE_PREVIOUS(featuresVector);
 		VisualPointFeatureVector2DPtr newFeaturesVector = NewVisualPointFeatureVector2D();
 		Copy(optionalFeaturesDescriptor2d->featuresOutput(), *newFeaturesVector);
 		featuresVector = newFeaturesVector;
 
 		DEBUG_PRINT_TO_LOG("Described Current Features", GetNumberOfPoints(*featuresVector) );
+		DELETE_PREVIOUS(keypointsVector); //Keypoints are no longer needed
 		}
 	else
 		{
