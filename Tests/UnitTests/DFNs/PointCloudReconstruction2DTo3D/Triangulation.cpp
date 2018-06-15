@@ -33,6 +33,7 @@ class TriangulationTest
 
 void TriangulationTest::RandomCorrespondencesTest(const Pose3D& secondCameraPose, unsigned numberOfCorrespondences)
 {
+	// Prepare input data
 	CameraPair cameraPair;
 	cameraPair.SetSecondCameraPose(&secondCameraPose);
 
