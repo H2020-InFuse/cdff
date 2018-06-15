@@ -249,7 +249,9 @@ find_package(OpenCV 3.4.0 REQUIRED)
 find_package_mode(OpenCV)
 
 include_directories(
-  SYSTEM "${_DEPENDENCIES_PREFIX}/include/pcl-1.8"
+  SYSTEM "${_DEPENDENCIES_PREFIX}/include/pcl-1.8" 
+  #"/InFuse/ceres-solver/install/include" 
+  #"/InFuse/glog/install/include"
 )
 
 ## Dependencies: compiled libraries --------------------------------------------
@@ -262,6 +264,8 @@ include_directories(
 
 link_directories(
   "${_DEPENDENCIES_PREFIX}/lib"
+  #/InFuse/ceres-solver/install/lib
+  #/InFuse/glog/install/lib
 )
 
 ## CDFF ------------------------------------------------------------------------
@@ -301,3 +305,6 @@ add_subdirectory(CC)
 # for header files? There isn't, as far as I understand, but triple-check. If
 # there is and it includes system directories, we should prepend the directories
 # we currently append to this list with include_directories().
+include_directories(
+	
+)

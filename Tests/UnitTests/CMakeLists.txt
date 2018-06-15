@@ -32,6 +32,9 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
+    DFNs/Registration3D/IcpCC.cpp
+    DFNs/BundleAdjustment/SvdDecomposition.cpp
+#   DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
 #[=[DFNs/Registration3D/Icp3D.cpp]=] # FIXME: name collision, issue #56
@@ -64,6 +67,8 @@ set(UNITTEST_LIBRARIES Catch
     hirschmuller_disparity_mapping
     icp_3d
     image_undistortion
+    svd_decomposition
+#   ceres_adjustment
     iterative_pnp_solver
     kalman_predictor
 #[=[mock]=] # no longer used by any DFN unit test
@@ -94,6 +99,10 @@ set(UNITTEST_LIBRARIES Catch
     pcl_surface
     pcl_tracking
     pcl_visualization
+#   ceres
+#   glog
+#   pthread
+#   gomp
     ransac_3d
 #[=[reconstruction_from_stereo]=]
 #[=[registration_icp_3d]=] # FIXME: name collision, issue #56
