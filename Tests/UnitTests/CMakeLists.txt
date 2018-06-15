@@ -34,10 +34,10 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
-#[=[DFNs/Registration3D/Icp3D.cpp]=]
+#[=[DFNs/Registration3D/Icp3D.cpp]=] # FIXME: name collision, issue #56
     DFNs/Registration3D/IcpCC.cpp
-#[=[DFNs/StereoReconstruction/DisparityMapping.cpp]=]
-#[=[DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp]=]
+    DFNs/StereoReconstruction/DisparityMapping.cpp
+    DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
 #[=[DFPCs/DfpcConfigurator.cpp]=]
 #[=[DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp]=]
 #[=[DFPCs/Reconstruction3D/ObservedScene.cpp]=]
@@ -55,18 +55,18 @@ set(UNITTEST_LIBRARIES Catch
     converters_opencv
 #[=[dfpc_configurator]=]
 #[=[dfpc_implementation_features_matching_3d]=]
-#[=[disparity_mapping]=]
+    disparity_mapping
     essential_matrix_decomposition
     flann_matcher
     fundamental_matrix_ransac
     harris_detector_2d
     harris_detector_3d
-#[=[hirschmuller_disparity_mapping]=]
+    hirschmuller_disparity_mapping
     icp_3d
     image_undistortion
     iterative_pnp_solver
     kalman_predictor
-#[=[mock]=]
+#[=[mock]=] # no longer used by any DFN unit test
     opencv_core
     opencv_highgui
     opencv_imgcodecs
@@ -96,7 +96,7 @@ set(UNITTEST_LIBRARIES Catch
     pcl_visualization
     ransac_3d
 #[=[reconstruction_from_stereo]=]
-#[=[registration_icp_3d]=]
+#[=[registration_icp_3d]=] # FIXME: name collision, issue #56
     registration_icp_cc
     shot_descriptor_3d
     synthetic_generators

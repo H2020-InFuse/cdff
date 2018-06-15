@@ -1,187 +1,181 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file HirschmullerDisparityMapping.hpp
- * @date 12/03/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  This DFN implementation uses the Hirschmuller disparity mapping algorithm for the reconstruction of 3D point clouds from images taken by a stereo camera.
- *  
- *  This DFN implementation executes the following tasks: conversion of the input images to grey-scale image, application of the Hirschmuller disparity algorithm for the computation of a disparity map,
- *  application of reprojection algorithm for the reconstruction of a point cloud from the disparity Map, and reduction of the density of the output point cloud by position sampling.
- *
- *  This implementation requires the following parameters:
- *  @param prefilter.maximum
- *  @param disparities.minimum, this is the value of the minimum disparity.
- *  @param disparities.numberOfIntervals, this is the number of disparity intervals that will be detected.
- *  @param disparities.useMaximumDifference
- *  @param disparities.maximumDifference
- *  @param disparities.speckleRange
- *  @param disparities.speckleWindow
- *  @param disparities.smoothnessParameter1
- *  @param disparities.smoothnessParameter2
- *  @param blocksMatching.blockSize, this is the dimension of the blocks that need to be matched in order to compute the disparity, it needs to be an odd number greater or equal than 5.
- *  @param blocksMatching.uniquenessRatio
- *  @param useFullScaleTwoPassAlgorithm
- *  @param pointCloudSamplingDensity, this defines the ratio between sampled point cloud and full point cloud, it has to be a number between 0 and 1. The sampled point cloud is constructed by taking the 
- *					points at positions multiple of n where n is 1/pointCloudSamplingDensity.
- *  @param useDisparityToDepthMap, this determines whether the camera parameters are provided in the form of a DisparityToDepthMatrix or in form of focal length, principle point and baseline.
- *  @param disparityToDepthMap, the camera parameter in form of a 4x4 disparity to depth matrix, each element is defined as Element_X_Y where X and Y belong to {0, 1, 2, 3}.
- *  @param stereoCameraParameters, the camera parameter represented as left camera focal length (LeftFocalLength), Left Camera principle point coordinates (LeftPrinciplePointX and LeftPrinciplePointY),
- *					and distance between the two camera (Baseline).
- *  @param reconstructionSpace, the limits on the reconstructed 3d points coordinates as LimitX, LimitY and LimitZ. A point (x,y,z) is accepted in the output cloud if -LimitX<=x<=LimitX, -LimitY<=y<=LimitY
- *					and 0<z<=LimitZ.
- *
- *  @reference, the algorithm is inspired by the paper: Hirschmuller, H. "Stereo Processing by Semiglobal Matching and Mutual Information", PAMI(30), No. 2, February 2008, pp. 328-341.
- *
  * @{
  */
 
-#ifndef HIRSCHMULLER_DISPARITY_MAPPING_HPP
-#define HIRSCHMULLER_DISPARITY_MAPPING_HPP
+#ifndef HIRSCHMULLERDISPARITYMAPPING_HPP
+#define HIRSCHMULLERDISPARITYMAPPING_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <StereoReconstruction/StereoReconstructionInterface.hpp>
-#include <Pose.hpp>
+#include "StereoReconstructionInterface.hpp"
+
 #include <PointCloud.hpp>
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <stdlib.h>
-#include <string>
-#include <pcl/keypoints/harris_3d.h>
-#include <yaml-cpp/yaml.h>
-#include <SupportTypes.hpp>
-#include "opencv2/calib3d.hpp"
+#include <FrameToMatConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
-namespace dfn_ci {
+#include <opencv2/core/core.hpp>
 
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class HirschmullerDisparityMapping : public StereoReconstructionInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+namespace dfn_ci
+{
+	/**
+	 * Scene reconstruction (as a 3D pointcloud) from 2D stereo images, using
+	 * the Hirschmueller disparity mapping algorithm.
+	 *
+	 * Processing steps: (i) grayscaling of the images, (ii) computation of the
+	 * Hirschmueller disparity map, (iii) scene reconstruction based on the
+	 * disparity map using a reprojection algorithm, (iv) downsampling of the
+	 * generated pointcloud.
+	 *
+	 * @param prefilter.maximum
+	 *
+	 * @param disparities.minimum
+	 *        disparity threshold
+	 * @param disparities.numberOfIntervals
+	 *        number of detected disparity intervals
+	 * @param disparities.useMaximumDifference
+	 * @param disparities.maximumDifference
+	 * @param disparities.speckleRange
+	 * @param disparities.speckleWindow
+	 * @param disparities.smoothnessParameter1
+	 * @param disparities.smoothnessParameter2
+	 *
+	 * @param blocksMatching.blockSize
+	 *        dimension of the pixel blocks that are matched during disparity
+	 *        computation, must be odd and larger than or equal to 5
+	 * @param blocksMatching.uniquenessRatio
+	 *
+	 * @param useFullScaleTwoPassAlgorithm
+	 *
+	 * @param pointCloudSamplingDensity
+	 *        downsampling ratio: a number between 0 and 1 that describes how
+	 *        much downsampling of the generated pointcloud is desired. The
+	 *        pointcloud is subsampled at positions that are multiples of n,
+	 *        where n = 1/pointCloudSamplingDensity.
+	 *
+	 * @param useDisparityToDepthMap
+	 *        defines whether the camera parameters are provided as a disparity-
+	 *        to-depth matrix or as the focal length, principle points, and
+	 *        baseline
+	 *
+	 * @param disparityToDepthMap
+	 *        camera parameters in the form of a 4-by-4 disparity-to-depth
+	 *        matrix: provide the elements of this matrix via parameters called
+	 *        Element_X_Y, where X and Y are between 0 and 3
+	 *
+	 * @param stereoCameraParameters
+	 *        camera parameters in the form of the focal length and principal
+	 *        point of the left camera and the distance between the two cameras:
+	 *        the parameters to use to provide this information are called
+	 *        LeftFocalLength, LeftPrinciplePointX, LeftPrinciplePointY, and
+	 *        Baseline, respectively
+	 *
+	 * @param reconstructionSpace
+	 *        a bounding box for the reconstructed scene, provided via
+	 *        parameters called LimitX, LimitY, LimitZ. A reconstructed point
+	 *        of coordinates (x,y,z) is accepted into the pointcloud if
+	 *        -LimitX <= x <= LimitX, -LimitY <= y <= LimitY, 0 < z <= LimitZ.
+	 *
+	 * @reference The algorithm is adapted from Heiko Hirschmueller (2008),
+	 *            "Stereo Processing by Semiglobal Matching and Mutual
+	 *            Information", IEEE Transactions on Pattern Analysis and
+	 *            Machine Intelligence, 30(2), 328-341.
 	 */
-        public:
-        	HirschmullerDisparityMapping();
-        	~HirschmullerDisparityMapping();
-        	void process();
-        	void configure();
+	class HirschmullerDisparityMapping : public StereoReconstructionInterface
+	{
+		public:
 
+			HirschmullerDisparityMapping();
+			virtual ~HirschmullerDisparityMapping();
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
+			virtual void configure();
+			virtual void process();
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
-	private:
-		static const float EPSILON;
+		private:
 
-		struct ReconstructionSpace
+			static const float EPSILON;
+
+			struct ReconstructionSpace
 			{
-			float limitX;
-			float limitY;
-			float limitZ;
+				float limitX;
+				float limitY;
+				float limitZ;
 			};
 
-		struct PrefilterOptionsSet
+			struct PrefilterOptionsSet
 			{
-			int maximum;
+				int maximum;
 			};
 
-		struct DisparitiesOptionsSet
+			struct DisparitiesOptionsSet
 			{
-			int minimum;
-			int numberOfIntervals;
-			bool useMaximumDifference;
-			int maximumDifference;
-			int speckleRange;
-			int speckleWindow;
-			int smoothnessParameter1;
-			int smoothnessParameter2;
+				int minimum;
+				int numberOfIntervals;
+				bool useMaximumDifference;
+				int maximumDifference;
+				int speckleRange;
+				int speckleWindow;
+				int smoothnessParameter1;
+				int smoothnessParameter2;
 			};
 
-		struct BlocksMatchingOptionsSet
+			struct BlocksMatchingOptionsSet
 			{
-			int blockSize;
-			int uniquenessRatio;
-			};
-		
-		struct StereoCameraParameters
-			{
-			float leftFocalLength;
-			float leftPrinciplePointX;
-			float leftPrinciplePointY;
-			float baseline;
+				int blockSize;
+				int uniquenessRatio;
 			};
 
-		typedef double DisparityToDepthMap[16];
-		struct HirschmullerDisparityMappingOptionsSet
+			struct StereoCameraParameters
 			{
-			ReconstructionSpace reconstructionSpace;
-			PrefilterOptionsSet prefilter;
-			DisparitiesOptionsSet disparities;
-			BlocksMatchingOptionsSet blocksMatching;
-			DisparityToDepthMap disparityToDepthMap;
-			float pointCloudSamplingDensity;
-			float voxelGridLeafSize;
-			bool useFullScaleTwoPassAlgorithm;
-			bool useDisparityToDepthMap;
-			StereoCameraParameters stereoCameraParameters;
+				float leftFocalLength;
+				float leftPrinciplePointX;
+				float leftPrinciplePointY;
+				float baseline;
 			};
 
-		cv::Mat disparityToDepthMap;
+			typedef double DisparityToDepthMap[16];
+			struct HirschmullerDisparityMappingOptionsSet
+			{
+				ReconstructionSpace reconstructionSpace;
+				PrefilterOptionsSet prefilter;
+				DisparitiesOptionsSet disparities;
+				BlocksMatchingOptionsSet blocksMatching;
+				DisparityToDepthMap disparityToDepthMap;
+				float pointCloudSamplingDensity;
+				float voxelGridLeafSize;
+				bool useFullScaleTwoPassAlgorithm;
+				bool useDisparityToDepthMap;
+				StereoCameraParameters stereoCameraParameters;
+			};
 
-		Helpers::ParametersListHelper parametersHelper;
-		HirschmullerDisparityMappingOptionsSet parameters;
-		static const HirschmullerDisparityMappingOptionsSet DEFAULT_PARAMETERS;
+			cv::Mat disparityToDepthMap;
 
-		cv::Mat ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage);
-		PointCloudWrapper::PointCloudConstPtr Convert(cv::Mat cvPointCloud);
-		PointCloudWrapper::PointCloudConstPtr ConvertWithPeriodicSampling(cv::Mat cvPointCloud);
-		PointCloudWrapper::PointCloudConstPtr ConvertWithVoxelFilter(cv::Mat cvPointCloud);
-		cv::Mat Convert(DisparityToDepthMap disparityToDepthMap);
-		cv::Mat ComputePointCloudFromDisparity(cv::Mat disparity);
+			Helpers::ParametersListHelper parametersHelper;
+			HirschmullerDisparityMappingOptionsSet parameters;
+			static const HirschmullerDisparityMappingOptionsSet DEFAULT_PARAMETERS;
 
-		void ValidateParameters();
+			cv::Mat ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage);
 
+			PointCloudWrapper::PointCloudConstPtr Convert(cv::Mat cvPointCloud);
+			PointCloudWrapper::PointCloudConstPtr ConvertWithPeriodicSampling(cv::Mat cvPointCloud);
+			PointCloudWrapper::PointCloudConstPtr ConvertWithVoxelFilter(cv::Mat cvPointCloud);
+			cv::Mat Convert(DisparityToDepthMap disparityToDepthMap);
+			Converters::FrameToMatConverter frameToMat;
 
-	/* --------------------------------------------------------------------
-	 * Private Testing 
-	 * --------------------------------------------------------------------
-	 */
-	#ifdef TESTING
-		#define SAVE_DISPARITY_MATRIX(disparity) disparityMatrix = disparity
-	#else
-		#define SAVE_DISPARITY_MATRIX(disparity)
-	#endif
-    };
+			cv::Mat ComputePointCloudFromDisparity(cv::Mat disparity);
+
+			void ValidateParameters();
+
+			#ifdef TESTING
+				#define SAVE_DISPARITY_MATRIX(disparity) disparityMatrix = disparity
+			#else
+				#define SAVE_DISPARITY_MATRIX(disparity)
+			#endif
+	};
 }
-#endif
-/* HirschmullerDisparityMapping.hpp */
+
+#endif // HIRSCHMULLERDISPARITYMAPPING_HPP
+
 /** @} */
