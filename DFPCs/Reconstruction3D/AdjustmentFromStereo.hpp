@@ -22,8 +22,6 @@
  *  the left and right features are matched against each other and against the previous N left and right features;
  *  the point cloud and the matches are stored in a database for future processing;
  *  The correspondences among the latest N image pairs are used for the computation of the camera pose by means of bundle adjustment.    
- *  The N-th to last camera pose is finalized, it is assumed to be the real camera pose.
- *  The N-th to last point cloud is merged with the 3d map at the finalized camera pose.
  * 
  * @{
  */
