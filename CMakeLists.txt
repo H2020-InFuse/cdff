@@ -84,14 +84,14 @@ endif()
 if(USE_BUNDLED_DEPENDENCIES)
 
   set(CMAKE_MODULE_PATH
-    "${PROJECT_SOURCE_DIR}/${BUNDLED_DEPENDENCIES_PREFIX}/share/cmake-3.11.0-rc4/Modules")
+    "${PROJECT_SOURCE_DIR}/${BUNDLED_DEPENDENCIES_PREFIX}/share/cmake-3.11.4/Modules")
 
 else()
 
-  # TODO: check if CMake 3.5.1 doesn't automaically look for find modules in
+  # TODO: check if CMake 3.5.1 doesn't automatically look for find modules in
   # /usr/local/share/cmake*/Modules (it does in /usr/share/cmake-3.5/Modules)
   set(CMAKE_MODULE_PATH
-    "${_DEPENDENCIES_PREFIX}/share/cmake-3.11.0-rc4/Modules")
+    "${_DEPENDENCIES_PREFIX}/share/cmake-3.11.4/Modules")
 
 endif()
 

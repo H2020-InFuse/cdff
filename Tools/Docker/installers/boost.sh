@@ -87,9 +87,9 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
 
   # Patch: support for Boost 1.66.0 in the CMake find module FindBoost.cmake is
   # only available from the module shipped with CMake 3.11: download that module
-  mkdir -p "${INSTALL_DIR}/share/cmake-3.11.0-rc4/Modules"
-  cd "${INSTALL_DIR}/share/cmake-3.11.0-rc4/Modules"
-  wget https://gitlab.kitware.com/cmake/cmake/raw/v3.11.0-rc4/Modules/FindBoost.cmake
+  mkdir -p "${INSTALL_DIR}/share/cmake-3.11.4/Modules"
+  cd "${INSTALL_DIR}/share/cmake-3.11.4/Modules"
+  wget https://gitlab.kitware.com/cmake/cmake/raw/v3.11.4/Modules/FindBoost.cmake
 
   # Remove source/build directory
   clean_function boost
