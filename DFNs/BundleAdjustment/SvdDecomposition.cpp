@@ -59,7 +59,8 @@ void SvdDecomposition::configure()
 
 void SvdDecomposition::process()
 {
-	cv::Mat measurementMatrix = ComputeMeasurementMatrix(inCorrespondenceMapsSequence);
+	cv::Mat measurementMatrix = correspondenceMaps2DSequenceToMatConverter.Convert(&inCorrespondenceMapsSequence);
+	//cv::Mat measurementMatrix = ComputeMeasurementMatrix(inCorrespondenceMapsSequence);
 	if (measurementMatrix.cols < 4) //Not enough points available.
 		{
 		outSuccess = false;
@@ -96,7 +97,7 @@ const SvdDecomposition::SvdDecompositionOptionsSet SvdDecomposition::DEFAULT_PAR
 	.baseline = 1.0
 };
 
-int SvdDecomposition::ComputeNumberOfImages(CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequence& correspondenceMapsSequence)
+/*int SvdDecomposition::ComputeNumberOfImages(CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequence& correspondenceMapsSequence)
 	{
 	if ( GetNumberOfCorrespondenceMaps(correspondenceMapsSequence) == 6 )
 		{
@@ -220,7 +221,7 @@ void SvdDecomposition::AddChainToMeasurementMatrix(const std::vector<ImagePoint>
 		cv::Mat matricesList[2] = {measurementMatrix, chainMatrix};
 		cv::hconcat(matricesList, 2, measurementMatrix);
 		}
-	}
+	}*/
 
 void SvdDecomposition::DecomposeMeasurementMatrix(cv::Mat measurementMatrix, cv::Mat& compatibleRotationMatrix, cv::Mat& compatiblePositionMatrix)
 	{
@@ -365,7 +366,7 @@ cv::Mat SvdDecomposition::ComputeMetricRotationMatrix(cv::Mat rotationMatrix, in
 	return matrixToDecompose; 		
 	}
 
-bool SvdDecomposition::PointIsNotInVector(Point2D point, const std::vector<Point2D>& vector)
+/*bool SvdDecomposition::PointIsNotInVector(Point2D point, const std::vector<Point2D>& vector)
 	{
 	for(int pointIndex = 0; pointIndex < vector.size(); pointIndex++)
 		{
@@ -376,7 +377,7 @@ bool SvdDecomposition::PointIsNotInVector(Point2D point, const std::vector<Point
 			}
 		}
 	return true;
-	}
+	}*/
 
 void SvdDecomposition::ValidateParameters()
 {
@@ -391,8 +392,19 @@ void SvdDecomposition::ValidateInputs()
 	ASSERT( n == 6 || n == 15 || n == 28, "SvdDecomposition Error: you should provide correspondence maps for either 2, 3 or 4 pairs of stereo camera images");
 }
 
+cv::Mat SvdDecomposition::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix)
+	{
+	cv::Mat cvCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
+	cvCameraMatrix.at<float>(0,0) = cameraMatrix.focalLengthX;
+	cvCameraMatrix.at<float>(1,1) = cameraMatrix.focalLengthY;
+	cvCameraMatrix.at<float>(2,0) = cameraMatrix.principalPointX;
+	cvCameraMatrix.at<float>(2,1) = cameraMatrix.principalPointY;
+	cvCameraMatrix.at<float>(2,2) = 1.0;
 
-bool SvdDecomposition::ThereAreUnexploredPoints(const std::vector<ImagePoint>& chain, int& chainIndexToExplore)
+	return cvCameraMatrix;
+	}
+
+/*bool SvdDecomposition::ThereAreUnexploredPoints(const std::vector<ImagePoint>& chain, int& chainIndexToExplore)
 	{
 	for(int pointIndex = 0; pointIndex < chain.size(); pointIndex++)
 		{
@@ -491,19 +503,7 @@ bool SvdDecomposition::ImageIsNotInChain(const std::vector<ImagePoint>& chain, i
 			}
 		}
 	return true;
-	}
-
-cv::Mat SvdDecomposition::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix)
-	{
-	cv::Mat cvCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
-	cvCameraMatrix.at<float>(0,0) = cameraMatrix.focalLengthX;
-	cvCameraMatrix.at<float>(1,1) = cameraMatrix.focalLengthY;
-	cvCameraMatrix.at<float>(2,0) = cameraMatrix.principalPointX;
-	cvCameraMatrix.at<float>(2,1) = cameraMatrix.principalPointY;
-	cvCameraMatrix.at<float>(2,2) = 1.0;
-
-	return cvCameraMatrix;
-	}
+	}*/
 }
 
 /** @} */

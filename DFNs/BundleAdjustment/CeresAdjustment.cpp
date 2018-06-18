@@ -57,7 +57,8 @@ void CeresAdjustment::configure()
 
 void CeresAdjustment::process()
 {
-	cv::Mat measurementMatrix = ComputeMeasurementMatrix(inCorrespondenceMapsSequence);
+	cv::Mat measurementMatrix = correspondenceMaps2DSequenceToMatConverter.Convert(&inCorrespondenceMapsSequence);
+	//cv::Mat measurementMatrix = ComputeMeasurementMatrix(inCorrespondenceMapsSequence);
 	if (measurementMatrix.cols < 4) //Not enough points available.
 		{
 		outSuccess = false;
@@ -287,7 +288,7 @@ void CeresAdjustment::ConvertProjectionMatricesListToPosesSequence(std::vector<c
 		}
 	}
 
-int CeresAdjustment::ComputeNumberOfImages(CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequence& correspondenceMapsSequence)
+/*int CeresAdjustment::ComputeNumberOfImages(CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequence& correspondenceMapsSequence)
 	{
 	if ( GetNumberOfCorrespondenceMaps(correspondenceMapsSequence) == 6 )
 		{
@@ -424,7 +425,7 @@ bool CeresAdjustment::PointIsNotInVector(Point2D point, const std::vector<Point2
 			}
 		}
 	return true;
-	}
+	}*/
 
 void CeresAdjustment::ValidateParameters()
 {
@@ -441,7 +442,7 @@ void CeresAdjustment::ValidateInputs()
 }
 
 
-bool CeresAdjustment::ThereAreUnexploredPoints(const std::vector<ImagePoint>& chain, int& chainIndexToExplore)
+/*bool CeresAdjustment::ThereAreUnexploredPoints(const std::vector<ImagePoint>& chain, int& chainIndexToExplore)
 	{
 	for(int pointIndex = 0; pointIndex < chain.size(); pointIndex++)
 		{
@@ -540,7 +541,7 @@ bool CeresAdjustment::ImageIsNotInChain(const std::vector<ImagePoint>& chain, in
 			}
 		}
 	return true;
-	}
+	}*/
 
 cv::Mat CeresAdjustment::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix)
 	{
