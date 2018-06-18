@@ -100,9 +100,10 @@ int main(int argc, char** argv)
 			}		
 		}
 
-	SparseRegistrationFromStereo registrationFromStereo;
-	guiReconstruction3d.Run(registrationFromStereo);
+	SparseRegistrationFromStereo* registrationFromStereo = new SparseRegistrationFromStereo;
+	guiReconstruction3d.Run(*registrationFromStereo);
 
+	delete(registrationFromStereo);
 	return 0;
 	};
 

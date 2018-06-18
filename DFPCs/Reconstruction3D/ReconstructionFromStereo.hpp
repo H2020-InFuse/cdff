@@ -46,6 +46,12 @@
 #include "ObservedScene.hpp"
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
+#include <Frame.hpp>
+#include <PointCloud.hpp>
+#include <Pose.hpp>
+#include <VisualPointFeatureVector2D.hpp>
+#include <CorrespondenceMap2D.hpp>
+#include <Matrix.hpp>
 
 
 namespace dfpc_ci {
@@ -102,22 +108,22 @@ namespace dfpc_ci {
 		dfn_ci::StereoReconstructionInterface* reconstructor3D;
 
 		FrameWrapper::FrameConstPtr pastLeftImage;
-		FrameWrapper::FrameConstPtr currentLeftImage;
-		FrameWrapper::FrameConstPtr currentRightImage;
-		FrameWrapper::FrameConstPtr filteredPastLeftImage;
-		FrameWrapper::FrameConstPtr filteredCurrentLeftImage;
-		FrameWrapper::FrameConstPtr filteredCurrentRightImage;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr pastLeftKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentLeftKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentRightKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr pastLeftFeaturesVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentLeftFeaturesVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr currentRightFeaturesVector;
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr pastToCurrentCorrespondenceMap;
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr leftToRightCorrespondenceMap;
-		MatrixWrapper::Matrix3dConstPtr fundamentalMatrix;
-		PoseWrapper::Pose3DConstPtr pastToCurrentCameraTransform;
-		PointCloudWrapper::PointCloudConstPtr pointCloud;
+		FrameWrapper::FramePtr currentLeftImage;
+		FrameWrapper::FramePtr currentRightImage;
+		FrameWrapper::FramePtr filteredPastLeftImage;
+		FrameWrapper::FramePtr filteredCurrentLeftImage;
+		FrameWrapper::FramePtr filteredCurrentRightImage;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr pastLeftKeypointsVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentLeftKeypointsVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentRightKeypointsVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr pastLeftFeaturesVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentLeftFeaturesVector;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentRightFeaturesVector;
+		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr pastToCurrentCorrespondenceMap;
+		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr leftToRightCorrespondenceMap;
+		MatrixWrapper::Matrix3dPtr fundamentalMatrix;
+		PoseWrapper::Pose3DPtr pastToCurrentCameraTransform;
+		PointCloudWrapper::PointCloudPtr pointCloud;
 
 		void ConfigureExtraParameters();
 		void AssignDfnsAlias();

@@ -52,6 +52,9 @@
 #include "PointCloudMap.hpp"
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
+#include <Frame.hpp>
+#include <PointCloud.hpp>
+#include <Pose.hpp>
 
 
 namespace dfpc_ci {
@@ -110,10 +113,10 @@ namespace dfpc_ci {
 		dfn_ci::FeaturesMatching2DInterface* featuresMatcher2d;
 		dfn_ci::BundleAdjustmentInterface* bundleAdjuster;
 
-		FrameWrapper::FrameConstPtr leftImage;
-		FrameWrapper::FrameConstPtr rightImage;
-		FrameWrapper::FrameConstPtr filteredLeftImage;
-		FrameWrapper::FrameConstPtr filteredRightImage;
+		FrameWrapper::FramePtr leftImage;
+		FrameWrapper::FramePtr rightImage;
+		FrameWrapper::FramePtr filteredLeftImage;
+		FrameWrapper::FramePtr filteredRightImage;
 		PointCloudWrapper::PointCloudConstPtr imagesCloud;
 		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr leftKeypointsVector;
 		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr rightKeypointsVector;
@@ -123,7 +126,7 @@ namespace dfpc_ci {
 		std::vector<VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr> featuresVectorsList;
 		std::vector< std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> > currentCorrespondenceMapsList;
 		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequenceConstPtr latestCorrespondenceMaps;
-		PoseWrapper::Poses3DSequenceConstPtr latestCameraPoses;
+		PoseWrapper::Poses3DSequencePtr latestCameraPoses;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr emptyFeaturesVector;
 		PoseWrapper::Pose3DPtr previousCameraPose;
 
@@ -133,7 +136,7 @@ namespace dfpc_ci {
 		void FilterImages();
 		void ComputeVisualPointFeatures();
 
-		void FilterImage(FrameWrapper::FrameConstPtr image, dfn_ci::ImageFilteringInterface* filter, FrameWrapper::FrameConstPtr& filteredImage);
+		void FilterImage(FrameWrapper::FramePtr image, dfn_ci::ImageFilteringInterface* filter, FrameWrapper::FramePtr& filteredImage);
 		void ComputeStereoPointCloud();
 		void ExtractFeatures(FrameWrapper::FrameConstPtr filteredImage, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& keypointsVector);
 		void DescribeFeatures(

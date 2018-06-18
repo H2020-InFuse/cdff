@@ -63,6 +63,8 @@ AdjustmentFromStereo::AdjustmentFromStereo()
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfAdjustedStereoPairs", parameters.numberOfAdjustedStereoPairs, DEFAULT_PARAMETERS.numberOfAdjustedStereoPairs);
 
+	leftImage = NewFrame();
+	rightImage = NewFrame();
 	filteredLeftImage = NULL;
 	filteredRightImage = NULL;
 	imagesCloud = NULL;
@@ -71,7 +73,7 @@ AdjustmentFromStereo::AdjustmentFromStereo()
 	leftFeaturesVector = NULL;
 	rightFeaturesVector = NULL;
 	latestCorrespondenceMaps = NULL;
-	latestCameraPoses = NULL;
+	latestCameraPoses = NewPoses3DSequence();
 	emptyFeaturesVector = NewVisualPointFeatureVector3D();
 	previousCameraPose = NewPose3D();
 
@@ -104,11 +106,13 @@ AdjustmentFromStereo::~AdjustmentFromStereo()
 		DELETE_PREVIOUS(leftFeaturesVector);
 		DELETE_PREVIOUS(rightFeaturesVector);
 		}
+	delete(leftImage);
+	delete(rightImage);
 	DELETE_PREVIOUS(imagesCloud);
 	DELETE_PREVIOUS(leftKeypointsVector);
 	DELETE_PREVIOUS(rightKeypointsVector);
 	DELETE_PREVIOUS(latestCorrespondenceMaps);
-	DELETE_PREVIOUS(latestCameraPoses);
+	delete(latestCameraPoses);
 	DELETE_PREVIOUS(emptyFeaturesVector);
 	DELETE_PREVIOUS(previousCameraPose);
 	for(int imageIndex = 0; imageIndex < featuresVectorsList.size(); imageIndex++)
@@ -134,9 +138,9 @@ AdjustmentFromStereo::~AdjustmentFromStereo()
 void AdjustmentFromStereo::run() 
 	{
 	DEBUG_PRINT_TO_LOG("Adjustment from stereo start", "");
-
-	leftImage = inLeftImage;
-	rightImage = inRightImage;
+ 
+	Copy(inLeftImage, *leftImage);
+	Copy(inRightImage, *rightImage);
 
 	FilterImages();
 	ComputeStereoPointCloud();
@@ -155,22 +159,21 @@ void AdjustmentFromStereo::run()
 
 	if (outSuccess)
 		{
+		Pose3DConstPtr outputPose;
 		if(firstTimeBundle)
 			{
-			outPose = AddAllPointCloudsToMap();
+			outputPose = AddAllPointCloudsToMap();
 			}
 		else
 			{
-			outPose = AddLastPointCloudToMap();
+			outputPose = AddLastPointCloudToMap();
 			}
+		Copy(*outputPose, outPose);
 
-		outPointCloud = pointCloudMap.GetScenePointCloudInOrigin(outPose, parameters.searchRadius);
-		DEBUG_SHOW_POINT_CLOUD(outPointCloud);
-		}
-	else
-		{
-		outPointCloud = NULL;
-		outPose = NULL;
+		PointCloudWrapper::PointCloudConstPtr outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(outputPose, parameters.searchRadius);
+		Copy(*outputPointCloud, outPointCloud); 
+		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
+		DELETE_PREVIOUS(outputPointCloud);
 		}
 	}
 
@@ -233,6 +236,15 @@ void AdjustmentFromStereo::AssignDfnsAlias()
 	ASSERT(featuresExtractor2d != NULL, "DFPC Adjustment from stereo error: featuresExtractor2d DFN configured incorrectly");
 	ASSERT(featuresMatcher2d != NULL, "DFPC Adjustment from stereo error: featuresMatcher3d DFN configured incorrectly");
 	ASSERT(bundleAdjuster != NULL, "DFPC Adjustment from stereo error: bundleAdjuster DFN configured incorrectly");
+
+	if (optionalLeftFilter != NULL)
+		{
+		filteredLeftImage = NewFrame();
+		}
+	if (optionalRightFilter != NULL)
+		{
+		filteredRightImage = NewFrame();
+		}
 	}
 
 /**
@@ -245,18 +257,13 @@ void AdjustmentFromStereo::FilterImages()
 	FilterImage(rightImage, optionalRightFilter, filteredRightImage);
 	}
 
-void AdjustmentFromStereo::FilterImage(FrameConstPtr image, ImageFilteringInterface* filter, FrameConstPtr& filteredImage)
+void AdjustmentFromStereo::FilterImage(FramePtr image, ImageFilteringInterface* filter, FramePtr& filteredImage)
 	{
 	if (filter != NULL)
 		{
 		filter->imageInput(*image);
 		filter->process();
-
-		DELETE_PREVIOUS(filteredImage);
-		FramePtr newFrame = NewFrame();
-		Copy(optionalLeftFilter->imageOutput(), *newFrame);
-		filteredImage = newFrame;
-
+		Copy(optionalLeftFilter->imageOutput(), *filteredImage);
 		DEBUG_PRINT_TO_LOG("Filtered Frame", "");
 		DEBUG_SHOW_IMAGE(filteredImage);
 		}
@@ -416,10 +423,7 @@ bool AdjustmentFromStereo::ComputeCameraPoses()
 	
 	if (successOutput)
 		{
-		DELETE_PREVIOUS(latestCameraPoses);
-		Poses3DSequencePtr newSequence = NewPoses3DSequence();
-		Copy(bundleAdjuster->posesSequenceOutput(), *newSequence);
-		latestCameraPoses = newSequence;
+		Copy(bundleAdjuster->posesSequenceOutput(), *latestCameraPoses);
 		DEBUG_PRINT_TO_LOG("Bundle adjustement success", "");
 		}
 	else

@@ -18,7 +18,7 @@ using namespace BaseTypesWrapper;
 void Copy(const PointCloud& source, PointCloud& destination)
 {
 	ClearPoints(destination);
-	for (int pointIndex; pointIndex < GetNumberOfPoints(source); pointIndex++)
+	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(source); pointIndex++)
 	{
 		AddPoint(destination, GetXCoordinate(source, pointIndex), GetYCoordinate(source, pointIndex), GetZCoordinate(source, pointIndex));
 	}

@@ -59,14 +59,16 @@ SparseRegistrationFromStereo::SparseRegistrationFromStereo()
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 
+	leftImage = NewFrame();
+	rightImage = NewFrame();
 	filteredLeftImage = NULL;
 	filteredRightImage = NULL;
-	imagesCloud = NULL;
+	imagesCloud = NewPointCloud();
 	imagesSparseCloud = NULL;
 	sceneSparseCloud = NULL;
-	imagesCloudKeypointsVector = NULL;
+	imagesCloudKeypointsVector = NewVisualPointFeatureVector3D();
 	sceneCloudKeypointsVector = NULL;
-	cameraPoseInScene = NULL;
+	cameraPoseInScene = NewPose3D();
 	previousCameraPoseInScene = NewPose3D();
 	emptyFeaturesVector = NewVisualPointFeatureVector3D();
 
@@ -90,12 +92,14 @@ SparseRegistrationFromStereo::~SparseRegistrationFromStereo()
 		{
 		DELETE_PREVIOUS(filteredRightImage);
 		}
-	DELETE_PREVIOUS(imagesCloud);
+	delete(leftImage);
+	delete(rightImage);
+	delete(imagesCloud);
 	DELETE_PREVIOUS(imagesSparseCloud);
 	DELETE_PREVIOUS(sceneSparseCloud);
-	DELETE_PREVIOUS(imagesCloudKeypointsVector);
+	delete(imagesCloudKeypointsVector);
 	DELETE_PREVIOUS(sceneCloudKeypointsVector);
-	DELETE_PREVIOUS(cameraPoseInScene);
+	delete(cameraPoseInScene);
 	DELETE_PREVIOUS(previousCameraPoseInScene);
 	DELETE_PREVIOUS(emptyFeaturesVector);
 	}
@@ -111,8 +115,8 @@ void SparseRegistrationFromStereo::run()
 	{
 	DEBUG_PRINT_TO_LOG("Sparse Registration from stereo start", "");
 
-	leftImage = inLeftImage;
-	rightImage = inRightImage;
+	Copy(inLeftImage, *leftImage);
+	Copy(inRightImage, *rightImage);
 
 	ComputePointCloud();
 	ComputeImagesCloudKeypoints();
@@ -139,20 +143,15 @@ void SparseRegistrationFromStereo::run()
 	if (outSuccess)
 		{
 		pointCloudMap.AddPointCloud(imagesCloud, imagesCloudKeypointsVector, cameraPoseInScene);
-		outPointCloud = pointCloudMap.GetScenePointCloudInOrigin(cameraPoseInScene, parameters.searchRadius);
-		DEBUG_SHOW_POINT_CLOUD(outPointCloud);
+		PointCloudWrapper::PointCloudConstPtr outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(cameraPoseInScene, parameters.searchRadius);
+		Copy(*outputPointCloud, outPointCloud); 
+		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
+		DELETE_PREVIOUS(outputPointCloud);
 
-		Pose3DPtr newOutPose = NewPose3D();
-		Copy(*cameraPoseInScene, *newOutPose);
-		outPose = newOutPose;
+		Copy(*cameraPoseInScene, outPose);
 
 		Copy(*cameraPoseInScene, *previousCameraPoseInScene);
-		DEBUG_PRINT_TO_LOG("Pose ", ToString(*outPose) );
-		}
-	else
-		{
-		outPointCloud = NULL;
-		outPose = NULL;
+		DEBUG_PRINT_TO_LOG("Pose ", ToString(outPose) );
 		}
 	}
 
@@ -200,6 +199,15 @@ void SparseRegistrationFromStereo::AssignDfnsAlias()
 
 	ASSERT(reconstructor3D != NULL, "DFPC Registration from stereo error: reconstructor3D DFN configured incorrectly");
 	ASSERT(cloudRegistrator != NULL, "DFPC Registration from stereo error: featuresMatcher3d DFN configured incorrectly");
+
+	if (optionalLeftFilter != NULL)
+		{
+		filteredLeftImage = NewFrame();
+		}
+	if (optionalRightFilter != NULL)
+		{
+		filteredRightImage = NewFrame();
+		}
 	}
 
 /**
@@ -219,10 +227,7 @@ void SparseRegistrationFromStereo::FilterLeftImage()
 		{
 		optionalLeftFilter->imageInput(*leftImage);
 		optionalLeftFilter->process();
-		DELETE_PREVIOUS(filteredLeftImage);
-		FramePtr newFrame = NewFrame();
-		Copy(optionalLeftFilter->imageOutput(), *newFrame);
-		filteredLeftImage = newFrame;
+		Copy(optionalLeftFilter->imageOutput(), *filteredLeftImage);
 		DEBUG_PRINT_TO_LOG("Filtered Frame", "");
 		DEBUG_SHOW_IMAGE(filteredLeftImage);
 		}
@@ -238,10 +243,7 @@ void SparseRegistrationFromStereo::FilterRightImage()
 		{
 		optionalRightFilter->imageInput(*rightImage);
 		optionalRightFilter->process();
-		DELETE_PREVIOUS(filteredRightImage);
-		FramePtr newFrame = NewFrame();
-		Copy(optionalRightFilter->imageOutput(), *newFrame);
-		filteredRightImage = newFrame;
+		Copy(optionalRightFilter->imageOutput(), *filteredRightImage);
 		DEBUG_PRINT_TO_LOG("Filtered Right Frame", "");
 		DEBUG_SHOW_IMAGE(filteredRightImage);
 		}
@@ -256,9 +258,7 @@ void SparseRegistrationFromStereo::ComputeStereoPointCloud()
 	reconstructor3D->leftInput(*filteredLeftImage);
 	reconstructor3D->rightInput(*filteredRightImage);
 	reconstructor3D->process();
-	DELETE_PREVIOUS(imagesCloud);
-	const PointCloud& tmp = reconstructor3D->pointcloudOutput();
-	imagesCloud = &tmp;
+	Copy( reconstructor3D->pointcloudOutput(), *imagesCloud);
 	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*imagesCloud));
 	DEBUG_SHOW_POINT_CLOUD(imagesCloud);
 	}
@@ -267,10 +267,7 @@ void SparseRegistrationFromStereo::ComputeImagesCloudKeypoints()
 	{
 	featuresExtractor->pointcloudInput(*imagesCloud);
 	featuresExtractor->process();
-	DELETE_PREVIOUS(imagesCloudKeypointsVector);
-	VisualPointFeatureVector3DPtr newKeypointsVector = NewVisualPointFeatureVector3D();
-	Copy(featuresExtractor->featuresOutput(), *newKeypointsVector);
-	imagesCloudKeypointsVector = newKeypointsVector;
+	Copy(featuresExtractor->featuresOutput(), *imagesCloudKeypointsVector);
 	DEBUG_PRINT_TO_LOG("Extracted Point Cloud Features", GetNumberOfPoints(*imagesCloudKeypointsVector) );
 	DEBUG_SHOW_3D_VISUAL_FEATURES(imagesCloud, imagesCloudKeypointsVector);
 	}
@@ -292,10 +289,7 @@ bool SparseRegistrationFromStereo::RegisterImagesCloudOnScene()
 	cloudRegistrator->sinkCloudInput(*sceneSparseCloud);
 	cloudRegistrator->useGuessInput(false);
 	cloudRegistrator->process();
-	DELETE_PREVIOUS(cameraPoseInScene);
-	Pose3DPtr newPose = NewPose3D();
-	Copy(cloudRegistrator->transformOutput(), *newPose);
-	cameraPoseInScene = newPose;
+	Copy(cloudRegistrator->transformOutput(), *cameraPoseInScene);
 	bool registrationSuccess = cloudRegistrator->successOutput();
 	DEBUG_PRINT_TO_LOG("Registration 3D Success", registrationSuccess );
 	DEBUG_PRINT_TO_LOG("Transform", (registrationSuccess ? ToString(*cameraPoseInScene) : "") );

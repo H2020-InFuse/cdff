@@ -1,4 +1,4 @@
-name: PointCloudModelLocalisation
+name: Reconstruction3D
 dfns:
     - name: FeaturesExtraction2D
     - name: FeaturesDescription2D
@@ -10,20 +10,20 @@ dfns:
     - name: PointCloudReconstruction2DTo3D
 input_ports:
     - name: leftImage
-      type: Frame
+      type: asn1SccFrame
       doc: "a 2D left image taken from a stereo camera"
       connections:
         - dfn: ImageFiltering
           port: image
     - name: rightImage
-      type: Frame
+      type: asn1SccFrame
       doc: "a 2D right image taken from a stereo camera"
       connections:
         - dfn: ImageFiltering
           port: image
 output_ports:
     - name: pointCloud
-      type: PointCloud
+      type: asn1SccPointcloud
       doc: "This is the point cloud representing the 3D scene constructed so far."
       connections:
         dfn: StereoReconstruction
@@ -31,7 +31,7 @@ output_ports:
         dfn: PointCloudReconstruction2DTo3D
         port: pointCloud
     - name: pose
-      type: Pose3D
+      type: asn1SccPose
       doc: "This is the pose of the camera in the scene."
       connections:
         dfn: CamerasTransformEstimation

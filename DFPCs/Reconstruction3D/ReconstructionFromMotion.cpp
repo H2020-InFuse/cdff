@@ -78,20 +78,22 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 
+	currentLeftImage = NewFrame();
+	currentRightImage = NewFrame();
 	filteredCurrentLeftImage = NULL;
-	filteredPastLeftImage = NULL;
+	filteredPastLeftImage = NewFrame();
 	filteredCurrentRightImage = NULL;
-	currentLeftKeypointsVector = NULL;
-	pastLeftKeypointsVector = NULL;
-	currentRightKeypointsVector = NULL;
+	currentLeftKeypointsVector = NewVisualPointFeatureVector2D();
+	pastLeftKeypointsVector = NewVisualPointFeatureVector2D();
+	currentRightKeypointsVector = NewVisualPointFeatureVector2D();
 	currentLeftFeaturesVector = NULL;
 	pastLeftFeaturesVector = NULL;
 	currentRightFeaturesVector = NULL;
-	pastToCurrentCorrespondenceMap = NULL;
-	leftRightCorrespondenceMap = NULL;
-	fundamentalMatrix = NULL;
-	pastToCurrentCameraTransform = NULL;
-	pointCloud = NULL;
+	pastToCurrentCorrespondenceMap = NewCorrespondenceMap2D();
+	leftRightCorrespondenceMap = NewCorrespondenceMap2D();
+	fundamentalMatrix = NewMatrix3d();
+	pastToCurrentCameraTransform = NewPose3D();
+	pointCloud = NewPointCloud();
 
 	leftFilter = NULL;
 	rightFilter = NULL;
@@ -112,26 +114,31 @@ ReconstructionFromMotion::~ReconstructionFromMotion()
 	if (leftFilter != NULL)
 		{
 		DELETE_PREVIOUS(filteredCurrentLeftImage);
-		DELETE_PREVIOUS(filteredPastLeftImage);
 		}
 	if (rightFilter != NULL)
 		{
 		DELETE_PREVIOUS(filteredCurrentRightImage);
 		}
-	DELETE_PREVIOUS(currentLeftKeypointsVector);
-	DELETE_PREVIOUS(pastLeftKeypointsVector);
-	DELETE_PREVIOUS(currentRightKeypointsVector);
+	delete(filteredPastLeftImage);
+
 	if (optionalFeaturesDescriptor != NULL)
 		{
 		DELETE_PREVIOUS(currentLeftFeaturesVector);
 		DELETE_PREVIOUS(pastLeftFeaturesVector);
 		DELETE_PREVIOUS(currentRightFeaturesVector);
 		}
-	DELETE_PREVIOUS(pastToCurrentCorrespondenceMap);
-	DELETE_PREVIOUS(leftRightCorrespondenceMap);
-	DELETE_PREVIOUS(fundamentalMatrix);
-	DELETE_PREVIOUS(pastToCurrentCameraTransform);
-	DELETE_PREVIOUS(pointCloud);
+
+	delete(currentLeftImage);
+	delete(currentRightImage);
+	delete(currentLeftKeypointsVector);
+	delete(pastLeftKeypointsVector);
+	delete(currentRightKeypointsVector);
+
+	delete(pastToCurrentCorrespondenceMap);
+	delete(leftRightCorrespondenceMap);
+	delete(fundamentalMatrix);
+	delete(pastToCurrentCameraTransform);
+	delete(pointCloud);
 	delete(rightToLeftCameraPose);
 	}
 
@@ -152,11 +159,6 @@ void ReconstructionFromMotion::run()
 		{
 		ComputePointCloud();
 		UpdateScene();
-		}
-	else
-		{
-		outPointCloud = NULL;
-		outPose = NULL;
 		}
 	}
 
@@ -219,10 +221,11 @@ void ReconstructionFromMotion::ConfigureExtraParameters()
 *      (ii d) the search stops when a transform is successfully estimated or there are no more past images
 **/
 bool ReconstructionFromMotion::ComputeCameraMovement()
-	{
-	currentLeftImage = inLeftImage;
-	currentRightImage = inRightImage;
-	map->AddFrames(inLeftImage, inRightImage);
+	{ 
+	Copy(inLeftImage, *currentLeftImage);
+	Copy(inRightImage, *currentRightImage);
+
+	map->AddFrames(currentLeftImage, currentRightImage);
 	FilterCurrentLeftImage();
 	ExtractCurrentLeftFeatures();
 	DescribeCurrentLeftFeatures();
@@ -279,11 +282,13 @@ void ReconstructionFromMotion::UpdateScene()
 	map->AddFramePoseInReference(pastToCurrentCameraTransform);
 	map->AddPointCloudInLastReference(pointCloud);
 
-	outPose = map->GetCurrentFramePoseInOrigin();
-	outPointCloud = map->GetPartialScene(parameters.searchRadius);
+	Pose3DConstPtr outputPose = map->GetCurrentFramePoseInOrigin();
+	PointCloudConstPtr outputPointCloud = map->GetPartialScene(parameters.searchRadius);
 
-	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*outPointCloud));
-	DEBUG_SHOW_POINT_CLOUD(outPointCloud);
+	Copy(*outputPose, outPose);
+	Copy(*outputPointCloud, outPointCloud);
+	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*outputPointCloud));
+	DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 	}
 
 void ReconstructionFromMotion::AssignDfnsAlias()
@@ -302,16 +307,31 @@ void ReconstructionFromMotion::AssignDfnsAlias()
 	ASSERT(fundamentalMatrixComputer != NULL, "DFPC Structure from motion error: fundamentalMatrixComputer DFN configured incorrectly");
 	ASSERT(cameraTransformEstimator != NULL, "DFPC Structure from motion error: cameraTransformEstimator DFN configured incorrectly");
 	ASSERT(reconstructor3D != NULL, "DFPC Structure from motion error: reconstructor3D DFN configured incorrectly");
+
+	//This data should be initialized only if the relative DFN is used.
+	if (leftFilter != NULL)
+		{
+		filteredCurrentLeftImage = NewFrame();
+		}
+	if (rightFilter != NULL)
+		{
+		filteredCurrentRightImage = NewFrame();
+		}
+	if (optionalFeaturesDescriptor != NULL)
+		{
+		currentLeftFeaturesVector = NewVisualPointFeatureVector2D();
+		pastLeftFeaturesVector = NewVisualPointFeatureVector2D();
+		currentRightFeaturesVector = NewVisualPointFeatureVector2D();
+		}
 	}
 
 void ReconstructionFromMotion::FilterCurrentLeftImage()
 	{
 	if (leftFilter != NULL)
 		{
-		leftFilter->imageInput(currentLeftImage);
+		leftFilter->imageInput(*currentLeftImage);
 		leftFilter->process();
-		DELETE_PREVIOUS(filteredCurrentLeftImage);
-		filteredCurrentLeftImage = leftFilter->filteredImageOutput();
+		Copy( leftFilter->imageOutput(), *filteredCurrentLeftImage);
 		DEBUG_PRINT_TO_LOG("Filtered Current Frame", "");
 		}
 	else
@@ -324,15 +344,14 @@ void ReconstructionFromMotion::FilterPastLeftImage()
 	{
 	if (leftFilter != NULL)
 		{
-		leftFilter->imageInput(pastLeftImage);
+		leftFilter->imageInput(*pastLeftImage);
 		leftFilter->process();
-		DELETE_PREVIOUS(filteredPastLeftImage);
-		filteredPastLeftImage = leftFilter->filteredImageOutput();
+		Copy( leftFilter->imageOutput(), *filteredPastLeftImage);
 		DEBUG_PRINT_TO_LOG("Filtered Past Frame", "");
 		}
 	else
 		{
-		filteredPastLeftImage = pastLeftImage;
+		Copy(*pastLeftImage, *filteredPastLeftImage);
 		}
 	}
 
@@ -340,10 +359,9 @@ void ReconstructionFromMotion::FilterCurrentRightImage()
 	{
 	if (rightFilter != NULL)
 		{
-		rightFilter->imageInput(currentRightImage);
+		rightFilter->imageInput(*currentRightImage);
 		rightFilter->process();
-		DELETE_PREVIOUS(filteredCurrentRightImage);
-		filteredCurrentRightImage = rightFilter->filteredImageOutput();
+		Copy( rightFilter->imageOutput(), *filteredCurrentRightImage);
 		DEBUG_PRINT_TO_LOG("Filtered Current Right Frame", "");
 		}
 	else
@@ -354,28 +372,25 @@ void ReconstructionFromMotion::FilterCurrentRightImage()
 
 void ReconstructionFromMotion::ExtractCurrentLeftFeatures()
 	{
-	featuresExtractor->imageInput(filteredCurrentLeftImage);
+	featuresExtractor->frameInput(*filteredCurrentLeftImage);
 	featuresExtractor->process();
-	DELETE_PREVIOUS(currentLeftKeypointsVector);
-	currentLeftKeypointsVector = featuresExtractor->featuresSetOutput();
+	Copy( featuresExtractor->featuresOutput(), *currentLeftKeypointsVector);
 	DEBUG_PRINT_TO_LOG("Extracted Current Features", GetNumberOfPoints(*currentLeftKeypointsVector) );
 	}
 
 void ReconstructionFromMotion::ExtractPastLeftFeatures()
 	{
-	featuresExtractor->imageInput(filteredPastLeftImage);
+	featuresExtractor->frameInput(*filteredPastLeftImage);
 	featuresExtractor->process();
-	DELETE_PREVIOUS(pastLeftKeypointsVector);
-	pastLeftKeypointsVector = featuresExtractor->featuresSetOutput();
+	Copy( featuresExtractor->featuresOutput(), *pastLeftKeypointsVector);
 	DEBUG_PRINT_TO_LOG("Extracted Past Features", GetNumberOfPoints(*pastLeftKeypointsVector) );
 	}
 
 void ReconstructionFromMotion::ExtractCurrentRightFeatures()
 	{
-	featuresExtractor->imageInput(filteredCurrentRightImage);
+	featuresExtractor->frameInput(*filteredCurrentRightImage);
 	featuresExtractor->process();
-	DELETE_PREVIOUS(currentRightKeypointsVector);
-	currentRightKeypointsVector = featuresExtractor->featuresSetOutput();
+	Copy( featuresExtractor->featuresOutput(), *currentRightKeypointsVector);
 	DEBUG_PRINT_TO_LOG("Extracted Current Right Features", GetNumberOfPoints(*currentRightKeypointsVector) );
 	}
 
@@ -383,10 +398,10 @@ void ReconstructionFromMotion::DescribeCurrentLeftFeatures()
 	{
 	if (optionalFeaturesDescriptor != NULL)
 		{
-		optionalFeaturesDescriptor->featuresSetInput(currentLeftKeypointsVector);
+		optionalFeaturesDescriptor->frameInput(*filteredCurrentLeftImage);
+		optionalFeaturesDescriptor->featuresInput(*currentLeftKeypointsVector);
 		optionalFeaturesDescriptor->process();
-		DELETE_PREVIOUS(currentLeftFeaturesVector);
-		currentLeftFeaturesVector = optionalFeaturesDescriptor->featuresSetWithDescriptorsOutput();
+		Copy( optionalFeaturesDescriptor->featuresOutput(), *currentLeftFeaturesVector);
 		DEBUG_PRINT_TO_LOG("Described Current Features", GetNumberOfPoints(*currentLeftFeaturesVector) );
 		}
 	else
@@ -399,10 +414,10 @@ void ReconstructionFromMotion::DescribePastLeftFeatures()
 	{
 	if (optionalFeaturesDescriptor != NULL)
 		{
-		optionalFeaturesDescriptor->featuresSetInput(pastLeftKeypointsVector);
+		optionalFeaturesDescriptor->frameInput(*filteredPastLeftImage);
+		optionalFeaturesDescriptor->featuresInput(*pastLeftKeypointsVector);
 		optionalFeaturesDescriptor->process();
-		DELETE_PREVIOUS(pastLeftFeaturesVector);
-		pastLeftFeaturesVector = optionalFeaturesDescriptor->featuresSetWithDescriptorsOutput();
+		Copy(optionalFeaturesDescriptor->featuresOutput(), *pastLeftFeaturesVector);
 		DEBUG_PRINT_TO_LOG("Described Past Features", GetNumberOfPoints(*pastLeftFeaturesVector) );
 		}
 	else
@@ -415,10 +430,10 @@ void ReconstructionFromMotion::DescribeCurrentRightFeatures()
 	{
 	if (optionalFeaturesDescriptor != NULL)
 		{
-		optionalFeaturesDescriptor->featuresSetInput(currentRightKeypointsVector);
+		optionalFeaturesDescriptor->frameInput(*filteredCurrentRightImage);
+		optionalFeaturesDescriptor->featuresInput(*currentRightKeypointsVector);
 		optionalFeaturesDescriptor->process();
-		DELETE_PREVIOUS(currentRightFeaturesVector);
-		currentRightFeaturesVector = optionalFeaturesDescriptor->featuresSetWithDescriptorsOutput();
+		Copy( optionalFeaturesDescriptor->featuresOutput(), *currentRightFeaturesVector);
 		DEBUG_PRINT_TO_LOG("Described Current Right Features", GetNumberOfPoints(*currentRightFeaturesVector) );
 		}
 	else
@@ -429,22 +444,20 @@ void ReconstructionFromMotion::DescribeCurrentRightFeatures()
 
 void ReconstructionFromMotion::MatchCurrentAndPastFeatures()
 	{
-	featuresMatcher->sourceFeaturesVectorInput(currentLeftFeaturesVector);
-	featuresMatcher->sinkFeaturesVectorInput(pastLeftFeaturesVector);
+	featuresMatcher->sourceFeaturesInput(*currentLeftFeaturesVector);
+	featuresMatcher->sinkFeaturesInput(*pastLeftFeaturesVector);
 	featuresMatcher->process();
-	DELETE_PREVIOUS(pastToCurrentCorrespondenceMap);
-	pastToCurrentCorrespondenceMap = featuresMatcher->correspondenceMapOutput();	
+	Copy( featuresMatcher->matchesOutput(), *pastToCurrentCorrespondenceMap);	
 	DEBUG_PRINT_TO_LOG("Correspondences", GetNumberOfCorrespondences(*pastToCurrentCorrespondenceMap) );
 	DEBUG_SHOW_2D_CORRESPONDENCES(filteredCurrentLeftImage, filteredPastLeftImage, pastToCurrentCorrespondenceMap);
 	}
 
 void ReconstructionFromMotion::MatchLeftAndRightFeatures()
 	{
-	featuresMatcher->sourceFeaturesVectorInput(currentRightFeaturesVector);
-	featuresMatcher->sinkFeaturesVectorInput(currentLeftFeaturesVector);
+	featuresMatcher->sourceFeaturesInput(*currentRightFeaturesVector);
+	featuresMatcher->sinkFeaturesInput(*currentLeftFeaturesVector);
 	featuresMatcher->process();
-	DELETE_PREVIOUS(leftRightCorrespondenceMap);
-	leftRightCorrespondenceMap = featuresMatcher->correspondenceMapOutput();	
+	Copy( featuresMatcher->matchesOutput(), *leftRightCorrespondenceMap);	
 	DEBUG_PRINT_TO_LOG("Left Right Correspondences", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
 	DEBUG_SHOW_2D_CORRESPONDENCES(filteredCurrentRightImage, filteredCurrentLeftImage, leftRightCorrespondenceMap);
 	}
@@ -455,10 +468,9 @@ bool ReconstructionFromMotion::ComputeFundamentalMatrix()
 		{
 		return false;
 		}
-	fundamentalMatrixComputer->correspondenceMapInput(pastToCurrentCorrespondenceMap);
+	fundamentalMatrixComputer->matchesInput(*pastToCurrentCorrespondenceMap);
 	fundamentalMatrixComputer->process();
-	DELETE_PREVIOUS(fundamentalMatrix);	
-	fundamentalMatrix = fundamentalMatrixComputer->fundamentalMatrixOutput();	
+	Copy( fundamentalMatrixComputer->fundamentalMatrixOutput(), *fundamentalMatrix);	
 	bool fundamentalMatrixSuccess =  fundamentalMatrixComputer->successOutput();
 	DEBUG_PRINT_TO_LOG("Fundamental Matrix", fundamentalMatrixSuccess);
 	if(fundamentalMatrixSuccess)
@@ -470,11 +482,10 @@ bool ReconstructionFromMotion::ComputeFundamentalMatrix()
 
 bool ReconstructionFromMotion::ComputePastToCurrentTransform()
 	{
-	cameraTransformEstimator->fundamentalMatrixInput(fundamentalMatrix);
-	cameraTransformEstimator->correspondenceMapInput(pastToCurrentCorrespondenceMap);
+	cameraTransformEstimator->fundamentalMatrixInput(*fundamentalMatrix);
+	cameraTransformEstimator->matchesInput(*pastToCurrentCorrespondenceMap);
 	cameraTransformEstimator->process();
-	DELETE_PREVIOUS(pastToCurrentCameraTransform);
-	pastToCurrentCameraTransform = cameraTransformEstimator->transformOutput();
+	Copy( cameraTransformEstimator->transformOutput(), *pastToCurrentCameraTransform);
 	bool essentialMatrixSuccess = cameraTransformEstimator->successOutput();
 	DEBUG_PRINT_TO_LOG("Essential Matrix", essentialMatrixSuccess);
 	if(essentialMatrixSuccess)
@@ -486,11 +497,10 @@ bool ReconstructionFromMotion::ComputePastToCurrentTransform()
 
 void ReconstructionFromMotion::ComputeStereoPointCloud()
 	{
-	reconstructor3D->poseInput(rightToLeftCameraPose);
-	reconstructor3D->correspondenceMapInput(leftRightCorrespondenceMap);
+	reconstructor3D->frameInput(*rightToLeftCameraPose);
+	reconstructor3D->matchesInput(*leftRightCorrespondenceMap);
 	reconstructor3D->process();
-	DELETE_PREVIOUS(pointCloud);
-	pointCloud = reconstructor3D->pointCloudOutput();
+	Copy( reconstructor3D->pointcloudOutput(), *pointCloud);
 	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*pointCloud));
 	DEBUG_SHOW_POINT_CLOUD(pointCloud);
 	}

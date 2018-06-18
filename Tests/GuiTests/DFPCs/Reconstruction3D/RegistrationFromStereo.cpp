@@ -100,9 +100,10 @@ int main(int argc, char** argv)
 			}		
 		}
 
-	RegistrationFromStereo registrationFromStereo;
-	guiReconstruction3d.Run(registrationFromStereo);
+	RegistrationFromStereo* registrationFromStereo = new RegistrationFromStereo();
+	guiReconstruction3d.Run(*registrationFromStereo);
 
+	delete(registrationFromStereo);
 	return 0;
 	};
 
