@@ -42,7 +42,7 @@ target_link_libraries(
   kalman_predictor
   registration_icp_cc
   #ceres_adjustment
-  #svd_decomposition
+  svd_decomposition
   converters_opencv
   pcl_common
   pcl_features
