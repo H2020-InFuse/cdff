@@ -5,13 +5,14 @@
 
 # ## Boost 1.66.0 =============================================================
 #
-# Download               https://dl.bintray.com/boostorg/release/1.66.0/source/
-# Release notes          http://www.boost.org/users/history/version_1_66_0.html
-# General documentation  http://www.boost.org/doc/libs/1_66_0/more/getting_started/unix-variants.html
-# Library documentation  http://www.boost.org/doc/libs/1_66_0/
+# Download        https://dl.bintray.com/boostorg/release/1.66.0/source/
+# Release notes   http://www.boost.org/users/history/version_1_66_0.html
+#
+# Installation    http://www.boost.org/doc/libs/1_66_0/more/getting_started/unix-variants.html
+# Documentation   http://www.boost.org/doc/libs/1_66_0/
 #
 # Most Boost.* libraries are header-only. Some must be built, and some others
-# have optional binary components: see the general documentation for a list,
+# have optional binary components: see the installation webpage for a list,
 # or run ./bootstrap.sh --show-libraries in the Boost source directory.
 #
 # ### Dependencies ------------------------------------------------------------
@@ -46,21 +47,23 @@
 #
 # Neither we nor the PCL need *all* the Boost.* libraries that require building:
 #
-# * Compiled Boost libraries used by the PCL (source: https://github.com/
-#   PointCloudLibrary/pcl/blob/master/cmake/pcl_find_boost.cmake):
+# * Compiled Boost libraries used by the PCL (sources: https://github.com/
+#   PointCloudLibrary/pcl/blob/master/cmake/pcl_find_boost.cmake and http://
+#   www.pointclouds.org/documentation/tutorials/building_pcl.php):
 #
 #   + Required: Date_Time Filesystem Iostreams System Thread
 #   + Required if WITH_OPENNI2: Chrono
 #   + Optional: MPI Serialization
 #
-#   TODO: OpenNI2 support by the PCL unlikely to be necessary for us
+#   TODO: OpenNI2 support by the PCL (it is an optional dependency of pcl_io)
+#   is unlikely to be necessary for us
 #
 #   TODO: Message-Parsing Interface and Serialization disabled but check that
 #   we are not using a part of the PCL that could make use of them
 #
 # * Boost header-only libraries required by the PCL:
 #
-#   + undocumented
+#   + undocumented, but at least SmartPtr
 #
 # * Compiled Boost libraries used by the CDFF:
 #
@@ -83,7 +86,7 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
   ./bootstrap.sh \
     --with-libraries=date_time,filesystem,iostreams,system,thread,chrono \
     --prefix="${INSTALL_DIR}"
-  ./b2 install
+  ./b2 -q -j ${CPUS} install
 
   # Patch: support for Boost 1.66.0 in the CMake find module FindBoost.cmake is
   # only available from the module shipped with CMake 3.11: download that module
@@ -91,7 +94,7 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
   cd "${INSTALL_DIR}/share/cmake-3.11.4/Modules"
   wget https://gitlab.kitware.com/cmake/cmake/raw/v3.11.4/Modules/FindBoost.cmake
 
-  # Remove source/build directory
+  # Remove source and build directories
   clean_function boost
 fi
 }
