@@ -8,7 +8,7 @@ The CDFF currently requires the following libraries (**direct dependencies**):
 
 * yaml-cpp 0.5.3
 * Boost 1.66.0  
-  Although not all Boost.* libraries are necessary, we need to list those we effectively depend on.
+  Only a couple Boost.* libraries are currently required, see [`boost.sh`](/Tools/Docker/installers/boost.sh) for a list
 * Eigen 3.3.4
 * FLANN 1.9.1
 * QHull (master branch)  
@@ -23,13 +23,14 @@ These libraries in turn have their own dependencies (the CDFF's **recurse depend
 * Boost
   - The C/C++ standard libraries (`apt: libc6-dev libstdc++-5-dev`)
   - The GCC support library (`apt: libgcc-5-dev`)
-  - For certain Boost.* libraries: OpenSSL, OpenGL, Python v2.2+, ICU (`apt: libicu-dev`), zlib, libbzip2, liblzma (`apt: zlib1g-dev libbz2-dev liblzma-dev`)
+  - For the Boost.Iostream library (a dependency of PCL): zlib, libbzip2, liblzma (`apt: zlib1g-dev libbz2-dev liblzma-dev`)
 
 * Eigen
   - Only the C++ standard library
 
 * PCL
-  - Boost, Eigen, FLANN, QHull, VTK
+  - A few Boost.* libraries, see [`boost.sh`](/Tools/Docker/installers/boost.sh) for the list
+  - Eigen, FLANN, QHull, VTK
 
 * OpenCV
   - FFmpeg development packages are required for video IO to work (`apt: libavcodec-dev libavformat-dev libswscale-dev`)

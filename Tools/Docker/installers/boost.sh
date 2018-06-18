@@ -1,10 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # xma@spaceapplications.com, romain.michalec@strath.ac.uk
 # This file is required by ../fetch_compile_install_dependencies.sh
-# Version 1.1
 
-# # Boost 1.66.0
+# ## Boost 1.66.0 =============================================================
 #
 # Download               https://dl.bintray.com/boostorg/release/1.66.0/source/
 # Release notes          http://www.boost.org/users/history/version_1_66_0.html
@@ -15,7 +14,7 @@
 # have optional binary components: see the general documentation for a list,
 # or run ./bootstrap.sh --show-libraries in the Boost source directory.
 #
-# ## Dependencies
+# ### Dependencies ------------------------------------------------------------
 #
 # Most Boost.* libraries depend only on:
 #
@@ -25,34 +24,54 @@
 #
 # In particular, AFAICT:
 #
-# * Boost.Beast optionally requires OpenSSL
-# * Boost.Compute requires OpenGL
-# * Boost.GraphParallel requires Open MPI (apt:libopenmpi-dev) *DISABLED*
-# * Boost.Iostreams requires zlib (apt:zlib1g-dev), libbzip2 (apt:libbz2-dev), liblzma (apt:liblzma-dev)
-# * Boost.Locale recommends ICU v3.6+ (apt:libicu-dev) *DISABLED*
-# * Boost.MPI requires Open MPI (apt:libopenmpi-dev) *DISABLED*
-# * Boost.Python requires Python v2.2+
-# * Boost.Regex optionally requires ICU (apt:libicu-dev)
+# * Beast optionally requires OpenSSL
+# * Compute requires OpenGL
+# * GraphParallel requires Open MPI (apt:libopenmpi-dev)
+# * Iostreams requires zlib, libbzip2, liblzma (apt:zlib1g-dev libbz2-dev liblzma-dev)
+# * Locale recommends ICU v3.6+ (apt:libicu-dev)
+# * MPI requires Open MPI (apt:libopenmpi-dev)
+# * Python requires Python v2.2+
+# * Regex optionally requires ICU (apt:libicu-dev)
 #
-# Make sure your system includes all these aforementioned libraries, in decently
-# recent versions (the Boost documentation rarely mentions which minimum version
-# of a dependency is required), before building, installing, and using Boost.
-# Assumedly, both the headers and the runtime libraries are required.
+# Make sure your system includes the aforementioned libraries, in decently
+# recent versions (the Boost documentation rarely mentions which minimum
+# version of a dependency is required), before building, installing, and using
+# the corresponding Boost.* libraries. Assumedly, both the headers and the
+# runtime libraries are required.
 #
-# ## Dependants
+# ### Dependants --------------------------------------------------------------
 #
 # * PCL
 # * CDFF
 #
-# Neither we nor the PCL need *all* the Boost.* libraries that require building.
-# We must aim at maintaining a list of those that are actually needed, and only
-# build and install those.
+# Neither we nor the PCL need *all* the Boost.* libraries that require building:
 #
-# Currently disabled libraries:
+# * Compiled Boost libraries used by the PCL (source: https://github.com/
+#   PointCloudLibrary/pcl/blob/master/cmake/pcl_find_boost.cmake):
 #
-# * Boost.GraphParallel
-# * Boost.Locale
-# * Boost.MPI
+#   + Required: Date_Time Filesystem Iostreams System Thread
+#   + Required if WITH_OPENNI2: Chrono
+#   + Optional: MPI Serialization
+#
+#   TODO: OpenNI2 support by the PCL unlikely to be necessary for us
+#
+#   TODO: Message-Parsing Interface and Serialization disabled but check that
+#   we are not using a part of the PCL that could make use of them
+#
+# * Boost header-only libraries required by the PCL:
+#
+#   + undocumented
+#
+# * Compiled Boost libraries used by the CDFF:
+#
+#   + System
+#
+#   FIXME: really?
+#
+# * Boost header-only libraries used by the CDFF:
+#
+#   + SmartPtr
+#   + String_Algo
 
 function install4infuse_boost {
 if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
@@ -61,7 +80,9 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
   fetchsource_function boost boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/
 
   # Build and install
-  ./bootstrap.sh --without-libraries=graph_parallel,locale,mpi --prefix="${INSTALL_DIR}"
+  ./bootstrap.sh \
+    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono \
+    --prefix="${INSTALL_DIR}"
   ./b2 install
 
   # Patch: support for Boost 1.66.0 in the CMake find module FindBoost.cmake is
