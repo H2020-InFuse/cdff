@@ -57,7 +57,7 @@ void CeresAdjustment::configure()
 
 void CeresAdjustment::process()
 {
-	cv::Mat measurementMatrix = correspondenceMaps2DSequenceToMatConverter.Convert(&inCorrespondenceMapsSequence);
+	cv::Mat measurementMatrix = sequenceConverter.Convert(&inCorrespondenceMapsSequence);
 	if (measurementMatrix.cols < 4) //Not enough points available.
 		{
 		outSuccess = false;

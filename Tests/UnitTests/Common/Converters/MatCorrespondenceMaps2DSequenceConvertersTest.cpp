@@ -35,7 +35,7 @@
 using namespace Converters;
 using namespace CorrespondenceMap2DWrapper;
 
-TEST_CASE( "Mat to CorrespondenceMaps2DSequence and 4 images matrix", "[MatToCorrespondenceMaps2DSequence4]" )
+TEST_CASE( "Mat to CorrespondenceMaps2DSequence and 4 images matrix", "[MatToCorrespondenceMaps2DSequence]" )
 	{
 	MatToCorrespondenceMaps2DSequenceConverter firstConverter;
 	CorrespondenceMaps2DSequenceToMatConverter secondConverter;
@@ -69,7 +69,7 @@ TEST_CASE( "Mat to CorrespondenceMaps2DSequence and 4 images matrix", "[MatToCor
 	asnSequence.reset();
 	} 
 
-TEST_CASE( "Mat to CorrespondenceMaps2DSequence and 4 empty matrix", "[MatToCorrespondenceMaps2DSequence0]" )
+TEST_CASE( "Mat to CorrespondenceMaps2DSequence and 4 empty matrix", "[MatToCorrespondenceMaps2DSequence]" )
 	{
 	MatToCorrespondenceMaps2DSequenceConverter firstConverter;
 	CorrespondenceMaps2DSequenceToMatConverter secondConverter;
@@ -86,7 +86,7 @@ TEST_CASE( "Mat to CorrespondenceMaps2DSequence and 4 empty matrix", "[MatToCorr
 	asnSequence.reset();
 	} 
 
-TEST_CASE( "CorrespondenceMaps2DSequence to mat not all data converted", "[CorrespondenceMaps2DSequenceToMatNotAllData]" )
+TEST_CASE( "CorrespondenceMaps2DSequence to mat not all data converted", "[MatToCorrespondenceMaps2DSequence]" )
 	{
 	CorrespondenceMaps2DSequenceSharedPtr sequence = NewSharedCorrespondenceMaps2DSequence();
 	
