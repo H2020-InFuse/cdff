@@ -20,6 +20,9 @@ The CDFF currently requires the following libraries (**direct dependencies**):
 
 These libraries in turn have their own dependencies (the CDFF's **recurse dependencies**). List under construction:
 
+* yaml-cpp
+  - Certain Boost.* libraries, but precisely which ones is undocumented (assumedly, header-only ones)
+
 * Boost
   - The C/C++ standard libraries (`apt: libc6-dev libstdc++-5-dev`)
   - The GCC support library (`apt: libgcc-5-dev`)
