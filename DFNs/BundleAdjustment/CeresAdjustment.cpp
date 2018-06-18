@@ -179,7 +179,7 @@ std::vector<cv::Mat> CeresAdjustment::SolveBundleAdjustment(cv::Mat measurementM
 		{
 		for(int pointElement = 0; pointElement < 3; pointElement++)
 			{
-			mutablePoints3dStructure.at(pointIndex)[pointElement] = (pointElement == 2) ? 1 : 0;
+			mutablePoints3dStructure.at(pointIndex)[pointElement] = (pointElement == 2) ? 1 : measurementMatrix.at<float>(pointElement, pointIndex);
 			}
 		}
 	for(int stereoIndex = 0; stereoIndex < numberOfImages/2; stereoIndex++)
