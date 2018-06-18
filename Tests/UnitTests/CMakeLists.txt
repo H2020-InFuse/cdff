@@ -20,6 +20,8 @@ set(UNITTEST_SOURCES UnitTests.cpp
     Common/Converters/Transform3DMatConvertersTest.cpp
     Common/Converters/VisualPointFeatureVector3DPclPointCloudConvertersTest.cpp
     Common/Helpers/ParametersHelper.cpp
+#[=[DFNs/BundleAdjustment/CeresAdjustment.cpp]=]
+    DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
@@ -32,9 +34,6 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
-    DFNs/Registration3D/IcpCC.cpp
-    DFNs/BundleAdjustment/SvdDecomposition.cpp
-#   DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
 #[=[DFNs/Registration3D/Icp3D.cpp]=] # FIXME: name collision, issue #56
@@ -55,6 +54,8 @@ set(UNITTEST_LIBRARIES Catch
     cdff_helpers
     cdff_logger
     cdff_types
+#[=[ceres]=]
+#[=[ceres_adjustment]=]
     converters_opencv
 #[=[dfpc_configurator]=]
 #[=[dfpc_implementation_features_matching_3d]=]
@@ -62,13 +63,13 @@ set(UNITTEST_LIBRARIES Catch
     essential_matrix_decomposition
     flann_matcher
     fundamental_matrix_ransac
+#[=[glog]=]
+#[=[gomp]=]
     harris_detector_2d
     harris_detector_3d
     hirschmuller_disparity_mapping
     icp_3d
     image_undistortion
-    svd_decomposition
-#   ceres_adjustment
     iterative_pnp_solver
     kalman_predictor
 #[=[mock]=] # no longer used by any DFN unit test
@@ -99,15 +100,13 @@ set(UNITTEST_LIBRARIES Catch
     pcl_surface
     pcl_tracking
     pcl_visualization
-#   ceres
-#   glog
-#   pthread
-#   gomp
+#[=[pthread]=]
     ransac_3d
 #[=[reconstruction_from_stereo]=]
 #[=[registration_icp_3d]=] # FIXME: name collision, issue #56
     registration_icp_cc
     shot_descriptor_3d
+    svd_decomposition
     synthetic_generators
     triangulation
 )
