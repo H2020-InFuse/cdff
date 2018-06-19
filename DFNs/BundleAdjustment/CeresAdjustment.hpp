@@ -74,7 +74,7 @@ namespace dfn_ci
 				float baseline;
 				};
 
-			Converters::CorrespondenceMaps2DSequenceToMatConverter framesSequenceConverter;
+			Converters::CorrespondenceMaps2DSequenceToMatConverter correspondencesSequenceConverter;
 			cv::Mat leftCameraMatrix, rightCameraMatrix;
 
 			std::vector<cv::Mat> SolveBundleAdjustment(cv::Mat measurementMatrix, bool& success);
