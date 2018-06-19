@@ -18,7 +18,7 @@ using namespace BaseTypesWrapper;
 void Copy(const Poses3DSequence& source, Poses3DSequence& destination)
 {
 	Clear(destination);
-	for(T_UInt32 poseIndex = 0; poseIndex < GetNumberOfPoses3D(destination); poseIndex++)
+	for(T_UInt32 poseIndex = 0; poseIndex < GetNumberOfPoses(destination); poseIndex++)
 		{
 		AddPose(destination, GetPose(source, poseIndex));
 		}
@@ -64,7 +64,7 @@ void Clear(Poses3DSequence& posesSequence)
 
 void AddPose(Poses3DSequence& posesSequence, const Pose3D& pose)
 {
-	ASSERT( GetNumberOfPoses3D(posesSequence) < MAX_POSES_SEQUENCE_LENGTH, "Error, poses sequence limit reached");
+	ASSERT( GetNumberOfPoses(posesSequence) < MAX_POSES_SEQUENCE_LENGTH, "Error, poses sequence limit reached");
 	Copy( pose, posesSequence.arr[posesSequence.nCount] );
 	posesSequence.nCount++;
 }
@@ -79,7 +79,7 @@ void GetPose(const Poses3DSequence& posesSequence, BaseTypesWrapper::T_UInt32 po
 	Copy( GetPose(posesSequence, poseIndex), pose);
 }
 
-BaseTypesWrapper::T_UInt32 GetNumberOfPoses3D(const Poses3DSequence& posesSequence)
+BaseTypesWrapper::T_UInt32 GetNumberOfPoses(const Poses3DSequence& posesSequence)
 {
 	return posesSequence.nCount;
 }
