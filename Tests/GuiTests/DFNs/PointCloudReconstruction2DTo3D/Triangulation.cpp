@@ -66,8 +66,8 @@ TriangulationTestInterface::TriangulationTestInterface(std::string DFNName, int 
 	cameraMatrix.at<float>(1,2) = 0;
 	cameraMatrix.at<float>(2,2) = 1;
 
-	cv::Mat sourceProjection = cameraMatrix * translationProjection;
-	cv::Mat sinkProjection = cameraMatrix * identityProjection;
+	cv::Mat sourceProjection = cameraMatrix * identityProjection;
+	cv::Mat sinkProjection  = cameraMatrix * translationProjection;
 
 	std::vector<Point3D> cube;
 	for (unsigned x = 2; x <= 3; x++)
