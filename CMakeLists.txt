@@ -222,6 +222,33 @@ include_directories(
   SYSTEM "${_DEPENDENCIES_PREFIX}/include/eigen3"
 )
 
+## Look for Ceres --------------------------------------------------------------
+
+# TODO: doc
+
+find_package(Ceres 1.14.0 REQUIRED)
+
+if(Ceres_FOUND)
+
+  find_package_mode(Ceres)
+
+  message(STATUS "Found Ceres (and its dependencies') headers in: ${CERES_INCLUDE_DIRS}")
+  message(STATUS "Ceres (and its dependencies') libraries are: ${CERES_LIBRARIES}")
+
+  include_directories(
+    SYSTEM ${CERES_INCLUDE_DIRS}
+  )
+
+# Use as follow in targets:
+# target_link_libraries(target_name ${CERES_LIBRARIES})
+
+else()
+
+  # Abort if Ceres is not found
+  return()
+
+endif()
+
 ## Don't look for FLANN, QHull, yaml-cpp ---------------------------------------
 
 # There aren't any CMake find modules nor any package configuration files for
