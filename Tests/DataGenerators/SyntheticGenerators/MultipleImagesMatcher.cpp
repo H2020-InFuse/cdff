@@ -65,6 +65,7 @@ MultipleImagesMatcher::MultipleImagesMatcher(std::vector<std::string> inputImage
 	inputImageFilePathList(inputImageFilePathList), 
 	imageZoomingList( inputImageFilePathList.size() ),
 	originalImageList( inputImageFilePathList.size() ),
+	selectionList( inputImageFilePathList.size() ),
 	correspondenceVectorList( POSSIBLE_UNORDERED_PAIRS(inputImageFilePathList) )
 	{
 	this->outputCorrespondencesFilePath = outputCorrespondencesFilePath;
@@ -208,6 +209,14 @@ void MultipleImagesMatcher::MouseCallback(int event, int x, int y)
 		{
 		return;
 		}
+	if (currentSelection == SELECTED_FROM_SOURCE)
+		{
+		GetClosePoint(selectionList.at(currentSourceIndex), effectiveX, effectiveY);
+		}
+	else
+		{
+		GetClosePoint(selectionList.at(currentSinkIndex), effectiveX, effectiveY);
+		}
 
 	
 	//Add one selected point at the bottom of the correspondencesVector in case the vector is empty or the last correspondence is complete.
@@ -231,17 +240,27 @@ void MultipleImagesMatcher::MouseCallback(int event, int x, int y)
 
 	//If the last correspondence is not complete, we add the corresponding point to the previous selection.
 	std::vector<Correspondence>::iterator lastEntry = correspondencesVector.end()-1;
+	bool selectionComplete = false;
 	if (lastEntry->selection == SELECTED_FROM_SOURCE && currentSelection == SELECTED_FROM_SINK)
 		{
 		lastEntry->sinkX = effectiveX;
 		lastEntry->sinkY = effectiveY;
 		lastEntry->selection = SELECTED_FROM_BOTH;
+		selectionComplete = true;
 		}
 	else if (lastEntry->selection == SELECTED_FROM_SINK && currentSelection == SELECTED_FROM_SOURCE)
 		{
 		lastEntry->sourceX = effectiveX;
 		lastEntry->sourceY = effectiveY;
 		lastEntry->selection = SELECTED_FROM_BOTH;
+		selectionComplete = true;
+		}
+
+	// Add points to selections list if the selection is complete.
+	if (selectionComplete)
+		{
+		AddToSelectionList(lastEntry->sourceX, lastEntry->sourceY, selectionList.at(currentSourceIndex));
+		AddToSelectionList(lastEntry->sinkX, lastEntry->sinkY, selectionList.at(currentSinkIndex));
 		}
 	}
 
@@ -277,6 +296,7 @@ void MultipleImagesMatcher::DrawCorrespondences(cv::Mat imageToDraw)
 		}
 
 	DrawLastSelectedPoint(imageToDraw, nextColorIndex);
+	DrawSelections(imageToDraw);
 	}
 
 void MultipleImagesMatcher::DrawLastSelectedPoint(cv::Mat imageToDraw, int nextColorIndex)
@@ -305,6 +325,35 @@ void MultipleImagesMatcher::DrawLastSelectedPoint(cv::Mat imageToDraw, int nextC
 		if (sinkPointIsVisible)
 			{
 			cv::circle(imageToDraw, cv::Point2d(windowSinkX + BASE_WINDOW_WIDTH, windowSinkY), 3, nextColor, -1);
+			}
+		}
+	}
+
+void MultipleImagesMatcher::DrawSelections(cv::Mat imageToDraw)
+	{
+	const cv::Scalar SELECTION_COLOR(80, 150, 210);
+	std::vector<BaseTypesWrapper::Point2D>& sourceSelectionList = selectionList.at(currentSourceIndex);
+	std::vector<BaseTypesWrapper::Point2D>& sinkSelectionList = selectionList.at(currentSinkIndex);
+
+	for(int pointIndex = 0; pointIndex < sourceSelectionList.size(); pointIndex++)
+		{
+		BaseTypesWrapper::Point2D& point = sourceSelectionList.at(pointIndex);
+		int windowSourceX, windowSourceY;
+		bool sourcePointIsVisible = imageZoomingList.at(currentSourceIndex)->ImageToWindowPixel(point.x, point.y, windowSourceX, windowSourceY);
+		if (sourcePointIsVisible)
+			{
+			cv::circle(imageToDraw, cv::Point2d(windowSourceX, windowSourceY), 3, SELECTION_COLOR, -1);
+			}
+		}
+
+	for(int pointIndex = 0; pointIndex < sinkSelectionList.size(); pointIndex++)
+		{
+		BaseTypesWrapper::Point2D& point = sinkSelectionList.at(pointIndex);
+		int windowSinkX, windowSinkY;
+		bool sinkPointIsVisible = imageZoomingList.at(currentSinkIndex)->ImageToWindowPixel(point.x, point.y, windowSinkX, windowSinkY);
+		if (sinkPointIsVisible)
+			{
+			cv::circle(imageToDraw, cv::Point2d(windowSinkX + BASE_WINDOW_WIDTH, windowSinkY), 3, SELECTION_COLOR, -1);
 			}
 		}
 	}
@@ -416,9 +465,9 @@ void MultipleImagesMatcher::SaveCorrespondences()
 				{
 				BaseTypesWrapper::Point2D sourcePoint, sinkPoint;
 				sourcePoint.x = correspondence.sourceX;
-				sourcePoint.x = correspondence.sourceY;
+				sourcePoint.y = correspondence.sourceY;
 				sinkPoint.x = correspondence.sinkX;
-				sinkPoint.x = correspondence.sinkY;
+				sinkPoint.y = correspondence.sinkY;
 				AddCorrespondence(*correspondenceMap, sourcePoint, sinkPoint, 1);
 				}
 			}
@@ -457,15 +506,18 @@ void MultipleImagesMatcher::LoadCorrespondences()
 	CorrespondenceMaps2DSequenceConstPtr correspondenceSequence = converter.Convert(measurementMatrix);
 
 	ASSERT( GetNumberOfCorrespondenceMaps(*correspondenceSequence) == correspondenceVectorList.size(), "Error, mismatch between existing file and number of input images");
+	int sourceImageIndex = 0;
+	int sinkImageIndex = 1;
+	int numberOfImages = (1 + std::sqrt(1 + 8 * correspondenceVectorList.size() ) ) / 2;
 	for(int correspondenceMapIndex = 0; correspondenceMapIndex < correspondenceVectorList.size(); correspondenceMapIndex++)
 		{
-		std::vector<Correspondence> correspondencesVector = correspondenceVectorList.at(correspondenceMapIndex);
+		std::vector<Correspondence>& correspondencesVector = correspondenceVectorList.at(correspondenceMapIndex);
 		const CorrespondenceMap2D& correspondenceMap = GetCorrespondenceMap(*correspondenceSequence, correspondenceMapIndex);
 
 		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(correspondenceMap); correspondenceIndex++)
 			{
 			BaseTypesWrapper::Point2D sourcePoint = GetSource(correspondenceMap, correspondenceIndex);
-			BaseTypesWrapper::Point2D sinkPoint = GetSource(correspondenceMap, correspondenceIndex);
+			BaseTypesWrapper::Point2D sinkPoint = GetSink(correspondenceMap, correspondenceIndex);
 			Correspondence correspondence;
 			correspondence.sourceX = sourcePoint.x;
 			correspondence.sourceY = sourcePoint.y;
@@ -473,6 +525,17 @@ void MultipleImagesMatcher::LoadCorrespondences()
 			correspondence.sinkY = sinkPoint.y;
 			correspondence.selection = SELECTED_FROM_BOTH;
 			correspondencesVector.push_back(correspondence);
+			AddToSelectionList(sourcePoint.x, sourcePoint.y, selectionList.at(sourceImageIndex));
+			AddToSelectionList(sinkPoint.x, sinkPoint.y, selectionList.at(sinkImageIndex));
+			}
+		if (sinkImageIndex < numberOfImages - 1)
+			{
+			sinkImageIndex++;
+			}
+		else
+			{
+			sourceImageIndex++;
+			sinkImageIndex = sourceImageIndex+1;
 			}
 		}
 	}
@@ -489,6 +552,41 @@ std::vector<MultipleImagesMatcher::Correspondence>& MultipleImagesMatcher::GetCu
 
 	ASSERT( correspondenceIndex >= 0 && correspondenceIndex < correspondenceVectorList.size(), "Error, wrong index computation");
 	return correspondenceVectorList.at(correspondenceIndex);
+	}
+
+void MultipleImagesMatcher::GetClosePoint(const std::vector<BaseTypesWrapper::Point2D>& pointVector, int& pointX, int& pointY)
+	{
+	static const int PIXEL_DISTANCE = 5;
+
+	for(int pointIndex = 0; pointIndex < pointVector.size(); pointIndex++)
+		{
+		int x = pointVector.at(pointIndex).x;
+		int y = pointVector.at(pointIndex).y;
+	
+		if ( x - PIXEL_DISTANCE <= pointX && pointX <= x + PIXEL_DISTANCE && y - PIXEL_DISTANCE <= pointY && pointY <= y + PIXEL_DISTANCE)
+			{
+			pointX = x;
+			pointY = y;
+			return;
+			}
+		}
+	}
+
+void MultipleImagesMatcher::AddToSelectionList(int pointX, int pointY, std::vector<BaseTypesWrapper::Point2D>& pointVector)
+	{
+	bool found = false;
+	for(int pointIndex = 0; pointIndex < pointVector.size() && !found; pointIndex++)
+		{
+		found = (pointVector.at(pointIndex).x == pointX && pointVector.at(pointIndex).y == pointY);
+		}
+
+	if (!found)
+		{
+		BaseTypesWrapper::Point2D newPoint;
+		newPoint.x = pointX;
+		newPoint.y = pointY;
+		pointVector.push_back(newPoint);
+		}
 	}
 
 

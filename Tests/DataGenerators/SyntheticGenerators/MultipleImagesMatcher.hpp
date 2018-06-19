@@ -33,6 +33,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <BaseTypes.hpp>
 
 
 namespace DataGenerators {
@@ -92,6 +93,7 @@ namespace DataGenerators {
 
 		std::vector<ImageZooming*> imageZoomingList;
 		std::vector<cv::Mat> originalImageList;
+		std::vector< std::vector< BaseTypesWrapper::Point2D> > selectionList;
 		int currentSourceIndex;
 		int currentSinkIndex;
 
@@ -106,11 +108,14 @@ namespace DataGenerators {
 		void DrawImages();
 		void DrawCorrespondences(cv::Mat imageToDraw);
 		void DrawLastSelectedPoint(cv::Mat imageToDraw, int nextColorIndex);
+		void DrawSelections(cv::Mat imageToDraw);
 		void ExecuteCommand(char command);
 		void SaveCorrespondences();
 		void LoadCorrespondences();
 
 		std::vector<Correspondence>& GetCurrentCorrespondenceVector();
+		void GetClosePoint(const std::vector<BaseTypesWrapper::Point2D>& pointVector, int& pointX, int& pointY);
+		void AddToSelectionList(int pointX, int pointY, std::vector<BaseTypesWrapper::Point2D>& pointVector);
     };
 
 }
