@@ -1,96 +1,63 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file PointCloudModelLocalisationInterface.hpp
- * @date 23/02/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
- * @addtogroup DFNs
- * 
- *  This is the common interface of all DFPNs Chain that want to localise a 3d model in a 3d sceneray reconstructed by camera images.    
- *
+/**
+ * @addtogroup DFPCs
  * @{
  */
-#ifndef POINT_CLOUD_MODEL_LOCALISATION_INTERFACE_HPP
-#define POINT_CLOUD_MODEL_LOCALISATION_INTERFACE_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <DFPCCommonInterface.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
+#ifndef POINTCLOUDMODELLOCALISATION_INTERFACE_HPP
+#define POINTCLOUDMODELLOCALISATION_INTERFACE_HPP
 
+#include "DFPCCommonInterface.hpp"
+#include <Pose.h>
+#include <Pointcloud.h>
 
-namespace dfpc_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
+namespace dfpc_ci
+{
     class PointCloudModelLocalisationInterface : public DFPCCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
+
             PointCloudModelLocalisationInterface();
             virtual ~PointCloudModelLocalisationInterface();
-            /**
-            * Send value to input port pointCloud
-            * @param pointCloud, a point cloud representing the environment
-            */
-            virtual void sceneInput(PointCloudWrapper::PointCloudConstPtr data);
 
             /**
-            * Send value to input port model
-            * @param model, the 3d point cloud of the model
-            */
-            virtual void modelInput(PointCloudWrapper::PointCloudConstPtr data);
+             * Send value to input port "scene"
+             * @param scene: a point cloud representing the environment
+             */
+            virtual void sceneInput(const asn1SccPointcloud& data);
+            /**
+             * Send value to input port "model"
+             * @param model: the 3d point cloud of the model
+             */
+            virtual void modelInput(const asn1SccPointcloud& data);
+            /**
+             * Send value to input port "computeModelFeatures"
+             * @param computeModelFeatures: this determines whether the model features will be computed. It has to be true the first time a new model is provided. For optimal performance it should be false on all subsequent calls.
+             */
+            virtual void computeModelFeaturesInput(bool data);
 
             /**
-            * Receive value from output port pose
-            * @param pose, This is the pose of the model in the scene.
-            */
-            virtual PoseWrapper::Pose3DConstPtr poseOutput();
-
+             * Query value from output port "pose"
+             * @return pose: This is the pose of the model in the scene
+             */
+            virtual const asn1SccPose& poseOutput() const;
             /**
-            * Receive value from output port success
-            * @param success, this determines whether the dfpc could localise the model.
-            */
-            virtual bool successOutput();
+             * Query value from output port "success"
+             * @return success: this determines whether the dfpc could localise the model
+             */
+            virtual bool successOutput() const;
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
+
         protected:
-            PointCloudWrapper::PointCloudConstPtr inScene;
-	    PointCloudWrapper::PointCloudConstPtr inModel;
-            PoseWrapper::Pose3DConstPtr outPose;
-	    bool outSuccess;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+            asn1SccPointcloud inScene;
+            asn1SccPointcloud inModel;
+            bool inComputeModelFeatures;
+            asn1SccPose outPose;
+            bool outSuccess;
+
     };
 }
-#endif
-/* PointCloudModelLocalisationInterface.hpp */
+
+#endif //  POINTCLOUDMODELLOCALISATION_INTERFACE_HPP
+
 /** @} */
