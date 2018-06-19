@@ -11,6 +11,7 @@ target_include_directories(Catch SYSTEM INTERFACE "${CATCH_INCLUDE_DIR}")
 # Source files containing Catch test cases. They will be linked together to
 # produce the test executable. Add any additional file in ALPHABETICAL ORDER.
 set(UNITTEST_SOURCES UnitTests.cpp
+    Common/Converters/MatCorrespondenceMaps2DSequenceConvertersTest.cpp
     Common/Converters/MatFrameConvertersTest.cpp
     Common/Converters/MatVisualPointFeatureVector2DConvertersTest.cpp
     Common/Converters/MatVisualPointFeatureVector3DConvertersTest.cpp

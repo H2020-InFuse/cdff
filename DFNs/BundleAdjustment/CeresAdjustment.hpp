@@ -19,6 +19,7 @@
 #include <yaml-cpp/yaml.h>
 #include <Eigen/Dense>
 #include <ceres/ceres.h>
+#include <CorrespondenceMaps2DSequenceToMatConverter.hpp>
 
 namespace dfn_ci
 {
@@ -60,16 +61,6 @@ namespace dfn_ci
 			CeresAdjustmentOptionsSet parameters;
 			static const CeresAdjustmentOptionsSet DEFAULT_PARAMETERS;
 
-			struct ImagePoint
-			{
-				int x;
-				int y;
-				int image;
-				bool explored;
-				ImagePoint(float initX, float initY, int initImage, bool initExplored)
-					{ x = initX; y = initY; image = initImage; explored = initExplored; }
-			};
-
 			struct StereoImagePointCostFunctor 
 				{
 				StereoImagePointCostFunctor(cv::Mat leftCameraMatrix, cv::Mat rightCameraMatrix, cv::Mat pointMeasuresMatrix, float baseline);
@@ -83,28 +74,16 @@ namespace dfn_ci
 				float baseline;
 				};
 
+			Converters::CorrespondenceMaps2DSequenceToMatConverter correspondencesSequenceConverter;
 			cv::Mat leftCameraMatrix, rightCameraMatrix;
 
 			std::vector<cv::Mat> SolveBundleAdjustment(cv::Mat measurementMatrix, bool& success);
 			void ConvertProjectionMatricesListToPosesSequence(std::vector<cv::Mat> projectionMatricesList, PoseWrapper::Poses3DSequence& posesSequence);
-
-			int ComputeNumberOfImages(CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequence& correspondenceMapsSequence); 
-			cv::Mat ComputeMeasurementMatrix(CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequence& correspondenceMapsSequence);
-			std::vector<ImagePoint> ComputeChainOfMatchingPoints
-				(CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequence& correspondenceMapsSequence, int numberOfImages, ImagePoint point1, ImagePoint point2);
-			void AddChainToMeasurementMatrix(const std::vector<ImagePoint> chain, cv::Mat& measurementMatrix);
 	
 			bool PointIsNotInVector(BaseTypesWrapper::Point2D point, const std::vector<BaseTypesWrapper::Point2D>& vector);
 			void ValidateParameters();
 			void ValidateInputs();
-
-			bool ThereAreUnexploredPoints(const std::vector<ImagePoint>& chain, int& chainIndexToExplore);
-			std::vector<int> ComputeMapsToExplore(int numberOfImages, int imageIndex, int& separationPoint);
-			int GetSourceIndex(int numberOfImages, int mapIndex, int imageIndex);
-			int GetSinkIndex(int numberOfImages, int mapIndex, int imageIndex);
-			bool AllImagesAreRepresented(const std::vector<ImagePoint>& chain, int numberOfImages);
 			cv::Mat CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix);
-			bool ImageIsNotInChain(const std::vector<ImagePoint>& chain, int imageIndex);
 
 	};
 }
