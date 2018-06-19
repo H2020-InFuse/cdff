@@ -100,9 +100,10 @@ int main(int argc, char** argv)
 			}		
 		}
 
-	AdjustmentFromStereo adjustmentFromStereo;
-	guiReconstruction3d.Run(adjustmentFromStereo);
+	AdjustmentFromStereo* adjustmentFromStereo = new AdjustmentFromStereo;
+	guiReconstruction3d.Run(*adjustmentFromStereo);
 
+	delete(adjustmentFromStereo);
 	return 0;
 	};
 

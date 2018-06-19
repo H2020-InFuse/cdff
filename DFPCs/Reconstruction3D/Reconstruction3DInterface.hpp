@@ -1,105 +1,64 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file Reconstruction3DInterface.hpp
- * @date 08/03/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
- * @addtogroup DFNs
- * 
- *  This is the common interface of all DFNs Chain that want to reconstruct a 3D scene from a pair of images.    
- *
+/**
+ * @addtogroup DFPCs
  * @{
  */
-#ifndef RECONSTRUCTION_3D_INTERFACE_HPP
-#define RECONSTRUCTION_3D_INTERFACE_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <DFPCCommonInterface.hpp>
-#include <Frame.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
+#ifndef RECONSTRUCTION3D_INTERFACE_HPP
+#define RECONSTRUCTION3D_INTERFACE_HPP
 
+#include "DFPCCommonInterface.hpp"
+#include <Frame.h>
+#include <Pose.h>
+#include <Pointcloud.h>
 
-namespace dfpc_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
+namespace dfpc_ci
+{
     class Reconstruction3DInterface : public DFPCCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
+
             Reconstruction3DInterface();
             virtual ~Reconstruction3DInterface();
-            /**
-            * Send value to input port leftImage
-            * @param leftImage, a 2D left image taken from a stereo camera
-            */
-            virtual void leftImageInput(FrameWrapper::FrameConstPtr data);
 
             /**
-            * Send value to input port rightImage
-            * @param rightImage, a 2D right image taken from a stereo camera
-            */
-            virtual void rightImageInput(FrameWrapper::FrameConstPtr data);
+             * Send value to input port "leftImage"
+             * @param leftImage: a 2D left image taken from a stereo camera
+             */
+            virtual void leftImageInput(const asn1SccFrame& data);
+            /**
+             * Send value to input port "rightImage"
+             * @param rightImage: a 2D right image taken from a stereo camera
+             */
+            virtual void rightImageInput(const asn1SccFrame& data);
 
             /**
-            * Receive value from output port pointCloud
-            * @param pointCloud, This is the point cloud representing the 3D scene constructed so far.
-            */
-	    virtual PointCloudWrapper::PointCloudConstPtr pointCloudOutput();
-
+             * Query value from output port "pointCloud"
+             * @return pointCloud: This is the point cloud representing the 3D scene constructed so far.
+             */
+            virtual const asn1SccPointcloud& pointCloudOutput() const;
             /**
-            * Receive value from output port pose
-            * @param pose, This is the pose of the camera in the scene.
-            */
-            virtual PoseWrapper::Pose3DConstPtr poseOutput();
-
+             * Query value from output port "pose"
+             * @return pose: This is the pose of the camera in the scene.
+             */
+            virtual const asn1SccPose& poseOutput() const;
             /**
-            * Receive value from output port success
-            * @param success, this determines whether the dfpc determine the camera transform.
-            */
-            virtual bool successOutput();
+             * Query value from output port "success"
+             * @return success: this determines whether the dfpc determine the camera transform
+             */
+            virtual bool successOutput() const;
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
+
         protected:
-            FrameWrapper::FrameConstPtr inLeftImage;
-            FrameWrapper::FrameConstPtr inRightImage;
-	    PointCloudWrapper::PointCloudConstPtr inModel;
-	    PointCloudWrapper::PointCloudConstPtr outPointCloud;
-            PoseWrapper::Pose3DConstPtr outPose;
-	    bool outSuccess;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+            asn1SccFrame inLeftImage;
+            asn1SccFrame inRightImage;
+            asn1SccPointcloud outPointCloud;
+            asn1SccPose outPose;
+            bool outSuccess;
+
     };
 }
-#endif
-/* Reconstruction3DInterface.hpp */
+
+#endif //  RECONSTRUCTION3D_INTERFACE_HPP
+
 /** @} */

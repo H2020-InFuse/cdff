@@ -43,7 +43,10 @@
 #include "PointCloudMap.hpp"
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
-
+#include <Frame.hpp>
+#include <PointCloud.hpp>
+#include <Pose.hpp>
+#include <VisualPointFeatureVector3D.hpp>
 
 namespace dfpc_ci {
 
@@ -97,15 +100,15 @@ namespace dfpc_ci {
 		dfn_ci::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
 		dfn_ci::FeaturesMatching3DInterface* featuresMatcher3d;
 
-		FrameWrapper::FrameConstPtr leftImage;
-		FrameWrapper::FrameConstPtr rightImage;
-		FrameWrapper::FrameConstPtr filteredLeftImage;
-		FrameWrapper::FrameConstPtr filteredRightImage;
-		PointCloudWrapper::PointCloudConstPtr pointCloud;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr pointCloudKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr pointCloudFeaturesVector;
+		FrameWrapper::FramePtr leftImage;
+		FrameWrapper::FramePtr rightImage;
+		FrameWrapper::FramePtr filteredLeftImage;
+		FrameWrapper::FramePtr filteredRightImage;
+		PointCloudWrapper::PointCloudPtr pointCloud;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr pointCloudKeypointsVector;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr pointCloudFeaturesVector;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneFeaturesVector;
-		PoseWrapper::Pose3DConstPtr cameraPoseInScene;
+		PoseWrapper::Pose3DPtr cameraPoseInScene;
 		PoseWrapper::Pose3DPtr previousCameraPoseInScene;
 
 		void ConfigureExtraParameters();

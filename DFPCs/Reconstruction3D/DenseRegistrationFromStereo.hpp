@@ -41,6 +41,9 @@
 #include "PointCloudMap.hpp"
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
+#include <Frame.hpp>
+#include <PointCloud.hpp>
+#include <Pose.hpp>
 
 
 namespace dfpc_ci {
@@ -93,13 +96,13 @@ namespace dfpc_ci {
 		dfn_ci::StereoReconstructionInterface* reconstructor3D;
 		dfn_ci::Registration3DInterface* cloudRegistrator;
 
-		FrameWrapper::FrameConstPtr leftImage;
-		FrameWrapper::FrameConstPtr rightImage;
-		FrameWrapper::FrameConstPtr filteredLeftImage;
-		FrameWrapper::FrameConstPtr filteredRightImage;
-		PointCloudWrapper::PointCloudConstPtr imagesCloud;
+		FrameWrapper::FramePtr leftImage;
+		FrameWrapper::FramePtr rightImage;
+		FrameWrapper::FramePtr filteredLeftImage;
+		FrameWrapper::FramePtr filteredRightImage;
+		PointCloudWrapper::PointCloudPtr imagesCloud;
 		PointCloudWrapper::PointCloudConstPtr sceneCloud;
-		PoseWrapper::Pose3DConstPtr cameraPoseInScene;
+		PoseWrapper::Pose3DPtr cameraPoseInScene;
 		PoseWrapper::Pose3DPtr previousCameraPoseInScene;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr emptyFeaturesVector;
 

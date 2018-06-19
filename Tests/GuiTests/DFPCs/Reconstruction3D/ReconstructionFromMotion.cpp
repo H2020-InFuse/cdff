@@ -98,9 +98,10 @@ int main(int argc, char** argv)
 			}		
 		}
 
-	ReconstructionFromMotion reconstructionFromMotion;
-	guiReconstruction3d.Run(reconstructionFromMotion);
+	ReconstructionFromMotion* reconstructionFromMotion = new ReconstructionFromMotion;
+	guiReconstruction3d.Run(*reconstructionFromMotion);
  
+	delete(reconstructionFromMotion);
 	return 0;
 	};
 
