@@ -100,9 +100,10 @@ int main(int argc, char** argv)
 			}		
 		}
 
-	DenseRegistrationFromStereo registrationFromStereo;
-	guiReconstruction3d.Run(registrationFromStereo);
+	DenseRegistrationFromStereo* registrationFromStereo = new DenseRegistrationFromStereo();
+	guiReconstruction3d.Run(*registrationFromStereo);
 
+	delete(registrationFromStereo);
 	return 0;
 	};
 
