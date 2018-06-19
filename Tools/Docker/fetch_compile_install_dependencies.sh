@@ -167,6 +167,7 @@ function clean_function {
 function build_all_function {
  InstallersToRUN+=("boost")
  InstallersToRUN+=("eigen")
+ InstallersToRUN+=("ceres")
  InstallersToRUN+=("flann")
  InstallersToRUN+=("qhull")
  InstallersToRUN+=("yaml-cpp")

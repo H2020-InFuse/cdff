@@ -26,6 +26,10 @@ RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /u
 COPY installers/eigen.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s eigen
 
+RUN apt-get update && apt-get install -y libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
+COPY installers/ceres.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s ceres
+
 COPY installers/flann.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s flann
 
@@ -45,6 +49,6 @@ RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /u
 COPY installers/pcl.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s pcl
 
-LABEL version="1.7.1"
-LABEL maintainer="xma@spaceapplications.com,romain.michalec@strath.ac.uk"
-LABEL description="Image providing the CDFF's dependencies compiled from source and installed in /usr/local"
+LABEL version="1.8"
+LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>, Romain Michalec <romain.michalec@strath.ac.uk>"
+LABEL description="Image providing the dependencies of CDFF-core and CDFF-support, compiled from source, and installed in /usr/local"

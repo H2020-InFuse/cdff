@@ -30,6 +30,10 @@ RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /u
 COPY installers/eigen.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s eigen
 
+RUN apt-get update && apt-get install -y libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
+COPY installers/ceres.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s ceres
+
 COPY installers/flann.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s flann
 
@@ -85,6 +89,6 @@ RUN chmod 0755 /tmp/CDFF/Tools/Docker/entrypoint.sh && \
 ENTRYPOINT ["/tmp/CDFF/Tools/Docker/entrypoint.sh"]
 CMD ["bash"]
 
-LABEL version="0.1.1"
+LABEL version="0.2"
 LABEL maintainer="Romain Michalec <romain.michalec@strath.ac.uk>"
 LABEL description="A self-contained environment for building and testing CDFF-core and CDFF-support, and for using CDFF-dev"

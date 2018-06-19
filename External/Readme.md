@@ -17,6 +17,7 @@ The CDFF currently requires the following libraries (**direct dependencies**):
   It's only required by `pcl_visualization` for 3D point cloud rendering and visualization, and we don't need that module on our target systems, so what can we do about it?
 * PCL 1.8.1
 * OpenCV 3.4.0
+* Ceres 1.14.0
 
 These libraries in turn have their own dependencies (the CDFF's **recurse dependencies**). List under construction:
 
@@ -42,6 +43,12 @@ These libraries in turn have their own dependencies (the CDFF's **recurse depend
   - Python 2.6+ and NumPy 1.5+ with development packages are required but assumedly only for using OpenCV's Python API (`apt: python-dev python-numpy` or perhaps `apt: python3-dev python3-numpy`)
   - Build tools: GNU Compiler Collection 4.4+ and CMake 2.8.7+ (`apt: build-essential cmake`)
   - Optional dependencies, most of them we probably don't need: `apt: libdc1394-22-dev libv4l-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libxine2-dev` and probably others for video IO, `apt: libjpeg-dev libpng12-dev libtiff5-dev libjasper-dev libwebp-dev libopenexr-dev libgdal-dev zlib1g-dev` and probably others for media IO, `apt: libtbb2 libtbb-dev` for parallel programming but I'm pretty sure we don't want to allow that in the CDFF
+
+* [Ceres](http://ceres-solver.org/installation.html)
+  - Required: Eigen 3.1.0+, CMake 2.8.0+
+  - Recommended: Eigen 3.2.2+, glog 0.3.1+ (`apt: libgoogle-glog-dev`), SuiteSparse (`apt: libsuitesparse-dev`)
+  - Optional but required for SuiteSparse: BLAS and LAPACK, both provided by ATLAS for instance (`apt: libatlas-base-dev`)
+  - Optional: gflags to build examples and tests (`apt: libgflags-dev`), Threading Building Blocks (`apt: libtbb-dev`) to have multithreading support provided by Threading Building Blocks instead of OpenMP or C++11 primitives (all multithreading is off by default)
 
 * The others
   - Check their online documentation and `CMakeLists` files and report here
