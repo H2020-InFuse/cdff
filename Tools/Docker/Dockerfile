@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
   cmake \
   git \
   cppcheck \
-  mono-devel \
+  mono-runtime mono-numerics \
   wget \
   curl \
   unzip \
@@ -18,8 +18,8 @@ RUN apt-get update && apt-get install -y \
 COPY installers/infuse_environnement.env /tmp/CDFF/Tools/Docker/installers/
 COPY fetch_compile_install_dependencies.sh /tmp/CDFF/Tools/Docker/
 
-# Download, build, and install the CDFF's dependencies
-RUN apt-get update && apt-get install -y libbz2-dev python-dev
+# Download, build, and install the CDFF's dependencies (and their dependencies)
+RUN apt-get update && apt-get install -y liblzma-dev libbz2-dev zlib1g-dev
 COPY installers/boost.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s boost
 
@@ -39,7 +39,11 @@ RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /u
 COPY installers/yamlcpp.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s yaml-cpp
 
-RUN apt-get update && apt-get install -y freeglut3-dev
+RUN apt-get update && apt-get install -y \
+  libavcodec-dev libavformat-dev libswscale-dev \
+  libjpeg-dev libpng++-dev libdc1394-22-dev libjasper-dev libtiff5-dev \
+  libv4l-dev \
+  freeglut3-dev
 COPY installers/opencv.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s opencv
 
