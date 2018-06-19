@@ -59,7 +59,7 @@ void SvdDecomposition::configure()
 
 void SvdDecomposition::process()
 {
-	cv::Mat measurementMatrix = sequenceConverter.Convert(&inCorrespondenceMapsSequence);
+	cv::Mat measurementMatrix = framesSequenceConverter.Convert(&inCorrespondenceMapsSequence);
 	if (measurementMatrix.cols < 4) //Not enough points available.
 		{
 		outSuccess = false;

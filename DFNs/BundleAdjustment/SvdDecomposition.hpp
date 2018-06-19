@@ -60,7 +60,7 @@ namespace dfn_ci
 			static const SvdDecompositionOptionsSet DEFAULT_PARAMETERS;
 
 			typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
-			Converters::CorrespondenceMaps2DSequenceToMatConverter sequenceConverter;
+			Converters::CorrespondenceMaps2DSequenceToMatConverter framesSequenceConverter;
 
 			cv::Mat leftCameraMatrix, rightCameraMatrix;
 			cv::Mat leftCameraMatrixInverse, rightCameraMatrixInverse;
