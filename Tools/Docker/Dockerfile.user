@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
   cmake \
   git \
   cppcheck \
-  mono-runtime mono-numerics \
+  mono-runtime libmono-system-core4.0-cil libmono-system-numerics4.0-cil \
   wget \
   curl \
   unzip \

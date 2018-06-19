@@ -60,6 +60,5 @@ ASN1_PREFIX=asn1Scc
 echo "Compiling ASN.1 data types to C"
 find "${ASN1_DIR}" -name \*.asn -print0 |
   xargs -0 mono "${ASN1_COMPILER}" \
-    -c -typePrefix ${ASN1_PREFIX} -uPER -wordSize 8 -ACN -o "${ASN1_OUT_DIR}" \
-    "${ASN1_FILES}"
+    -c -typePrefix ${ASN1_PREFIX} -uPER -wordSize 8 -ACN -o "${ASN1_OUT_DIR}"
 echo "Compiling ASN.1 data types to C: done"
