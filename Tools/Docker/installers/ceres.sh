@@ -48,6 +48,7 @@ if [[ ! -d "${INSTALL_DIR}/include/ceres" ]]; then
   cd build
   cmake \
     -D CMAKE_BUILD_TYPE=Release \
+    -D BUILD_SHARED_LIBS=ON \
     -D EIGEN_INCLUDE_DIR="${INSTALL_DIR}/include/" \
     -D BUILD_TESTING=OFF -D BUILD_EXAMPLES=OFF \
     -D CMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
