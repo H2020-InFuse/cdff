@@ -45,10 +45,6 @@ if [ "${CDFF}" -a "${CDFFDEV}" ]; then
   CDFFPATH="${CDFF}"
   export CDFFPATH
 
-  # Set /path/to/CDFF in a hint file
-  # Warning: overwrites that file with new value
-  printf "%s" "${CDFF}" > "${CDFFDEV}/cdffpath"
-
   echo "Setting up CDFF-dev: done"
 fi
 

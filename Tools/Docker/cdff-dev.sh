@@ -10,3 +10,5 @@
 # Maintainer: Romain Michalec <romain.michalec@strath.ac.uk>
 
 CDFFPATH="${1}" pip3 install --editable "${2}"
+
+rm /etc/sudoers.d/cdff-dev
