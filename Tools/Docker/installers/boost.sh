@@ -83,10 +83,11 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
   fetchsource_function boost boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/
 
   # Build and install
+  mkdir build
   ./bootstrap.sh \
     --with-libraries=date_time,filesystem,iostreams,system,thread,chrono \
     --prefix="${INSTALL_DIR}"
-  ./b2 -q -j ${CPUS} install
+  ./b2 --build-dir=build -q -j ${CPUS} link=shared install
 
   # Patch: support for Boost 1.66.0 in the CMake find module FindBoost.cmake is
   # only available from the module shipped with CMake 3.11: download that module
