@@ -30,8 +30,8 @@ build:
       - pwd
       - mkdir build
       - cd build
-      - cmake -DCMAKE_INSTALL_PREFIX=./ ..
       - echo ${CPUS}
+      - cmake -DCMAKE_INSTALL_PREFIX=./ ..
       - make --jobs=${CPUS} --output-sync=target
   artifacts:
     paths:
