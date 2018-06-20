@@ -11,7 +11,6 @@ hardware:
   stage : platform
   script:
       - cat /proc/cpuinfo
-      - CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)
       - lscpu
 
 autogeneration:
@@ -30,8 +29,8 @@ build:
       - pwd
       - mkdir build
       - cd build
-      - echo ${CPUS}
       - cmake -DCMAKE_INSTALL_PREFIX=./ ..
+      - CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)
       - make --jobs=${CPUS} --output-sync=target
   artifacts:
     paths:
