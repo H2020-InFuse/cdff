@@ -16,9 +16,11 @@ if [[ ! -n $(find $PKG_DIR -name 'flann*') ]]; then
 		-D BUILD_TESTS=OFF -D BUILD_EXAMPLES=OFF -D BUILD_DOC=OFF \
 		-D CMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
 		$SOURCE_DIR/flann
+
 	make --jobs=${CPUS}
 
-	install_function 1.9.1
+	install_function flann 1.9.1
+
 	clean_function flann
 fi
 }

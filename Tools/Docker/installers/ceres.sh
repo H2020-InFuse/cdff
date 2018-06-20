@@ -46,6 +46,7 @@ if [[ ! -d "${INSTALL_DIR}/include/ceres" ]]; then
   # Build
   mkdir build
   cd build
+
   cmake \
     -D CMAKE_BUILD_TYPE=Release \
     -D BUILD_SHARED_LIBS=ON \
@@ -53,10 +54,11 @@ if [[ ! -d "${INSTALL_DIR}/include/ceres" ]]; then
     -D BUILD_TESTING=OFF -D BUILD_EXAMPLES=OFF \
     -D CMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
     ../
+
   make --jobs=${CPUS}
 
   # Install
-  install_function 1.14.0
+  install_function ceres 1.14.0
 
   # Remove source and build directories
   clean_function ceres

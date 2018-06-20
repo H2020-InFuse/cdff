@@ -8,7 +8,7 @@ if [[ ! -n $(find $PKG_DIR -name 'qhull*') ]]; then
 	fetchgit_function qhull master https://github.com/qhull/qhull.git
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR $SOURCE_DIR/qhull
 	make --jobs=${CPUS}
-	install_function 1.0
+	install_function qhull 0.0.0
 	clean_function qhull
 fi
 }

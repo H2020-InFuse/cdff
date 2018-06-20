@@ -27,7 +27,7 @@ if [[ ! -d "${INSTALL_DIR}/include/pcl-1.8" ]]; then
   make --jobs=${JOBS}
 
   # Install
-  install_function 1.8.1
+  install_function pcl 1.8.1
 
   # Remove source and build directories
   clean_function pcl

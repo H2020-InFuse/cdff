@@ -129,7 +129,7 @@ function run_installers {
 
 function install_function {
 if (command -v checkinstall); then
-   checkinstall -y --pakdir $PKG_DIR --nodoc --pkgversion="$1"
+   checkinstall -y --pakdir $PKG_DIR --nodoc --pkgname="$1" --pkgversion="$2"
 else
    make --jobs=${CPUS} install
 fi

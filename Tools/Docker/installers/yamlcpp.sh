@@ -17,7 +17,8 @@ if [[ ! -n $(find $PKG_DIR -name 'yaml-cpp*') ]]; then
 		$SOURCE_DIR/yaml-cpp
 	make --jobs=${CPUS}
 
-	install_function 0.5.3
+	install_function yamlcpp 0.5.3
+
 	clean_function yaml-cpp
 fi
 }
