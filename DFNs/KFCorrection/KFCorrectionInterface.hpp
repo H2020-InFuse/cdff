@@ -29,10 +29,9 @@
  * --------------------------------------------------------------------------
  */
 #include <DFNCommonInterface.hpp>
-extern "C"{
 #include "RigidBodyState.h"
 #include "Time.h"
-}
+
 
 namespace dfn_ci {
     class KFCorrectionInterface : public DFNCommonInterface
