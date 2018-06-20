@@ -10,8 +10,7 @@ RUN apt-get update && apt-get install -y \
   mono-runtime libmono-system-core4.0-cil libmono-system-numerics4.0-cil \
   wget \
   curl \
-  unzip \
-  checkinstall
+  unzip
 
 # Add the scripts that download, build, and install the CDFF's dependencies
 # (main script added here, component scripts added next)
