@@ -28,8 +28,29 @@ target_link_libraries(
 	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_3d registration_3d registration_icp_cc opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
 
+add_executable(
+    position_test_svd
+    DFNs/BundleAdjustment/SvdDecomposition.cpp
+    DFNs/BundleAdjustment/PositionTester.cpp
+)
+target_link_libraries(
+	position_test_svd
+	cdff_helpers cdff_logger cdff_types converters_opencv svd_decomposition feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system
+)
+
 #[======================================================================[
 #DFNs
+
+add_executable(
+    position_test_ceres
+    DFNs/BundleAdjustment/CeresAdjustment.cpp
+    DFNs/BundleAdjustment/PositionTester.cpp
+)
+target_link_libraries(
+	position_test_svd
+	cdff_helpers cdff_logger cdff_types converters_opencv ceres_adjustment feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system ceres glog pthread gomp
+)
+
 add_executable(
     validity_harris_detector_2d
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp

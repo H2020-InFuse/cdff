@@ -49,7 +49,7 @@ void Clear(Poses3DSequence& posesSequence);
 void AddPose(Poses3DSequence& posesSequence, const Pose3D& pose);
 const Pose3D& GetPose(const Poses3DSequence& posesSequence, BaseTypesWrapper::T_UInt32 poseIndex);
 void GetPose(const Poses3DSequence& posesSequence, BaseTypesWrapper::T_UInt32 frameIndex, Pose3D& pose);
-BaseTypesWrapper::T_UInt32 GetNumberOfPoses3D(const Poses3DSequence& posesSequence); 
+BaseTypesWrapper::T_UInt32 GetNumberOfPoses(const Poses3DSequence& posesSequence); 
 }
 
 #endif // POSES_SEQUENCE_HPP

@@ -89,6 +89,17 @@ target_link_libraries(
 )
 
 add_executable(
+    match_multiple_images
+    SyntheticGenerators/MatchMultipleImages.cpp
+    SyntheticGenerators/MultipleImagesMatcher.cpp
+    SyntheticGenerators/ImageZooming.cpp
+)
+target_link_libraries(
+	match_multiple_images
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+)
+
+add_executable(
     paint_lines
     SyntheticGenerators/PaintLines.cpp
     SyntheticGenerators/LinesPainter.cpp
