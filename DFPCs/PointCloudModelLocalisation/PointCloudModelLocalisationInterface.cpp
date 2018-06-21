@@ -1,77 +1,46 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file PointCloudModelLocalisationInterface.cpp
- * @date 23/02/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
- * @addtogroup DFNs
- * 
- * Implementation of the PointCloudModelLocalisationInterface class
- * 
- * 
+/**
+ * @addtogroup DFPCs
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "PointCloudModelLocalisationInterface.hpp"
-#include "Errors/Assert.hpp"
 
-namespace dfpc_ci {
+namespace dfpc_ci
+{
 
-using namespace PoseWrapper;
-using namespace PointCloudWrapper;
-
-/* --------------------------------------------------------------------------
- *
- * Public Member Functions
- *
- * --------------------------------------------------------------------------
- */
 PointCloudModelLocalisationInterface::PointCloudModelLocalisationInterface()
-	{
-	
-	}
+{
+}
 
 PointCloudModelLocalisationInterface::~PointCloudModelLocalisationInterface()
-	{
+{
+}
 
-	}
+void PointCloudModelLocalisationInterface::sceneInput(const asn1SccPointcloud& data)
+{
+    inScene = data;
+}
 
-void PointCloudModelLocalisationInterface::sceneInput(PointCloudWrapper::PointCloudConstPtr data)
-	{
-    	inScene = data;
-	}
+void PointCloudModelLocalisationInterface::modelInput(const asn1SccPointcloud& data)
+{
+    inModel = data;
+}
 
-void PointCloudModelLocalisationInterface::modelInput(PointCloudConstPtr data)
-	{
-	inModel = data;
-	}
+void PointCloudModelLocalisationInterface::computeModelFeaturesInput(bool data)
+{
+    inComputeModelFeatures = data;
+}
 
-Pose3DConstPtr PointCloudModelLocalisationInterface::poseOutput() 
-	{
-    	return outPose;
-	}
+const asn1SccPose& PointCloudModelLocalisationInterface::poseOutput() const
+{
+    return outPose;
+}
 
-bool PointCloudModelLocalisationInterface::successOutput()
-	{
-	return outSuccess;
-	}
-
+bool PointCloudModelLocalisationInterface::successOutput() const
+{
+    return outSuccess;
+}
 
 }
 
 /** @} */
-

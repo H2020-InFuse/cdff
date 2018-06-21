@@ -5,20 +5,28 @@ dfns:
     - name: FeaturesMatching3D
 input_ports:
     - name: scene
-      type: PointCloud
+      type: asn1SccPointcloud
       doc: "a point cloud representing the environment"
       connections:
         - dfn: FeaturesExtraction3D
           port: pointCloud
     - name: model
-      type: PointCloud
+      type: asn1SccPointcloud
       doc: "the 3d point cloud of the model"
       connections:
         - dfn: FeaturesExtraction3D
           port: pointCloud
+    - name: computeModelFeatures
+      type: bool
+      doc: "this determines whether the model features will be computed.
+            It has to be true the first time a new model is provided.
+            For optimal performance it should be false on all subsequent calls."
+      connections:
+        - dfn: NoDfn
+          port: noPort
 output_ports:
     - name: pose
-      type: Pose3D
+      type: asn1SccPose
       doc: "This is the pose of the model in the scene"
       connections:
         dfn: FeaturesMatching3D
