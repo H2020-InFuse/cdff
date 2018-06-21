@@ -22,6 +22,13 @@ BUILD_DIR="$(readlink -m $DIR"/../../External/build")"
 INSTALL_DIR="$(readlink -m $DIR"/../../External/install")"
 PKG_DIR="$(readlink -m $DIR"/../../External/package")"
 
+# How many processors?
+if [ -f /proc/cpuinfo ]; then
+  CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)
+else
+  CPUS=1
+fi
+
 function show_help {
 
   cat <<EOF
@@ -122,9 +129,9 @@ function run_installers {
 
 function install_function {
 if (command -v checkinstall); then
-   checkinstall -y --pakdir $PKG_DIR --nodoc --pkgversion="$1"
+   checkinstall -y --pakdir $PKG_DIR --nodoc --pkgname="$1" --pkgversion="$2"
 else
-   make install
+   make --jobs=${CPUS} install
 fi
 }
 
@@ -143,7 +150,7 @@ function fetchsource_function {
 
 function fetchgit_function {
 	echo "Checking out $1"
-	git -C $SOURCE_DIR clone --depth 1 --single-branch --recursive -b $2 $3
+	git -C $SOURCE_DIR clone --depth 1 --single-branch --recursive -b $2 $3 $1
 	mkdir -p $BUILD_DIR/$1
 	cd $BUILD_DIR/$1
   echo "Done. $1 Checked out."
@@ -160,6 +167,7 @@ function clean_function {
 function build_all_function {
  InstallersToRUN+=("boost")
  InstallersToRUN+=("eigen")
+ InstallersToRUN+=("ceres")
  InstallersToRUN+=("flann")
  InstallersToRUN+=("qhull")
  InstallersToRUN+=("yaml-cpp")

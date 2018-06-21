@@ -84,14 +84,14 @@ endif()
 if(USE_BUNDLED_DEPENDENCIES)
 
   set(CMAKE_MODULE_PATH
-    "${PROJECT_SOURCE_DIR}/${BUNDLED_DEPENDENCIES_PREFIX}/share/cmake-3.11.0-rc4/Modules")
+    "${PROJECT_SOURCE_DIR}/${BUNDLED_DEPENDENCIES_PREFIX}/share/cmake-3.11.4/Modules")
 
 else()
 
-  # TODO: check if CMake 3.5.1 doesn't automaically look for find modules in
+  # TODO: check if CMake 3.5.1 doesn't automatically look for find modules in
   # /usr/local/share/cmake*/Modules (it does in /usr/share/cmake-3.5/Modules)
   set(CMAKE_MODULE_PATH
-    "${_DEPENDENCIES_PREFIX}/share/cmake-3.11.0-rc4/Modules")
+    "${_DEPENDENCIES_PREFIX}/share/cmake-3.11.4/Modules")
 
 endif()
 
@@ -160,7 +160,11 @@ if(Boost_FOUND)
   #
   # To use compiled libraries:
   #
+  # * In your source:
+  #     #include <boost/...>
+  #
   # * In your CMakeLists file:
+  #     include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
   #     add_executable(mybin src1.cpp src2.cpp ...)
   #     target_link_libraries(mybin Boost::date_time Boost::system ...)
   #       # to link against the specified libraries and their dependencies
@@ -179,7 +183,7 @@ if(Boost_FOUND)
     message(STATUS "Pass them to your target_link_libraries() commands")
   endif()
 
-  message(STATUS "All requested Boost compiled libraries "
+  message(STATUS "All requested Boost compiled libraries, "
     "and their dependencies: ${Boost_LIBRARIES}")
 
   # TODO: kept for compatibility with the existing CDFF code base: to be removed
@@ -221,6 +225,49 @@ endif()
 include_directories(
   SYSTEM "${_DEPENDENCIES_PREFIX}/include/eigen3"
 )
+
+## Look for Ceres --------------------------------------------------------------
+
+# TODO: doc
+
+find_package(Ceres 1.14.0 REQUIRED COMPONENTS SparseLinearAlgebraLibrary)
+
+if(Ceres_FOUND)
+
+  find_package_mode(Ceres)
+
+  # To use Ceres:
+  #
+  # * In your source:
+  #     #include <ceres/...>
+  #
+  # * In your CMakeLists file:
+  #     include_directories(SYSTEM ${CERES_INCLUDE_DIRS})
+  #     add_executable(mybin src1.cpp src2.cpp ...)
+  #     target_link_libraries(mybin ${CERES_LIBRARIES})
+  #       # to link against Ceres and its dependencies
+  #
+  # TODO: target_include_directories() should be preferred to include_
+  # directories() but I don't understand how it works
+
+  message(STATUS "Found Ceres headers, and the headers of its dependencies, in: ${CERES_INCLUDE_DIRS}")
+
+  # TODO: CERES_LIBRARIES appears to actually be an imported target instead of a list of
+  # libraries, cf. http://ceres-solver.org/installation.html#understanding-the-cmake-package-system
+  message(STATUS "Requested Ceres library, "
+    "and its dependencies: ${CERES_LIBRARIES}")
+
+  # TODO: kept for compatibility with the existing CDFF code base: to be removed
+  # when all CMakeLists that define targets feature the appropriate [target_]
+  # include_directories()
+  include_directories(SYSTEM ${CERES_INCLUDE_DIRS})
+
+else()
+
+  # Abort if Ceres is not found
+  return()
+
+endif()
 
 ## Don't look for FLANN, QHull, yaml-cpp ---------------------------------------
 

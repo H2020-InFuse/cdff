@@ -35,6 +35,7 @@
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <Errors/Assert.hpp>
+#include <ctime>
 
 #include <VisualPointFeatureVector3D.hpp>
 #include <PointCloud.hpp>
@@ -129,6 +130,8 @@ class CorrectLocalizationTester
 		bool dfnsWereConfigured;
 		bool inputsWereLoaded;
 		bool groundTruthWasLoaded;
+		clock_t beginTime, endTime;
+		float processingTime;
 
 		void ExtractFeatures();
 		void DescribeFeatures();
