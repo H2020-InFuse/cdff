@@ -22,7 +22,7 @@ if [[ ! -d "${INSTALL_DIR}/include/pcl-1.8" ]]; then
     -D CMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
     ../
 
-  JOBS=$((CPUS/2))
+  JOBS=$((CPUS/4))
   JOBS=$((JOBS > 0 ? JOBS : 1))
   make --jobs=${JOBS}
 
