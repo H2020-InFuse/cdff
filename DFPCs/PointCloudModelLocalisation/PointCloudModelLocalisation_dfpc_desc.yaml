@@ -1,4 +1,5 @@
 name: PointCloudModelLocalisation
+doc: Interface of all DFPCs that find a 3D model in a 3D scene
 dfns:
     - name: FeaturesExtraction3D
     - name: FeaturesDescription3D
