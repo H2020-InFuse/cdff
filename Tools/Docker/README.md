@@ -6,7 +6,7 @@ This directory contains the `Dockerfiles` and the necessary build context requir
 
     ```shell
     $ cd /path/to/this/directory
-    $ docker build --tag=nexus.spaceapplications.com/repository/infuse/cdff-ci:<version> ./
+    $ docker build [--no-cache] --tag=nexus.spaceapplications.com/repository/infuse/cdff-ci:<version> ./
     ```
 
 * The Docker image that can be used by CDFF developers to:
@@ -18,7 +18,7 @@ This directory contains the `Dockerfiles` and the necessary build context requir
 
     ```shell
     $ cd /path/to/this/directory
-    $ docker build --tag=h2020infuse/cdff:<version> --tag=h2020infuse/cdff:latest --file=Dockerfile.user ./
+    $ docker build [--no-cache] --tag=h2020infuse/cdff:<version> --tag=h2020infuse/cdff:latest --file=Dockerfile.user ./
     $ docker push h2020infuse/cdff:<version>
     $ docker push h2020infuse/cdff:latest
     ```

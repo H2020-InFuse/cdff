@@ -8,7 +8,7 @@ The CDFF currently requires the following libraries (**direct dependencies**):
 
 * yaml-cpp 0.5.3
 * Boost 1.66.0  
-  Although not all Boost.* libraries are necessary, we need to list those we effectively depend on.
+  Only a couple Boost.* libraries are currently required, see [`boost.sh`](/Tools/Docker/installers/boost.sh) for a list
 * Eigen 3.3.4
 * FLANN 1.9.1
 * QHull (master branch)  
@@ -17,19 +17,24 @@ The CDFF currently requires the following libraries (**direct dependencies**):
   It's only required by `pcl_visualization` for 3D point cloud rendering and visualization, and we don't need that module on our target systems, so what can we do about it?
 * PCL 1.8.1
 * OpenCV 3.4.0
+* Ceres 1.14.0
 
 These libraries in turn have their own dependencies (the CDFF's **recurse dependencies**). List under construction:
+
+* yaml-cpp
+  - Certain Boost.* libraries, but precisely which ones is undocumented (assumedly, header-only ones)
 
 * Boost
   - The C/C++ standard libraries (`apt: libc6-dev libstdc++-5-dev`)
   - The GCC support library (`apt: libgcc-5-dev`)
-  - For certain Boost.* libraries: OpenSSL, OpenGL, Python v2.2+, ICU (`apt: libicu-dev`), zlib, libbzip2, liblzma (`apt: zlib1g-dev libbz2-dev liblzma-dev`)
+  - For the Boost.Iostream library (a dependency of PCL): zlib, libbzip2, liblzma (`apt: zlib1g-dev libbz2-dev liblzma-dev`)
 
 * Eigen
   - Only the C++ standard library
 
 * PCL
-  - Boost, Eigen, FLANN, QHull, VTK
+  - A few Boost.* libraries, see [`boost.sh`](/Tools/Docker/installers/boost.sh) for the list
+  - Eigen, FLANN, QHull, VTK
 
 * OpenCV
   - FFmpeg development packages are required for video IO to work (`apt: libavcodec-dev libavformat-dev libswscale-dev`)
@@ -38,6 +43,12 @@ These libraries in turn have their own dependencies (the CDFF's **recurse depend
   - Python 2.6+ and NumPy 1.5+ with development packages are required but assumedly only for using OpenCV's Python API (`apt: python-dev python-numpy` or perhaps `apt: python3-dev python3-numpy`)
   - Build tools: GNU Compiler Collection 4.4+ and CMake 2.8.7+ (`apt: build-essential cmake`)
   - Optional dependencies, most of them we probably don't need: `apt: libdc1394-22-dev libv4l-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libxine2-dev` and probably others for video IO, `apt: libjpeg-dev libpng12-dev libtiff5-dev libjasper-dev libwebp-dev libopenexr-dev libgdal-dev zlib1g-dev` and probably others for media IO, `apt: libtbb2 libtbb-dev` for parallel programming but I'm pretty sure we don't want to allow that in the CDFF
+
+* [Ceres](http://ceres-solver.org/installation.html)
+  - Required: Eigen 3.1.0+, CMake 2.8.0+
+  - Recommended: Eigen 3.2.2+, glog 0.3.1+ (`apt: libgoogle-glog-dev`), SuiteSparse (`apt: libsuitesparse-dev`)
+  - Optional but required for SuiteSparse: BLAS and LAPACK, both provided by ATLAS for instance (`apt: libatlas-base-dev`)
+  - Optional: gflags to build examples and tests (`apt: libgflags-dev`), Threading Building Blocks (`apt: libtbb-dev`) to have multithreading support provided by Threading Building Blocks instead of OpenMP or C++11 primitives (all multithreading is off by default)
 
 * The others
   - Check their online documentation and `CMakeLists` files and report here
@@ -141,7 +152,7 @@ You can use a combination of your distribution's software package manager and/or
 
     It is currently **recommended** to compile the CDFF's direct dependencies from source, rather than relying on the precompiled versions available in your distribution's software package manager. The reason for that is that they are specialist libraries (mathematics, robotics, computer vision) that the CDFF relies heavily on, and relying on the compilation and packaging choices of a particular package maintainer can be uncertain: those choices are often different for different distributions, as is the version number too. Our current policy is to **use the official upstream sources in fixed versions and choose our own compilation options**.
 
-    That said, you are free to install these dependencies from whatever source you prefer in whatever version you want, and link the CDFF against them. In that case, please make sure that the features you contribute to the CDFF also work as you intend in a CDFF linked against direct dependencies compiled from source in the versions listed above. You can use the `h2020infuse/cdff` Docker image for that: the whole point of that image is to provide a common reference environment. Please also be aware that the `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` running the continuous integration pipeline on the GitLab server also uses direct dependencies compiled from source in the versions listed above.
+    That said, you are free to install these dependencies from whatever source you prefer in whatever version you want, and link the CDFF against them. In that case, please make sure that the features you contribute to the CDFF also work as you intend in a CDFF linked against direct dependencies compiled from source in the versions listed above. You can use the `h2020infuse/cdff` Docker image for that: the whole point of that image is to provide a common reference environment. Please also be aware that the `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` image used to run the continuous integration pipeline on the GitLab server also uses direct dependencies compiled from source in the versions listed above.
 
     A helper script is provided in `External/`. It downloads the sources of the CDFF's direct dependencies, builds them, and installs the result in `External/install/{bin,include,lib,share}` by default. Of course you can do all that manually if you prefer. In that case, check out our currently-selected build options in the various `External/installers/*.sh` scripts.
 
