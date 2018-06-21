@@ -77,24 +77,16 @@ void GuiTestReconstruction3D::Run(dfpc_ci::Reconstruction3DInterface& reconstruc
 	while( LoadNextImages(leftImage, rightImage) )
 		{
 		PRINT_TO_LOG("run", "");
-		reconstructor3d.leftImageInput(leftImage);
-		reconstructor3d.rightImageInput(rightImage);
+		reconstructor3d.leftImageInput(*leftImage);
+		reconstructor3d.rightImageInput(*rightImage);
 		reconstructor3d.run();
 		PRINT_TO_LOG("run", "after");
-		PointCloudConstPtr pointCloud = reconstructor3d.pointCloudOutput();
-		Pose3DConstPtr pose = reconstructor3d.poseOutput();
+		const PointCloud& pointCloud = reconstructor3d.pointCloudOutput();
+		const Pose3D& pose = reconstructor3d.poseOutput();
 		bool success = reconstructor3d.successOutput();
 		PRINT_TO_LOG("run", "load");
 		delete(leftImage);
 		delete(rightImage);
-		if (pointCloud != NULL)
-			{
-			delete(pointCloud);
-			}
-		if (pose != NULL)
-			{
-			delete(pose);
-			}
 		}
 	}
 

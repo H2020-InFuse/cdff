@@ -1,83 +1,46 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file Reconstruction3DInterface.cpp
- * @date 08/03/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
- * @addtogroup DFNs
- * 
- * Implementation of the Reconstruction3DInterface class
- * 
- * 
+/**
+ * @addtogroup DFPCs
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "Reconstruction3DInterface.hpp"
-#include "Errors/Assert.hpp"
 
-namespace dfpc_ci {
+namespace dfpc_ci
+{
 
-using namespace FrameWrapper;
-using namespace PoseWrapper;
-using namespace PointCloudWrapper;
-
-/* --------------------------------------------------------------------------
- *
- * Public Member Functions
- *
- * --------------------------------------------------------------------------
- */
 Reconstruction3DInterface::Reconstruction3DInterface()
-	{
-	
-	}
+{
+}
 
 Reconstruction3DInterface::~Reconstruction3DInterface()
-	{
+{
+}
 
-	}
+void Reconstruction3DInterface::leftImageInput(const asn1SccFrame& data)
+{
+    inLeftImage = data;
+}
 
-void Reconstruction3DInterface::leftImageInput(FrameConstPtr data) 
-	{
-    	inLeftImage = data;
-	}
+void Reconstruction3DInterface::rightImageInput(const asn1SccFrame& data)
+{
+    inRightImage = data;
+}
 
-void Reconstruction3DInterface::rightImageInput(FrameConstPtr data) 
-	{
-    	inRightImage = data;
-	}
+const asn1SccPointcloud& Reconstruction3DInterface::pointCloudOutput() const
+{
+    return outPointCloud;
+}
 
-PointCloudConstPtr Reconstruction3DInterface::pointCloudOutput()
-	{
-	return outPointCloud;
-	}
+const asn1SccPose& Reconstruction3DInterface::poseOutput() const
+{
+    return outPose;
+}
 
-Pose3DConstPtr Reconstruction3DInterface::poseOutput() 
-	{
-    	return outPose;
-	}
-
-bool Reconstruction3DInterface::successOutput()
-	{
-	return outSuccess;
-	}
-
+bool Reconstruction3DInterface::successOutput() const
+{
+    return outSuccess;
+}
 
 }
 
 /** @} */
-

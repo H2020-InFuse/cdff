@@ -276,6 +276,48 @@ target_link_libraries(
     boost_system yaml-cpp ${VTK_LIBRARIES} #ceres glog pthread gomp
 )
 
+add_executable(
+    ReconstructionFromMotionGuiTest
+    DFPCs/Reconstruction3D/ReconstructionFromMotion.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
+)
+set_target_properties(ReconstructionFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    ReconstructionFromMotionGuiTest
+    reconstruction_from_motion
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
+add_executable(
+    ReconstructionFromStereoGuiTest
+    DFPCs/Reconstruction3D/ReconstructionFromStereo.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
+)
+set_target_properties(ReconstructionFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    ReconstructionFromStereoGuiTest
+    reconstruction_from_stereo
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
+add_executable(
+    RegistrationFromStereoGuiTest
+    DFPCs/Reconstruction3D/RegistrationFromStereo.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
+)
+set_target_properties(RegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    RegistrationFromStereoGuiTest
+    registration_from_stereo
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
 #[======================================================================[
 
 add_executable(
@@ -318,48 +360,6 @@ set_target_properties(FeaturesMatching3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECT
 target_link_libraries(
     FeaturesMatching3DGuiTest
     dfpc_implementation_features_matching_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
-    ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
-)
-
-add_executable(
-    ReconstructionFromMotionGuiTest
-    DFPCs/Reconstruction3D/ReconstructionFromMotion.cpp
-    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
-)
-set_target_properties(ReconstructionFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-    ReconstructionFromMotionGuiTest
-    reconstruction_from_motion
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
-    ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
-)
-
-add_executable(
-    ReconstructionFromStereoGuiTest
-    DFPCs/Reconstruction3D/ReconstructionFromStereo.cpp
-    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
-)
-set_target_properties(ReconstructionFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-    ReconstructionFromStereoGuiTest
-    reconstruction_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
-    ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
-)
-
-add_executable(
-    RegistrationFromStereoGuiTest
-    DFPCs/Reconstruction3D/RegistrationFromStereo.cpp
-    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
-)
-set_target_properties(RegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-    RegistrationFromStereoGuiTest
-    registration_from_stereo
     ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     boost_system yaml-cpp ${VTK_LIBRARIES}
