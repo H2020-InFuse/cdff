@@ -1,79 +1,64 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file DisparityMapping.cpp
- * @date 08/03/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
+ * Unit tests for the DFN DisparityMapping
+ */
+
+/**
  * @addtogroup DFNsTest
- * 
- * Unit Test for the DFN Implementation: DisparityMapping.
- * 
- * 
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include <catch.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <Errors/Assert.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+#include <MatToFrameConverter.hpp>
+#include <opencv2/imgcodecs/imgcodecs.hpp>
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace FrameWrapper;
 
-/* --------------------------------------------------------------------------
- *
- * Test Cases
- *
- * --------------------------------------------------------------------------
- */
-TEST_CASE( "Success Call to process (disparity mapping)", "[process]" ) 
-	{
-	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
+TEST_CASE( "DFN DisparityMapping: processing step", "[process]" )
+{
+	// Prepare input data
+	cv::Mat stereoImage = cv::imread("../tests/Data/Images/SmestechLab.jpg", cv::IMREAD_COLOR);
+	cv::Mat leftImage = stereoImage(cv::Rect(0, 0, stereoImage.cols/2, stereoImage.rows));
+	cv::Mat rightImage = stereoImage(cv::Rect(stereoImage.cols/2, 0, stereoImage.cols/2, stereoImage.rows));
 
-	cv::Mat cvImage = cv::imread("../tests/Data/Images/SmestechLab.jpg", cv::IMREAD_COLOR);
-	cv::Mat leftImage = cvImage( cv::Rect(0, 0, cvImage.cols/2, cvImage.rows) );
-	cv::Mat rightImage = cvImage( cv::Rect(cvImage.cols/2, 0, cvImage.cols/2, cvImage.rows) );
-	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&leftImage) );
-	mockInputConverter->AddBehaviour("Convert", "2", (void*) (&rightImage) );
+	MatToFrameConverter matToFrame;
+	const Frame* left = matToFrame.Convert(leftImage);
+	const Frame* right = matToFrame.Convert(rightImage);
 
-	DisparityMapping disparityMapping;
-	disparityMapping.leftImageInput(new Frame());
-	disparityMapping.rightImageInput(new Frame());
-	disparityMapping.process();
+	// Instantiate DFN
+	DisparityMapping* disparityMapping = new DisparityMapping;
 
-	PointCloudConstPtr outputCloud = disparityMapping.pointCloudOutput();
-	delete(outputCloud);
-	}
+	// Send input data to DFN
+	disparityMapping->leftInput(*left);
+	disparityMapping->rightInput(*right);
 
-TEST_CASE( "Success Call to configure (disparity mapping)", "[configure]" ) 
-	{
-	DisparityMapping disparityMapping;
-	disparityMapping.setConfigurationFile("../tests/ConfigurationFiles/DFNs/StereoReconstruction/DisparityMapping_Conf1.yaml");
-	disparityMapping.configure();	
-	}
+	// Run DFN
+	disparityMapping->process();
 
+	// Query output data from DFN
+	const PointCloud& reconstructedScene = disparityMapping->pointcloudOutput();
+
+	// Cleanup
+	delete disparityMapping;
+	delete left;
+	delete right;
+}
+
+TEST_CASE( "DFN DisparityMapping: configuration", "[configure]" )
+{
+	// Instantiate DFN
+	DisparityMapping* disparityMapping = new DisparityMapping;
+
+	// Setup DFN
+	disparityMapping->setConfigurationFile("../tests/ConfigurationFiles/DFNs/StereoReconstruction/DisparityMapping_Conf1.yaml");
+	disparityMapping->configure();
+}
 
 /** @} */

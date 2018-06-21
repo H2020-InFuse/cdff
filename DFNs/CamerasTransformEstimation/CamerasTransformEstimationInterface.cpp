@@ -1,80 +1,41 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file CamerasTransformEstimationInterface.cpp
- * @date 31/01/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
+/**
  * @addtogroup DFNs
- * 
- * Implementation of the CamerasTransformEstimationInterface class
- * 
- * 
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "CamerasTransformEstimationInterface.hpp"
-#include "Errors/Assert.hpp"
 
-namespace dfn_ci {
+namespace dfn_ci
+{
 
-using namespace MatrixWrapper;
-using namespace PoseWrapper;
-using namespace CorrespondenceMap2DWrapper;
-
-/* --------------------------------------------------------------------------
- *
- * Public Member Functions
- *
- * --------------------------------------------------------------------------
- */
 CamerasTransformEstimationInterface::CamerasTransformEstimationInterface()
-	{
-	
-	}
+{
+}
 
 CamerasTransformEstimationInterface::~CamerasTransformEstimationInterface()
-	{
+{
+}
 
-	}
+void CamerasTransformEstimationInterface::fundamentalMatrixInput(const asn1SccMatrix3d& data)
+{
+    inFundamentalMatrix = data;
+}
 
-void CamerasTransformEstimationInterface::fundamentalMatrixInput(Matrix3dConstPtr data) 
-	{
-    	inFundamentalMatrix = data;
-	}
+void CamerasTransformEstimationInterface::matchesInput(const asn1SccCorrespondenceMap2D& data)
+{
+    inMatches = data;
+}
 
-void CamerasTransformEstimationInterface::correspondenceMapInput(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr data)
-	{
-	inCorrespondenceMap = data;
-	}
+const asn1SccPose& CamerasTransformEstimationInterface::transformOutput() const
+{
+    return outTransform;
+}
 
-Transform3DConstPtr CamerasTransformEstimationInterface::transformOutput() 
-	{
-    	return outTransform;
-	}
-
-bool CamerasTransformEstimationInterface::successOutput()
-	{
-	return outSuccess;
-	}
-
-
-
+bool CamerasTransformEstimationInterface::successOutput() const
+{
+    return outSuccess;
+}
 
 }
 
 /** @} */
-

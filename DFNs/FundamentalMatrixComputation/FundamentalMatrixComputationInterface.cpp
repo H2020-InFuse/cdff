@@ -1,75 +1,36 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file FundamentalMatrixComputationInterface.cpp
- * @date 26/01/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
+/**
  * @addtogroup DFNs
- * 
- * Implementation of the FundamentalMatrixComputationInterface class
- * 
- * 
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "FundamentalMatrixComputationInterface.hpp"
-#include "Errors/Assert.hpp"
 
-namespace dfn_ci {
+namespace dfn_ci
+{
 
-using namespace CorrespondenceMap2DWrapper;
-using namespace MatrixWrapper;
-using namespace BaseTypesWrapper;
-
-/* --------------------------------------------------------------------------
- *
- * Public Member Functions
- *
- * --------------------------------------------------------------------------
- */
 FundamentalMatrixComputationInterface::FundamentalMatrixComputationInterface()
-	{
-	
-	}
+{
+}
 
 FundamentalMatrixComputationInterface::~FundamentalMatrixComputationInterface()
-	{
+{
+}
 
-	}
+void FundamentalMatrixComputationInterface::matchesInput(const asn1SccCorrespondenceMap2D& data)
+{
+    inMatches = data;
+}
 
-void FundamentalMatrixComputationInterface::correspondenceMapInput(CorrespondenceMap2DConstPtr data) 
-	{
-    	inCorrespondenceMap = data;
-	}
+const asn1SccMatrix3d& FundamentalMatrixComputationInterface::fundamentalMatrixOutput() const
+{
+    return outFundamentalMatrix;
+}
 
-Matrix3dConstPtr FundamentalMatrixComputationInterface::fundamentalMatrixOutput() 
-	{
-    	return outFundamentalMatrix;
-	}
-
-bool FundamentalMatrixComputationInterface::successOutput()
-	{
-	return outSuccess;
-	}
-
-
-
+bool FundamentalMatrixComputationInterface::successOutput() const
+{
+    return outSuccess;
+}
 
 }
 
 /** @} */
-

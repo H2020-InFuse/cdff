@@ -1,72 +1,36 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file StereoReconstructionInterface.cpp
- * @date 08/03/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
+/**
  * @addtogroup DFNs
- * 
- * Implementation of the StereoReconstructionInterface class
- * 
- * 
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include "StereoReconstructionInterface.hpp"
-#include "Errors/Assert.hpp"
 
-namespace dfn_ci {
+namespace dfn_ci
+{
 
-using namespace PointCloudWrapper;
-using namespace FrameWrapper;
-
-/* --------------------------------------------------------------------------
- *
- * Public Member Functions
- *
- * --------------------------------------------------------------------------
- */
 StereoReconstructionInterface::StereoReconstructionInterface()
-	{
-	
-	}
+{
+}
 
 StereoReconstructionInterface::~StereoReconstructionInterface()
-	{
+{
+}
 
-	}
+void StereoReconstructionInterface::leftInput(const asn1SccFrame& data)
+{
+    inLeft = data;
+}
 
-void StereoReconstructionInterface::leftImageInput(FrameConstPtr data)
-	{
-    	inLeftImage = data;
-	}
+void StereoReconstructionInterface::rightInput(const asn1SccFrame& data)
+{
+    inRight = data;
+}
 
-void StereoReconstructionInterface::rightImageInput(FrameConstPtr data)
-	{
-    	inRightImage = data;
-	}
-
-PointCloudConstPtr StereoReconstructionInterface::pointCloudOutput() 
-	{
-    	return outPointCloud;
-	}
-
+const asn1SccPointcloud& StereoReconstructionInterface::pointcloudOutput() const
+{
+    return outPointcloud;
+}
 
 }
 
 /** @} */
-

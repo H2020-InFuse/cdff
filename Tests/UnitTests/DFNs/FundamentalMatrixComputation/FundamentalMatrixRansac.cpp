@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Unit Test for the DFN FundamentalMatrixRansac.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -28,24 +28,21 @@
  */
 #include <catch.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
+
 #include <FrameToMatConverter.hpp>
 #include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Errors/Assert.hpp>
-#include <time.h>
 #include <DataGenerators/SyntheticGenerators/CameraPair.hpp>
+#include <Errors/Assert.hpp>
+
+#include <time.h>
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace BaseTypesWrapper;
 using namespace MatrixWrapper;
 using namespace CorrespondenceMap2DWrapper;
-using namespace DataGenerators;
 using namespace PoseWrapper;
+using namespace DataGenerators;
 
 /* --------------------------------------------------------------------------
  *
@@ -53,7 +50,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-class FundamentalMatrixTest 
+class FundamentalMatrixTest
 	{
 	public:
 		static void RandomCorrespondencesTest(PoseWrapper::Pose3DConstPtr secondCameraPose, unsigned numberOfCorrespondences = 20);
@@ -61,7 +58,6 @@ class FundamentalMatrixTest
 
 	private:
 		static const double EPSILON;
-
 		static void ValidateOutput(MatrixWrapper::Matrix3dConstPtr output, cv::Mat cvFundamentalMatrix);
 	};
 
@@ -77,37 +73,36 @@ void FundamentalMatrixTest::RandomCorrespondencesTest(PoseWrapper::Pose3DConstPt
 	ransac.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac_Conf2.yaml");
 	ransac.configure();
 
-	ransac.correspondenceMapInput(input);
+	ransac.matchesInput(*input);
 	ransac.process();
 
-	Matrix3dConstPtr output = ransac.fundamentalMatrixOutput();
-	bool success = ransac.successOutput();	
+	const Matrix3d& output = ransac.fundamentalMatrixOutput();
+	bool success = ransac.successOutput();
 	REQUIRE(success == true);
 
-	ValidateOutput(output, cvFundamentalMatrix);
+	ValidateOutput(&output, cvFundamentalMatrix);
 	}
 
 void FundamentalMatrixTest::FailureTest()
 	{
 	CorrespondenceMap2DPtr input = new CorrespondenceMap2D();
 	for(unsigned index = 0; index < 15; index++)
-		{		
+		{
 		Point2D source = { .x = 0 , .y= 0};
 		Point2D sink = { .x = 0 , .y= 0};
 		AddCorrespondence(*input, source, sink, 1);
 		}
 
 	FundamentalMatrixRansac ransac;
-	ransac.correspondenceMapInput(input);
+	ransac.matchesInput(*input);
 	ransac.process();
 
-	Matrix3dConstPtr output = ransac.fundamentalMatrixOutput();
+	const Matrix3d& output = ransac.fundamentalMatrixOutput();
 	bool success = ransac.successOutput();
-	
+
 	REQUIRE(success == false);
-	
+
 	delete(input);
-	delete(output);
 	}
 
 const double FundamentalMatrixTest::EPSILON = 0.0001;
@@ -152,7 +147,7 @@ void FundamentalMatrixTest::ValidateOutput(Matrix3dConstPtr output, cv::Mat cvFu
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Fail Call to process (RANSAC fundamental matrix)", "[processFail]" ) 
+TEST_CASE( "Fail Call to process (RANSAC fundamental matrix)", "[processFail]" )
 	{
 	FundamentalMatrixTest::FailureTest();
 	}
@@ -161,7 +156,7 @@ TEST_CASE( "Call to configure (RANSAC fundamental matrix)", "[configure]" )
 	{
 	FundamentalMatrixRansac ransac;
 	ransac.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac_Conf1.yaml");
-	ransac.configure();	
+	ransac.configure();
 	}
 
 TEST_CASE( "Correct computation on camera translation X", "[fundamentalTranslationX]" )

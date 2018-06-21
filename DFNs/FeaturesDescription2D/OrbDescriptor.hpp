@@ -1,111 +1,85 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file OrbDescriptor.hpp
- * @date 21/02/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  @brief This DFN uses the Orb Descriptor (Rotated BRIEF descriptor) for the computation of the descriptors of the input keypoints.
- *  
- *  The algorithm uses the following parameters:
- *  @param generalParameters.edgeThreshold
- *  @param generalParameters.fastThreshold
- *  @param generalParameters.firstLevel
- *  @param generalParameters.maxFeaturesNumber, this determines the maximum number of keypoints the algorithm will extract.
- *  @param generalParameters.levelsNumber
- *  @param generalParameters.patchSize
- *  @param generalParameters.scaleFactor
- *  @param generalParameters.scoreType
- *  @param generalParameters.sizeOfBrightnessTestSet
- *
  * @{
  */
 
-#ifndef ORB_DESCRIPTOR_HPP
-#define ORB_DESCRIPTOR_HPP
+#ifndef ORBDESCRIPTOR_HPP
+#define ORBDESCRIPTOR_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
+#include "FeaturesDescription2DInterface.hpp"
 #include <Frame.hpp>
 #include <VisualPointFeatureVector2D.hpp>
+#include <FrameToMatConverter.hpp>
+#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Helpers/ParametersListHelper.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <yaml-cpp/yaml.h>
 #include <opencv2/features2d.hpp>
-#include <Helpers/ParametersListHelper.hpp>
+#include <yaml-cpp/yaml.h>
 
-namespace dfn_ci {
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class OrbDescriptor : public FeaturesDescription2DInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+namespace dfn_ci
+{
+	/**
+	 * Computation of descriptors for input 2D keypoints using ORB (rotated
+	 * BRIEF descriptor).
+	 *
+	 * @param generalParameters.edgeThreshold
+	 * @param generalParameters.fastThreshold
+	 * @param generalParameters.firstLevel
+	 * @param generalParameters.maxFeaturesNumber
+	 *        maximal number of keypoints that the algorithm will extract
+	 * @param generalParameters.levelsNumber
+	 * @param generalParameters.patchSize
+	 * @param generalParameters.scaleFactor
+	 * @param generalParameters.scoreType
+	 * @param generalParameters.sizeOfBrightnessTestSet
 	 */
-        public:
-            OrbDescriptor();
-            ~OrbDescriptor();
-            void process();
-            void configure();
+	class OrbDescriptor : public FeaturesDescription2DInterface
+	{
+		public:
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
+			OrbDescriptor();
+			virtual ~OrbDescriptor();
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
-	private:
-		
-		struct OrbOptionsSet
+			virtual void configure();
+			virtual void process();
+
+		private:
+
+			struct OrbOptionsSet
 			{
-			int edgeThreshold;
-			int fastThreshold;
-			int firstLevel;
-			int maxFeaturesNumber;
-			int levelsNumber;
-			int patchSize;
-			double scaleFactor;
-			int scoreType;
-			int sizeOfBrightnessTestSet;
+				int edgeThreshold;
+				int fastThreshold;
+				int firstLevel;
+				int maxFeaturesNumber;
+				int levelsNumber;
+				int patchSize;
+				double scaleFactor;
+				int scoreType;
+				int sizeOfBrightnessTestSet;
 			};
 
-		Helpers::ParametersListHelper parametersHelper;
-		OrbOptionsSet parameters;
-		static const OrbOptionsSet DEFAULT_PARAMETERS;
+			Helpers::ParametersListHelper parametersHelper;
+			OrbOptionsSet parameters;
+			static const OrbOptionsSet DEFAULT_PARAMETERS;
 
-		cv::Mat ComputeOrbFeatures(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector);
-		std::vector<cv::KeyPoint> Convert(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featuresVector);
+			Converters::FrameToMatConverter frameToMat;
+			Converters::MatToVisualPointFeatureVector2DConverter matToVisualPointFeatureVector2D;
 
-		void ValidateParameters();
-		void ValidateInputs(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector);
+			cv::Mat ComputeOrbFeatures(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector);
+			std::vector<cv::KeyPoint> Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& featuresVector);
 
-		static int ConvertToScoreType(std::string scoreType);
-    };
+			void ValidateParameters();
+			void ValidateInputs(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector);
+
+			static int ConvertToScoreType(std::string scoreType);
+	};
 }
-#endif
-/* OrbDescriptor.hpp */
+
+#endif // ORBDESCRIPTOR_HPP
+
 /** @} */

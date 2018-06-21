@@ -28,16 +28,9 @@
  */
 #include <catch.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Errors/Assert.hpp>
+#include <MatToFrameConverter.hpp>
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
@@ -49,42 +42,41 @@ using namespace VisualPointFeatureVector2DWrapper;
  * --------------------------------------------------------------------------
  */
 TEST_CASE( "Call to process (ORB descriptor)", "[process]" ) 
-	{
-	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
+{
+	// Prepare input data
+	cv::Mat inputImage(500, 500, CV_8UC3, cv::Scalar(100, 100, 100));
+	FrameConstPtr inputFrame = MatToFrameConverter().Convert(inputImage);
+	VisualPointFeatureVector2DConstPtr inputFeatures = new VisualPointFeatureVector2D;
 
-	Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr >* stubOutputCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
-	Mocks::MatToVisualPointFeatureVector2DConverter* mockOutputConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubOutputCache, mockOutputConverter);
+	// Instantiate DFN
+	OrbDescriptor* orb = new OrbDescriptor;
 
-	cv::Mat inputImage(500, 500, CV_8UC3, cv::Scalar(100, 100, 100));	
-	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputImage) );
+	// Send input data to DFN
+	orb->frameInput(*inputFrame);
+	orb->featuresInput(*inputFeatures);
 
-	VisualPointFeatureVector2DConstPtr featuresVector = new VisualPointFeatureVector2D();
-	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&featuresVector) );
+	// Run DFN
+	orb->process();
 
-	FramePtr inputFrame = new Frame();
-	VisualPointFeatureVector2DPtr inputFeaturesSet = new VisualPointFeatureVector2D();
+	// Query output data from DFN
+	const VisualPointFeatureVector2D& output = orb->featuresOutput();
 
-	OrbDescriptor orb;
-	orb.imageInput(inputFrame);
-	orb.featuresSetInput(inputFeaturesSet);
-	orb.process();
-
-	VisualPointFeatureVector2DConstPtr output = orb.featuresSetWithDescriptorsOutput();
-	
-	REQUIRE(GetNumberOfPoints(*output) == GetNumberOfPoints(*featuresVector));
-	delete(output);
-	delete(inputFrame);
-	delete(inputFeaturesSet);
-	}
+	// Cleanup
+	delete inputFeatures;
+	delete orb;
+}
 
 TEST_CASE( "Call to configure (ORB descriptor)", "[configure]" )
-	{
-	OrbDescriptor orb;
-	orb.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesDescription2D/OrbDescriptor_Conf1.yaml");
-	orb.configure();	
-	}
+{
+	// Instantiate DFN
+	OrbDescriptor* orb = new OrbDescriptor;
+
+	// Setup DFN
+	orb->setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesDescription2D/OrbDescriptor_Conf1.yaml");
+	orb->configure();
+
+	// Cleanup
+	delete orb;
+}
 
 /** @} */

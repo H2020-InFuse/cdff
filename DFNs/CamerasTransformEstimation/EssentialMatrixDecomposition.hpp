@@ -1,117 +1,107 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file EssentialMatrixDecomposition.hpp
- * @date 31/01/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  @brief This DFN computes the camera transform by decomposition of the essential matrix.
- *  
- * The DFN takes a fundamental matrix as input and a set of 2d features matches from one image to another. It operates according to the following steps:
- * (i) computation of the essential matrix from the fundamental matrix and the camera parameters; (ii) decomposition of the fundamental matrix according to OpenCV algorithm described in 
- * "Multiple view geometry in computer vision" by Richard Hartley, and Andrew Zisserman; (iii) as the second step yelds 4 candidates transforms, the 2d features matches are used to rule out three
- * of them and discover the valid one. If more tha one transform is considered valid, the decomposition fails and no transform is given as a result.
- * 
- * This DFN implementation requires the following parameters:
- * @param firstCameraMatrix, this represents the internal parameters of the first (or left) camera: focal lengths and principle points.
- * @param secondCameraMatrix, this represents the internal parameters of the second (or right) camera: focal lengths and principle points.
- * @param numberOfTestPoints, this represents the number of points that need to be tested from the 2d features matches, the half of this number represents the minimum number of points whose 2d matching
- *				 agrees with a transform in order to consider that transform as valid. 
- *
  * @{
  */
 
-#ifndef ESSENTIAL_MATRIX_DECOMPOSITION_HPP
-#define ESSENTIAL_MATRIX_DECOMPOSITION_HPP
+#ifndef ESSENTIALMATRIXDECOMPOSITION_HPP
+#define ESSENTIALMATRIXDECOMPOSITION_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
+#include "CamerasTransformEstimationInterface.hpp"
+
 #include <CorrespondenceMap2D.hpp>
-#include <Pose.hpp>
+#include <Matrix.hpp>
+#include <MatToTransform3DConverter.hpp>
+#include <Helpers/ParametersListHelper.hpp>
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
-#include <Helpers/ParametersListHelper.hpp>
 
+namespace dfn_ci
+{
 
-namespace dfn_ci {
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class EssentialMatrixDecomposition : public CamerasTransformEstimationInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+	/**
+	 * Estimation of the geometric transformation between two cameras by
+	 * decomposition of the essential matrix.
+	 *
+	 * Processing steps:
+	 *
+	 * (i)   Use the camera parameters and the fundamental matrix of the camera
+	 *       pair to compute the essential matrix
+	 * (ii)  Decompose the essential matrix using an algorithm provided by
+	 *       OpenCV and described in Richard Hartley and Andrew Zisserman,
+	 *       "Multiple View Geometry in Computer Vision".
+	 * (iii) The previous step yields four candidate transformations between
+	 *       the two camera frames, but we can use matching keypoints in a pair
+	 *       of images captured by the cameras to try and rule out three of
+	 *       them.
+	 *       If less than three candidate transformations can be ruled out,
+	 *       failure is reported and an invalid transformation is returned.
+	 *
+	 * @param firstCameraMatrix
+	 *        Internal parameters of the first/left camera:
+	 *        focal lengths and principal points
+	 * @param secondCameraMatrix
+	 *        Internal parameters of the second/right camera:
+	 *        focal lengths and principal points
+	 * @param numberOfTestPoints
+	 *        Number of points that need to be tested from the 2d features
+	 *        matches, half of this number represents the minimum number of
+	 *        points whose 2d matching agrees with a transform in order to
+	 *        consider that transform as valid (???)
 	 */
-        public:
-            EssentialMatrixDecomposition();
-            ~EssentialMatrixDecomposition();
-            void process();
-            void configure();
+	class EssentialMatrixDecomposition : public CamerasTransformEstimationInterface
+	{
+		public:
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
+			EssentialMatrixDecomposition();
+			virtual ~EssentialMatrixDecomposition();
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
-	private:
-		Helpers::ParametersListHelper parametersHelper;
+			virtual void configure();
+			virtual void process();
 
-		struct CameraMatrix
+		private:
+
+			Helpers::ParametersListHelper parametersHelper;
+
+			struct CameraMatrix
 			{
-			double focalLengthX;
-			double focalLengthY;
-			cv::Point2d principlePoint;
+				double focalLengthX;
+				double focalLengthY;
+				cv::Point2d principlePoint;
 			};
 
-		struct EssentialMatrixDecompositionOptionsSet
+			struct EssentialMatrixDecompositionOptionsSet
 			{
-			int numberOfTestPoints;
-			CameraMatrix firstCameraMatrix;
-			CameraMatrix secondCameraMatrix;
+				int numberOfTestPoints;
+				CameraMatrix firstCameraMatrix;
+				CameraMatrix secondCameraMatrix;
 			};
 
-		cv::Mat firstCameraMatrix;
-		cv::Mat secondCameraMatrix;
+			cv::Mat firstCameraMatrix;
+			cv::Mat secondCameraMatrix;
 
-		EssentialMatrixDecompositionOptionsSet parameters;
-		static const EssentialMatrixDecompositionOptionsSet DEFAULT_PARAMETERS;
-		cv::Mat ConvertToMat(CameraMatrix cameraMatrix);
-		cv::Mat ConvertToMat(MatrixWrapper::Matrix3dConstPtr matrix);
-		cv::Mat Convert(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap);
+			EssentialMatrixDecompositionOptionsSet parameters;
+			static const EssentialMatrixDecompositionOptionsSet DEFAULT_PARAMETERS;
+			cv::Mat ConvertToMat(CameraMatrix cameraMatrix);
+			cv::Mat ConvertToMat(MatrixWrapper::Matrix3dConstPtr matrix);
+			cv::Mat Convert(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap);
 
-		std::vector<cv::Mat> ComputeTransformMatrix(cv::Mat fundamentalMatrix);
-		int FindValidTransform(std::vector<cv::Mat> transformsList, cv::Mat correspondenceMap);
-		bool ProjectionMatrixIsValidForTestPoints(cv::Mat projectionMatrix, cv::Mat correspondenceMap);
+			Converters::MatToTransform3DConverter matToTransform3DConverter;
 
-		void ValidateParameters();
-		void ValidateInputs(cv::Mat fundamentalMatrix, cv::Mat CorrespondenceMap);
-    };
+			std::vector<cv::Mat> ComputeTransformMatrix(cv::Mat fundamentalMatrix);
+			int FindValidTransform(std::vector<cv::Mat> transformsList, cv::Mat correspondenceMap);
+			bool ProjectionMatrixIsValidForTestPoints(cv::Mat projectionMatrix, cv::Mat correspondenceMap);
+
+			void ValidateParameters();
+			void ValidateInputs(cv::Mat fundamentalMatrix, cv::Mat CorrespondenceMap);
+	};
 }
-#endif
-/* EssentialMatrixDecomposition.hpp */
+
+#endif // ESSENTIALMATRIXDECOMPOSITION_HPP
+
 /** @} */

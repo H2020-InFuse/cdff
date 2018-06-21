@@ -333,6 +333,7 @@ include_directories(
   DFPCs
   Tests
   Tools
+  CC
 )
 
 # Process all subdirectories containing a CMakeLists file
@@ -341,6 +342,7 @@ add_subdirectory(Common)
 add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
 add_subdirectory(Tests)
+add_subdirectory(CC)
 
 # TODO: is there an initial, default value for the directories that are searched
 # for header files? There isn't, as far as I understand, but triple-check. If

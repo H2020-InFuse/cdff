@@ -46,6 +46,8 @@
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
+#include <Registration3D/Registration3DInterface.hpp>
+#include <BundleAdjustment/BundleAdjustmentInterface.hpp>
 
 
 namespace dfn_ci {
@@ -90,6 +92,8 @@ namespace dfn_ci {
 		static FeaturesDescription3DInterface* CreateFeaturesDescription3D(std::string dfnImplementation);
 		static FeaturesMatching3DInterface* CreateFeaturesMatching3D(std::string dfnImplementation);
 		static StereoReconstructionInterface* CreateStereoReconstruction(std::string dfnImplementation);
+		static Registration3DInterface* CreateRegistration3D(std::string dfnImplementation);
+		static BundleAdjustmentInterface* CreateBundleAdjustment(std::string dfnImplementation);
     };
 }
 #endif

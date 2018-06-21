@@ -1,97 +1,67 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file FeaturesMatching3DInterface.hpp
- * @date 17/01/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  This is the common interface of all DFNs that finds the best correspondence between two point clouds.    
- *
  * @{
  */
-#ifndef FEATURES_MATCHING_3D_INTERFACE_HPP
-#define FEATURES_MATCHING_3D_INTERFACE_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <DFNCommonInterface.hpp>
-#include <VisualPointFeatureVector3D.hpp>
-#include <Pose.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
+#ifndef FEATURESMATCHING3D_INTERFACE_HPP
+#define FEATURESMATCHING3D_INTERFACE_HPP
 
+#include "DFNCommonInterface.hpp"
+#include <VisualPointFeatureVector3D.h>
+#include <Pose.h>
 
-namespace dfn_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
+namespace dfn_ci
+{
+    /**
+     * DFN that matches 3D keypoints
+     */
     class FeaturesMatching3DInterface : public DFNCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
+
             FeaturesMatching3DInterface();
             virtual ~FeaturesMatching3DInterface();
-            /**
-            * Send value to input port sourceFeaturesVector
-            * @param sourceFeaturesVector, these are the extracted features of the 3D point cloud model we would like to discover in the other point cloud.
-            */
-            virtual void sourceFeaturesVectorInput(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr data);
 
             /**
-            * Send value to input port sinkFeaturesVector
-            * @param sinkFeaturesVector, these are the extracted features of the 3D point cloud into which we are looking for the model.
-            */
-            virtual void sinkFeaturesVectorInput(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr data);
+             * Send value to input port "sourceFeatures"
+             * @param sourceFeatures: keypoints extracted from the source 3D
+             *        pointcloud (a "model" whose keypoints we would like to
+             *        find in the other pointcloud)
+             */
+            virtual void sourceFeaturesInput(const asn1SccVisualPointFeatureVector3D& data);
+            /**
+             * Send value to input port "sinkFeatures"
+             * @param sinkFeatures: keypoints extracted from the sink 3D
+             *        pointcloud (a "scene" in which we are looking for the
+             *        model)
+             */
+            virtual void sinkFeaturesInput(const asn1SccVisualPointFeatureVector3D& data);
 
             /**
-            * Receive value from output port transform
-            * @param transform, This is the best 3D trasform correspondence that matches source features to sink features.
-            */
-            virtual PoseWrapper::Transform3DConstPtr transformOutput();
-
+             * Query value from output port "transform"
+             * @return transform: best geometric transformation that matches
+             *        the source keypoints to the sink keypoints
+             */
+            virtual const asn1SccPose& transformOutput() const;
             /**
-            * Receive value from output port success
-            * @param success, This is a boolean value representing whether it was really possible to compute a valid transform. If this value is false the transform is meaningless.
-            */
-            virtual bool successOutput();
+             * Query value from output port "success"
+             * @return success: boolean flag indicating successful computation
+             *        of the geometric transformation between the keypoints.
+             *        Computation may fail if the matches are not good enough;
+             *        in that case, the returned geometric transformation is
+             *        meaningless.
+             */
+            virtual bool successOutput() const;
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
         protected:
-            VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inSourceFeaturesVector;
-            VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inSinkFeaturesVector;
-            PoseWrapper::Transform3DConstPtr outTransform;
-	    bool outSuccess;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+            asn1SccVisualPointFeatureVector3D inSourceFeatures;
+            asn1SccVisualPointFeatureVector3D inSinkFeatures;
+            asn1SccPose outTransform;
+            bool outSuccess;
     };
 }
-#endif
-/* FeaturesMatching3DInterface.hpp */
+
+#endif // FEATURESMATCHING3D_INTERFACE_HPP
+
 /** @} */

@@ -1,0 +1,38 @@
+name: Registration3D
+doc: DFN that registers a source point cloud on a sink point cloud
+input_ports:
+    - name: sourceCloud
+      type: asn1SccPointcloud
+      doc: 3D pointcloud captured by a 3D sensor
+           or reconstructed from other perceptions
+    - name: sinkCloud
+      type: asn1SccPointcloud
+      doc: 3D pointcloud captured by a 3D sensor
+           or reconstructed from other perceptions
+    - name: transformGuess
+      type: asn1SccPose
+      doc: initial pose estimate of the coordinate frame of the source
+           pointcloud relative to the coordinate frame of the sink pointcloud
+    - name: useGuess
+      type: bool
+      doc: boolean flag indicating whether the initial estimate of the
+           geometric transformation between the pointclouds should be used.
+           If it is set to not be used, and a particular implementation of this
+           DFN requires an initial estimate, that implementation shall use the
+           identity transformation as the estimate. If it is set to be used,
+           and a particular implementation of this DFN does not require an
+           initial estimate, that implementation must throw an error.
+output_ports:
+    - name: transform
+      type: asn1SccPose
+      doc: pose of the coordinate frame of the source pointcloud relative to
+           the coordinate frame of the sink pointcloud
+    - name: success
+      type: bool
+      doc: boolean flag indicating successful computation of the geometric
+           transformation between the pointcloud frames. Computation may fail
+           if the pointclouds are not similar enough; in that case, the
+           returned geometric transformation is meaningless.
+implementations:
+    - Icp3D
+    - IcpCC

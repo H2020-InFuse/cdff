@@ -100,9 +100,10 @@ int main(int argc, char** argv)
 			}		
 		}
 
-	ReconstructionFromStereo reconstructionFromStereo;
-	guiReconstruction3d.Run(reconstructionFromStereo);
+	ReconstructionFromStereo* reconstructionFromStereo = new ReconstructionFromStereo();
+	guiReconstruction3d.Run(*reconstructionFromStereo);
 
+	delete(reconstructionFromStereo);
 	return 0;
 	};
 

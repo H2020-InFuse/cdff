@@ -1,90 +1,52 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file FeaturesDescription2DInterface.hpp
- * @date 21/02/2018
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  This is the common interface of all DFNs that compute a descriptor for a set of 2D points.    
- *
  * @{
  */
-#ifndef FEATURES_DESCRIPTION_2D_INTERFACE_HPP
-#define FEATURES_DESCRIPTION_2D_INTERFACE_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <DFNCommonInterface.hpp>
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <FrameToMatConverter.hpp>
+#ifndef FEATURESDESCRIPTION2D_INTERFACE_HPP
+#define FEATURESDESCRIPTION2D_INTERFACE_HPP
 
+#include "DFNCommonInterface.hpp"
+#include <VisualPointFeatureVector2D.h>
+#include <Frame.h>
 
-namespace dfn_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
+namespace dfn_ci
+{
+    /**
+     * DFN that computes descriptors for 2D keypoints
+     */
     class FeaturesDescription2DInterface : public DFNCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
+
             FeaturesDescription2DInterface();
             virtual ~FeaturesDescription2DInterface();
-            /**
-            * Send value to input port image
-            * @param image, a 2D image taken from a camera
-            */
-            virtual void imageInput(FrameWrapper::FrameConstPtr data);
 
             /**
-            * Receive value from input port featuresSet
-            * @param featuresSet, This is the set of the points extracted from the image with no associated descriptor.
-            */
-            virtual void featuresSetInput(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr data);
+             * Send value to input port "frame"
+             * @param frame: 2D image captured by a camera
+             */
+            virtual void frameInput(const asn1SccFrame& data);
+            /**
+             * Send value to input port "features"
+             * @param features: keypoints extracted from the image, without any descriptors
+             */
+            virtual void featuresInput(const asn1SccVisualPointFeatureVector2D& data);
 
             /**
-            * Receive value from output port featuresSetWithDescriptors
-            * @param featuresSetWithDescriptors, This is the set of the points extracted from the image. A descriptor is associated to each point.
-            */
-            virtual VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featuresSetWithDescriptorsOutput();
+             * Query value from output port "features"
+             * @return features: same keypoints, with added descriptors
+             */
+            virtual const asn1SccVisualPointFeatureVector2D& featuresOutput() const;
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
         protected:
-            FrameWrapper::FrameConstPtr inImage;
-            VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inFeaturesSet;
-            VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr outFeaturesSetWithDescriptors;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+            asn1SccFrame inFrame;
+            asn1SccVisualPointFeatureVector2D inFeatures;
+            asn1SccVisualPointFeatureVector2D outFeatures;
     };
 }
-#endif
-/* FeaturesDescription2DInterface.hpp */
+
+#endif // FEATURESDESCRIPTION2D_INTERFACE_HPP
+
 /** @} */

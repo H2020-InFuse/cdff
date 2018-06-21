@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Unit Test for the DFN FlannMatcher.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -27,18 +27,20 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
+
+#include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
 #include <FeaturesMatching2D/FlannMatcher.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector2DToMatConverter.hpp>
+#include <MatToFrameConverter.hpp>
 #include <Errors/Assert.hpp>
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
-using namespace CorrespondenceMap2DWrapper;
+using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
+using namespace CorrespondenceMap2DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -46,42 +48,80 @@ using namespace VisualPointFeatureVector2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process (FLANN registration)", "[process]" ) 
-	{
-	Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat >* stubInputCache = new Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>();
-	Mocks::VisualPointFeatureVector2DToMatConverter* mockInputConverter = new Mocks::VisualPointFeatureVector2DToMatConverter();
-	ConversionCache<VisualPointFeatureVector2DConstPtr, cv::Mat, VisualPointFeatureVector2DToMatConverter>::Instance(stubInputCache, mockInputConverter);
-
+TEST_CASE( "Call to process (FLANN registration)", "[process]" )
+{
+	// Previous input data
+	/*
 	const unsigned NUMBER_OF_POINTS = 10;
 	const unsigned DESCRIPTOR_LENGTH = 8;
-	cv::Mat inputImage(NUMBER_OF_POINTS, DESCRIPTOR_LENGTH+2, CV_32FC1, cv::Scalar(0));	
-	for(unsigned pointIndex = 0; pointIndex < NUMBER_OF_POINTS; pointIndex++)
-		{
+	cv::Mat inputImage(NUMBER_OF_POINTS, DESCRIPTOR_LENGTH+2, CV_32FC1, cv::Scalar(0));
+	for (unsigned pointIndex = 0; pointIndex < NUMBER_OF_POINTS; pointIndex++)
+	{
 		inputImage.at<float>(pointIndex, 0) = 10;
 		inputImage.at<float>(pointIndex, 1) = (float)pointIndex + 10;
-		for(unsigned componentIndex = 0; componentIndex < DESCRIPTOR_LENGTH; componentIndex++)
-			{
-			inputImage.at<float>(pointIndex, componentIndex+2) = (float)pointIndex + (float)componentIndex / 100; 
-			}
+		for (unsigned componentIndex = 0; componentIndex < DESCRIPTOR_LENGTH; componentIndex++)
+		{
+			inputImage.at<float>(pointIndex, componentIndex+2) = (float)pointIndex + (float)componentIndex / 100;
 		}
-	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputImage) );
-	mockInputConverter->AddBehaviour("Convert", "2", (void*) (&inputImage) );
-
-	FlannMatcher flann;
-	flann.sourceFeaturesVectorInput(new VisualPointFeatureVector2D());
-	flann.sinkFeaturesVectorInput(new VisualPointFeatureVector2D());
-	flann.process();
-
-	CorrespondenceMap2DConstPtr output = flann.correspondenceMapOutput();
-	
-	delete(output);
 	}
+	*/
+
+	// First run a feature extraction/description DFN on actual data
+	// to prepare input data for the feature matching DFN
+
+	// Prepare input data
+	cv::Mat doubleImage = cv::imread("../tests/Data/Images/DevonIslandLeft.ppm", cv::IMREAD_COLOR);
+	cv::Mat inputImage = doubleImage( cv::Rect(0, 0, doubleImage.cols/2, doubleImage.rows) );
+	FrameConstPtr inputFrame = MatToFrameConverter().Convert(inputImage);
+
+	// Instantiate DFN
+	OrbDetectorDescriptor* orb = new OrbDetectorDescriptor;
+
+	// Send input data to DFN
+	orb->frameInput(*inputFrame);
+
+	// Setup DFN
+	orb->setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesDescription2D/OrbDescriptor_Conf1.yaml");
+	orb->configure();
+
+	// Run DFN
+	orb->process();
+
+	// Now test the feature matching DFN
+
+	// Prepare input data
+	const VisualPointFeatureVector2D& inputFeaturesA = orb->featuresOutput();
+	const VisualPointFeatureVector2D& inputFeaturesB = orb->featuresOutput();
+
+	// Instantiate DFN
+	FlannMatcher* flann = new FlannMatcher;
+
+	// Send input data to DFN
+	flann->sourceFeaturesInput(inputFeaturesA);
+	flann->sinkFeaturesInput(inputFeaturesB);
+
+	// Run DFN
+	flann->process();
+
+	// Query output data from DFN
+	const CorrespondenceMap2D& output = flann->matchesOutput();
+
+	// Cleanup
+	delete orb;
+	delete flann;
+}
 
 TEST_CASE( "Call to configure (FLANN registration)", "[configure]" )
-	{
-	FlannMatcher flann;
-	flann.setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesMatching2D/FlannMatcher_Conf1.yaml");
-	flann.configure();	
-	}
+{
+	// Instantiate DFN
+	FlannMatcher* flann = new FlannMatcher;
+
+	// Setup DFN
+	flann->setConfigurationFile("../tests/ConfigurationFiles/DFNs/FeaturesMatching2D/FlannMatcher_Conf1.yaml");
+	flann->configure();
+
+	// Cleanup
+	delete flann;
+}
 
 /** @} */

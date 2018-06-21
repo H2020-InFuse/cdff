@@ -1,15 +1,15 @@
 name: FeaturesMatching2D
+doc: DFN that matches 2D keypoints
 input_ports:
-    - name: sourceFeaturesVector
-      type: VisualPointFeatureVector2D
-      doc: these are the extracted features of the 2D source image we would like to match with the sink.
-    - name: sinkFeaturesVector
-      type: VisualPointFeatureVector2D
-      doc: these are the extracted features of the 2D sink image we would like to match with the source.
+    - name: sourceFeatures
+      type: asn1SccVisualPointFeatureVector2D
+      doc: keypoints extracted from the source 2D image
+    - name: sinkFeatures
+      type: asn1SccVisualPointFeatureVector2D
+      doc: keypoints extracted from the sink 2D image
 output_ports:
-    - name: correspondenceMap
-      type: CorrespondenceMap2D
-      doc: This is the best set of correspondences between the source features set and the sink features set.
+    - name: matches
+      type: asn1SccCorrespondenceMap2D
+      doc: matches between the two sets of keypoints
 implementations:
     - FlannMatcher
-

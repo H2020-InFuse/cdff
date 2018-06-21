@@ -1,4 +1,56 @@
+add_executable(
+    registration_3d_icp_test
+    DFNs/Registration3D/Icp3D.cpp
+    DFNs/Registration3D/CorrectLocalizationTester.cpp
+)
+target_link_libraries(
+	registration_3d_icp_test
+	cdff_helpers cdff_logger cdff_types converters_opencv registration_3d registration_icp_3d opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+)
+
+add_executable(
+    registration_3d_icp_cc_test
+    DFNs/Registration3D/IcpCC.cpp
+    DFNs/Registration3D/CorrectLocalizationTester.cpp
+)
+target_link_libraries(
+	registration_3d_icp_cc_test
+	cdff_helpers cdff_logger cdff_types converters_opencv registration_3d registration_icp_cc opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+)
+
+add_executable(
+    harris_icp_cc
+    DFNsIntegration/FeaturesRegistration/HarrisIcpCC.cpp
+    DFNsIntegration/FeaturesRegistration/CorrectLocalizationTester.cpp
+)
+target_link_libraries(
+	harris_icp_cc
+	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_3d registration_3d registration_icp_cc opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+)
+
+add_executable(
+    position_test_svd
+    DFNs/BundleAdjustment/SvdDecomposition.cpp
+    DFNs/BundleAdjustment/PositionTester.cpp
+)
+target_link_libraries(
+	position_test_svd
+	cdff_helpers cdff_logger cdff_types converters_opencv svd_decomposition feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system
+)
+
+#[======================================================================[
 #DFNs
+
+add_executable(
+    position_test_ceres
+    DFNs/BundleAdjustment/CeresAdjustment.cpp
+    DFNs/BundleAdjustment/PositionTester.cpp
+)
+target_link_libraries(
+	position_test_svd
+	cdff_helpers cdff_logger cdff_types converters_opencv ceres_adjustment feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system ${CERES_LIBRARIES}
+)
+
 add_executable(
     validity_harris_detector_2d
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
@@ -68,7 +120,6 @@ target_link_libraries(
 	fundamental_matrix_ransac_test
 	cdff_helpers cdff_logger cdff_types converters_opencv fundamental_matrix_computation fundamental_matrix_ransac mock opencv_core opencv_imgproc opencv_highgui boost_system
 )
-
 
 #DFNs Integration
 add_executable(
@@ -142,3 +193,4 @@ target_link_libraries(
 	quality_registration_from_stereo
 	registration_from_stereo mock converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator
 )
+]======================================================================]

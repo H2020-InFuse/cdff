@@ -11,6 +11,7 @@ target_include_directories(Catch SYSTEM INTERFACE "${CATCH_INCLUDE_DIR}")
 # Source files containing Catch test cases. They will be linked together to
 # produce the test executable. Add any additional file in ALPHABETICAL ORDER.
 set(UNITTEST_SOURCES UnitTests.cpp
+    Common/Converters/MatCorrespondenceMaps2DSequenceConvertersTest.cpp
     Common/Converters/MatFrameConvertersTest.cpp
     Common/Converters/MatVisualPointFeatureVector2DConvertersTest.cpp
     Common/Converters/MatVisualPointFeatureVector3DConvertersTest.cpp
@@ -20,6 +21,8 @@ set(UNITTEST_SOURCES UnitTests.cpp
     Common/Converters/Transform3DMatConvertersTest.cpp
     Common/Converters/VisualPointFeatureVector3DPclPointCloudConvertersTest.cpp
     Common/Helpers/ParametersHelper.cpp
+    DFNs/BundleAdjustment/CeresAdjustment.cpp
+    DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
@@ -34,11 +37,13 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
+#[=[DFNs/Registration3D/Icp3D.cpp]=] # FIXME: name collision, issue #56
+    DFNs/Registration3D/IcpCC.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
-    DFPCs/DfpcConfigurator.cpp
-    DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
-    DFPCs/Reconstruction3D/ObservedScene.cpp
+#[=[DFPCs/DfpcConfigurator.cpp]=]
+#[=[DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp]=]
+#[=[DFPCs/Reconstruction3D/ObservedScene.cpp]=]
 )
 
 # Libraries used by the aforementioned source files. They will be linked in the
@@ -46,12 +51,14 @@ set(UNITTEST_SOURCES UnitTests.cpp
 # list the necessary ones.
 set(UNITTEST_LIBRARIES Catch
     boost_system
+    cc_core_lib
     cdff_helpers
     cdff_logger
     cdff_types
+    ceres_adjustment
     converters_opencv
-    dfpc_configurator
-    dfpc_implementation_features_matching_3d
+#[=[dfpc_configurator]=]
+#[=[dfpc_implementation_features_matching_3d]=]
     disparity_mapping
     essential_matrix_decomposition
     flann_matcher
@@ -63,7 +70,7 @@ set(UNITTEST_LIBRARIES Catch
     image_undistortion
     iterative_pnp_solver
     kalman_predictor
-    mock
+#[=[mock]=] # no longer used by any DFN unit test
     opencv_core
     opencv_highgui
     opencv_imgcodecs
@@ -92,8 +99,11 @@ set(UNITTEST_LIBRARIES Catch
     pcl_tracking
     pcl_visualization
     ransac_3d
-    reconstruction_from_stereo
+#[=[reconstruction_from_stereo]=]
+#[=[registration_icp_3d]=] # FIXME: name collision, issue #56
+    registration_icp_cc
     shot_descriptor_3d
+    svd_decomposition
     synthetic_generators
     triangulation
 )

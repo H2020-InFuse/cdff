@@ -58,13 +58,15 @@ RegistrationFromStereo::RegistrationFromStereo()
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 
+	leftImage = NewFrame();
+	rightImage = NewFrame();
 	filteredLeftImage = NULL;
 	filteredRightImage = NULL;
-	pointCloud = NULL;
-	pointCloudKeypointsVector = NULL;
+	pointCloud = NewPointCloud();
+	pointCloudKeypointsVector = NewVisualPointFeatureVector3D();
 	pointCloudFeaturesVector = NULL;
 	sceneFeaturesVector = NULL;
-	cameraPoseInScene = NULL;
+	cameraPoseInScene = NewPose3D();
 	previousCameraPoseInScene = NewPose3D();
 
 	optionalLeftFilter = NULL;
@@ -92,11 +94,13 @@ RegistrationFromStereo::~RegistrationFromStereo()
 		{
 		DELETE_PREVIOUS(pointCloudFeaturesVector);
 		}
-	DELETE_PREVIOUS(pointCloud);
-	DELETE_PREVIOUS(pointCloudKeypointsVector);
+	delete(leftImage);
+	delete(rightImage);
+	delete(pointCloud);
+	delete(pointCloudKeypointsVector);
 	DELETE_PREVIOUS(sceneFeaturesVector);
-	DELETE_PREVIOUS(cameraPoseInScene);
-	DELETE_PREVIOUS(previousCameraPoseInScene);
+	delete(cameraPoseInScene);
+	delete(previousCameraPoseInScene);
 	}
 
 /**
@@ -110,8 +114,8 @@ void RegistrationFromStereo::run()
 	{
 	DEBUG_PRINT_TO_LOG("Registration from stereo start", "");
 
-	leftImage = inLeftImage;
-	rightImage = inRightImage;
+	Copy(inLeftImage, *leftImage);
+	Copy(inRightImage, *rightImage);
 
 	ComputePointCloud();
 
@@ -132,20 +136,14 @@ void RegistrationFromStereo::run()
 	if (outSuccess)
 		{
 		pointCloudMap.AddPointCloud(pointCloud, pointCloudFeaturesVector, cameraPoseInScene);
-		outPointCloud = pointCloudMap.GetScenePointCloud(cameraPoseInScene, parameters.searchRadius);
-		DEBUG_SHOW_POINT_CLOUD(outPointCloud);
+		PointCloudConstPtr outputPointCloud = pointCloudMap.GetScenePointCloud(cameraPoseInScene, parameters.searchRadius);
+		Copy(*outputPointCloud, outPointCloud);
+		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 
-		Pose3DPtr newOutPose = NewPose3D();
-		Copy(*cameraPoseInScene, *newOutPose);
-		outPose = newOutPose;
+		Copy(*cameraPoseInScene, outPose);
 
 		Copy(*cameraPoseInScene, *previousCameraPoseInScene);
-		DEBUG_PRINT_TO_LOG("Pose ", ToString(*outPose) );
-		}
-	else
-		{
-		outPointCloud = NULL;
-		outPose = NULL;
+		DEBUG_PRINT_TO_LOG("Pose ", ToString(outPose) );
 		}
 	}
 
@@ -195,6 +193,19 @@ void RegistrationFromStereo::AssignDfnsAlias()
 	ASSERT(reconstructor3D != NULL, "DFPC Registration from stereo error: reconstructor3D DFN configured incorrectly");
 	ASSERT(featuresMatcher3d != NULL, "DFPC Registration from stereo error: featuresMatcher3d DFN configured incorrectly");
 	ASSERT(featuresExtractor3d != NULL, "DFPC Registration from stereo error: featuresExtractor3d DFN configured incorrectly");
+
+	if (optionalLeftFilter != NULL)
+		{
+		filteredLeftImage = NewFrame();
+		}
+	if (optionalRightFilter != NULL)
+		{
+		filteredRightImage = NewFrame();
+		}
+	if (optionalFeaturesDescriptor3d != NULL)
+		{
+		pointCloudFeaturesVector = NewVisualPointFeatureVector3D();
+		}
 	}
 
 /**
@@ -231,10 +242,9 @@ void RegistrationFromStereo::FilterLeftImage()
 	{
 	if (optionalLeftFilter != NULL)
 		{
-		optionalLeftFilter->imageInput(leftImage);
+		optionalLeftFilter->imageInput(*leftImage);
 		optionalLeftFilter->process();
-		DELETE_PREVIOUS(filteredLeftImage);
-		filteredLeftImage = optionalLeftFilter->filteredImageOutput();
+		Copy( optionalLeftFilter->imageOutput(), *filteredLeftImage);
 		DEBUG_PRINT_TO_LOG("Filtered Frame", "");
 		DEBUG_SHOW_IMAGE(filteredLeftImage);
 		}
@@ -248,10 +258,9 @@ void RegistrationFromStereo::FilterRightImage()
 	{
 	if (optionalRightFilter != NULL)
 		{
-		optionalRightFilter->imageInput(rightImage);
+		optionalRightFilter->imageInput(*rightImage);
 		optionalRightFilter->process();
-		DELETE_PREVIOUS(filteredRightImage);
-		filteredRightImage = optionalRightFilter->filteredImageOutput();
+		Copy( optionalRightFilter->imageOutput(), *filteredRightImage);
 		DEBUG_PRINT_TO_LOG("Filtered Right Frame", "");
 		DEBUG_SHOW_IMAGE(filteredRightImage);
 		}
@@ -263,21 +272,19 @@ void RegistrationFromStereo::FilterRightImage()
 
 void RegistrationFromStereo::ComputeStereoPointCloud()
 	{
-	reconstructor3D->leftImageInput(filteredLeftImage);
-	reconstructor3D->rightImageInput(filteredRightImage);
+	reconstructor3D->leftInput(*filteredLeftImage);
+	reconstructor3D->rightInput(*filteredRightImage);
 	reconstructor3D->process();
-	DELETE_PREVIOUS(pointCloud);
-	pointCloud = reconstructor3D->pointCloudOutput();
+	Copy( reconstructor3D->pointcloudOutput(), *pointCloud);
 	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*pointCloud));
 	DEBUG_SHOW_POINT_CLOUD(pointCloud);
 	}
 
 void RegistrationFromStereo::ExtractPointCloudFeatures()
 	{
-	featuresExtractor3d->pointCloudInput(pointCloud);
+	featuresExtractor3d->pointcloudInput(*pointCloud);
 	featuresExtractor3d->process();
-	DELETE_PREVIOUS(pointCloudKeypointsVector);
-	pointCloudKeypointsVector = featuresExtractor3d->featuresSetOutput();
+	Copy( featuresExtractor3d->featuresOutput(), *pointCloudKeypointsVector);
 	DEBUG_PRINT_TO_LOG("Extracted Point Cloud Features", GetNumberOfPoints(*pointCloudKeypointsVector) );
 	DEBUG_SHOW_3D_VISUAL_FEATURES(pointCloud, pointCloudKeypointsVector);
 	}
@@ -286,11 +293,10 @@ void RegistrationFromStereo::DescribePointCloudFeatures()
 	{
 	if (optionalFeaturesDescriptor3d != NULL)
 		{
-		optionalFeaturesDescriptor3d->pointCloudInput(pointCloud);
-		optionalFeaturesDescriptor3d->featuresSetInput(pointCloudKeypointsVector);
+		optionalFeaturesDescriptor3d->pointcloudInput(*pointCloud);
+		optionalFeaturesDescriptor3d->featuresInput(*pointCloudKeypointsVector);
 		optionalFeaturesDescriptor3d->process();
-		DELETE_PREVIOUS(pointCloudFeaturesVector);
-		pointCloudFeaturesVector = optionalFeaturesDescriptor3d->featuresSetWithDescriptorsOutput();
+		Copy( optionalFeaturesDescriptor3d->featuresOutput(), *pointCloudFeaturesVector);
 		DEBUG_PRINT_TO_LOG("Described Point Cloud Features", GetNumberOfPoints(*pointCloudFeaturesVector) );
 		}
 	else
@@ -301,11 +307,10 @@ void RegistrationFromStereo::DescribePointCloudFeatures()
 
 bool RegistrationFromStereo::MatchPointCloudWithSceneFeatures()
 	{
-	featuresMatcher3d->sourceFeaturesVectorInput(pointCloudFeaturesVector);
-	featuresMatcher3d->sinkFeaturesVectorInput(sceneFeaturesVector);
+	featuresMatcher3d->sourceFeaturesInput(*pointCloudFeaturesVector);
+	featuresMatcher3d->sinkFeaturesInput(*sceneFeaturesVector);
 	featuresMatcher3d->process();
-	DELETE_PREVIOUS(cameraPoseInScene);
-	cameraPoseInScene = featuresMatcher3d->transformOutput();
+	Copy( featuresMatcher3d->transformOutput(), *cameraPoseInScene);
 	bool matching3dSuccess = featuresMatcher3d->successOutput();	
 	DEBUG_PRINT_TO_LOG("Matching 3d Success", matching3dSuccess );
 	return matching3dSuccess;

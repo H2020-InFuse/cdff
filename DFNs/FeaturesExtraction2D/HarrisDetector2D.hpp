@@ -1,121 +1,97 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file HarrisDetector2D.hpp
- * @date 17/11/2017
+/**
  * @author Alessandro Bianco
  */
 
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  @brief This DFN uses the Harris Detector for detection of keypoints in 2D images. It does not provide a descriptor.
- *
- *  The DFN operates according the following steps: transformation of the image into grey scale, application of a Gaussian Filter, computation and normalization of the Harris Matrix, and extraction of
- *  the Harris points from the matrix.
- *
- *  The algorithm uses the following parameters:
- *  @param generalParameters.apertureSize
- *  @param generalParameters.blockSize
- *  @param generalParameters.parameterK
- *  @param generalParameters.detectionThreshold
- *  @param generalParameters.useGaussianBlur, this parameters determines whether the application of the Gaussian filter should be skipped or not.
- *  @param gaussianBlurParameters, this contains the parameters of the Gaussian filter, either as width and height of the kernel or as standard deviation of width and height.
- *
  * @{
  */
 
-#ifndef HARRIS_DETECTOR_2D_HPP
-#define HARRIS_DETECTOR_2D_HPP
+#ifndef HARRISDETECTOR2D_HPP
+#define HARRISDETECTOR2D_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
+#include "FeaturesExtraction2DInterface.hpp"
 #include <Frame.hpp>
 #include <VisualPointFeatureVector2D.hpp>
+#include <FrameToMatConverter.hpp>
+#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Helpers/ParametersListHelper.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
-#include <Helpers/ParametersListHelper.hpp>
 
-
-namespace dfn_ci {
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class HarrisDetector2D : public FeaturesExtraction2DInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+namespace dfn_ci
+{
+	/**
+	 * Extraction of keypoints in a 2D image using Harris-Stephens Corner
+	 * Detector. Keypoints are returned without any descriptor.
+	 *
+	 * Processing steps: grayscaling, Gaussian filtering, computation and
+	 * normalization of the structure tensor (Harris-Stephens matrix),
+	 * extraction of interest points from the tensor (Harris-Stephens points).
+	 *
+	 * @param generalParameters.apertureSize
+	 * @param generalParameters.blockSize
+	 * @param generalParameters.parameterK
+	 * @param generalParameters.detectionThreshold
+	 * @param generalParameters.useGaussianBlur
+	 *        enable or disable Gaussian filtering
+	 * @param gaussianBlurParameters
+	 *        parameters of the Gaussian filter: width and height of the kernel
+	 *        or standard deviation of width and height
 	 */
-        public:
-            HarrisDetector2D();
-            ~HarrisDetector2D();
-            void process();
-            void configure();
+	class HarrisDetector2D : public FeaturesExtraction2DInterface
+	{
+		public:
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
+			HarrisDetector2D();
+			virtual ~HarrisDetector2D();
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
-	private:
+			virtual void configure();
+			virtual void process();
 
-		struct GaussianBlurOptionsSet
+		private:
+
+			struct GaussianBlurOptionsSet
 			{
-			int kernelWidth;
-			int kernelHeight;
-			float widthStandardDeviation;
-			float heightStandardDeviation;
-			};
-		
-		struct GeneralOptionsSet
-			{
-			int apertureSize;
-			int blockSize;
-			float parameterK;
-			int detectionThreshold;
-			bool useGaussianBlur;
+				int kernelWidth;
+				int kernelHeight;
+				float widthStandardDeviation;
+				float heightStandardDeviation;
 			};
 
-		struct HarryOptionsSet
+			struct GeneralOptionsSet
 			{
-			GeneralOptionsSet generalParameters;
-			GaussianBlurOptionsSet gaussianBlurParameters;
+				int apertureSize;
+				int blockSize;
+				float parameterK;
+				int detectionThreshold;
+				bool useGaussianBlur;
 			};
 
-		Helpers::ParametersListHelper parametersHelper;
-		HarryOptionsSet parameters;
-		static const HarryOptionsSet DEFAULT_PARAMETERS;
+			struct HarrisOptionsSet
+			{
+				GeneralOptionsSet generalParameters;
+				GaussianBlurOptionsSet gaussianBlurParameters;
+			};
 
-		cv::Mat ComputeHarrisImage(cv::Mat inputImage);
-		cv::Mat ExtractHarrisPoints(cv::Mat harrisImage);
+			Helpers::ParametersListHelper parametersHelper;
+			HarrisOptionsSet parameters;
+			static const HarrisOptionsSet DEFAULT_PARAMETERS;
 
-		void ValidateParameters();
-		void ValidateInputs(cv::Mat inputImage);
+			Converters::FrameToMatConverter frameToMat;
+			Converters::MatToVisualPointFeatureVector2DConverter matToVisualPointFeatureVector2D;
 
-		void Configure(const YAML::Node& configurationNode);
-    };
+			cv::Mat ComputeHarrisImage(cv::Mat inputImage);
+			cv::Mat ExtractHarrisPoints(cv::Mat harrisImage);
+
+			void ValidateParameters();
+			void ValidateInputs(cv::Mat inputImage);
+
+			void Configure(const YAML::Node& configurationNode);
+	};
 }
-#endif
-/* HarrisDetector2D.hpp */
+
+#endif // HARRISDETECTOR2D_HPP
+
 /** @} */

@@ -16,6 +16,8 @@ add_library(
     MatToTransform3DConverter.cpp
     PointCloudToPclNormalsCloudConverter.cpp
     PclNormalsCloudToPointCloudConverter.cpp  
+    CorrespondenceMaps2DSequenceToMatConverter.cpp
+    MatToCorrespondenceMaps2DSequenceConverter.cpp
 )
 target_link_libraries(converters_opencv opencv_core cdff_types)
 

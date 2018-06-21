@@ -1,14 +1,13 @@
 name: ImageFiltering
+doc: DFN that applies an image processing filter to a 2D image
 input_ports:
     - name: image
-      type: Frame
-      doc: a 2D image taken from camera
+      type: asn1SccFrame
+      doc: 2D image captured by a camera
 output_ports:
-    - name: filteredImage
-      type: Frame
-      doc: the filtered image output
+    - name: image
+      type: asn1SccFrame
+      doc: same image, filtered
 implementations:
     - ImageUndistortion
     - ImageUndistortionRectification
-
-

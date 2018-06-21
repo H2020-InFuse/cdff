@@ -44,6 +44,9 @@
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
+#include <Registration3D/IcpCC.hpp>
+#include <BundleAdjustment/SvdDecomposition.hpp>
+//#include <BundleAdjustment/CeresAdjustment.hpp>
 
 namespace dfn_ci {
 
@@ -103,6 +106,14 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	else if (dfnType == "StereoReconstruction")
 		{
 		return CreateStereoReconstruction(dfnImplementation);
+		}
+	else if (dfnType == "Registration3D")
+		{
+		return CreateRegistration3D(dfnImplementation);
+		}
+	else if (dfnType == "BundleAdjustment")
+		{
+		return CreateBundleAdjustment(dfnImplementation);
 		}
 	PRINT_TO_LOG("DFN: ", dfnType);
 	PRINT_TO_LOG("Implementation: ", dfnImplementation);
@@ -249,6 +260,30 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(std::stri
 		{
 		return new HirschmullerDisparityMapping();
 		}
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
+	return NULL;
+	}
+
+Registration3DInterface* DFNsBuilder::CreateRegistration3D(std::string dfnImplementation)
+	{
+	if (dfnImplementation == "IcpCC")
+		{
+		return new IcpCC();
+		}
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
+	return NULL;
+	}
+
+BundleAdjustmentInterface* DFNsBuilder::CreateBundleAdjustment(std::string dfnImplementation)
+	{
+	if (dfnImplementation == "SvdDecomposition")
+		{
+		return new SvdDecomposition();
+		}
+	/*else if (dfnImplementation == "CeresAdjustment")
+		{
+		return new CeresAdjustment();
+		}*/
 	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}

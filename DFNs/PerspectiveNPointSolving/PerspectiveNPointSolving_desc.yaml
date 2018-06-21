@@ -1,18 +1,19 @@
 name: PerspectiveNPointSolving
+doc: DFN that solves the Perspective-n-Point problem
 input_ports:
-    - name: pointCloud
-      type: PointCloud
-      doc: this is the set of 3d points representing the scene in some reference coordinate system.
-    - name: cameraFeaturesVector
-      type: VisualPointFeatureVector2D
-      doc: these are the 2d image coordinates of the 3d points as they are observed by the camera.
+    - name: points
+      type: asn1SccPointcloud
+      doc: a set of n 3D points in a given reference frame (cartesian coordinates)
+    - name: projections
+      type: asn1SccVisualPointFeatureVector2D
+      doc: their corresponding 2D projections in an image captured by a camera (image coordinates)
 output_ports:
-    - name: pose
-      type: Pose3D
-      doc: This is the pose of the camera in the reference coordinate system of the point cloud.
+    - name: camera
+      type: asn1SccPose
+      doc: the pose of the camera in the same reference frame
     - name: success
       type: bool
-      doc: This boolean value determines whether a valid pose could be found. If this value is false, pose is meaningless.
+      doc: boolean flag indicating successful estimation of a valid pose for
+           the camera. If false, the returned pose is meaningless.
 implementations:
     - IterativePnpSolver
-

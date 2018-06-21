@@ -33,12 +33,9 @@
 using namespace dfpc_ci;
 using namespace FrameWrapper;
 using namespace Converters;
-using namespace VisualPointFeatureVector2DWrapper;
-using namespace VisualPointFeatureVector3DWrapper;
 using namespace PoseWrapper;
 using namespace Common;
 using namespace PointCloudWrapper;
-using namespace Converters::SupportTypes;
 
 /* --------------------------------------------------------------------------
  *
@@ -64,32 +61,11 @@ GuiTestReconstruction3D::~GuiTestReconstruction3D()
 	delete(stubInverseFrameCache);
 	delete(mockInverseFrameConverter);
 
-	delete(stubMatToVectorCache);
-	delete(mockMatToVectorConverter);
-
-	delete(stubVectorToMatCache);
-	delete(mockVectorToMatConverter);
-
-	delete(stubEssentialPoseCache);
-	delete(mockEssentialPoseConverter);
-
-	delete(stubTriangulationPoseCache);
-	delete(mockTriangulationPoseConverter);
-
 	delete(stubCloudCache);
 	delete(mockCloudConverter);
 
 	delete(stubInverseCloudCache);
 	delete(mockInverseCloudConverter);
-
-	delete(stubOutputCache);
-	delete(mockOutputConverter);
-
-	delete(stubVector3dCache);
-	delete(mockVector3dConverter);
-
-	delete(stubTransform3dCache);
-	delete(mockTransform3dConverter);
 	}
 
 void GuiTestReconstruction3D::Run(dfpc_ci::Reconstruction3DInterface& reconstructor3d)
@@ -101,24 +77,16 @@ void GuiTestReconstruction3D::Run(dfpc_ci::Reconstruction3DInterface& reconstruc
 	while( LoadNextImages(leftImage, rightImage) )
 		{
 		PRINT_TO_LOG("run", "");
-		reconstructor3d.leftImageInput(leftImage);
-		reconstructor3d.rightImageInput(rightImage);
+		reconstructor3d.leftImageInput(*leftImage);
+		reconstructor3d.rightImageInput(*rightImage);
 		reconstructor3d.run();
 		PRINT_TO_LOG("run", "after");
-		PointCloudConstPtr pointCloud = reconstructor3d.pointCloudOutput();
-		Pose3DConstPtr pose = reconstructor3d.poseOutput();
+		const PointCloud& pointCloud = reconstructor3d.pointCloudOutput();
+		const Pose3D& pose = reconstructor3d.poseOutput();
 		bool success = reconstructor3d.successOutput();
 		PRINT_TO_LOG("run", "load");
 		delete(leftImage);
 		delete(rightImage);
-		if (pointCloud != NULL)
-			{
-			delete(pointCloud);
-			}
-		if (pose != NULL)
-			{
-			delete(pose);
-			}
 		}
 	}
 
@@ -138,22 +106,6 @@ void GuiTestReconstruction3D::SetUpMocksAndStubs()
 	mockInverseFrameConverter = new Mocks::MatToFrameConverter();
 	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubInverseFrameCache, mockInverseFrameConverter);
 
-	stubMatToVectorCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
-	mockMatToVectorConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubMatToVectorCache, mockMatToVectorConverter);
-
-	stubVectorToMatCache = new Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>();
-	mockVectorToMatConverter = new Mocks::VisualPointFeatureVector2DToMatConverter();
-	ConversionCache<VisualPointFeatureVector2DConstPtr, cv::Mat, VisualPointFeatureVector2DToMatConverter>::Instance(stubVectorToMatCache, mockVectorToMatConverter);
-
-	stubEssentialPoseCache = new Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>();
-	mockEssentialPoseConverter = new Mocks::MatToPose3DConverter();
-	ConversionCache<cv::Mat, Pose3DConstPtr, MatToPose3DConverter>::Instance(stubEssentialPoseCache, mockEssentialPoseConverter);
-
-	stubTriangulationPoseCache = new Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>();
-	mockTriangulationPoseConverter = new Mocks::Pose3DToMatConverter();
-	ConversionCache<Pose3DConstPtr, cv::Mat, Pose3DToMatConverter>::Instance(stubTriangulationPoseCache, mockTriangulationPoseConverter);
-
 	stubCloudCache = new Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr>;
 	mockCloudConverter = new Mocks::PclPointCloudToPointCloudConverter();
 	ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Instance(stubCloudCache, mockCloudConverter);
@@ -161,18 +113,6 @@ void GuiTestReconstruction3D::SetUpMocksAndStubs()
 	stubInverseCloudCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>;
 	mockInverseCloudConverter = new Mocks::PointCloudToPclPointCloudConverter();
 	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInverseCloudCache, mockInverseCloudConverter);
-
-	stubOutputCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
-	mockOutputConverter = new Mocks::EigenTransformToTransform3DConverter();
-	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, Mocks::EigenTransformToTransform3DConverter>::Instance(stubOutputCache, mockOutputConverter);
-
-	stubVector3dCache = new Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>();
-	mockVector3dConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
-	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubVector3dCache, mockVector3dConverter);
-
-	stubTransform3dCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
-	mockTransform3dConverter = new Mocks::EigenTransformToTransform3DConverter();
-	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubTransform3dCache, mockTransform3dConverter);
 	}
 
 void GuiTestReconstruction3D::LoadImagesList(std::string imagesListFileName)

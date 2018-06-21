@@ -1,83 +1,46 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file FeaturesExtraction2DInterface.hpp
- * @date 15/11/2017
- * @author Alessandro Bianco (with code generation support)
- */
-
-/*!
+/**
  * @addtogroup DFNs
- * 
- *  This is the common interface of all DFNs that extract 2D keypoints from a 2D image.    
- *
  * @{
  */
-#ifndef FEATURES_EXTRACTION_2D_INTERFACE_HPP
-#define FEATURES_EXTRACTION_2D_INTERFACE_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <DFNCommonInterface.hpp>
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <FrameToMatConverter.hpp>
+#ifndef FEATURESEXTRACTION2D_INTERFACE_HPP
+#define FEATURESEXTRACTION2D_INTERFACE_HPP
 
+#include "DFNCommonInterface.hpp"
+#include <VisualPointFeatureVector2D.h>
+#include <Frame.h>
 
-namespace dfn_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
+namespace dfn_ci
+{
+    /**
+     * DFN that extracts 2D keypoints from a 2D image
+     */
     class FeaturesExtraction2DInterface : public DFNCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
+
             FeaturesExtraction2DInterface();
             virtual ~FeaturesExtraction2DInterface();
-            /**
-            * Send value to input port image
-            * @param image, a 2D image taken from a camera
-            */
-            virtual void imageInput(FrameWrapper::FrameConstPtr data);
 
             /**
-            * Receive value from output port featuresSet
-            * @param featuresSet, This is the set of the points extracted from the image, a descriptor may or may not be provided.
-            */
-            virtual VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featuresSetOutput();
+             * Send value to input port "frame"
+             * @param frame: 2D image captured by a camera
+             */
+            virtual void frameInput(const asn1SccFrame& data);
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
+            /**
+             * Query value from output port "features"
+             * @return features: keypoints extracted from the image, may include descriptors
+             */
+            virtual const asn1SccVisualPointFeatureVector2D& featuresOutput() const;
+
         protected:
-            FrameWrapper::FrameConstPtr inImage;
-            VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr outFeaturesSet;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+            asn1SccFrame inFrame;
+            asn1SccVisualPointFeatureVector2D outFeatures;
     };
 }
-#endif
-/* FeaturesExtraction2DInterface.hpp */
+
+#endif // FEATURESEXTRACTION2D_INTERFACE_HPP
+
 /** @} */

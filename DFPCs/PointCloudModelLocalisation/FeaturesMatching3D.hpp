@@ -37,6 +37,8 @@
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <DfpcConfigurator.hpp>
+#include <VisualPointFeatureVector3D.hpp>
+#include <PointCloud.hpp>
 
 
 namespace dfpc_ci {
@@ -76,12 +78,12 @@ namespace dfpc_ci {
 		dfn_ci::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
 		dfn_ci::FeaturesMatching3DInterface* featuresMatcher3d;
 
-		PointCloudWrapper::PointCloudConstPtr sceneCloud;
-		PointCloudWrapper::PointCloudConstPtr lastModelCloud;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneFeaturesVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelFeaturesVector;
+		PointCloudWrapper::PointCloudPtr sceneCloud;
+		PointCloudWrapper::PointCloudPtr lastModelCloud;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr sceneKeypointsVector;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr modelKeypointsVector;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr sceneFeaturesVector;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr modelFeaturesVector;
 
 		void AssignDfnsAlias();
 
