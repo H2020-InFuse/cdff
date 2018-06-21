@@ -273,7 +273,7 @@ target_link_libraries(
     adjustment_from_stereo
     ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES} #ceres glog pthread gomp
+    boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(

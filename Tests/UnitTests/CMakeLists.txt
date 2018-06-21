@@ -21,7 +21,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     Common/Converters/Transform3DMatConvertersTest.cpp
     Common/Converters/VisualPointFeatureVector3DPclPointCloudConvertersTest.cpp
     Common/Helpers/ParametersHelper.cpp
-#[=[DFNs/BundleAdjustment/CeresAdjustment.cpp]=]
+    DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
@@ -55,8 +55,7 @@ set(UNITTEST_LIBRARIES Catch
     cdff_helpers
     cdff_logger
     cdff_types
-#[=[ceres]=]
-#[=[ceres_adjustment]=]
+    ceres_adjustment
     converters_opencv
 #[=[dfpc_configurator]=]
 #[=[dfpc_implementation_features_matching_3d]=]
@@ -64,8 +63,6 @@ set(UNITTEST_LIBRARIES Catch
     essential_matrix_decomposition
     flann_matcher
     fundamental_matrix_ransac
-#[=[glog]=]
-#[=[gomp]=]
     harris_detector_2d
     harris_detector_3d
     hirschmuller_disparity_mapping
@@ -101,7 +98,6 @@ set(UNITTEST_LIBRARIES Catch
     pcl_surface
     pcl_tracking
     pcl_visualization
-#[=[pthread]=]
     ransac_3d
 #[=[reconstruction_from_stereo]=]
 #[=[registration_icp_3d]=] # FIXME: name collision, issue #56

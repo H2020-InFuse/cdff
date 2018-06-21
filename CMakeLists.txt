@@ -282,18 +282,6 @@ include_directories(
   SYSTEM "${_DEPENDENCIES_PREFIX}/include"
 )
 
-## FIXME: Ceres solver ----------------------------------------------------------
-
-#include_directories(
-#  SYSTEM "${_DEPENDENCIES_PREFIX}/ceres-solver/install/include"
-#  SYSTEM "${_DEPENDENCIES_PREFIX}/glog/install/include"
-#)
-
-#link_directories(
-#  "${_DEPENDENCIES_PREFIX}/ceres-solver/install/lib"
-#  "${_DEPENDENCIES_PREFIX}/glog/install/lib"
-#)
-
 ## Look for VTK, PCL, OpenCV ---------------------------------------------------
 
 # TODO: rework this section

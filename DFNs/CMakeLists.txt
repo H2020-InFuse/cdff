@@ -41,7 +41,7 @@ target_link_libraries(
   harris_detector_3d
   kalman_predictor
   registration_icp_cc
-  #ceres_adjustment
+  ceres_adjustment
   svd_decomposition
   converters_opencv
   pcl_common

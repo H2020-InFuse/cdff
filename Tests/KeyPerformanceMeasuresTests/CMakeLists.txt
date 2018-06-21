@@ -48,7 +48,7 @@ add_executable(
 )
 target_link_libraries(
 	position_test_svd
-	cdff_helpers cdff_logger cdff_types converters_opencv ceres_adjustment feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system ceres glog pthread gomp
+	cdff_helpers cdff_logger cdff_types converters_opencv ceres_adjustment feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system ${CERES_LIBRARIES}
 )
 
 add_executable(

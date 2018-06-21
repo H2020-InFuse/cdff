@@ -12,11 +12,11 @@ target_link_libraries(
     bundle_adjustment cdff_types yaml-cpp cdff_helpers opencv_core converters_opencv
 )
 
-#add_library(
-#    ceres_adjustment
-#    CeresAdjustment.cpp
-#)
-#target_link_libraries(
-#    ceres_adjustment
-#    bundle_adjustment cdff_types yaml-cpp cdff_helpers opencv_core converters_opencv ceres glog pthread gomp
-#)
+add_library(
+    ceres_adjustment
+    CeresAdjustment.cpp
+)
+target_link_libraries(
+    ceres_adjustment
+    bundle_adjustment cdff_types yaml-cpp cdff_helpers opencv_core converters_opencv ${CERES_LIBRARIES}
+)
