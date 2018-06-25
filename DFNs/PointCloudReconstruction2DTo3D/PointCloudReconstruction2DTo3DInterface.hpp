@@ -40,7 +40,7 @@ namespace dfn_ci
              *        captured image B relative to the coordinate frame of the
              *        camera that captured image A
              */
-            virtual void frameInput(const asn1SccPose& data);
+            virtual void poseInput(const asn1SccPose& data);
 
             /**
              * Query value from output port "pointcloud"
@@ -52,7 +52,7 @@ namespace dfn_ci
         protected:
 
             asn1SccCorrespondenceMap2D inMatches;
-            asn1SccPose inFrame;
+            asn1SccPose inPose;
             asn1SccPointcloud outPointcloud;
     };
 }

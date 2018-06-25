@@ -82,7 +82,7 @@ RegularityTester::~RegularityTester()
 
 void RegularityTester::ExecuteDfn()
 	{
-	dfn->pointCloudInput(inputCloud);
+	dfn->pointcloudInput(*inputCloud);
 
 	clock_t beginTime = clock();
 	dfn->process();
@@ -91,7 +91,9 @@ void RegularityTester::ExecuteDfn()
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 
 	DELETE_IF_NOT_NULL(outputFeaturesVector);
-	outputFeaturesVector = dfn->featuresSetOutput();
+	VisualPointFeatureVector3DPtr newOutputFeaturesVector = NewVisualPointFeatureVector3D();
+	Copy( dfn->featuresOutput(), *newOutputFeaturesVector);
+	outputFeaturesVector = newOutputFeaturesVector;
 
 	PRINT_TO_LOG("Number of keypoints extracted is", GetNumberOfPoints(*outputFeaturesVector));
 	}

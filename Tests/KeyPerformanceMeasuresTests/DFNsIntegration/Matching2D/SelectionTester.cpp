@@ -149,23 +149,29 @@ void SelectionTester::ExecuteDfns()
 	clock_t beginTime, endTime;
 	float processingTime = 0;
 
-	descriptor->imageInput(inputSourceFrame);
-	descriptor->featuresSetInput(inputSourceKeypointsVector);
+	descriptor->frameInput(*inputSourceFrame);
+	descriptor->featuresInput(*inputSourceKeypointsVector);
 	PROCESS_AND_MEASURE_TIME(descriptor);
 	DELETE_IF_NOT_NULL(sourceFeaturesVector);
-	sourceFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
+	VisualPointFeatureVector2DPtr newSourceFeaturesVector = NewVisualPointFeatureVector2D();
+	Copy( descriptor->featuresOutput(), *newSourceFeaturesVector);
+	sourceFeaturesVector = newSourceFeaturesVector;
 
-	descriptor->imageInput(inputSinkFrame);
-	descriptor->featuresSetInput(inputSinkKeypointsVector);
+	descriptor->frameInput(*inputSinkFrame);
+	descriptor->featuresInput(*inputSinkKeypointsVector);
 	PROCESS_AND_MEASURE_TIME(descriptor);
 	DELETE_IF_NOT_NULL(sinkFeaturesVector);
-	sinkFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
+	VisualPointFeatureVector2DPtr newSinkFeaturesVector = NewVisualPointFeatureVector2D();
+	Copy( descriptor->featuresOutput(), *newSinkFeaturesVector);
+	sinkFeaturesVector = newSinkFeaturesVector;
 
-	matcher->sourceFeaturesVectorInput(sourceFeaturesVector);
-	matcher->sinkFeaturesVectorInput(sinkFeaturesVector);
+	matcher->sourceFeaturesInput(*sourceFeaturesVector);
+	matcher->sinkFeaturesInput(*sinkFeaturesVector);
 	PROCESS_AND_MEASURE_TIME(matcher);
 	DELETE_IF_NOT_NULL(outputCorrespondenceMap);
-	outputCorrespondenceMap = matcher->correspondenceMapOutput();	
+	CorrespondenceMap2DPtr newOutputCorrespondenceMap = NewCorrespondenceMap2D();
+	Copy(matcher->matchesOutput(), *newOutputCorrespondenceMap);
+	outputCorrespondenceMap = newOutputCorrespondenceMap;
 
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 	}

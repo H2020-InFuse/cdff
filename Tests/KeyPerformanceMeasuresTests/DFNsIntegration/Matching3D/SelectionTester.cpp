@@ -160,23 +160,29 @@ void SelectionTester::ExecuteDfns()
 	clock_t beginTime, endTime;
 	float processingTime = 0;
 
-	descriptor->pointCloudInput(inputSourceCloud);
-	descriptor->featuresSetInput(inputSourceKeypointsVector);
+	descriptor->pointcloudInput(*inputSourceCloud);
+	descriptor->featuresInput(*inputSourceKeypointsVector);
 	PROCESS_AND_MEASURE_TIME(descriptor);
 	DELETE_IF_NOT_NULL(sourceFeaturesVector);
-	sourceFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
+	VisualPointFeatureVector3DPtr newSourceFeaturesVector = NewVisualPointFeatureVector3D();
+	Copy (descriptor->featuresOutput(), *newSourceFeaturesVector);
+	sourceFeaturesVector = newSourceFeaturesVector;
 
-	descriptor->pointCloudInput(inputSinkCloud);
-	descriptor->featuresSetInput(inputSinkKeypointsVector);
+	descriptor->pointcloudInput(*inputSinkCloud);
+	descriptor->featuresInput(*inputSinkKeypointsVector);
 	PROCESS_AND_MEASURE_TIME(descriptor);
 	DELETE_IF_NOT_NULL(sinkFeaturesVector);
-	sinkFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
+	VisualPointFeatureVector3DPtr newSinkFeaturesVector = NewVisualPointFeatureVector3D();
+	Copy (descriptor->featuresOutput(), *newSinkFeaturesVector);
+	sinkFeaturesVector = newSinkFeaturesVector;
 
-	matcher->sourceFeaturesVectorInput(sourceFeaturesVector);
-	matcher->sinkFeaturesVectorInput(sinkFeaturesVector);
+	matcher->sourceFeaturesInput(*sourceFeaturesVector);
+	matcher->sinkFeaturesInput(*sinkFeaturesVector);
 	PROCESS_AND_MEASURE_TIME(matcher);
 	DELETE_IF_NOT_NULL(sourcePoseInSink);
-	sourcePoseInSink = matcher->transformOutput();
+	Pose3DPtr newSourcePoseInSink = NewPose3D();
+	Copy( matcher->transformOutput(), *newSourcePoseInSink);
+	sourcePoseInSink = newSourcePoseInSink;
 	matcherSuccess = matcher->successOutput();
 
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);

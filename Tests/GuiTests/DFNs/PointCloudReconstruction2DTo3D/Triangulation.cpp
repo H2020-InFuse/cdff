@@ -124,7 +124,7 @@ TriangulationTestInterface::TriangulationTestInterface(std::string DFNName, int 
 	Pose3D pose;
 	SetPosition(pose, 1, 0, 0);
 	SetOrientation(pose, 0, 0, 0, 1);
-	triangulation->frameInput(pose);
+	triangulation->poseInput(pose);
 
 	outputWindowName = "Triangulation 2D to 3D Result";
 }

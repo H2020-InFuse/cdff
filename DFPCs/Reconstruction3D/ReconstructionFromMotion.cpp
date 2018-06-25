@@ -497,7 +497,7 @@ bool ReconstructionFromMotion::ComputePastToCurrentTransform()
 
 void ReconstructionFromMotion::ComputeStereoPointCloud()
 	{
-	reconstructor3D->frameInput(*rightToLeftCameraPose);
+	reconstructor3D->poseInput(*rightToLeftCameraPose);
 	reconstructor3D->matchesInput(*leftRightCorrespondenceMap);
 	reconstructor3D->process();
 	Copy( reconstructor3D->pointcloudOutput(), *pointCloud);

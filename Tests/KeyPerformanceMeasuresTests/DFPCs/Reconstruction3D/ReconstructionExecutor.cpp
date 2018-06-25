@@ -164,8 +164,8 @@ void ReconstructionExecutor::ExecuteDfpc()
 		LoadInputImage(leftImageFilePath.str(), inputLeftFrame);
 		LoadInputImage(rightImageFilePath.str(), inputRightFrame);
 
-		dfpc->leftImageInput(inputLeftFrame);
-		dfpc->rightImageInput(inputRightFrame);
+		dfpc->leftImageInput(*inputLeftFrame);
+		dfpc->rightImageInput(*inputRightFrame);
 
 		clock_t beginTime = clock();
 		dfpc->run();
@@ -173,10 +173,14 @@ void ReconstructionExecutor::ExecuteDfpc()
 		processingTime += float(endTime - beginTime) / CLOCKS_PER_SEC;
 
 		DELETE_IF_NOT_NULL(outputPointCloud);
-		outputPointCloud = dfpc->pointCloudOutput();
-
+		PointCloudPtr newOutputPointCloud = NewPointCloud();
+		Copy( dfpc->pointCloudOutput(), *newOutputPointCloud);
+		outputPointCloud = newOutputPointCloud;
+	
 		DELETE_IF_NOT_NULL(outputCameraPose);
-		outputCameraPose = dfpc->poseOutput();
+		Pose3DPtr newOutputCameraPose = NewPose3D();
+		Copy( dfpc->poseOutput(), *newOutputCameraPose);
+		outputCameraPose = newOutputCameraPose;
 
 		outputSuccess = dfpc->successOutput();
 		successCounter = (outputSuccess ? successCounter+1 : successCounter);

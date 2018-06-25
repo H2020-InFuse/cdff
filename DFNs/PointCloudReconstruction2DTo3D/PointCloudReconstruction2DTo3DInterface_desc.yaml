@@ -9,7 +9,7 @@ input_ports:
             ((x^A_n, y^A_n), (x^B_n, y^B_n)). Each pair contains the
             coordinates of the same keypoint (hopefully, the same physical
             point) in each image."
-    - name: frame
+    - name: pose
       type: asn1SccPose
       doc: pose of the coordinate frame of the camera that captured image B
            relative to the coordinate frame of the camera that captured

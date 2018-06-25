@@ -97,7 +97,7 @@ void SelectionTester::SetFilesPaths(std::string inputImageFilePath, std::string 
 
 void SelectionTester::ExecuteDfn()
 	{
-	dfn->imageInput(inputFrame);
+	dfn->frameInput(*inputFrame);
 
 	clock_t beginTime = clock();
 	dfn->process();
@@ -106,7 +106,9 @@ void SelectionTester::ExecuteDfn()
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 
 	DELETE_IF_NOT_NULL(outputFeaturesVector);
-	outputFeaturesVector = dfn->featuresSetOutput();
+	VisualPointFeatureVector2DPtr newOutputFeaturesVector = NewVisualPointFeatureVector2D();
+	Copy(dfn->featuresOutput(), *newOutputFeaturesVector);
+	outputFeaturesVector = newOutputFeaturesVector;
 
 	PRINT_TO_LOG("Number of keypoints extracted is", GetNumberOfPoints(*outputFeaturesVector));
 	}

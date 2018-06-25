@@ -211,48 +211,57 @@ bool CorrectLocalizationTester::IsOutputCorrect(float relativeLocationError, flo
 
 void CorrectLocalizationTester::ExtractFeatures()
 	{
-	extractor->pointCloudInput(inputSceneCloud);
+	extractor->pointcloudInput(*inputSceneCloud);
 	extractor->process();
 
 	DELETE_IF_NOT_NULL(sceneKeypointsVector);
-	sceneKeypointsVector = extractor->featuresSetOutput();
+	VisualPointFeatureVector3DPtr newSceneKeypointsVector = NewVisualPointFeatureVector3D();
+	Copy( extractor->featuresOutput(), *newSceneKeypointsVector);
+	sceneKeypointsVector = newSceneKeypointsVector;
 	PRINT_TO_LOG("Number of scene keypoints extracted is", GetNumberOfPoints(*sceneKeypointsVector));
 
-	extractor->pointCloudInput(inputModelCloud);
+	extractor->pointcloudInput(*inputModelCloud);
 	PROCESS_AND_MEASURE_TIME(extractor);
 
 	DELETE_IF_NOT_NULL(modelKeypointsVector);
-	modelKeypointsVector = extractor->featuresSetOutput();
+	VisualPointFeatureVector3DPtr newModelKeypointsVector = NewVisualPointFeatureVector3D();
+	Copy( extractor->featuresOutput(), *newModelKeypointsVector);
+	modelKeypointsVector = newModelKeypointsVector;
 	PRINT_TO_LOG("Number of model keypoints extracted is", GetNumberOfPoints(*modelKeypointsVector));
 	}
 
 void CorrectLocalizationTester::DescribeFeatures()
 	{
-	descriptor->pointCloudInput(inputSceneCloud);
-	descriptor->featuresSetInput(sceneKeypointsVector);
+	descriptor->pointcloudInput(*inputSceneCloud);
+	descriptor->featuresInput(*sceneKeypointsVector);
 	descriptor->process();
 
 	DELETE_IF_NOT_NULL(sceneFeaturesVector);
-	sceneFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
+	VisualPointFeatureVector3DPtr newSceneFeaturesVector = NewVisualPointFeatureVector3D();	
+	Copy( descriptor->featuresOutput(), *newSceneFeaturesVector);
+	sceneFeaturesVector = newSceneFeaturesVector;
 	PRINT_TO_LOG("Number of scene features described is", GetNumberOfPoints(*sceneFeaturesVector));
 
-	descriptor->pointCloudInput(inputModelCloud);
-	descriptor->featuresSetInput(modelKeypointsVector);
+	descriptor->pointcloudInput(*inputModelCloud);
+	descriptor->featuresInput(*modelKeypointsVector);
 	PROCESS_AND_MEASURE_TIME(descriptor);
-
 	DELETE_IF_NOT_NULL(modelFeaturesVector);
-	modelFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
+	VisualPointFeatureVector3DPtr newModelFeaturesVector = NewVisualPointFeatureVector3D();
+	Copy( descriptor->featuresOutput(), *newModelFeaturesVector);
+	modelFeaturesVector = newModelFeaturesVector;
 	PRINT_TO_LOG("Number of model features described is", GetNumberOfPoints(*modelFeaturesVector));
 	}
 
 void CorrectLocalizationTester::MatchFeatures()
 	{
-	matcher->sourceFeaturesVectorInput(modelFeaturesVector);
-	matcher->sinkFeaturesVectorInput(sceneFeaturesVector);
+	matcher->sourceFeaturesInput(*modelFeaturesVector);
+	matcher->sinkFeaturesInput(*sceneFeaturesVector);
 	PROCESS_AND_MEASURE_TIME(matcher);
 
 	DELETE_IF_NOT_NULL(outputModelPoseInScene);
-	outputModelPoseInScene = matcher->transformOutput();
+	Pose3DPtr newOutputModelPoseInScene = NewPose3D();
+	Copy( matcher->transformOutput(), *newOutputModelPoseInScene);
+	outputModelPoseInScene = newOutputModelPoseInScene;
 	outputMatcherSuccess = matcher->successOutput();
 
 	if (outputMatcherSuccess)

@@ -94,7 +94,7 @@ void LinearityTester::ExecuteDfn()
 	{
 	ASSERT(dfnWasSet && inputImageWasLoaded, "Error: dfn or inputs were not correctly loaded");
 
-	dfn->imageInput(inputFrame);
+	dfn->imageInput(*inputFrame);
 
 	clock_t beginTime = clock();
 	dfn->process();
@@ -103,7 +103,9 @@ void LinearityTester::ExecuteDfn()
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 
 	DELETE_IF_NOT_NULL(outputFrame);
-	outputFrame = dfn->filteredImageOutput();
+	FramePtr newOutputFrame = NewFrame();
+	Copy( dfn->imageOutput(), *newOutputFrame);
+	outputFrame = newOutputFrame;
 	}
 
 bool LinearityTester::IsResultLinear(std::string referenceLinesFilePath, float relativeDistortionDifference)
