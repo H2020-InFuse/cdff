@@ -82,7 +82,7 @@ set(UNITTEST_LIBRARIES Catch
     iterative_pnp_solver
     kalman_corrector
     kalman_predictor
-#[=[mock]=] # no longer used by any DFN unit test
+    mock # no longer used by any DFN unit test
     opencv_core
     opencv_highgui
     opencv_imgcodecs
