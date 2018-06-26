@@ -21,9 +21,9 @@ void PointCloudReconstruction2DTo3DInterface::matchesInput(const asn1SccCorrespo
     inMatches = data;
 }
 
-void PointCloudReconstruction2DTo3DInterface::frameInput(const asn1SccPose& data)
+void PointCloudReconstruction2DTo3DInterface::poseInput(const asn1SccPose& data)
 {
-    inFrame = data;
+    inPose = data;
 }
 
 const asn1SccPointcloud& PointCloudReconstruction2DTo3DInterface::pointcloudOutput() const

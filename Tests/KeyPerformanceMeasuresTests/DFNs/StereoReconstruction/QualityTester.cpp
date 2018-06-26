@@ -133,8 +133,8 @@ void QualityTester::SetMeasuresFilePath(std::string measuresReferenceFilePath)
 void QualityTester::ExecuteDfn()
 	{
 	ASSERT(inputImagesWereLoaded && dfnWasLoaded, "Cannot execute DFN if input images or the dfn itself are not loaded");
-	dfn->leftImageInput(inputLeftFrame);
-	dfn->rightImageInput(inputRightFrame);
+	dfn->leftInput(*inputLeftFrame);
+	dfn->rightInput(*inputRightFrame);
 
 	clock_t beginTime = clock();
 	dfn->process();
@@ -143,7 +143,9 @@ void QualityTester::ExecuteDfn()
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 
 	DELETE_IF_NOT_NULL(outputPointCloud);
-	outputPointCloud = dfn->pointCloudOutput();
+	PointCloudPtr newOutputPointCloud = NewPointCloud();
+	Copy( dfn->pointcloudOutput(), *newOutputPointCloud);
+	outputPointCloud = newOutputPointCloud;
 
 	PRINT_TO_LOG("Point cloud size is", GetNumberOfPoints(*outputPointCloud));
 	dfnExecuted = true;

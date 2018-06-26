@@ -133,10 +133,12 @@ void ReconstructionTester::ExecuteDfns()
 	clock_t beginTime, endTime;
 	float processingTime = 0;
 
-	fundamentalMatrixEstimator->correspondenceMapInput(inputCorrespondenceMap);
+	fundamentalMatrixEstimator->matchesInput(*inputCorrespondenceMap);
 	PROCESS_AND_MEASURE_TIME(fundamentalMatrixEstimator)
 	DELETE_IF_NOT_NULL(fundamentalMatrix);
-	fundamentalMatrix = fundamentalMatrixEstimator->fundamentalMatrixOutput();
+	Matrix3dPtr newFundamentalMatrix = NewMatrix3d();
+	Copy( fundamentalMatrixEstimator->fundamentalMatrixOutput(), *newFundamentalMatrix);
+	fundamentalMatrix = newFundamentalMatrix;
 	fundamentalMatrixSuccess = fundamentalMatrixEstimator->successOutput();
 
 	if (!fundamentalMatrixSuccess)
@@ -145,11 +147,13 @@ void ReconstructionTester::ExecuteDfns()
 		return;
 		}
 
-	poseEstimator->correspondenceMapInput(inputCorrespondenceMap);
-	poseEstimator->fundamentalMatrixInput(fundamentalMatrix);
+	poseEstimator->matchesInput(*inputCorrespondenceMap);
+	poseEstimator->fundamentalMatrixInput(*fundamentalMatrix);
 	PROCESS_AND_MEASURE_TIME(poseEstimator)
 	DELETE_IF_NOT_NULL(cameraTransform);
-	cameraTransform = poseEstimator->transformOutput();
+	Pose3DPtr newCameraTransform;
+	Copy( poseEstimator->transformOutput(), *newCameraTransform);
+	cameraTransform = newCameraTransform;
 	poseEstimatorWasSuccessful = poseEstimator->successOutput();
 
 	if (!poseEstimatorWasSuccessful)
@@ -158,11 +162,13 @@ void ReconstructionTester::ExecuteDfns()
 		return;
 		}
 
-	reconstructor->correspondenceMapInput(inputCorrespondenceMap);
-	reconstructor->poseInput(cameraTransform);
+	reconstructor->matchesInput(*inputCorrespondenceMap);
+	reconstructor->poseInput(*cameraTransform);
 	PROCESS_AND_MEASURE_TIME(reconstructor)
 	DELETE_IF_NOT_NULL(outputPointCloud);
-	outputPointCloud = reconstructor->pointCloudOutput();	
+	PointCloudPtr newOutputPointCloud = NewPointCloud();
+	Copy( reconstructor->pointcloudOutput(), *newOutputPointCloud);
+	outputPointCloud = newOutputPointCloud;	
 	dfnsWereExecuted = true;
 
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);

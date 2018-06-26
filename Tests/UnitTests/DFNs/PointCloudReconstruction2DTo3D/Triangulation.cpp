@@ -46,7 +46,7 @@ void TriangulationTest::RandomCorrespondencesTest(const Pose3D& secondCameraPose
 
 	// Send input data to DFN
 	triangulation->matchesInput(*input);
-	triangulation->frameInput(secondCameraPose);
+	triangulation->poseInput(secondCameraPose);
 
 	// Run DFN
 	triangulation->process();

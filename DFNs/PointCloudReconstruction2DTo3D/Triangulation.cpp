@@ -59,9 +59,9 @@ void Triangulation::configure()
 void Triangulation::process()
 {
 	// Read data from input ports
-	ValidateInputs(inMatches, inFrame);
+	ValidateInputs(inMatches, inPose);
 
-	cv::Mat projectionMatrix = pose3DToMat.Convert(&inFrame);
+	cv::Mat projectionMatrix = pose3DToMat.Convert(&inPose);
 	cv::Mat pointsVectorAtSource = ConvertAtPose(&inMatches, SOURCE_CAMERA);
 	cv::Mat pointsVectorAtSink = ConvertAtPose(&inMatches, SINK_CAMERA);
 
@@ -183,7 +183,7 @@ void Triangulation::ValidateParameters()
 		"Triangulation Error: the focal length of the second camera is not strictly positive");
 }
 
-void Triangulation::ValidateInputs(const CorrespondenceMap2D& matches, const Pose3D& frame)
+void Triangulation::ValidateInputs(const CorrespondenceMap2D& matches, const Pose3D& pose)
 {
 	// TODO
 }

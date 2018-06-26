@@ -83,7 +83,7 @@ namespace dfn_ci
 			cv::Mat Triangulate(cv::Mat projectionMatrix, cv::Mat pointsVectorAtPose1, cv::Mat pointsVectorAtPose2);
 
 			void ValidateParameters();
-			void ValidateInputs(const CorrespondenceMap2DWrapper::CorrespondenceMap2D& matches, const PoseWrapper::Pose3D& frame);
+			void ValidateInputs(const CorrespondenceMap2DWrapper::CorrespondenceMap2D& matches, const PoseWrapper::Pose3D& pose);
 	};
 }
 

@@ -76,7 +76,7 @@ void FundamentalMatrixTester::SetInputFilePath(std::string inputCorrespondenceFi
 
 void FundamentalMatrixTester::ExecuteDfn()
 	{
-	dfn->correspondenceMapInput(inputCorrespondenceMap);
+	dfn->matchesInput(*inputCorrespondenceMap);
 
 	clock_t beginTime = clock();
 	dfn->process();
@@ -85,7 +85,10 @@ void FundamentalMatrixTester::ExecuteDfn()
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 
 	DELETE_IF_NOT_NULL(outputFundamentalMatrix);
-	outputFundamentalMatrix = dfn->fundamentalMatrixOutput();
+	Matrix3dPtr newOutputFundamentalMatrix = NewMatrix3d();
+	Copy( dfn->fundamentalMatrixOutput(), *newOutputFundamentalMatrix);
+	outputFundamentalMatrix = newOutputFundamentalMatrix;
+
 	outputComputationSuccess = dfn->successOutput();
 	}
 
