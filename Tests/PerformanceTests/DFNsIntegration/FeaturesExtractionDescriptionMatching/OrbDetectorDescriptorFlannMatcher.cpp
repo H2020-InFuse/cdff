@@ -60,15 +60,6 @@ class OrbDetectorDescriptorFlannMatcher : public PerformanceTestInterface
 	protected:
 
 	private:
-		Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat >* stubVisualFeaturesCache;
-		Mocks::VisualPointFeatureVector2DToMatConverter* mockVisualFeaturesConverter;
-
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>* stubVisualFeaturesCache2;
-		Mocks::MatToVisualPointFeatureVector2DConverter* mockVisualFeaturesConverter2;
-
-		Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache;
-		Mocks::FrameToMatConverter* mockInputConverter;
-
 		cv::Mat cvLeftImage;
 		cv::Mat cvRightImage;
 
@@ -80,7 +71,6 @@ class OrbDetectorDescriptorFlannMatcher : public PerformanceTestInterface
 
 		OrbDetectorDescriptor* orb;
 		FlannMatcher* flann;
-		void SetupMocksAndStubs();
 
 		bool SetNextInputs();
 		void ExecuteDfns();
@@ -94,7 +84,6 @@ OrbDetectorDescriptorFlannMatcher::OrbDetectorDescriptorFlannMatcher(std::string
 	flann = new FlannMatcher();
 	AddDfn(orb);
 	AddDfn(flann);
-	SetupMocksAndStubs();
 
 	leftFrame = NULL;
 	rightFrame = NULL;
@@ -105,13 +94,6 @@ OrbDetectorDescriptorFlannMatcher::OrbDetectorDescriptorFlannMatcher(std::string
 
 OrbDetectorDescriptorFlannMatcher::~OrbDetectorDescriptorFlannMatcher()
 	{
-	delete(stubInputCache);
-	delete(mockInputConverter);
-	delete(stubVisualFeaturesCache);
-	delete(mockVisualFeaturesConverter);
-	delete(stubVisualFeaturesCache2);
-	delete(mockVisualFeaturesConverter2);
-
 	if (leftFrame != NULL)
 		{
 		delete(leftFrame);
@@ -132,21 +114,6 @@ OrbDetectorDescriptorFlannMatcher::~OrbDetectorDescriptorFlannMatcher()
 		{
 		delete(correspondenceMap);
 		}
-	}
-
-void OrbDetectorDescriptorFlannMatcher::SetupMocksAndStubs()
-	{
-	stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
-
-	stubVisualFeaturesCache = new Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>();
-	mockVisualFeaturesConverter = new Mocks::VisualPointFeatureVector2DToMatConverter();
-	ConversionCache<VisualPointFeatureVector2DConstPtr, cv::Mat, VisualPointFeatureVector2DToMatConverter>::Instance(stubVisualFeaturesCache, mockVisualFeaturesConverter);
-
-	stubVisualFeaturesCache2 = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
-	mockVisualFeaturesConverter2 = new Mocks::MatToVisualPointFeatureVector2DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubVisualFeaturesCache2, mockVisualFeaturesConverter2);
 	}
 
 bool OrbDetectorDescriptorFlannMatcher::SetNextInputs()
@@ -176,26 +143,32 @@ void OrbDetectorDescriptorFlannMatcher::ExecuteDfns()
 		{
 		delete(leftFeaturesVector);
 		}
-	orb->imageInput(leftFrame);
+	orb->frameInput(*leftFrame);
 	orb->process();
-	leftFeaturesVector = orb->featuresSetOutput();
+	VisualPointFeatureVector2DPtr newLeftFeaturesVector = NewVisualPointFeatureVector2D();
+	Copy( orb->featuresOutput(), *newLeftFeaturesVector);
+	leftFeaturesVector = newLeftFeaturesVector;
 
 	if (rightFeaturesVector != NULL)
 		{
 		delete(rightFeaturesVector);
 		}
-	orb->imageInput(rightFrame);
+	orb->frameInput(*rightFrame);
 	orb->process();
-	rightFeaturesVector = orb->featuresSetOutput();
+	VisualPointFeatureVector2DPtr newRightFeaturesVector = NewVisualPointFeatureVector2D();
+	Copy( orb->featuresOutput(), *newRightFeaturesVector);
+	rightFeaturesVector = newRightFeaturesVector;
 
 	if (correspondenceMap != NULL)
 		{
 		delete(correspondenceMap);
 		}
-	flann->sinkFeaturesVectorInput( leftFeaturesVector );
-	flann->sourceFeaturesVectorInput( rightFeaturesVector );
+	flann->sinkFeaturesInput( *leftFeaturesVector );
+	flann->sourceFeaturesInput( *rightFeaturesVector );
 	flann->process();
-	correspondenceMap = flann->correspondenceMapOutput();
+	CorrespondenceMap2DPtr newCorrespondenceMap = NewCorrespondenceMap2D();
+	Copy( flann->matchesOutput(), *newCorrespondenceMap);
+	correspondenceMap = newCorrespondenceMap;
 	}
 
 OrbDetectorDescriptorFlannMatcher::MeasuresMap OrbDetectorDescriptorFlannMatcher::ExtractMeasures()

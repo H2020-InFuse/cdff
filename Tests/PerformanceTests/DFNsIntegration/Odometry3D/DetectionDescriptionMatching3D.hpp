@@ -82,21 +82,6 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 	protected:
 
 	private:
-		Stubs::CacheHandler<PointCloudWrapper::PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr >* stubNormalsCache;
-		Mocks::PointCloudToPclNormalsCloudConverter* mockNormalsConverter;
-
-		Stubs::CacheHandler<PointCloudWrapper::PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr >* stubPointCloudCache;
-		Mocks::PointCloudToPclPointCloudConverter* mockPointCloudConverter;
-
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr>* stubFeatures3dCache;
-		Mocks::MatToVisualPointFeatureVector3DConverter* mockFeatures3dConverter;
-
-		Stubs::CacheHandler<VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr, Converters::SupportTypes::PointCloudWithFeatures >* stubFeaturesCloudCache;
-		Mocks::VisualPointFeatureVector3DToPclPointCloudConverter* mockFeaturesCloudConverter;
-
-		Stubs::CacheHandler<Eigen::Matrix4f, PoseWrapper::Transform3DConstPtr>* stubTransformCache;
-		Mocks::EigenTransformToTransform3DConverter* mockTransformConverter;
-
 		pcl::PointCloud<pcl::PointXYZ>::Ptr sceneCloud;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr modelCloud;
 		PoseWrapper::Pose3D groundTruthPose;
@@ -123,7 +108,6 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 		void LoadSceneCloud();
 		void LoadModelCloud(int long inputId);
 
-		void SetupMocksAndStubs();
 		bool SetNextInputs();
 		void ExecuteDfns();
 		MeasuresMap ExtractMeasures();

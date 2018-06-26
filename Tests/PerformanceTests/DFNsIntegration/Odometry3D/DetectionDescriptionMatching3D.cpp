@@ -51,7 +51,6 @@ DetectionDescriptionMatching3DTestInterface::DetectionDescriptionMatching3DTestI
 	AddDfn(descriptor);
 	matcher = dfnsSet.matcher;
 	AddDfn(matcher);
-	SetupMocksAndStubs();
 
 	groundPositionDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
 	AddAggregator("PositionDistance", groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
@@ -79,17 +78,6 @@ DetectionDescriptionMatching3DTestInterface::DetectionDescriptionMatching3DTestI
 
 DetectionDescriptionMatching3DTestInterface::~DetectionDescriptionMatching3DTestInterface()
 	{
-	delete(stubNormalsCache);
-	delete(mockNormalsConverter);
-	delete(stubPointCloudCache);
-	delete(mockPointCloudConverter);
-	delete(stubFeatures3dCache);
-	delete(mockFeatures3dConverter);
-	delete(stubFeaturesCloudCache);
-	delete(mockFeaturesCloudConverter);
-	delete(stubTransformCache);
-	delete(mockTransformConverter);
-
 	if (scenePointCloud != NULL)
 		{
 		delete(scenePointCloud);
@@ -216,29 +204,6 @@ void DetectionDescriptionMatching3DTestInterface::LoadModelCloud(int long inputI
 	Copy(posesList.at(inputId), groundTruthPose);
 	}
 
-void DetectionDescriptionMatching3DTestInterface::SetupMocksAndStubs()
-	{
-	stubNormalsCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr>();
-	mockNormalsConverter = new Mocks::PointCloudToPclNormalsCloudConverter();
-	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr, PointCloudToPclNormalsCloudConverter>::Instance(stubNormalsCache, mockNormalsConverter);
-
-	stubPointCloudCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
-	mockPointCloudConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubPointCloudCache, mockPointCloudConverter);
-
-	stubFeatures3dCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>();
-	mockFeatures3dConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubFeatures3dCache, mockFeatures3dConverter);
-
-	stubFeaturesCloudCache = new Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>();
-	mockFeaturesCloudConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
-	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubFeaturesCloudCache, mockFeaturesCloudConverter);
-
-	stubTransformCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
-	mockTransformConverter = new Mocks::EigenTransformToTransform3DConverter();
-	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubTransformCache, mockTransformConverter);
-	}
-
 bool DetectionDescriptionMatching3DTestInterface::SetNextInputs()
 	{
 	inputId++;
@@ -257,45 +222,55 @@ void DetectionDescriptionMatching3DTestInterface::ExecuteDfns()
 		{
 		delete(sceneKeypointsVector);
 		}
-	extractor->pointCloudInput(scenePointCloud);
+	extractor->pointcloudInput(*scenePointCloud);
 	extractor->process();
-	sceneKeypointsVector = extractor->featuresSetOutput();
+	VisualPointFeatureVector3DPtr newSceneKeypointsVector = NewVisualPointFeatureVector3D();
+	Copy( extractor->featuresOutput(), *newSceneKeypointsVector);
+	sceneKeypointsVector = newSceneKeypointsVector;
 
 	if (modelKeypointsVector != NULL)
 		{
 		delete(modelKeypointsVector);
 		}
-	extractor->pointCloudInput(modelPointCloud);
+	extractor->pointcloudInput(*modelPointCloud);
 	extractor->process();
-	modelKeypointsVector = extractor->featuresSetOutput();
+	VisualPointFeatureVector3DPtr newModelKeypointsVector = NewVisualPointFeatureVector3D();
+	Copy( extractor->featuresOutput(), *newModelKeypointsVector);
+	modelKeypointsVector = newModelKeypointsVector;
 
 	if (sceneFeaturesVector != NULL)
 		{
 		delete(sceneFeaturesVector);
 		}
-	descriptor->pointCloudInput(scenePointCloud);
-	descriptor->featuresSetInput(sceneKeypointsVector);
+	descriptor->pointcloudInput(*scenePointCloud);
+	descriptor->featuresInput(*sceneKeypointsVector);
 	descriptor->process();
-	sceneFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
+	VisualPointFeatureVector3DPtr newSceneFeaturesVector = NewVisualPointFeatureVector3D();
+	Copy( descriptor->featuresOutput(), *newSceneFeaturesVector);
+	sceneFeaturesVector = newSceneFeaturesVector;
 
 	if (modelFeaturesVector != NULL)
 		{
 		delete(modelFeaturesVector);
 		}
-	descriptor->pointCloudInput(modelPointCloud);
-	descriptor->featuresSetInput(modelKeypointsVector);
+	descriptor->pointcloudInput(*modelPointCloud);
+	descriptor->featuresInput(*modelKeypointsVector);
 	descriptor->process();
-	modelFeaturesVector = descriptor->featuresSetWithDescriptorsOutput();
+	VisualPointFeatureVector3DPtr newModelFeaturesVector = NewVisualPointFeatureVector3D();
+	Copy( descriptor->featuresOutput(), *newModelFeaturesVector);
+	modelFeaturesVector = newModelFeaturesVector;
 
 	if (modelPoseInScene != NULL)
 		{
 		delete(modelPoseInScene);
 		}
-	matcher->sourceFeaturesVectorInput(modelFeaturesVector);
-	matcher->sinkFeaturesVectorInput(sceneFeaturesVector);
+	matcher->sourceFeaturesInput(*modelFeaturesVector);
+	matcher->sinkFeaturesInput(*sceneFeaturesVector);
 	matcher->process();
 	icpSuccess = matcher->successOutput();
-	modelPoseInScene = matcher->transformOutput();
+	Pose3DPtr newModelPoseInScene = NewPose3D();
+	Copy( matcher->transformOutput(), *newModelPoseInScene);
+	modelPoseInScene = newModelPoseInScene;
 	}
 
 DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMatching3DTestInterface::ExtractMeasures()
