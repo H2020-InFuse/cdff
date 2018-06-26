@@ -84,6 +84,23 @@ BaseTypesWrapper::T_UInt32 GetNumberOfPoses(const Poses3DSequence& posesSequence
 	return posesSequence.nCount;
 }
 
+BitStream ConvertToBitStream(const Poses3DSequence& sequence)
+	{
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(Poses3DSequence) );
+	int errorCode;
+	bool success = asn1SccPosesSequence_Encode(&sequence, &bitStream, &errorCode, true);
+
+	ASSERT(success, "Error while converting Poses3DSequence to BitStream");
+	return bitStream;
+	}
+
+void ConvertFromBitStream(BitStream bitStream, Poses3DSequence& sequence)
+	{
+	int errorCode;
+	bool success = asn1SccPosesSequence_Decode(&sequence, &bitStream, &errorCode);
+	ASSERT(success, "Error while converting BitStream to Poses3DSequence");
+	}
+
 }
 
 /** @} */

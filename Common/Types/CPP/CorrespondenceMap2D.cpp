@@ -125,6 +125,23 @@ void RemoveCorrespondences(CorrespondenceMap2D& correspondenceMap, std::vector<B
 	correspondenceMap.nCount -= elementsToRemove;
 	}
 
+BitStream ConvertToBitStream(const CorrespondenceMap2D& map)
+	{
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(CorrespondenceMap2D) );
+	int errorCode;
+	bool success = asn1SccCorrespondenceMap2D_Encode(&map, &bitStream, &errorCode, true);
+
+	ASSERT(success, "Error while converting CorrespondenceMap2D to BitStream");
+	return bitStream;
+	}
+
+void ConvertFromBitStream(BitStream bitStream, CorrespondenceMap2D& map)
+	{
+	int errorCode;
+	bool success = asn1SccCorrespondenceMap2D_Decode(&map, &bitStream, &errorCode);
+	ASSERT(success, "Error while converting BitStream to CorrespondenceMap2D");
+	}
+
 }
 
 /** @} */

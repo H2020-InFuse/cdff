@@ -116,6 +116,9 @@ void ClearData(Frame& frame);
 byte GetDataByte(const Frame& frame, int index);
 int GetNumberOfDataBytes(const Frame& frame);
 
+BitStream ConvertToBitStream(const Frame& frame);
+void ConvertFromBitStream(BitStream bitStream, Frame& frame);
+
 }
 
 #endif // FRAME_HPP

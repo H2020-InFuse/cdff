@@ -121,6 +121,23 @@ void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32
 	pointCloud.points.nCount -= elementsToRemove;
 	}
 
+BitStream ConvertToBitStream(const PointCloud& pointCloud)
+	{
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(PointCloud) );
+	int errorCode;
+	bool success = asn1SccPointcloud_Encode(&pointCloud, &bitStream, &errorCode, true);
+
+	ASSERT(success, "Error while converting PointCloud to BitStream");
+	return bitStream;
+	}
+
+void ConvertFromBitStream(BitStream bitStream, PointCloud& pointCloud)
+	{
+	int errorCode;
+	bool success = asn1SccPointcloud_Decode(&pointCloud, &bitStream, &errorCode);
+	ASSERT(success, "Error while converting BitStream to PointCloud");
+	}
+
 }
 
 /** @} */

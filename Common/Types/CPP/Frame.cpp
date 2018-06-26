@@ -246,6 +246,23 @@ int GetNumberOfDataBytes(const Frame& frame)
 	return frame.image.nCount;
 }
 
+BitStream ConvertToBitStream(const Frame& frame)
+	{
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(Frame) );
+	int errorCode;
+	bool success = asn1SccFrame_Encode(&frame, &bitStream, &errorCode, true);
+
+	ASSERT(success, "Error while converting Frame to BitStream");
+	return bitStream;
+	}
+
+void ConvertFromBitStream(BitStream bitStream, Frame& frame)
+	{
+	int errorCode;
+	bool success = asn1SccFrame_Decode(&frame, &bitStream, &errorCode);
+	ASSERT(success, "Error while converting BitStream to Frame");
+	}
+
 }
 
 /** @} */

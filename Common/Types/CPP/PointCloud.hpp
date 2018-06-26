@@ -56,6 +56,9 @@ BaseTypesWrapper::T_Double GetYCoordinate(const PointCloud& pointCloud, int poin
 BaseTypesWrapper::T_Double GetZCoordinate(const PointCloud& pointCloud, int pointIndex);
 void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32> pointIndexOrderedList);
 
+BitStream ConvertToBitStream(const PointCloud& pointCloud);
+void ConvertFromBitStream(BitStream bitStream, PointCloud& pointCloud);
+
 }
 
 #endif // POINT_CLOUD_HPP

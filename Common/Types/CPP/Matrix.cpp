@@ -106,6 +106,23 @@ void SetElement(Matrix3d& matrix, unsigned rowIndex, unsigned columnIndex, T_Dou
 	matrix.arr[rowIndex].arr[columnIndex] = value;
 }
 
+BitStream ConvertToBitStream(const Matrix3d& matrix)
+	{
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(Matrix3d) );
+	int errorCode;
+	bool success = asn1SccMatrix3d_Encode(&matrix, &bitStream, &errorCode, true);
+
+	ASSERT(success, "Error while converting Matrix3d to BitStream");
+	return bitStream;
+	}
+
+void ConvertFromBitStream(BitStream bitStream, Matrix3d& matrix)
+	{
+	int errorCode;
+	bool success = asn1SccMatrix3d_Decode(&matrix, &bitStream, &errorCode);
+	ASSERT(success, "Error while converting BitStream to Matrix3d");
+	}
+
 }
 
 /** @} */

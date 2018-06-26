@@ -144,6 +144,23 @@ T_Double GetWRotation(const Pose3D& pose)
 	return GetWOrientation(pose);
 }
 
+BitStream ConvertToBitStream(const Pose3D& pose)
+	{
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(Pose3D) );
+	int errorCode;
+	bool success = asn1SccPose_Encode(&pose, &bitStream, &errorCode, true);
+
+	ASSERT(success, "Error while converting Pose3D to BitStream");
+	return bitStream;
+	}
+
+void ConvertFromBitStream(BitStream bitStream, Pose3D& pose)
+	{
+	int errorCode;
+	bool success = asn1SccPose_Decode(&pose, &bitStream, &errorCode);
+	ASSERT(success, "Error while converting BitStream to Pose3D");
+	}
+
 void Copy(const Pose2D& source, Pose2D& destination)
 {
 	SetPosition(destination, GetXPosition(source), GetYPosition(source));
@@ -228,6 +245,23 @@ T_Double GetRotation(const Pose2D& pose)
 {
 	return GetOrientation(pose);
 }
+
+BitStream ConvertToBitStream(const Pose2D& pose)
+	{
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(Pose2D) );
+	int errorCode;
+	bool success = asn1SccPose2D_Encode(&pose, &bitStream, &errorCode, true);
+
+	ASSERT(success, "Error while converting Pose2D to BitStream");
+	return bitStream;
+	}
+
+void ConvertFromBitStream(BitStream bitStream, Pose2D& pose)
+	{
+	int errorCode;
+	bool success = asn1SccPose2D_Decode(&pose, &bitStream, &errorCode);
+	ASSERT(success, "Error while converting BitStream to Pose2D");
+	}
 
 }
 

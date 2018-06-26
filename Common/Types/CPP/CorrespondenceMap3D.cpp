@@ -86,6 +86,23 @@ T_Float GetProbability(const CorrespondenceMap3D& correspondenceMap, const int c
 	return correspondenceMap.arr[correspondenceIndex].probability;
 }
 
+BitStream ConvertToBitStream(const CorrespondenceMap3D& map)
+	{
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(CorrespondenceMap3D) );
+	int errorCode;
+	bool success = asn1SccCorrespondenceMap3D_Encode(&map, &bitStream, &errorCode, true);
+
+	ASSERT(success, "Error while converting CorrespondenceMap3D to BitStream");
+	return bitStream;
+	}
+
+void ConvertFromBitStream(BitStream bitStream, CorrespondenceMap3D& map)
+	{
+	int errorCode;
+	bool success = asn1SccCorrespondenceMap3D_Decode(&map, &bitStream, &errorCode);
+	ASSERT(success, "Error while converting BitStream to CorrespondenceMap3D");
+	}
+
 }
 
 /** @} */

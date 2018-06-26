@@ -45,6 +45,17 @@ typedef Point2D const* Point2DConstPtr;
 typedef std::shared_ptr<Point2D> Point2DSharedPtr;
 typedef std::shared_ptr<const Point2D> Point2DSharedConstPtr;
 
+// BitStream Allocator
+class BitStreamAllocator
+	{
+	public:
+		static BitStream AllocateBitStream(long size);
+		static void DeallocateBitStream(BitStream bitStream);
+
+	private:
+		static std::allocator<unsigned char> allocator;
+	};
+
 }
 
 #endif // BASE_TYPES_HPP

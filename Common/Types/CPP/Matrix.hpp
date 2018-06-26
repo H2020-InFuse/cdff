@@ -56,6 +56,9 @@ void SetIdentityMatrix(Matrix3d& matrix);
 BaseTypesWrapper::T_Double GetElement(const Matrix3d& matrix, unsigned rowIndex, unsigned columnIndex);
 void SetElement(Matrix3d& matrix, unsigned rowIndex, unsigned columnIndex, BaseTypesWrapper::T_Double value);
 
+BitStream ConvertToBitStream(const Matrix3d& matrix);
+void ConvertFromBitStream(BitStream bitStream, Matrix3d& matrix);
+
 }
 
 #endif // MATRIX_HPP

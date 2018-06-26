@@ -130,6 +130,23 @@ void RemoveCorrespondences(CorrespondenceMaps2DSequence& correspondenceMapsSeque
 	RemoveCorrespondences(correspondenceMapsSequence.arr[mapIndex], correspondenceIndexOrderedList);
 	}
 
+BitStream ConvertToBitStream(const CorrespondenceMaps2DSequence& sequence)
+	{
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(CorrespondenceMaps2DSequence) );
+	int errorCode;
+	bool success = asn1SccCorrespondenceMaps2DSequence_Encode(&sequence, &bitStream, &errorCode, true);
+
+	ASSERT(success, "Error while converting CorrespondenceMaps2DSequence to BitStream");
+	return bitStream;
+	}
+
+void ConvertFromBitStream(BitStream bitStream, CorrespondenceMaps2DSequence& sequence)
+	{
+	int errorCode;
+	bool success = asn1SccCorrespondenceMaps2DSequence_Decode(&sequence, &bitStream, &errorCode);
+	ASSERT(success, "Error while converting BitStream to CorrespondenceMaps2DSequence");
+	}
+
 }
 
 /** @} */
