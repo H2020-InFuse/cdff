@@ -42,7 +42,6 @@ namespace dfn_ci {
 
 KalmanCorrector::KalmanCorrector():KF(12,6,0)
 	{
-	
 	parametersHelper.AddParameter<float>("KalmanParameters", "MeasurementNoiseStandardDeviationtdOrientation", parameters.kalmanParameters.stdOrientation, DEFAULT_PARAMETERS.kalmanParameters.stdOrientation);
 	parametersHelper.AddParameter<float>("KalmanParameters", "MeasurementNoiseStandardDeviationtdTranslation", parameters.kalmanParameters.stdTranslation, DEFAULT_PARAMETERS.kalmanParameters.stdOrientation);
 
@@ -60,10 +59,8 @@ void KalmanCorrector::configure()
     ValidateParameters();
 }
 
-
 void KalmanCorrector::process()
  {
-	
        for(int i=0;i<3;i++)
 	{		
        		KF.statePre.at<float>(i,0)=inPredictedState.orient.arr[i];
@@ -72,7 +69,6 @@ void KalmanCorrector::process()
 		KF.statePre.at<float>(i+9,0)=inPredictedState.velocity.arr[i];
 	}
 
-		
 	ValidateInputs(KF.statePre);
 
 	KF.errorCovPre.setTo(cv::Scalar(0));
@@ -86,8 +82,7 @@ void KalmanCorrector::process()
 		KF.errorCovPre.at<float>(row+3,col+3) = inPredictedStateCovariance.cov_position.arr[row].arr[col];
 		KF.errorCovPre.at<float>(row+6,col+6) =inPredictedStateCovariance.cov_angular_velocity.arr[row].arr[col];
 		KF.errorCovPre.at<float>(row+9,col+9) =inPredictedStateCovariance.cov_velocity.arr[row].arr[col];
-            
-          }
+            }
 	}
 
 	cv::Mat measurement(6,1,CV_32F);
@@ -98,9 +93,7 @@ void KalmanCorrector::process()
 		 
 	}
 
-		
 	cv::Mat updatedState= correct(measurement);
-	
 	for(int i=0;i<3;i++)
 	{
 	 	outCorrectedState.orient.arr[i]=updatedState.at<float>(i);
@@ -117,11 +110,8 @@ void KalmanCorrector::process()
 			outStateCovariance.cov_position.arr[row].arr[col]=KF.errorCovPost.at<float>(row+3,col+3);
 			outStateCovariance.cov_angular_velocity.arr[row].arr[col]=KF.errorCovPost.at<float>(row+6,col+6);
 			outStateCovariance.cov_velocity.arr[row].arr[col]=KF.errorCovPost.at<float>(row+9,col+9);
-		
 		}
 	}
-
-		
 }
 
 const KalmanCorrector::KalmanCorrectorOptionsSet KalmanCorrector::DEFAULT_PARAMETERS =
@@ -130,20 +120,16 @@ const KalmanCorrector::KalmanCorrectorOptionsSet KalmanCorrector::DEFAULT_PARAME
 		{
 		.stdOrientation =1.0,
 		.stdTranslation=1.0,
-				
 		}
-	
 	};
 
 cv::Mat KalmanCorrector::correct(cv::Mat measurement)
 	{
-
 	cv::Mat stateCorrect;
 	float stdOrientation;
 	float stdTranslation;
         stdOrientation = parameters.kalmanParameters.stdOrientation;
 	stdTranslation = parameters.kalmanParameters.stdTranslation;
-	      
 	cv::setIdentity(KF.measurementNoiseCov,cv::Scalar(1));
 	for(int i=0;i<3;i++)
 	    {
@@ -151,10 +137,8 @@ cv::Mat KalmanCorrector::correct(cv::Mat measurement)
 		 {
 			KF.measurementNoiseCov.at<float>(i,i)=sqrt(stdOrientation);
 			KF.measurementNoiseCov.at<float>(i+3,i+3)=sqrt(stdTranslation);
-			
 		}
 	     }
-	
 	cv::Mat H;
 	H=cv::Mat::zeros(6,12,CV_32F);
 	KF.measurementMatrix=H.clone();
@@ -162,27 +146,18 @@ cv::Mat KalmanCorrector::correct(cv::Mat measurement)
 	{
 	  KF.measurementMatrix.at<float>(i,i)=1;
 	}
-	
 	stateCorrect= KF.correct(measurement);
-
-		
 	return stateCorrect;
-
 	}
 
 void KalmanCorrector::ValidateParameters()
 	{
 	ASSERT(parameters.kalmanParameters.stdOrientation > 0, " Kalman Correctorr Configuration error: measurement covariance (orientation) greater than zero");
 	ASSERT(parameters.kalmanParameters.stdTranslation > 0, " Kalman Correctorr Configuration error: measurement covariance (translation) greater than zero");
-	
 	}
 
 void KalmanCorrector::ValidateInputs(cv::Mat inputState)
 	{
-	
-	ASSERT(inputState.rows == 12 && inputState.cols ==1, "Kalman Correctorr: Corrector input must be 12-d column vector");
+	ASSERT(inputState.rows == 12 && inputState.cols ==1, "Kalman Corrector: Corrector input must be 12-d column vector");
 	}
-	
-
-
 }

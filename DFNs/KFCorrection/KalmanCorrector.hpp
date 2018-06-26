@@ -84,9 +84,7 @@ namespace dfn_ci {
 			{
 				float stdOrientation;
 				float stdTranslation;
-								
 			};
-		
 		struct KalmanCorrectorOptionsSet
 			{
 				KalmanParameters kalmanParameters;
@@ -94,14 +92,10 @@ namespace dfn_ci {
 		
 		Helpers::ParametersListHelper parametersHelper;
 		KalmanCorrectorOptionsSet parameters;
-		
 		static const KalmanCorrectorOptionsSet DEFAULT_PARAMETERS;	
-		
 		cv::Mat correct(cv::Mat measurement);
-			
 		void ValidateParameters();
 		void ValidateInputs(cv::Mat inputState);
-
 		void Configure(const YAML::Node& configurationNode);			
 	
     };
