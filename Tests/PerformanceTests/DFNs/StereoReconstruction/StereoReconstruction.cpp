@@ -46,7 +46,6 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 	{
 	this->reconstructor = reconstructor;
 	SetDfn(this->reconstructor);
-	SetupMocksAndStubs();
 
 	baseFolderPath = "../tests/Data/Images";
 	
@@ -68,8 +67,7 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 
 StereoReconstructionTestInterface::~StereoReconstructionTestInterface()
 	{
-	delete(stubInputCache);
-	delete(mockInputConverter);
+
 	}
 
 void StereoReconstructionTestInterface::SetImageFilesPath(std::string baseFolderPath, std::string imagesListFileName, bool useReferenceDisparity)
@@ -142,17 +140,6 @@ void StereoReconstructionTestInterface::SetReferenceDisparity(std::string refere
 	cv::imwrite(stream.str(), normalizedReferenceDisparity);
 	}
 
-void StereoReconstructionTestInterface::SetupMocksAndStubs()
-	{
-	stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
-
-	stubCloudCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>();
-	mockCloudConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubCloudCache, mockCloudConverter);
-	}
-
 bool StereoReconstructionTestInterface::SetNextInputs()
 	{
 	static unsigned time = 0;
@@ -180,8 +167,8 @@ bool StereoReconstructionTestInterface::SetNextInputs()
 		FrameConstPtr leftFrame = converter.Convert(cvLeftImage);
 		FrameConstPtr rightFrame = converter.Convert(cvRightImage);
 
-		reconstructor->leftImageInput(leftFrame);
-		reconstructor->rightImageInput(rightFrame);
+		reconstructor->leftInput(*leftFrame);
+		reconstructor->rightInput(*rightFrame);
 
 		time++;
 		return true;
@@ -218,7 +205,8 @@ StereoReconstructionTestInterface::MeasuresMap StereoReconstructionTestInterface
 		SaveOutputDisparity(normalizedDisparity, testId);
 		}
 
-	PointCloudConstPtr outputCloud = reconstructor->pointCloudOutput();
+	PointCloudPtr outputCloud = NewPointCloud();
+	Copy( reconstructor->pointcloudOutput(), *outputCloud);
 	if (saveOutputCloud)
 		{
 		SaveOutputCloud(outputCloud, testId);

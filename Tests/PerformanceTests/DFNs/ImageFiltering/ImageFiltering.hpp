@@ -67,12 +67,6 @@ class ImageFilteringTestInterface : public PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		Stubs::CacheHandler<FrameWrapper::FrameConstPtr, cv::Mat>* stubInputCache;
-		Mocks::FrameToMatConverter* mockInputConverter;
-
-		Stubs::CacheHandler<cv::Mat, FrameWrapper::FrameConstPtr>* stubOutputCache;
-		Mocks::MatToFrameConverter* mockOutputConverter;
-
 		bool saveOutput;
 		std::string baseImageFolder;
 		std::string imagesListFileName;
@@ -84,7 +78,6 @@ class ImageFilteringTestInterface : public PerformanceTestInterface
 
 		dfn_ci::ImageFilteringInterface* filter;
 		void ReadImageFileNamesList();
-		void SetupMocksAndStubs();
 
 		bool SetNextInputs();
 		MeasuresMap ExtractMeasures();

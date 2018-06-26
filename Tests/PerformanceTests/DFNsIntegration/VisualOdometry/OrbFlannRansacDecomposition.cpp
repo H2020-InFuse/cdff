@@ -83,18 +83,6 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 			unsigned sinkY;
 			};
 
-		Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat >* stubVisualFeaturesCache;
-		Mocks::VisualPointFeatureVector2DToMatConverter* mockVisualFeaturesConverter;
-
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>* stubVisualFeaturesCache2;
-		Mocks::MatToVisualPointFeatureVector2DConverter* mockVisualFeaturesConverter2;
-
-		Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache;
-		Mocks::FrameToMatConverter* mockInputConverter;
-
-		Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>* stubPoseCache;
-		Mocks::MatToTransform3DConverter* mockPoseConverter;
-
 		cv::Mat cvLeftImage;
 		cv::Mat cvRightImage;
 
@@ -162,7 +150,6 @@ OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath,
 	AddDfn(flann);
 	AddDfn(ransac);
 	AddDfn(decomposition);
-	SetupMocksAndStubs();
 
 	groundPositionDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
 	AddAggregator("PositionDistance", groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
@@ -195,15 +182,6 @@ OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath,
 
 OrbFlannRansacDecomposition::~OrbFlannRansacDecomposition()
 	{
-	delete(stubInputCache);
-	delete(mockInputConverter);
-	delete(stubVisualFeaturesCache);
-	delete(mockVisualFeaturesConverter);
-	delete(stubVisualFeaturesCache2);
-	delete(mockVisualFeaturesConverter2);
-	delete(stubPoseCache);
-	delete(mockPoseConverter);
-
 	if (leftFrame != NULL)
 		{
 		delete(leftFrame);
@@ -391,25 +369,6 @@ Pose3D OrbFlannRansacDecomposition::InterpolatePose(unsigned beforePoseIndex, un
 	return interpolation;
 	}
 
-void OrbFlannRansacDecomposition::SetupMocksAndStubs()
-	{
-	stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
-
-	stubVisualFeaturesCache = new Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>();
-	mockVisualFeaturesConverter = new Mocks::VisualPointFeatureVector2DToMatConverter();
-	ConversionCache<VisualPointFeatureVector2DConstPtr, cv::Mat, VisualPointFeatureVector2DToMatConverter>::Instance(stubVisualFeaturesCache, mockVisualFeaturesConverter);
-
-	stubVisualFeaturesCache2 = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
-	mockVisualFeaturesConverter2 = new Mocks::MatToVisualPointFeatureVector2DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubVisualFeaturesCache2, mockVisualFeaturesConverter2);
-
-	stubPoseCache = new Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>();
-	mockPoseConverter = new Mocks::MatToTransform3DConverter;
-	ConversionCache<cv::Mat, Pose3DConstPtr, MatToTransform3DConverter>::Instance(stubPoseCache, mockPoseConverter);
-	}
-
 bool OrbFlannRansacDecomposition::SetNextInputs()
 	{
 	inputId++;
@@ -448,35 +407,43 @@ void OrbFlannRansacDecomposition::ExecuteDfns()
 		{
 		delete(leftFeaturesVector);
 		}
-	orb->imageInput(leftFrame);
+	orb->frameInput(*leftFrame);
 	orb->process();
-	leftFeaturesVector = orb->featuresSetOutput();
+	VisualPointFeatureVector2DPtr newLeftFeaturesVector = NewVisualPointFeatureVector2D();
+	Copy( orb->featuresOutput(), *newLeftFeaturesVector);
+	leftFeaturesVector = newLeftFeaturesVector;
 
 	if (rightFeaturesVector != NULL)
 		{
 		delete(rightFeaturesVector);
 		}
-	orb->imageInput(rightFrame);
+	orb->frameInput(*rightFrame);
 	orb->process();
-	rightFeaturesVector = orb->featuresSetOutput();
+	VisualPointFeatureVector2DPtr newRightFeaturesVector = NewVisualPointFeatureVector2D();
+	Copy( orb->featuresOutput(), *newRightFeaturesVector);
+	rightFeaturesVector = newRightFeaturesVector;
 
 	if (correspondenceMap != NULL)
 		{
 		delete(correspondenceMap);
 		}
-	flann->sinkFeaturesVectorInput( leftFeaturesVector );
-	flann->sourceFeaturesVectorInput( rightFeaturesVector );
+	flann->sinkFeaturesInput( *leftFeaturesVector );
+	flann->sourceFeaturesInput( *rightFeaturesVector );
 	flann->process();
-	correspondenceMap = flann->correspondenceMapOutput();
+	CorrespondenceMap2DPtr newCorrespondenceMap = NewCorrespondenceMap2D();
+	Copy( flann->matchesOutput(), *newCorrespondenceMap);
+	correspondenceMap = newCorrespondenceMap;
 
 	if (fundamentalMatrix != NULL)
 		{
 		delete(fundamentalMatrix);
 		}
-	ransac->correspondenceMapInput(correspondenceMap);
+	ransac->matchesInput(*correspondenceMap);
 	ransac->process();
+	Matrix3dPtr newFundamentalMatrix = NewMatrix3d();
 	ransacSuccess = ransac->successOutput();
-	fundamentalMatrix = ransac->fundamentalMatrixOutput();
+	Copy( ransac->fundamentalMatrixOutput(), *newFundamentalMatrix);
+	fundamentalMatrix = newFundamentalMatrix;
 
 	if (pose != NULL)
 		{
@@ -484,11 +451,13 @@ void OrbFlannRansacDecomposition::ExecuteDfns()
 		}
 	if (ransacSuccess)
 		{
-		decomposition->fundamentalMatrixInput(fundamentalMatrix);
-		decomposition->correspondenceMapInput(correspondenceMap);
+		decomposition->fundamentalMatrixInput(*fundamentalMatrix);
+		decomposition->matchesInput(*correspondenceMap);
 		decomposition->process();
 		decompositionSuccess = decomposition->successOutput();
-		pose = decomposition->transformOutput();
+		Pose3DPtr newPose = NewPose3D();
+		Copy( decomposition->transformOutput(), *newPose);
+		pose = newPose;
 		}
 	else
 		{

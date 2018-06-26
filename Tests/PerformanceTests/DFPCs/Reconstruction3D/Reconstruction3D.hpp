@@ -87,25 +87,6 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		Stubs::CacheHandler<FrameWrapper::FrameConstPtr, cv::Mat>* stubFrameCache;
-		Mocks::FrameToMatConverter* mockFrameConverter;
-		Stubs::CacheHandler<cv::Mat, FrameWrapper::FrameConstPtr>* stubInverseFrameCache;
-		Mocks::MatToFrameConverter* mockInverseFrameConverter;
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr>* stubMatToVectorCache;
-		Mocks::MatToVisualPointFeatureVector2DConverter* mockMatToVectorConverter;
-		Stubs::CacheHandler<VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr, cv::Mat>* stubVectorToMatCache;
-		Mocks::VisualPointFeatureVector2DToMatConverter* mockVectorToMatConverter;
-		Stubs::CacheHandler<cv::Mat, PoseWrapper::Pose3DConstPtr>* stubEssentialPoseCache;
-		Mocks::MatToPose3DConverter* mockEssentialPoseConverter;
-		Stubs::CacheHandler<PoseWrapper::Pose3DConstPtr, cv::Mat>* stubTriangulationPoseCache;
-		Mocks::Pose3DToMatConverter* mockTriangulationPoseConverter;
-		Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr>* stubCloudCache;
-		Mocks::PclPointCloudToPointCloudConverter* mockCloudConverter;
-		Stubs::CacheHandler<PointCloudWrapper::PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInverseCloudCache;
-		Mocks::PointCloudToPclPointCloudConverter* mockInverseCloudConverter;
-		Stubs::CacheHandler<Eigen::Matrix4f, PoseWrapper::Transform3DConstPtr>* stubOutputCache;
-		Mocks::EigenTransformToTransform3DConverter* mockOutputConverter;
-
 		std::string baseFolderPath;
 		std::string imagesListFileName;
 		std::string outputCloudFileBaseName;
@@ -114,7 +95,6 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 		dfpc_ci::ObservedScene* map;
 		dfpc_ci::Reconstruction3DInterface* reconstructor;
 		void ReadImagesList();
-		void SetupMocksAndStubs();
 	
 		std::vector<std::string> leftImageFileNamesList;
 		std::vector<std::string> rightImageFileNamesList;

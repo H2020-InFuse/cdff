@@ -48,7 +48,6 @@ ImageFilteringTestInterface::ImageFilteringTestInterface(std::string folderPath,
 	this->filter = filter;
 	SetDfn(this->filter);
 
-	SetupMocksAndStubs();
 	saveOutput = false;
 
 	baseImageFolder = "../tests/Data/Images";
@@ -62,10 +61,6 @@ ImageFilteringTestInterface::ImageFilteringTestInterface(std::string folderPath,
 
 ImageFilteringTestInterface::~ImageFilteringTestInterface()
 	{
-	delete(stubInputCache);
-	delete(mockInputConverter);
-	delete(stubOutputCache);
-	delete(mockOutputConverter);
 	}
 
 void ImageFilteringTestInterface::SetImageFilePath(std::string baseImageFolder, std::string imagesListFileName)
@@ -111,17 +106,6 @@ void ImageFilteringTestInterface::ReadImageFileNamesList()
 	file.close();
 	}
 
-void ImageFilteringTestInterface::SetupMocksAndStubs()
-	{
-	stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	mockInputConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInputCache, mockInputConverter);
-
-	stubOutputCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>();
-	mockOutputConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubOutputCache, mockOutputConverter);
-	}
-
 bool ImageFilteringTestInterface::SetNextInputs()
 	{
 	static unsigned time = 0;
@@ -141,7 +125,7 @@ bool ImageFilteringTestInterface::SetNextInputs()
 		MatToFrameConverter converter;
 		inputFrame = converter.Convert(cvImage);
 
-		filter->imageInput(inputFrame);
+		filter->imageInput(*inputFrame);
 
 		time++;
 		return true;
@@ -156,7 +140,9 @@ ImageFilteringTestInterface::MeasuresMap ImageFilteringTestInterface::ExtractMea
 	static unsigned testId = 0;
 	testId++;
 
-	FrameConstPtr outputFrame = filter->filteredImageOutput();
+	FramePtr outputFrame = NewFrame();
+	Copy( filter->imageOutput(), *outputFrame);
+
 	FrameToMatConverter converter;
 	cv::Mat cvImage = converter.Convert(outputFrame); 
 

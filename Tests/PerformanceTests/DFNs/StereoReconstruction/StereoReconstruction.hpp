@@ -69,12 +69,6 @@ class StereoReconstructionTestInterface : public PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		Stubs::CacheHandler<PointCloudWrapper::PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr >* stubCloudCache;
-		Mocks::PointCloudToPclPointCloudConverter* mockCloudConverter;
-
-		Stubs::CacheHandler<FrameWrapper::FrameConstPtr, cv::Mat>* stubInputCache;
-		Mocks::FrameToMatConverter* mockInputConverter;
-
 		cv::Mat referenceDisparity;
 		cv::Mat normalizedReferenceDisparity;
 		bool useReferenceDisparity;
@@ -95,7 +89,6 @@ class StereoReconstructionTestInterface : public PerformanceTestInterface
 		dfn_ci::StereoReconstructionInterface* reconstructor;
 		void ReadImagesList(bool useReferenceDisparity);
 		void SetReferenceDisparity(std::string referenceDisparityFilePath);
-		void SetupMocksAndStubs();
 
 		bool SetNextInputs();
 		MeasuresMap ExtractMeasures();
