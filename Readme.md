@@ -10,19 +10,45 @@ To develop a Data Fusion Node (DFN) or a Data Fusion Processing Compound (DFPC),
 
 ### Download and compile
 
-Let's assume you've downloaded the CDFF's code (Core and Support components), for instance by cloning the `CDFF` repository somewhere on your computer (if you leave the path out in the following command line, a `CDFF` directory will be created in your current directory):
+Download the CDFF Core and Support components:
 
 ```
-$ git clone git@gitlab.spaceapplications.com:InFuse/CDFF.git [/path/to/where/I/want/the/CDFF]
+$ mkdir InnFuse
+$ cd InFuse
+$ git clone git@gitlab.spaceapplications.com:InFuse/CDFF.git
+$ git clone git@gitlab.spaceapplications.com:InFuse/CDFF_dev.git
 ```
 
 There are two ways you can build the CDFF (Core and Support components):
 
 * You can compile it using CMake and a C++ compiler **in a Docker container**.
 
-    We provide a Docker image based on Ubuntu 16.04 where build tools and the CDFF's dependencies are already installed (**warning:** except those we forgot: please let us know if you spot one). You can span a container from that image, mount the CDFF's code inside it, and compile. That image, and the libraries it contains, make up a common **reference environment** for the CDFF.
+    We provide a Docker image based on Ubuntu 16.04 where build tools and the CDFF's dependencies are pre-installed. You can spawn a container from that image, mount the CDFF's code inside it, and compile. That image, and the libraries it contains, make up a common **reference environment** for the CDFF.
 
     We have documentation about [using Docker and the InFuse Docker image](https://drive.google.com/open?id=1aW3_giavOZdvOljEEfun4W0Cq2tlnDvb8S3y2bysjpw), please see also [this short section](/External/Readme.md#option-1-get-the-cdffs-dependencies-packaged-in-a-docker-image) in the documentation about the dependencies of the CDFF.
+
+    The TL;DR is (seriously, read the documentation though):
+
+    ```
+    $ docker pull pull h2020infuse/cdff:latest
+    $ docker run \
+      --name=cdff --hostname=cdff \
+      --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
+      --volume=/dev/log:/dev/log \
+      --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
+      --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
+      --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
+      --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
+      --user=$(id -u $(whoami)):$(id -g $(whoami))
+      --init --rm --interactive --tty \
+      h2020infuse/cdff:latest bash
+    ```
+
+    If the docker container is already running you can attach to it with: 
+
+    ```
+    $ docker attach cdff
+    ```
 
     Once you have mounted the directory containing the CDFF's source code inside your Docker container, you can build the CDFF (Core and Support):
 
@@ -33,9 +59,31 @@ There are two ways you can build the CDFF (Core and Support components):
 
 * You can compile it using CMake and a C++ compiler **in a directory on your computer**.
 
-    In that case, you will have installed the **dependencies** of the CDFF yourself on your computer, and the dependencies of these dependencies, and the necessary build tools. To do so, you can use a combination of your distribution's software package manager and/or compiling from source. The dependencies you compile from source do not need to be installed in your system's local hierarchy (`/usr/local/`): you may want to put them there, or you may prefer to put them in a dedicated directory next to the CDFF's source (`External/install/`), which is the **recommended** location for now as it makes uninstalling them easy.
+    In that case, you must have install the **dependencies** of the CDFF yourself on your computer, and the dependencies of these dependencies, and the necessary build tools. You can install the dependencies using your distribution package manager or from source. The dependencies you compile from source do not need to be installed in your system's local hierarchy (`/usr/local/`): you may want to install them there, or you may prefer to put them in a dedicated directory next to the CDFF's source (`External/install/`), which is the **recommended** location for now as it makes uninstalling them easy.
 
-    The documentation about the [dependencies of the CDFF](/External/Readme.md) describes this topic in detail.
+    Downloading all the dependencies is easy using the included `fetch_compile_install_dependencies.sh` script. You should install a handful of dependencies though the package manager. 
+
+    ```
+    $ sudo apt install libmesa-dev libxt-dev # For vtk
+    $ cd /path/to/CDFF/External/fetch_compile_install_dependencies.sh
+    ```
+
+    This might take up to an hour. If you chose this route remember to pass the `-D USE_BUNDLED_DEPENDENCIES=ON` to cmake when building.
+
+    The documentation about the [dependencies of the CDFF](/External/Readme.md) describes this topic in more detail.
+
+    ```
+    $ sudo apt install build-essential cmake wget curl \
+                       liblzma-dev libbz2-dev zlib1g-dev \
+                       libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev \
+                       libavcodec-dev libavformat-dev libswscale-dev libjpeg-dev \
+                       libpng++-dev libjasper-dev libtiff5-dev libv4l-dev freeglut3-dev 
+    $ cd /path/to/CDFF/External/fetch_compile_install_dependencies.sh
+    ```
+
+    This might take up to an hour. If you chose this route remember to pass the `-D USE_BUNDLED_DEPENDENCIES=ON` to cmake when building.
+
+    The documentation about the [dependencies of the CDFF](/External/Readme.md) describes this topic in more detail.
 
     Once you have installed all the dependencies and build tools, you can build the CDFF (Core and Support):
 
