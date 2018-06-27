@@ -15,6 +15,18 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
+# Attempt to cleanup leftover source folders if we exited early due to errors.
+function on_exit {
+  for i in "${InstallersToRUN[@]}"; do
+    if [[ -d  "${SOURCE_DIR}/$i" ]] ; then
+      echo ""
+      echo "Removing left over source folder: ${SOURCE_DIR}/$i"
+      rm -rf "${SOURCE_DIR}/$i"
+    fi
+  done
+}
+trap on_exit EXIT
+
 
 # directory where the files will be build and installed
 SOURCE_DIR="$(readlink -m $DIR"/../../External/source")"
