@@ -56,17 +56,18 @@ EOF
 }
 
 function show_configuration {
-  echo "Dependencies that will be BUILT : "
+  echo -n "Dependencies that will be BUILT : "
   for i in "${InstallersToRUN[@]}"
   do
     if [[ ${infuse_dependencies_map[$i]} ]] ;  then
-    echo "$i";
-  fi
+      echo -n "$i ";
+    fi
   done
 
-	echo "build directory    = ${BUILD_DIR}"
-	echo "install directory  = ${INSTALL_DIR}"
-	echo "Packages directory = ${PKG_DIR}"
+  echo ""
+  echo "build directory    = ${BUILD_DIR}"
+  echo "install directory  = ${INSTALL_DIR}"
+  echo "Packages directory = ${PKG_DIR}"
 }
 
 # imports all functions present in all scripts in "/installers" folder
@@ -120,10 +121,15 @@ function run_installers {
   do
     if [[ ${infuse_dependencies_map[$i]} ]] ;  then
       # RUN the actual function
-      echo "Running INFUSE $i installer"
+      echo ""
+      echo "#"
+      echo "# Running INFUSE $i installer"
+      echo "#"
+      echo ""
       eval ${infuse_dependencies_map[$i]}
+      echo ""
       echo "INFUSE $i installer Done."
-  fi
+    fi
   done
 }
 
