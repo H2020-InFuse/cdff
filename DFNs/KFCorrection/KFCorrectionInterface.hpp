@@ -49,10 +49,10 @@ namespace dfn_ci {
             */
             virtual void predictedStateInput(const asn1SccRigidBodyState& data);
 	    /**
-            * Send value to input port  measured
-            * @param  measured,  measured rigid body pose parameters
+            * Send value to input port  measurement
+            * @param  measurement,  measurement rigid body pose parameters
             */
-            virtual void  measuredInput(const asn1SccRigidBodyState& data);
+            virtual void  measurementInput(const asn1SccRigidBodyState& data);
 
 	   /**
             * Send valueve value from input port predictedStateCovariance
@@ -73,7 +73,7 @@ namespace dfn_ci {
 
         protected:
             asn1SccRigidBodyState inPredictedState;
-	    asn1SccRigidBodyState inMeasured;
+	    asn1SccRigidBodyState inmeasurement;
 	    asn1SccRigidBodyState inPredictedStateCovariance;
             asn1SccRigidBodyState outCorrectedState;
 	    asn1SccRigidBodyState outStateCovariance;

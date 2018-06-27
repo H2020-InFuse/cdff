@@ -42,8 +42,8 @@ namespace dfn_ci {
 
 KalmanCorrector::KalmanCorrector():KF(12,6,0)
 	{
-	parametersHelper.AddParameter<float>("KalmanParameters", "MeasurementNoiseStandardDeviationtdOrientation", parameters.kalmanParameters.stdOrientation, DEFAULT_PARAMETERS.kalmanParameters.stdOrientation);
-	parametersHelper.AddParameter<float>("KalmanParameters", "MeasurementNoiseStandardDeviationtdTranslation", parameters.kalmanParameters.stdTranslation, DEFAULT_PARAMETERS.kalmanParameters.stdOrientation);
+	parametersHelper.AddParameter<float>("KalmanParameters", "MeasurementNoiseStandardDeviationOrientation", parameters.kalmanParameters.stdOrientation, DEFAULT_PARAMETERS.kalmanParameters.stdOrientation);
+	parametersHelper.AddParameter<float>("KalmanParameters", "MeasurementNoiseStandardDeviationTranslation", parameters.kalmanParameters.stdTranslation, DEFAULT_PARAMETERS.kalmanParameters.stdOrientation);
 
 	configurationFilePath = "";
 	}
@@ -88,8 +88,8 @@ void KalmanCorrector::process()
 	cv::Mat measurement(6,1,CV_32F);
 	for(int i=0;i<3;i++)
 	{		
-       		 measurement.at<float>(i,0)=inMeasured.orient.arr[i];
-		 measurement.at<float>(i+3,0)=inMeasured.pos.arr[i];
+       		 measurement.at<float>(i,0)=inmeasurement.orient.arr[i];
+		 measurement.at<float>(i+3,0)=inmeasurement.pos.arr[i];
 		 
 	}
 
@@ -152,8 +152,8 @@ cv::Mat KalmanCorrector::correct(cv::Mat measurement)
 
 void KalmanCorrector::ValidateParameters()
 	{
-	ASSERT(parameters.kalmanParameters.stdOrientation > 0, " Kalman Correctorr Configuration error: measurement covariance (orientation) greater than zero");
-	ASSERT(parameters.kalmanParameters.stdTranslation > 0, " Kalman Correctorr Configuration error: measurement covariance (translation) greater than zero");
+	ASSERT(parameters.kalmanParameters.stdOrientation > 0, " Kalman Corrector Configuration error: measurement covariance (orientation) greater than zero");
+	ASSERT(parameters.kalmanParameters.stdTranslation > 0, " Kalman Corrector Configuration error: measurement covariance (translation) greater than zero");
 	}
 
 void KalmanCorrector::ValidateInputs(cv::Mat inputState)

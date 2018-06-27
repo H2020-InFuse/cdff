@@ -1,4 +1,4 @@
 - Name: KalmanParameters
-  MeasurementNoiseStandardDeviationtdOrientation: 1.0
-  MeasurementNoiseStandardDeviationtdTranslation: 1.0
+  MeasurementNoiseStandardDeviationOrientation: 1.0
+  MeasurementNoiseStandardDeviationTranslation: 1.0
   

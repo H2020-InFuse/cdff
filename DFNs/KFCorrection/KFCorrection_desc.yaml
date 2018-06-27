@@ -3,7 +3,7 @@ input_ports:
     - name: predictedState
       type: RigidBodyState
       doc: predicted rigid body state from KFPrediction DFN
-    - name: measured
+    - name: measurement
       type: RigidBodyState
       doc: measured rigid body pose parameters	
     - name: predictedStateCovariance

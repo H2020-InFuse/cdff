@@ -113,7 +113,7 @@ TEST_CASE( "Call to process (Kalman correction)", "[process]" )
 	
 	KalmanCorrector simpleCorrector;
 	simpleCorrector.predictedStateInput(inputPredicted);
-	simpleCorrector.measuredInput(inputMeasure);
+	simpleCorrector.measurementInput(inputMeasure);
 	simpleCorrector.predictedStateCovarianceInput(inputPredictedCov);
 	
 	simpleCorrector.process();
