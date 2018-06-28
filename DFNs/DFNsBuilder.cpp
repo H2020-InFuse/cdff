@@ -46,7 +46,7 @@
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <Registration3D/IcpCC.hpp>
 #include <BundleAdjustment/SvdDecomposition.hpp>
-//#include <BundleAdjustment/CeresAdjustment.hpp>
+#include <BundleAdjustment/CeresAdjustment.hpp>
 
 namespace dfn_ci {
 
@@ -280,10 +280,10 @@ BundleAdjustmentInterface* DFNsBuilder::CreateBundleAdjustment(std::string dfnIm
 		{
 		return new SvdDecomposition();
 		}
-	/*else if (dfnImplementation == "CeresAdjustment")
+	else if (dfnImplementation == "CeresAdjustment")
 		{
 		return new CeresAdjustment();
-		}*/
+		}
 	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
 	}

@@ -1,0 +1,66 @@
+- Name: DFNsChain
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudMapResolution: 0.1
+    SearchRadius: 80
+- Name: reconstructor3D
+  Type: StereoReconstruction
+  Implementation: HirschmullerDisparityMapping
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudSamplingDensity: 0.1
+    UseFullScaleTwoPassAlgorithm: false
+    UseDisparityToDepthMap: false
+  - Name: Prefilter
+    Maximum: 31
+  - Name: Disparities
+    Minimum: 0
+    NumberOfIntervals: 256
+    UseMaximumDifference: true
+    MaximumDifference: 10
+    SpeckleRange: 16
+    SpeckleWindow: 100
+    SmoothnessParameter1: 600
+    SmoothnessParameter2: 3005
+  - Name: BlocksMatching
+    BlockSize: 5
+    UniquenessRatio: 1
+  - Name: DisparityToDepthMap
+    Element_0_0: 1
+    Element_0_1: 0
+    Element_0_2: 0
+    Element_0_3: -279.0498046875
+    Element_1_0: 0
+    Element_1_1: 1
+    Element_1_2: 0
+    Element_1_3: 29.868621826172
+    Element_2_0: 0
+    Element_2_1: 0
+    Element_2_2: 0
+    Element_2_3: -8192.8300337838
+    Element_3_0: 0
+    Element_3_1: 0
+    Element_3_2: 3.3436329786051
+    Element_3_3: -0
+  - Name: StereoCamera
+    LeftFocalLength: 871.118
+    LeftPrinciplePointX: 519.487
+    LeftPrinciplePointY: 385.304
+    Baseline: 0.09290672099999999
+  - Name: ReconstructionSpace
+    LimitX: 15
+    LimitY: 15
+    LimitZ: 15
+- Name: cloudRegistrator
+  Type: Registration3D
+  Implementation: IcpCC
+  Parameters:
+  - Name: GeneralParameters
+    ConvergenceType: ErrorReduction
+    MinimumErrorReduction: 1e-5
+    MaximumNumberOfIterations: 10
+    ScaleIsAdjustable: false
+    FarthestPointsAreFilteredOut: false
+    SamplingLimit: 50000
+    FinalOverlapRatio: 1.0
+    MaximumNumberOfThreads: 0
