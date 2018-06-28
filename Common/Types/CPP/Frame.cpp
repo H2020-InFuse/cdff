@@ -248,8 +248,11 @@ int GetNumberOfDataBytes(const Frame& frame)
 
 BitStream ConvertToBitStream(const Frame& frame)
 	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(Frame) );
-	int errorCode;
+	BitStream bitStream;
+	byte* buffer = new byte[asn1SccFrame_REQUIRED_BYTES_FOR_ENCODING];
+	BitStream_Init(&bitStream, buffer, asn1SccFrame_REQUIRED_BYTES_FOR_ENCODING);	
+	//BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccFrame_REQUIRED_BYTES_FOR_ENCODING );
+	int errorCode = 0;
 	bool success = asn1SccFrame_Encode(&frame, &bitStream, &errorCode, true);
 
 	ASSERT(success, "Error while converting Frame to BitStream");
@@ -258,7 +261,7 @@ BitStream ConvertToBitStream(const Frame& frame)
 
 void ConvertFromBitStream(BitStream bitStream, Frame& frame)
 	{
-	int errorCode;
+	int errorCode = 0;
 	bool success = asn1SccFrame_Decode(&frame, &bitStream, &errorCode);
 	ASSERT(success, "Error while converting BitStream to Frame");
 	}

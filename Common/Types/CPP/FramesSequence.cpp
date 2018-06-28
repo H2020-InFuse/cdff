@@ -87,7 +87,7 @@ BaseTypesWrapper::T_UInt32 GetNumberOfFrames(const FramesSequence& framesSequenc
 
 BitStream ConvertToBitStream(const FramesSequence& sequence)
 	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(FramesSequence) );
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccFramesSequence_REQUIRED_BYTES_FOR_ENCODING );
 	int errorCode;
 	bool success = asn1SccFramesSequence_Encode(&sequence, &bitStream, &errorCode, true);
 

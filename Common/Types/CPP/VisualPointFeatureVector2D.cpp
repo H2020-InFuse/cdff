@@ -111,7 +111,7 @@ float GetDescriptorComponent(const VisualPointFeatureVector2D& featuresVector, i
 
 BitStream ConvertToBitStream(const VisualPointFeatureVector2D& vector)
 	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(VisualPointFeatureVector2D) );
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING );
 	int errorCode;
 	bool success = asn1SccVisualPointFeatureVector2D_Encode(&vector, &bitStream, &errorCode, true);
 

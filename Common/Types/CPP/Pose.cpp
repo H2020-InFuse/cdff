@@ -146,7 +146,7 @@ T_Double GetWRotation(const Pose3D& pose)
 
 BitStream ConvertToBitStream(const Pose3D& pose)
 	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(Pose3D) );
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccPose_REQUIRED_BYTES_FOR_ENCODING );
 	int errorCode;
 	bool success = asn1SccPose_Encode(&pose, &bitStream, &errorCode, true);
 
@@ -248,7 +248,7 @@ T_Double GetRotation(const Pose2D& pose)
 
 BitStream ConvertToBitStream(const Pose2D& pose)
 	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(Pose2D) );
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING );
 	int errorCode;
 	bool success = asn1SccPose2D_Encode(&pose, &bitStream, &errorCode, true);
 

@@ -53,7 +53,7 @@ class BitStreamAllocator
 		static void DeallocateBitStream(BitStream bitStream);
 
 	private:
-		static std::allocator<unsigned char> allocator;
+		static std::allocator<byte> allocator;
 	};
 
 }

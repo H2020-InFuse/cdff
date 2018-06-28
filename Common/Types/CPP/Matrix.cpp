@@ -108,7 +108,7 @@ void SetElement(Matrix3d& matrix, unsigned rowIndex, unsigned columnIndex, T_Dou
 
 BitStream ConvertToBitStream(const Matrix3d& matrix)
 	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(Matrix3d) );
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING );
 	int errorCode;
 	bool success = asn1SccMatrix3d_Encode(&matrix, &bitStream, &errorCode, true);
 

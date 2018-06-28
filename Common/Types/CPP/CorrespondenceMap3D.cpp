@@ -88,7 +88,7 @@ T_Float GetProbability(const CorrespondenceMap3D& correspondenceMap, const int c
 
 BitStream ConvertToBitStream(const CorrespondenceMap3D& map)
 	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(CorrespondenceMap3D) );
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING );
 	int errorCode;
 	bool success = asn1SccCorrespondenceMap3D_Encode(&map, &bitStream, &errorCode, true);
 

@@ -123,7 +123,7 @@ void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32
 
 BitStream ConvertToBitStream(const PointCloud& pointCloud)
 	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(PointCloud) );
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccPointcloud_REQUIRED_BYTES_FOR_ENCODING );
 	int errorCode;
 	bool success = asn1SccPointcloud_Encode(&pointCloud, &bitStream, &errorCode, true);
 

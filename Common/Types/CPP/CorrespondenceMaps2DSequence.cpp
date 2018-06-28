@@ -132,7 +132,7 @@ void RemoveCorrespondences(CorrespondenceMaps2DSequence& correspondenceMapsSeque
 
 BitStream ConvertToBitStream(const CorrespondenceMaps2DSequence& sequence)
 	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( sizeof(CorrespondenceMaps2DSequence) );
+	BitStream bitStream = BitStreamAllocator::AllocateBitStream(asn1SccCorrespondenceMaps2DSequence_REQUIRED_BYTES_FOR_ENCODING );
 	int errorCode;
 	bool success = asn1SccCorrespondenceMaps2DSequence_Encode(&sequence, &bitStream, &errorCode, true);
 

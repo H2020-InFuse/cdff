@@ -15,12 +15,12 @@
 namespace BaseTypesWrapper
 {
 
-std::allocator<unsigned char> BitStreamAllocator::allocator;
+std::allocator<byte> BitStreamAllocator::allocator;
 
 BitStream BitStreamAllocator::AllocateBitStream(long size)
 	{
 	BitStream bitStream;
-	unsigned char* buffer = allocator.allocate(size);
+	byte* buffer = allocator.allocate(size);
 	BitStream_Init(&bitStream, buffer, size);	
 	return bitStream;
 	}
