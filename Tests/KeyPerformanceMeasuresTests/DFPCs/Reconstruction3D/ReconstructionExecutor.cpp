@@ -37,7 +37,6 @@ using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
 using namespace FrameWrapper;
-using namespace Common;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace SupportTypes;
 
@@ -66,36 +65,10 @@ ReconstructionExecutor::ReconstructionExecutor()
 	measuresReferenceWasLoaded = false;
 	dfpcExecuted = false;
 	dfpcWasLoaded = false;
-
-	SetUpMocksAndStubs();
 	}
 
 ReconstructionExecutor::~ReconstructionExecutor()
 	{
-	delete(stubFrameCache);
-	delete(mockFrameConverter);
-
-	delete(stubInverseFrameCache);
-	delete(mockInverseFrameConverter);
-
-	delete(stubCloudCache);
-	delete(mockCloudConverter);
-
-	delete(stubVector3dCache);
-	delete(mockVector3dConverter);
-
-	delete(stubNormalsCache);
-	delete(mockNormalsConverter);
-
-	delete(stubFeaturesCloudCache);
-	delete(mockFeaturesCloudConverter);
-
-	delete(stubInverseCloudCache);
-	delete(mockInverseCloudConverter);
-
-	delete(stubTransformCache);
-	delete(mockTransformConverter);
-	
 	DELETE_IF_NOT_NULL(inputLeftFrame);
 	DELETE_IF_NOT_NULL(inputRightFrame);
 	DELETE_IF_NOT_NULL(outputPointCloud);
@@ -264,41 +237,6 @@ void ReconstructionExecutor::SaveOutputPointCloud(std::string outputPointCloudFi
  *
  * --------------------------------------------------------------------------
  */
-void ReconstructionExecutor::SetUpMocksAndStubs()
-	{
-	stubFrameCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>;
-	mockFrameConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubFrameCache, mockFrameConverter);
-
-	stubInverseFrameCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>;
-	mockInverseFrameConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInverseFrameCache, mockInverseFrameConverter);
-
-	stubCloudCache = new Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr>();
-	mockCloudConverter = new Mocks::PclPointCloudToPointCloudConverter();
-	ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Instance(stubCloudCache, mockCloudConverter);
-
-	stubVector3dCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>();
-	mockVector3dConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubVector3dCache, mockVector3dConverter);
-
-	stubNormalsCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr>();
-	mockNormalsConverter = new Mocks::PointCloudToPclNormalsCloudConverter();
-	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr, PointCloudToPclNormalsCloudConverter>::Instance(stubNormalsCache, mockNormalsConverter);
-
-	stubInverseCloudCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>;
-	mockInverseCloudConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInverseCloudCache, mockInverseCloudConverter);
-
-	stubFeaturesCloudCache = new Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>();
-	mockFeaturesCloudConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
-	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubFeaturesCloudCache, mockFeaturesCloudConverter);
-
-	stubTransformCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
-	mockTransformConverter = new Mocks::EigenTransformToTransform3DConverter();
-	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubTransformCache, mockTransformConverter);
-	}
-
 void ReconstructionExecutor::LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame)
 	{
 	cv::Mat cvImage = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);

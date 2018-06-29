@@ -33,11 +33,12 @@ using namespace FrameWrapper;
 class HarrisDetector2DTestInterface : public DFNTestInterface
 	{
 	public:
-		HarrisDetector2DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		HarrisDetector2DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath = DEFAULT_IMAGE_FILE_PATH);
 		~HarrisDetector2DTestInterface();
 	protected:
 
 	private:
+		static const std::string DEFAULT_IMAGE_FILE_PATH;
 		HarrisDetector2D* harris;
 
 		cv::Mat cvImage;
@@ -48,13 +49,15 @@ class HarrisDetector2DTestInterface : public DFNTestInterface
 		void DisplayResult();
 	};
 
-HarrisDetector2DTestInterface::HarrisDetector2DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
+const std::string HarrisDetector2DTestInterface::DEFAULT_IMAGE_FILE_PATH = "../../tests/Data/Images/DevonIslandLeft.ppm";
+
+HarrisDetector2DTestInterface::HarrisDetector2DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
 	{
 	harris = new HarrisDetector2D();
 	SetDFN(harris);
 
-	cvImage = cv::imread("../../tests/Data/Images/DevonIslandLeft.ppm", cv::IMREAD_COLOR);
+	cvImage = cv::imread(imageFilePath, cv::IMREAD_COLOR);
 	inputImage = MatToFrameConverter().Convert(cvImage);
 
 	harris->frameInput(*inputImage);
@@ -84,6 +87,7 @@ void HarrisDetector2DTestInterface::DisplayResult()
 	{
 	const VisualPointFeatureVector2D& featuresVector = harris->featuresOutput();
 
+	PRINT_TO_LOG("Number of detected features: ", GetNumberOfPoints( featuresVector ) );
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
 	cv::Mat outputImage = cvImage.clone();
 
@@ -101,8 +105,17 @@ void HarrisDetector2DTestInterface::DisplayResult()
 
 int main(int argc, char** argv)
 	{
-	HarrisDetector2DTestInterface interface("HarrisDetector2D", 100, 40);
-	interface.Run();
+	HarrisDetector2DTestInterface* interface;
+	if (argc > 1)
+		{
+		interface = new HarrisDetector2DTestInterface("HarrisDetector2D", 100, 40, argv[1]);
+		}
+	else
+		{
+		interface = new HarrisDetector2DTestInterface("HarrisDetector2D", 100, 40);
+		}
+	interface->Run();
+	delete(interface);
 	};
 
 /** @} */

@@ -35,7 +35,6 @@ using namespace dfn_ci;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
-using namespace Common;
 using namespace CorrespondenceMap2DWrapper;
 
 #define DELETE_IF_NOT_NULL(pointer) \
@@ -71,24 +70,10 @@ SelectionTester::SelectionTester()
 	inputImagesWereLoaded = false;
 	inputKeypointsWereLoaded = false;
 	precisionReferenceWasLoaded = false;
-
-	SetUpMocksAndStubs();
 	}
 
 SelectionTester::~SelectionTester()
-	{
-	delete(stubFrameCache);
-	delete(mockFrameConverter);
-
-	delete(stubInverseFrameCache);
-	delete(mockInverseFrameConverter);
-
-	delete(stubVector2dCache);
-	delete(mockVector2dConverter);
-
-	delete(stubInverseVector2dCache);
-	delete(mockInverseVector2dConverter);
-	
+	{	
 	DELETE_IF_NOT_NULL(inputSourceFrame);
 	DELETE_IF_NOT_NULL(inputSinkFrame);
 	DELETE_IF_NOT_NULL(inputSourceKeypointsVector);
@@ -198,25 +183,6 @@ bool SelectionTester::AreCorrespondencesValid(float percentageThreshold)
  *
  * --------------------------------------------------------------------------
  */
-void SelectionTester::SetUpMocksAndStubs()
-	{
-	stubFrameCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>;
-	mockFrameConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubFrameCache, mockFrameConverter);
-
-	stubInverseFrameCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>;
-	mockInverseFrameConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInverseFrameCache, mockInverseFrameConverter);
-
-	stubVector2dCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
-	mockVector2dConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubVector2dCache, mockVector2dConverter);
-
-	stubInverseVector2dCache = new Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>();
-	mockInverseVector2dConverter = new Mocks::VisualPointFeatureVector2DToMatConverter();
-	ConversionCache<VisualPointFeatureVector2DConstPtr, cv::Mat, VisualPointFeatureVector2DToMatConverter>::Instance(stubInverseVector2dCache, mockInverseVector2dConverter);
-	}
-
 void SelectionTester::LoadInputImage(const std::string& imageFilePath, FrameWrapper::FrameConstPtr& frame)
 	{
 	cv::Mat cvImage = cv::imread(imageFilePath, CV_LOAD_IMAGE_COLOR);

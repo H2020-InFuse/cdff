@@ -42,12 +42,6 @@
 #include <PointCloudToPclPointCloudConverter.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
 
-#include <ConversionCache/ConversionCache.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
-
 #include <stdlib.h>
 #include <fstream>
 #include <string>
@@ -103,15 +97,6 @@ class QualityTester
 
 		typedef std::vector<Line> Object;
 
-		Stubs::CacheHandler<cv::Mat, FrameWrapper::FrameConstPtr>* stubFrameCache;
-		Mocks::MatToFrameConverter* mockFrameConverter;
-
-		Stubs::CacheHandler<FrameWrapper::FrameConstPtr, cv::Mat>* stubInverseFrameCache;
-		Mocks::FrameToMatConverter* mockInverseFrameConverter;
-
-		Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr>* stubCloudCache;
-		Mocks::PclPointCloudToPointCloudConverter* mockCloudConverter;
-
 		std::string configurationFilePath;
 		std::string inputLeftImageFilePath;
 		std::string inputRightImageFilePath;
@@ -138,7 +123,6 @@ class QualityTester
 		bool dfnExecuted;
 		bool dfnWasLoaded;
 
-		void SetUpMocksAndStubs();
 		void LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame);
 		void LoadOutputPointCloud();
 		void LoadOutliersReference();

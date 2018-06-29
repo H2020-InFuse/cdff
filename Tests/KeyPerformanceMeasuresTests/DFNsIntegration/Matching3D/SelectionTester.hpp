@@ -41,15 +41,7 @@
 #include <BaseTypes.hpp>
 #include <CorrespondenceMap3D.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
-
-#include <ConversionCache/ConversionCache.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
-#include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.hpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclNormalsCloudConverter.hpp>
+#include <SupportTypes.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -93,24 +85,6 @@ class SelectionTester
 	private:
 		typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
 
-		Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr>* stubCloudCache;
-		Mocks::PclPointCloudToPointCloudConverter* mockCloudConverter;
-
-		Stubs::CacheHandler<PointCloudWrapper::PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInverseCloudCache;
-		Mocks::PointCloudToPclPointCloudConverter* mockInverseCloudConverter;
-
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr>* stubVector3dCache;
-		Mocks::MatToVisualPointFeatureVector3DConverter* mockVector3dConverter;
-
-		Stubs::CacheHandler<PointCloudWrapper::PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr >* stubNormalsCache;
-		Mocks::PointCloudToPclNormalsCloudConverter* mockNormalsConverter;
-
-		Stubs::CacheHandler<VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr, Converters::SupportTypes::PointCloudWithFeatures >* stubFeaturesCloudCache;
-		Mocks::VisualPointFeatureVector3DToPclPointCloudConverter* mockFeaturesCloudConverter;
-
-		Stubs::CacheHandler<Eigen::Matrix4f, PoseWrapper::Transform3DConstPtr>* stubTransformCache;
-		Mocks::EigenTransformToTransform3DConverter* mockTransformConverter;
-
 		std::string featuresDescriptorConfigurationFilePath;
 		std::string featuresMatcherConfigurationFilePath;
 		std::string sourceCloudFilePath;
@@ -134,7 +108,6 @@ class SelectionTester
 		bool inputKeypointsWereLoaded;
 		bool precisionReferenceWasLoaded;
 
-		void SetUpMocksAndStubs();
 		void LoadInputCloud(const std::string& cloudFilePath, PointCloudWrapper::PointCloudConstPtr& cloud);
 		void LoadReferenceCorrespondenceMap();
 		void ConfigureDfns();

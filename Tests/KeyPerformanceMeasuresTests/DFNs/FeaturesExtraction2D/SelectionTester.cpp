@@ -35,7 +35,6 @@ using namespace dfn_ci;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
-using namespace Common;
 using namespace PoseWrapper;
 
 #define DELETE_IF_NOT_NULL(pointer) \
@@ -62,21 +61,11 @@ SelectionTester::SelectionTester(std::string configurationFilePath, dfn_ci::Feat
 	numberReferenceWasLoaded = false;
 	precisionReferenceWasLoaded = false;
 
-	SetUpMocksAndStubs();
 	ConfigureDfn();
 	}
 
 SelectionTester::~SelectionTester()
 	{
-	delete(stubFrameCache);
-	delete(mockFrameConverter);
-
-	delete(stubInverseFrameCache);
-	delete(mockInverseFrameConverter);
-
-	delete(stubVector2dCache);
-	delete(mockVector2dConverter);
-	
 	DELETE_IF_NOT_NULL(inputFrame);
 	DELETE_IF_NOT_NULL(outputFeaturesVector);
 	}
@@ -141,21 +130,6 @@ bool SelectionTester::IsSelectionValid(float numberPercentageThreshold, unsigned
  *
  * --------------------------------------------------------------------------
  */
-void SelectionTester::SetUpMocksAndStubs()
-	{
-	stubFrameCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>;
-	mockFrameConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubFrameCache, mockFrameConverter);
-
-	stubInverseFrameCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>;
-	mockInverseFrameConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInverseFrameCache, mockInverseFrameConverter);
-
-	stubVector2dCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
-	mockVector2dConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubVector2dCache, mockVector2dConverter);
-	}
-
 void SelectionTester::LoadInputImage()
 	{
 	cv::Mat cvImage = cv::imread(inputImageFilePath, CV_LOAD_IMAGE_COLOR);

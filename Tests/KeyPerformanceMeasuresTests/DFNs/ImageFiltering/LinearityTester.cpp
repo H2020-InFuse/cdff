@@ -35,7 +35,6 @@
 using namespace dfn_ci;
 using namespace Converters;
 using namespace FrameWrapper;
-using namespace Common;
 
 #define DELETE_IF_NOT_NULL(pointer) \
 	if (pointer != NULL) \
@@ -56,18 +55,10 @@ LinearityTester::LinearityTester()
 
 	dfnWasSet = false;
 	inputImageWasLoaded = false;
-
-	SetUpMocksAndStubs();
 	}
 
 LinearityTester::~LinearityTester()
 	{
-	delete(stubFrameCache);
-	delete(mockFrameConverter);
-
-	delete(stubInverseFrameCache);
-	delete(mockInverseFrameConverter);
-	
 	DELETE_IF_NOT_NULL(inputFrame);
 	DELETE_IF_NOT_NULL(outputFrame);
 	}
@@ -136,17 +127,6 @@ void LinearityTester::SaveOutputImage()
  *
  * --------------------------------------------------------------------------
  */
-void LinearityTester::SetUpMocksAndStubs()
-	{
-	stubFrameCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>;
-	mockFrameConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubFrameCache, mockFrameConverter);
-
-	stubInverseFrameCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>;
-	mockInverseFrameConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInverseFrameCache, mockInverseFrameConverter);
-	}
-
 void LinearityTester::LoadInputImage()
 	{
 	inputImage = cv::imread(inputImageFilePath, CV_LOAD_IMAGE_COLOR);

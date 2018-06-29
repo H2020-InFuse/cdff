@@ -40,11 +40,6 @@
 #include <CorrespondenceMap2D.hpp>
 #include <PointCloud.hpp>
 
-#include <ConversionCache/ConversionCache.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/MatToTransform3DConverter.hpp>
-#include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
-
 #include <stdlib.h>
 #include <fstream>
 #include <string>
@@ -86,12 +81,6 @@ class ReconstructionTester
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		Stubs::CacheHandler<cv::Mat, PoseWrapper::Transform3DConstPtr>* stubTransformCache;
-		Mocks::MatToTransform3DConverter* mockTransformConverter;
-
-		Stubs::CacheHandler<PoseWrapper::Transform3DConstPtr, cv::Mat>* stubInverseTransformCache;
-		Mocks::Transform3DToMatConverter* mockInverseTransformConverter;
-
 		std::string poseEstimatorConfigurationFilePath;
 		std::string reconstructorConfigurationFilePath;
 		std::string fundamentalMatrixEstimatorFilePath;
@@ -112,7 +101,6 @@ class ReconstructionTester
 		bool inputCorrespondencesWereLoaded;
 		bool dfnsWereExecuted;
 
-		void SetUpMocksAndStubs();
 		void LoadInputCorrespondences();
 		void ConfigureDfns();
 		bool AllPointsAreInTheFieldOfView(float fieldOfViewX, float fieldOfViewY);

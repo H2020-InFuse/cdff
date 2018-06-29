@@ -32,11 +32,9 @@
 #include <ctime>
 
 using namespace dfn_ci;
-using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace MatrixWrapper;
 using namespace PoseWrapper;
-using namespace Common;
 using namespace CorrespondenceMap2DWrapper;
 
 #define DELETE_IF_NOT_NULL(pointer) \
@@ -68,18 +66,10 @@ ReconstructionTester::ReconstructionTester()
 	dfnsWereLoaded = false;
 	inputCorrespondencesWereLoaded = false;
 	dfnsWereExecuted = false;
-
-	SetUpMocksAndStubs();
 	}
 
 ReconstructionTester::~ReconstructionTester()
 	{
-	delete(stubTransformCache);
-	delete(mockTransformConverter);
-
-	delete(stubInverseTransformCache);
-	delete(mockInverseTransformConverter);
-	
 	DELETE_IF_NOT_NULL(inputCorrespondenceMap);
 	DELETE_IF_NOT_NULL(fundamentalMatrix);
 	DELETE_IF_NOT_NULL(cameraTransform);
@@ -151,7 +141,7 @@ void ReconstructionTester::ExecuteDfns()
 	poseEstimator->fundamentalMatrixInput(*fundamentalMatrix);
 	PROCESS_AND_MEASURE_TIME(poseEstimator)
 	DELETE_IF_NOT_NULL(cameraTransform);
-	Pose3DPtr newCameraTransform;
+	Pose3DPtr newCameraTransform = NewPose3D();
 	Copy( poseEstimator->transformOutput(), *newCameraTransform);
 	cameraTransform = newCameraTransform;
 	poseEstimatorWasSuccessful = poseEstimator->successOutput();
@@ -206,17 +196,6 @@ bool ReconstructionTester::AreTriangulatedPointsValid(float fieldOfViewX, float 
  *
  * --------------------------------------------------------------------------
  */
-void ReconstructionTester::SetUpMocksAndStubs()
-	{
-	stubTransformCache = new Stubs::CacheHandler<cv::Mat, Transform3DConstPtr>;
-	mockTransformConverter = new Mocks::MatToTransform3DConverter();
-	ConversionCache<cv::Mat, Transform3DConstPtr, MatToTransform3DConverter>::Instance(stubTransformCache, mockTransformConverter);
-
-	stubInverseTransformCache = new Stubs::CacheHandler<Transform3DConstPtr, cv::Mat>;
-	mockInverseTransformConverter = new Mocks::Transform3DToMatConverter();
-	ConversionCache<Transform3DConstPtr, cv::Mat, Transform3DToMatConverter>::Instance(stubInverseTransformCache, mockInverseTransformConverter);
-	}
-
 void ReconstructionTester::LoadInputCorrespondences()
 	{
 	cv::FileStorage opencvFile(inputCorrespodencesFilePath, cv::FileStorage::READ);

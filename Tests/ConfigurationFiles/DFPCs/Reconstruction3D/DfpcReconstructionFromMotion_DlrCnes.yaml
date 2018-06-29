@@ -53,12 +53,12 @@
     FocalLengthX: 871.118
     FocalLengthY: 872.007
     PrinciplePointX: 518.813
-    PrinciplePointX: 384.272
+    PrinciplePointY: 384.272
   - Name: SecondCameraMatrix
     FocalLengthX: 868.904
     FocalLengthY: 869.596
     PrinciplePointX: 519.487
-    PrinciplePointX: 385.304
+    PrinciplePointY: 385.304
 - Name: reconstructor3D
   Type: PointCloudReconstruction2DTo3D
   Implementation: Triangulation
@@ -67,9 +67,9 @@
     FocalLengthX: 871.118
     FocalLengthY: 872.007
     PrinciplePointX: 518.813
-    PrinciplePointX: 384.272
+    PrinciplePointY: 384.272
   - Name: SecondCameraMatrix
     FocalLengthX: 868.904
     FocalLengthY: 869.596
     PrinciplePointX: 519.487
-    PrinciplePointX: 385.304
+    PrinciplePointY: 385.304
