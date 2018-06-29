@@ -44,13 +44,6 @@
 #include <CorrespondenceMap2D.hpp>
 #include <MatToFrameConverter.hpp>
 
-#include <ConversionCache/ConversionCache.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector2DToMatConverter.hpp>
-
 #include <stdlib.h>
 #include <fstream>
 #include <string>
@@ -91,18 +84,6 @@ class SelectionTester
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		Stubs::CacheHandler<cv::Mat, FrameWrapper::FrameConstPtr>* stubFrameCache;
-		Mocks::MatToFrameConverter* mockFrameConverter;
-
-		Stubs::CacheHandler<FrameWrapper::FrameConstPtr, cv::Mat>* stubInverseFrameCache;
-		Mocks::FrameToMatConverter* mockInverseFrameConverter;
-
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr>* stubVector2dCache;
-		Mocks::MatToVisualPointFeatureVector2DConverter* mockVector2dConverter;
-
-		Stubs::CacheHandler<VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr, cv::Mat>* stubInverseVector2dCache;
-		Mocks::VisualPointFeatureVector2DToMatConverter* mockInverseVector2dConverter;
-
 		std::string featuresDescriptorConfigurationFilePath;
 		std::string featuresMatcherConfigurationFilePath;
 		std::string sourceImageFilePath;
@@ -124,7 +105,6 @@ class SelectionTester
 		bool inputKeypointsWereLoaded;
 		bool precisionReferenceWasLoaded;
 
-		void SetUpMocksAndStubs();
 		void LoadInputImage(const std::string& imageFilePath, FrameWrapper::FrameConstPtr& frame);
 		void LoadReferenceCorrespondenceMap();
 		void ConfigureDfns();

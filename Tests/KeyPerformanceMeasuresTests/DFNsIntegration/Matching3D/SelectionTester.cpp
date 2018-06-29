@@ -36,7 +36,6 @@ using namespace dfn_ci;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
-using namespace Common;
 using namespace CorrespondenceMap3DWrapper;
 using namespace SupportTypes;
 using namespace PoseWrapper;
@@ -75,30 +74,10 @@ SelectionTester::SelectionTester()
 	inputCloudsWereLoaded = false;
 	inputKeypointsWereLoaded = false;
 	precisionReferenceWasLoaded = false;
-
-	SetUpMocksAndStubs();
 	}
 
 SelectionTester::~SelectionTester()
 	{
-	delete(stubCloudCache);
-	delete(mockCloudConverter);
-
-	delete(stubInverseCloudCache);
-	delete(mockInverseCloudConverter);
-
-	delete(stubVector3dCache);
-	delete(mockVector3dConverter);
-
-	delete(stubNormalsCache);
-	delete(mockNormalsConverter);
-
-	delete(stubFeaturesCloudCache);
-	delete(mockFeaturesCloudConverter);
-
-	delete(stubTransformCache);
-	delete(mockTransformConverter);
-	
 	DELETE_IF_NOT_NULL(inputSourceCloud);
 	DELETE_IF_NOT_NULL(inputSinkCloud);
 	DELETE_IF_NOT_NULL(inputSourceKeypointsVector);
@@ -219,33 +198,6 @@ bool SelectionTester::AreCorrespondencesValid(float percentageThreshold)
  *
  * --------------------------------------------------------------------------
  */
-void SelectionTester::SetUpMocksAndStubs()
-	{
-	stubCloudCache = new Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr>;
-	mockCloudConverter = new Mocks::PclPointCloudToPointCloudConverter();
-	ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Instance(stubCloudCache, mockCloudConverter);
-
-	stubInverseCloudCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>;
-	mockInverseCloudConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInverseCloudCache, mockInverseCloudConverter);
-
-	stubVector3dCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>();
-	mockVector3dConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubVector3dCache, mockVector3dConverter);
-
-	stubNormalsCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr>();
-	mockNormalsConverter = new Mocks::PointCloudToPclNormalsCloudConverter();
-	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr, PointCloudToPclNormalsCloudConverter>::Instance(stubNormalsCache, mockNormalsConverter);
-
-	stubFeaturesCloudCache = new Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>();
-	mockFeaturesCloudConverter = new Mocks::VisualPointFeatureVector3DToPclPointCloudConverter();
-	ConversionCache<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures, VisualPointFeatureVector3DToPclPointCloudConverter>::Instance(stubFeaturesCloudCache, mockFeaturesCloudConverter);
-
-	stubTransformCache = new Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>();
-	mockTransformConverter = new Mocks::EigenTransformToTransform3DConverter();
-	ConversionCache<Eigen::Matrix4f, Transform3DConstPtr, EigenTransformToTransform3DConverter>::Instance(stubTransformCache, mockTransformConverter);
-	}
-
 void SelectionTester::LoadInputCloud(const std::string& cloudFilePath, PointCloudWrapper::PointCloudConstPtr& cloud)
 	{
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();

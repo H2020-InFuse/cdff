@@ -35,7 +35,6 @@ using namespace dfn_ci;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
-using namespace Common;
 using namespace PoseWrapper;
 
 #define DELETE_IF_NOT_NULL(pointer) \
@@ -60,22 +59,12 @@ RegularityTester::RegularityTester(std::string configurationFilePath, std::strin
 	inputCloud = NULL;
 	outputFeaturesVector = NULL;
 
-	SetUpMocksAndStubs();
 	ConfigureDfn();
 	LoadPointCloud();
 	}
 
 RegularityTester::~RegularityTester()
 	{
-	delete(stubCloudCache);
-	delete(mockCloudConverter);
-
-	delete(stubInverseCloudCache);
-	delete(mockInverseCloudConverter);
-
-	delete(stubVector3dCache);
-	delete(mockVector3dConverter);
-	
 	DELETE_IF_NOT_NULL(inputCloud);
 	DELETE_IF_NOT_NULL(outputFeaturesVector);
 	}
@@ -114,7 +103,8 @@ bool RegularityTester::IsOutputRegular(float regularity)
 	PRINT_TO_LOG("Number of computed clusters is", clustersList.size());
 	PRINT_TO_LOG("Average number of points in cluster is", averageNumberOfPointsInCluster);
 
-	bool regular = ThereAreNoGaps(distanceThreshold) && ThereAreNoClusters(distanceThreshold);
+	bool regular = ThereAreNoGaps(distanceThreshold);
+	regular = ThereAreNoClusters(distanceThreshold) && regular;
 
 	return regular;
 	}
@@ -125,21 +115,6 @@ bool RegularityTester::IsOutputRegular(float regularity)
  *
  * --------------------------------------------------------------------------
  */
-void RegularityTester::SetUpMocksAndStubs()
-	{
-	stubCloudCache = new Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr>;
-	mockCloudConverter = new Mocks::PclPointCloudToPointCloudConverter();
-	ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Instance(stubCloudCache, mockCloudConverter);
-
-	stubInverseCloudCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>;
-	mockInverseCloudConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInverseCloudCache, mockInverseCloudConverter);
-
-	stubVector3dCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>();
-	mockVector3dConverter = new Mocks::MatToVisualPointFeatureVector3DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector3DConstPtr, MatToVisualPointFeatureVector3DConverter>::Instance(stubVector3dCache, mockVector3dConverter);
-	}
-
 void RegularityTester::LoadPointCloud()
 	{
 	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();

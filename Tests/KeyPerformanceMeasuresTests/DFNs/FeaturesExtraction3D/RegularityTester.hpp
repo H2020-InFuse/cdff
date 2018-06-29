@@ -39,12 +39,6 @@
 #include <Pose.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
 
-#include <ConversionCache/ConversionCache.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
-
 #include <stdlib.h>
 #include <fstream>
 #include <string>
@@ -90,15 +84,6 @@ class RegularityTester
 	private:
 		typedef std::vector<int> Cluster;
 
-		Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr>* stubCloudCache;
-		Mocks::PclPointCloudToPointCloudConverter* mockCloudConverter;
-
-		Stubs::CacheHandler<PointCloudWrapper::PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInverseCloudCache;
-		Mocks::PointCloudToPclPointCloudConverter* mockInverseCloudConverter;
-
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr>* stubVector3dCache;
-		Mocks::MatToVisualPointFeatureVector3DConverter* mockVector3dConverter;
-
 		std::string configurationFilePath;
 		std::string pointCloudFilePath;
 		PointCloudWrapper::PointCloudConstPtr inputCloud;
@@ -111,7 +96,6 @@ class RegularityTester
 		std::vector<Cluster> clustersList;
 		float averageNumberOfPointsInCluster;
 
-		void SetUpMocksAndStubs();
 		void LoadPointCloud();
 		void ConfigureDfn();
 

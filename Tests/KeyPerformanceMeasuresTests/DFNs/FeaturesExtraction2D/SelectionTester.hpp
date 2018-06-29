@@ -42,12 +42,6 @@
 #include <Pose.hpp>
 #include <MatToFrameConverter.hpp>
 
-#include <ConversionCache/ConversionCache.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
-
 #include <stdlib.h>
 #include <fstream>
 #include <string>
@@ -86,15 +80,6 @@ class SelectionTester
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		Stubs::CacheHandler<cv::Mat, FrameWrapper::FrameConstPtr>* stubFrameCache;
-		Mocks::MatToFrameConverter* mockFrameConverter;
-
-		Stubs::CacheHandler<FrameWrapper::FrameConstPtr, cv::Mat>* stubInverseFrameCache;
-		Mocks::FrameToMatConverter* mockInverseFrameConverter;
-
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr>* stubVector2dCache;
-		Mocks::MatToVisualPointFeatureVector2DConverter* mockVector2dConverter;
-
 		std::string configurationFilePath;
 		std::string inputImageFilePath;
 		std::string numberReferenceFilePath;
@@ -111,7 +96,6 @@ class SelectionTester
 		bool numberReferenceWasLoaded;
 		bool precisionReferenceWasLoaded;
 
-		void SetUpMocksAndStubs();
 		void LoadInputImage();
 		void LoadReferenceFeatures(std::string& filePath, cv::Mat& keypointsMatrix);
 		void ConfigureDfn();

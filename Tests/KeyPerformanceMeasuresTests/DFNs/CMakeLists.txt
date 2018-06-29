@@ -25,7 +25,7 @@ add_executable(
 )
 target_link_libraries(
 	position_test_svd
-	cdff_helpers cdff_logger cdff_types converters_opencv svd_decomposition feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system
+	cdff_helpers cdff_logger cdff_types converters_opencv svd_decomposition feature_extraction_2d opencv_core opencv_imgproc opencv_highgui boost_system
 )
 
 add_executable(
@@ -35,7 +35,7 @@ add_executable(
 )
 target_link_libraries(
 	validity_harris_detector_2d
-	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_2d feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system
+	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_2d feature_extraction_2d opencv_core opencv_imgproc opencv_highgui boost_system
 )
 
 add_executable(
@@ -45,7 +45,7 @@ add_executable(
 )
 target_link_libraries(
 	validity_orb_detector_2d
-	cdff_helpers cdff_logger cdff_types converters_opencv orb_detector_descriptor feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system
+	cdff_helpers cdff_logger cdff_types converters_opencv orb_detector_descriptor feature_extraction_2d opencv_core opencv_imgproc opencv_highgui boost_system
 )
 
 add_executable(
@@ -55,7 +55,7 @@ add_executable(
 )
 target_link_libraries(
 	regularity_harris_detector_3d
-	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_3d feature_extraction_3d mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_3d feature_extraction_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
 
 add_executable(
@@ -65,7 +65,7 @@ add_executable(
 )
 target_link_libraries(
 	fundamental_matrix_ransac_test
-	cdff_helpers cdff_logger cdff_types converters_opencv fundamental_matrix_computation fundamental_matrix_ransac mock opencv_core opencv_imgproc opencv_highgui boost_system
+	cdff_helpers cdff_logger cdff_types converters_opencv fundamental_matrix_computation fundamental_matrix_ransac opencv_core opencv_imgproc opencv_highgui boost_system
 )
 
 add_executable(
@@ -75,7 +75,7 @@ add_executable(
 )
 target_link_libraries(
 	linearity_image_undistortion
-	cdff_helpers cdff_logger cdff_types converters_opencv image_undistortion image_filtering mock opencv_core opencv_imgproc opencv_highgui boost_system
+	cdff_helpers cdff_logger cdff_types converters_opencv image_undistortion image_filtering opencv_core opencv_imgproc opencv_highgui boost_system
 )
 
 add_executable(
@@ -85,7 +85,7 @@ add_executable(
 )
 target_link_libraries(
 	quality_hirschmuller
-	cdff_helpers cdff_logger cdff_types converters_opencv stereoReconstruction hirschmuller_disparity_mapping mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters opencv_core opencv_imgproc opencv_highgui boost_system
+	cdff_helpers cdff_logger cdff_types converters_opencv stereoReconstruction hirschmuller_disparity_mapping pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters opencv_core opencv_imgproc opencv_highgui boost_system
 )
 
 add_executable(
@@ -95,10 +95,8 @@ add_executable(
 )
 target_link_libraries(
 	quality_scanline
-	cdff_helpers cdff_logger cdff_types converters_opencv stereoReconstruction scanline_optimization mock pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters opencv_core opencv_imgproc opencv_highgui boost_system
+	cdff_helpers cdff_logger cdff_types converters_opencv stereoReconstruction scanline_optimization pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters opencv_core opencv_imgproc opencv_highgui boost_system
 )
-
-#[======================================================================[
 
 add_executable(
     position_test_ceres
@@ -106,8 +104,6 @@ add_executable(
     BundleAdjustment/PositionTester.cpp
 )
 target_link_libraries(
-	position_test_svd
-	cdff_helpers cdff_logger cdff_types converters_opencv ceres_adjustment feature_extraction_2d mock opencv_core opencv_imgproc opencv_highgui boost_system ${CERES_LIBRARIES}
+	position_test_ceres
+	cdff_helpers cdff_logger cdff_types converters_opencv ceres_adjustment feature_extraction_2d opencv_core opencv_imgproc opencv_highgui boost_system ${CERES_LIBRARIES}
 )
-
-]======================================================================]

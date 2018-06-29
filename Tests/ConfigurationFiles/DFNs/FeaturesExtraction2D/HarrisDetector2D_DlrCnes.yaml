@@ -1,0 +1,11 @@
+- Name: GeneralParameters
+  ApertureSize: 5
+  BlockSize: 7
+  ParameterK: 0.09
+  DetectionThreshold: 200
+  UseGaussianBlur: false
+- Name: GaussianBlur
+  KernelWidth: 3
+  KernelHeight: 3
+  WidthStandardDeviation: 0
+  HeightStandardDeviation: 0

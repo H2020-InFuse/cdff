@@ -36,7 +36,6 @@ using namespace dfn_ci;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace FrameWrapper;
-using namespace Common;
 
 #define DELETE_IF_NOT_NULL(pointer) \
 	if (pointer != NULL) \
@@ -62,21 +61,10 @@ QualityTester::QualityTester()
 	measuresReferenceWasLoaded = false;
 	dfnExecuted = false;
 	dfnWasLoaded = false;
-
-	SetUpMocksAndStubs();
 	}
 
 QualityTester::~QualityTester()
 	{
-	delete(stubFrameCache);
-	delete(mockFrameConverter);
-
-	delete(stubInverseFrameCache);
-	delete(mockInverseFrameConverter);
-
-	delete(stubCloudCache);
-	delete(mockCloudConverter);
-	
 	DELETE_IF_NOT_NULL(inputLeftFrame);
 	DELETE_IF_NOT_NULL(inputRightFrame);
 	DELETE_IF_NOT_NULL(outputPointCloud);
@@ -222,21 +210,6 @@ void QualityTester::SaveOutputPointCloud(std::string outputPointCloudFilePath)
  *
  * --------------------------------------------------------------------------
  */
-void QualityTester::SetUpMocksAndStubs()
-	{
-	stubFrameCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>;
-	mockFrameConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubFrameCache, mockFrameConverter);
-
-	stubInverseFrameCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>;
-	mockInverseFrameConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubInverseFrameCache, mockInverseFrameConverter);
-
-	stubCloudCache = new Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr>();
-	mockCloudConverter = new Mocks::PclPointCloudToPointCloudConverter();
-	ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Instance(stubCloudCache, mockCloudConverter);
-	}
-
 void QualityTester::LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame)
 	{
 	cv::Mat cvImage = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);

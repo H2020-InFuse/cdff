@@ -39,11 +39,6 @@
 #include <MatToFrameConverter.hpp>
 #include <FrameToMatConverter.hpp>
 
-#include <ConversionCache/ConversionCache.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-
 #include <stdlib.h>
 #include <fstream>
 #include <string>
@@ -90,12 +85,6 @@ class LinearityTester
 			int y;
 			};
 		typedef std::vector<Point> Line;
-
-		Stubs::CacheHandler<cv::Mat, FrameWrapper::FrameConstPtr>* stubFrameCache;
-		Mocks::MatToFrameConverter* mockFrameConverter;
-
-		Stubs::CacheHandler<FrameWrapper::FrameConstPtr, cv::Mat>* stubInverseFrameCache;
-		Mocks::FrameToMatConverter* mockInverseFrameConverter;
 
 		std::string configurationFilePath;
 		std::string inputImageFilePath;
