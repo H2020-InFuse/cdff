@@ -67,6 +67,7 @@ class AssertException: public std::exception
 	{ \
 	LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::ERROR); \
 	LoggerFactory::GetLogger()->Print(); \
+	LoggerFactory::GetLogger()->Clear(); \
 	}
 
 #define ASSERT(condition, message) \
