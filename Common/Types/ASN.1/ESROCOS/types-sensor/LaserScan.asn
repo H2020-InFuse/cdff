@@ -20,7 +20,7 @@ LASER-RANGE-ERRORS ::= ENUMERATED { 	 too-far, too-near, measurement-error, othe
 ---- END of typedefs defined in this module 
 
 --- Size of the LaserScan data
-maxLaserScanSize T-UInt32 ::= 60
+maxLaserScanSize T-UInt32 ::= 2000
 
 ---  Definition LASERSCAN Starts 
 
