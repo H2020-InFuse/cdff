@@ -88,8 +88,8 @@ void KalmanCorrector::process()
 	cv::Mat measurement(6,1,CV_32F);
 	for(int i=0;i<3;i++)
 	{		
-       		 measurement.at<float>(i,0)=inmeasurement.orient.arr[i];
-		 measurement.at<float>(i+3,0)=inmeasurement.pos.arr[i];
+       		 measurement.at<float>(i,0)=inMeasurement.orient.arr[i];
+		 measurement.at<float>(i+3,0)=inMeasurement.pos.arr[i];
 		 
 	}
 

@@ -52,7 +52,7 @@ void KFCorrectionInterface::predictedStateInput(const asn1SccRigidBodyState& dat
 }
 
 void KFCorrectionInterface::measurementInput(const asn1SccRigidBodyState& data) {
-    inmeasurement = data;
+    inMeasurement = data;
 }
 
 void KFCorrectionInterface::predictedStateCovarianceInput(const asn1SccRigidBodyState& data)

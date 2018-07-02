@@ -73,7 +73,7 @@ namespace dfn_ci {
 
         protected:
             asn1SccRigidBodyState inPredictedState;
-	    asn1SccRigidBodyState inmeasurement;
+	    asn1SccRigidBodyState inMeasurement;
 	    asn1SccRigidBodyState inPredictedStateCovariance;
             asn1SccRigidBodyState outCorrectedState;
 	    asn1SccRigidBodyState outStateCovariance;
