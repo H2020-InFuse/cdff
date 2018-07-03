@@ -67,9 +67,8 @@
 #
 # * Compiled Boost libraries used by the CDFF:
 #
-#   + System
-#
-#   FIXME: really?
+#   + System        # FIXME: really?
+#   + Serialization # used by MAG and CDFF-dev only
 #
 # * Boost header-only libraries used by the CDFF:
 #
@@ -85,7 +84,7 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
   # Build and install
   mkdir build
   ./bootstrap.sh \
-    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono \
+    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono,serialization \
     --prefix="${INSTALL_DIR}"
   ./b2 --build-dir=build -q -j ${CPUS} link=shared install
 

@@ -3,10 +3,8 @@ FROM ubuntu:16.04
 # Install the basic tools that are not already available in the base image
 RUN apt-get update && apt-get install -y \
   build-essential \
-  apt-utils \
   cmake \
   git \
-  cppcheck \
   mono-runtime libmono-system-core4.0-cil libmono-system-numerics4.0-cil \
   wget \
   curl \
@@ -84,6 +82,6 @@ RUN chmod 0755 /tmp/CDFF/Tools/Docker/entrypoint.sh && \
 ENTRYPOINT ["/tmp/CDFF/Tools/Docker/entrypoint.sh"]
 CMD ["bash"]
 
-LABEL version="0.2"
+LABEL version="0.2.1"
 LABEL maintainer="Romain Michalec <romain.michalec@strath.ac.uk>"
 LABEL description="A self-contained environment for building and testing CDFF-core and CDFF-support, and for using CDFF-dev"

@@ -3,10 +3,8 @@ FROM ubuntu:16.04
 # Install the basic tools that are not already available in the base image
 RUN apt-get update && apt-get install -y \
   build-essential \
-  apt-utils \
   cmake \
   git \
-  cppcheck \
   mono-runtime libmono-system-core4.0-cil libmono-system-numerics4.0-cil \
   wget \
   curl \
@@ -52,6 +50,6 @@ RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /u
 COPY installers/pcl.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /bin/bash /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s pcl
 
-LABEL version="1.8"
+LABEL version="1.8.1"
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>, Romain Michalec <romain.michalec@strath.ac.uk>"
 LABEL description="Image providing the dependencies of CDFF-core and CDFF-support, compiled from source, and installed in /usr/local"
