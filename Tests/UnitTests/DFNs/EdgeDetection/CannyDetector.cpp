@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Unit Test for the DFN CannyDetector.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -47,7 +47,7 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process (canny detector)", "[process]" ) 
+TEST_CASE( "Call to process (canny detector)", "[process]" )
 	{
 	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
 	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
@@ -58,9 +58,9 @@ TEST_CASE( "Call to process (canny detector)", "[process]" )
 	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubOutputCache, mockOutputConverter);
 
 	cv::Mat inputImage;
-	cv::Mat testImage = cv::imread("../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR); 
+	cv::Mat testImage = cv::imread("../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
  	cv::cvtColor(testImage, inputImage, cv::COLOR_BGR2GRAY);
-		
+
 	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputImage) );
 
 	FrameConstPtr outputImage = new Frame();
@@ -72,7 +72,7 @@ TEST_CASE( "Call to process (canny detector)", "[process]" )
 	detector.process();
 
 	FrameConstPtr output = detector.edgeMapOutput();
-	
+
 	delete(input);
 	delete(output);
 	}
@@ -81,7 +81,7 @@ TEST_CASE( "Call to configure (canny detector)", "[configure]" )
 	{
 	CannyDetector detector;
 	detector.setConfigurationFile("../tests/ConfigurationFiles/DFNs/EdgeDetection/CannyDetector_Conf.yaml");
-	detector.configure();	
+	detector.configure();
 	}
 
 /** @} */

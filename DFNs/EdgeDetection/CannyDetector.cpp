@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  * CannyDetector Implementation .
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -54,7 +54,7 @@ CannyDetector::CannyDetector()
 	parametersHelper.AddParameter<float>("CannyParameters", "LowThreshold", parameters.cannyParameters.lowThreshold, DEFAULT_PARAMETERS.cannyParameters.lowThreshold);
 	parametersHelper.AddParameter<float>("CannyParameters", "HighThreshold", parameters.cannyParameters.highThreshold, DEFAULT_PARAMETERS.cannyParameters.highThreshold);
 	parametersHelper.AddParameter<float>("CannyParameters", "KernelSize", parameters.cannyParameters.kernelSize, DEFAULT_PARAMETERS.cannyParameters.kernelSize);
-	
+
 	configurationFilePath = "";
 	}
 CannyDetector::~CannyDetector()
@@ -70,7 +70,7 @@ void CannyDetector::configure()
 	}
 
 
-void CannyDetector::process() 
+void CannyDetector::process()
 	{
 	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
 	ValidateInputs(inputImage);
@@ -85,15 +85,15 @@ const CannyDetector::CannyDetectorOptionsSet CannyDetector::DEFAULT_PARAMETERS =
 		.lowThreshold =50.0,
 		.highThreshold=80.0,
 		.kernelSize = 3,
-		
+
 		}
-	
+
 	};
 
 
 cv::Mat CannyDetector::Canny(cv::Mat inputImage)
 	{
-	
+
 	double t1,t2;
 	int k_size;
 
@@ -110,7 +110,7 @@ cv::Mat CannyDetector::Canny(cv::Mat inputImage)
 void CannyDetector::ValidateParameters()
 	{
 	ASSERT(parameters.cannyParameters.lowThreshold > 0 && parameters.cannyParameters.highThreshold > 0, "Canny Detector Configuration error: thresholds have to be positive");
-	
+
 	}
 
 void CannyDetector::ValidateInputs(cv::Mat inputImage)

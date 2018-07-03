@@ -1,22 +1,19 @@
 name: EdgeDetection
+doc: DFN that applies an edge detection filter to a 2D image
 input_ports:
     - name: image
-      type: Frame
-      doc: a 2D camera image
+      type: asn1SccFrame
+      doc: 2D image
 output_ports:
     - name: edgeMap
-      type: Frame
-      doc: the edge map output
+      type: asn1SccFrame
+      doc: edge map of the input image
     - name: sobelGradientX
-      type: Frame
-      doc: the image gradient in x-direction output
+      type: asn1SccFrame
+      doc: image gradient in the x direction
     - name: sobelGradientY
-      type: Frame
-      doc: the image gradient in y-direction output
+      type: asn1SccFrame
+      doc: image gradient in the y direction
 implementations:
     - CannyDetector
     - SobelDerivative
-   
-     
-
-

@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  * Sobel (Scharroperator) Implementation .
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -56,7 +56,7 @@ SobelDerivative::SobelDerivative()
 	parametersHelper.AddParameter<DepthMode, DepthModeHelper>("GeneralParameters", "DepthMode", parameters.depthMode, DEFAULT_PARAMETERS.depthMode);
 	parametersHelper.AddParameter<float>("SobelParameters", "Scale", parameters.sobelParameters.scale, DEFAULT_PARAMETERS.sobelParameters.scale);
 	parametersHelper.AddParameter<float>("SobelParameters", "Delta", parameters.sobelParameters.delta, DEFAULT_PARAMETERS.sobelParameters.delta);
-	
+
 	configurationFilePath = "";
 	}
 SobelDerivative::~SobelDerivative()
@@ -71,11 +71,11 @@ void SobelDerivative::configure()
 	}
 
 
-void SobelDerivative::process() 
+void SobelDerivative::process()
 	{
 	cv::Mat inputImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(inImage);
 	ValidateInputs(inputImage);
-	
+
 	cv::Mat  scharrGradx= sobelx(inputImage);
 	outSobelGradientX = ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Convert(scharrGradx);
 
@@ -151,7 +151,7 @@ const SobelDerivative::SobelDerivativeOptionsSet SobelDerivative::DEFAULT_PARAME
 		.scale = 1.0,
 		.delta = 0
 		}
-	
+
      };
 
 
@@ -165,7 +165,7 @@ cv::Mat SobelDerivative::sobelx(cv::Mat inputImage)
 	case REFLECT: borderMode = cv::BORDER_REFLECT_101; break;
 	case BORDER_DEFAULT: borderMode = cv::BORDER_REFLECT_101; break;
 	default: ASSERT(false, " Sobel Schar Derivative: Unhandled border mode");
-   } 
+   }
 
 	int depthMode;
  switch(parameters.depthMode)
@@ -176,13 +176,13 @@ cv::Mat SobelDerivative::sobelx(cv::Mat inputImage)
 	case FLOAT64: depthMode = CV_64F; break;
 	case DEFAULT: depthMode = CV_16S ; break;
 	default: ASSERT(false, " Sobel Schar Derivative: Unhandled depth mode");
-   } 
+   }
 
-  double param_scale=(double)parameters.sobelParameters.scale; 
-  double param_delta=(double)parameters.sobelParameters.delta; 
+  double param_scale=(double)parameters.sobelParameters.scale;
+  double param_delta=(double)parameters.sobelParameters.delta;
 
   cv::Mat gradientX, abs_gradientX;
-  
+
   cv::Scharr(inputImage, gradientX, depthMode, 1, 0, param_scale, param_delta,borderMode);
   convertScaleAbs(gradientX, abs_gradientX );
 
@@ -199,7 +199,7 @@ cv::Mat SobelDerivative::sobely(cv::Mat inputImage)
 	case REFLECT: borderMode = cv::BORDER_REFLECT_101; break;
 	case BORDER_DEFAULT: borderMode = cv::BORDER_REFLECT_101; break;
 	default: ASSERT(false, " Sobel Schar Derivative: Unhandled border mode");
-   } 
+   }
 
 	int depthMode;
  switch(parameters.depthMode)
@@ -210,13 +210,13 @@ cv::Mat SobelDerivative::sobely(cv::Mat inputImage)
 	case FLOAT64: depthMode = CV_64F; break;
 	case DEFAULT: depthMode = CV_16S ; break;
 	default: ASSERT(false, " Sobel Schar Derivative: Unhandled depth mode");
-   } 
+   }
 
-  double param_scale=(double)parameters.sobelParameters.scale; 
-  double param_delta=(double)parameters.sobelParameters.delta; 
- 
+  double param_scale=(double)parameters.sobelParameters.scale;
+  double param_delta=(double)parameters.sobelParameters.delta;
+
   cv::Mat gradientY, abs_gradientY;
-  
+
   cv::Scharr(inputImage, gradientY, depthMode, 0, 1, param_scale, param_delta,borderMode);
   convertScaleAbs(gradientY, abs_gradientY );
 

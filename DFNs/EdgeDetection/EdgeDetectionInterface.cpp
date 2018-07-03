@@ -8,15 +8,15 @@
 /*!
  * @file EdgeDetectionInterface.hpp
  * @date 11/04/2018
- * @author Nassir W. Oumer 
+ * @author Nassir W. Oumer
  */
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  * Implementation of the EdgeDetectionInterface class
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -41,7 +41,7 @@ using namespace FrameWrapper;
  */
 EdgeDetectionInterface::EdgeDetectionInterface()
 	{
-	
+
 	}
 
 EdgeDetectionInterface::~EdgeDetectionInterface()
@@ -49,21 +49,21 @@ EdgeDetectionInterface::~EdgeDetectionInterface()
 
 	}
 
-void EdgeDetectionInterface::imageInput(FrameConstPtr data) 
+void EdgeDetectionInterface::imageInput(FrameConstPtr data)
 	{
     	inImage = data;
 	}
 
-FrameConstPtr EdgeDetectionInterface::edgeMapOutput() 
+FrameConstPtr EdgeDetectionInterface::edgeMapOutput()
 	{
     	return outEdgeMap;
 	}
-FrameConstPtr EdgeDetectionInterface::sobelGradientXOutput() 
+FrameConstPtr EdgeDetectionInterface::sobelGradientXOutput()
 	{
     	return outSobelGradientX;
 	}
 
-FrameConstPtr EdgeDetectionInterface::sobelGradientYOutput() 
+FrameConstPtr EdgeDetectionInterface::sobelGradientYOutput()
 	{
     	return outSobelGradientY;
 	}
@@ -74,4 +74,3 @@ FrameConstPtr EdgeDetectionInterface::sobelGradientYOutput()
 }
 
 /** @} */
-

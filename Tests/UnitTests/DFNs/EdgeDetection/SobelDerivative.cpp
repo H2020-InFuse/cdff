@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Unit Test for the DFN SobelDerivative.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -49,7 +49,7 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process (sobel derivative)", "[process]" ) 
+TEST_CASE( "Call to process (sobel derivative)", "[process]" )
 	{
 	Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubInputCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
 	Mocks::FrameToMatConverter* mockInputConverter = new Mocks::FrameToMatConverter();
@@ -62,22 +62,22 @@ TEST_CASE( "Call to process (sobel derivative)", "[process]" )
 	cv::Mat inputImage;
 	cv::Mat testImage = cv::imread("../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
  	cv::cvtColor(testImage, inputImage, cv::COLOR_BGR2GRAY );
-	
+
 	mockInputConverter->AddBehaviour("Convert", "1", (void*) (&inputImage) );
 
 	FrameConstPtr outputImage = new Frame();
 	mockOutputConverter->AddBehaviour("Convert", "1", (void*) (&outputImage) );
 
-	
+
 	SobelDerivative sobelGradient;
-	
+
 	FrameConstPtr input = new Frame();
 	sobelGradient.imageInput(input);
 	sobelGradient.process();
 
 	FrameConstPtr outputx = sobelGradient.sobelGradientXOutput();
 	FrameConstPtr outputy = sobelGradient.sobelGradientYOutput();
-	
+
 	delete(input);
 	delete(outputx);
 	delete(outputy);
@@ -87,7 +87,7 @@ TEST_CASE( "Call to configure (sobel derivative) ", "[configure]" )
 	{
 	SobelDerivative sobelGradient;
 	sobelGradient.setConfigurationFile("../tests/ConfigurationFiles/DFNs/EdgeDetection/SobelDerivative_Conf.yaml");
-	sobelGradient.configure();	
+	sobelGradient.configure();
 	}
 
 /** @} */

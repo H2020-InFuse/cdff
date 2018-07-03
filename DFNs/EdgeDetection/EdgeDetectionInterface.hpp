@@ -8,13 +8,13 @@
 /*!
  * @file EdgeDetectionInterface.hpp
  * @date 11/04/2018
- * @author Nassir W. Oumer 
+ * @author Nassir W. Oumer
  */
 
 /*!
  * @addtogroup DFNs
- * 
- *  This is the common interface of all DFNs that apply edge detector to an image.    
+ *
+ *  This is the common interface of all DFNs that apply edge detector to an image.
  *
  * @{
  */

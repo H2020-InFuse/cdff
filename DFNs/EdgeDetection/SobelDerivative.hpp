@@ -13,11 +13,11 @@
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  *  @brief This DFN implements a Sobel image gradient (e.g Scharr derivative).
- *  
+ *
  * This DFN is Sobel implementation (e.g Scharr operator) of OpenCV .
- * 
+ *
  * This DFN implementation requires the following parameters:
  * @param scaleDerivative, optional scale factor for the computed derivative values
  * @param delta, optional delta value that is added to the results prior to storing them
@@ -73,7 +73,7 @@ namespace dfn_ci {
 	/* --------------------------------------------------------------------
 	 * Private
 	 * --------------------------------------------------------------------
-	 */	
+	 */
 	private:
 
 		enum BorderMode
@@ -99,7 +99,7 @@ namespace dfn_ci {
 			DEFAULT
 			};
 
-		
+
 		class DepthModeHelper : public Helpers::ParameterHelper<DepthMode, std::string>
 			{
 			public:
@@ -108,14 +108,14 @@ namespace dfn_ci {
 				DepthMode Convert(const std::string& value);
 			};
 
-					
+
 		struct SobelParameters
 			{
 				float scale;
 				float delta;
-								
-			};		
-		
+
+			};
+
 
 		struct SobelDerivativeOptionsSet
 			{
@@ -123,12 +123,12 @@ namespace dfn_ci {
  			 BorderMode borderMode;
 			 DepthMode depthMode;
 			 SobelParameters sobelParameters;
-				
+
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
 		SobelDerivativeOptionsSet parameters;
-		
+
 		static const SobelDerivativeOptionsSet DEFAULT_PARAMETERS;
 
 		cv::Mat sobelx(cv::Mat inputImage);

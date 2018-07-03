@@ -13,11 +13,11 @@
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  *  @brief This DFN executes a Canny edge detection.
- *  
+ *
  * This DFN is Canny edge detector implementation of OpenCV.
- * 
+ *
  * This DFN implementation requires the following parameters:
  * @param lowThreshold, lower threshold parameter of the canny edge detector.
  * @param highThreshold, higher threshold parameter.
@@ -73,7 +73,7 @@ namespace dfn_ci {
 	/* --------------------------------------------------------------------
 	 * Private
 	 * --------------------------------------------------------------------
-	 */	
+	 */
 	private:
 
 		struct CannyParameters
@@ -82,17 +82,17 @@ namespace dfn_ci {
 				float highThreshold;
 				float kernelSize;
 			};
-		
+
 
 		struct CannyDetectorOptionsSet
 			{
 			  CannyParameters cannyParameters;
-			
+
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
 		CannyDetectorOptionsSet parameters;
-		
+
 		static const CannyDetectorOptionsSet DEFAULT_PARAMETERS;
 
 		cv::Mat Canny(cv::Mat inputImage);
