@@ -1,103 +1,71 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file KalmanPredictor.hpp
- * @date 08/05/2018
+/**
  * @author Nassir W. Oumer
  */
 
-/*!
+/**
  * @addtogroup DFNs
- *
- *  @brief This DFN executes a Kalman Corrector.
- *
- * This DFN is Kalman Predictor implementation of OpenCV.
- *
- * states are incremental local motions, dp and associated derivatives, vel
- * Constant velocity model, between two camera frames
- * For pose estimation, the user of this DFN can use corrected states, for example convert to corrected pose dT(dp_correct)
- * This DFN implementation requires the following parameters:
- * @param  measurement noise parameters, standard deviation of pose estimation (rotation and translation)  .
- *
  * @{
  */
 
 #ifndef KALMANCORRECTOR_HPP
 #define KALMANCORRECTOR_HPP
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include "KFCorrection/KFCorrectionInterface.hpp"
-#include "opencv2/video/tracking.hpp"
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/imgcodecs/imgcodecs.hpp>
-#include <yaml-cpp/yaml.h>
+
+#include "KFCorrectionInterface.hpp"
 #include <Helpers/ParametersListHelper.hpp>
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/video/tracking.hpp>
+#include <yaml-cpp/yaml.h>
 
-
-namespace dfn_ci {
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-	class KalmanCorrector: public KFCorrectionInterface
+namespace dfn_ci
+{
+	/**
+	 * Kalman corrector DFN (algorithm provided by OpenCV)
+	 *
+	 * States are local motion increments dp and the associated derivatives vel.
+	 * Constant velocity model between two camera frames. For pose estimation,
+	 * the user of this DFN can use corrected states, for example convert to
+	 * absolute corrected pose as T_{k+1} = T_k * dT(dp_corrected)
+	 *
+	 * @param measurement noise parameters
+	 *        standard deviation of pose estimate (rotation and translation)
+	 */
+	class KalmanCorrector : public KFCorrectionInterface
 	{
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
-	public:
-		KalmanCorrector();
-		virtual ~KalmanCorrector();
-		virtual void process();
-		virtual void configure();
+		public:
 
-		cv::KalmanFilter KF;
+			KalmanCorrector();
+			virtual ~KalmanCorrector();
 
+			virtual void configure();
+			virtual void process();
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-	protected:
+			cv::KalmanFilter KF;
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+		private:
 
-		struct KalmanParameters
+			struct KalmanParameters
 			{
 				float stdOrientation;
 				float stdTranslation;
 			};
-		struct KalmanCorrectorOptionsSet
+			struct KalmanCorrectorOptionsSet
 			{
 				KalmanParameters kalmanParameters;
 			};
 
-		Helpers::ParametersListHelper parametersHelper;
-		KalmanCorrectorOptionsSet parameters;
-		static const KalmanCorrectorOptionsSet DEFAULT_PARAMETERS;
-		cv::Mat correct(cv::Mat measurement);
-		void ValidateParameters();
-		void ValidateInputs(cv::Mat inputState);
-		void Configure(const YAML::Node& configurationNode);
+			Helpers::ParametersListHelper parametersHelper;
+			KalmanCorrectorOptionsSet parameters;
+			static const KalmanCorrectorOptionsSet DEFAULT_PARAMETERS;
 
-};
+			cv::Mat correct(cv::Mat measurement);
+
+			void ValidateParameters();
+			void ValidateInputs(cv::Mat inputState);
+			void Configure(const YAML::Node& configurationNode);
+	};
 }
-#endif
+
+#endif // KALMANCORRECTOR_HPP
+
+/** @} */

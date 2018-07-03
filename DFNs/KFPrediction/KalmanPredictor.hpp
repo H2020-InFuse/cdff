@@ -28,8 +28,8 @@ namespace dfn_ci
 	 * the user of this DFN can use predicted states, for example convert to
 	 * absolute predicted pose as T_{k+1} = T_k * dT(dp)
 	 *
-	 * @param  process noise parameters
-	 *         standard deviation of the random (linear and angular) acceleration
+	 * @param process noise parameters
+	 *        standard deviation of the random (linear and angular) acceleration
 	 * @param initial covariance
 	 *        roto-translation and velocity components
 	 */
