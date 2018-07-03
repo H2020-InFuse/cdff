@@ -9,6 +9,7 @@
 #include "DFNCommonInterface.hpp"
 #include <CorrespondenceMaps2DSequence.hpp>
 #include <PosesSequence.hpp>
+#include <PointCloud.hpp>
 
 namespace dfn_ci
 {
@@ -37,6 +38,24 @@ namespace dfn_ci
             virtual void correspondenceMapsSequenceInput(const asn1SccCorrespondenceMaps2DSequence& data);
 
             /**
+             * Send value to input port "guessedPosesSequence"
+             * @param guessedPosesSequence: This is an initial estimation of the camera poses, except the first camera. This input is optional,
+             * as some algorithm may not need it. Set to an empty sequence if the input is
+             * not provided.
+             */
+            virtual void guessedPosesSequenceInput(const asn1SccPosesSequence& data);
+
+            /**
+             * Send value to input port "guessedPointCloud"
+             * @param guessedPointCloud: This is an initial estimation of the 3d position of the features detected by the
+             * first camera in the reference frame of the first camera. 3d points are listed in
+             * the order in which the features appear in the first correspondence map (L1-R1).
+             * This input is optional, as some algorirthms may not need it. Set to empty cloud
+             * if the input is not provided.
+             */
+            virtual void guessedPointCloudInput(const asn1SccPointcloud& data);
+
+            /**
              * Query value from output port "posesSequence"
              * @return posesSequence: poses of the camera in the coordinate system relative
              * to the pose of the camera in the first picture.
@@ -53,6 +72,8 @@ namespace dfn_ci
         protected:
 
             asn1SccCorrespondenceMaps2DSequence inCorrespondenceMapsSequence;
+            asn1SccPosesSequence inGuessedPosesSequence;
+	    asn1SccPointcloud inGuessedPointCloud;
             asn1SccPosesSequence outPosesSequence;
             bool outSuccess;
     };

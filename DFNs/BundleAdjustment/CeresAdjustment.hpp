@@ -60,6 +60,8 @@ namespace dfn_ci
 			Helpers::ParametersListHelper parametersHelper;
 			CeresAdjustmentOptionsSet parameters;
 			static const CeresAdjustmentOptionsSet DEFAULT_PARAMETERS;
+			bool initialPoseEstimationIsAvailable;
+			bool initialPointEstimationIsAvailable;
 
 			struct StereoImagePointCostFunctor 
 				{
@@ -73,16 +75,21 @@ namespace dfn_ci
 				cv::Mat pointMeasuresMatrix;
 				float baseline;
 				};
+			typedef double Point3d[3];
+			typedef double Transform3d[6];
 
 			Converters::CorrespondenceMaps2DSequenceToMatConverter correspondencesSequenceConverter;
 			cv::Mat leftCameraMatrix, rightCameraMatrix;
 
 			std::vector<cv::Mat> SolveBundleAdjustment(cv::Mat measurementMatrix, bool& success);
 			void ConvertProjectionMatricesListToPosesSequence(std::vector<cv::Mat> projectionMatricesList, PoseWrapper::Poses3DSequence& posesSequence);
+			void InitializePoints(std::vector<Point3d>& pointCloud, cv::Mat measurementMatrix);
+			void InitializePoses(std::vector<Transform3d>& posesSequence, int numberOfImages);
 	
 			bool PointIsNotInVector(BaseTypesWrapper::Point2D point, const std::vector<BaseTypesWrapper::Point2D>& vector);
 			void ValidateParameters();
 			void ValidateInputs();
+			void ValidateInitialEstimations(int numberOfCameras);
 			cv::Mat CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix);
 
 	};

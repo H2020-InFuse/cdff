@@ -20,6 +20,7 @@ using namespace Converters;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
 using namespace BaseTypesWrapper;
+using namespace PointCloudWrapper;
 
 namespace dfn_ci
 {
@@ -57,12 +58,15 @@ void CeresAdjustment::configure()
 
 void CeresAdjustment::process()
 {
+	ValidateInputs();
+
 	cv::Mat measurementMatrix = correspondencesSequenceConverter.Convert(&inCorrespondenceMapsSequence);
 	if (measurementMatrix.cols < 4) //Not enough points available.
 		{
 		outSuccess = false;
 		return;
 		}
+	ValidateInitialEstimations(measurementMatrix.rows/2);
 
 	std::vector<cv::Mat> projectionMatricesList = SolveBundleAdjustment(measurementMatrix, outSuccess);
 
@@ -139,7 +143,7 @@ bool CeresAdjustment::StereoImagePointCostFunctor::operator()(const T* const lef
 	leftProjectedPoint[1] = leftFy * transformedPoint[1] + leftPy * transformedPoint[2];
 	leftProjectedPoint[2] = transformedPoint[2];
 
-	// rightCameraTransform = leftCameraTransform - (baseline, 0, 0).
+	// rightCameraTransform = leftCameraTransform - (baseline, 0, 0). This is a comment stating the formula.
 	T rightProjectedPoint[3];
 	rightProjectedPoint[0] = rightFx * (transformedPoint[0] - T(baseline)) + rightPx * transformedPoint[2];
 	rightProjectedPoint[1] = rightFy * transformedPoint[1] + rightPy * transformedPoint[2];
@@ -171,25 +175,11 @@ std::vector<cv::Mat> CeresAdjustment::SolveBundleAdjustment(cv::Mat measurementM
 	int numberOfPoints = measurementMatrix.cols;
 
 	//Setting Data Structure
-	typedef double Point3d[3];
-	typedef double Transform3d[6];
 	std::vector<Point3d> mutablePoints3dStructure(numberOfPoints);
 	std::vector<Transform3d> mutableTransforms3dStructure(numberOfImages/2);
-	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
-		{
-		for(int pointElement = 0; pointElement < 3; pointElement++)
-			{
-			mutablePoints3dStructure.at(pointIndex)[pointElement] = (pointElement == 2) ? 1 : measurementMatrix.at<float>(pointElement, pointIndex);
-			}
-		}
-	for(int stereoIndex = 0; stereoIndex < numberOfImages/2; stereoIndex++)
-		{
-		for(int transformElement = 0; transformElement < 6; transformElement++)
-			{
-			mutableTransforms3dStructure.at(stereoIndex)[transformElement] = 0;
-			}
-		}
-	
+	InitializePoints(mutablePoints3dStructure, measurementMatrix);
+	InitializePoses(mutableTransforms3dStructure, numberOfImages);
+
 	// Setting the problem
 	ceres::Problem bundleAdjustment;
 	for(int stereoIndex = 0; stereoIndex < numberOfImages/2; stereoIndex++)
@@ -287,6 +277,118 @@ void CeresAdjustment::ConvertProjectionMatricesListToPosesSequence(std::vector<c
 		}
 	}
 
+void CeresAdjustment::InitializePoints(std::vector<Point3d>& pointCloud, cv::Mat measurementMatrix)
+	{
+	//Initialization without initial estimation, all point (x, y, z) are (pixelX, pixely, 1).
+	if (!initialPointEstimationIsAvailable)
+		{
+		for(int pointIndex = 0; pointIndex < measurementMatrix.cols; pointIndex++)
+			{
+			for(int pointElement = 0; pointElement < 3; pointElement++)
+				{
+				pointCloud.at(pointIndex)[pointElement] = (pointElement == 2) ? 1 : measurementMatrix.at<float>(pointElement, pointIndex);
+				}
+			}
+		return;
+		}
+
+	//Initialization with initial estimation, this works under the assumption that the order of points in the correspondenceMap and the measurement Matrix is preserved.
+	CorrespondenceMap2D firstCorrespondenceMap = GetCorrespondenceMap(inCorrespondenceMapsSequence, 0);
+	int startingMeasurementIndex = 0;
+	int measureCounter = 0;
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(inGuessedPointCloud); pointIndex++)
+		{
+		Point2D correspondingPoint = GetSource(firstCorrespondenceMap, pointIndex);
+		bool measurementFound = false;
+		PRINT_TO_LOG("pointIndex", pointIndex);
+		PRINT_TO_LOG("cX", correspondingPoint.x);
+		PRINT_TO_LOG("cY", correspondingPoint.y);
+		for(int measurementIndex = startingMeasurementIndex; measurementIndex < measurementMatrix.cols && !measurementFound; measurementIndex++)
+			{
+			float measureX = measurementMatrix.at<float>(0, measurementIndex);
+			float measureY = measurementMatrix.at<float>(1, measurementIndex);
+			PRINT_TO_LOG("measurementIndex", measurementIndex);
+			PRINT_TO_LOG("cX", measureX);
+			PRINT_TO_LOG("cY", measureY);
+			if (measureX == correspondingPoint.x && measureY == correspondingPoint.y)
+				{
+				pointCloud.at(measurementIndex)[0] = GetXCoordinate(inGuessedPointCloud, pointIndex);
+				pointCloud.at(measurementIndex)[1] = GetYCoordinate(inGuessedPointCloud, pointIndex);
+				pointCloud.at(measurementIndex)[2] = GetZCoordinate(inGuessedPointCloud, pointIndex);
+
+				measurementFound = true;
+				startingMeasurementIndex = measurementIndex + 1;
+				measureCounter++;
+				PRINT_TO_LOG("measureCounter", measureCounter);
+				PRINT_TO_LOG("pointX", pointCloud.at(measurementIndex)[0]);
+				PRINT_TO_LOG("pointY", pointCloud.at(measurementIndex)[1]);
+				PRINT_TO_LOG("pointZ", pointCloud.at(measurementIndex)[2]);
+				}
+			}
+		}
+	ASSERT(measureCounter == measurementMatrix.cols, "Ceres Solver: error we could not initialize all cloud points. Probably order is not preseved between correspondenceMap and measurementMatrix");
+	}
+
+void CeresAdjustment::InitializePoses(std::vector<Transform3d>& posesSequence, int numberOfImages)
+	{
+	//Initialization without initial estimation, all transforms are (0,0,0) position and (0,0,0) rotation angles
+	if (!initialPoseEstimationIsAvailable)
+		{
+		for(int stereoIndex = 0; stereoIndex < numberOfImages/2; stereoIndex++)
+			{
+			for(int transformElement = 0; transformElement < 6; transformElement++)
+				{
+				posesSequence.at(stereoIndex)[transformElement] = 0;
+				}
+			}
+		return;
+		}
+
+	//Initialization with initial estimation
+	int stereoIndex = 0;
+	for(int transformElement = 0; transformElement < 6; transformElement++)
+		{
+		posesSequence.at(stereoIndex)[transformElement] = 0;
+		}
+
+	for(stereoIndex = 1; stereoIndex < numberOfImages/2; stereoIndex++)
+		{
+		const Pose3D& guessedPose = GetPose(inGuessedPosesSequence, stereoIndex - 1);
+		posesSequence.at(stereoIndex)[0] = GetXPosition(guessedPose);
+		posesSequence.at(stereoIndex)[1] = GetYPosition(guessedPose);
+		posesSequence.at(stereoIndex)[2] = GetZPosition(guessedPose);
+
+		//Computing Roll
+		double rollSine = 2.0 * ( GetWOrientation(guessedPose) * GetXOrientation(guessedPose) + GetYOrientation(guessedPose) * GetZOrientation(guessedPose) );
+		double rollCosine = 1.0 - 2.0 * ( GetXOrientation(guessedPose) * GetXOrientation(guessedPose) + GetYOrientation(guessedPose) * GetYOrientation(guessedPose) );
+		posesSequence.at(stereoIndex)[3] = std::atan2(rollSine, rollCosine);
+
+		// Computing pitch
+		double pitchSine = 2.0 * ( GetWOrientation(guessedPose) * GetYOrientation(guessedPose) - GetZOrientation(guessedPose) * GetXOrientation(guessedPose) );
+		if (std::fabs(pitchSine) >= 1)
+			{
+			posesSequence.at(stereoIndex)[4] = std::copysign(M_PI / 2, pitchSine); // use 90 degrees if out of range
+			}
+		else
+			{
+			posesSequence.at(stereoIndex)[4] = std::asin(pitchSine);
+			}
+
+		// Computing Yaw
+		double yawSine = 2.0 * ( GetWOrientation(guessedPose) * GetZOrientation(guessedPose) + GetXOrientation(guessedPose) * GetYOrientation(guessedPose) );
+		double yawCosine = 1.0 - 2.0 * ( GetYOrientation(guessedPose) * GetYOrientation(guessedPose) + GetZOrientation(guessedPose) * GetZOrientation(guessedPose) );  
+		posesSequence.at(stereoIndex)[5] = std::atan2(yawSine, yawCosine);
+
+		PRINT_TO_LOG("stereoIndex", stereoIndex);
+		PRINT_TO_LOG("trX", posesSequence.at(stereoIndex)[0]);
+		PRINT_TO_LOG("trY", posesSequence.at(stereoIndex)[1]);
+		PRINT_TO_LOG("trZ", posesSequence.at(stereoIndex)[2]);
+		PRINT_TO_LOG("rotX", posesSequence.at(stereoIndex)[3]);
+		PRINT_TO_LOG("rotY", posesSequence.at(stereoIndex)[4]);
+		PRINT_TO_LOG("rotZ", posesSequence.at(stereoIndex)[5]);
+		}
+	}
+
 void CeresAdjustment::ValidateParameters()
 {
 	ASSERT(parameters.leftCameraMatrix.focalLengthX > 0 && parameters.leftCameraMatrix.focalLengthY > 0, "CeresAdjustment Configuration error: left focal length has to be positive");
@@ -300,6 +402,27 @@ void CeresAdjustment::ValidateInputs()
 	int n = GetNumberOfCorrespondenceMaps(inCorrespondenceMapsSequence);
 	ASSERT( n == 6 || n == 15 || n == 28, "CeresAdjustment Error: you should provide correspondence maps for either 2, 3 or 4 pairs of stereo camera images");
 }
+
+void CeresAdjustment::ValidateInitialEstimations(int numberOfCameras)
+	{
+	initialPoseEstimationIsAvailable = ( GetNumberOfPoses(inGuessedPosesSequence) > 0 );
+	initialPointEstimationIsAvailable = ( GetNumberOfPoints(inGuessedPointCloud) > 0 );
+
+	PRINT_TO_LOG("poses", GetNumberOfPoses(inGuessedPosesSequence));
+	PRINT_TO_LOG("cameras", numberOfCameras/2 - 1);
+	if (initialPoseEstimationIsAvailable && GetNumberOfPoses(inGuessedPosesSequence) != numberOfCameras/2 - 1)
+		{
+		initialPoseEstimationIsAvailable = false;
+		PRINT_WARNING("Ceres adjustment, initial pose estimation does not match number of cameras, initial poses estimation is ignored");
+		}
+
+	CorrespondenceMap2D firstCorrespondenceMap = GetCorrespondenceMap(inCorrespondenceMapsSequence, 0);
+	if (initialPointEstimationIsAvailable && GetNumberOfPoints(inGuessedPointCloud) != GetNumberOfCorrespondences(firstCorrespondenceMap) )
+		{
+		initialPointEstimationIsAvailable = false;
+		PRINT_WARNING("Ceres adjustment, initial point estimation does not match number of first camera correspondences, initial point estimation is ignored");
+		}
+	}
 
 cv::Mat CeresAdjustment::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix)
 	{

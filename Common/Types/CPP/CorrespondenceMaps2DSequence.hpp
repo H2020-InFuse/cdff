@@ -19,6 +19,7 @@
 #include <CorrespondenceMap2D.hpp>
 #include <stdlib.h>
 #include <memory>
+#include <vector>
 
 namespace CorrespondenceMap2DWrapper
 {
@@ -50,6 +51,8 @@ void AddCorrespondenceMap(CorrespondenceMaps2DSequence& correspondenceMapsSequen
 const CorrespondenceMap2D& GetCorrespondenceMap(const CorrespondenceMaps2DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 correspondenceMapIndex);
 void GetCorrespondenceMap(const CorrespondenceMaps2DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 frameIndex, CorrespondenceMap2D& correspondenceMap);
 BaseTypesWrapper::T_UInt32 GetNumberOfCorrespondenceMaps(const CorrespondenceMaps2DSequence& correspondenceMapsSequence); 
+void RemoveCorrespondenceMaps(CorrespondenceMaps2DSequence& correspondenceMapsSequence, std::vector<BaseTypesWrapper::T_UInt32> correspondenceMapIndexOrderedList);
+void RemoveCorrespondences(CorrespondenceMaps2DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 mapIndex, std::vector<BaseTypesWrapper::T_UInt32> correspondenceIndexOrderedList);
 }
 
 #endif // CORRESPONDENCE_MAPS_2D_SEQUENCE_HPP

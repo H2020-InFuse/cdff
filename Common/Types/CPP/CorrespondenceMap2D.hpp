@@ -18,6 +18,7 @@
 #include "BaseTypes.hpp"
 #include <stdlib.h>
 #include <memory>
+#include <vector>
 
 namespace CorrespondenceMap2DWrapper
 {
@@ -51,6 +52,7 @@ int GetNumberOfCorrespondences(const CorrespondenceMap2D& correspondenceMap);
 BaseTypesWrapper::Point2D GetSource(const CorrespondenceMap2D& correspondenceMap, const int correspondenceIndex);
 BaseTypesWrapper::Point2D GetSink(const CorrespondenceMap2D& correspondenceMap, const int correspondenceIndex);
 BaseTypesWrapper::T_Float GetProbability(const CorrespondenceMap2D& correspondenceMap, const int correspondenceIndex);
+void RemoveCorrespondences(CorrespondenceMap2D& correspondenceMap, std::vector<BaseTypesWrapper::T_UInt32> correspondenceIndexOrderedList);
 
 }
 

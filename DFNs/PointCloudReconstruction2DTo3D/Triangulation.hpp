@@ -67,6 +67,7 @@ namespace dfn_ci
 			{
 				CameraMatrix firstCameraMatrix;
 				CameraMatrix secondCameraMatrix;
+				bool outputInvalidPoints;
 			};
 
 			cv::Mat firstCameraMatrix;
