@@ -1,8 +1,9 @@
 name: KFCorrection
+doc: DFN for Kalman filtering
 input_ports:
     - name: predictedState
       type: asn1SccRigidBodyState
-      doc: predicted rigid body state from KFPrediction DFN
+      doc: predicted rigid body state (returned by the DFN KFPrediction, for instance)
     - name: measurement
       type: asn1SccRigidBodyState
       doc: measured rigid body pose parameters

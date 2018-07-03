@@ -1,43 +1,12 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* ---------------------------------------------------------------------------
-*/
-
-/*!
- * @file KalmanPredictionInterface.hpp
- * @date 5/05/2018
- * @author Nassir W. Oumer
- */
-
-/*!
+/**
  * @addtogroup DFNs
- *
- * Implementation of the KalmanCorrectionInterface class
- *
- *
  * @{
  */
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-
 #include "KFCorrectionInterface.hpp"
-#include "Errors/Assert.hpp"
 
-namespace dfn_ci {
-
-/* --------------------------------------------------------------------------
- *
- * Public Member Functions
- *
- * --------------------------------------------------------------------------
- */
+namespace dfn_ci
+{
 
 KFCorrectionInterface::KFCorrectionInterface()
 {
@@ -47,11 +16,13 @@ KFCorrectionInterface::~KFCorrectionInterface()
 {
 }
 
-void KFCorrectionInterface::predictedStateInput(const asn1SccRigidBodyState& data) {
+void KFCorrectionInterface::predictedStateInput(const asn1SccRigidBodyState& data)
+{
     inPredictedState = data;
 }
 
-void KFCorrectionInterface::measurementInput(const asn1SccRigidBodyState& data) {
+void KFCorrectionInterface::measurementInput(const asn1SccRigidBodyState& data)
+{
     inMeasurement = data;
 }
 
@@ -60,12 +31,16 @@ void KFCorrectionInterface::predictedStateCovarianceInput(const asn1SccRigidBody
     inPredictedStateCovariance = data;
 }
 
-asn1SccRigidBodyState KFCorrectionInterface::correctedStateOutput() {
+const asn1SccRigidBodyState& KFCorrectionInterface::correctedStateOutput() const
+{
     return outCorrectedState;
 }
 
-asn1SccRigidBodyState KFCorrectionInterface::stateCovarianceOutput() {
+const asn1SccRigidBodyState& KFCorrectionInterface::stateCovarianceOutput() const
+{
     return outStateCovariance;
 }
 
 }
+
+/** @} */
