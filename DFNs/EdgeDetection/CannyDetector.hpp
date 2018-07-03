@@ -1,108 +1,75 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file CannyDetector.hpp
- * @date 11/04/2018
+/**
  * @author Nassir W. Oumer
  */
 
-/*!
+/**
  * @addtogroup DFNs
- *
- *  @brief This DFN executes a Canny edge detection.
- *
- * This DFN is Canny edge detector implementation of OpenCV.
- *
- * This DFN implementation requires the following parameters:
- * @param lowThreshold, lower threshold parameter of the canny edge detector.
- * @param highThreshold, higher threshold parameter.
- * @param kernelSize, size of the filter e.g 3, 5.
- *
  * @{
  */
 
-#ifndef CANNY_DETECTOR_HPP
-#define CANNY_DETECTOR_HPP
+#ifndef CANNYDETECTOR_HPP
+#define CANNYDETECTOR_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <EdgeDetection/EdgeDetectionInterface.hpp>
-#include <Frame.hpp>
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/imgcodecs/imgcodecs.hpp>
-#include <yaml-cpp/yaml.h>
+#include "EdgeDetectionInterface.hpp"
 #include <Helpers/ParametersListHelper.hpp>
+#include <FrameToMatConverter.hpp>
+#include <MatToFrameConverter.hpp>
 
+#include <opencv2/core/core.hpp>
+#include <yaml-cpp/yaml.h>
 
-namespace dfn_ci {
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class CannyDetector : public EdgeDetectionInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+namespace dfn_ci
+{
+	/**
+	 * Detect edges in a 2D image, using the Canny edge detector provided by
+	 * OpenCV.
+	 *
+	 * @param lowThreshold
+	 * @param highThreshold
+	 *        lower and higher threshold parameters of the Canny edge detector
+	 * @param kernelSize
+	 *        size of the filter e.g. 3 or 5 pixels
 	 */
-        public:
-            CannyDetector();
-            ~CannyDetector();
-            void process();
-            void configure();
+	class CannyDetector : public EdgeDetectionInterface
+	{
+		public:
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
+			CannyDetector();
+			virtual ~CannyDetector();
 
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+			virtual void configure();
+			virtual void process();
 
-		struct CannyParameters
+		private:
+
+			struct CannyParameters
 			{
 				float lowThreshold;
 				float highThreshold;
 				float kernelSize;
 			};
 
-
-		struct CannyDetectorOptionsSet
+			struct CannyDetectorOptionsSet
 			{
-			  CannyParameters cannyParameters;
-
+				CannyParameters cannyParameters;
 			};
 
-		Helpers::ParametersListHelper parametersHelper;
-		CannyDetectorOptionsSet parameters;
+			Helpers::ParametersListHelper parametersHelper;
+			CannyDetectorOptionsSet parameters;
+			static const CannyDetectorOptionsSet DEFAULT_PARAMETERS;
 
-		static const CannyDetectorOptionsSet DEFAULT_PARAMETERS;
+			Converters::FrameToMatConverter frameToMat;
+			Converters::MatToFrameConverter matToFrame;
 
-		cv::Mat Canny(cv::Mat inputImage);
+			cv::Mat Canny(cv::Mat inputImage);
 
-		void ValidateParameters();
-		void ValidateInputs(cv::Mat inputImage);
+			void ValidateParameters();
+			void ValidateInput(cv::Mat inputImage);
 
-		void Configure(const YAML::Node& configurationNode);
-    };
+			void Configure(const YAML::Node& configurationNode);
+	};
 }
-#endif
-/* CANNY_DETECTOR.hpp */
+
+#endif // CANNYDETECTOR_HPP
+
 /** @} */
