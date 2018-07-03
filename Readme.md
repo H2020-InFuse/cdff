@@ -13,7 +13,7 @@ To develop a Data Fusion Node (DFN) or a Data Fusion Processing Compound (DFPC),
 Download the CDFF Core and Support components:
 
 ```
-$ mkdir InnFuse
+$ mkdir InFuse
 $ cd InFuse
 $ git clone git@gitlab.spaceapplications.com:InFuse/CDFF.git
 $ git clone git@gitlab.spaceapplications.com:InFuse/CDFF_dev.git
@@ -30,7 +30,7 @@ There are two ways you can build the CDFF (Core and Support components):
     The TL;DR is (seriously, read the documentation though):
 
     ```
-    $ docker pull pull h2020infuse/cdff:latest
+    $ docker pull h2020infuse/cdff:latest
     $ docker run \
       --name=cdff --hostname=cdff \
       --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
@@ -42,12 +42,6 @@ There are two ways you can build the CDFF (Core and Support components):
       --user=$(id -u $(whoami)):$(id -g $(whoami))
       --init --rm --interactive --tty \
       h2020infuse/cdff:latest bash
-    ```
-
-    If the docker container is already running you can attach to it with: 
-
-    ```
-    $ docker attach cdff
     ```
 
     Once you have mounted the directory containing the CDFF's source code inside your Docker container, you can build the CDFF (Core and Support):
