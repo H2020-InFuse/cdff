@@ -41,6 +41,7 @@ There are two ways you can build the CDFF (Core and Support components):
       --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
       --user=$(id -u $(whoami)):$(id -g $(whoami))
       --init --rm --interactive --tty \
+      -p 9091:9091 --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
       h2020infuse/cdff:latest bash
     ```
 
