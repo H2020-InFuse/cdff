@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  * KalmanCorrector Implementation .
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -53,17 +53,17 @@ KalmanCorrector::~KalmanCorrector()
 
 }
 
-void KalmanCorrector::configure() 
+void KalmanCorrector::configure()
 {
-    parametersHelper.ReadFile(configurationFilePath);
-    ValidateParameters();
+	parametersHelper.ReadFile(configurationFilePath);
+	ValidateParameters();
 }
 
 void KalmanCorrector::process()
- {
-       for(int i=0;i<3;i++)
-	{		
-       		KF.statePre.at<float>(i,0)=inPredictedState.orient.arr[i];
+{
+	for(int i=0;i<3;i++)
+	{
+		KF.statePre.at<float>(i,0)=inPredictedState.orient.arr[i];
 		KF.statePre.at<float>(i+3,0)=inPredictedState.pos.arr[i];
 		KF.statePre.at<float>(i+6,0)=inPredictedState.angular_velocity.arr[i];
 		KF.statePre.at<float>(i+9,0)=inPredictedState.velocity.arr[i];
@@ -72,25 +72,25 @@ void KalmanCorrector::process()
 	ValidateInputs(KF.statePre);
 
 	KF.errorCovPre.setTo(cv::Scalar(0));
-	
+
 	for(int row=0;row<3;row++)
 	{
-	  for(int col=0;col<3;col++)
-	  {
+		for(int col=0;col<3;col++)
+		{
 
 		KF.errorCovPre.at<float>(row,col) = inPredictedStateCovariance.cov_orientation.arr[row].arr[col];
 		KF.errorCovPre.at<float>(row+3,col+3) = inPredictedStateCovariance.cov_position.arr[row].arr[col];
 		KF.errorCovPre.at<float>(row+6,col+6) =inPredictedStateCovariance.cov_angular_velocity.arr[row].arr[col];
 		KF.errorCovPre.at<float>(row+9,col+9) =inPredictedStateCovariance.cov_velocity.arr[row].arr[col];
-            }
+		}
 	}
 
 	cv::Mat measurement(6,1,CV_32F);
 	for(int i=0;i<3;i++)
-	{		
-       		 measurement.at<float>(i,0)=inMeasurement.orient.arr[i];
+	{
+		 measurement.at<float>(i,0)=inMeasurement.orient.arr[i];
 		 measurement.at<float>(i+3,0)=inMeasurement.pos.arr[i];
-		 
+
 	}
 
 	cv::Mat updatedState= correct(measurement);
@@ -101,7 +101,7 @@ void KalmanCorrector::process()
 		outCorrectedState.angular_velocity.arr[i]=updatedState.at<float>(i+6);
 		outCorrectedState.velocity.arr[i]=updatedState.at<float>(i+9);
 	}
-		
+
 	for(int row=0;row<3;row++)
 	{
 		for(int col=0;col<3;col++)
@@ -128,7 +128,7 @@ cv::Mat KalmanCorrector::correct(cv::Mat measurement)
 	cv::Mat stateCorrect;
 	float stdOrientation;
 	float stdTranslation;
-        stdOrientation = parameters.kalmanParameters.stdOrientation;
+	stdOrientation = parameters.kalmanParameters.stdOrientation;
 	stdTranslation = parameters.kalmanParameters.stdTranslation;
 	cv::setIdentity(KF.measurementNoiseCov,cv::Scalar(1));
 	for(int i=0;i<3;i++)

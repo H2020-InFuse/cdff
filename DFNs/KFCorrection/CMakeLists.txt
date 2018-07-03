@@ -11,4 +11,3 @@ target_link_libraries(
    kalman_corrector
    kf_correction cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core opencv_imgcodecs opencv_video
 )
-

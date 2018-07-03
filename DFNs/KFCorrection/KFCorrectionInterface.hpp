@@ -8,13 +8,13 @@
 /*!
  * @file KalmanCorrectionInterface.hpp
  * @date 05/05/2018
- * @author Nassir W. Oumer 
+ * @author Nassir W. Oumer
  */
 
 /*!
  * @addtogroup DFNs
- * 
- *  This is the common interface of all DFNs that apply Kalman Filter.    
+ *
+ *  This is the common interface of all DFNs that apply Kalman Filter.
  *
  * @{
  */
@@ -36,11 +36,11 @@
 namespace dfn_ci {
     class KFCorrectionInterface : public DFNCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */        
-	public:
+    /* --------------------------------------------------------------------
+     * Public
+     * --------------------------------------------------------------------
+     */
+    public:
            KFCorrectionInterface();
             virtual ~KFCorrectionInterface();
             /**
@@ -48,13 +48,13 @@ namespace dfn_ci {
             * @param predictedState, predictedState rigid body state
             */
             virtual void predictedStateInput(const asn1SccRigidBodyState& data);
-	    /**
+            /**
             * Send value to input port  measurement
             * @param  measurement,  measurement rigid body pose parameters
             */
             virtual void  measurementInput(const asn1SccRigidBodyState& data);
 
-	   /**
+            /**
             * Send valueve value from input port predictedStateCovariance
             * @param predictedStateCovariance, state covariance
             */
@@ -73,10 +73,10 @@ namespace dfn_ci {
 
         protected:
             asn1SccRigidBodyState inPredictedState;
-	    asn1SccRigidBodyState inMeasurement;
-	    asn1SccRigidBodyState inPredictedStateCovariance;
+            asn1SccRigidBodyState inMeasurement;
+            asn1SccRigidBodyState inPredictedStateCovariance;
             asn1SccRigidBodyState outCorrectedState;
-	    asn1SccRigidBodyState outStateCovariance;
+            asn1SccRigidBodyState outStateCovariance;
     };
 }
 #endif

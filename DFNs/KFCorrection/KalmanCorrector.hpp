@@ -13,13 +13,13 @@
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  *  @brief This DFN executes a Kalman Corrector.
- *  
+ *
  * This DFN is Kalman Predictor implementation of OpenCV.
- * 
+ *
  * states are incremental local motions, dp and associated derivatives, vel
- * Constant velocity model, between two camera frames  
+ * Constant velocity model, between two camera frames
  * For pose estimation, the user of this DFN can use corrected states, for example convert to corrected pose dT(dp_correct)
  * This DFN implementation requires the following parameters:
  * @param  measurement noise parameters, standard deviation of pose estimation (rotation and translation)  .
@@ -53,33 +53,33 @@ namespace dfn_ci {
  *
  * --------------------------------------------------------------------------
  */
-    class KalmanCorrector: public KFCorrectionInterface
-    {
+	class KalmanCorrector: public KFCorrectionInterface
+	{
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
-        public:
-            KalmanCorrector();
-            virtual ~KalmanCorrector();
-            virtual void process();
-            virtual void configure();
-	   
-	    cv::KalmanFilter KF; 
-	  
-	
+	public:
+		KalmanCorrector();
+		virtual ~KalmanCorrector();
+		virtual void process();
+		virtual void configure();
+
+		cv::KalmanFilter KF;
+
+
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
 	 */
-        protected:
+	protected:
 
 	/* --------------------------------------------------------------------
 	 * Private
 	 * --------------------------------------------------------------------
-	 */	
+	 */
 	private:
-	
+
 		struct KalmanParameters
 			{
 				float stdOrientation;
@@ -89,15 +89,15 @@ namespace dfn_ci {
 			{
 				KalmanParameters kalmanParameters;
 			};
-		
+
 		Helpers::ParametersListHelper parametersHelper;
 		KalmanCorrectorOptionsSet parameters;
-		static const KalmanCorrectorOptionsSet DEFAULT_PARAMETERS;	
+		static const KalmanCorrectorOptionsSet DEFAULT_PARAMETERS;
 		cv::Mat correct(cv::Mat measurement);
 		void ValidateParameters();
 		void ValidateInputs(cv::Mat inputState);
-		void Configure(const YAML::Node& configurationNode);			
-	
-    };
+		void Configure(const YAML::Node& configurationNode);
+
+};
 }
 #endif

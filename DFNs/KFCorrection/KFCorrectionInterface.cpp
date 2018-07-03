@@ -8,15 +8,15 @@
 /*!
  * @file KalmanPredictionInterface.hpp
  * @date 5/05/2018
- * @author Nassir W. Oumer 
+ * @author Nassir W. Oumer
  */
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  * Implementation of the KalmanCorrectionInterface class
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -57,7 +57,7 @@ void KFCorrectionInterface::measurementInput(const asn1SccRigidBodyState& data) 
 
 void KFCorrectionInterface::predictedStateCovarianceInput(const asn1SccRigidBodyState& data)
 {
- inPredictedStateCovariance = data;
+    inPredictedStateCovariance = data;
 }
 
 asn1SccRigidBodyState KFCorrectionInterface::correctedStateOutput() {

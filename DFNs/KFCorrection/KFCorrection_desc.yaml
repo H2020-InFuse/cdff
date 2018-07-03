@@ -1,22 +1,20 @@
 name: KFCorrection
 input_ports:
     - name: predictedState
-      type: RigidBodyState
+      type: asn1SccRigidBodyState
       doc: predicted rigid body state from KFPrediction DFN
     - name: measurement
-      type: RigidBodyState
-      doc: measured rigid body pose parameters	
+      type: asn1SccRigidBodyState
+      doc: measured rigid body pose parameters
     - name: predictedStateCovariance
-      type: RigidBodyState
-      doc: predicted state covariance 
+      type: asn1SccRigidBodyState
+      doc: predicted state covariance
 output_ports:
     - name: correctedState
-      type: RigidBodyState
-      doc: corrected rigid body state   
+      type: asn1SccRigidBodyState
+      doc: corrected rigid body state
     - name: stateCovariance
-      type: RigidBodyState
-      doc: corrected state covariance  
+      type: asn1SccRigidBodyState
+      doc: corrected state covariance
 implementations:
     - KalmanCorrector
-    
-   
