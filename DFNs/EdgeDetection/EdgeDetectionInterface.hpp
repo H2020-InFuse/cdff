@@ -1,96 +1,57 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file EdgeDetectionInterface.hpp
- * @date 11/04/2018
- * @author Nassir W. Oumer
- */
-
-/*!
+/**
  * @addtogroup DFNs
- *
- *  This is the common interface of all DFNs that apply edge detector to an image.
- *
  * @{
  */
-#ifndef EDGE_DETECTION_INTERFACE_HPP
-#define EDGE_DETECTION_INTERFACE_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <DFNCommonInterface.hpp>
-#include <Frame.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#ifndef EDGEDETECTION_INTERFACE_HPP
+#define EDGEDETECTION_INTERFACE_HPP
 
+#include "DFNCommonInterface.hpp"
+#include <Frame.h>
 
-namespace dfn_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
+namespace dfn_ci
+{
+    /**
+     * DFN that applies an edge detection filter to a 2D image
+     */
     class EdgeDetectionInterface : public DFNCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
+
             EdgeDetectionInterface();
             virtual ~EdgeDetectionInterface();
-            /**
-            * Send value to input port image
-            * @param image, a 2D camera image
-            */
-            virtual void imageInput(FrameWrapper::FrameConstPtr data);
 
             /**
-            * Receive value from output port edgeMap
-            * @param image, the edge Map output.
-            */
-            virtual FrameWrapper::FrameConstPtr edgeMapOutput();
-	   /**
-            * Receive value from output port sobelGradientX
-            * @return sobelGradx, the image gradient in x-direction output
-            */
-            virtual FrameWrapper::FrameConstPtr sobelGradientXOutput();
-            /**
-            * Receive value from output port sobelGradientY
-            * @return sobelGrady, the image gradient in y-direction output
-            */
-            virtual FrameWrapper::FrameConstPtr sobelGradientYOutput();
+             * Send value to input port "image"
+             * @param image: 2D image
+             */
+            virtual void imageInput(const asn1SccFrame& data);
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
+            /**
+             * Query value from output port "edgeMap"
+             * @return edgeMap: edge map of the input image
+             */
+            virtual const asn1SccFrame& edgeMapOutput() const;
+            /**
+             * Query value from output port "sobelGradientX"
+             * @return sobelGradientX: image gradient in the x direction
+             */
+            virtual const asn1SccFrame& sobelGradientXOutput() const;
+            /**
+             * Query value from output port "sobelGradientY"
+             * @return sobelGradientY: image gradient in the y direction
+             */
+            virtual const asn1SccFrame& sobelGradientYOutput() const;
+
         protected:
-            FrameWrapper::FrameConstPtr inImage;
-            FrameWrapper::FrameConstPtr outEdgeMap;
-   	    FrameWrapper::FrameConstPtr outSobelGradientX;
-            FrameWrapper::FrameConstPtr outSobelGradientY;
 
-
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
+            asn1SccFrame inImage;
+            asn1SccFrame outEdgeMap;
+            asn1SccFrame outSobelGradientX;
+            asn1SccFrame outSobelGradientY;
     };
 }
-#endif
-/* EdgeDetectionInterface.hpp */
+
+#endif // EDGEDETECTION_INTERFACE_HPP
+
 /** @} */
