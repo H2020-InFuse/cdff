@@ -47,7 +47,7 @@ MainInterface::MainInterface(std::string windowName, int buttonWidth, int button
 void MainInterface::Run()
 	{
 	ButtonsInterface::ButtonStyle exit_style;
-	exit_style.backgroundColor = cv::Scalar(0, 69, 255); // OrangeRed
+	exit_style.backgroundColor = cv::Scalar(60, 76, 231); // Red - Alizarin
 	exit_style.textColor = cv::Scalar(255, 255, 255);    // White
 
 	buttonList.AddButton("Exit", std::bind(&MainInterface::ExitCallback, this), exit_style);

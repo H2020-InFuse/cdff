@@ -44,7 +44,7 @@ DFNTestInterface::DFNTestInterface(std::string dfnName, int buttonWidth, int but
 	, parametersInterface(dfnName)
 	{
 	ButtonsInterface::ButtonStyle process_button_style;
-	process_button_style.backgroundColor = cv::Scalar(0, 252, 124); // LawnGreen
+	process_button_style.backgroundColor = cv::Scalar(96, 174, 39); // Green - Nephritis
 	process_button_style.textColor = cv::Scalar(255, 255, 255);     // White
 
 	mainInterface.AddButton(
