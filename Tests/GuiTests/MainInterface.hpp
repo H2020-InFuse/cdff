@@ -59,11 +59,11 @@ class MainInterface
 
 		void Run();
 
-		void AddButton(std::string option, ButtonsInterface::on_button_clicked_cb_t callback);
+		void AddButton(std::string option, ButtonsInterface::ButtonClickedCallback callback);
 
 		void AddButton(
 			std::string option,
-			ButtonsInterface::on_button_clicked_cb_t callback,
+			ButtonsInterface::ButtonClickedCallback callback,
 			ButtonsInterface::ButtonStyle style);
 
 

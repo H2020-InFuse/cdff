@@ -58,14 +58,14 @@ void MainInterface::Run()
 		}
 	}
 
-void MainInterface::AddButton(std::string option, ButtonsInterface::on_button_clicked_cb_t callback)
+void MainInterface::AddButton(std::string option, ButtonsInterface::ButtonClickedCallback callback)
 	{
 		buttonList.AddButton(option, callback);
 	}
 
 void MainInterface::AddButton(
 	std::string option,
-	ButtonsInterface::on_button_clicked_cb_t callback,
+	ButtonsInterface::ButtonClickedCallback callback,
 	ButtonsInterface::ButtonStyle style)
 	{
 	buttonList.AddButton(option, callback, style);

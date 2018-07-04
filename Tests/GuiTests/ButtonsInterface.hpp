@@ -52,7 +52,7 @@ class ButtonsInterface
 	 */
 	public:
 
-		using on_button_clicked_cb_t = std::function<void()>;
+		using ButtonClickedCallback = std::function<void()>;
 
 		/**
 		 * The `ButtonStyle` struct is used to control the appearance of
@@ -82,7 +82,7 @@ class ButtonsInterface
 		 */
 		void AddButton(
 			std::string const &label,
-			on_button_clicked_cb_t callback,
+            ButtonClickedCallback callback,
 			const ButtonStyle style
 		);
 
@@ -94,7 +94,7 @@ class ButtonsInterface
 		*/
 		void AddButton(
 			std::string const &label,
-			on_button_clicked_cb_t callback
+            ButtonClickedCallback callback
 		);
 
 	/* --------------------------------------------------------------------
@@ -116,7 +116,7 @@ class ButtonsInterface
 			cv::Point bottomRightCorner;
 			ButtonStyle style;
 			std::string label;
-			on_button_clicked_cb_t callback;
+            ButtonClickedCallback callback;
 			};
 
 		const std::string windowName;

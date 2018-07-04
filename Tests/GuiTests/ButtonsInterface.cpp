@@ -62,7 +62,7 @@ void ButtonsInterface::Display()
 	}
 
 void ButtonsInterface::AddButton(
-	std::string const &label, on_button_clicked_cb_t callback, const ButtonStyle style)
+	std::string const &label, ButtonClickedCallback callback, const ButtonStyle style)
 {
 	Button button;
 	button.topLeftCorner.x = buttonPadding;
@@ -76,7 +76,7 @@ void ButtonsInterface::AddButton(
 	buttonList.push_back(button);
 }
 
-void ButtonsInterface::AddButton(std::string const &label, ButtonsInterface::on_button_clicked_cb_t callback)
+void ButtonsInterface::AddButton(std::string const &label, ButtonsInterface::ButtonClickedCallback callback)
 {
 	AddButton(label, callback, {});
 }
