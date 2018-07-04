@@ -52,7 +52,7 @@ class DFNTestInterface
 	 */
 	public:
 		DFNTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
-		~DFNTestInterface();
+		virtual ~DFNTestInterface() = default;
 
 		void Run();
 		void SetDFN(DFNCommonInterface* dfn);
@@ -85,7 +85,6 @@ class DFNTestInterface
 		virtual void SetupParameters();
 		virtual void DisplayResult();
 
-		static void ProcessCallback(void* referenceToClass);
 		void ProcessCallback();
 
 

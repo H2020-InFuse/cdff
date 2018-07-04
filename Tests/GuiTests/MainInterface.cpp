@@ -37,30 +37,26 @@
  * --------------------------------------------------------------------------
  */
 MainInterface::MainInterface(std::string windowName, int buttonWidth, int buttonHeight) 
-	: innerInterface(windowName, buttonWidth, buttonHeight)
+	: buttonList(windowName, buttonWidth, buttonHeight)
 	{
 	shutdownNow = false;
-	
 	}
 
-MainInterface::~MainInterface()
-	{
 
-	}
 
 void MainInterface::Run()
 	{
-	innerInterface.AddButton("Exit", MainInterface::ExitCallback, this);
-	innerInterface.Display();
+	buttonList.AddButton("Exit", std::bind(&MainInterface::ExitCallback, this));
+	buttonList.Display();
 	while(!shutdownNow)
 		{
 		cv::waitKey(refreshRate);
 		}
 	}
 
-void MainInterface::AddButton(std::string option, void (*callback)(void*), void* userdata)
+void MainInterface::AddButton(std::string option, ButtonsInterface::on_button_clicked_cb_t callback)
 	{
-	innerInterface.AddButton(option, callback, userdata);
+		buttonList.AddButton(option, callback);
 	}
 
 /* --------------------------------------------------------------------------
@@ -79,10 +75,6 @@ const unsigned MainInterface::refreshRate = 200;
  *
  * --------------------------------------------------------------------------
  */
-void MainInterface::ExitCallback(void* instance)
-	{
-	((MainInterface*)instance)->ExitCallback();
-	}
 
 void MainInterface::ExitCallback()
 	{

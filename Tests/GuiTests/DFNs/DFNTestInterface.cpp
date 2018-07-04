@@ -42,10 +42,8 @@
 DFNTestInterface::DFNTestInterface(std::string dfnName, int buttonWidth, int buttonHeight) 
 	: mainInterface("Control Panel", buttonWidth, buttonHeight), parametersInterface(dfnName)
 	{
-	mainInterface.AddButton("Process", DFNTestInterface::ProcessCallback, this);
+	mainInterface.AddButton("Process", std::bind(&DFNTestInterface::ProcessCallback, this));
 	}
-
-DFNTestInterface::~DFNTestInterface()
 	{
 
 	}
@@ -139,11 +137,6 @@ void DFNTestInterface::SetupParameters()
 void DFNTestInterface::DisplayResult()
 	{
 
-	}
-
-void DFNTestInterface::ProcessCallback(void* referenceToClass)
-	{
-	((DFNTestInterface*)referenceToClass)->ProcessCallback();
 	}
 
 void DFNTestInterface::ProcessCallback()

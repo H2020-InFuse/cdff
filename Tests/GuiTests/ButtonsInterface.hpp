@@ -51,10 +51,24 @@ class ButtonsInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:
+
+		using on_button_clicked_cb_t = std::function<void()>;
+
 		ButtonsInterface(std::string windowName, int buttonWidth, int buttonHeight);
-		~ButtonsInterface();
+		~ButtonsInterface() = default;
+
 		void Display();
-		void AddButton(std::string option, void (*callback)(void*), void* userdata = NULL);
+
+		/**
+		* Add a button to this `ButtonsInterface` with default styling
+		*
+		* @param label The text of the button
+		* @param callback The callback function to call when the button is clicked
+		*/
+		void AddButton(
+			std::string const &label,
+			on_button_clicked_cb_t callback
+		);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -62,25 +76,23 @@ class ButtonsInterface
 	 */
 	protected:
 
-
 	/* --------------------------------------------------------------------
 	 * Private
 	 * --------------------------------------------------------------------
 	 */
 	private:
 		typedef void (*Callback)(void*);
-		
+
 		struct Button
 			{
 			cv::Point topLeftCorner;
 			cv::Point bottomRightCorner;
-			std::string option;
-			Callback callback;
-			void* userdataForCallback;
+			std::string label;
+			on_button_clicked_cb_t callback;
 			};
 
 		const std::string windowName;
-		std::vector<Button> buttonsList;
+		std::vector<Button> buttonList;
 		cv::Mat buttonsImage;
 		int buttonWidth;
 		int buttonHeight;

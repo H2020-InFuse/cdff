@@ -53,10 +53,11 @@ class MainInterface
 	 */
 	public:
 		MainInterface(std::string windowName, int buttonWidth, int buttonHeight);
-		~MainInterface();
-		void Run();
-		void AddButton(std::string option, void (*callback)(void*), void* userdata);
+		~MainInterface() = default;
 
+		void Run();
+
+		void AddButton(std::string option, ButtonsInterface::on_button_clicked_cb_t callback);
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
@@ -69,11 +70,10 @@ class MainInterface
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		ButtonsInterface innerInterface;
+		ButtonsInterface buttonList;
 		bool shutdownNow;
-		static const unsigned refreshRate;
-	
-		static void ExitCallback(void* instance);
+		static const unsigned int refreshRate;
+
 		void ExitCallback();
 
 

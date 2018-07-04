@@ -45,38 +45,34 @@ ButtonsInterface::ButtonsInterface(std::string windowName, int buttonWidth, int 
 	cv::setMouseCallback( windowName, ButtonsInterface::OnMouseCallback, this);
 	}
 
-ButtonsInterface::~ButtonsInterface()
-	{
-
-	}
 
 void ButtonsInterface::Display()
 	{
 	int imageColumns = buttonWidth+2*buttonPadding;
-	int imageRows = buttonPadding + (buttonHeight + buttonPadding)*buttonsList.size();
+	int imageRows = buttonPadding
+		+ (buttonHeight + buttonPadding) * static_cast<int>(buttonList.size());
 	buttonsImage = cv::Mat(imageRows, imageColumns, CV_8UC3, backgroundColor);
-	for(std::vector<Button>::iterator button = buttonsList.begin(); button != buttonsList.end(); button++)
+	for(const auto& button: buttonList)
 		{
-		cv::rectangle(buttonsImage, button->topLeftCorner, button->bottomRightCorner, buttonColor, -1, 8);
-		cv::Point TextStartPoint(button->topLeftCorner.x + xTextPadding, button->bottomRightCorner.y -yTextPadding);
-		cv::putText(buttonsImage, button->option, TextStartPoint, cv::FONT_HERSHEY_SIMPLEX, 0.6, textColor, 2, 8);		
+		cv::rectangle(buttonsImage, button.topLeftCorner, button.bottomRightCorner, buttonColor, -1, 8);
+		cv::Point TextStartPoint(button.topLeftCorner.x + xTextPadding, button.bottomRightCorner.y -yTextPadding);
+		cv::putText(buttonsImage, button.label, TextStartPoint, cv::FONT_HERSHEY_SIMPLEX, 0.6, textColor, 2, 8);
 		}
 	cv::imshow(windowName, buttonsImage);
 	}
 
-void ButtonsInterface::AddButton(std::string option, void (*callback)(void*), void* userdata)
-	{
+void ButtonsInterface::AddButton(std::string const &label, ButtonsInterface::on_button_clicked_cb_t callback)
+{
 	Button button;
 	button.topLeftCorner.x = buttonPadding;
-	button.topLeftCorner.y = buttonPadding + (buttonHeight+buttonPadding) * buttonsList.size();
-	button.bottomRightCorner.x = button.topLeftCorner.x + buttonWidth; 
+	button.topLeftCorner.y = buttonPadding
+		+ (buttonHeight + buttonPadding) * static_cast<int>(buttonList.size());
+	button.bottomRightCorner.x = button.topLeftCorner.x + buttonWidth;
 	button.bottomRightCorner.y = button.topLeftCorner.y + buttonHeight;
-	button.option = option;
+	button.label = label;
 	button.callback = callback;
-	button.userdataForCallback = userdata;
-	buttonsList.push_back(button);
-	}
-
+	buttonList.push_back(button);
+}
 /* --------------------------------------------------------------------------
  *
  * Private Member Variables
@@ -105,15 +101,18 @@ void ButtonsInterface::OnMouseCallback(int event, int x, int y, int z, void* dat
 
 void ButtonsInterface::OnMouseCallback(int event, int x, int y, int z)
 	{
-    	if( event != cv::EVENT_LBUTTONDOWN )
+	if( event != cv::EVENT_LBUTTONDOWN )
 		return;
 
-	for(std::vector<Button>::iterator button = buttonsList.begin(); button != buttonsList.end(); button++)
-		if ( x >= button->topLeftCorner.x && x <= button->bottomRightCorner.x && y>= button->topLeftCorner.y && y <= button->bottomRightCorner.y)
+	for(const auto& button: buttonList)
+		{
+		if (   x >= button.topLeftCorner.x && x <= button.bottomRightCorner.x
+			&& y >= button.topLeftCorner.y && y <= button.bottomRightCorner.y)
 			{
-			button->callback(button->userdataForCallback);
+			button.callback();
 			return;
 			}
+		}
 	}
 
 
