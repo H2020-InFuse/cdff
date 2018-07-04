@@ -105,7 +105,7 @@ void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32
 	BaseTypesWrapper::T_UInt32 currentGap = 1;
 	for(int pointIndex = firstIndex; pointIndex < pointCloud.points.nCount - elementsToRemove; pointIndex++)
 		{
-		if (nextIndexToRemove < elementsToRemove && pointIndex+1 == pointIndexOrderedList.at(nextIndexToRemove))
+		if (nextIndexToRemove < elementsToRemove && pointIndex+currentGap == pointIndexOrderedList.at(nextIndexToRemove))
 			{
 			currentGap++;
 			nextIndexToRemove++;

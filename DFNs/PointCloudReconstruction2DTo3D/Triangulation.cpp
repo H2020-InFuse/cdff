@@ -172,6 +172,10 @@ PointCloudConstPtr Triangulation::Convert(cv::Mat homogeneousPointCloudMatrix)
 					homogeneousPointY/homogeneousPointFactor,
 					homogeneousPointZ/homogeneousPointFactor);
 			}
+			else if (parameters.outputInvalidPoints)
+			{
+				AddPoint(*pointCloud, std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::quiet_NaN());
+			}
 		}
 	}
 	return pointCloud;

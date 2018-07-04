@@ -128,6 +128,83 @@ TEST_CASE( "Remove Correspondences on Sequence", "[CorrespondencesRemoveOnSequen
 	delete(sequence);
 	} 
 
+TEST_CASE( "Remove More Correspondences on Sequence", "[MoreCorrespondencesRemoveOnSequence]" )
+	{
+	CorrespondenceMap2DPtr correspondenceMap = NewCorrespondenceMap2D();
+	BaseTypesWrapper::Point2D source1, sink1, source2, sink2, source3, sink3, source4, sink4;
+	BaseTypesWrapper::Point2D source5, sink5, source6, sink6, source7, sink7, source8, sink8;
+	source1.x = 0;
+	source1.y = 1;
+	sink1.x = 2;
+	sink1.y = 3;
+	source2.x = 4;
+	source2.y = 5;
+	sink2.x = 6;
+	sink2.y = 7;
+	source3.x = 8;
+	source3.y = 9;
+	sink3.x = 10;
+	sink3.y = 11;
+	source4.x = 12;
+	source4.y = 13;
+	sink4.x = 14;
+	sink4.y = 15;
+	source5.x = 22;
+	source5.y = 23;
+	sink5.x = 24;
+	sink5.y = 25;
+	source6.x = 32;
+	source6.y = 33;
+	sink6.x = 34;
+	sink6.y = 35;
+	source7.x = 42;
+	source7.y = 43;
+	sink7.x = 44;
+	sink7.y = 45;
+	source8.x = 52;
+	source8.y = 53;
+	sink8.x = 54;
+	sink8.y = 55;
+
+	AddCorrespondence(*correspondenceMap, source1, sink1, 1);
+	AddCorrespondence(*correspondenceMap, source2, sink2, 0.1);
+	AddCorrespondence(*correspondenceMap, source3, sink3, 0.3);
+	AddCorrespondence(*correspondenceMap, source4, sink4, 0.4);
+	AddCorrespondence(*correspondenceMap, source5, sink5, 0.5);
+	AddCorrespondence(*correspondenceMap, source6, sink6, 0.6);
+	AddCorrespondence(*correspondenceMap, source7, sink7, 0.7);
+	AddCorrespondence(*correspondenceMap, source8, sink8, 0.8);
+
+	CorrespondenceMaps2DSequencePtr sequence = NewCorrespondenceMaps2DSequence();
+	AddCorrespondenceMap(*sequence, *correspondenceMap);
+
+	std::vector<BaseTypesWrapper::T_UInt32> indexToRemoveList = {1, 3, 4, 6, 7};
+	RemoveCorrespondences(*sequence, 0, indexToRemoveList);
+
+	REQUIRE( GetNumberOfCorrespondenceMaps(*sequence) == 1);
+	const CorrespondenceMap2D& outputMap = GetCorrespondenceMap( *sequence, 0 );
+
+	REQUIRE( GetNumberOfCorrespondences(outputMap) == 3);
+	REQUIRE( GetSource(outputMap, 0).x == 0 );
+	REQUIRE( GetSource(outputMap, 0).y == 1 );
+	REQUIRE( GetSink(outputMap, 0).x == 2 );
+	REQUIRE( GetSink(outputMap, 0).y == 3 );
+	REQUIRE( GetProbability(outputMap, 0) == 1);
+	REQUIRE( GetSource(outputMap, 1).x == 8 );
+	REQUIRE( GetSource(outputMap, 1).y == 9 );
+	REQUIRE( GetSink(outputMap, 1).x == 10 );
+	REQUIRE( GetSink(outputMap, 1).y == 11 );
+	REQUIRE( GetProbability(outputMap, 1) == 0.3);
+	REQUIRE( GetSource(outputMap, 2).x == 32 );
+	REQUIRE( GetSource(outputMap, 2).y == 33 );
+	REQUIRE( GetSink(outputMap, 2).x == 34 );
+	REQUIRE( GetSink(outputMap, 2).y == 35 );
+	REQUIRE( GetProbability(outputMap, 2) == 0.6);
+	
+	delete(correspondenceMap);
+	delete(sequence);
+	} 
+
 TEST_CASE( "Remove Correspondence Maps", "[CorrespondenceMapRemove]" )
 	{
 	CorrespondenceMap2DPtr correspondenceMap = NewCorrespondenceMap2D();

@@ -110,7 +110,7 @@ void RemoveCorrespondenceMaps(CorrespondenceMaps2DSequence& correspondenceMapsSe
 	BaseTypesWrapper::T_UInt32 currentGap = 1;
 	for(int mapIndex = firstIndex; mapIndex < correspondenceMapsSequence.nCount - elementsToRemove; mapIndex++)
 		{
-		if (nextIndexToRemove < elementsToRemove && mapIndex+1 == correspondenceMapIndexOrderedList.at(nextIndexToRemove))
+		if (nextIndexToRemove < elementsToRemove && mapIndex+currentGap == correspondenceMapIndexOrderedList.at(nextIndexToRemove))
 			{
 			currentGap++;
 			nextIndexToRemove++;

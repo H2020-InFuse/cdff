@@ -67,7 +67,6 @@ void CeresAdjustment::process()
 		return;
 		}
 	ValidateInitialEstimations(measurementMatrix.rows/2);
-	numberOfElementsInFirstCorrespondenceMap = GetNumberOfCorrespondences( GetCorrespondenceMap(inCorrespondenceMapsSequence, 0) );
 
 	std::vector<cv::Mat> projectionMatricesList = SolveBundleAdjustment(measurementMatrix, outSuccess);
 
@@ -335,7 +334,8 @@ void CeresAdjustment::InitializePoints(std::vector<Point3d>& pointCloud, cv::Mat
 			}
 		}
 
-	ASSERT( measureCounter == numberOfElementsInFirstCorrespondenceMap, "Ceres adjustment error: some 3d points were not matched with a correspondence in the first map");
+	//numberOfValidElementsInFirstCorrespondenceMap information is lost in the conversion.
+	//ASSERT( measureCounter == numberOfValidElementsInFirstCorrespondenceMap, "Ceres adjustment error: some 3d points were not matched with a correspondence in the first map");
 
 	//Some points may not be initialized, due to the fact that they do not appear in the first correspondence map. 
 	//These points will appear last in the measurement, to avoid problems in convergence they will removed.
@@ -406,6 +406,25 @@ void CeresAdjustment::ValidateInputs()
 {
 	int n = GetNumberOfCorrespondenceMaps(inCorrespondenceMapsSequence);
 	ASSERT( n == 6 || n == 15 || n == 28, "CeresAdjustment Error: you should provide correspondence maps for either 2, 3 or 4 pairs of stereo camera images");
+
+	for(int mapIndex = 0; mapIndex < n; mapIndex++)
+		{
+		const CorrespondenceMap2D& correspondenceMap = GetCorrespondenceMap(inCorrespondenceMapsSequence, mapIndex);
+		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(correspondenceMap); correspondenceIndex++)
+			{
+			BaseTypesWrapper::Point2D sourcePoint = GetSource(correspondenceMap, correspondenceIndex);
+			BaseTypesWrapper::Point2D sinkPoint = GetSink(correspondenceMap, correspondenceIndex);
+			bool validPoint = sourcePoint.x == sourcePoint.x && sourcePoint.y == sourcePoint.y;		
+			validPoint = validPoint && sinkPoint.x == sinkPoint.x && sinkPoint.y == sinkPoint.y;	
+			ASSERT(validPoint, "Ceres Adjustment error, invalid correspondence in input");		
+			for(int secondCorrespondenceIndex = correspondenceIndex+1; secondCorrespondenceIndex < GetNumberOfCorrespondences(correspondenceMap); secondCorrespondenceIndex++)
+				{
+				BaseTypesWrapper::Point2D secondSourcePoint = GetSource(correspondenceMap, secondCorrespondenceIndex);
+				bool notRepeated = sourcePoint.x != secondSourcePoint.x || sourcePoint.y != secondSourcePoint.y;
+				ASSERT(notRepeated, "Ceres Adjustment error, repeated soource points");			
+				}
+			}
+		}
 }
 
 void CeresAdjustment::ValidateInitialEstimations(int numberOfCameras)
@@ -424,6 +443,33 @@ void CeresAdjustment::ValidateInitialEstimations(int numberOfCameras)
 		{
 		initialPointEstimationIsAvailable = false;
 		PRINT_WARNING("Ceres adjustment, initial point estimation does not match number of first camera correspondences, initial point estimation is ignored");
+		}
+
+	if (initialPointEstimationIsAvailable)
+		{
+		for(int pointIndex = 0; pointIndex < GetNumberOfPoints(inGuessedPointCloud); pointIndex++)
+			{	
+			bool validPoint = GetXCoordinate(inGuessedPointCloud, pointIndex) == GetXCoordinate(inGuessedPointCloud, pointIndex);
+			validPoint = validPoint && GetYCoordinate(inGuessedPointCloud, pointIndex) == GetYCoordinate(inGuessedPointCloud, pointIndex);
+			validPoint = validPoint && GetZCoordinate(inGuessedPointCloud, pointIndex) == GetZCoordinate(inGuessedPointCloud, pointIndex);
+			ASSERT(validPoint, "Ceres adjustment error, an invalid 3d point was provided as a guess");
+			}
+		}
+
+	if (initialPoseEstimationIsAvailable)
+		{
+		for(int poseIndex = 0; poseIndex < GetNumberOfPoses(inGuessedPosesSequence); poseIndex++)
+			{
+			const Pose3D& pose = GetPose(inGuessedPosesSequence, poseIndex);
+			bool validPose = GetXPosition(pose) == GetXPosition(pose);
+			validPose = validPose && GetYPosition(pose) == GetYPosition(pose);
+			validPose = validPose && GetZPosition(pose) == GetZPosition(pose);
+			validPose = validPose && GetXOrientation(pose) == GetXOrientation(pose);
+			validPose = validPose && GetYOrientation(pose) == GetYOrientation(pose);
+			validPose = validPose && GetZOrientation(pose) == GetZOrientation(pose);
+			validPose = validPose && GetWOrientation(pose) == GetWOrientation(pose);
+			ASSERT(validPose, "Ceres adjustment error, an invalid pose was provided as a guess");
+			}
 		}
 	}
 

@@ -109,7 +109,7 @@ void RemoveCorrespondences(CorrespondenceMap2D& correspondenceMap, std::vector<B
 	BaseTypesWrapper::T_UInt32 currentGap = 1;
 	for(int correspondenceIndex = firstIndex; correspondenceIndex < correspondenceMap.nCount - elementsToRemove; correspondenceIndex++)
 		{
-		if (nextIndexToRemove < elementsToRemove && correspondenceIndex+1 == correspondenceIndexOrderedList.at(nextIndexToRemove))
+		if (nextIndexToRemove < elementsToRemove && correspondenceIndex+currentGap == correspondenceIndexOrderedList.at(nextIndexToRemove))
 			{
 			currentGap++;
 			nextIndexToRemove++;

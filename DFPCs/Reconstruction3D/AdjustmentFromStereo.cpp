@@ -194,8 +194,8 @@ void AdjustmentFromStereo::run()
 void AdjustmentFromStereo::setup()
 	{
 	configurator.configure(configurationFilePath);
+	ConfigureExtraParameters(); //Configuration shall happen before alias assignment here.
 	AssignDfnsAlias();
-	ConfigureExtraParameters();
 	}
 
 /* --------------------------------------------------------------------------
@@ -528,7 +528,6 @@ bool AdjustmentFromStereo::EstimateCameraPoses()
 			return false;
 			}		
 		AddPose(*estimatedCameraPoses, *cameraTransform);
-		DEBUG_PRINT_TO_LOG("Estimated stereo pose", ToString(*cameraTransform));
 		}
 	return true;
 	}
@@ -582,6 +581,7 @@ void AdjustmentFromStereo::ComputeStereoPointCloud(CorrespondenceMap2DConstPtr i
 
 void AdjustmentFromStereo::CleanBundleAdjustmentInputs()
 	{
+	// Removing invalid 3d points
 	std::vector<BaseTypesWrapper::T_UInt32> indexToRemoveList;
 	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*estimatedPointCloud); pointIndex++)
 		{
@@ -592,6 +592,79 @@ void AdjustmentFromStereo::CleanBundleAdjustmentInputs()
 		}
 	RemoveCorrespondences(*latestCorrespondenceMaps, 0, indexToRemoveList);
 	RemovePoints(*estimatedPointCloud, indexToRemoveList);
+
+	//Removing repeated source points
+	for(int mapIndex = 0; mapIndex < GetNumberOfCorrespondenceMaps(*latestCorrespondenceMaps); mapIndex++)
+		{
+		indexToRemoveList.clear();
+		const CorrespondenceMap2D& correspondenceMap = GetCorrespondenceMap(*latestCorrespondenceMaps, mapIndex);
+		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(correspondenceMap); correspondenceIndex++)
+			{
+			BaseTypesWrapper::Point2D sourcePoint = GetSource(correspondenceMap, correspondenceIndex);
+			bool found = false;
+			for(int secondCorrespondenceIndex = correspondenceIndex+1; secondCorrespondenceIndex < GetNumberOfCorrespondences(correspondenceMap) && !found; secondCorrespondenceIndex++)
+				{
+				BaseTypesWrapper::Point2D secondSourcePoint = GetSource(correspondenceMap, secondCorrespondenceIndex);
+				if (StaticCastToInt(sourcePoint.x) == StaticCastToInt(secondSourcePoint.x) && StaticCastToInt(sourcePoint.y) == StaticCastToInt(secondSourcePoint.y))
+					{
+					indexToRemoveList.push_back(correspondenceIndex);
+					found = true;
+					}
+				}
+			}
+		RemoveCorrespondences(*latestCorrespondenceMaps, mapIndex, indexToRemoveList);
+		if (mapIndex == 0)
+			{
+			RemovePoints(*estimatedPointCloud, indexToRemoveList);
+			} 
+		}
+
+	//Removing repeated sink points
+	for(int mapIndex = 0; mapIndex < GetNumberOfCorrespondenceMaps(*latestCorrespondenceMaps); mapIndex++)
+		{
+		indexToRemoveList.clear();
+		const CorrespondenceMap2D& correspondenceMap = GetCorrespondenceMap(*latestCorrespondenceMaps, mapIndex);
+		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(correspondenceMap); correspondenceIndex++)
+			{
+			BaseTypesWrapper::Point2D sinkPoint = GetSink(correspondenceMap, correspondenceIndex);
+			bool found = false;
+			for(int secondCorrespondenceIndex = correspondenceIndex+1; secondCorrespondenceIndex < GetNumberOfCorrespondences(correspondenceMap) && !found; secondCorrespondenceIndex++)
+				{
+				BaseTypesWrapper::Point2D secondSinkPoint = GetSink(correspondenceMap, secondCorrespondenceIndex);
+				if (StaticCastToInt(sinkPoint.x) == StaticCastToInt(secondSinkPoint.x) && StaticCastToInt(sinkPoint.y) == StaticCastToInt(secondSinkPoint.y))
+					{
+					indexToRemoveList.push_back(correspondenceIndex);
+					found = true;
+					}
+				}
+			}
+		RemoveCorrespondences(*latestCorrespondenceMaps, mapIndex, indexToRemoveList);
+		if (mapIndex == 0)
+			{
+			RemovePoints(*estimatedPointCloud, indexToRemoveList);
+			} 
+		}
+	}
+
+int AdjustmentFromStereo::StaticCastToInt(float value)
+	{
+	int integerValue = 0;
+	if (value > 0)
+		{
+		while( value >= 0.5 )
+			{
+			integerValue++;
+			value = value - 1;
+			}
+		return integerValue;
+		}
+
+	while (value <= -0.5)
+		{
+		integerValue--;
+		value = value + 1;
+		}
+	return integerValue;
 	}
 
 }
