@@ -34,6 +34,8 @@
 #include <Matrix.hpp>
 #include <Pose.hpp>
 #include <PointCloud.hpp>
+#include <DepthMap.h>
+#include <LaserScan.h>
 #include <Errors/Assert.hpp>
 #include <string>
 
@@ -89,8 +91,10 @@ int main(int argc, char** argv)
 	PRINT_TO_LOG("CorrespondenceMap2D Size:        ", PrintSize(sizeof(CorrespondenceMap2D)) );
 	PRINT_TO_LOG("CorrespondenceMap3D Size:        ", PrintSize(sizeof(CorrespondenceMap3D)) );
 	PRINT_TO_LOG("Matrix3d Size:                   ", PrintSize(sizeof(Matrix3d)) );
-	PRINT_TO_LOG("Pose3D Size:                ", PrintSize(sizeof(Pose3D)) );
-	PRINT_TO_LOG("Pose2D Size:                ", PrintSize(sizeof(Pose2D)) );
+	PRINT_TO_LOG("Pose3D Size:                     ", PrintSize(sizeof(Pose3D)) );
+	PRINT_TO_LOG("Pose2D Size:                     ", PrintSize(sizeof(Pose2D)) );
+        PRINT_TO_LOG("asn1SccDepthMap Size:            ", PrintSize(sizeof(asn1SccDepthMap)) );
+        PRINT_TO_LOG("asn1SccLaserScan Size:           ", PrintSize(sizeof(asn1SccLaserScan)) );
 	};
 
 /** @} */

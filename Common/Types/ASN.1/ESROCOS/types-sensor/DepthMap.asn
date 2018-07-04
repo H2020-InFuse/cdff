@@ -32,7 +32,7 @@ PROJECTION-TYPE ::= ENUMERATED { 	 polar, planar }
 ---- END of typedefs defined in this module 
 
 --- Maximum size constant for DepthMap
-maxDepthMapSize T-UInt32 ::= 60
+maxDepthMapSize T-UInt32 ::= 30000
 
 DepthMap   ::= 
 SEQUENCE
