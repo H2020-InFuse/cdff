@@ -77,7 +77,7 @@ You may still compile the data types yourself if you wish, and you should do so 
 * The download fails (**warning:** currently happens if running CMake in a new branch *and* the types haven't been downloaded before; fixing in progress; a workaround is to run CMake once in the `master` branch before, or compile the types yourself).
 * You modify or create a new data type in `Common/Types/ASN.1/`.
 
-See the [ASNtoC documentation](/Tools/ASNtoC/Readme.md) for more information. An overview of the data types, wrappers, sizes, etc. can be found at [this table](https://docs.google.com/spreadsheets/d/1bzlF_N8QcPMMNQ6Ze_mW29N-lTO_ancUdyNxRL6ggcQ/).
+See the [ASNtoC documentation](/Tools/ASNtoC/Readme.md) for more information. An overview of the data types, wrappers, sizes, etc. can be found in [this table](https://drive.google.com/open?id=0B2f4AImIv45fRUFkeldjdTVtSUE).
 
 ### Test and (optionally) install
 
