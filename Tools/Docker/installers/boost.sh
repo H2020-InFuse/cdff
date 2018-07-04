@@ -67,8 +67,11 @@
 #
 # * Compiled Boost libraries used by the CDFF:
 #
-#   + System        # FIXME: really?
-#   + Serialization # used by MAG and CDFF-dev only
+#   + System
+#     FIXME: really?
+#   + Serialization
+#     Used by MAG
+#     Used by EnviRe in CDFF-dev: EnviRe uses it to serialize its graphs
 #
 # * Boost header-only libraries used by the CDFF:
 #
