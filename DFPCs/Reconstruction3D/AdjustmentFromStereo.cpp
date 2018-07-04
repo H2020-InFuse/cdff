@@ -448,7 +448,7 @@ bool AdjustmentFromStereo::ComputeCameraPoses()
 		{
 		EstimatePointCloud(); //Estimates point cloud from the most recent image pair
 		EstimateCameraPoses(); //Estimates the camera poses with respect to the most recent pose.
-		CleanRecentLeftRightCorrespondenceMap(); //Cleaning is needed because there may be correspondences without a valid 3d point.
+		CleanBundleAdjustmentInputs(); //Cleaning is needed because there may be correspondences without a valid 3d point.
 
 		bundleAdjuster->guessedPosesSequenceInput(*estimatedCameraPoses);
 		bundleAdjuster->guessedPointCloudInput(*estimatedPointCloud);
@@ -516,6 +516,7 @@ bool AdjustmentFromStereo::EstimateCameraPoses()
 	int numberOfCameras = featuresVectorsList.size();
 	int numberOfStereoCameras = numberOfCameras/2;
 	int pastLeftCorrespondenceIndex = 0;
+	Clear(*estimatedCameraPoses);
 	for(int stereoIndex = 0; stereoIndex < numberOfStereoCameras - 1; stereoIndex++)
 		{
 		pastLeftCorrespondenceIndex += (numberOfCameras - 2*stereoIndex - 1) + (numberOfCameras - 2*stereoIndex - 2);
@@ -527,6 +528,7 @@ bool AdjustmentFromStereo::EstimateCameraPoses()
 			return false;
 			}		
 		AddPose(*estimatedCameraPoses, *cameraTransform);
+		DEBUG_PRINT_TO_LOG("Estimated stereo pose", ToString(*cameraTransform));
 		}
 	return true;
 	}
@@ -567,18 +569,18 @@ bool AdjustmentFromStereo::ComputeCameraTransform(CorrespondenceMap2DConstPtr in
 void AdjustmentFromStereo::ComputeStereoPointCloud(CorrespondenceMap2DConstPtr inputCorrespondenceMap)
 	{
 	Pose3D rightCameraPose;
-	SetPosition(rightCameraPose, parameters.baseline, 0, 0);
+	SetPosition(rightCameraPose, -parameters.baseline, 0, 0);
 	SetOrientation(rightCameraPose, 0, 0, 0, 1);
 
 	reconstructor3dfrom2dmatches->poseInput(rightCameraPose);
 	reconstructor3dfrom2dmatches->matchesInput(*inputCorrespondenceMap);
 	reconstructor3dfrom2dmatches->process();
 	Copy( reconstructor3dfrom2dmatches->pointcloudOutput(), *estimatedPointCloud);
-	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*estimatedPointCloud));
+	DEBUG_PRINT_TO_LOG("Left Right Point Cloud", GetNumberOfPoints(*estimatedPointCloud));
 	DEBUG_SHOW_POINT_CLOUD(estimatedPointCloud);	
 	}
 
-void AdjustmentFromStereo::CleanRecentLeftRightCorrespondenceMap()
+void AdjustmentFromStereo::CleanBundleAdjustmentInputs()
 	{
 	std::vector<BaseTypesWrapper::T_UInt32> indexToRemoveList;
 	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*estimatedPointCloud); pointIndex++)
@@ -588,8 +590,8 @@ void AdjustmentFromStereo::CleanRecentLeftRightCorrespondenceMap()
 			indexToRemoveList.push_back(pointIndex);
 			}
 		}
-
 	RemoveCorrespondences(*latestCorrespondenceMaps, 0, indexToRemoveList);
+	RemovePoints(*estimatedPointCloud, indexToRemoveList);
 	}
 
 }

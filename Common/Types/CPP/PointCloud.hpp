@@ -18,6 +18,7 @@
 #include "BaseTypes.hpp"
 #include <stdlib.h>
 #include <memory>
+#include <vector>
 
 namespace PointCloudWrapper
 {
@@ -53,6 +54,7 @@ int GetNumberOfPoints(const PointCloud& pointCloud);
 BaseTypesWrapper::T_Double GetXCoordinate(const PointCloud& pointCloud, int pointIndex);
 BaseTypesWrapper::T_Double GetYCoordinate(const PointCloud& pointCloud, int pointIndex);
 BaseTypesWrapper::T_Double GetZCoordinate(const PointCloud& pointCloud, int pointIndex);
+void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32> pointIndexOrderedList);
 
 }
 

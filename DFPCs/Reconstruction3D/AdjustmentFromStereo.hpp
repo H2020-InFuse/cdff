@@ -176,7 +176,7 @@ namespace dfpc_ci {
 			MatrixWrapper::Matrix3dPtr inputFundamentalMatrix, 
 			PoseWrapper::Pose3DPtr outputCameraTransform);
 		void ComputeStereoPointCloud(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputCorrespondenceMap);
-		void CleanRecentLeftRightCorrespondenceMap();
+		void CleanBundleAdjustmentInputs();
 
 		PoseWrapper::Pose3DConstPtr AddAllPointCloudsToMap();
 		PoseWrapper::Pose3DConstPtr AddLastPointCloudToMap();

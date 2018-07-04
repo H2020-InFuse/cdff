@@ -67,6 +67,7 @@ void CeresAdjustment::process()
 		return;
 		}
 	ValidateInitialEstimations(measurementMatrix.rows/2);
+	numberOfElementsInFirstCorrespondenceMap = GetNumberOfCorrespondences( GetCorrespondenceMap(inCorrespondenceMapsSequence, 0) );
 
 	std::vector<cv::Mat> projectionMatricesList = SolveBundleAdjustment(measurementMatrix, outSuccess);
 
@@ -293,23 +294,34 @@ void CeresAdjustment::InitializePoints(std::vector<Point3d>& pointCloud, cv::Mat
 		}
 
 	//Initialization with initial estimation, this works under the assumption that the order of points in the correspondenceMap and the measurement Matrix is preserved.
-	CorrespondenceMap2D firstCorrespondenceMap = GetCorrespondenceMap(inCorrespondenceMapsSequence, 0);
+	CorrespondenceMap2D firstCorrespondenceMap = GetCorrespondenceMap(inCorrespondenceMapsSequence, 0);	
+
+	for(int measurementIndex = 0; measurementIndex < measurementMatrix.cols; measurementIndex++)
+		{
+		float measureX = measurementMatrix.at<float>(0, measurementIndex);
+		float measureY = measurementMatrix.at<float>(1, measurementIndex);
+		bool found = false;
+		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(firstCorrespondenceMap) && !found; correspondenceIndex++)
+			{
+			Point2D correspondingPoint = GetSource(firstCorrespondenceMap, correspondenceIndex);
+			if (measureX == correspondingPoint.x && measureY == correspondingPoint.y)
+				{
+				found = true;
+				}
+			}		
+		}
+
+
 	int startingMeasurementIndex = 0;
 	int measureCounter = 0;
 	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(inGuessedPointCloud); pointIndex++)
 		{
 		Point2D correspondingPoint = GetSource(firstCorrespondenceMap, pointIndex);
 		bool measurementFound = false;
-		PRINT_TO_LOG("pointIndex", pointIndex);
-		PRINT_TO_LOG("cX", correspondingPoint.x);
-		PRINT_TO_LOG("cY", correspondingPoint.y);
 		for(int measurementIndex = startingMeasurementIndex; measurementIndex < measurementMatrix.cols && !measurementFound; measurementIndex++)
 			{
 			float measureX = measurementMatrix.at<float>(0, measurementIndex);
 			float measureY = measurementMatrix.at<float>(1, measurementIndex);
-			PRINT_TO_LOG("measurementIndex", measurementIndex);
-			PRINT_TO_LOG("cX", measureX);
-			PRINT_TO_LOG("cY", measureY);
 			if (measureX == correspondingPoint.x && measureY == correspondingPoint.y)
 				{
 				pointCloud.at(measurementIndex)[0] = GetXCoordinate(inGuessedPointCloud, pointIndex);
@@ -319,14 +331,15 @@ void CeresAdjustment::InitializePoints(std::vector<Point3d>& pointCloud, cv::Mat
 				measurementFound = true;
 				startingMeasurementIndex = measurementIndex + 1;
 				measureCounter++;
-				PRINT_TO_LOG("measureCounter", measureCounter);
-				PRINT_TO_LOG("pointX", pointCloud.at(measurementIndex)[0]);
-				PRINT_TO_LOG("pointY", pointCloud.at(measurementIndex)[1]);
-				PRINT_TO_LOG("pointZ", pointCloud.at(measurementIndex)[2]);
 				}
 			}
 		}
-	ASSERT(measureCounter == measurementMatrix.cols, "Ceres Solver: error we could not initialize all cloud points. Probably order is not preseved between correspondenceMap and measurementMatrix");
+
+	ASSERT( measureCounter == numberOfElementsInFirstCorrespondenceMap, "Ceres adjustment error: some 3d points were not matched with a correspondence in the first map");
+
+	//Some points may not be initialized, due to the fact that they do not appear in the first correspondence map. 
+	//These points will appear last in the measurement, to avoid problems in convergence they will removed.
+	measurementMatrix = measurementMatrix( cv::Rect(0, 0, measureCounter, measurementMatrix.rows) );
 	}
 
 void CeresAdjustment::InitializePoses(std::vector<Transform3d>& posesSequence, int numberOfImages)
@@ -378,14 +391,6 @@ void CeresAdjustment::InitializePoses(std::vector<Transform3d>& posesSequence, i
 		double yawSine = 2.0 * ( GetWOrientation(guessedPose) * GetZOrientation(guessedPose) + GetXOrientation(guessedPose) * GetYOrientation(guessedPose) );
 		double yawCosine = 1.0 - 2.0 * ( GetYOrientation(guessedPose) * GetYOrientation(guessedPose) + GetZOrientation(guessedPose) * GetZOrientation(guessedPose) );  
 		posesSequence.at(stereoIndex)[5] = std::atan2(yawSine, yawCosine);
-
-		PRINT_TO_LOG("stereoIndex", stereoIndex);
-		PRINT_TO_LOG("trX", posesSequence.at(stereoIndex)[0]);
-		PRINT_TO_LOG("trY", posesSequence.at(stereoIndex)[1]);
-		PRINT_TO_LOG("trZ", posesSequence.at(stereoIndex)[2]);
-		PRINT_TO_LOG("rotX", posesSequence.at(stereoIndex)[3]);
-		PRINT_TO_LOG("rotY", posesSequence.at(stereoIndex)[4]);
-		PRINT_TO_LOG("rotZ", posesSequence.at(stereoIndex)[5]);
 		}
 	}
 
@@ -408,9 +413,7 @@ void CeresAdjustment::ValidateInitialEstimations(int numberOfCameras)
 	initialPoseEstimationIsAvailable = ( GetNumberOfPoses(inGuessedPosesSequence) > 0 );
 	initialPointEstimationIsAvailable = ( GetNumberOfPoints(inGuessedPointCloud) > 0 );
 
-	PRINT_TO_LOG("poses", GetNumberOfPoses(inGuessedPosesSequence));
-	PRINT_TO_LOG("cameras", numberOfCameras/2 - 1);
-	if (initialPoseEstimationIsAvailable && GetNumberOfPoses(inGuessedPosesSequence) != numberOfCameras/2 - 1)
+	if (initialPoseEstimationIsAvailable && GetNumberOfPoses(inGuessedPosesSequence) != (numberOfCameras/2 - 1) )
 		{
 		initialPoseEstimationIsAvailable = false;
 		PRINT_WARNING("Ceres adjustment, initial pose estimation does not match number of cameras, initial poses estimation is ignored");

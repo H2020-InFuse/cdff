@@ -62,6 +62,7 @@ namespace dfn_ci
 			static const CeresAdjustmentOptionsSet DEFAULT_PARAMETERS;
 			bool initialPoseEstimationIsAvailable;
 			bool initialPointEstimationIsAvailable;
+			int numberOfElementsInFirstCorrespondenceMap;
 
 			struct StereoImagePointCostFunctor 
 				{

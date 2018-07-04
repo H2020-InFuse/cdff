@@ -82,6 +82,45 @@ T_Double GetZCoordinate(const PointCloud& pointCloud, int pointIndex)
 	return pointCloud.points.arr[pointIndex].arr[2];
 }
 
+void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32> pointIndexOrderedList)
+	{
+	BaseTypesWrapper::T_UInt32 elementsToRemove = pointIndexOrderedList.size();
+	if ( elementsToRemove == 0)
+		{
+		return;
+		}
+	//Checking that input is ordered correctly.
+	static const std::string errorMessage = "Remove Points in PointCloud error, the second input was not an ORDERED list or some index is not within range";
+	for(int listIndex = 1; listIndex < elementsToRemove-1; listIndex++)
+		{
+		ASSERT( pointIndexOrderedList.at(listIndex-1) < pointIndexOrderedList.at(listIndex), errorMessage);
+		ASSERT(	pointIndexOrderedList.at(listIndex) < pointIndexOrderedList.at(listIndex+1), errorMessage);
+		}
+	ASSERT( pointIndexOrderedList.at(elementsToRemove-1) < pointCloud.points.nCount, errorMessage);
+	BaseTypesWrapper::T_UInt32 firstIndex = pointIndexOrderedList.at(0);
+	ASSERT(firstIndex >= 0, errorMessage);
+
+	//Removing elements 
+	BaseTypesWrapper::T_UInt32 nextIndexToRemove = 1;
+	BaseTypesWrapper::T_UInt32 currentGap = 1;
+	for(int pointIndex = firstIndex; pointIndex < pointCloud.points.nCount - elementsToRemove; pointIndex++)
+		{
+		if (nextIndexToRemove < elementsToRemove && pointIndex+1 == pointIndexOrderedList.at(nextIndexToRemove))
+			{
+			currentGap++;
+			nextIndexToRemove++;
+			pointIndex--; //This is to not allow the map index to step forward in the next iteration;
+			}
+		else
+			{
+			pointCloud.points.arr[pointIndex].arr[0] = pointCloud.points.arr[pointIndex+currentGap].arr[0];
+			pointCloud.points.arr[pointIndex].arr[1] = pointCloud.points.arr[pointIndex+currentGap].arr[1];
+			pointCloud.points.arr[pointIndex].arr[2] = pointCloud.points.arr[pointIndex+currentGap].arr[2];
+			}
+		}
+	pointCloud.points.nCount -= elementsToRemove;
+	}
+
 }
 
 /** @} */
