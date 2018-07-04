@@ -54,14 +54,15 @@ void ButtonsInterface::Display()
 	buttonsImage = cv::Mat(imageRows, imageColumns, CV_8UC3, backgroundColor);
 	for(const auto& button: buttonList)
 		{
-		cv::rectangle(buttonsImage, button.topLeftCorner, button.bottomRightCorner, buttonColor, -1, 8);
+		cv::rectangle(buttonsImage, button.topLeftCorner, button.bottomRightCorner, button.style.backgroundColor, -1, 8);
 		cv::Point TextStartPoint(button.topLeftCorner.x + xTextPadding, button.bottomRightCorner.y -yTextPadding);
-		cv::putText(buttonsImage, button.label, TextStartPoint, cv::FONT_HERSHEY_SIMPLEX, 0.6, textColor, 2, 8);
+		cv::putText(buttonsImage, button.label, TextStartPoint, button.style.font_face, button.style.font_scale, button.style.textColor, 2, 8);
 		}
 	cv::imshow(windowName, buttonsImage);
 	}
 
-void ButtonsInterface::AddButton(std::string const &label, ButtonsInterface::on_button_clicked_cb_t callback)
+void ButtonsInterface::AddButton(
+	std::string const &label, on_button_clicked_cb_t callback, const ButtonStyle style)
 {
 	Button button;
 	button.topLeftCorner.x = buttonPadding;
@@ -69,24 +70,16 @@ void ButtonsInterface::AddButton(std::string const &label, ButtonsInterface::on_
 		+ (buttonHeight + buttonPadding) * static_cast<int>(buttonList.size());
 	button.bottomRightCorner.x = button.topLeftCorner.x + buttonWidth;
 	button.bottomRightCorner.y = button.topLeftCorner.y + buttonHeight;
+	button.style = style;
 	button.label = label;
 	button.callback = callback;
 	buttonList.push_back(button);
 }
-/* --------------------------------------------------------------------------
- *
- * Private Member Variables
- *
- * --------------------------------------------------------------------------
- */
-const int ButtonsInterface::buttonPadding = 30;
-const int ButtonsInterface::xTextPadding = 20;
-const int ButtonsInterface::yTextPadding = 10;
-const cv::Scalar ButtonsInterface::backgroundColor = cv::Scalar(129, 129, 129);
-const cv::Scalar ButtonsInterface::buttonColor = cv::Scalar(79, 79, 79);
-const cv::Scalar ButtonsInterface::textColor = cv::Scalar(0, 0, 0);
 
-
+void ButtonsInterface::AddButton(std::string const &label, ButtonsInterface::on_button_clicked_cb_t callback)
+{
+	AddButton(label, callback, {});
+}
 
 /* --------------------------------------------------------------------------
  *

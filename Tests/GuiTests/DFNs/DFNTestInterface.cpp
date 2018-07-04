@@ -40,13 +40,17 @@
  * --------------------------------------------------------------------------
  */
 DFNTestInterface::DFNTestInterface(std::string dfnName, int buttonWidth, int buttonHeight) 
-	: mainInterface("Control Panel", buttonWidth, buttonHeight), parametersInterface(dfnName)
+	: mainInterface(dfnName + ": Control Panel", buttonWidth, buttonHeight)
+	, parametersInterface(dfnName)
 	{
-	mainInterface.AddButton("Process", std::bind(&DFNTestInterface::ProcessCallback, this));
-	}
-	{
+	ButtonsInterface::ButtonStyle process_button_style;
+	process_button_style.backgroundColor = cv::Scalar(0, 252, 124); // LawnGreen
+	process_button_style.textColor = cv::Scalar(255, 255, 255);     // White
 
+	mainInterface.AddButton(
+		"Process", std::bind(&DFNTestInterface::ProcessCallback, this), process_button_style);
 	}
+
 
 void DFNTestInterface::Run()
 	{

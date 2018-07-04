@@ -54,10 +54,37 @@ class ButtonsInterface
 
 		using on_button_clicked_cb_t = std::function<void()>;
 
+		/**
+		 * The `ButtonStyle` struct is used to control the appearance of
+		 * Buttons.
+		 * @see ButtonsInterface::AddButton
+		 */
+		struct ButtonStyle
+		{
+			cv::Scalar backgroundColor = cv::Scalar(79, 79, 79);
+			cv::Scalar textColor = cv::Scalar(0, 0, 0);
+
+			int font_face = cv::FONT_HERSHEY_SIMPLEX;
+			double font_scale = 0.6;
+		};
+
 		ButtonsInterface(std::string windowName, int buttonWidth, int buttonHeight);
 		~ButtonsInterface() = default;
 
 		void Display();
+
+		/**
+		 * Add a button to this `ButtonsInterface`
+		 *
+		 * @param label The text of the button
+		 * @param callback The callback function to call when the button is clicked
+		 * @param style The colours used on the button
+		 */
+		void AddButton(
+			std::string const &label,
+			on_button_clicked_cb_t callback,
+			const ButtonStyle style
+		);
 
 		/**
 		* Add a button to this `ButtonsInterface` with default styling
@@ -87,6 +114,7 @@ class ButtonsInterface
 			{
 			cv::Point topLeftCorner;
 			cv::Point bottomRightCorner;
+			ButtonStyle style;
 			std::string label;
 			on_button_clicked_cb_t callback;
 			};
@@ -96,17 +124,29 @@ class ButtonsInterface
 		cv::Mat buttonsImage;
 		int buttonWidth;
 		int buttonHeight;
-		static const int buttonPadding;
-		static const int xTextPadding;
-		static const int yTextPadding;
-		static const cv::Scalar backgroundColor;
-		static const cv::Scalar buttonColor;
-		static const cv::Scalar textColor;
+
+		// Button Appearance
+
+		/// The amount of space (in pixels) between the buttons and its neighbours
+		/// or the edge of the canvas.
+		int buttonPadding = 30;
+
+		/// The amount of free space (in pixels) between the edge of the button
+		/// and its label text along the _x_ direction
+		int xTextPadding = 20;
+
+	/// The amount of free space (in pixels) between the edge of the button
+	/// and its label text along the _y_ direction
+		int yTextPadding = 10;
+
+		/// The colour of the background of the image onto which the buttons
+		/// will be rendered.
+		// The default background colour is the same as the background colour of
+		// OpenCV windows.
+		cv::Scalar backgroundColor = cv::Scalar(215, 217, 220);
 
 		static void OnMouseCallback(int event, int x, int y, int z, void* data);
 		void OnMouseCallback(int event, int x, int y, int z);
-
-
 	};
 
 #endif

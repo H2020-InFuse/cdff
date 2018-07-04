@@ -51,6 +51,8 @@ class MainInterface
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
+
+
 	public:
 		MainInterface(std::string windowName, int buttonWidth, int buttonHeight);
 		~MainInterface() = default;
@@ -58,6 +60,13 @@ class MainInterface
 		void Run();
 
 		void AddButton(std::string option, ButtonsInterface::on_button_clicked_cb_t callback);
+
+		void AddButton(
+			std::string option,
+			ButtonsInterface::on_button_clicked_cb_t callback,
+			ButtonsInterface::ButtonStyle style);
+
+
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------

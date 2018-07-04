@@ -46,7 +46,11 @@ MainInterface::MainInterface(std::string windowName, int buttonWidth, int button
 
 void MainInterface::Run()
 	{
-	buttonList.AddButton("Exit", std::bind(&MainInterface::ExitCallback, this));
+	ButtonsInterface::ButtonStyle exit_style;
+	exit_style.backgroundColor = cv::Scalar(0, 69, 255); // OrangeRed
+	exit_style.textColor = cv::Scalar(255, 255, 255);    // White
+
+	buttonList.AddButton("Exit", std::bind(&MainInterface::ExitCallback, this), exit_style);
 	buttonList.Display();
 	while(!shutdownNow)
 		{
@@ -58,6 +62,15 @@ void MainInterface::AddButton(std::string option, ButtonsInterface::on_button_cl
 	{
 		buttonList.AddButton(option, callback);
 	}
+
+void MainInterface::AddButton(
+	std::string option,
+	ButtonsInterface::on_button_clicked_cb_t callback,
+	ButtonsInterface::ButtonStyle style)
+	{
+	buttonList.AddButton(option, callback, style);
+	}
+
 
 /* --------------------------------------------------------------------------
  *

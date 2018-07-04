@@ -38,11 +38,8 @@
 
 using namespace dfn_ci;
 
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
+/**
+ * The DFNTestInterface is the base class for all the GUI Tests.
  */
 class DFNTestInterface
 	{
@@ -75,7 +72,7 @@ class DFNTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		MainInterface mainInterface;	
+		MainInterface mainInterface;
 		ParametersInterface parametersInterface;
 		DFNCommonInterface* dfn;
 		static const std::string filePath;
