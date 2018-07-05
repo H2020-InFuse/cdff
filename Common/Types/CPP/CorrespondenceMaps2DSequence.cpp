@@ -72,6 +72,7 @@ void AddCorrespondenceMap(CorrespondenceMaps2DSequence& correspondenceMapsSequen
 
 const CorrespondenceMap2D& GetCorrespondenceMap(const CorrespondenceMaps2DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 correspondenceMapIndex)
 {
+	ASSERT(correspondenceMapIndex >= 0 && correspondenceMapIndex < correspondenceMapsSequence.nCount, "GetCorrespondenceMap error, correspondenceMapIndex out of range");
 	return correspondenceMapsSequence.arr[correspondenceMapIndex];
 }
 
@@ -84,6 +85,50 @@ BaseTypesWrapper::T_UInt32 GetNumberOfCorrespondenceMaps(const CorrespondenceMap
 {
 	return correspondenceMapsSequence.nCount;
 }
+
+void RemoveCorrespondenceMaps(CorrespondenceMaps2DSequence& correspondenceMapsSequence, std::vector<BaseTypesWrapper::T_UInt32> correspondenceMapIndexOrderedList)
+	{
+	BaseTypesWrapper::T_UInt32 elementsToRemove = correspondenceMapIndexOrderedList.size();
+	if ( elementsToRemove == 0)
+		{
+		return;
+		}
+
+	//Checking that input is ordered correctly.
+	static const std::string errorMessage = "Remove Correspondence Map error, the second input was not an ORDERED list or some index is not within range";
+	for(int listIndex = 1; listIndex < elementsToRemove-1; listIndex++)
+		{
+		ASSERT( correspondenceMapIndexOrderedList.at(listIndex-1) < correspondenceMapIndexOrderedList.at(listIndex), errorMessage);
+		ASSERT(	correspondenceMapIndexOrderedList.at(listIndex) < correspondenceMapIndexOrderedList.at(listIndex+1), errorMessage);
+		}
+	ASSERT( correspondenceMapIndexOrderedList.at(elementsToRemove-1) < correspondenceMapsSequence.nCount, errorMessage);
+	BaseTypesWrapper::T_UInt32 firstIndex = correspondenceMapIndexOrderedList.at(0);
+	ASSERT(firstIndex >= 0, errorMessage); 
+
+	//Removing elements
+	BaseTypesWrapper::T_UInt32 nextIndexToRemove = 1;
+	BaseTypesWrapper::T_UInt32 currentGap = 1;
+	for(int mapIndex = firstIndex; mapIndex < correspondenceMapsSequence.nCount - elementsToRemove; mapIndex++)
+		{
+		if (nextIndexToRemove < elementsToRemove && mapIndex+currentGap == correspondenceMapIndexOrderedList.at(nextIndexToRemove))
+			{
+			currentGap++;
+			nextIndexToRemove++;
+			mapIndex--; //This is to not allow the map index to step forward in the next iteration;
+			}
+		else
+			{
+			Copy(correspondenceMapsSequence.arr[mapIndex+currentGap], correspondenceMapsSequence.arr[mapIndex]);
+			}
+		}
+	correspondenceMapsSequence.nCount -= elementsToRemove;
+	}
+
+void RemoveCorrespondences(CorrespondenceMaps2DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 mapIndex, std::vector<BaseTypesWrapper::T_UInt32> correspondenceIndexOrderedList)
+	{
+	ASSERT(mapIndex >= 0 && mapIndex < correspondenceMapsSequence.nCount, "RemoveCorrespondences error, mapIndex out of range");
+	RemoveCorrespondences(correspondenceMapsSequence.arr[mapIndex], correspondenceIndexOrderedList);
+	}
 
 }
 

@@ -12,6 +12,18 @@ input_ports:
            the correspondence maps are ordered as (L1-R1), (L1-L2), (L1-R2), ..., 
            (L1-Lm), (L1-Rm), (R1,L2), (R1,R2), ..., (R1, Lm), (R1,Rm), ..., (Lm, Rm).
            the maximum number of features set is n = 8, for a maximum number of 28 maps.
+    - name: guessedPosesSequence
+      type: asn1SccPosesSequence
+      doc: This is an initial estimation of the camera poses, except the first camera. This input is optional,
+           as some algorithm may not need it. Set to an empty sequence if the input is
+           not provided.
+    - name: guessedPointCloud
+      type: asn1SccPointcloud
+      doc: This is an initial estimation of the 3d position of the features detected by the
+           first camera in the reference frame of the first camera. 3d points are listed in
+           the order in which the features appear in the first correspondence map (L1-R1).
+           This input is optional, as some algorirthms may not need it. Set to empty cloud
+           if the input is not provided.
 output_ports:
     - name: posesSequence
       type: asn1SccPosesSequence

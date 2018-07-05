@@ -1,11 +1,11 @@
 - Name: DFNsChain
   Parameters:
   - Name: GeneralParameters
-    Baseline: 1
+    Baseline: 0.09290672099999999
     PointCloudMapResolution: 0.1
     SearchRadius: 80
+    UseBundleInitialEstimation: true
     NumberOfAdjustedStereoPairs: 2
-    UseBundleInitialEstimation: false
 - Name: reconstructor3d
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
@@ -97,4 +97,43 @@
   - Name: GeneralParameters
     Baseline: 0.09290672099999999
     SquaredPixelErrorTolerance: 1e-4
+- Name: fundamentalMatrixComputer
+  Type: FundamentalMatrixComputation
+  Implementation: FundamentalMatrixRansac
+  Parameters:
+  - Name: GeneralParameters
+    OutlierThreshold: 1 
+    Confidence: 0.90
+- Name: cameraTransformEstimator
+  Type: CamerasTransformEstimation
+  Implementation: EssentialMatrixDecomposition
+  Parameters:
+  - Name: GeneralParameters
+    NumberOfTestPoints: 20
+  - Name: FirstCameraMatrix
+    FocalLengthX: 871.118
+    FocalLengthY: 872.007
+    PrinciplePointX: 518.813
+    PrinciplePointY: 384.272
+  - Name: SecondCameraMatrix
+    FocalLengthX: 868.904
+    FocalLengthY: 869.596
+    PrinciplePointX: 519.487
+    PrinciplePointY: 385.304
+- Name: reconstructor3dfrom2dmatches
+  Type: PointCloudReconstruction2DTo3D
+  Implementation: Triangulation
+  Parameters:
+  - Name: FirstCameraMatrix
+    FocalLengthX: 871.118
+    FocalLengthY: 872.007
+    PrinciplePointX: 518.813
+    PrinciplePointY: 384.272
+  - Name: SecondCameraMatrix
+    FocalLengthX: 868.904
+    FocalLengthY: 869.596
+    PrinciplePointX: 519.487
+    PrinciplePointY: 385.304
+  - Name: GeneralParameters
+    OutputInvalidPoints: true
     

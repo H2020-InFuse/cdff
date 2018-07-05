@@ -1,9 +1,11 @@
 - Name: DFNsChain
   Parameters:
   - Name: GeneralParameters
+    Baseline: 1
     PointCloudMapResolution: 0.1
     SearchRadius: 80
     NumberOfAdjustedStereoPairs: 2
+    UseBundleInitialEstimation: false
 - Name: reconstructor3d
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
@@ -49,9 +51,9 @@
     LeftPrincipalPointY: 463.537109375
     Baseline: 0.239977002
   - Name: ReconstructionSpace
-    LimitX: 80
-    LimitY: 80
-    LimitZ: 80
+    LimitX: 15
+    LimitY: 15
+    LimitZ: 15
 - Name: featuresExtractor2d
   Type: FeaturesExtraction2D
   Implementation: OrbDetectorDescriptor

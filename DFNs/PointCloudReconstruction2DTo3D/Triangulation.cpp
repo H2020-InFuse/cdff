@@ -37,6 +37,8 @@ Triangulation::Triangulation()
 	parametersHelper.AddParameter<double>("SecondCameraMatrix", "PrinciplePointY",
 		parameters.secondCameraMatrix.principalPoint.y, DEFAULT_PARAMETERS.secondCameraMatrix.principalPoint.y);
 
+	parametersHelper.AddParameter<bool>("GeneralParameters", "OutputInvalidPoints", parameters.outputInvalidPoints, DEFAULT_PARAMETERS.outputInvalidPoints);
+
 	firstCameraMatrix = ConvertToMat(DEFAULT_PARAMETERS.firstCameraMatrix);
 	secondCameraMatrix = ConvertToMat(DEFAULT_PARAMETERS.secondCameraMatrix);
 
@@ -87,7 +89,8 @@ const Triangulation::TriangulationOptionsSet Triangulation::DEFAULT_PARAMETERS =
 		.focalLengthX = 1.0,
 		.focalLengthY = 1.0,
 		.principalPoint = cv::Point2d(0, 0)
-	}
+	},
+	.outputInvalidPoints = false
 };
 
 cv::Mat Triangulation::ConvertToMat(CameraMatrix cameraMatrix)
@@ -156,10 +159,9 @@ PointCloudConstPtr Triangulation::Convert(cv::Mat homogeneousPointCloudMatrix)
 		float homogeneousPointY = homogeneousPointCloudMatrix.at<float>(1, pointIndex);
 		float homogeneousPointZ = homogeneousPointCloudMatrix.at<float>(2, pointIndex);
 		float homogeneousPointFactor = homogeneousPointCloudMatrix.at<float>(3, pointIndex);
-		if (std::abs(homogeneousPointFactor) < EPSILON)
+		if (std::abs(homogeneousPointFactor) < EPSILON && parameters.outputInvalidPoints)
 		{
-			// FIXME
-			//AddPoint(*pointCloud, 0, 0, 0);
+			AddPoint(*pointCloud, std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::quiet_NaN());
 		}
 		else
 		{
@@ -169,6 +171,10 @@ PointCloudConstPtr Triangulation::Convert(cv::Mat homogeneousPointCloudMatrix)
 					homogeneousPointX/homogeneousPointFactor,
 					homogeneousPointY/homogeneousPointFactor,
 					homogeneousPointZ/homogeneousPointFactor);
+			}
+			else if (parameters.outputInvalidPoints)
+			{
+				AddPoint(*pointCloud, std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::quiet_NaN());
 			}
 		}
 	}

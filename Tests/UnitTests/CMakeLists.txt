@@ -21,6 +21,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     Common/Converters/Transform3DMatConvertersTest.cpp
     Common/Converters/VisualPointFeatureVector3DPclPointCloudConvertersTest.cpp
     Common/Helpers/ParametersHelper.cpp
+    Common/Types/CorrespondenceMap2D.cpp
     DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp

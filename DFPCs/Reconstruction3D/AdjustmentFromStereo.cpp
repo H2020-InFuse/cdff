@@ -50,6 +50,7 @@ using namespace PointCloudWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace CorrespondenceMap2DWrapper;
+using namespace MatrixWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -62,6 +63,8 @@ AdjustmentFromStereo::AdjustmentFromStereo()
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfAdjustedStereoPairs", parameters.numberOfAdjustedStereoPairs, DEFAULT_PARAMETERS.numberOfAdjustedStereoPairs);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "UseBundleInitialEstimation", parameters.useBundleInitialEstimation, DEFAULT_PARAMETERS.useBundleInitialEstimation);
+	parametersHelper.AddParameter<float>("GeneralParameters", "Baseline", parameters.baseline, DEFAULT_PARAMETERS.baseline);
 
 	leftImage = NewFrame();
 	rightImage = NewFrame();
@@ -76,6 +79,11 @@ AdjustmentFromStereo::AdjustmentFromStereo()
 	latestCameraPoses = NewPoses3DSequence();
 	emptyFeaturesVector = NewVisualPointFeatureVector3D();
 	previousCameraPose = NewPose3D();
+
+	fundamentalMatrix = NewMatrix3d();
+	cameraTransform = NewPose3D();
+	estimatedPointCloud = NewPointCloud();
+	estimatedCameraPoses = NewPoses3DSequence();
 
 	optionalLeftFilter = NULL;
 	optionalRightFilter = NULL;
@@ -115,6 +123,12 @@ AdjustmentFromStereo::~AdjustmentFromStereo()
 	delete(latestCameraPoses);
 	DELETE_PREVIOUS(emptyFeaturesVector);
 	DELETE_PREVIOUS(previousCameraPose);
+
+	delete(fundamentalMatrix);
+	delete(cameraTransform);
+	delete(estimatedPointCloud);
+	delete(estimatedCameraPoses);
+
 	for(int imageIndex = 0; imageIndex < featuresVectorsList.size(); imageIndex++)
 		{
 		DELETE_PREVIOUS(featuresVectorsList.at(imageIndex));
@@ -180,8 +194,8 @@ void AdjustmentFromStereo::run()
 void AdjustmentFromStereo::setup()
 	{
 	configurator.configure(configurationFilePath);
+	ConfigureExtraParameters(); //Configuration shall happen before alias assignment here.
 	AssignDfnsAlias();
-	ConfigureExtraParameters();
 	}
 
 /* --------------------------------------------------------------------------
@@ -195,7 +209,9 @@ const AdjustmentFromStereo::AdjustmentFromStereoOptionsSet AdjustmentFromStereo:
 	{
 	.searchRadius = 20,
 	.pointCloudMapResolution = 1e-2,
-	.numberOfAdjustedStereoPairs = 4
+	.numberOfAdjustedStereoPairs = 4,
+	.useBundleInitialEstimation = true,
+	.baseline = 1
 	};
 
 /* --------------------------------------------------------------------------
@@ -236,6 +252,17 @@ void AdjustmentFromStereo::AssignDfnsAlias()
 	ASSERT(featuresExtractor2d != NULL, "DFPC Adjustment from stereo error: featuresExtractor2d DFN configured incorrectly");
 	ASSERT(featuresMatcher2d != NULL, "DFPC Adjustment from stereo error: featuresMatcher3d DFN configured incorrectly");
 	ASSERT(bundleAdjuster != NULL, "DFPC Adjustment from stereo error: bundleAdjuster DFN configured incorrectly");
+
+	fundamentalMatrixComputer = static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer", true) );
+	cameraTransformEstimator = static_cast<CamerasTransformEstimationInterface*>( configurator.GetDfn("cameraTransformEstimator", true) );
+	reconstructor3dfrom2dmatches = static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3dfrom2dmatches", true) );
+
+	if (parameters.useBundleInitialEstimation)
+		{
+		ASSERT(fundamentalMatrixComputer != NULL, "DFPC Adjustment from stereo error: fundamentalMatrixComputer DFN configured incorrectly");
+		ASSERT(cameraTransformEstimator != NULL, "DFPC Adjustment from stereo error: cameraTransformEstimator DFN configured incorrectly");
+		ASSERT(reconstructor3dfrom2dmatches != NULL, "DFPC Adjustment from stereo error: reconstructor3dfrom2dmatches DFN configured incorrectly");		
+		}
 
 	if (optionalLeftFilter != NULL)
 		{
@@ -417,6 +444,16 @@ CorrespondenceMap2DConstPtr AdjustmentFromStereo::MatchFeatures(VisualPointFeatu
 
 bool AdjustmentFromStereo::ComputeCameraPoses()
 	{
+	if (parameters.useBundleInitialEstimation)
+		{
+		EstimatePointCloud(); //Estimates point cloud from the most recent image pair
+		EstimateCameraPoses(); //Estimates the camera poses with respect to the most recent pose.
+		CleanBundleAdjustmentInputs(); //Cleaning is needed because there may be correspondences without a valid 3d point.
+
+		bundleAdjuster->guessedPosesSequenceInput(*estimatedCameraPoses);
+		bundleAdjuster->guessedPointCloudInput(*estimatedPointCloud);
+		}
+
 	bundleAdjuster->correspondenceMapsSequenceInput(*latestCorrespondenceMaps);
 	bundleAdjuster->process();
 	bool successOutput = bundleAdjuster->successOutput();
@@ -462,6 +499,172 @@ PoseWrapper::Pose3DConstPtr AdjustmentFromStereo::AddLastPointCloudToMap()
 	SetOrientation(*previousCameraPose, newOrientationX/norm, newOrientationY/norm, newOrientationZ/norm, newOrientationW/norm);
 
 	return previousCameraPose;
+	}
+
+bool AdjustmentFromStereo::EstimatePointCloud()
+	{
+	const CorrespondenceMap2D& recentLeftRightCorrespondence = GetCorrespondenceMap( *latestCorrespondenceMaps, 0 );
+	ComputeStereoPointCloud( &recentLeftRightCorrespondence );
+	bool thereIsOne3dPointForEachCorrespondence = GetNumberOfPoints(*estimatedPointCloud) == GetNumberOfCorrespondences( recentLeftRightCorrespondence );
+	VERIFY( thereIsOne3dPointForEachCorrespondence, 
+		"AdjustmentFromStereo error, the reconstructor3dTo2d you used does not output a 3d point for each correspondence, please adjust the option setting or use another DFN");
+	return thereIsOne3dPointForEachCorrespondence;
+	}
+
+bool AdjustmentFromStereo::EstimateCameraPoses()
+	{
+	int numberOfCameras = featuresVectorsList.size();
+	int numberOfStereoCameras = numberOfCameras/2;
+	int pastLeftCorrespondenceIndex = 0;
+	Clear(*estimatedCameraPoses);
+	for(int stereoIndex = 0; stereoIndex < numberOfStereoCameras - 1; stereoIndex++)
+		{
+		pastLeftCorrespondenceIndex += (numberOfCameras - 2*stereoIndex - 1) + (numberOfCameras - 2*stereoIndex - 2);
+		const CorrespondenceMap2D& leftPastLeftCorrespondence = GetCorrespondenceMap( *latestCorrespondenceMaps, pastLeftCorrespondenceIndex );
+		bool success = ComputeFundamentalMatrix(&leftPastLeftCorrespondence, fundamentalMatrix);
+		success = success && ComputeCameraTransform(&leftPastLeftCorrespondence, fundamentalMatrix, cameraTransform);
+		if (!success)
+			{	
+			return false;
+			}		
+		AddPose(*estimatedCameraPoses, *cameraTransform);
+		}
+	return true;
+	}
+
+bool AdjustmentFromStereo::ComputeFundamentalMatrix(CorrespondenceMap2DConstPtr inputCorrespondenceMap, Matrix3dPtr outputFundamentalMatrix)
+	{
+	if (GetNumberOfCorrespondences(*inputCorrespondenceMap) < 8 )
+		{
+		return false;
+		}
+	fundamentalMatrixComputer->matchesInput(*inputCorrespondenceMap);
+	fundamentalMatrixComputer->process();
+	Copy( fundamentalMatrixComputer->fundamentalMatrixOutput(), *outputFundamentalMatrix);	
+	bool fundamentalMatrixSuccess =  fundamentalMatrixComputer->successOutput();
+	DEBUG_PRINT_TO_LOG("Fundamental Matrix", fundamentalMatrixSuccess);
+	if(fundamentalMatrixSuccess)
+		{
+		DEBUG_SHOW_MATRIX(outputFundamentalMatrix);
+		}
+	return fundamentalMatrixSuccess;
+	}
+
+bool AdjustmentFromStereo::ComputeCameraTransform(CorrespondenceMap2DConstPtr inputCorrespondenceMap, Matrix3dPtr inputFundamentalMatrix, Pose3DPtr outputCameraTransform)
+	{
+	cameraTransformEstimator->fundamentalMatrixInput(*inputFundamentalMatrix);
+	cameraTransformEstimator->matchesInput(*inputCorrespondenceMap);
+	cameraTransformEstimator->process();
+	Copy( cameraTransformEstimator->transformOutput(), *outputCameraTransform);
+	bool essentialMatrixSuccess = cameraTransformEstimator->successOutput();
+	DEBUG_PRINT_TO_LOG("Essential Matrix", essentialMatrixSuccess);
+	if(essentialMatrixSuccess)
+		{
+		DEBUG_SHOW_POSE(outputCameraTransform);
+		}
+	return essentialMatrixSuccess;
+	}
+
+void AdjustmentFromStereo::ComputeStereoPointCloud(CorrespondenceMap2DConstPtr inputCorrespondenceMap)
+	{
+	Pose3D rightCameraPose;
+	SetPosition(rightCameraPose, -parameters.baseline, 0, 0);
+	SetOrientation(rightCameraPose, 0, 0, 0, 1);
+
+	reconstructor3dfrom2dmatches->poseInput(rightCameraPose);
+	reconstructor3dfrom2dmatches->matchesInput(*inputCorrespondenceMap);
+	reconstructor3dfrom2dmatches->process();
+	Copy( reconstructor3dfrom2dmatches->pointcloudOutput(), *estimatedPointCloud);
+	DEBUG_PRINT_TO_LOG("Left Right Point Cloud", GetNumberOfPoints(*estimatedPointCloud));
+	DEBUG_SHOW_POINT_CLOUD(estimatedPointCloud);	
+	}
+
+void AdjustmentFromStereo::CleanBundleAdjustmentInputs()
+	{
+	// Removing invalid 3d points
+	std::vector<BaseTypesWrapper::T_UInt32> indexToRemoveList;
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*estimatedPointCloud); pointIndex++)
+		{
+		if ( GetXCoordinate(*estimatedPointCloud, pointIndex) != GetXCoordinate(*estimatedPointCloud, pointIndex) )
+			{
+			indexToRemoveList.push_back(pointIndex);
+			}
+		}
+	RemoveCorrespondences(*latestCorrespondenceMaps, 0, indexToRemoveList);
+	RemovePoints(*estimatedPointCloud, indexToRemoveList);
+
+	//Removing repeated source points
+	for(int mapIndex = 0; mapIndex < GetNumberOfCorrespondenceMaps(*latestCorrespondenceMaps); mapIndex++)
+		{
+		indexToRemoveList.clear();
+		const CorrespondenceMap2D& correspondenceMap = GetCorrespondenceMap(*latestCorrespondenceMaps, mapIndex);
+		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(correspondenceMap); correspondenceIndex++)
+			{
+			BaseTypesWrapper::Point2D sourcePoint = GetSource(correspondenceMap, correspondenceIndex);
+			bool found = false;
+			for(int secondCorrespondenceIndex = correspondenceIndex+1; secondCorrespondenceIndex < GetNumberOfCorrespondences(correspondenceMap) && !found; secondCorrespondenceIndex++)
+				{
+				BaseTypesWrapper::Point2D secondSourcePoint = GetSource(correspondenceMap, secondCorrespondenceIndex);
+				if (StaticCastToInt(sourcePoint.x) == StaticCastToInt(secondSourcePoint.x) && StaticCastToInt(sourcePoint.y) == StaticCastToInt(secondSourcePoint.y))
+					{
+					indexToRemoveList.push_back(correspondenceIndex);
+					found = true;
+					}
+				}
+			}
+		RemoveCorrespondences(*latestCorrespondenceMaps, mapIndex, indexToRemoveList);
+		if (mapIndex == 0)
+			{
+			RemovePoints(*estimatedPointCloud, indexToRemoveList);
+			} 
+		}
+
+	//Removing repeated sink points
+	for(int mapIndex = 0; mapIndex < GetNumberOfCorrespondenceMaps(*latestCorrespondenceMaps); mapIndex++)
+		{
+		indexToRemoveList.clear();
+		const CorrespondenceMap2D& correspondenceMap = GetCorrespondenceMap(*latestCorrespondenceMaps, mapIndex);
+		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(correspondenceMap); correspondenceIndex++)
+			{
+			BaseTypesWrapper::Point2D sinkPoint = GetSink(correspondenceMap, correspondenceIndex);
+			bool found = false;
+			for(int secondCorrespondenceIndex = correspondenceIndex+1; secondCorrespondenceIndex < GetNumberOfCorrespondences(correspondenceMap) && !found; secondCorrespondenceIndex++)
+				{
+				BaseTypesWrapper::Point2D secondSinkPoint = GetSink(correspondenceMap, secondCorrespondenceIndex);
+				if (StaticCastToInt(sinkPoint.x) == StaticCastToInt(secondSinkPoint.x) && StaticCastToInt(sinkPoint.y) == StaticCastToInt(secondSinkPoint.y))
+					{
+					indexToRemoveList.push_back(correspondenceIndex);
+					found = true;
+					}
+				}
+			}
+		RemoveCorrespondences(*latestCorrespondenceMaps, mapIndex, indexToRemoveList);
+		if (mapIndex == 0)
+			{
+			RemovePoints(*estimatedPointCloud, indexToRemoveList);
+			} 
+		}
+	}
+
+int AdjustmentFromStereo::StaticCastToInt(float value)
+	{
+	int integerValue = 0;
+	if (value > 0)
+		{
+		while( value >= 0.5 )
+			{
+			integerValue++;
+			value = value - 1;
+			}
+		return integerValue;
+		}
+
+	while (value <= -0.5)
+		{
+		integerValue--;
+		value = value + 1;
+		}
+	return integerValue;
 	}
 
 }

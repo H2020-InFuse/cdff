@@ -63,7 +63,7 @@ class AssertException: public std::exception
 	#define ABORT_PROGRAM() throw AssertException();
 #endif
 
-#define PRINT_ABORT_MESSAGE_TO_LOG(message) \
+#define PRINT_ERROR(message) \
 	{ \
 	LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::ERROR); \
 	LoggerFactory::GetLogger()->Print(); \
@@ -74,7 +74,7 @@ class AssertException: public std::exception
 	{ \
 	if( !(condition) ) \
 		{ \
-		PRINT_ABORT_MESSAGE_TO_LOG(message) \
+		PRINT_ERROR(message) \
 		ABORT_PROGRAM() \
 		} \
 	}
@@ -92,7 +92,7 @@ class AssertException: public std::exception
 		std::stringstream stream; \
 		stream << #expression1 <<" evaluates to "<<(expression1)<<", "<<#expression2<<" evaluates to "<<(expression2)<<", message: "<<message;\
 		std::string abortMessage = stream.str(); \
-		PRINT_ABORT_MESSAGE_TO_LOG(abortMessage) \
+		PRINT_ERROR(abortMessage) \
 		ABORT_PROGRAM() \
 		} \
 	}
@@ -104,7 +104,7 @@ class AssertException: public std::exception
 		std::stringstream stream; \
 		stream << #expression1 <<" evaluates to "<<(expression1)<<", "<<#expression2<<" evaluates to "<<(expression2)<<", message: "<<message;\
 		std::string abortMessage = stream.str(); \
-		PRINT_ABORT_MESSAGE_TO_LOG(abortMessage) \
+		PRINT_ERROR(abortMessage) \
 		ABORT_PROGRAM() \
 		} \
 	}	
@@ -128,13 +128,18 @@ class AssertException: public std::exception
 	LoggerFactory::GetLogger()->Clear(); \
 	}
 
+#define PRINT_WARNING(message) \
+	{ \
+	LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::WARNING); \
+	LoggerFactory::GetLogger()->Print(); \
+	LoggerFactory::GetLogger()->Clear(); \
+	}
+
 #define VERIFY(condition, message) \
 	{ \
 	if( !(condition) ) \
 		{ \
-		LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::WARNING); \
-		LoggerFactory::GetLogger()->Print(); \
-		LoggerFactory::GetLogger()->Clear(); \
+		PRINT_WARNING(message); \
 		} \
 	}
 
@@ -142,9 +147,7 @@ class AssertException: public std::exception
 	{ \
 	if( !(condition) ) \
 		{ \
-		LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::ERROR); \
-		LoggerFactory::GetLogger()->Print(); \
-		LoggerFactory::GetLogger()->Clear(); \
+		PRINT_ERROR(message); \
 		} \
 	}
 
