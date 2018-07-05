@@ -7,7 +7,7 @@
 
 message(STATUS "Looking for ASN.1 C bindings in ${CMAKE_CURRENT_SOURCE_DIR}/C")
 if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/C)
-    message(STATUS "ASN.1 C bindings found. Skipping generation step")
+    message(STATUS "C code for ASN.1 types found. Skipping generation step")
 else()
     # Use _NOT_FOUND variables instead of _FOUND variables since 0 indicates
     # that the package was found and 1 indicates that it was missing.
@@ -21,10 +21,10 @@ else()
     )
 
     if(${MONO_CORE_NOT_FOUND} OR ${MONO_NUMERICS_NOT_FOUND})
-        message(STATUS "Mono installation not found. Downloading ASN.1 bindings.")
+        message(STATUS "Mono installation not found. Downloading C code for ASN.1 types.")
         set(MAKE_CMD "${CMAKE_SOURCE_DIR}/Tools/ASNtoC/FetcherScript.sh" )
     else()
-        message(STATUS "Found mono installation. Generating ASN.1 bindings locally")
+        message(STATUS "Found mono installation. Generating C code for ASN.1 types locally")
         set(MAKE_CMD "${CMAKE_SOURCE_DIR}/Tools/ASNtoC/GeneratorScript.sh" )
     endif()
 
