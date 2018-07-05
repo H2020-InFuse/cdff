@@ -1,4 +1,4 @@
-## Writing unit tests with the Catch unit-test framework (1.x branch)
+## Writing and running unit tests with the Catch unit-test framework (1.x branch)
 
 Read the [tutorial](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/tutorial.md). More [documentation](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/Readme.md) is available from the [home page](https://github.com/catchorg/Catch2/tree/Catch1.x). Read it too.
 
@@ -24,10 +24,11 @@ Read the [tutorial](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/tutori
 
     unsigned int Factorial(unsigned int number) {
         return number <= 1 ? number : Factorial(number-1)*number;
-        // bug: should be number > 1 ? Factorial(number-1)*number : 1
+        // bug: returns 0 for the factorial of zero, whereas it is actually 1
+        // better implementation: number > 1 ? Factorial(number-1)*number : 1
     }
 
-    TEST_CASE( "Factorials are computed", "[factorial]" ) {
+    TEST_CASE( "Factorials are computed", "[math][factorial]" ) {
         REQUIRE( Factorial(0) == 1 );
         REQUIRE( Factorial(1) == 1 );
         REQUIRE( Factorial(2) == 2 );
@@ -43,7 +44,7 @@ Read the [tutorial](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/tutori
         return number*number;
     }
 
-    TEST_CASE( "Squares are computed", "[square]" ) {
+    TEST_CASE( "Squares are computed", "[math][square]" ) {
         REQUIRE( Square(1) == 1 );
         REQUIRE( Square(2) == 4 );
     }
@@ -68,18 +69,24 @@ Read the [tutorial](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/tutori
     $ ./unit-tests
     ```
 
-    **In the CDFF**&emsp;The unit test executable is `Tests/UnitTests/cdff-unit-tests`. The CMake build system is parameterized so that it is also available through CTest (see `ctest(1)`), but by default CTest reports less.
+    **In the CDFF**&emsp;The unit test executable is `Tests/UnitTests/cdff-unit-tests`. The CMake build system is parameterized so that CTest runs this executable (see `ctest(1)`), however CTest reports less, unless used with `--verbose`:
 
     ```shell
     /path/to/CDFF/build/Tests/UnitTests:~$ ./cdff-unit-tests
-
-    /path/to/CDFF/build:~$ ctest [--verbose]
-    /path/to/CDFF/build:~$ make test # same as ctest --force-new-ctest-process
+      # this executable can only be run from its own directory; it fails if you
+      # run /path/to/cdff-unit-tests: this is a bug that needs fixing
     ```
 
-    Use options `-?, -h, --help` with `cdff-unit-tests`, and [this documentation page](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/command-line.md), for usage information.
+    or:
 
-    **Warning:** the test executable can only be run from its own directory; it fails if you run `/path/to/cdff-unit-tests`. This is a bug that needs fixing.
+    ```shell
+    /path/to/CDFF/build:~$ ctest [--verbose]
+
+    /path/to/CDFF/build:~$ make test
+      # same as ctest --force-new-ctest-process
+    ```
+
+    For advanced usage, such as running only certain tests identified by their names or tags, run `cdff-unit-tests -? | -h | --help` and read [this documentation page](https://github.com/catchorg/Catch2/blob/Catch1.x/docs/command-line.md).
 
 ### How to write tests? What are the available assertion macros?
 
@@ -95,4 +102,6 @@ Integration of Catch with CMake has been sorted out. You shouldn't have to chang
 
 ## Catch2
 
-The aforementioned links point to files in the 1.x branch (C++03) of Catch's code repository. The [master branch](https://github.com/catchorg/Catch2) is for version 2.x (C++11, C++14, C++17) and has documentation in similar files. We are using version 1.x at the moment.
+This readme file and the links it contains are for version 1.x (C++03) of Catch, not for version 2.x (C++11, C++14, C++17). We are using version 1.x at the moment.
+
+Catch's code repository contains a [master branch](https://github.com/catchorg/Catch2) for version 2.x and a [1.x branch](https://github.com/catchorg/Catch2/tree/Catch1.x) for version 1.x. When reading the online documentation, be careful to select the correct branch.

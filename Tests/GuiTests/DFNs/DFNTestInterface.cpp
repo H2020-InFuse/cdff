@@ -40,15 +40,17 @@
  * --------------------------------------------------------------------------
  */
 DFNTestInterface::DFNTestInterface(std::string dfnName, int buttonWidth, int buttonHeight) 
-	: mainInterface("Control Panel", buttonWidth, buttonHeight), parametersInterface(dfnName)
+	: mainInterface(dfnName + ": Control Panel", buttonWidth, buttonHeight)
+	, parametersInterface(dfnName)
 	{
-	mainInterface.AddButton("Process", DFNTestInterface::ProcessCallback, this);
+	ButtonsInterface::ButtonStyle process_button_style;
+	process_button_style.backgroundColor = cv::Scalar(96, 174, 39); // Green - Nephritis
+	process_button_style.textColor = cv::Scalar(255, 255, 255);     // White
+
+	mainInterface.AddButton(
+		"Process", std::bind(&DFNTestInterface::ProcessCallback, this), process_button_style);
 	}
 
-DFNTestInterface::~DFNTestInterface()
-	{
-
-	}
 
 void DFNTestInterface::Run()
 	{
@@ -139,11 +141,6 @@ void DFNTestInterface::SetupParameters()
 void DFNTestInterface::DisplayResult()
 	{
 
-	}
-
-void DFNTestInterface::ProcessCallback(void* referenceToClass)
-	{
-	((DFNTestInterface*)referenceToClass)->ProcessCallback();
 	}
 
 void DFNTestInterface::ProcessCallback()
