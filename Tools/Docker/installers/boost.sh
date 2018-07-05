@@ -68,8 +68,10 @@
 # * Compiled Boost libraries used by the CDFF:
 #
 #   + System
-#
-#   FIXME: really?
+#     FIXME: really?
+#   + Serialization
+#     Used by MAG
+#     Used by EnviRe in CDFF-dev: EnviRe uses it to serialize its graphs
 #
 # * Boost header-only libraries used by the CDFF:
 #
@@ -85,7 +87,7 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
   # Build and install
   mkdir build
   ./bootstrap.sh \
-    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono \
+    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono,serialization \
     --prefix="${INSTALL_DIR}"
   ./b2 --build-dir=build -q -j ${CPUS} link=shared install
 
