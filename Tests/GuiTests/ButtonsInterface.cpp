@@ -94,9 +94,10 @@ void ButtonsInterface::OnMouseCallback(int event, int x, int y, int z, void* dat
 
 void ButtonsInterface::OnMouseCallback(int event, int x, int y, int z)
 	{
-	if( event != cv::EVENT_LBUTTONDOWN )
+	if(event != cv::EVENT_LBUTTONDOWN)
+		{
 		return;
-
+		}
 	for(const auto& button: buttonList)
 		{
 		if (   x >= button.topLeftCorner.x && x <= button.bottomRightCorner.x
