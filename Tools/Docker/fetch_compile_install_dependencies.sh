@@ -62,7 +62,7 @@ Installation directories:
                             [$INSTALL_DIR]
   -p DIR            	    Directory where packages are stored
                             [$PKG_DIR]
-  -c                      Print current Configuration only
+  -c                        Print current Configuration only
 
 EOF
 }
@@ -77,6 +77,7 @@ function show_configuration {
   done
 
   echo ""
+  echo "source directory   = ${SOURCE_DIR}"
   echo "build directory    = ${BUILD_DIR}"
   echo "install directory  = ${INSTALL_DIR}"
   echo "Packages directory = ${PKG_DIR}"
@@ -211,9 +212,9 @@ while getopts ":b:i:p:s:c" opt; do
         exit 0
         ;;
     c)
-      show_configuration
-    exit 0
-            ;;
+        show_configuration
+        exit 0
+        ;;
     b)
 	BUILD_DIR=$OPTARG
         ;;
