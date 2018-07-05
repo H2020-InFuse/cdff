@@ -42,8 +42,7 @@ void printUpdated(const asn1SccRigidBodyState& output, correctedState state)
 
 TEST_CASE( "Call to process (Kalman correction)", "[process]" )
 {
-	cv::Mat vel0(6, 1, CV_32F);
-
+	
 	// Prepare input data for port "predictedState"
 	asn1SccRigidBodyState inputPredicted;
 	for(int i=0;i<3;i++)
