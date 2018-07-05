@@ -232,7 +232,21 @@ while getopts ":b:i:p:s:c" opt; do
       ;;
     esac
 done
+
 if [ $OPTIND -eq 1 ]; then
+  # Check if `checkinstall` is installed. If it is installed we need superuser
+  # privileges to complete the build & install for each package even if we're
+  # not installing the packages globally.
+  if type checkinstall 2>/dev/null; then
+    if [[ $(whoami) != "root" ]]; then
+        echo "Error: superuser privileges are required to run this tool."
+        echo "Unable to continue."
+        exit 127
+    fi
+  else
+    echo "Warning: checkinstall is not installed. No distribution packages will be generated."
+  fi
+
   build_all_function
 fi
 shift $((OPTIND-1))
