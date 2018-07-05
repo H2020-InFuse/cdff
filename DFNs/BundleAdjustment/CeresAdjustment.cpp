@@ -420,8 +420,10 @@ void CeresAdjustment::ValidateInputs()
 			for(int secondCorrespondenceIndex = correspondenceIndex+1; secondCorrespondenceIndex < GetNumberOfCorrespondences(correspondenceMap); secondCorrespondenceIndex++)
 				{
 				BaseTypesWrapper::Point2D secondSourcePoint = GetSource(correspondenceMap, secondCorrespondenceIndex);
-				bool notRepeated = sourcePoint.x != secondSourcePoint.x || sourcePoint.y != secondSourcePoint.y;
-				ASSERT(notRepeated, "Ceres Adjustment error, repeated soource points");			
+				BaseTypesWrapper::Point2D secondSinkPoint = GetSink(correspondenceMap, secondCorrespondenceIndex);
+				bool notRepeatedSource = sourcePoint.x != secondSourcePoint.x || sourcePoint.y != secondSourcePoint.y;
+				bool notRepeatedSink = sinkPoint.x != secondSinkPoint.x || sinkPoint.y != secondSinkPoint.y;
+				ASSERT(notRepeatedSource && notRepeatedSink, "Ceres Adjustment error, repeated source or sink points within the same correspondence map");			
 				}
 			}
 		}
