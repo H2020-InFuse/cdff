@@ -36,11 +36,9 @@ namespace dfn_ci
 
 			KalmanCorrector();
 			virtual ~KalmanCorrector();
-
 			virtual void configure();
 			virtual void process();
-
-			cv::KalmanFilter KF;
+			
 
 		private:
 
@@ -57,7 +55,7 @@ namespace dfn_ci
 			Helpers::ParametersListHelper parametersHelper;
 			KalmanCorrectorOptionsSet parameters;
 			static const KalmanCorrectorOptionsSet DEFAULT_PARAMETERS;
-
+			cv::KalmanFilter KF;
 			cv::Mat correct(cv::Mat measurement);
 
 			void ValidateParameters();
