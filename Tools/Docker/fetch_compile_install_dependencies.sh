@@ -15,7 +15,6 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-
 # directory where the files will be build and installed
 SOURCE_DIR="$(readlink -m $DIR"/../../External/source")"
 BUILD_DIR="$(readlink -m $DIR"/../../External/build")"
@@ -50,23 +49,25 @@ Installation directories:
                             [$INSTALL_DIR]
   -p DIR            	    Directory where packages are stored
                             [$PKG_DIR]
-  -c                      Print current Configuration only
+  -c                        Print current Configuration only
 
 EOF
 }
 
 function show_configuration {
-  echo "Dependencies that will be BUILT : "
+  echo -n "Dependencies that will be BUILT : "
   for i in "${InstallersToRUN[@]}"
   do
     if [[ ${infuse_dependencies_map[$i]} ]] ;  then
-    echo "$i";
-  fi
+      echo -n "$i ";
+    fi
   done
 
-	echo "build directory    = ${BUILD_DIR}"
-	echo "install directory  = ${INSTALL_DIR}"
-	echo "Packages directory = ${PKG_DIR}"
+  echo ""
+  echo "source directory   = ${SOURCE_DIR}"
+  echo "build directory    = ${BUILD_DIR}"
+  echo "install directory  = ${INSTALL_DIR}"
+  echo "Packages directory = ${PKG_DIR}"
 }
 
 # imports all functions present in all scripts in "/installers" folder
@@ -120,10 +121,15 @@ function run_installers {
   do
     if [[ ${infuse_dependencies_map[$i]} ]] ;  then
       # RUN the actual function
-      echo "Running INFUSE $i installer"
+      echo ""
+      echo "#"
+      echo "# Running INFUSE $i installer"
+      echo "#"
+      echo ""
       eval ${infuse_dependencies_map[$i]}
+      echo ""
       echo "INFUSE $i installer Done."
-  fi
+    fi
   done
 }
 
@@ -180,7 +186,19 @@ function build_all_function {
   #done
 }
 
-###### MAIN PROGRAMM
+###### MAIN PROGRAM
+
+# Attempt to cleanup leftover source folders if we exited early due to errors.
+function on_exit {
+  for i in "${InstallersToRUN[@]}"; do
+    if [[ -d  "${SOURCE_DIR}/$i" ]] ; then
+          echo "Removing left over source folder: ${SOURCE_DIR}/$i"
+      rm -rf "${SOURCE_DIR}/$i"
+    fi
+  done
+}
+trap on_exit EXIT
+
 find_installers
 
 # A POSIX variable
@@ -193,9 +211,9 @@ while getopts ":b:i:p:s:c" opt; do
         exit 0
         ;;
     c)
-      show_configuration
-    exit 0
-            ;;
+        show_configuration
+        exit 0
+        ;;
     b)
 	BUILD_DIR=$OPTARG
         ;;
