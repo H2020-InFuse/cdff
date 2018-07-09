@@ -35,6 +35,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
+    DFNs/KFCorrection/KalmanCorrector.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
@@ -70,6 +71,7 @@ set(UNITTEST_LIBRARIES Catch
     icp_3d
     image_undistortion
     iterative_pnp_solver
+    kalman_corrector
     kalman_predictor
 #[=[mock]=] # no longer used by any DFN unit test
     opencv_core

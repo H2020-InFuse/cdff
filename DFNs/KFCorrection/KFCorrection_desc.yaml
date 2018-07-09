@@ -1,0 +1,21 @@
+name: KFCorrection
+doc: DFN for Kalman filtering
+input_ports:
+    - name: predictedState
+      type: asn1SccRigidBodyState
+      doc: predicted rigid body state (returned by the DFN KFPrediction, for instance)
+    - name: measurement
+      type: asn1SccRigidBodyState
+      doc: measured rigid body pose parameters
+    - name: predictedStateCovariance
+      type: asn1SccRigidBodyState
+      doc: predicted state covariance
+output_ports:
+    - name: correctedState
+      type: asn1SccRigidBodyState
+      doc: corrected rigid body state
+    - name: stateCovariance
+      type: asn1SccRigidBodyState
+      doc: corrected state covariance
+implementations:
+    - KalmanCorrector
