@@ -135,7 +135,7 @@ function run_installers {
 
 function install_function {
 if (command -v checkinstall); then
-   checkinstall -y --pakdir $PKG_DIR --nodoc --pkgname="$1" --pkgversion="$2"
+   sudo checkinstall -y --pakdir $PKG_DIR --nodoc --pkgname="$1" --pkgversion="$2"
 else
    make --jobs=${CPUS} install
 fi
@@ -238,11 +238,8 @@ if [ $OPTIND -eq 1 ]; then
   # privileges to complete the build & install for each package even if we're
   # not installing the packages globally.
   if type checkinstall 2>/dev/null; then
-    if [[ $(whoami) != "root" ]]; then
-        echo "Error: superuser privileges are required to run this tool."
-        echo "Unable to continue."
-        exit 127
-    fi
+    echo "Caching your sudo password for install scripts ... "
+    sudo true
   else
     echo "Warning: checkinstall is not installed. No distribution packages will be generated."
   fi
