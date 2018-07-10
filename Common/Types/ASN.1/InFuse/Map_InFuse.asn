@@ -1,0 +1,58 @@
+Map-Types DEFINITIONS ::=
+BEGIN
+IMPORTS
+T-UInt32 FROM TASTE-BasicTypes
+T-Double FROM TASTE-ExtendedTypes
+Pose-InFuse FROM Pose-InFuse-Types
+Time FROM Time-Types;
+
+-- Message version
+map-InFuse-Version    T-UInt32 ::= 0
+
+--- Map sizes (manually defined)
+-- 1200 (width) x 1200 (height) x 7 (layers) x 4(bytes-per-data)
+mapMaxRows	T-UInt32 ::= 1200
+mapMaxCols	T-UInt32 ::= 1200
+mapMaxLayers	T-UInt32 ::= 7
+mapMaxBytes	T-UInt32 ::= 40320000
+
+--- Definition of enum Map-cell-type-t follows
+Map-cell-type-t ::= ENUMERATED
+{
+	cell-8U,	-- 8-bit unsigned integers ( 0..255 )
+	cell-16S,	-- 16-bit signed integers ( -32768..32767 )
+	cell-32S,	-- 32-bit signed integers ( -2147483648..2147483647 )
+	cell-32F	-- 32-bit floating-point numbers ( -FLT_MAX..FLT_MAX, INF, NAN )
+}
+
+--- Definition of enum Map-type-t follows
+Map-type-t ::= ENUMERATED
+{
+	map-UNDEF,
+	map-DEM,	-- Digital Elevation Map
+	map-NAV	-- Navigation Map
+}
+
+Map-InFuse ::= SEQUENCE
+{
+	msgVersion			T-UInt32,	-- Message version
+
+	timeStamp			Time,		-- Time at which the data has been acquired
+
+	type				Map-type-t,	-- Map type (Digital Elevation Map, Navigation Map...)
+	errValue			T-Double,	-- Cell error value (empty cells)
+	scale				T-Double,	-- Size of a map cell in meters
+
+	pose-fixedFrame-mapFrame	Pose-InFuse,	-- Transform from map to fixed frame (can be site frame or world frame)
+							-- The map origin is supposed to be its bottom-left corner
+
+	rows				T-UInt32,	-- Height of the map
+	cols				T-UInt32,	-- Width of the map
+	cellType			Map-cell-type-t,-- Matrix element depth identifier
+	cellDepth			T-UInt32,	-- Cell size in bytes
+	lineStep			T-UInt32,	-- Number of bytes each matrix row occupies. The value should include the padding bytes at the end of each row, if any.
+
+	data				OCTET STRING (SIZE(0..mapMaxBytes))	-- Cell data
+}
+
+END

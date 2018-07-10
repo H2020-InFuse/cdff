@@ -1,0 +1,24 @@
+Path-InFuse-Types DEFINITIONS ::=
+BEGIN
+IMPORTS
+T-UInt32 FROM TASTE-BasicTypes
+Time FROM Time-Types
+Pose-InFuse FROM Pose-InFuse-Types;
+
+--- Maximum size of Path_InFuse data
+pathMaxSize T-UInt32 ::= 100
+
+--- Definition of Path_InFuse starts
+Path-InFuse ::= SEQUENCE
+{
+	-- Metadata
+
+	msgVersion	T-UInt32,					-- Message version
+	timeStamp	Time,						-- Time at which the path has been created
+
+	-- Data
+
+	waypoints	SEQUENCE (SIZE(0..pathMaxSize)) OF Pose-InFuse	-- Waypoints describing the path
+}
+
+END
