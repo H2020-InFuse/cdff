@@ -55,6 +55,11 @@ function download_artifact_function(){
   test_present_or_exit wget
   test_present_or_exit curl
 
+  # Note: The wget command may fail when run in docker. This seems to be linked
+  # to the MTU (Maximum Transmission Unit). Fixing it requires setting the --mtu
+  # option in the docker startup script (/lib/systemd/docker.service).
+  # However, if you are running from the docker image you're better off
+  # just compiling the ASN.1 types locally with the GeneratorScript.
   if [[ `wget -S --spider $1  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
   echo "Fetching latest Artifacts for branch $branch_name."
   curl -o generatedFiles.gz -LOk -X GET --header "PRIVATE-TOKEN: pVUF6xEhoz2kgWAUyyCr" https://gitlab.spaceapplications.com/InFuse/CDFF/-/jobs/artifacts/$branch_name/download?job=autogeneration

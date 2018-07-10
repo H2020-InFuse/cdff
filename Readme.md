@@ -40,7 +40,11 @@ There are two ways you can build the CDFF (Core and Support components):
     Once you have installed all the dependencies and build tools, you can build the CDFF (Core and Support):
 
     ```
-    /path/to/CDFF/build$ cmake [-D USE_BUNDLED_DEPENDENCIES=ON] [-D CMAKE_INSTALL_PREFIX=/path/to/CDFF/install/] /path/to/CDFF/
+    /path/to/CDFF/build$ cmake                           \
+        [-D USE_BUNDLED_DEPENDENCIES=ON]                 \
+        [-D COMPILE_ASN1=OFF]                            \
+        [-D CMAKE_INSTALL_PREFIX=/path/to/CDFF/install/] \
+        /path/to/CDFF/
     /path/to/CDFF/build$ make
     ```
 
@@ -63,6 +67,10 @@ Paths and options:
   - Default: `OFF`, look directly in `/usr/local/`.
   - **Recommended** to use default when building inside an InFuse Docker container.
   - **Recommended** to install those dependencies in `External/install/` if you're not using Docker, and therefore recommended to use `ON` for that option.
+
+* `COMPILE_ASN1`: whether or not to compile the ASN.1 types directly on the machine (requires a working installation of mono) or download the latest compiled types from the CI server.
+  - Default: `ON`, to compile them locally
+  - **Recommended** to use the default value when building inside an InFuse Docker container.
 
 CMake variables given using the `-D` option are written to the CMake cache (`/path/to/CDFF/build/CMakeCache.txt`) and therefore don't need to be given on subsequent CMake runs. CMake will read their value in the cache. If you want to change a CMake cache entry, it is safer to delete the cache in addition to giving the new value on the command line. This makes sure that all entries whose value depends on the changed entry are regenerated, instead of being read from the cache.
 
