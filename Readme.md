@@ -2,21 +2,22 @@ This is the code repository for the Core and Support components of the Common Da
 
 * The Core and Support components are those that must be deployed in your final robotic target system.
 
-* The Dev component is a development environment which provides many utilities that can be used to efficiently implement reusable data fusion solutions. In fact, they **ought** to be used: using the CDFF's development environment is the natural way to develop the CDFF.
-
-To develop a Data Fusion Node (DFN) or a Data Fusion Processing Compound (DFPC), you should therefore not just clone the `CDFF` repository but also the `CDFF_dev` repository. Put the resulting local repositories next to each other, for instance.
+* The Dev component is a development environment containing tools to develop and test data fusion solutions, and visualize and analyze data fusion products.
 
 ## Building the CDFF (Core and Support)
 
 ### Download and compile
 
-Download the CDFF Core and Support components:
+Download the code for the CDFF's Core and Support components, for instance:
 
+```shell
+~/InFuse$ git clone git@gitlab.spaceapplications.com:InFuse/CDFF.git
 ```
-$ mkdir InFuse
-$ cd InFuse
-$ git clone git@gitlab.spaceapplications.com:InFuse/CDFF.git
-$ git clone git@gitlab.spaceapplications.com:InFuse/CDFF_dev.git
+
+To develop a Data Fusion Node (DFN) or a Data Fusion Processing Compound (DFPC), or more generally to use the tools provided by the CDFF's Dev component, you should also get that component:
+
+```shell
+~/InFuse$ git clone git@gitlab.spaceapplications.com:InFuse/CDFF_dev.git
 ```
 
 There are two ways you can build the CDFF (Core and Support components):
@@ -29,7 +30,7 @@ There are two ways you can build the CDFF (Core and Support components):
 
     The TL;DR is (seriously, read the documentation though):
 
-    ```
+    ```shell
     $ docker pull h2020infuse/cdff:latest
     $ docker run \
       --name=cdff --hostname=cdff \
@@ -47,42 +48,34 @@ There are two ways you can build the CDFF (Core and Support components):
 
     Once you have mounted the directory containing the CDFF's source code inside your Docker container, you can build the CDFF (Core and Support):
 
-    ```
+    ```shell
     /path/to/CDFF/build$ cmake [-D CMAKE_INSTALL_PREFIX=/path/to/CDFF/install/] /path/to/CDFF/
     /path/to/CDFF/build$ make
     ```
 
 * You can compile it using CMake and a C++ compiler **in a directory on your computer**.
 
-    In that case, you must have install the **dependencies** of the CDFF yourself on your computer, and the dependencies of these dependencies, and the necessary build tools. You can install the dependencies using your distribution package manager or from source. The dependencies you compile from source do not need to be installed in your system's local hierarchy (`/usr/local/`): you may want to install them there, or you may prefer to put them in a dedicated directory next to the CDFF's source (`External/install/`), which is the **recommended** location for now as it makes uninstalling them easy.
+    In that case, you must have installed the **dependencies** of the CDFF yourself on your computer, and the dependencies of these dependencies, and the necessary build tools. To do so, you can use your distribution's software package manager and/or compile from source. The dependencies you compile from source do not need to be installed in your system's local hierarchy (`/usr/local/`): you may want to install them there, or you may prefer to put them in a dedicated directory next to the CDFF's source (`External/install/`), which is the **recommended** location for now as it makes uninstalling them easy.
 
-    Downloading all the dependencies is easy using the included `fetch_compile_install_dependencies.sh` script. You should install a handful of dependencies though the package manager. 
+    Downloading the first-level dependencies is easy using the included `fetch_compile_install_dependencies.sh` script. You must first install a handful of recurse dependencies through the package manager.
 
-    ```
-    $ sudo apt install libmesa-dev libxt-dev # For vtk
-    $ cd /path/to/CDFF/External/fetch_compile_install_dependencies.sh
-    ```
-
-    This might take up to an hour. If you chose this route remember to pass the `-D USE_BUNDLED_DEPENDENCIES=ON` to cmake when building.
-
-    The documentation about the [dependencies of the CDFF](/External/Readme.md) describes this topic in more detail.
-
-    ```
+    ```shell
     $ sudo apt install build-essential cmake wget curl \
                        liblzma-dev libbz2-dev zlib1g-dev \
                        libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev \
                        libavcodec-dev libavformat-dev libswscale-dev libjpeg-dev \
-                       libpng++-dev libjasper-dev libtiff5-dev libv4l-dev freeglut3-dev 
-    $ cd /path/to/CDFF/External/fetch_compile_install_dependencies.sh
+                       libpng++-dev libjasper-dev libtiff5-dev libv4l-dev freeglut3-dev \
+                       libmesa-dev libxt-dev # last two packages for VTK
+    $ /path/to/CDFF/External/fetch_compile_install_dependencies.sh
     ```
 
-    This might take up to an hour. If you chose this route remember to pass the `-D USE_BUNDLED_DEPENDENCIES=ON` to cmake when building.
+    This might take up to an hour. If you choose this route remember to pass `-D USE_BUNDLED_DEPENDENCIES=ON` to CMake when building.
 
     The documentation about the [dependencies of the CDFF](/External/Readme.md) describes this topic in more detail.
 
     Once you have installed all the dependencies and build tools, you can build the CDFF (Core and Support):
 
-    ```
+    ```shell
     /path/to/CDFF/build$ cmake                           \
         [-D USE_BUNDLED_DEPENDENCIES=ON]                 \
         [-D COMPILE_ASN1=OFF]                            \
@@ -108,11 +101,11 @@ Paths and options:
 
 * `USE_BUNDLED_DEPENDENCIES`: Whether or not to look for the CDFF's direct dependencies (Boost, Eigen, PCL, OpenCV...) in `External/install/{bin,include,lib,share}` before looking for them in `/usr/local/{bin,include,lib,share}`.
   - Default: `OFF`, look directly in `/usr/local/`.
-  - **Recommended** to use default when building inside an InFuse Docker container.
+  - **Recommended** to use the default value when building inside an InFuse Docker container.
   - **Recommended** to install those dependencies in `External/install/` if you're not using Docker, and therefore recommended to use `ON` for that option.
 
-* `COMPILE_ASN1`: whether or not to compile the ASN.1 types directly on the machine (requires a working installation of mono) or download the latest compiled types from the CI server.
-  - Default: `ON`, to compile them locally
+* `COMPILE_ASN1`: Compile the ASN.1 data types on your machine (requires a working installation of Mono, with the Core and Numerics libraries), or download precompiled data types (compiled by the CI server).
+  - Default: `ON`, compile them locally.
   - **Recommended** to use the default value when building inside an InFuse Docker container.
 
 CMake variables given using the `-D` option are written to the CMake cache (`/path/to/CDFF/build/CMakeCache.txt`) and therefore don't need to be given on subsequent CMake runs. CMake will read their value in the cache. If you want to change a CMake cache entry, it is safer to delete the cache in addition to giving the new value on the command line. This makes sure that all entries whose value depends on the changed entry are regenerated, instead of being read from the cache.
@@ -134,13 +127,13 @@ See the [ASNtoC documentation](/Tools/ASNtoC/Readme.md) for more information. An
 
 Once the CDFF (Core and Support) is built you can run the unit tests with:
 
-```
+```shell
 /path/to/CDFF/build$ make test
 ```
 
 **Warning** don't even try to install for now, our current `make install` rule is very incomplete, sorry. Only building works, not installing. This is because we are focusing on developing the CDFF at the moment, not on installing (or uninstalling) it. In the future, one will be able to install the CDFF (Core and Support components) in their selected `CMAKE_INSTALL_PREFIX` (in `{bin,lib}` subdirectories) with:
 
-```
+```shell
 /path/to/CDFF/build$ [sudo] make install
 ```
 

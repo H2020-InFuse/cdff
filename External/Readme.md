@@ -189,7 +189,7 @@ The current default of the aforementioned helper script is to install all the so
 
 Download, build, and install the CDFF's direct dependencies in `External/install/{bin,include,lib,share}` by default:
 
-```
+```shell
 /path/to/CDFF/External$ [sudo] ./fetch_compile_install_dependencies.sh
 ```
 
