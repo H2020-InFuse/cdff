@@ -116,7 +116,7 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
       # Recommended: be the same user inside your container as outside
       --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
       --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
-      --user=my-UID:my-GID \
+      --user=$(id -u $(whoami)):$(id -g $(whoami)) \
 
       # Recommended: use an init process and delete your container when you exit it
       --init --rm \

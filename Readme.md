@@ -26,9 +26,9 @@ There are two ways you can build the CDFF (Core and Support components):
 
     We provide a Docker image based on Ubuntu 16.04 where build tools and the CDFF's dependencies are pre-installed. You can spawn a container from that image, mount the CDFF's code inside it, and compile. That image, and the libraries it contains, make up a common **reference environment** for the CDFF.
 
-    We have documentation about [using Docker and the InFuse Docker image](https://drive.google.com/open?id=1aW3_giavOZdvOljEEfun4W0Cq2tlnDvb8S3y2bysjpw), please see also [this short section](/External/Readme.md#option-1-get-the-cdffs-dependencies-packaged-in-a-docker-image) in the documentation about the dependencies of the CDFF.
+    We have documentation about [using Docker and the InFuse Docker image](https://drive.google.com/open?id=1aW3_giavOZdvOljEEfun4W0Cq2tlnDvb8S3y2bysjpw), however perhaps start with [this short section](/External/Readme.md#option-1-get-the-cdffs-dependencies-packaged-in-a-docker-image) in the documentation about the dependencies of the CDFF.
 
-    The TL;DR is (seriously, read the documentation though):
+    The TL;DR is (seriously, read the documentation though, not all these options are necessary all the time):
 
     ```shell
     $ docker pull h2020infuse/cdff:latest
