@@ -35,6 +35,7 @@ docker() {
         --name=cdff --hostname=cdff \
         --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
         --volume=/dev/log:/dev/log \
+        --cap-add=SYS_PTRACE --publish=2159:2159 \
         --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
         --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
         --user=$(id -u $(whoami)):$(id -g $(whoami)) \
@@ -64,6 +65,12 @@ docker() {
 #
 # Optional: allow messages from inside the container to be logged outside
 # --volume=/dev/log:/dev/log
+#
+# Optional: allow breakpoint debugging
+# --cap-add=SYS_PTRACE
+#
+# Optional: open port for debugging from outside the container
+# --publish=2159:2159
 #
 # Recommended: be the same user inside your container as outside
 # --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro

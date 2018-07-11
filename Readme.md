@@ -36,14 +36,14 @@ There are two ways you can build the CDFF (Core and Support components):
       --name=cdff --hostname=cdff \
       --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
       --volume=/dev/log:/dev/log \
+      --cap-add=SYS_PTRACE --publish=2159:2159 \
       --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
       --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
       --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
       --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
       --user=$(id -u $(whoami)):$(id -g $(whoami))
       --init --rm --interactive --tty \
-      -p 9091:9091 --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
-      h2020infuse/cdff:latest bash
+      h2020infuse/cdff:latest [bash]
     ```
 
     Once you have mounted the directory containing the CDFF's source code inside your Docker container, you can build the CDFF (Core and Support):
