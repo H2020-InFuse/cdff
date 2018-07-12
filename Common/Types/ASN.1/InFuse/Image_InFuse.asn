@@ -111,7 +111,8 @@ ImageMetadata-InFuse ::= SEQUENCE
 
   hasFixedTransform              BOOLEAN,                             -- Is there a fixed transform attached to the image (robot base frame to fixed frame)
   pose-robotFrame-sensorFrame    Pose-InFuse,	                        -- Transform from sensor to robot frame
-  poseList                       SEQUENCE(SIZE(0..10)) OF Pose-InFuse -- Transforms that can be relevant to use the image
+  pose-fixedFrame-robotFrame     Pose-InFuse                          -- Transform from robot frame to fixed frame (can be site frame or world frame). This is used mainly for DEBUG.
+  -- poseList                       SEQUENCE(SIZE(0..10)) OF Pose-InFuse -- Transforms that can be relevant to use the image
 }
 
 --- Definition of ImageStamped-InFuse
