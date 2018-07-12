@@ -11,20 +11,20 @@ pose-InFuse-Version T-UInt32 ::= 1
 
 Pose-InFuse ::= SEQUENCE
 {
-    -- Metadata 
+    -- Metadata
 
-    msgVersion		T-UInt32,		            -- Message version
-    producerId          T-String,                           -- Name of the module producing the pose
-    dataEstimated       SEQUENCE(SIZE(7)) OF INTEGER,       -- Which variables in translation/orientation are estimated by the pose
+    msgVersion		      T-UInt32,		                  -- Message version
+    producerId          T-String,                     -- Name of the module producing the pose
+    dataEstimated       SEQUENCE(SIZE(7)) OF BOOLEAN, -- Which variables in translation/orientation are estimated by the pose
 
 
     parentFrameId  	T-String, 	                    -- Frame IN WHICH the Pose is represented
-    parentTime     	Time, 	 		            -- Timestamp AT WHICH we consider the Parent Frame  
+    parentTime     	Time, 	 		            -- Timestamp AT WHICH we consider the Parent Frame
     childFrameId   	T-String,		            -- Frame OF WHICH the Pose is represented
     childTime      	Time,			            -- Timestamp AT WHICH we consider the Child Frame
 
 
-    -- Data 
+    -- Data
 
     transform           TransformWithCovariance	            -- Actual Transform (Position, Quaternion, 6x6 Covariance)
 }
