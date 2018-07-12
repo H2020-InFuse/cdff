@@ -169,6 +169,23 @@ void PointCloudTransformer::ViewPointCloud()
 	Visualizers::PclVisualizer::Disable();
 	}
 
+void PointCloudTransformer::Rescale(float scale)
+	{
+	InitTransformedCloud();
+	if ( transformedCloud->points.size() == 0)
+		{
+		return;
+		}
+
+	for(unsigned pointIndex = 0; pointIndex < transformedCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ& point = transformedCloud->points.at(pointIndex);
+		point.x = point.x * scale;
+		point.y = point.y * scale;
+		point.z = point.z * scale;
+		}	
+	}
+
 /* --------------------------------------------------------------------------
  *
  * Private Member Functions

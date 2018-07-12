@@ -107,6 +107,13 @@ int main(int argc, char** argv)
 			{
 			pointCloudTransformer.RemoveOutliers();
 			}
+		else if (command == "rescale")
+			{
+			float scale;
+			std::cin >> scale;
+			PRINT_TO_LOG("Rescaling by", scale);
+			pointCloudTransformer.Rescale(scale);			
+			}
 		}
 
 	return 0;

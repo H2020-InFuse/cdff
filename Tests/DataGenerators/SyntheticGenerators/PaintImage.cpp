@@ -41,6 +41,7 @@ Example usage: ./match_images ../tests/Data/Images/DevonIslandRoadLeft.ppm ../te
 const std::string INSTRUCTIONS = 
 	"press keys A-W-S-D to navigate into the image \n \
 	press keys O-P to zoom in or out \n \
+	press key T to switch between single point and box selection \n \
 	press the left mouse button to mark a keypoint down \n \
 	press the right mouse button to unmark a keypoint \n \
 	press m to save the image to file \n \
