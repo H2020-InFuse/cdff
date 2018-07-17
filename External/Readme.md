@@ -113,10 +113,16 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
       # Optional: allow messages from inside the container to be logged outside
       --volume=/dev/log:/dev/log \
 
+      # Optional: allow breakpoint debugging
+      --cap-add=SYS_PTRACE \
+
+      # Optional: open port for debugging from outside the container
+      --publish=2159:2159 \
+
       # Recommended: be the same user inside your container as outside
       --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
       --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
-      --user=my-UID:my-GID \
+      --user=$(id -u $(whoami)):$(id -g $(whoami)) \
 
       # Recommended: use an init process and delete your container when you exit it
       --init --rm \
@@ -189,7 +195,7 @@ The current default of the aforementioned helper script is to install all the so
 
 Download, build, and install the CDFF's direct dependencies in `External/install/{bin,include,lib,share}` by default:
 
-```
+```shell
 /path/to/CDFF/External$ [sudo] ./fetch_compile_install_dependencies.sh
 ```
 
