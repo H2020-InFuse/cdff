@@ -4,8 +4,7 @@
 ----------------------------------------------------------------
 Pointcloud-Types DEFINITIONS ::=
 BEGIN
-IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes Vector3d FROM Eigen-Types Time FROM Time-Types Vector4d FROM Eigen-Types Point FROM Point-Types;
-
+IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes Vector3d FROM Eigen-Types Time FROM Time-Types Vector4d FROM Eigen-Types Point FROM Point-Types Pose-InFuse FROM Pose-InFuse-Types;
 
 ---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
 
@@ -13,15 +12,55 @@ IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-I
 
 
 --- Size of the Pointcloud data
-maxPointcloudSize T-UInt32 ::= 300000
+maxPointcloudSize T-UInt32 ::= 400000
+
+--- Message version
+pointCloud-Version T-UInt32 ::= 1
+
+
+--- Point cloud metadata
+PointCloud-Metadata ::=
+SEQUENCE
+{
+
+    msgVersion			            T-UInt32,		-- Message version
+    
+    sensorId			            T-String,		-- Identifier for the sensor the produced the point cloud
+    frameId				    T-String, 		-- Frame in which the point cloud is described 
+    timeStamp			            Time,		-- Time at which the data has been acquired
+    
+    height				    T-UInt32,		-- Height of the point cloud
+    width				    T-UInt32,		-- Width of the point cloud (1 if isOrdered is TRUE)
+    
+    
+    isRegistered		            BOOLEAN,		-- Is there color info on the point cloud
+    isOrdered			            BOOLEAN, 		-- Is the point cloud ordered
+    hasFixedTransform                       BOOLEAN,            -- Is there a fixed transform attached to the point cloud (robot base frame to fixed frame)
+    
+    pose-robotFrame-sensorFrame             Pose-InFuse,	-- Transform from sensor to robot frame
+    pose-fixedFrame-robotFrame              Pose-InFuse        -- Transform from robot frame to fixed frame (can be site frame or world frame). This is used mainly for DEBUG.
+
+}
+
+PointCloud-Data ::=
+SEQUENCE 
+{
+    -- Geometrical data
+    points				    SEQUENCE(SIZE(1..maxPointcloudSize)) OF Point,	
+    -- Colors (empty if isRegitered is FALSE)
+    colors				    SEQUENCE(SIZE(1..maxPointcloudSize)) OF Vector3d,	
+    -- Intensity
+    intensity                               SEQUENCE(SIZE(1..maxPointcloudSize)) OF T-Int32       
+
+}
+
 
 ---  Definition POINTCLOUD Starts 
 Pointcloud   ::= 
 SEQUENCE
 {
-    ref-time				Time,
-    points					SEQUENCE (SIZE(1..maxPointcloudSize)) OF Point,
-    colors					SEQUENCE (SIZE(1..maxPointcloudSize)) OF Vector4d
+    metadata                                PointCloud-Metadata,
+    data                                    PointCloud-Data
 }
 
 ---  Definition POINTCLOUD Ends 
