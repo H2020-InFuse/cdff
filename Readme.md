@@ -65,7 +65,7 @@ There are two ways you can build the CDFF (Core and Support components):
                        libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev \
                        libavcodec-dev libavformat-dev libswscale-dev libjpeg-dev \
                        libpng++-dev libjasper-dev libtiff5-dev libv4l-dev freeglut3-dev \
-                       libmesa-dev libxt-dev # last two packages for VTK
+                       libxt-dev #  for VTK
     $ /path/to/CDFF/External/fetch_compile_install_dependencies.sh
     ```
 
