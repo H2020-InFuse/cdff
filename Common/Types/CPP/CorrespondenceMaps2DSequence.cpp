@@ -133,18 +133,20 @@ void RemoveCorrespondences(CorrespondenceMaps2DSequence& correspondenceMapsSeque
 BitStream ConvertToBitStream(const CorrespondenceMaps2DSequence& sequence)
 	{
 	BitStream bitStream = BitStreamAllocator::AllocateBitStream(asn1SccCorrespondenceMaps2DSequence_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode;
+	int errorCode = 0;
 	bool success = asn1SccCorrespondenceMaps2DSequence_Encode(&sequence, &bitStream, &errorCode, true);
 
-	ASSERT(success, "Error while converting CorrespondenceMaps2DSequence to BitStream");
+	ASSERT(success && (errorCode == 0), "Error while converting CorrespondenceMaps2DSequence to BitStream");
 	return bitStream;
 	}
 
 void ConvertFromBitStream(BitStream bitStream, CorrespondenceMaps2DSequence& sequence)
 	{
-	int errorCode;
+	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccCorrespondenceMaps2DSequence_REQUIRED_BYTES_FOR_ENCODING);
+	int errorCode = 0;
 	bool success = asn1SccCorrespondenceMaps2DSequence_Decode(&sequence, &bitStream, &errorCode);
-	ASSERT(success, "Error while converting BitStream to CorrespondenceMaps2DSequence");
+	ASSERT(success && (errorCode == 0), "Error while converting BitStream to CorrespondenceMaps2DSequence");
+	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccCorrespondenceMaps2DSequence_REQUIRED_BYTES_FOR_ENCODING);
 	}
 
 }

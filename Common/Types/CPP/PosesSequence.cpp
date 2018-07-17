@@ -60,6 +60,11 @@ void Initialize(Poses3DSequence& posesSequence)
 void Clear(Poses3DSequence& posesSequence)
 {
 	posesSequence.nCount = 0;
+	for(int poseIndex = 0; poseIndex < MAX_POSES_SEQUENCE_LENGTH; poseIndex++)
+		{
+		posesSequence.arr[poseIndex].pos.nCount = 3;
+		posesSequence.arr[poseIndex].orient.nCount = 4;
+		}
 }
 
 void AddPose(Poses3DSequence& posesSequence, const Pose3D& pose)
@@ -87,18 +92,20 @@ BaseTypesWrapper::T_UInt32 GetNumberOfPoses(const Poses3DSequence& posesSequence
 BitStream ConvertToBitStream(const Poses3DSequence& sequence)
 	{
 	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode;
+	int errorCode = 0;
 	bool success = asn1SccPosesSequence_Encode(&sequence, &bitStream, &errorCode, true);
 
-	ASSERT(success, "Error while converting Poses3DSequence to BitStream");
+	ASSERT(success && (errorCode == 0), "Error while converting Poses3DSequence to BitStream");
 	return bitStream;
 	}
 
 void ConvertFromBitStream(BitStream bitStream, Poses3DSequence& sequence)
 	{
-	int errorCode;
+	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING);
+	int errorCode = 0;
 	bool success = asn1SccPosesSequence_Decode(&sequence, &bitStream, &errorCode);
-	ASSERT(success, "Error while converting BitStream to Poses3DSequence");
+	ASSERT(success && (errorCode == 0), "Error while converting BitStream to Poses3DSequence");
+	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING);
 	}
 
 }

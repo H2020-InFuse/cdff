@@ -29,6 +29,11 @@ void Copy(const Matrix3d& source, Matrix3d& destination)
 Matrix3dPtr NewMatrix3d(InitializationType initializationType)
 {
 	Matrix3dPtr newMatrix = new Matrix3d();
+	newMatrix->nCount = 3;
+	for(int row = 0; row < 3; row++)
+		{
+		newMatrix->arr[row].nCount = 3;
+		}
 
 	switch(initializationType)
 	{
@@ -109,18 +114,20 @@ void SetElement(Matrix3d& matrix, unsigned rowIndex, unsigned columnIndex, T_Dou
 BitStream ConvertToBitStream(const Matrix3d& matrix)
 	{
 	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode;
+	int errorCode = 0;
 	bool success = asn1SccMatrix3d_Encode(&matrix, &bitStream, &errorCode, true);
 
-	ASSERT(success, "Error while converting Matrix3d to BitStream");
+	ASSERT(success && (errorCode == 0), "Error while converting Matrix3d to BitStream");
 	return bitStream;
 	}
 
 void ConvertFromBitStream(BitStream bitStream, Matrix3d& matrix)
 	{
-	int errorCode;
+	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING);
+	int errorCode = 0;
 	bool success = asn1SccMatrix3d_Decode(&matrix, &bitStream, &errorCode);
-	ASSERT(success, "Error while converting BitStream to Matrix3d");
+	ASSERT(success && (errorCode == 0), "Error while converting BitStream to Matrix3d");
+	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING);
 	}
 
 }

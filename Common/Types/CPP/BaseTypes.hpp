@@ -50,7 +50,8 @@ class BitStreamAllocator
 	{
 	public:
 		static BitStream AllocateBitStream(long size);
-		static void DeallocateBitStream(BitStream bitStream);
+		static void PrepareBitStreamForDecoding(BitStream& bitStream, long size);
+		static void DeallocateBitStream(BitStream& bitStream, long size);
 
 	private:
 		static std::allocator<byte> allocator;

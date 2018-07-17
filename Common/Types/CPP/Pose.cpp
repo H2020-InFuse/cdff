@@ -44,6 +44,8 @@ Pose3DSharedPtr NewSharedPose3D()
 
 void Reset(Pose3D& pose)
 {
+	pose.pos.nCount = 3;
+	pose.orient.nCount = 4;
 	SetPosition(pose, 0, 0, 0);
 	SetOrientation(pose, 0, 0, 0, 0);
 }
@@ -147,18 +149,20 @@ T_Double GetWRotation(const Pose3D& pose)
 BitStream ConvertToBitStream(const Pose3D& pose)
 	{
 	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccPose_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode;
+	int errorCode = 0;
 	bool success = asn1SccPose_Encode(&pose, &bitStream, &errorCode, true);
 
-	ASSERT(success, "Error while converting Pose3D to BitStream");
+	ASSERT(success && (errorCode == 0), "Error while converting Pose3D to BitStream");
 	return bitStream;
 	}
 
 void ConvertFromBitStream(BitStream bitStream, Pose3D& pose)
 	{
-	int errorCode;
+	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING);
+	int errorCode = 0;
 	bool success = asn1SccPose_Decode(&pose, &bitStream, &errorCode);
-	ASSERT(success, "Error while converting BitStream to Pose3D");
+	ASSERT(success && (errorCode == 0), "Error while converting BitStream to Pose3D");
+	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING);
 	}
 
 void Copy(const Pose2D& source, Pose2D& destination)
@@ -183,6 +187,7 @@ Pose2DSharedPtr NewSharedPose2D()
 
 void Reset(Pose2D& pose)
 {
+	pose.position.nCount = 2;
 	SetPosition(pose, 0, 0);
 	SetOrientation(pose, 0);
 }
@@ -249,18 +254,20 @@ T_Double GetRotation(const Pose2D& pose)
 BitStream ConvertToBitStream(const Pose2D& pose)
 	{
 	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode;
+	int errorCode = 0;
 	bool success = asn1SccPose2D_Encode(&pose, &bitStream, &errorCode, true);
 
-	ASSERT(success, "Error while converting Pose2D to BitStream");
+	ASSERT(success && (errorCode == 0), "Error while converting Pose2D to BitStream");
 	return bitStream;
 	}
 
 void ConvertFromBitStream(BitStream bitStream, Pose2D& pose)
 	{
-	int errorCode;
+	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING);
+	int errorCode = 0;
 	bool success = asn1SccPose2D_Decode(&pose, &bitStream, &errorCode);
-	ASSERT(success, "Error while converting BitStream to Pose2D");
+	ASSERT(success && (errorCode == 0), "Error while converting BitStream to Pose2D");
+	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING);
 	}
 
 }

@@ -11,6 +11,7 @@
  */
 
 #include <BaseTypes.hpp>
+#include <Errors/Assert.hpp>
 
 namespace BaseTypesWrapper
 {
@@ -21,13 +22,18 @@ BitStream BitStreamAllocator::AllocateBitStream(long size)
 	{
 	BitStream bitStream;
 	byte* buffer = allocator.allocate(size);
-	BitStream_Init(&bitStream, buffer, size);	
+	BitStream_Init(&bitStream, buffer, size);
 	return bitStream;
 	}
 
-void BitStreamAllocator::DeallocateBitStream(BitStream bitStream)
+void BitStreamAllocator::PrepareBitStreamForDecoding(BitStream& bitStream, long size)
 	{
-	allocator.deallocate(bitStream.buf, bitStream.count);
+	BitStream_AttachBuffer(&bitStream, bitStream.buf, size);
+	}
+
+void BitStreamAllocator::DeallocateBitStream(BitStream& bitStream, long size)
+	{
+	allocator.deallocate(bitStream.buf, size);
 	}
 
 }

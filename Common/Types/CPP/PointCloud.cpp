@@ -53,10 +53,29 @@ void AddPoint(PointCloud& pointCloud, T_Double x, T_Double y, T_Double z)
 	pointCloud.points.nCount++;
 }
 
+void AddColorToLastPoint(PointCloud& pointCloud, BaseTypesWrapper::T_Double r, BaseTypesWrapper::T_Double g, BaseTypesWrapper::T_Double b, BaseTypesWrapper::T_Double alpha)
+	{
+	int lastAddedIndex = pointCloud.points.nCount - 1;
+	ASSERT(lastAddedIndex >= 0, "Point Cloud error: color could not be added, cloud is empty");
+
+	pointCloud.colors.arr[lastAddedIndex].arr[0] = r;
+	pointCloud.colors.arr[lastAddedIndex].arr[1] = g;
+	pointCloud.colors.arr[lastAddedIndex].arr[2] = b;
+	pointCloud.colors.arr[lastAddedIndex].arr[3] = alpha;
+	pointCloud.colors.nCount = lastAddedIndex + 1;
+	}
+
 void ClearPoints(PointCloud& pointCloud)
 {
+	pointCloud.ref_time.microseconds = 0;
+	pointCloud.ref_time.usecPerSec = 0;
 	pointCloud.points.nCount = 0;
 	pointCloud.colors.nCount = 0;
+	for(int pointIndex = 0; pointIndex < MAX_CLOUD_SIZE; pointIndex++)
+		{
+		pointCloud.points.arr[pointIndex].nCount = 3;
+		pointCloud.colors.arr[pointIndex].nCount = 4;
+		}
 }
 
 int GetNumberOfPoints(const PointCloud& pointCloud)
@@ -124,18 +143,21 @@ void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32
 BitStream ConvertToBitStream(const PointCloud& pointCloud)
 	{
 	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccPointcloud_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode;
+	int errorCode = 0;
 	bool success = asn1SccPointcloud_Encode(&pointCloud, &bitStream, &errorCode, true);
 
-	ASSERT(success, "Error while converting PointCloud to BitStream");
+	PRINT_TO_LOG("errorcode", errorCode);
+	ASSERT(success && (errorCode == 0), "Error while converting PointCloud to BitStream");
 	return bitStream;
 	}
 
 void ConvertFromBitStream(BitStream bitStream, PointCloud& pointCloud)
 	{
-	int errorCode;
+	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccPointcloud_REQUIRED_BYTES_FOR_ENCODING);
+	int errorCode = 0;
 	bool success = asn1SccPointcloud_Decode(&pointCloud, &bitStream, &errorCode);
-	ASSERT(success, "Error while converting BitStream to PointCloud");
+	ASSERT(success && (errorCode == 0), "Error while converting BitStream to PointCloud");
+	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccPointcloud_REQUIRED_BYTES_FOR_ENCODING);
 	}
 
 }

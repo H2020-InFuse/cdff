@@ -89,18 +89,20 @@ T_Float GetProbability(const CorrespondenceMap3D& correspondenceMap, const int c
 BitStream ConvertToBitStream(const CorrespondenceMap3D& map)
 	{
 	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode;
+	int errorCode = 0;
 	bool success = asn1SccCorrespondenceMap3D_Encode(&map, &bitStream, &errorCode, true);
 
-	ASSERT(success, "Error while converting CorrespondenceMap3D to BitStream");
+	ASSERT(success && (errorCode == 0), "Error while converting CorrespondenceMap3D to BitStream");
 	return bitStream;
 	}
 
 void ConvertFromBitStream(BitStream bitStream, CorrespondenceMap3D& map)
 	{
-	int errorCode;
+	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING);
+	int errorCode = 0;
 	bool success = asn1SccCorrespondenceMap3D_Decode(&map, &bitStream, &errorCode);
-	ASSERT(success, "Error while converting BitStream to CorrespondenceMap3D");
+	ASSERT(success && (errorCode == 0), "Error while converting BitStream to CorrespondenceMap3D");
+	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING);
 	}
 
 }

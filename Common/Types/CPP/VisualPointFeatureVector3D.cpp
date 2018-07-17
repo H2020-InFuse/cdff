@@ -195,18 +195,20 @@ float GetDescriptorComponent(const VisualPointFeatureVector3D& featuresVector, i
 BitStream ConvertToBitStream(const VisualPointFeatureVector3D& vector)
 	{
 	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode;
+	int errorCode = 0;
 	bool success = asn1SccVisualPointFeatureVector3D_Encode(&vector, &bitStream, &errorCode, true);
 
-	ASSERT(success, "Error while converting VisualPointFeatureVector3D to BitStream");
+	ASSERT(success && (errorCode == 0), "Error while converting VisualPointFeatureVector3D to BitStream");
 	return bitStream;
 	}
 
 void ConvertFromBitStream(BitStream bitStream, VisualPointFeatureVector3D& vector)
 	{
-	int errorCode;
+	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING);
+	int errorCode = 0;
 	bool success = asn1SccVisualPointFeatureVector3D_Decode(&vector, &bitStream, &errorCode);
-	ASSERT(success, "Error while converting BitStream to VisualPointFeatureVector3D");
+	ASSERT(success && (errorCode == 0), "Error while converting BitStream to VisualPointFeatureVector3D");
+	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING);
 	}
 
 }
