@@ -150,7 +150,6 @@ FrameMode GetFrameMode(const Frame& frame)
 	return frame.metadata.mode;
 }
 
-
 void SetFrameSize(Frame& frame, T_UInt16 width, T_UInt16 height)
 {
 	frame.data.cols = width;
@@ -171,14 +170,19 @@ void SetFrameStatus(Frame& frame, FrameStatus frameStatus)
 {
     frame.metadata.status = frameStatus;
 }
+
 FrameStatus GetFrameStatus(const Frame& frame)
 {
     return frame.metadata.status;
 }
 
-void ClearData(Frame& frame)
+void ClearData(Frame& frame, bool overwrite)
 {
 	frame.data.data.nCount = 0;
+	if (overwrite)
+	{
+		memset(frame.data.data.arr, 0, Array3DWrapper::MAX_ARRAY3D_BYTE_SIZE);
+	}
 }
 
 byte GetDataByte(const Frame& frame, int index)
