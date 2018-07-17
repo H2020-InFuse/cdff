@@ -146,7 +146,6 @@ BitStream ConvertToBitStream(const PointCloud& pointCloud)
 	int errorCode = 0;
 	bool success = asn1SccPointcloud_Encode(&pointCloud, &bitStream, &errorCode, true);
 
-	PRINT_TO_LOG("errorcode", errorCode);
 	ASSERT(success && (errorCode == 0), "Error while converting PointCloud to BitStream");
 	return bitStream;
 	}
