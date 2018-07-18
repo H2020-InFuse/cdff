@@ -46,11 +46,11 @@ PointCloud-Data ::=
 SEQUENCE 
 {
     -- Geometrical data
-    points				    SEQUENCE(SIZE(1..maxPointcloudSize)) OF Point,	
+    points				    SEQUENCE(SIZE(0..maxPointcloudSize)) OF Point,	
     -- Colors (empty if isRegitered is FALSE)
-    colors				    SEQUENCE(SIZE(1..maxPointcloudSize)) OF Vector3d,	
+    colors				    SEQUENCE(SIZE(0..maxPointcloudSize)) OF Vector3d,	
     -- Intensity
-    intensity                               SEQUENCE(SIZE(1..maxPointcloudSize)) OF T-Int32       
+    intensity                               SEQUENCE(SIZE(0..maxPointcloudSize)) OF T-Int32       
 
 }
 
