@@ -3,19 +3,36 @@
   UseFullScaleTwoPassAlgorithm: false
   UseDisparityToDepthMap: false
 - Name: Prefilter
-  Maximum: 31
+  Maximum: 25
 - Name: Disparities
   Minimum: 0
   NumberOfIntervals: 256
   UseMaximumDifference: true
-  MaximumDifference: 10
-  SpeckleRange: 16
-  SpeckleWindow: 100
-  SmoothnessParameter1: 600 
-  SmoothnessParameter2: 3005
+  MaximumDifference: 5
+  SpeckleRange: 22
+  SpeckleWindow: 300
+  SmoothnessParameter1: 600
+  SmoothnessParameter2: 2000
 - Name: BlocksMatching
-  BlockSize: 5
+  BlockSize: 15
   UniquenessRatio: 1
+- Name: DisparityToDepthMap
+  Element_0_0: 1
+  Element_0_1: 0
+  Element_0_2: 0
+  Element_0_3: -279.0498046875
+  Element_1_0: 0
+  Element_1_1: 1
+  Element_1_2: 0
+  Element_1_3: 29.868621826172
+  Element_2_0: 0
+  Element_2_1: 0
+  Element_2_2: 0
+  Element_2_3: -8192.8300337838
+  Element_3_0: 0
+  Element_3_1: 0
+  Element_3_2: 3.3436329786051
+  Element_3_3: -0
 - Name: StereoCamera
   LeftFocalLength: 871.118
   LeftPrinciplePointX: 519.487
