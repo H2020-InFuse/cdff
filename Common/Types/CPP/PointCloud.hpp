@@ -48,6 +48,7 @@ PointCloudSharedPtr NewSharedPointCloud();
 void Initialize(PointCloud& pointCloud);
 
 void AddPoint(PointCloud& pointCloud, BaseTypesWrapper::T_Double x, BaseTypesWrapper::T_Double y, BaseTypesWrapper::T_Double z);
+void AddColorToLastPoint(PointCloud& pointCloud, BaseTypesWrapper::T_Double r, BaseTypesWrapper::T_Double g, BaseTypesWrapper::T_Double b, BaseTypesWrapper::T_Double alpha);
 void ClearPoints(PointCloud& pointCloud);
 int GetNumberOfPoints(const PointCloud& pointCloud);
 
@@ -55,6 +56,9 @@ BaseTypesWrapper::T_Double GetXCoordinate(const PointCloud& pointCloud, int poin
 BaseTypesWrapper::T_Double GetYCoordinate(const PointCloud& pointCloud, int pointIndex);
 BaseTypesWrapper::T_Double GetZCoordinate(const PointCloud& pointCloud, int pointIndex);
 void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32> pointIndexOrderedList);
+
+BitStream ConvertToBitStream(const PointCloud& pointCloud);
+void ConvertFromBitStream(BitStream bitStream, PointCloud& pointCloud);
 
 }
 

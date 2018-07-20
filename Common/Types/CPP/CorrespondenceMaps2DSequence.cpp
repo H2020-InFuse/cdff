@@ -130,6 +130,12 @@ void RemoveCorrespondences(CorrespondenceMaps2DSequence& correspondenceMapsSeque
 	RemoveCorrespondences(correspondenceMapsSequence.arr[mapIndex], correspondenceIndexOrderedList);
 	}
 
+BitStream ConvertToBitStream(const CorrespondenceMaps2DSequence& sequence)
+	CONVERT_TO_BIT_STREAM(sequence, asn1SccCorrespondenceMaps2DSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMaps2DSequence_Encode)
+
+void ConvertFromBitStream(BitStream bitStream, CorrespondenceMaps2DSequence& sequence)
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccCorrespondenceMaps2DSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccCorrespondenceMaps2DSequence_Decode)
+
 }
 
 /** @} */

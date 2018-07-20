@@ -50,6 +50,9 @@ void AddPose(Poses3DSequence& posesSequence, const Pose3D& pose);
 const Pose3D& GetPose(const Poses3DSequence& posesSequence, BaseTypesWrapper::T_UInt32 poseIndex);
 void GetPose(const Poses3DSequence& posesSequence, BaseTypesWrapper::T_UInt32 frameIndex, Pose3D& pose);
 BaseTypesWrapper::T_UInt32 GetNumberOfPoses(const Poses3DSequence& posesSequence); 
+
+BitStream ConvertToBitStream(const Poses3DSequence& sequence);
+void ConvertFromBitStream(BitStream bitStream, Poses3DSequence& sequence);
 }
 
 #endif // POSES_SEQUENCE_HPP

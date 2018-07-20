@@ -53,6 +53,9 @@ void GetCorrespondenceMap(const CorrespondenceMaps2DSequence& correspondenceMaps
 BaseTypesWrapper::T_UInt32 GetNumberOfCorrespondenceMaps(const CorrespondenceMaps2DSequence& correspondenceMapsSequence); 
 void RemoveCorrespondenceMaps(CorrespondenceMaps2DSequence& correspondenceMapsSequence, std::vector<BaseTypesWrapper::T_UInt32> correspondenceMapIndexOrderedList);
 void RemoveCorrespondences(CorrespondenceMaps2DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 mapIndex, std::vector<BaseTypesWrapper::T_UInt32> correspondenceIndexOrderedList);
+
+BitStream ConvertToBitStream(const CorrespondenceMaps2DSequence& sequence);
+void ConvertFromBitStream(BitStream bitStream, CorrespondenceMaps2DSequence& sequence);
 }
 
 #endif // CORRESPONDENCE_MAPS_2D_SEQUENCE_HPP

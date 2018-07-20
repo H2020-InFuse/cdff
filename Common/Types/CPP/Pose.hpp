@@ -87,6 +87,9 @@ BaseTypesWrapper::T_Double GetYRotation(const Pose3D& pose);
 BaseTypesWrapper::T_Double GetZRotation(const Pose3D& pose);
 BaseTypesWrapper::T_Double GetWRotation(const Pose3D& pose);
 
+BitStream ConvertToBitStream(const Pose3D& pose);
+void ConvertFromBitStream(BitStream bitStream, Pose3D& pose);
+
 void Copy(const Pose2D& source, Pose2D& destination);
 Pose2DPtr NewPose2D();
 Pose2DSharedPtr NewSharedPose2D();
@@ -106,6 +109,9 @@ BaseTypesWrapper::T_Double GetYTranslation(const Pose2D& pose);
 
 void SetRotation(Pose2D& pose, BaseTypesWrapper::T_Double angle);
 BaseTypesWrapper::T_Double GetRotation(const Pose2D& pose);
+
+BitStream ConvertToBitStream(const Pose2D& pose);
+void ConvertFromBitStream(BitStream bitStream, Pose2D& pose);
 
 }
 

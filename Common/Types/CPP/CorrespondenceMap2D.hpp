@@ -54,6 +54,9 @@ BaseTypesWrapper::Point2D GetSink(const CorrespondenceMap2D& correspondenceMap, 
 BaseTypesWrapper::T_Float GetProbability(const CorrespondenceMap2D& correspondenceMap, const int correspondenceIndex);
 void RemoveCorrespondences(CorrespondenceMap2D& correspondenceMap, std::vector<BaseTypesWrapper::T_UInt32> correspondenceIndexOrderedList);
 
+BitStream ConvertToBitStream(const CorrespondenceMap2D& map);
+void ConvertFromBitStream(BitStream bitStream, CorrespondenceMap2D& map);
+
 }
 
 #endif // CORRESPONDENCE_MAP_2D_HPP
