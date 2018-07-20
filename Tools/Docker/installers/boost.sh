@@ -72,6 +72,8 @@
 #   + Serialization
 #     Used by MAG
 #     Used by EnviRe in CDFF-dev: EnviRe uses it to serialize its graphs
+#   + Timer
+#     Used by MAG MiddlewareSupport
 #
 # * Boost header-only libraries used by the CDFF:
 #
@@ -87,7 +89,7 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
   # Build and install
   mkdir build
   ./bootstrap.sh \
-    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono,serialization \
+    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono,serialization,timer \
     --prefix="${INSTALL_DIR}"
   ./b2 --build-dir=build -q -j ${CPUS} link=shared install
 
