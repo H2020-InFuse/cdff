@@ -16,24 +16,24 @@
 namespace BaseTypesWrapper
 {
 
-std::allocator<byte> BitStreamAllocator::allocator;
-
-BitStream BitStreamAllocator::AllocateBitStream(long size)
+void AllocateBitStreamBufferForEncoding(BitStream& bitStream, long size)
 	{
-	BitStream bitStream;
-	byte* buffer = allocator.allocate(size);
+	byte* buffer = new byte[size];
 	BitStream_Init(&bitStream, buffer, size);
-	return bitStream;
 	}
 
-void BitStreamAllocator::PrepareBitStreamForDecoding(BitStream& bitStream, long size)
+void PrepareBitStreamBufferForDeconding(BitStream& bitStream, long size)
 	{
 	BitStream_AttachBuffer(&bitStream, bitStream.buf, size);
 	}
 
-void BitStreamAllocator::DeallocateBitStream(BitStream& bitStream, long size)
+void DeallocateBitStreamBuffer(BitStream& bitStream)
 	{
-	allocator.deallocate(bitStream.buf, size);
+	if (bitStream.buf != NULL)
+		{
+		delete [] bitStream.buf;
+		bitStream.buf = NULL;
+		}
 	}
 
 }

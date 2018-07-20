@@ -112,23 +112,10 @@ void SetElement(Matrix3d& matrix, unsigned rowIndex, unsigned columnIndex, T_Dou
 }
 
 BitStream ConvertToBitStream(const Matrix3d& matrix)
-	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode = 0;
-	bool success = asn1SccMatrix3d_Encode(&matrix, &bitStream, &errorCode, true);
-
-	ASSERT(success && (errorCode == 0), "Error while converting Matrix3d to BitStream");
-	return bitStream;
-	}
+	CONVERT_TO_BIT_STREAM(matrix, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING, asn1SccMatrix3d_Encode)
 
 void ConvertFromBitStream(BitStream bitStream, Matrix3d& matrix)
-	{
-	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING);
-	int errorCode = 0;
-	bool success = asn1SccMatrix3d_Decode(&matrix, &bitStream, &errorCode);
-	ASSERT(success && (errorCode == 0), "Error while converting BitStream to Matrix3d");
-	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING);
-	}
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING, matrix, asn1SccMatrix3d_Decode)
 
 }
 

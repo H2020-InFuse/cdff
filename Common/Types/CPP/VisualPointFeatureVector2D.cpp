@@ -110,23 +110,10 @@ float GetDescriptorComponent(const VisualPointFeatureVector2D& featuresVector, i
 }
 
 BitStream ConvertToBitStream(const VisualPointFeatureVector2D& vector)
-	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode = 0;
-	bool success = asn1SccVisualPointFeatureVector2D_Encode(&vector, &bitStream, &errorCode, true);
-
-	ASSERT(success && (errorCode == 0), "Error while converting VisualPointFeatureVector2D to BitStream");
-	return bitStream;
-	}
+	CONVERT_TO_BIT_STREAM(vector, asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccVisualPointFeatureVector2D_Encode)
 
 void ConvertFromBitStream(BitStream bitStream, VisualPointFeatureVector2D& vector)
-	{
-	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING);
-	int errorCode = 0;
-	bool success = asn1SccVisualPointFeatureVector2D_Decode(&vector, &bitStream, &errorCode);
-	ASSERT(success && (errorCode == 0), "Error while converting BitStream to VisualPointFeatureVector2D");
-	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING);
-	}
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING, vector, asn1SccVisualPointFeatureVector2D_Decode)
 
 }
 

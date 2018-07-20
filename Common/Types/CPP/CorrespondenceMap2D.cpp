@@ -126,23 +126,10 @@ void RemoveCorrespondences(CorrespondenceMap2D& correspondenceMap, std::vector<B
 	}
 
 BitStream ConvertToBitStream(const CorrespondenceMap2D& map)
-	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccCorrespondenceMap2D_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode = 0;
-	bool success = asn1SccCorrespondenceMap2D_Encode(&map, &bitStream, &errorCode, true);
-
-	ASSERT(success && (errorCode == 0), "Error while converting CorrespondenceMap2D to BitStream");
-	return bitStream;
-	}
+	CONVERT_TO_BIT_STREAM(map, asn1SccCorrespondenceMap2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMap2D_Encode)
 
 void ConvertFromBitStream(BitStream bitStream, CorrespondenceMap2D& map)
-	{
-	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccCorrespondenceMap2D_REQUIRED_BYTES_FOR_ENCODING);
-	int errorCode = 0;
-	bool success = asn1SccCorrespondenceMap2D_Decode(&map, &bitStream, &errorCode);
-	ASSERT(success && (errorCode == 0), "Error while converting BitStream to CorrespondenceMap2D");
-	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccCorrespondenceMap2D_REQUIRED_BYTES_FOR_ENCODING);
-	}
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccCorrespondenceMap2D_REQUIRED_BYTES_FOR_ENCODING, map, asn1SccCorrespondenceMap2D_Decode)
 
 }
 

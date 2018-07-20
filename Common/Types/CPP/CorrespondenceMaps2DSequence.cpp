@@ -131,23 +131,10 @@ void RemoveCorrespondences(CorrespondenceMaps2DSequence& correspondenceMapsSeque
 	}
 
 BitStream ConvertToBitStream(const CorrespondenceMaps2DSequence& sequence)
-	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream(asn1SccCorrespondenceMaps2DSequence_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode = 0;
-	bool success = asn1SccCorrespondenceMaps2DSequence_Encode(&sequence, &bitStream, &errorCode, true);
-
-	ASSERT(success && (errorCode == 0), "Error while converting CorrespondenceMaps2DSequence to BitStream");
-	return bitStream;
-	}
+	CONVERT_TO_BIT_STREAM(sequence, asn1SccCorrespondenceMaps2DSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMaps2DSequence_Encode)
 
 void ConvertFromBitStream(BitStream bitStream, CorrespondenceMaps2DSequence& sequence)
-	{
-	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccCorrespondenceMaps2DSequence_REQUIRED_BYTES_FOR_ENCODING);
-	int errorCode = 0;
-	bool success = asn1SccCorrespondenceMaps2DSequence_Decode(&sequence, &bitStream, &errorCode);
-	ASSERT(success && (errorCode == 0), "Error while converting BitStream to CorrespondenceMaps2DSequence");
-	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccCorrespondenceMaps2DSequence_REQUIRED_BYTES_FOR_ENCODING);
-	}
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccCorrespondenceMaps2DSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccCorrespondenceMaps2DSequence_Decode)
 
 }
 

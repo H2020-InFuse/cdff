@@ -45,17 +45,31 @@ typedef Point2D const* Point2DConstPtr;
 typedef std::shared_ptr<Point2D> Point2DSharedPtr;
 typedef std::shared_ptr<const Point2D> Point2DSharedConstPtr;
 
-// BitStream Allocator
-class BitStreamAllocator
-	{
-	public:
-		static BitStream AllocateBitStream(long size);
-		static void PrepareBitStreamForDecoding(BitStream& bitStream, long size);
-		static void DeallocateBitStream(BitStream& bitStream, long size);
+//BitStream Allocators Helper functions
 
-	private:
-		static std::allocator<byte> allocator;
-	};
+void AllocateBitStreamBufferForEncoding(BitStream& bitStream, long size);
+void PrepareBitStreamBufferForDeconding(BitStream& bitStream, long size);
+void DeallocateBitStreamBuffer(BitStream& bitStream);
+
+#define CONVERT_TO_BIT_STREAM(inputData, bitStreamSize, encodeMethod) \
+	{ \
+	BitStream bitStream; \
+	AllocateBitStreamBufferForEncoding(bitStream, bitStreamSize ); \
+	\
+	int errorCode = 0; \
+	bool success = encodeMethod(&inputData, &bitStream, &errorCode, true); \
+	\
+	ASSERT(success && (errorCode == 0), "Error while executing #conversionMethod"); \
+	return bitStream; \
+	}
+
+#define CONVERT_FROM_BIT_STREAM(inputBitStream, bitStreamSize, outputData, decodeMethod) \
+	{ \
+	PrepareBitStreamBufferForDeconding(inputBitStream, bitStreamSize); \
+	int errorCode = 0; \
+	bool success = decodeMethod(&outputData, &inputBitStream, &errorCode); \
+	ASSERT(success && (errorCode == 0), "Error while executing #conversionMethod"); \
+	}
 
 }
 

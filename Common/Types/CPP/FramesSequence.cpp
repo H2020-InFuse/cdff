@@ -86,23 +86,10 @@ BaseTypesWrapper::T_UInt32 GetNumberOfFrames(const FramesSequence& framesSequenc
 }
 
 BitStream ConvertToBitStream(const FramesSequence& sequence)
-	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccFramesSequence_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode = 0;
-	bool success = asn1SccFramesSequence_Encode(&sequence, &bitStream, &errorCode, true);
-
-	ASSERT(success && (errorCode == 0), "Error while converting FramesSequence to BitStream");
-	return bitStream;
-	}
+	CONVERT_TO_BIT_STREAM(sequence, asn1SccFramesSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccFramesSequence_Encode)
 
 void ConvertFromBitStream(BitStream bitStream, FramesSequence& sequence)
-	{
-	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccFramesSequence_REQUIRED_BYTES_FOR_ENCODING);
-	int errorCode = 0;
-	bool success = asn1SccFramesSequence_Decode(&sequence, &bitStream, &errorCode);
-	ASSERT(success && (errorCode == 0), "Error while converting BitStream to FramesSequence");
-	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccFramesSequence_REQUIRED_BYTES_FOR_ENCODING);
-	}
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccFramesSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccFramesSequence_Decode)
 
 }
 

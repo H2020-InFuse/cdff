@@ -90,23 +90,10 @@ BaseTypesWrapper::T_UInt32 GetNumberOfPoses(const Poses3DSequence& posesSequence
 }
 
 BitStream ConvertToBitStream(const Poses3DSequence& sequence)
-	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode = 0;
-	bool success = asn1SccPosesSequence_Encode(&sequence, &bitStream, &errorCode, true);
-
-	ASSERT(success && (errorCode == 0), "Error while converting Poses3DSequence to BitStream");
-	return bitStream;
-	}
+	CONVERT_TO_BIT_STREAM(sequence, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccPosesSequence_Encode)
 
 void ConvertFromBitStream(BitStream bitStream, Poses3DSequence& sequence)
-	{
-	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING);
-	int errorCode = 0;
-	bool success = asn1SccPosesSequence_Decode(&sequence, &bitStream, &errorCode);
-	ASSERT(success && (errorCode == 0), "Error while converting BitStream to Poses3DSequence");
-	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING);
-	}
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccPosesSequence_Decode)
 
 }
 

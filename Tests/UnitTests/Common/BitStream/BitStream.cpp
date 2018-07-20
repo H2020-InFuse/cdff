@@ -79,7 +79,7 @@ TEST_CASE( "Frame To BitStream", "[FrameToBitStream]" )
 
 	delete(inputFrame);
 	delete(outputFrame);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	} 
 
 
@@ -105,7 +105,7 @@ TEST_CASE( "PointCloud To BitStream", "[PointCloudToBitStream]" )
 
 	delete(inputPointCloud);
 	delete(outputPointCloud);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	} 
 
 TEST_CASE( "Pose3D To BitStream", "[Pose3DToBitStream]" )
@@ -128,7 +128,7 @@ TEST_CASE( "Pose3D To BitStream", "[Pose3DToBitStream]" )
 
 	delete(inputPose);
 	delete(outputPose);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	}
 
 TEST_CASE( "Pose2D To BitStream", "[Pose2DToBitStream]" )
@@ -147,7 +147,7 @@ TEST_CASE( "Pose2D To BitStream", "[Pose2DToBitStream]" )
 
 	delete(inputPose);
 	delete(outputPose);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	} 
 
 TEST_CASE( "Matrix3d To BitStream", "[Matrix3dToBitStream]" )
@@ -175,7 +175,7 @@ TEST_CASE( "Matrix3d To BitStream", "[Matrix3dToBitStream]" )
 
 	delete(inputMatrix);
 	delete(outputMatrix);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	}
 
 TEST_CASE( "CorrespondenceMap2D To BitStream", "[CorrespondenceMap2DToBitStream]" )
@@ -206,7 +206,7 @@ TEST_CASE( "CorrespondenceMap2D To BitStream", "[CorrespondenceMap2DToBitStream]
 
 	delete(inputMap);
 	delete(outputMap);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	} 
 
 TEST_CASE( "CorrespondenceMap3D To BitStream", "[CorrespondenceMap3DToBitStream]" )
@@ -241,7 +241,7 @@ TEST_CASE( "CorrespondenceMap3D To BitStream", "[CorrespondenceMap3DToBitStream]
 
 	delete(inputMap);
 	delete(outputMap);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	} 
 
 TEST_CASE( "VisualPointFeatureVector2D To BitStream", "[VisualPointFeatureVector2DToBitStream]" )
@@ -272,7 +272,7 @@ TEST_CASE( "VisualPointFeatureVector2D To BitStream", "[VisualPointFeatureVector
 
 	delete(inputVector);
 	delete(outputVector);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	}
 
 TEST_CASE( "VisualPointFeatureVector3D To BitStream", "[VisualPointFeatureVector3DToBitStream]" )
@@ -304,7 +304,7 @@ TEST_CASE( "VisualPointFeatureVector3D To BitStream", "[VisualPointFeatureVector
 
 	delete(inputVector);
 	delete(outputVector);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	} 
 
 TEST_CASE( "CorrespondenceMaps2DSequence To BitStream", "[CorrespondenceMaps2DSequenceToBitStream]" )
@@ -347,7 +347,7 @@ TEST_CASE( "CorrespondenceMaps2DSequence To BitStream", "[CorrespondenceMaps2DSe
 
 	delete(inputSequence);
 	delete(outputSequence);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	}
 
 
@@ -391,7 +391,7 @@ TEST_CASE( "FramesSequence To BitStream", "[FramesSequenceToBitStream]" )
 
 	delete(inputSequence);
 	delete(outputSequence);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	} 
 
 TEST_CASE( "Poses3DSequence To BitStream", "[Poses3DSequenceToBitStream]" )
@@ -426,5 +426,5 @@ TEST_CASE( "Poses3DSequence To BitStream", "[Poses3DSequenceToBitStream]" )
 
 	delete(inputSequence);
 	delete(outputSequence);
-	//BitStreamAllocator::DeallocateBitStream(bitStream);
+	DeallocateBitStreamBuffer(bitStream);
 	}

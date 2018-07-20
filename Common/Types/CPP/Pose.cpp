@@ -147,23 +147,10 @@ T_Double GetWRotation(const Pose3D& pose)
 }
 
 BitStream ConvertToBitStream(const Pose3D& pose)
-	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccPose_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode = 0;
-	bool success = asn1SccPose_Encode(&pose, &bitStream, &errorCode, true);
-
-	ASSERT(success && (errorCode == 0), "Error while converting Pose3D to BitStream");
-	return bitStream;
-	}
+	CONVERT_TO_BIT_STREAM(pose, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose_Encode)
 
 void ConvertFromBitStream(BitStream bitStream, Pose3D& pose)
-	{
-	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING);
-	int errorCode = 0;
-	bool success = asn1SccPose_Decode(&pose, &bitStream, &errorCode);
-	ASSERT(success && (errorCode == 0), "Error while converting BitStream to Pose3D");
-	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING);
-	}
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING, pose, asn1SccPose_Decode)
 
 void Copy(const Pose2D& source, Pose2D& destination)
 {
@@ -252,23 +239,10 @@ T_Double GetRotation(const Pose2D& pose)
 }
 
 BitStream ConvertToBitStream(const Pose2D& pose)
-	{
-	BitStream bitStream = BitStreamAllocator::AllocateBitStream( asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING );
-	int errorCode = 0;
-	bool success = asn1SccPose2D_Encode(&pose, &bitStream, &errorCode, true);
-
-	ASSERT(success && (errorCode == 0), "Error while converting Pose2D to BitStream");
-	return bitStream;
-	}
+	CONVERT_TO_BIT_STREAM(pose, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose2D_Encode)
 
 void ConvertFromBitStream(BitStream bitStream, Pose2D& pose)
-	{
-	BitStreamAllocator::PrepareBitStreamForDecoding(bitStream, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING);
-	int errorCode = 0;
-	bool success = asn1SccPose2D_Decode(&pose, &bitStream, &errorCode);
-	ASSERT(success && (errorCode == 0), "Error while converting BitStream to Pose2D");
-	//BitStreamAllocator::DeallocateBitStream(bitStream, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING);
-	}
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, pose, asn1SccPose2D_Decode)
 
 }
 
