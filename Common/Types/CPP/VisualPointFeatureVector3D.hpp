@@ -80,6 +80,9 @@ void ClearDescriptor(VisualPointFeatureVector3D& featuresVector, int pointIndex)
 int GetNumberOfDescriptorComponents(const VisualPointFeatureVector3D& featuresVector, int pointIndex);
 float GetDescriptorComponent(const VisualPointFeatureVector3D& featuresVector, int pointIndex, int componentIndex);
 
+BitStream ConvertToBitStream(const VisualPointFeatureVector3D& vector);
+void ConvertFromBitStream(BitStream bitStream, VisualPointFeatureVector3D& vector);
+
 }
 
 #endif // VISUAL_POINT_FEATURE_VECTOR_3D_HPP

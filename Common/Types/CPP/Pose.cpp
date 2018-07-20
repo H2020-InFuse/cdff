@@ -44,6 +44,8 @@ Pose3DSharedPtr NewSharedPose3D()
 
 void Reset(Pose3D& pose)
 {
+	pose.pos.nCount = 3;
+	pose.orient.nCount = 4;
 	SetPosition(pose, 0, 0, 0);
 	SetOrientation(pose, 0, 0, 0, 0);
 }
@@ -144,6 +146,12 @@ T_Double GetWRotation(const Pose3D& pose)
 	return GetWOrientation(pose);
 }
 
+BitStream ConvertToBitStream(const Pose3D& pose)
+	CONVERT_TO_BIT_STREAM(pose, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose_Encode)
+
+void ConvertFromBitStream(BitStream bitStream, Pose3D& pose)
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING, pose, asn1SccPose_Decode)
+
 void Copy(const Pose2D& source, Pose2D& destination)
 {
 	SetPosition(destination, GetXPosition(source), GetYPosition(source));
@@ -166,6 +174,7 @@ Pose2DSharedPtr NewSharedPose2D()
 
 void Reset(Pose2D& pose)
 {
+	pose.position.nCount = 2;
 	SetPosition(pose, 0, 0);
 	SetOrientation(pose, 0);
 }
@@ -228,6 +237,12 @@ T_Double GetRotation(const Pose2D& pose)
 {
 	return GetOrientation(pose);
 }
+
+BitStream ConvertToBitStream(const Pose2D& pose)
+	CONVERT_TO_BIT_STREAM(pose, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose2D_Encode)
+
+void ConvertFromBitStream(BitStream bitStream, Pose2D& pose)
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, pose, asn1SccPose2D_Decode)
 
 }
 

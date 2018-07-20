@@ -49,6 +49,7 @@ ImagePainter::ImagePainter(std::string inputImageFilePath, std::string outputKey
 	imageZooming = NULL;
 	LoadImage();
 	LoadKeypointsImage();
+	boxSelection = false;
 
 	cv::namedWindow("Image Painter", 1);
 	cv::setMouseCallback("Image Painter", ImagePainter::MouseCallback, this);
@@ -161,10 +162,52 @@ void ImagePainter::MouseCallback(int event, int x, int y)
 		}
 
 	//Add a new point
-	Point newPoint;
-	newPoint.x = effectiveX;
-	newPoint.y = effectiveY;
-	keypointsList.push_back(newPoint);
+	if (!boxSelection)
+		{
+		Point newPoint;
+		newPoint.x = effectiveX;
+		newPoint.y = effectiveY;
+		keypointsList.push_back(newPoint);
+		return;
+		}
+
+	//Start adding square
+	if (!topLeftCornerSelected)
+		{
+		topLeftCornerSelected = true;
+		topLeftCorner.x = effectiveX;
+		topLeftCorner.y = effectiveY;
+		return;
+		}
+
+	//Add the square
+	const int CLOSENESS = 3;
+	int beginX = (topLeftCorner.x < effectiveX ? topLeftCorner.x : effectiveX);
+	int endX = (topLeftCorner.x >= effectiveX ? topLeftCorner.x : effectiveX);
+	int beginY = (topLeftCorner.y < effectiveY ? topLeftCorner.y : effectiveY);
+	int endY = (topLeftCorner.y >= effectiveY ? topLeftCorner.y : effectiveY);
+	int currentKeypointNumber = keypointsList.size();
+	for(int selectionX = beginX; selectionX <= endX; selectionX += CLOSENESS)
+		{
+		for(int selectionY = beginY; selectionY <= endY; selectionY += CLOSENESS)
+			{
+			Point newPoint;
+			newPoint.x = selectionX;
+			newPoint.y = selectionY;
+			bool pointFound = false;
+			for(int pointIndex = 0; pointIndex < currentKeypointNumber && !pointFound; pointIndex++)
+				{
+				const Point& oldPoint = keypointsList.at(pointIndex);
+				pointFound = (oldPoint.x - CLOSENESS <= newPoint.x && newPoint.x <= oldPoint.x + CLOSENESS);
+				pointFound = pointFound && (oldPoint.y - CLOSENESS <= newPoint.y && newPoint.y <= oldPoint.y + CLOSENESS);
+				}
+			if (!pointFound)
+				{
+				keypointsList.push_back(newPoint);
+				}
+			}
+		}
+	topLeftCornerSelected = false;
 	}
 
 void ImagePainter::DrawImage()
@@ -218,6 +261,11 @@ void ImagePainter::ExecuteCommand(char command)
 	else if (command == 'm')
 		{
 		SaveKeypointsImage();
+		}
+	else if (command == 't')
+		{
+		boxSelection = !boxSelection;
+		topLeftCornerSelected = false;
 		}
 	}
 

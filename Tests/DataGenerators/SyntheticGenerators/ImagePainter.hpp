@@ -84,6 +84,9 @@ namespace DataGenerators {
 
 		cv::Mat originalImage;
 		std::vector<Point> keypointsList;
+		bool boxSelection;
+		Point topLeftCorner;
+		bool topLeftCornerSelected;
 
 		std::string inputImageFilePath;
 		std::string outputKeypointsFilePath;

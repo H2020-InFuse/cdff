@@ -60,6 +60,11 @@ void Initialize(Poses3DSequence& posesSequence)
 void Clear(Poses3DSequence& posesSequence)
 {
 	posesSequence.nCount = 0;
+	for(int poseIndex = 0; poseIndex < MAX_POSES_SEQUENCE_LENGTH; poseIndex++)
+		{
+		posesSequence.arr[poseIndex].pos.nCount = 3;
+		posesSequence.arr[poseIndex].orient.nCount = 4;
+		}
 }
 
 void AddPose(Poses3DSequence& posesSequence, const Pose3D& pose)
@@ -83,6 +88,12 @@ BaseTypesWrapper::T_UInt32 GetNumberOfPoses(const Poses3DSequence& posesSequence
 {
 	return posesSequence.nCount;
 }
+
+BitStream ConvertToBitStream(const Poses3DSequence& sequence)
+	CONVERT_TO_BIT_STREAM(sequence, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccPosesSequence_Encode)
+
+void ConvertFromBitStream(BitStream bitStream, Poses3DSequence& sequence)
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccPosesSequence_Decode)
 
 }
 

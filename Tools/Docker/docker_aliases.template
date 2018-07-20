@@ -8,8 +8,8 @@
 # * Replaces the "alias docker='sudo /usr/bin/docker'" line that is commonly
 #   put in ~/.bashrc or ~/.bash_aliases
 #
-# Adapt to suit your needs. In particular, set the placeholders in options
-# --user and --volume. Run "id" if you don't know your user ID and group ID.
+# Adapt to suit your needs. In particular, set the necessary paths in the
+# --volume options.
 #
 # If your shell is bash, a good place for that function defition is ~/.bashrc,
 # because that file is not only read by interactive non-login shells, but also
@@ -35,9 +35,10 @@ docker() {
         --name=cdff --hostname=cdff \
         --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
         --volume=/dev/log:/dev/log \
+        --cap-add=SYS_PTRACE --publish=2159:2159 \
         --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
         --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
-        --user=my-UID:my-GID \
+        --user=$(id -u $(whoami)):$(id -g $(whoami)) \
         --init --rm \
         --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
         --interactive --tty \
@@ -65,10 +66,16 @@ docker() {
 # Optional: allow messages from inside the container to be logged outside
 # --volume=/dev/log:/dev/log
 #
+# Optional: allow breakpoint debugging
+# --cap-add=SYS_PTRACE
+#
+# Optional: open port for debugging from outside the container
+# --publish=2159:2159
+#
 # Recommended: be the same user inside your container as outside
 # --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro
 # --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro
-# --user=my-UID:my-GID
+# --user=$(id -u $(whoami)):$(id -g $(whoami))
 #
 # Recommended: use an init process and delete your container when you exit it
 # --init --rm

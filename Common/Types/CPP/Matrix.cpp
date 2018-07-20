@@ -29,6 +29,11 @@ void Copy(const Matrix3d& source, Matrix3d& destination)
 Matrix3dPtr NewMatrix3d(InitializationType initializationType)
 {
 	Matrix3dPtr newMatrix = new Matrix3d();
+	newMatrix->nCount = 3;
+	for(int row = 0; row < 3; row++)
+		{
+		newMatrix->arr[row].nCount = 3;
+		}
 
 	switch(initializationType)
 	{
@@ -105,6 +110,12 @@ void SetElement(Matrix3d& matrix, unsigned rowIndex, unsigned columnIndex, T_Dou
 {
 	matrix.arr[rowIndex].arr[columnIndex] = value;
 }
+
+BitStream ConvertToBitStream(const Matrix3d& matrix)
+	CONVERT_TO_BIT_STREAM(matrix, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING, asn1SccMatrix3d_Encode)
+
+void ConvertFromBitStream(BitStream bitStream, Matrix3d& matrix)
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING, matrix, asn1SccMatrix3d_Decode)
 
 }
 

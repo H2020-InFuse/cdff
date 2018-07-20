@@ -9,6 +9,9 @@
 
 #include "VisualPointFeatureVector2D.hpp"
 #include <Errors/Assert.hpp>
+#include <BaseTypes.hpp>
+
+using namespace BaseTypesWrapper;
 
 namespace VisualPointFeatureVector2DWrapper
 {
@@ -105,6 +108,12 @@ float GetDescriptorComponent(const VisualPointFeatureVector2D& featuresVector, i
 	ASSERT_ON_TEST(componentIndex < featuresVector.arr[pointIndex].descriptor.nCount, "A missing descriptor component was requested from a features vector 2D");
 	return featuresVector.arr[pointIndex].descriptor.arr[componentIndex];
 }
+
+BitStream ConvertToBitStream(const VisualPointFeatureVector2D& vector)
+	CONVERT_TO_BIT_STREAM(vector, asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccVisualPointFeatureVector2D_Encode)
+
+void ConvertFromBitStream(BitStream bitStream, VisualPointFeatureVector2D& vector)
+	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING, vector, asn1SccVisualPointFeatureVector2D_Decode)
 
 }
 

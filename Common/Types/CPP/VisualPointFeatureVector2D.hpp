@@ -58,6 +58,9 @@ void ClearDescriptor(VisualPointFeatureVector2D& featuresVector, int pointIndex)
 int GetNumberOfDescriptorComponents(const VisualPointFeatureVector2D& featuresVector, int pointIndex);
 float GetDescriptorComponent(const VisualPointFeatureVector2D& featuresVector, int pointIndex, int componentIndex);
 
+BitStream ConvertToBitStream(const VisualPointFeatureVector2D& vector);
+void ConvertFromBitStream(BitStream bitStream, VisualPointFeatureVector2D& vector);
+
 }
 
 #endif // VISUAL_POINT_FEATURE_VECTOR_2D_HPP
