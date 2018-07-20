@@ -45,41 +45,42 @@ void Initialize(PointCloud& pointCloud)
 
 void AddPoint(PointCloud& pointCloud, T_Double x, T_Double y, T_Double z)
 {
-	ASSERT_ON_TEST(pointCloud.points.nCount < MAX_CLOUD_SIZE, "Point Cloud maximum capacity has been reached");
-	int currentIndex = pointCloud.points.nCount;
-	pointCloud.points.arr[currentIndex].arr[0] = x;
-	pointCloud.points.arr[currentIndex].arr[1] = y;
-	pointCloud.points.arr[currentIndex].arr[2] = z;
-	pointCloud.points.nCount++;
+	ASSERT_ON_TEST(pointCloud.data.points.nCount < MAX_CLOUD_SIZE, "Point Cloud maximum capacity has been reached");
+	int currentIndex = pointCloud.data.points.nCount;
+	pointCloud.data.points.arr[currentIndex].arr[0] = x;
+	pointCloud.data.points.arr[currentIndex].arr[1] = y;
+	pointCloud.data.points.arr[currentIndex].arr[2] = z;
+	pointCloud.data.points.nCount++;
 }
 
 void ClearPoints(PointCloud& pointCloud)
 {
-	pointCloud.points.nCount = 0;
-	pointCloud.colors.nCount = 0;
+	pointCloud.data.points.nCount = 0;
+	pointCloud.data.colors.nCount = 0;
+	pointCloud.data.intensity.nCount = 0;
 }
 
 int GetNumberOfPoints(const PointCloud& pointCloud)
 {
-	return pointCloud.points.nCount;
+	return pointCloud.data.points.nCount;
 }
 
 T_Double GetXCoordinate(const PointCloud& pointCloud, int pointIndex)
 {
-	ASSERT_ON_TEST(pointIndex < pointCloud.points.nCount, "A missing point was requested from a features vector 2D");
-	return pointCloud.points.arr[pointIndex].arr[0];
+	ASSERT_ON_TEST(pointIndex < pointCloud.data.points.nCount, "A missing point was requested from a features vector 2D");
+	return pointCloud.data.points.arr[pointIndex].arr[0];
 }
 
 T_Double GetYCoordinate(const PointCloud& pointCloud, int pointIndex)
 {
-	ASSERT_ON_TEST(pointIndex < pointCloud.points.nCount, "A missing point was requested from a features vector 2D");
-	return pointCloud.points.arr[pointIndex].arr[1];
+	ASSERT_ON_TEST(pointIndex < pointCloud.data.points.nCount, "A missing point was requested from a features vector 2D");
+	return pointCloud.data.points.arr[pointIndex].arr[1];
 }
 
 T_Double GetZCoordinate(const PointCloud& pointCloud, int pointIndex)
 {
-	ASSERT_ON_TEST(pointIndex < pointCloud.points.nCount, "A missing point was requested from a features vector 2D");
-	return pointCloud.points.arr[pointIndex].arr[2];
+	ASSERT_ON_TEST(pointIndex < pointCloud.data.points.nCount, "A missing point was requested from a features vector 2D");
+	return pointCloud.data.points.arr[pointIndex].arr[2];
 }
 
 void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32> pointIndexOrderedList)
@@ -96,14 +97,14 @@ void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32
 		ASSERT( pointIndexOrderedList.at(listIndex-1) < pointIndexOrderedList.at(listIndex), errorMessage);
 		ASSERT(	pointIndexOrderedList.at(listIndex) < pointIndexOrderedList.at(listIndex+1), errorMessage);
 		}
-	ASSERT( pointIndexOrderedList.at(elementsToRemove-1) < pointCloud.points.nCount, errorMessage);
+	ASSERT( pointIndexOrderedList.at(elementsToRemove-1) < pointCloud.data.points.nCount, errorMessage);
 	BaseTypesWrapper::T_UInt32 firstIndex = pointIndexOrderedList.at(0);
 	ASSERT(firstIndex >= 0, errorMessage);
 
 	//Removing elements 
 	BaseTypesWrapper::T_UInt32 nextIndexToRemove = 1;
 	BaseTypesWrapper::T_UInt32 currentGap = 1;
-	for(int pointIndex = firstIndex; pointIndex < pointCloud.points.nCount - elementsToRemove; pointIndex++)
+	for(int pointIndex = firstIndex; pointIndex < pointCloud.data.points.nCount - elementsToRemove; pointIndex++)
 		{
 		if (nextIndexToRemove < elementsToRemove && pointIndex+currentGap == pointIndexOrderedList.at(nextIndexToRemove))
 			{
@@ -113,12 +114,12 @@ void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32
 			}
 		else
 			{
-			pointCloud.points.arr[pointIndex].arr[0] = pointCloud.points.arr[pointIndex+currentGap].arr[0];
-			pointCloud.points.arr[pointIndex].arr[1] = pointCloud.points.arr[pointIndex+currentGap].arr[1];
-			pointCloud.points.arr[pointIndex].arr[2] = pointCloud.points.arr[pointIndex+currentGap].arr[2];
+			pointCloud.data.points.arr[pointIndex].arr[0] = pointCloud.data.points.arr[pointIndex+currentGap].arr[0];
+			pointCloud.data.points.arr[pointIndex].arr[1] = pointCloud.data.points.arr[pointIndex+currentGap].arr[1];
+			pointCloud.data.points.arr[pointIndex].arr[2] = pointCloud.data.points.arr[pointIndex+currentGap].arr[2];
 			}
 		}
-	pointCloud.points.nCount -= elementsToRemove;
+	pointCloud.data.points.nCount -= elementsToRemove;
 	}
 
 }

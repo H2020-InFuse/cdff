@@ -25,8 +25,8 @@ namespace PointCloudWrapper
 
 // Types
 
-typedef asn1SccPointcloud_colors ColorsList;
-typedef asn1SccPointcloud_points PointsList;
+typedef asn1SccPointCloud_Data_colors ColorsList;
+typedef asn1SccPointCloud_Data_points PointsList;
 typedef asn1SccPointcloud PointCloud;
 
 // Global constant variables
