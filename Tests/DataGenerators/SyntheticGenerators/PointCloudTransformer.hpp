@@ -61,6 +61,7 @@ namespace DataGenerators {
 		void RemoveOutliers();
 		void SavePointCloud(std::string outputFilePath);
 		void ViewPointCloud();
+		void Rescale(float scale);
 
 	/* --------------------------------------------------------------------
 	 * Protected
