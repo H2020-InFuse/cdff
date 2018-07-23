@@ -74,9 +74,10 @@ void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, floa
 	}
 
 	featuresVector.list.arr[currentIndex].point.kind = VisualPoint::position_PRESENT;
-	featuresVector.list.arr[currentIndex].point.u.position.x = x;
-	featuresVector.list.arr[currentIndex].point.u.position.y = y;
-	featuresVector.list.arr[currentIndex].point.u.position.z = z;
+	featuresVector.list.arr[currentIndex].point.u.position.nCount = 3;
+	featuresVector.list.arr[currentIndex].point.u.position.arr[0] = x;
+	featuresVector.list.arr[currentIndex].point.u.position.arr[1] = y;
+	featuresVector.list.arr[currentIndex].point.u.position.arr[2] = z;
 	featuresVector.list.arr[currentIndex].descriptor.nCount = 0;
 	featuresVector.list.nCount++;
 }
@@ -104,6 +105,10 @@ void AddPoint(VisualPointFeatureVector3D& featuresVector, BaseTypesWrapper::T_UI
 void ClearPoints(VisualPointFeatureVector3D& featuresVector)
 {
 	featuresVector.list.nCount = 0;
+	for(int pointIndex = 0; pointIndex < MAX_FEATURE_3D_POINTS; pointIndex++)
+		{
+		featuresVector.list.arr[pointIndex].point.u.position.nCount = 3;
+		}
 }
 
 VisualPointFeatureVector3DType GetVectorType(const VisualPointFeatureVector3D& featuresVector)
@@ -120,21 +125,21 @@ float GetXCoordinate(const VisualPointFeatureVector3D& featuresVector, int point
 {
 	ASSERT_ON_TEST(pointIndex < featuresVector.list.nCount, "A missing point was requested from a features vector 3D");
 	ASSERT_ON_TEST(featuresVector.list.arr[pointIndex].point.kind == VisualPoint::position_PRESENT, "Request for coordinates for a non-coordinates type visual point");
-	return featuresVector.list.arr[pointIndex].point.u.position.x;
+	return featuresVector.list.arr[pointIndex].point.u.position.arr[0];
 }
 
 float GetYCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 {
 	ASSERT_ON_TEST(pointIndex < featuresVector.list.nCount, "A missing point was requested from a features vector 3D");
 	ASSERT_ON_TEST(featuresVector.list.arr[pointIndex].point.kind == VisualPoint::position_PRESENT, "Request for coordinates for a non-coordinates type visual point");
-	return featuresVector.list.arr[pointIndex].point.u.position.y;
+	return featuresVector.list.arr[pointIndex].point.u.position.arr[1];
 }
 
 float GetZCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex)
 {
 	ASSERT_ON_TEST(pointIndex < featuresVector.list.nCount, "A missing point was requested from a features vector 3D");
 	ASSERT_ON_TEST(featuresVector.list.arr[pointIndex].point.kind == VisualPoint::position_PRESENT, "Request for coordinates for a non-coordinates type visual point");
-	return featuresVector.list.arr[pointIndex].point.u.position.z;
+	return featuresVector.list.arr[pointIndex].point.u.position.arr[2];
 }
 
 BaseTypesWrapper::T_UInt64 GetReferenceIndex(const VisualPointFeatureVector3D& featuresVector, int pointIndex)

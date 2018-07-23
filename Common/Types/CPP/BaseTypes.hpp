@@ -17,7 +17,7 @@
 #include <VisualPointFeatureVector2D.h>
 #include <VisualPointFeatureVector3D.h>
 #include <Pointcloud.h>
-#include <Geometry.h>
+#include <Point.h>
 #include <CorrespondenceMap3D.h>
 
 #include <memory>
@@ -35,8 +35,19 @@ typedef asn1SccT_Boolean T_Boolean;
 typedef asn1SccT_String T_String;
 typedef asn1SccT_Float T_Float;
 typedef asn1SccT_Double T_Double;
-typedef asn1SccPoint3D Point3D;
-typedef asn1SccPoint2D Point2D;
+
+struct Point3D
+	{
+	T_Double x;
+	T_Double y;
+	T_Double z;	
+	};
+
+struct Point2D
+	{
+	T_Double x;
+	T_Double y;
+	};
 
 // Pointer types
 
