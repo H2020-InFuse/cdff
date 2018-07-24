@@ -26,12 +26,12 @@ void VisualOdometry_MAGInterface::rightImageInput(const asn1SccFrame& data)
     inRightImage = data;
 }
 
-void VisualOdometry_MAGInterface::odoMotionInput(const asn1SccPose& data)
+void VisualOdometry_MAGInterface::odoMotionInput(const asn1SccTransformWithCovariance& data)
 {
     inOdoMotion = data;
 }
 
-const asn1SccPose& VisualOdometry_MAGInterface::estimateMotionOutput() const
+const asn1SccTransformWithCovariance& VisualOdometry_MAGInterface::estimateMotionOutput() const
 {
     return outEstimateMotion;
 }

@@ -25,7 +25,7 @@ input_ports:
 
 output_ports:
     - name: estimatedMotion
-      type: asn1SccPose
+      type: asn1SccTransformWithCovariance
       doc: "Pose estimated from the VisualOdometry_LAAS DFPC"
       connections:
           dfn: 3D3DMotionEstimation

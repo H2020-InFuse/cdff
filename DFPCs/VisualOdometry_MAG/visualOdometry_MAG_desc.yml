@@ -24,7 +24,7 @@ input_ports:
         - dfn: CNESStereoRectification
           port: rightImage
     - name: odoMotion
-      type: asn1SccPose
+      type: asn1SccTransformWithCovariance
       doc: "Estimated pose of the rover from Odometry"
       connections:
         - dfn: TemporalMatching
@@ -32,7 +32,7 @@ input_ports:
 
 output_ports:
     - name: estimateMotion
-      type: asn1SccPose
+      type: asn1SccTransformWithCovariance
       doc: "Pose estimated from the VisualOdometry_MAG DFPC"
       connections:
           dfn: MotionEstimationLeastSquares

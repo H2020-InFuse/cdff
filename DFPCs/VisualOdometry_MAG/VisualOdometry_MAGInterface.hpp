@@ -7,8 +7,8 @@
 #define VISUALODOMETRY_MAG_INTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
+#include <TransformWithCovariance.h>
 #include <Frame.h>
-#include <Pose.h>
 
 namespace dfpc_ci
 {
@@ -36,21 +36,21 @@ namespace dfpc_ci
              * Send value to input port "odoMotion"
              * @param odoMotion: Estimated pose of the rover from Odometry
              */
-            virtual void odoMotionInput(const asn1SccPose& data);
+            virtual void odoMotionInput(const asn1SccTransformWithCovariance& data);
 
             /**
              * Query value from output port "estimateMotion"
              * @return estimateMotion: Pose estimated from the VisualOdometry_MAG DFPC
              */
-            virtual const asn1SccPose& estimateMotionOutput() const;
+            virtual const asn1SccTransformWithCovariance& estimateMotionOutput() const;
 
 
         protected:
 
             asn1SccFrame inLeftImage;
             asn1SccFrame inRightImage;
-            asn1SccPose inOdoMotion;
-            asn1SccPose outEstimateMotion;
+            asn1SccTransformWithCovariance inOdoMotion;
+            asn1SccTransformWithCovariance outEstimateMotion;
 
     };
 }

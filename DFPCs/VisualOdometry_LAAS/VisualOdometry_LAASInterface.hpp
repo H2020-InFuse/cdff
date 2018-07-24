@@ -7,8 +7,8 @@
 #define VISUALODOMETRY_LAAS_INTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
-#include <Pose.h>
 #include <Frame.h>
+#include <TransformWithCovariance.h>
 
 namespace dfpc_ci
 {
@@ -37,14 +37,14 @@ namespace dfpc_ci
              * Query value from output port "estimatedMotion"
              * @return estimatedMotion: Pose estimated from the VisualOdometry_LAAS DFPC
              */
-            virtual const asn1SccPose& estimatedMotionOutput() const;
+            virtual const asn1SccTransformWithCovariance& estimatedMotionOutput() const;
 
 
         protected:
 
             asn1SccFrame inLeftImage;
             asn1SccFrame inRightImage;
-            asn1SccPose outEstimatedMotion;
+            asn1SccTransformWithCovariance outEstimatedMotion;
 
     };
 }

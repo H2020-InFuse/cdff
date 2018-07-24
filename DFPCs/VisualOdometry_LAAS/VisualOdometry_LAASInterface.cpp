@@ -26,7 +26,7 @@ void VisualOdometry_LAASInterface::rightImageInput(const asn1SccFrame& data)
     inRightImage = data;
 }
 
-const asn1SccPose& VisualOdometry_LAASInterface::estimatedMotionOutput() const
+const asn1SccTransformWithCovariance& VisualOdometry_LAASInterface::estimatedMotionOutput() const
 {
     return outEstimatedMotion;
 }
