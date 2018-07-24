@@ -1,0 +1,47 @@
+name: PoseFusion
+doc: Integrate data corresponding to past poses, and to produce updated past poses after the application of a pose fusion process.
+dfns:
+    - name: KalmanFilter
+    - name: MapOptimizer
+input_ports:
+    - name: wheelOdometry
+      type: asn1SccTransformWithCovariance
+      doc: ""
+      connections:
+        - dfn: KalmanFilter
+          port: wheelPoseEstimation
+    - name: visualOdometry
+      type: asn1SccTransformWithCovariance
+      doc: ""
+      connections:
+        - dfn: KalmanFilter
+          port: visualPoseEstimantion
+output_ports:
+    - name: estimatedCurrentPose
+      type: asn1SccTransformWithCovariance
+      doc: "Pose estimated from the SLAM DFPC"
+      connections:
+          dfn: MapOptimizer
+          port: fusedPoseEstimation
+    - name: estimatedPastPoses
+      type: asn1SccTransformWithCovariance
+      doc: "Past pose estimated from the SLAM DFPC"
+      connections:
+          dfn: MapOptimizer
+          port: fusedPastPoseEstimation #Are these poses coming from here?
+#
+# No Operations?
+#operations:
+#    - name: 
+#      inputs:
+#          - output_type:
+#            doc :
+#
+# Are the internal connections (No connections) right?
+#internal_connections:
+#    - from:
+#        dfn: 
+#        port:
+#      to:
+#        dfn:
+#        port: 
