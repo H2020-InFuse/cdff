@@ -3,11 +3,11 @@ BEGIN
 IMPORTS
 T-UInt32 FROM TASTE-BasicTypes
 T-Double FROM TASTE-ExtendedTypes
-Pose-InFuse FROM Pose-InFuse-Types
+TransformWithCovariance FROM TransformWithCovariance-Types
 Time FROM Time-Types;
 
 -- Message version
-map-InFuse-Version    T-UInt32 ::= 0
+map-Version    T-UInt32 ::= 0
 
 --- Map sizes (manually defined)
 -- 1200 (width) x 1200 (height) x 7 (layers) x 4(bytes-per-data)
@@ -33,7 +33,7 @@ Map-type-t ::= ENUMERATED
 	map-NAV	-- Navigation Map
 }
 
-Map-InFuse ::= SEQUENCE
+Map ::= SEQUENCE
 {
 	msgVersion			T-UInt32,	-- Message version
 
@@ -43,7 +43,7 @@ Map-InFuse ::= SEQUENCE
 	errValue			T-Double,	-- Cell error value (empty cells)
 	scale				T-Double,	-- Size of a map cell in meters
 
-	pose-fixedFrame-mapFrame	Pose-InFuse,	-- Transform from map to fixed frame (can be site frame or world frame)
+	pose-fixedFrame-mapFrame	TransformWithCovariance,	-- Transform from map to fixed frame (can be site frame or world frame)
 							-- The map origin is supposed to be its bottom-left corner
 
 	rows				T-UInt32,	-- Height of the map
