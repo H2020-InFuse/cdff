@@ -1,0 +1,168 @@
+Frame-Types DEFINITIONS ::=
+BEGIN
+IMPORTS
+T-UInt32  FROM TASTE-BasicTypes 
+T-Double, T-String FROM TASTE-ExtendedTypes 
+Matrix3d, VectorXd FROM Eigen-Types
+TransformWithCovariance FROM TransformWithCovariance-Types
+Time FROM Time-Types
+Array3D FROM Array3D-Types;
+
+--- Definition of Message version
+Frame-Version    T-UInt32 ::= 1
+
+--- Definition of frameMax values
+frameMaxAttributes    T-UInt32 ::= 5
+frameMaxErrValues     T-UInt32 ::= 3
+
+
+--- Definition of enum Frame-pixelModel-t follows
+Frame-pixelModel-t ::= ENUMERATED
+{
+    pix-UNDEF,    -- f(X) = X is assumed by default
+    pix-POLY,     -- f(X) = a + b.X + c.X² + ...
+    pix-DISP      -- [f(X) = a.X + b, c = baseline, d = minimum disparity value, e = maximum disparity value]
+}
+
+
+---  Definition Frame-error-t follows 
+Frame-error-t ::= SEQUENCE
+{
+    name     T-String,    -- Error name identifier (e.g. 'DEAD' for dead pixel)
+    value    T-Double     -- Error value (should be converted in the type corresponding to the image depth) 
+}
+
+
+---  Definition Frame-attrib-t follows 
+Frame-attrib-t ::= 
+SEQUENCE
+{
+    name    T-String,    -- Attribute name identifier
+    data    T-String     -- Attribute data (should be converted in the type corresponding to the attribute) 
+}
+
+
+--- Definition of enum Frame-mode-t follows 
+Frame-mode-t ::= ENUMERATED 
+{
+    mode-UNDEF, 
+    mode-GRAY, 
+    mode-RGB, 
+    mode-RGBA,
+    mode-BGR,
+    mode-BGRA, 
+    mode-HSV,
+    mode-HLS,
+    mode-YUV,
+    mode-UYVY,
+    mode-Lab,
+    mode-Luv,
+    mode-XYZ,
+    mode-YCrCb,
+    mode-RGB32, 
+    mode-Bayer-RGGB, 
+    mode-Bayer-GRBG, 
+    mode-Bayer-BGGR, 
+    mode-Bayer-GBRG, 
+    mode-PJPG, 
+    mode-JPEG, 
+    mode-PNG 
+}
+
+
+--- Definition of enum Frame-status-t follows 
+Frame-status-t ::= ENUMERATED 
+{
+    status-EMPTY, 
+    status-VALID, 
+    status-INVALID 
+}
+
+ 
+---  Definition of Frame-metadata-t follows 
+Frame-metadata-t ::= SEQUENCE
+{
+    msgVersion      T-UInt32,                                                    -- Message version
+
+    timeStamp       Time,                                                        -- Time at which the data has been acquired
+    receivedTime    Time,                                                        -- Time at which the data has been received
+    
+    pixelModel      Frame-pixelModel-t,                                          -- Model of the function used to translate an X physical value into a f(X) pixel value
+    pixelCoeffs     VectorXd,                                                    -- Coefficients for the pixel model function
+
+    errValues       SEQUENCE (SIZE(0..frameMaxErrValues)) OF Frame-error-t,      -- Pixel error values (e.g. dead pixel value, pixel removed by undistortion)
+
+    attributes      SEQUENCE (SIZE(0..frameMaxAttributes)) OF Frame-attrib-t,    -- Any additional information about the image
+
+    mode            Frame-mode-t,                                                -- Image type mode
+    status          Frame-status-t                                               -- Image status
+}
+
+
+--- Definition of enum Frame-cameraModel-t follows
+Frame-cameraModel-t ::= ENUMERATED
+{
+    cam-UNDEF,      -- Undefined camera calibration model
+    cam-PINHOLE,    -- Pinhole camera calibration model
+    cam-FISHEYE,    -- Fisheye camera calibration model
+    cam-MAPS        -- Correction maps camera calibration model
+}
+
+
+---  Definition of Frame-intrinsic-t follows 
+Frame-intrinsic-t ::= SEQUENCE
+{
+    msgVersion      T-UInt32,               -- Message version
+
+    sensorId        T-String,               -- Identifier for the sensor that produced the image
+    
+    cameraMatrix    Matrix3d,               -- Intrinsic camera calibration matrix
+                                            -- [fx, s,  cx] with (fx, fy) the focal length in pixels
+                                            -- [0,  fy, cy]     (cx, cy) the principal point offsets in pixels
+                                            -- [0,  0,   1]     s the axis skew
+
+    cameraModel     Frame-cameraModel-t,    -- Camera model to use for correction
+    distCoeffs      VectorXd,               -- Vector of distortion coefficients (k1, k2, p1, p2, k3, k4, k5, k6, s1, s2, s3, s4)
+                                            -- k1-6 the radial distortion coefficients
+                                            -- p1-2 the tangential distortion coefficients
+                                            -- s1-4 the thin prism distortion coefficients
+}
+
+
+---  Definition of Frame-extrinsic-t follows 
+Frame-extrinsic-t ::= SEQUENCE
+{
+    msgVersion                     T-UInt32,                   -- Message version
+
+    hasFixedTransform              BOOLEAN,                    -- Is there a fixed transform attached to the image (robot base frame to fixed frame)
+    pose-robotFrame-sensorFrame    TransformWithCovariance,    -- Transform from sensor to robot frame
+    pose-fixedFrame-robotFrame     TransformWithCovariance,    -- Transform from robot frame to fixed frame (can be site frame or world frame). This is used mainly for DEBUG.
+}
+
+
+---  Definition of Frame follows 
+Frame ::= SEQUENCE
+{
+    msgVersion    T-UInt32,               -- Message version
+
+    metadata      Frame-metadata-t,       -- Frame metadata information
+    intrinsic     Frame-intrinsic-t,      -- Intrinsic camera parameters
+    extrinsic     Frame-extrinsic-t,      -- Extrinsic camera parameters
+
+    data          Array3D
+}
+
+
+---  Definition of FramePair follows 
+FramePair ::= SEQUENCE
+{
+    msgVersion    T-UInt32,    -- Message version
+
+    baseline      T-Double,    -- Distance between the optical centers of the two cameras
+
+    left          Frame,       -- Left image
+    right         Frame        -- Right image
+}
+
+
+END
