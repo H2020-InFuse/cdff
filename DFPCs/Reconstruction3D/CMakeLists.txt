@@ -66,4 +66,14 @@ target_link_libraries(
     reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator
 )
 
+add_library(
+    estimation_from_stereo
+    EstimationFromStereo.cpp
+    PointCloudMap.cpp
+)
+target_link_libraries(
+    estimation_from_stereo
+    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator
+)
+
 
