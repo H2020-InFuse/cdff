@@ -8,12 +8,19 @@
  */
 
 #include "Frame.hpp"
-#include <Errors/Assert.hpp>
 
 namespace FrameWrapper
 {
 
 using namespace BaseTypesWrapper;
+
+	void CopyImageData(Frame& destination, const Frame& source)
+	{
+		// copy buffers
+		ASSERT_ON_TEST(source.image.nCount < MAX_DATA_BYTE_SIZE, "Image data exceeds limits");
+		std::memcpy(&destination.image.arr, &source.image.arr, source.image.nCount);
+	}
+
 
 void Copy(const Frame& source, Frame& destination)
 {
@@ -31,10 +38,7 @@ void Copy(const Frame& source, Frame& destination)
 		AddAttribute(destination, GetAttribute(source, attributeIndex));
 	}
 	ClearData(destination);
-	for (int dataByteIndex = 0; dataByteIndex < GetNumberOfDataBytes(source); dataByteIndex++)
-	{
-		AddDataByte(destination, GetDataByte(source, dataByteIndex));
-	}
+	CopyImageData(destination,source);
 }
 
 FramePtr NewFrame()
@@ -220,14 +224,6 @@ FrameAttribute GetAttribute(const Frame& frame, int index)
 unsigned GetNumberOfAttributes(const Frame& frame)
 {
 	return frame.attributes.nCount;
-}
-
-void AddDataByte(Frame& frame, byte data)
-{
-	ASSERT_ON_TEST(frame.image.nCount < MAX_DATA_BYTE_SIZE, "Image data exceeds limits");
-	int currentIndex = frame.image.nCount;
-	frame.image.arr[currentIndex] = data;
-	frame.image.nCount++;
 }
 
 void ClearData(Frame& frame)
