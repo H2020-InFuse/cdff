@@ -1,0 +1,50 @@
+Map-Types DEFINITIONS ::=
+BEGIN
+IMPORTS
+T-UInt32 FROM TASTE-BasicTypes
+T-Double FROM TASTE-ExtendedTypes
+TransformWithCovariance FROM TransformWithCovariance-Types
+Frame-error-t FROM Frame-Types
+Time FROM Time-Types;
+
+-- Definition of Message version
+map-Version    T-UInt32 ::= 0
+
+
+--- Definition of enum Map-type-t follows
+Map-type-t ::= ENUMERATED
+{
+    map-UNDEF,    -- Undefined Map
+    map-DEM,      -- Digital Elevation Map
+    map-NAV       -- Navigation Map
+}
+
+
+---  Definition of Map-metadata-t follows 
+Map-metadata-t ::= SEQUENCE
+{
+    msgVersion                  T-UInt32,                                                  -- Message version
+
+    timeStamp                   Time,                                                      -- Time at which the data has been acquired
+
+    type                        Map-type-t,                                                -- Map type (Digital Elevation Map, Navigation Map...)
+    errValues                   SEQUENCE (SIZE(0..frameMaxErrValues)) OF Frame-error-t,    -- Cell error values (e.g. empty cells, unknown cells)
+    
+    scale                       T-Double,                                                  -- Size of a map cell side in meters (a cell is a square of scale x scale)
+
+    pose-fixedFrame-mapFrame    TransformWithCovariance                                    -- Transform from map to fixed frame (can be site frame or world frame)
+                                                                                           -- The map origin is supposed to be its bottom-left corner
+}
+
+
+---  Definition of Map follows 
+Map ::= SEQUENCE
+{
+    msgVersion    T-UInt32,          -- Message version
+
+    metadata      Map-metadata-t,    -- Map metadata information
+
+    data          Array3D            -- Cell data
+}
+
+END
