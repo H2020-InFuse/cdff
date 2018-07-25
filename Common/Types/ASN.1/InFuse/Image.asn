@@ -1,9 +1,8 @@
 ----------------------------------------------------------------
---!  ASN file generated automatically by the SARGON ASN.1 generator 
---!  Date/time of generation: 2016/06/08 19:36:15
---!  Manually updated to define sizes, etc.
+--!  The types defined here correspond to the former Frame types
 ----------------------------------------------------------------
-Frame-Types DEFINITIONS ::=
+
+Image-Types DEFINITIONS ::=
 BEGIN
 IMPORTS 
 T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
@@ -11,9 +10,9 @@ T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedType
 Time FROM Time-Types;
 
 
---- Definition of enum frame_mode_t follows 
+--- Definition of enum Image_mode_t follows 
 
-Frame-mode-t ::= ENUMERATED 
+Image-mode-t ::= ENUMERATED 
 {
      mode-undefined, 
      mode-grayscale, 
@@ -33,19 +32,19 @@ Frame-mode-t ::= ENUMERATED
      mode-png 
 }
 
---- End Definition of enum frame_mode_t
+--- End Definition of enum Image_mode_t
 
 
---- Definition of enum frame_status_t follows 
+--- Definition of enum Image_status_t follows 
 
-Frame-status-t ::= ENUMERATED 
+Image-status-t ::= ENUMERATED 
 {
  	status-empty, 
      status-valid, 
      status-invalid 
 }
 
---- End Definition of enum frame_status_t
+--- End Definition of enum Image_status_t
 
 
 ---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
@@ -53,72 +52,72 @@ Frame-status-t ::= ENUMERATED
 ---- END of typedefs defined in this module 
 
 
----  Definition FRAME_ATTRIB_T Starts 
-Frame-attrib-t   ::= 
+---  Definition Image_ATTRIB_T Starts 
+Image-attrib-t   ::= 
 SEQUENCE
 {
     data			T-String,
     att-name		T-String
 }
 
----  Definition FRAME_ATTRIB_T Ends 
+---  Definition Image_ATTRIB_T Ends 
 
 
----  Definition FRAME_SIZE_T Starts 
-Frame-size-t   ::= 
+---  Definition Image_SIZE_T Starts 
+Image-size-t   ::= 
 SEQUENCE
 {
     width			T-UInt16,
     height		T-UInt16
 }
 
----  Definition FRAME_SIZE_T Ends 
+---  Definition Image_SIZE_T Ends 
 
 
----  Frame sizes (manually defined)
+---  Image sizes (manually defined)
 
 -- 3840(width) x 2160(height) x 3(bytes-per-pixel)
-frameMaxBytes            T-UInt32 ::= 24883200
-frameMaxRows             T-UInt32 ::= 2160
-frameMaxCols             T-UInt32 ::= 3840
-frameMaxAttributes       T-UInt32 ::= 5
+imageMaxBytes            T-UInt32 ::= 24883200
+imageMaxRows             T-UInt32 ::= 2160
+imageMaxCols             T-UInt32 ::= 3840
+imageMaxAttributes       T-UInt32 ::= 5
 
----  END of frame sizes
+---  END of Image sizes
 
 
 
----  Definition FRAME Starts 
+---  Definition Image Starts 
 
 ---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
 
 ---- END of typedefs defined in this module 
-Frame   ::= 
+Image   ::= 
 SEQUENCE
 {
     frame-time				Time,
     received-time			Time,
-    image				OCTET STRING (SIZE(0..frameMaxBytes)),
-    attributes				SEQUENCE (SIZE(0..frameMaxAttributes)) OF Frame-attrib-t,
-    datasize				Frame-size-t,
+    image				OCTET STRING (SIZE(0..imageMaxBytes)),
+    attributes				SEQUENCE (SIZE(0..imageMaxAttributes)) OF Image-attrib-t,
+    datasize				Image-size-t,
     data-depth				T-UInt32,
     pixel-size				T-UInt32,
     row-size				T-UInt32,
-    frame-mode				Frame-mode-t,
-    frame-status			Frame-status-t
+    frame-mode				Image-mode-t,
+    frame-status			Image-status-t
 }
 
----  Definition FRAME Ends 
+---  Definition Image Ends 
 
 
----  Definition FRAMEPAIR Starts 
-FramePair   ::= 
+---  Definition ImagePAIR Starts 
+ImagePair   ::= 
 SEQUENCE
 {
     frame-time				Time,
-    first					Frame,
-    second				Frame,
+    first					Image,
+    second				Image,
     id					T-UInt32
 }
 
----  Definition FRAMEPAIR Ends 
+---  Definition ImagePAIR Ends 
 END
