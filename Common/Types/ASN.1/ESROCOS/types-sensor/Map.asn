@@ -4,55 +4,47 @@ IMPORTS
 T-UInt32 FROM TASTE-BasicTypes
 T-Double FROM TASTE-ExtendedTypes
 TransformWithCovariance FROM TransformWithCovariance-Types
+Frame-error-t FROM Frame-Types
 Time FROM Time-Types;
 
--- Message version
+-- Definition of Message version
 map-Version    T-UInt32 ::= 0
 
---- Map sizes (manually defined)
--- 1200 (width) x 1200 (height) x 7 (layers) x 4(bytes-per-data)
-mapMaxRows	T-UInt32 ::= 1200
-mapMaxCols	T-UInt32 ::= 1200
-mapMaxLayers	T-UInt32 ::= 7
-mapMaxBytes	T-UInt32 ::= 40320000
-
---- Definition of enum Map-cell-type-t follows
-Map-cell-type-t ::= ENUMERATED
-{
-	cell-8U,	-- 8-bit unsigned integers ( 0..255 )
-	cell-16S,	-- 16-bit signed integers ( -32768..32767 )
-	cell-32S,	-- 32-bit signed integers ( -2147483648..2147483647 )
-	cell-32F	-- 32-bit floating-point numbers ( -FLT_MAX..FLT_MAX, INF, NAN )
-}
 
 --- Definition of enum Map-type-t follows
 Map-type-t ::= ENUMERATED
 {
-	map-UNDEF,
-	map-DEM,	-- Digital Elevation Map
-	map-NAV	-- Navigation Map
+    map-UNDEF,    -- Undefined Map
+    map-DEM,      -- Digital Elevation Map
+    map-NAV       -- Navigation Map
 }
 
+
+---  Definition of Map-metadata-t follows 
+Map-metadata-t ::= SEQUENCE
+{
+    msgVersion                  T-UInt32,                                                  -- Message version
+
+    timeStamp                   Time,                                                      -- Time at which the data has been acquired
+
+    type                        Map-type-t,                                                -- Map type (Digital Elevation Map, Navigation Map...)
+    errValues                   SEQUENCE (SIZE(0..frameMaxErrValues)) OF Frame-error-t,    -- Cell error values (e.g. empty cells, unknown cells)
+    
+    scale                       T-Double,                                                  -- Size of a map cell side in meters (a cell is a square of scale x scale)
+
+    pose-fixedFrame-mapFrame    TransformWithCovariance                                    -- Transform from map to fixed frame (can be site frame or world frame)
+                                                                                           -- The map origin is supposed to be its bottom-left corner
+}
+
+
+---  Definition of Map follows 
 Map ::= SEQUENCE
 {
-	msgVersion			T-UInt32,	-- Message version
+    msgVersion    T-UInt32,          -- Message version
 
-	timeStamp			Time,		-- Time at which the data has been acquired
+    metadata      Map-metadata-t,    -- Map metadata information
 
-	type				Map-type-t,	-- Map type (Digital Elevation Map, Navigation Map...)
-	errValue			T-Double,	-- Cell error value (empty cells)
-	scale				T-Double,	-- Size of a map cell in meters
-
-	pose-fixedFrame-mapFrame	TransformWithCovariance,	-- Transform from map to fixed frame (can be site frame or world frame)
-							-- The map origin is supposed to be its bottom-left corner
-
-	rows				T-UInt32,	-- Height of the map
-	cols				T-UInt32,	-- Width of the map
-	cellType			Map-cell-type-t,-- Matrix element depth identifier
-	cellDepth			T-UInt32,	-- Cell size in bytes
-	lineStep			T-UInt32,	-- Number of bytes each matrix row occupies. The value should include the padding bytes at the end of each row, if any.
-
-	data				OCTET STRING (SIZE(0..mapMaxBytes))	-- Cell data
+    data          Array3D            -- Cell data
 }
 
 END

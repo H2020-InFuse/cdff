@@ -122,7 +122,7 @@ Frame-intrinsic-t ::= SEQUENCE
                                             -- [0,  0,   1]     s the axis skew
 
     cameraModel     Frame-cameraModel-t,    -- Camera model to use for correction
-    distCoeffs      VectorXd,               -- Vector of distortion coefficients (k1, k2, p1, p2, k3, k4, k5, k6, s1, s2, s3, s4)
+    distCoeffs      VectorXd                -- Vector of distortion coefficients (k1, k2, p1, p2, k3, k4, k5, k6, s1, s2, s3, s4)
                                             -- k1-6 the radial distortion coefficients
                                             -- p1-2 the tangential distortion coefficients
                                             -- s1-4 the thin prism distortion coefficients
@@ -136,7 +136,7 @@ Frame-extrinsic-t ::= SEQUENCE
 
     hasFixedTransform              BOOLEAN,                    -- Is there a fixed transform attached to the image (robot base frame to fixed frame)
     pose-robotFrame-sensorFrame    TransformWithCovariance,    -- Transform from sensor to robot frame
-    pose-fixedFrame-robotFrame     TransformWithCovariance,    -- Transform from robot frame to fixed frame (can be site frame or world frame). This is used mainly for DEBUG.
+    pose-fixedFrame-robotFrame     TransformWithCovariance     -- Transform from robot frame to fixed frame (can be site frame or world frame). This is used mainly for DEBUG.
 }
 
 
@@ -149,7 +149,7 @@ Frame ::= SEQUENCE
     intrinsic     Frame-intrinsic-t,      -- Intrinsic camera parameters
     extrinsic     Frame-extrinsic-t,      -- Extrinsic camera parameters
 
-    data          Array3D
+    data          Array3D                 -- Pixels data
 }
 
 
