@@ -19,6 +19,7 @@ using namespace BaseTypesWrapper;
 		// copy buffers
 		ASSERT_ON_TEST(source.image.nCount < MAX_DATA_BYTE_SIZE, "Image data exceeds limits");
 		std::memcpy(&destination.image.arr, &source.image.arr, source.image.nCount);
+		destination.image.nCount = source.image.nCount;
 	}
 
 
