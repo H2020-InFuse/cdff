@@ -4,14 +4,14 @@ IMPORTS
 T-UInt32 FROM TASTE-BasicTypes;
 
 --- Definition of Message version
-Array3D-Version    T-UInt32 ::= 1
+array3D-Version    T-UInt32 ::= 1
 
 --- Definition of Array3D sizes (manually defined)
 -- 1920(cols) x 1080(rows) x 4(channels) x 8(max bytes-per-pixel: 64F) 
-Array3DMaxBytes       T-UInt32 ::= 66355200
-Array3DMaxRows        T-UInt32 ::= 1080
-Array3DMaxCols        T-UInt32 ::= 1920
-Array3DMaxChannels    T-UInt32 ::= 4
+array3DMaxBytes       T-UInt32 ::= 66355200
+array3DMaxRows        T-UInt32 ::= 1080
+array3DMaxCols        T-UInt32 ::= 1920
+array3DMaxChannels    T-UInt32 ::= 4
 
 
 --- Definition of enum Array3D-depth-t follows
@@ -35,11 +35,11 @@ Array3D ::= SEQUENCE
     rows          T-UInt32,                                  -- Number of rows in the matrix (1st dimension)
     cols          T-UInt32,                                  -- Number of columns in the matrix (2nd dimension)
     channels      T-UInt32,                                  -- Number of channels in the matrix (3rd dimension)
-    depth         Buffer3D-depth-t,                          -- Matrix element depth identifier
+    depth         Array3D-depth-t,                          -- Matrix element depth identifier
     rowSize       T-UInt32,                                  -- Number of bytes each matrix row occupies. The value should include the padding bytes at the end of each row, if any.
 
     -- Data
-    data          OCTET STRING (SIZE(0..Array3DMaxBytes))    -- Matrix data
+    data          OCTET STRING (SIZE(0..array3DMaxBytes))    -- Matrix data
 }
 
 

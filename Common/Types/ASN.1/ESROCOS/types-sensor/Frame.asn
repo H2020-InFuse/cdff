@@ -8,8 +8,10 @@ TransformWithCovariance FROM TransformWithCovariance-Types
 Time FROM Time-Types
 Array3D FROM Array3D-Types;
 
+
 --- Definition of Message version
-Frame-Version    T-UInt32 ::= 1
+frame-Version    T-UInt32 ::= 1
+
 
 --- Definition of frameMax values
 frameMaxAttributes    T-UInt32 ::= 5
