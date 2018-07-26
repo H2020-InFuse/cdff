@@ -18,6 +18,9 @@
 #include "BaseTypes.hpp"
 #include <stdlib.h>
 #include <memory>
+#include "Errors/Assert.hpp"
+#include <cstring>
+#include <Types/C/Frame.h>
 
 /**
  *  The `Frame` type is the C++ interface to the compiled ASN.1 Frame. A
@@ -30,7 +33,7 @@
  *   - `datasize`, the size of the frame in pixels,
  *   - `data-depth`, the number of bits per channel,
  *   - `pixel-size`, the size of a single pixel in bytes. This is
- *     `number_of_channels * bytes_per_channel`,
+ *     `number_of_channels * bytes_per_channel (data-depth)`,
  *   - `row-size`, the size of a row in bytes, this is `pixel-size *
  *     datasize.width`. This value will be inaccurate for compressed image modes
  *     since they use a varying number of bytes per pixel,
@@ -185,7 +188,6 @@ void RemoveAttribute(Frame& frame, int index);
 FrameAttribute GetAttribute(const Frame& frame, int index);
 unsigned GetNumberOfAttributes(const Frame& frame);
 
-void AddDataByte(Frame& frame, byte data);
 void ClearData(Frame& frame);
 byte GetDataByte(const Frame& frame, int index);
 int GetNumberOfDataBytes(const Frame& frame);
@@ -193,6 +195,14 @@ int GetNumberOfDataBytes(const Frame& frame);
 BitStream ConvertToBitStream(const Frame& frame);
 void ConvertFromBitStream(BitStream bitStream, Frame& frame);
 
+    /* !! ASSUMES Little Endian */
+    template<typename T>
+    void AppendData(Frame &frame, T data)
+    {
+        ASSERT_ON_TEST(frame.image.nCount + static_cast<int>(sizeof(T)) < MAX_DATA_BYTE_SIZE, "Image data will exceed limits");
+        std::memcpy(&frame.image.arr[frame.image.nCount], &data, sizeof (T));
+        frame.image.nCount+= sizeof (T);
+    }
 }
 
 #endif // FRAME_HPP
