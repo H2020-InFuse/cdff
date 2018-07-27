@@ -44,9 +44,9 @@ namespace dfn_ci
 
 			struct CannyParameters
 			{
-				float lowThreshold;
-				float highThreshold;
-				float kernelSize;
+				double lowThreshold;
+				double highThreshold;
+				int kernelSize;
 			};
 
 			struct CannyDetectorOptionsSet

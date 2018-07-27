@@ -26,9 +26,8 @@ SobelDerivative::SobelDerivative()
 	parametersHelper.AddParameter<float>("GeneralParameters", "ConstantBorderValue", parameters.constantBorderValue, DEFAULT_PARAMETERS.constantBorderValue);
 	parametersHelper.AddParameter<BorderMode, BorderModeHelper>("GeneralParameters", "BorderMode", parameters.borderMode, DEFAULT_PARAMETERS.borderMode);
 	parametersHelper.AddParameter<DepthMode, DepthModeHelper>("GeneralParameters", "DepthMode", parameters.depthMode, DEFAULT_PARAMETERS.depthMode);
-
-	parametersHelper.AddParameter<float>("SobelParameters", "Scale", parameters.sobelParameters.scale, DEFAULT_PARAMETERS.sobelParameters.scale);
-	parametersHelper.AddParameter<float>("SobelParameters", "Delta", parameters.sobelParameters.delta, DEFAULT_PARAMETERS.sobelParameters.delta);
+	parametersHelper.AddParameter<double>("SobelParameters", "Scale", parameters.sobelParameters.scale, DEFAULT_PARAMETERS.sobelParameters.scale);
+	parametersHelper.AddParameter<double>("SobelParameters", "Delta", parameters.sobelParameters.delta, DEFAULT_PARAMETERS.sobelParameters.delta);
 
 	configurationFilePath = "";
 }
@@ -172,8 +171,8 @@ cv::Mat SobelDerivative::sobelx(cv::Mat inputImage)
 			ASSERT(false, "Sobel Schar Derivative: unhandled depth mode");
 	}
 
-	double scale = (double)parameters.sobelParameters.scale;
-	double delta = (double)parameters.sobelParameters.delta;
+	double scale = parameters.sobelParameters.scale;
+	double delta = parameters.sobelParameters.delta;
 
 	cv::Mat gradientX, abs_gradientX;
 
@@ -226,8 +225,8 @@ cv::Mat SobelDerivative::sobely(cv::Mat inputImage)
 			ASSERT(false, "Sobel Schar Derivative: unhandled depth mode");
 	}
 
-	double scale = (double)parameters.sobelParameters.scale;
-	double delta = (double)parameters.sobelParameters.delta;
+	double scale = parameters.sobelParameters.scale;
+	double delta = parameters.sobelParameters.delta;
 
 	cv::Mat gradientY, abs_gradientY;
 

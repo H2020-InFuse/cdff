@@ -27,11 +27,11 @@ namespace dfn_ci
 	 * @param scale
 	 *        optional scale factor for the calculated derivatives
 	 * @param delta
-	 *        optional delta value that is added to the results before storing them
+	 *        optional delta value that is added to the calculated derivatives
 	 * @param borderMode
 	 *        how interpolation is performed at the border of the image:
 	 *        Constant, Wrap, or Reflect
-	 * @param depthGradImage
+	 * @param depthMode
 	 *        output image depth
 	 */
 	class SobelDerivative : public EdgeDetectionInterface
@@ -79,8 +79,8 @@ namespace dfn_ci
 
 			struct SobelParameters
 			{
-				float scale;
-				float delta;
+				double scale;
+				double delta;
 			};
 
 			struct SobelDerivativeOptionsSet

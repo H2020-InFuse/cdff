@@ -39,9 +39,6 @@ target_link_libraries(
   iterative_pnp_solver
   triangulation
   harris_detector_3d
-  canny_detector
-  sobel_derivative
-  kalman_predictor
   registration_icp_cc
   ceres_adjustment
   svd_decomposition

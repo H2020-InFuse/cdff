@@ -23,9 +23,15 @@ namespace dfn_ci
 
 CannyDetector::CannyDetector()
 {
-	parametersHelper.AddParameter<float>("CannyParameters", "LowThreshold", parameters.cannyParameters.lowThreshold, DEFAULT_PARAMETERS.cannyParameters.lowThreshold);
-	parametersHelper.AddParameter<float>("CannyParameters", "HighThreshold", parameters.cannyParameters.highThreshold, DEFAULT_PARAMETERS.cannyParameters.highThreshold);
-	parametersHelper.AddParameter<float>("CannyParameters", "KernelSize", parameters.cannyParameters.kernelSize, DEFAULT_PARAMETERS.cannyParameters.kernelSize);
+	parametersHelper.AddParameter<double>("CannyParameters", "LowThreshold", parameters.cannyParameters.lowThreshold, DEFAULT_PARAMETERS.cannyParameters.lowThreshold);
+	parametersHelper.AddParameter<double>("CannyParameters", "HighThreshold", parameters.cannyParameters.highThreshold, DEFAULT_PARAMETERS.cannyParameters.highThreshold);
+	parametersHelper.AddParameter<int>("CannyParameters", "KernelSize", parameters.cannyParameters.kernelSize, DEFAULT_PARAMETERS.cannyParameters.kernelSize);
+
+	configurationFilePath = "";
+}
+
+CannyDetector::~CannyDetector()
+{
 
 	configurationFilePath = "";
 }
@@ -70,8 +76,8 @@ cv::Mat CannyDetector::Canny(cv::Mat inputImage)
 	double t1, t2;
 	int k_size;
 
-	t1 = (double)parameters.cannyParameters.lowThreshold;
-	t2 = (double)parameters.cannyParameters.highThreshold;
+	t1 = parameters.cannyParameters.lowThreshold;
+	t2 = parameters.cannyParameters.highThreshold;
 	k_size = parameters.cannyParameters.kernelSize;
 
 	cv::Mat edges;
