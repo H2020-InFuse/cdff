@@ -6,22 +6,22 @@
 */
 
 /*!
- * @file MatToFrameConverter.hpp
- * @date 08/12/2017
+ * @file MatToCorrespondenceMaps3DSequenceConverter.hpp
+ * @date 24/07/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup Converters
  * 
- *  This is the class for type conversion from Mat to Frame.
+ *  This is the class for type conversion from Measurement opencv matrix to CorrespondenceMapsSequence.
  *  
  *
  * @{
  */
 
-#ifndef MAT_TO_FRAME_CONVERTER_HPP
-#define  MAT_TO_FRAME_CONVERTER_HPP
+#ifndef MAT_TO_CORRESPONDENCE_MAPS_3D_SEQUENCE_CONVERTER
+#define MAT_TO_CORRESPONDENCE_MAPS_3D_SEQUENCE_CONVERTER
 
 
 /* --------------------------------------------------------------------------
@@ -30,9 +30,8 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <Frame.hpp>
+#include <CorrespondenceMaps3DSequence.hpp>
 #include <opencv2/core/core.hpp>
-
 
 namespace Converters {
 
@@ -42,15 +41,15 @@ namespace Converters {
  *
  * --------------------------------------------------------------------------
  */
-class MatToFrameConverter
+class MatToCorrespondenceMaps3DSequenceConverter
 	{
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual FrameWrapper::FrameConstPtr Convert(const cv::Mat& image);
-		FrameWrapper::FrameSharedConstPtr ConvertShared(const cv::Mat& image);
+		virtual CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequenceConstPtr Convert(const cv::Mat&  measurementMatrix);
+		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequenceSharedConstPtr ConvertShared(const cv::Mat&  measurementMatrix);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -63,14 +62,13 @@ class MatToFrameConverter
 	 * --------------------------------------------------------------------
 	 */	
 	private:
-		void ConvertRGB(const cv::Mat& image, FrameWrapper::Frame& frame);
-		void ConvertGrayscale(const cv::Mat& image, FrameWrapper::Frame& frame);
-	    void ConvertFloat(const cv::Mat& image, FrameWrapper::Frame& frame);
+		static const int MAXIMUM_NUMBER_OF_CLOUDS = 8;
+
 	};
 
 }
 
 #endif
 
-/* MatToFrameConverter.hpp */
+/* MatToCorrespondenceMaps3DSequenceConverter.hpp */
 /** @} */

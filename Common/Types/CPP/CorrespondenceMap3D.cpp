@@ -103,6 +103,45 @@ T_Float GetProbability(const CorrespondenceMap3D& correspondenceMap, const int c
 	return correspondenceMap.arr[correspondenceIndex].probability;
 }
 
+void RemoveCorrespondences(CorrespondenceMap3D& correspondenceMap, std::vector<BaseTypesWrapper::T_UInt32> correspondenceIndexOrderedList)
+	{
+	BaseTypesWrapper::T_UInt32 elementsToRemove = correspondenceIndexOrderedList.size();
+	if ( elementsToRemove == 0)
+		{
+		return;
+		}
+	//Checking that input is ordered correctly.
+	static const std::string errorMessage = "Remove Correspondences error, the second input was not an ORDERED list or some index is not within range";
+	for(int listIndex = 1; listIndex < elementsToRemove-1; listIndex++)
+		{
+		ASSERT( correspondenceIndexOrderedList.at(listIndex-1) < correspondenceIndexOrderedList.at(listIndex), errorMessage);
+		ASSERT(	correspondenceIndexOrderedList.at(listIndex) < correspondenceIndexOrderedList.at(listIndex+1), errorMessage);
+		}
+	ASSERT( correspondenceIndexOrderedList.at(elementsToRemove-1) < correspondenceMap.nCount, errorMessage);
+	BaseTypesWrapper::T_UInt32 firstIndex = correspondenceIndexOrderedList.at(0);
+	ASSERT(firstIndex >= 0, errorMessage);
+
+	//Removing elements 
+	BaseTypesWrapper::T_UInt32 nextIndexToRemove = 1;
+	BaseTypesWrapper::T_UInt32 currentGap = 1;
+	for(int correspondenceIndex = firstIndex; correspondenceIndex < correspondenceMap.nCount - elementsToRemove; correspondenceIndex++)
+		{
+		if (nextIndexToRemove < elementsToRemove && correspondenceIndex+currentGap == correspondenceIndexOrderedList.at(nextIndexToRemove))
+			{
+			currentGap++;
+			nextIndexToRemove++;
+			correspondenceIndex--; //This is to not allow the map index to step forward in the next iteration;
+			}
+		else
+			{
+			correspondenceMap.arr[correspondenceIndex].source = correspondenceMap.arr[correspondenceIndex+currentGap].source;
+			correspondenceMap.arr[correspondenceIndex].sink = correspondenceMap.arr[correspondenceIndex+currentGap].sink;
+			correspondenceMap.arr[correspondenceIndex].probability = correspondenceMap.arr[correspondenceIndex+currentGap].probability;
+			}
+		}
+	correspondenceMap.nCount -= elementsToRemove;
+	}
+
 BitStream ConvertToBitStream(const CorrespondenceMap3D& map)
 	CONVERT_TO_BIT_STREAM(map, asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMap3D_Encode)
 

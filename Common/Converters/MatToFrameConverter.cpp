@@ -53,9 +53,13 @@ FrameConstPtr MatToFrameConverter::Convert(const cv::Mat& image)
 		{
 		ConvertRGB(image, *frame);
 		}
-	else if(image.type()==CV_8UC1)	
+	else if(image.type()==CV_8UC1)
 		{
 		ConvertGrayscale(image, *frame);
+		}
+	else if(image.type()==CV_32FC1)
+		{
+		ConvertFloat(image, *frame);
 		}
 	else
 		{
@@ -87,9 +91,9 @@ void MatToFrameConverter::ConvertRGB(const cv::Mat& image, Frame& frame)
 		for(int columnIndex = 0; columnIndex < image.cols; columnIndex++)
 			{
 			cv::Vec3b pixel = image.at<cv::Vec3b>(rowIndex, columnIndex);
-			AddDataByte(frame, (uint8_t) pixel[0] );
-			AddDataByte(frame, (uint8_t) pixel[1] );
-			AddDataByte(frame, (uint8_t) pixel[2] );
+				AppendData<uint8_t>(frame,  pixel[0]);
+				AppendData<uint8_t>(frame,  pixel[1]);
+				AppendData<uint8_t>(frame,  pixel[2]);
 			}
 		}
 	}
@@ -101,8 +105,21 @@ void MatToFrameConverter::ConvertGrayscale(const cv::Mat& image, Frame& frame)
 		{
 		for(int columnIndex = 0; columnIndex < image.cols; columnIndex++)
 			{
-			int pixel = (int)image.at<uchar>(rowIndex, columnIndex);
-			AddDataByte(frame, (uint8_t) pixel);	
+				uchar pixel = image.at<uchar>(rowIndex, columnIndex);
+				AppendData<uint8_t>(frame, pixel);
+			}
+		}
+	}
+
+	void MatToFrameConverter::ConvertFloat(const cv::Mat& image, Frame& frame)
+	{
+		SetFrameMode(frame, MODE_GRAYSCALE);
+		for(int rowIndex = 0; rowIndex < image.rows; rowIndex++)
+		{
+			for(int columnIndex = 0; columnIndex < image.cols; columnIndex++)
+			{
+				float pixel = image.at<float>(rowIndex, columnIndex);
+				AppendData<float>(frame, pixel);
 			}
 		}
 	}

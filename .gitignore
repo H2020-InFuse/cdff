@@ -1,6 +1,7 @@
 #Infuse specifics
 build/
-Common/Types/C/*
+Common/Types/C/
+Documentation/html/
 *~
 
 # Prerequisites

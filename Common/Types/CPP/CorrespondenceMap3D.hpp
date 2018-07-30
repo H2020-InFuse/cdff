@@ -18,6 +18,7 @@
 #include "BaseTypes.hpp"
 #include <stdlib.h>
 #include <memory>
+#include <vector>
 
 namespace CorrespondenceMap3DWrapper
 {
@@ -51,6 +52,7 @@ int GetNumberOfCorrespondences(const CorrespondenceMap3D& correspondenceMap);
 BaseTypesWrapper::Point3D GetSource(const CorrespondenceMap3D& correspondenceMap, const int correspondenceIndex);
 BaseTypesWrapper::Point3D GetSink(const CorrespondenceMap3D& correspondenceMap, const int correspondenceIndex);
 BaseTypesWrapper::T_Float GetProbability(const CorrespondenceMap3D& correspondenceMap, const int correspondenceIndex);
+void RemoveCorrespondences(CorrespondenceMap3D& correspondenceMap, std::vector<BaseTypesWrapper::T_UInt32> correspondenceIndexOrderedList);
 
 BitStream ConvertToBitStream(const CorrespondenceMap3D& map);
 void ConvertFromBitStream(BitStream bitStream, CorrespondenceMap3D& map);
