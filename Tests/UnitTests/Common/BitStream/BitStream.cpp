@@ -59,7 +59,7 @@ TEST_CASE( "Frame To BitStream", "[FrameToBitStream]" )
 		{
 		for (unsigned short columnIndex = 0; columnIndex < 10; columnIndex++)
 			{
-			AddDataByte(*inputFrame, rowIndex * 10 + columnIndex);
+                AppendData<uint8_t >(*inputFrame, rowIndex * 10 + columnIndex);
 			}
 		}
 	BitStream bitStream = ConvertToBitStream(*inputFrame);
@@ -362,7 +362,7 @@ TEST_CASE( "FramesSequence To BitStream", "[FramesSequenceToBitStream]" )
 			{
 			for (unsigned short columnIndex = 0; columnIndex < 10; columnIndex++)
 				{
-				AddDataByte(*inputFrame, rowIndex * 10 + columnIndex);
+                    AppendData<uint8_t >(*inputFrame, rowIndex * 10 + columnIndex);
 				}
 			}
 		AddFrame(*inputSequence, *inputFrame);
