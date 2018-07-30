@@ -42,6 +42,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
+    DFNs/Transform3DEstimation/CeresEstimation.cpp
 #[=[DFNs/Registration3D/Icp3D.cpp]=] # FIXME: name collision, issue #56
     DFNs/Registration3D/IcpCC.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
@@ -72,6 +73,7 @@ set(UNITTEST_LIBRARIES Catch
     harris_detector_3d
     hirschmuller_disparity_mapping
     transform_3d_estimation_least_squares_minimization
+    transform_3d_estimation_ceres
     icp_3d
     image_undistortion
     iterative_pnp_solver
