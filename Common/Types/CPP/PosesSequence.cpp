@@ -60,11 +60,6 @@ void Initialize(Poses3DSequence& posesSequence)
 void Clear(Poses3DSequence& posesSequence)
 {
 	posesSequence.nCount = 0;
-	for(int poseIndex = 0; poseIndex < MAX_POSES_SEQUENCE_LENGTH; poseIndex++)
-		{
-		posesSequence.arr[poseIndex].pos.nCount = 3;
-		posesSequence.arr[poseIndex].orient.nCount = 4;
-		}
 }
 
 void AddPose(Poses3DSequence& posesSequence, const Pose3D& pose)

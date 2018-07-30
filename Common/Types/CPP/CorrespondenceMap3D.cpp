@@ -46,11 +46,6 @@ CorrespondenceMap3DSharedPtr NewSharedCorrespondenceMap3D()
 void Initialize(CorrespondenceMap3D& correspondenceMap)
 {
 	ClearCorrespondences(correspondenceMap);
-	for(int correspondenceIndex = 0; correspondenceIndex < MAX_CORRESPONDENCES_3D; correspondenceIndex++)
-		{
-		correspondenceMap.arr[correspondenceIndex].source.nCount = 3;
-		correspondenceMap.arr[correspondenceIndex].sink.nCount = 3;
-		}
 }
 
 void AddCorrespondence(CorrespondenceMap3D& correspondenceMap, Point3D source, Point3D sink, T_Float probability)

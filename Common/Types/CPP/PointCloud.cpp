@@ -70,11 +70,6 @@ void ClearPoints(PointCloud& pointCloud)
 	pointCloud.data.points.nCount = 0;
 	pointCloud.data.colors.nCount = 0;
 	pointCloud.data.intensity.nCount = 0;
-	for(int pointIndex = 0; pointIndex < MAX_CLOUD_SIZE; pointIndex++)
-		{
-		pointCloud.data.points.arr[pointIndex].nCount = 3;
-		pointCloud.data.colors.arr[pointIndex].nCount = 3; // = 4;
-		}
 	
 	pointCloud.metadata.sensorId.nCount = 0;
 	pointCloud.metadata.frameId.nCount = 0;
@@ -83,9 +78,6 @@ void ClearPoints(PointCloud& pointCloud)
 	pointCloud.metadata.width = 0;
 	pointCloud.metadata.height = 0;
 	pointCloud.metadata.msgVersion = 0;
-	pointCloud.metadata.pose_robotFrame_sensorFrame.data.translation.nCount = 3;
-	pointCloud.metadata.pose_robotFrame_sensorFrame.data.orientation.nCount = 4;
-	pointCloud.metadata.pose_robotFrame_sensorFrame.data.cov.nCount = 6;
 	pointCloud.metadata.pose_robotFrame_sensorFrame.metadata.producerId.nCount = 0;
 	pointCloud.metadata.pose_robotFrame_sensorFrame.metadata.parentFrameId.nCount = 0;
 	pointCloud.metadata.pose_robotFrame_sensorFrame.metadata.childFrameId.nCount = 0;
@@ -95,9 +87,6 @@ void ClearPoints(PointCloud& pointCloud)
 	pointCloud.metadata.pose_robotFrame_sensorFrame.metadata.childTime.microseconds = 0;
 	pointCloud.metadata.pose_robotFrame_sensorFrame.metadata.childTime.usecPerSec = 0;
 
-	pointCloud.metadata.pose_fixedFrame_robotFrame.data.translation.nCount = 3;
-	pointCloud.metadata.pose_fixedFrame_robotFrame.data.orientation.nCount = 4;
-	pointCloud.metadata.pose_fixedFrame_robotFrame.data.cov.nCount = 6;
 	pointCloud.metadata.pose_fixedFrame_robotFrame.metadata.producerId.nCount = 0;
 	pointCloud.metadata.pose_fixedFrame_robotFrame.metadata.parentFrameId.nCount = 0;
 	pointCloud.metadata.pose_fixedFrame_robotFrame.metadata.childFrameId.nCount = 0;
@@ -107,11 +96,6 @@ void ClearPoints(PointCloud& pointCloud)
 	pointCloud.metadata.pose_fixedFrame_robotFrame.metadata.childTime.microseconds = 0;
 	pointCloud.metadata.pose_fixedFrame_robotFrame.metadata.childTime.usecPerSec = 0;
 
-	for(int row = 0; row < 6; row++)
-		{
-		pointCloud.metadata.pose_robotFrame_sensorFrame.data.cov.arr[row].nCount = 6;
-		pointCloud.metadata.pose_fixedFrame_robotFrame.data.cov.arr[row].nCount = 6;
-		}
 	
 }
 

@@ -63,11 +63,6 @@ void AddCorrespondence(CorrespondenceMap2D& correspondenceMap, Point2D source, P
 void ClearCorrespondences(CorrespondenceMap2D& correspondenceMap)
 {
 	correspondenceMap.nCount = 0;
-	for(int correspondenceIndex = 0; correspondenceIndex < MAX_CORRESPONDENCES_2D; correspondenceIndex++)
-		{
-		correspondenceMap.arr[correspondenceIndex].source.nCount = 2;
-		correspondenceMap.arr[correspondenceIndex].sink.nCount = 2;
-		}
 }
 
 int GetNumberOfCorrespondences(const CorrespondenceMap2D& correspondenceMap)

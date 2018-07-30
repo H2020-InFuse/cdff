@@ -35,7 +35,7 @@ TEST_CASE( "DFN processing step succeeds (3D Harris detector)", "[process]" )
 	*/
 
 	// Prepare simpler input data (nothing)
-	PointCloudConstPtr pc = new PointCloud;
+	PointCloudConstPtr pc = NewPointCloud();
 
 	// Instantiate DFN
 	HarrisDetector3D* harris = new HarrisDetector3D;
