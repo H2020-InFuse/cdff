@@ -58,6 +58,7 @@ namespace dfn_ci
 			struct CeresEstimationOptionsSet
 			{
 				float maximumAllowedError;
+				float maximumAllowedDeterminantError;
 			};
 
 			struct Transform3DCostFunctor 

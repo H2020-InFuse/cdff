@@ -140,6 +140,10 @@ namespace dfpc_ci {
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr rightTimeCorrespondenceMap;
 		PointCloudWrapper::PointCloudConstPtr triangulatedKeypointCloud;
 
+		#ifdef TESTING
+		std::vector<FrameWrapper::FramePtr> leftImageList;
+		std::vector<FrameWrapper::FramePtr> rightImageList;
+		#endif
 		std::vector<VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr> leftFeatureVectorList;
 		std::vector<VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr> rightFeatureVectorList;
 		std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> leftRightCorrespondenceMapList;
@@ -173,6 +177,8 @@ namespace dfpc_ci {
 			VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr sinkFeaturesVector);
 		bool ComputeCameraPoses();
 		void ComputeKeypointCloud(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputCorrespondenceMap);
+		CorrespondenceMap3DWrapper::CorrespondenceMap3DPtr Extract3DCorrespondencesFromTwoImagePairs(std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> mapList,
+			std::vector<PointCloudWrapper::PointCloudConstPtr> pointCloudList);
 
 		PoseWrapper::Pose3DConstPtr AddAllPointCloudsToMap();
 		PoseWrapper::Pose3DConstPtr AddLastPointCloudToMap();

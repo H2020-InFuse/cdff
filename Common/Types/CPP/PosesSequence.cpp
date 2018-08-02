@@ -18,7 +18,7 @@ using namespace BaseTypesWrapper;
 void Copy(const Poses3DSequence& source, Poses3DSequence& destination)
 {
 	Clear(destination);
-	for(T_UInt32 poseIndex = 0; poseIndex < GetNumberOfPoses(destination); poseIndex++)
+	for(T_UInt32 poseIndex = 0; poseIndex < GetNumberOfPoses(source); poseIndex++)
 		{
 		AddPose(destination, GetPose(source, poseIndex));
 		}

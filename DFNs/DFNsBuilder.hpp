@@ -48,6 +48,7 @@
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
 #include <Registration3D/Registration3DInterface.hpp>
 #include <BundleAdjustment/BundleAdjustmentInterface.hpp>
+#include <Transform3DEstimation/Transform3DEstimationInterface.hpp>
 
 
 namespace dfn_ci {
@@ -94,6 +95,7 @@ namespace dfn_ci {
 		static StereoReconstructionInterface* CreateStereoReconstruction(std::string dfnImplementation);
 		static Registration3DInterface* CreateRegistration3D(std::string dfnImplementation);
 		static BundleAdjustmentInterface* CreateBundleAdjustment(std::string dfnImplementation);
+		static Transform3DEstimationInterface* CreateTransform3DEstimation(std::string dfnImplementation);
     };
 }
 #endif
