@@ -21,7 +21,8 @@
  *  2d features and their descriptors are extracted from the left and right images; 
  *  the left and right features are matched against each other and against the previous N left and right features;
  *  the point cloud and the matches are stored in a database for future processing;
- *  The correspondences among the latest N image pairs are used for the computation of the camera pose by means of bundle adjustment.    
+ *  3d positions of the keypoints are found by triangulation;
+ *  the 3d point correspondences among the latest N image pairs are used for the computation of the camera pose by means 3d transform estimation dfn.    
  * 
  * @{
  */
