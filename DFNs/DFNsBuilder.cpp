@@ -47,6 +47,8 @@
 #include <Registration3D/IcpCC.hpp>
 #include <BundleAdjustment/SvdDecomposition.hpp>
 #include <BundleAdjustment/CeresAdjustment.hpp>
+#include <Transform3DEstimation/LeastSquaresMinimization.hpp>
+#include <Transform3DEstimation/CeresEstimation.hpp>
 
 namespace dfn_ci {
 
@@ -114,6 +116,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	else if (dfnType == "BundleAdjustment")
 		{
 		return CreateBundleAdjustment(dfnImplementation);
+		}
+	else if (dfnType == "Transform3DEstimation")
+		{
+		return CreateTransform3DEstimation(dfnImplementation);
 		}
 	PRINT_TO_LOG("DFN: ", dfnType);
 	PRINT_TO_LOG("Implementation: ", dfnImplementation);
@@ -283,6 +289,20 @@ BundleAdjustmentInterface* DFNsBuilder::CreateBundleAdjustment(std::string dfnIm
 	else if (dfnImplementation == "CeresAdjustment")
 		{
 		return new CeresAdjustment();
+		}
+	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
+	return NULL;
+	}
+
+Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(std::string dfnImplementation)
+	{
+	if (dfnImplementation == "LeastSquaresMinimization")
+		{
+		return new LeastSquaresMinimization();
+		}
+	else if (dfnImplementation == "CeresEstimation")
+		{
+		return new CeresEstimation();
 		}
 	ASSERT(false, "DFNsBuilder Error: unhandled dfn implementation");
 	return NULL;
