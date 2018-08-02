@@ -36,6 +36,11 @@ typedef asn1SccT_String T_String;
 typedef asn1SccT_Float T_Float;
 typedef asn1SccT_Double T_Double;
 
+// Constants
+
+const int MAX_STRING_SIZE = maxSize_T_String;
+
+// Point Types
 struct Point3D
 	{
 	T_Double x;
@@ -82,7 +87,12 @@ void DeallocateBitStreamBuffer(BitStream& bitStream);
 	ASSERT(success && (errorCode == 0), "Error while executing #conversionMethod"); \
 	}
 
+
+// String manipulation helper functions
+
+void CopyString(const asn1SccT_String& source, asn1SccT_String& destination);
 }
+
 
 #endif // BASE_TYPES_HPP
 

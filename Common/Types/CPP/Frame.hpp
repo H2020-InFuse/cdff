@@ -15,6 +15,7 @@
 
 #include <Frame.h>
 #include <Array3D.h>
+#include <Array3D.hpp>
 #include <taste-extended.h>
 
 #include "BaseTypes.hpp"
@@ -91,15 +92,15 @@ const FrameMode MODE_GRAYSCALE = asn1Sccmode_GRAY;
 const FrameMode MODE_RGB = asn1Sccmode_RGB;
 const FrameMode MODE_RGBA = asn1Sccmode_RGBA;
 const FrameMode MODE_BGR = asn1Sccmode_BGR;
-const FrameMode Mode_BGRA = asn1Sccmode_BGRA;
-const FrameMode Mode_HSV = asn1Sccmode_HSV;
-const FrameMode Mode_HLS = asn1Sccmode_HLS;
-const FrameMode Mode_YUV = asn1Sccmode_YUV;
+const FrameMode MODE_BGRA = asn1Sccmode_BGRA;
+const FrameMode MODE_HSV = asn1Sccmode_HSV;
+const FrameMode MODE_HLS = asn1Sccmode_HLS;
+const FrameMode MODE_YUV = asn1Sccmode_YUV;
 const FrameMode MODE_UYVY = asn1Sccmode_UYVY;
-const FrameMode Mode_LAB = asn1Sccmode_Lab;
-const FrameMode Mode_LUV = asn1Sccmode_Luv;
-const FrameMode Mode_XYZ = asn1Sccmode_XYZ;
-const FrameMode Mode_YCRCB = asn1Sccmode_YCrCb;
+const FrameMode MODE_LAB = asn1Sccmode_Lab;
+const FrameMode MODE_LUV = asn1Sccmode_Luv;
+const FrameMode MODE_XYZ = asn1Sccmode_XYZ;
+const FrameMode MODE_YCRCB = asn1Sccmode_YCrCb;
 const FrameMode MODE_RGB32 = asn1Sccmode_RGB32;
 const FrameMode MODE_BAYER_RGGB = asn1Sccmode_Bayer_RGGB;
 const FrameMode MODE_BAYER_GRBG = asn1Sccmode_Bayer_GRBG;
@@ -109,18 +110,15 @@ const FrameMode MODE_PJPG = asn1Sccmode_PJPG;
 const FrameMode MODE_JPEG = asn1Sccmode_JPEG;
 const FrameMode MODE_PNG = asn1Sccmode_PNG;
 
+const FrameStatus STATUS_EMPTY = asn1Sccstatus_EMPTY;
+const FrameStatus STATUS_VALID = asn1Sccstatus_VALID;
+const FrameStatus STATUS_INVALID = asn1Sccstatus_INVALID;
 
 // Global constant variables
 
 const int MAX_FRAME_ATTRIBUTES = frameMaxAttributes;
 const int MAX_FRAME_ERROR_VALUES = frameMaxErrValues;
 const int FRAME_VERSION = frame_Version;
-const int ARRAY_VERSION = array3D_Version;
-const int MAX_DATA_BYTE_SIZE = array3DMaxBytes;
-const int MAX_DATA_ROWS = array3DMaxRows;
-const int MAX_DATA_COLUMNS = array3DMaxCols;
-const int MAX_DATA_CHANNELS = array3DMaxChannels;
-const int MAX_STRING_SIZE = maxSize_T_String;
 
 // Pointer types
 
@@ -158,6 +156,15 @@ void SetFrameSize(Frame& frame, BaseTypesWrapper::T_UInt16 width, BaseTypesWrapp
 BaseTypesWrapper::T_UInt16 GetFrameWidth(const Frame& frame);
 BaseTypesWrapper::T_UInt16 GetFrameHeight(const Frame& frame);
 
+void SetFrameTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
+BaseTypesWrapper::T_UInt64 GetFrameTime(const Frame& frame);
+
+void SetFrameReceivedTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
+BaseTypesWrapper::T_UInt64 GetFrameReceivedTime(const Frame& frame);
+
+void SetFrameStatus(Frame& frame, FrameStatus frameStatus);
+FrameStatus GetFrameStatus(const Frame& frame);
+
 void ClearData(Frame& frame);
 byte GetDataByte(const Frame& frame, int index);
 int GetNumberOfDataBytes(const Frame& frame);
@@ -169,7 +176,7 @@ void ConvertFromBitStream(BitStream bitStream, Frame& frame);
     template<typename T>
     void AppendData(Frame &frame, T data)
     {
-        ASSERT_ON_TEST(frame.data.data.nCount + static_cast<int>(sizeof(T)) < MAX_DATA_BYTE_SIZE, "Image data will exceed limits");
+        ASSERT_ON_TEST(frame.data.data.nCount + static_cast<int>(sizeof(T)) < Array3DWrapper::MAX_ARRAY3D_BYTE_SIZE, "Image data will exceed limits");
         std::memcpy(&frame.data.data.arr[frame.data.data.nCount], &data, sizeof (T));
         frame.data.data.nCount+= sizeof (T);
     }

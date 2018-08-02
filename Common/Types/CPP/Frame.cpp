@@ -13,24 +13,6 @@ namespace FrameWrapper
 {
 
 using namespace BaseTypesWrapper;
-
-	void CopyImageData(const Frame& source, Frame& destination)
-	{
-		// copy buffers
-		ASSERT_ON_TEST(source.data.data.nCount < MAX_DATA_BYTE_SIZE, "Image data exceeds limits");
-		std::memcpy(&destination.data.data.arr, &source.data.data.arr, source.data.data.nCount);
-		destination.data.data.nCount = source.data.data.nCount;
-	}
-
-	void CopyString(const asn1SccT_String& source, asn1SccT_String& destination)
-	{
-		ASSERT_ON_TEST(source.nCount < MAX_STRING_SIZE, "Image data exceeds limits");
-		destination.nCount = source.nCount;
-		for(int index = 0; index < source.nCount; index++)
-			{
-			destination.arr[index] = source.arr[index];
-			}
-	}
 	
 	void CopyTransformWithCovariance(const asn1SccTransformWithCovariance& source, asn1SccTransformWithCovariance& destination)
 	{
@@ -50,7 +32,7 @@ using namespace BaseTypesWrapper;
 			}	
 		}
 	destination.metadata.msgVersion = source.metadata.msgVersion;
-	CopyString(source.metadata.producerId, destination.metadata.producerId);
+    CopyString(source.metadata.producerId, destination.metadata.producerId);
 	for(int i=0; i<7; i++) 
 		{
 		destination.metadata.dataEstimated.arr[i] = source.metadata.dataEstimated.arr[i];
@@ -64,6 +46,7 @@ using namespace BaseTypesWrapper;
 
 void Copy(const Frame& source, Frame& destination)
 {
+
 	destination.msgVersion = source.msgVersion;
 	destination.metadata.msgVersion = source.metadata.msgVersion;
 	destination.metadata.timeStamp = source.metadata.timeStamp;
@@ -109,13 +92,8 @@ void Copy(const Frame& source, Frame& destination)
 	destination.extrinsic.hasFixedTransform = source.extrinsic.hasFixedTransform;
 	CopyTransformWithCovariance(source.extrinsic.pose_robotFrame_sensorFrame, destination.extrinsic.pose_robotFrame_sensorFrame);
 	CopyTransformWithCovariance(source.extrinsic.pose_fixedFrame_robotFrame, destination.extrinsic.pose_fixedFrame_robotFrame);
-	destination.data.msgVersion = source.data.msgVersion;
-	destination.data.cols = source.data.cols;
-	destination.data.rows = source.data.rows;
-	destination.data.channels = source.data.channels;
-	destination.data.depth = source.data.depth;
-	destination.data.rowSize = source.data.rowSize;
-	CopyImageData(source, destination);
+
+    Array3DWrapper::Copy(source.data, destination.data);
 }
 
 FramePtr NewFrame()
@@ -148,7 +126,7 @@ FrameSharedPtr SharedClone(const Frame& source)
 
 void Initialize(Frame& frame)
 {
-frame.data.data.nCount = 0;
+Array3DWrapper::Initialize(frame.data);
 frame.metadata.pixelCoeffs.nCount = 0;
 frame.metadata.errValues.nCount = 0;
 frame.metadata.attributes.nCount = 0;
@@ -187,6 +165,15 @@ T_UInt16 GetFrameWidth(const Frame& frame)
 T_UInt16 GetFrameHeight(const Frame& frame)
 {
 	return frame.data.rows;
+}
+
+void SetFrameStatus(Frame& frame, FrameStatus frameStatus)
+{
+    frame.metadata.status = frameStatus;
+}
+FrameStatus GetFrameStatus(const Frame& frame)
+{
+    return frame.metadata.status;
 }
 
 void ClearData(Frame& frame)
