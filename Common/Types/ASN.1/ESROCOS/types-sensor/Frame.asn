@@ -26,12 +26,19 @@ Frame-pixelModel-t ::= ENUMERATED
     pix-DISP      -- [f(X) = a.X + b, c = baseline, d = minimum disparity value, e = maximum disparity value]
 }
 
+--- Definition of enum Frame-errorType-t follows
+Frame-errorType-t ::= ENUMERATED
+{
+    error-UNDEFINED,    -- Error code for undefined pixel
+    error-DEAD,         -- Error code for dead pixel
+    error-FILTERED      -- Error code for filtered pixel (e.g. filtered by algorithm)
+}
 
 ---  Definition Frame-error-t follows 
 Frame-error-t ::= SEQUENCE
 {
-    name     T-String,    -- Error name identifier (e.g. 'DEAD' for dead pixel)
     value    T-Double     -- Error value (should be converted in the type corresponding to the image depth) 
+    type     Frame-errorType-t,    -- Error type identifier
 }
 
 
