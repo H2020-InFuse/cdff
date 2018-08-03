@@ -13,7 +13,6 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
-#include <Geometry.h>
 #include <CorrespondenceMap3D.h>
 #include <Eigen.h>
 

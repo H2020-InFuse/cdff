@@ -1,0 +1,24 @@
+Path-InFuse-Types DEFINITIONS ::=
+BEGIN
+IMPORTS
+T-UInt32 FROM TASTE-BasicTypes
+Time FROM Time-Types
+TransformWithCovariance FROM TransformWithCovariance-Types;
+
+--- Maximum size of Path_InFuse data
+pathMaxSize T-UInt32 ::= 100
+
+--- Definition of Path_InFuse starts
+Path ::= SEQUENCE
+{
+	-- Metadata
+
+	msgVersion	T-UInt32,					-- Message version
+	timeStamp	Time,						-- Time at which the path has been created
+
+	-- Data
+
+	waypoints	SEQUENCE (SIZE(0..pathMaxSize)) OF TransformWithCovariance -- Waypoints describing the path
+}
+
+END

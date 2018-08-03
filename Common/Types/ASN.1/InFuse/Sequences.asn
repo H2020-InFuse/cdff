@@ -23,7 +23,6 @@ SequencesNS DEFINITIONS ::=
 BEGIN
 
 IMPORTS
-Point2D FROM GeometryNS
 T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
 T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes
 Frame FROM Frame-Types

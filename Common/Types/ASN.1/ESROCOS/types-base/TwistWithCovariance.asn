@@ -4,7 +4,7 @@
 ----------------------------------------------------------------
 TwistWithCovariance-Types DEFINITIONS ::=
 BEGIN
-IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes Matrix4d FROM Eigen-Types Vector3d FROM Eigen-Types Covariance FROM Covariance-Types;
+IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes Matrix4d FROM Eigen-Types Vector3d FROM Eigen-Types Covariance FROM Covariance-Types Time FROM Time-Types;
 
 
 
@@ -12,13 +12,30 @@ IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-I
 
 ---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
 
+twistWithCovariance-Version T-UInt32 ::= 0
+
 ---- END of typedefs defined in this module 
-TwistWithCovariance   ::= 
+
+TwistWithCovariance-metadata ::=
 SEQUENCE
 {
-vel						Vector3d,
-rot						Vector3d,
-cov						Covariance
+    msgVersion      T-UInt32,
+    timeStamp       Time
+}
+
+TwistWithCovariance-data   ::= 
+SEQUENCE
+{
+    vel	            Vector3d,
+    rot             Vector3d,
+    cov             Covariance
+}
+
+TwistWithCovariance ::=
+SEQUENCE
+{
+    metadata        TwistWithCovariance-metadata,
+    data            TwistWithCovariance-data
 }
 
 ---  Definition TWISTWITHCOVARIANCE Ends 

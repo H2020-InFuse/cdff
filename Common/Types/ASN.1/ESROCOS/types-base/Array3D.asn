@@ -1,0 +1,46 @@
+Array3D-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-UInt32 FROM TASTE-BasicTypes;
+
+--- Definition of Message version
+array3D-Version    T-UInt32 ::= 1
+
+--- Definition of Array3D sizes (manually defined)
+-- 1920(cols) x 1080(rows) x 4(channels) x 8(max bytes-per-pixel: 64F) 
+array3DMaxBytes       T-UInt32 ::= 66355200
+array3DMaxRows        T-UInt32 ::= 1080
+array3DMaxCols        T-UInt32 ::= 1920
+array3DMaxChannels    T-UInt32 ::= 4
+
+
+--- Definition of enum Array3D-depth-t follows
+Array3D-depth-t ::= ENUMERATED
+{
+    depth-8U,     -- 8-bit unsigned integers ( 0..255 )
+    depth-8S,     -- 8-bit signed integers ( -128..127 )
+    depth-16U,    -- 16-bit unsigned integers ( 0..65535 )
+    depth-16S,    -- 16-bit signed integers ( -32768..32767 )
+    depth-32S,    -- 32-bit signed integers ( -2147483648..2147483647 )
+    depth-32F,    -- 32-bit floating-point numbers ( -FLT_MAX..FLT_MAX, INF, NAN )
+    depth-64F     -- 64-bit floating-point numbers ( -DBL_MAX..DBL_MAX, INF, NAN )
+}
+
+
+--- Definition of Array3D follows
+Array3D ::= SEQUENCE
+{
+    -- Metadata
+    msgVersion    T-UInt32,                                  -- Message version
+    rows          T-UInt32,                                  -- Number of rows in the matrix (1st dimension)
+    cols          T-UInt32,                                  -- Number of columns in the matrix (2nd dimension)
+    channels      T-UInt32,                                  -- Number of channels in the matrix (3rd dimension)
+    depth         Array3D-depth-t,                          -- Matrix element depth identifier
+    rowSize       T-UInt32,                                  -- Number of bytes each matrix row occupies. The value should include the padding bytes at the end of each row, if any.
+
+    -- Data
+    data          OCTET STRING (SIZE(0..array3DMaxBytes))    -- Matrix data
+}
+
+
+END

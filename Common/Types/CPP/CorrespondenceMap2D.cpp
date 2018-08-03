@@ -52,8 +52,10 @@ void AddCorrespondence(CorrespondenceMap2D& correspondenceMap, Point2D source, P
 {
 	ASSERT_ON_TEST(correspondenceMap.nCount < MAX_CORRESPONDENCES_2D, "Correspondence Map 3D maximum capacity has been reached");
 	int currentIndex = correspondenceMap.nCount;
-	correspondenceMap.arr[currentIndex].source = source;
-	correspondenceMap.arr[currentIndex].sink = sink;
+	correspondenceMap.arr[currentIndex].source.arr[0] = source.x;
+	correspondenceMap.arr[currentIndex].source.arr[1] = source.y;
+	correspondenceMap.arr[currentIndex].sink.arr[0] = sink.x;
+	correspondenceMap.arr[currentIndex].sink.arr[1] = sink.y;
 	correspondenceMap.arr[currentIndex].probability = probability;
 	correspondenceMap.nCount++;
 }
@@ -71,13 +73,19 @@ int GetNumberOfCorrespondences(const CorrespondenceMap2D& correspondenceMap)
 Point2D GetSource(const CorrespondenceMap2D& correspondenceMap, const int correspondenceIndex)
 {
 	ASSERT_ON_TEST(correspondenceIndex < correspondenceMap.nCount, "A missing correspondence was requested from a correspondence map 3d");
-	return correspondenceMap.arr[correspondenceIndex].source;
+	Point2D point;
+	point.x = correspondenceMap.arr[correspondenceIndex].source.arr[0];
+	point.y = correspondenceMap.arr[correspondenceIndex].source.arr[1];
+	return point;
 }
 
 Point2D GetSink(const CorrespondenceMap2D& correspondenceMap, const int correspondenceIndex)
 {
 	ASSERT_ON_TEST(correspondenceIndex < correspondenceMap.nCount, "A missing correspondence was requested from a correspondence map 3d");
-	return correspondenceMap.arr[correspondenceIndex].sink;
+	Point2D point;
+	point.x = correspondenceMap.arr[correspondenceIndex].sink.arr[0];
+	point.y = correspondenceMap.arr[correspondenceIndex].sink.arr[1];
+	return point;
 }
 
 T_Float GetProbability(const CorrespondenceMap2D& correspondenceMap, const int correspondenceIndex)

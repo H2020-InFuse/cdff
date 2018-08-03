@@ -2,6 +2,7 @@ add_library(
     converters_opencv
     FrameToMatConverter.cpp
     MatToFrameConverter.cpp
+    FrameToImageConverter.cpp
     MatToVisualPointFeatureVector2DConverter.cpp
     VisualPointFeatureVector2DToMatConverter.cpp
     MatToVisualPointFeatureVector3DConverter.cpp

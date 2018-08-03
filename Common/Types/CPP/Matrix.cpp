@@ -29,11 +29,6 @@ void Copy(const Matrix3d& source, Matrix3d& destination)
 Matrix3dPtr NewMatrix3d(InitializationType initializationType)
 {
 	Matrix3dPtr newMatrix = new Matrix3d();
-	newMatrix->nCount = 3;
-	for(int row = 0; row < 3; row++)
-		{
-		newMatrix->arr[row].nCount = 3;
-		}
 
 	switch(initializationType)
 	{

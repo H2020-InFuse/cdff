@@ -1,0 +1,49 @@
+PointCloud-InFuse-Types DEFINITIONS ::=
+BEGIN
+IMPORTS
+T-Float, T-String, T-UInt16 FROM TASTE-ExtendedTypes
+T-UInt32, T-Int32 FROM TASTE-BasicTypes
+Time FROM Time-Types
+Point FROM Point-Types
+Vector3d FROM Eigen-Types
+Pose-InFuse FROM Pose-InFuse-Types;
+
+-- Message version
+pointCloud-Infuse-Version T-UInt32 ::= 1
+
+--- Maximum size of PointCloud_InFuse data
+maxSize T-UInt32 ::= 327680 
+
+
+--- Definition of PointCloud_InFuse starts
+PointCloud-InFuse ::= SEQUENCE
+{
+	-- Metadata
+	
+	msgVersion			            T-UInt32,		-- Message version
+
+	sensorId			            T-String,		-- Identifier for the sensor the produced the point cloud
+	frameId				            T-String, 		-- Frame in which the point cloud is described 
+	timeStamp			            Time,			-- Time at which the data has been acquired
+
+	isRegistered		            BOOLEAN,		-- Is there color info on the point cloud
+	isOrdered			            BOOLEAN, 		-- Is the point cloud ordered
+
+	height				            T-UInt32,		-- Height of the point cloud
+	width				            T-UInt32,		-- Width of the point cloud (1 if isOrdered is TRUE)
+	
+
+    hasFixedTransform               BOOLEAN,        -- Is there a fixed transform attached to the point cloud (robot base frame to fixed frame)
+
+	pose-robotFrame-sensorFrame     Pose-InFuse,	-- Transform from sensor to robot frame
+    pose-fixedFrame-robotFrame      Pose-InFuse,    -- Transform from robot frame to fixed frame (can be site frame or world frame). This is used mainly for DEBUG.
+	
+	-- Data
+	
+	points				SEQUENCE(SIZE(1..maxSize)) OF Point,	-- Geometrical data
+	colors				SEQUENCE(SIZE(1..maxSize)) OF Vector3d,	-- Colors (empty if isRegitered is FALSE)
+    intensity           SEQUENCE(SIZE(1..maxSize)) OF T-Int32   -- Intensity
+	
+}
+
+END
