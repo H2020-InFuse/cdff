@@ -175,6 +175,7 @@ void EstimationFromStereo::run()
 		if(firstTimeBundle)
 			{
 			outputPose = AddAllPointCloudsToMap();
+			firstTimeBundle = false;
 			}
 		else
 			{
@@ -328,7 +329,7 @@ void EstimationFromStereo::ComputeVisualPointFeatures()
 	DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
 	ComputeKeypointCloud(leftRightCorrespondenceMap);
 
-	int pastLength;
+	int pastLength, startIndex;
 	if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
 		{
 		#ifdef TESTING
@@ -340,6 +341,7 @@ void EstimationFromStereo::ComputeVisualPointFeatures()
 		leftRightCorrespondenceMapList.at(currentInputNumber) = leftRightCorrespondenceMap;
 		triangulatedKeypointCloudList.at(currentInputNumber) = triangulatedKeypointCloud;
 		pastLength = currentInputNumber + 1;
+		startIndex = currentInputNumber - 1;
 		}
 	else
 		{
@@ -356,18 +358,14 @@ void EstimationFromStereo::ComputeVisualPointFeatures()
 		DELETE_PREVIOUS( triangulatedKeypointCloudList.at(oldestCameraIndex) );
 		triangulatedKeypointCloudList.at(oldestCameraIndex) = triangulatedKeypointCloud;
 		pastLength = parameters.numberOfAdjustedStereoPairs;
+		startIndex = (oldestCameraIndex - 1) > 0 ? (oldestCameraIndex - 1) : parameters.numberOfAdjustedStereoPairs - 1;
 		oldestCameraIndex = (oldestCameraIndex+1) % parameters.numberOfAdjustedStereoPairs;
 		}
 	DEBUG_PRINT_TO_LOG("pastLength", pastLength);
 	DEBUG_PRINT_TO_LOG("oldestCameraIndex", oldestCameraIndex);
 
 	//Computing the correspondences between current and past features and adding them to storage
-	CorrespondenceMaps3DSequencePtr newSequence = NewCorrespondenceMaps3DSequence();
-	int startIndex = (oldestCameraIndex - 2) % parameters.numberOfAdjustedStereoPairs;
-	if (startIndex < 0)
-		{
-		startIndex = startIndex + parameters.numberOfAdjustedStereoPairs;
-		}	
+	CorrespondenceMaps3DSequencePtr newSequence = NewCorrespondenceMaps3DSequence();	
 	DEBUG_PRINT_TO_LOG("startIndex", startIndex);
 	for(int time = 0; time < pastLength - 1; time++)
 		{
@@ -508,6 +506,13 @@ PoseWrapper::Pose3DConstPtr EstimationFromStereo::AddAllPointCloudsToMap()
 	{
 	for(int stereoIndex = 0; stereoIndex < parameters.numberOfAdjustedStereoPairs; stereoIndex++)
 		{
+		if (stereoIndex == 0)
+			{
+			Pose3D zeroPose;
+			SetPosition(zeroPose, 0, 0, 0);
+			SetOrientation(zeroPose, 0, 0, 0, 1);
+			pointCloudMap.AddPointCloud(imageCloudList.at(parameters.numberOfAdjustedStereoPairs - 1), emptyFeaturesVector, &zeroPose);
+			}
 		const Pose3D& pose = GetPose(*cameraPoseList, parameters.numberOfAdjustedStereoPairs - 1 - stereoIndex);
 		pointCloudMap.AddPointCloud(imageCloudList.at(stereoIndex), emptyFeaturesVector, &pose);
 		}
@@ -517,20 +522,19 @@ PoseWrapper::Pose3DConstPtr EstimationFromStereo::AddAllPointCloudsToMap()
 
 PoseWrapper::Pose3DConstPtr EstimationFromStereo::AddLastPointCloudToMap()
 	{
-	const Pose3D& inversePose = GetPose(*cameraPoseList, 1);
+	const Pose3D& inversePose = GetPose(*cameraPoseList, 0);
+
+	Pose3D lastPose;
+	SetPosition(lastPose, -GetXPosition(inversePose), -GetYPosition(inversePose), -GetZPosition(inversePose) );
 	
-	float newPoseX = GetXPosition(*previousCameraPose) - GetXPosition(inversePose);
-	float newPoseY = GetYPosition(*previousCameraPose) - GetYPosition(inversePose);
-	float newPoseZ = GetZPosition(*previousCameraPose) - GetZPosition(inversePose);
-	float newOrientationX = GetXOrientation(*previousCameraPose) - GetXOrientation(inversePose);
-	float newOrientationY = GetYOrientation(*previousCameraPose) - GetYOrientation(inversePose);
-	float newOrientationZ = GetZOrientation(*previousCameraPose) - GetZOrientation(inversePose);
-	float newOrientationW = GetWOrientation(*previousCameraPose) - GetWOrientation(inversePose);
-	float norm = std::sqrt(newOrientationX*newOrientationX + newOrientationY * newOrientationY + newOrientationZ * newOrientationZ + newOrientationW * newOrientationW);
+	float qx = GetXOrientation(inversePose);
+	float qy = GetYOrientation(inversePose);
+	float qz = GetZOrientation(inversePose);
+	float qw = GetWOrientation(inversePose);
+	float squaredNorm = qx*qx + qy*qy + qz*qz + qw*qw;
+	SetOrientation(lastPose, -qx/squaredNorm, -qy/squaredNorm, -qz/squaredNorm, qw/squaredNorm);
 
-	SetPosition(*previousCameraPose, newPoseX, newPoseY, newPoseZ);
-	SetOrientation(*previousCameraPose, newOrientationX/norm, newOrientationY/norm, newOrientationZ/norm, newOrientationW/norm);
-
+	pointCloudMap.AddPointCloud(imageCloud, emptyFeaturesVector, &lastPose);
 	return previousCameraPose;
 	}
 

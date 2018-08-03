@@ -64,9 +64,7 @@ void LeastSquaresMinimization::process()
 			transformMatrix = SolveLinearSystem(coefficientMatrix, valueMatrix, error);
 			}
 
-		PRINT_TO_LOG("success", success);
-		PRINT_TO_LOG("error", error);
-		PRINT_TO_LOG("maximum error", parameters.maximumAllowedError);
+		DEBUG_PRINT_TO_LOG("error", error);
 		if (!success || error > parameters.maximumAllowedError)
 			{
 			if (numberOfCorrespondences == 1)
@@ -134,7 +132,6 @@ bool LeastSquaresMinimization::CreateLinearSystem(const CorrespondenceMap3D& map
 	cv::Mat singulaValueMatrix;
 	cv::SVD::compute(coefficientMatrix, singulaValueMatrix);
 	int rank = cv::countNonZero( singulaValueMatrix > EPSILON );
-	PRINT_TO_LOG("rank", rank);
 	return ( rank >= NUMBER_OF_DEGREES_OF_FREEDOM );
 	}
 
