@@ -37,8 +37,8 @@ Frame-errorType-t ::= ENUMERATED
 ---  Definition Frame-error-t follows 
 Frame-error-t ::= SEQUENCE
 {
-    value    T-Double     -- Error value (should be converted in the type corresponding to the image depth) 
     type     Frame-errorType-t,    -- Error type identifier
+    value    T-Double              -- Error value (should be converted in the type corresponding to the image depth) 
 }
 
 
