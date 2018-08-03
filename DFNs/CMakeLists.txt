@@ -43,6 +43,8 @@ target_link_libraries(
   registration_icp_cc
   ceres_adjustment
   svd_decomposition
+  transform_3d_estimation_least_squares_minimization
+  transform_3d_estimation_ceres
   converters_opencv
   pcl_common
   pcl_features

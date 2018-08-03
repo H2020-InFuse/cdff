@@ -64,6 +64,7 @@ void LeastSquaresMinimization::process()
 			transformMatrix = SolveLinearSystem(coefficientMatrix, valueMatrix, error);
 			}
 
+		DEBUG_PRINT_TO_LOG("error", error);
 		if (!success || error > parameters.maximumAllowedError)
 			{
 			if (numberOfCorrespondences == 1)

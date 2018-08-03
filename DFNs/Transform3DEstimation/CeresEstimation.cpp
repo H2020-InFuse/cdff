@@ -30,6 +30,7 @@ namespace dfn_ci
 CeresEstimation::CeresEstimation()
 {
 	parametersHelper.AddParameter<float>("GeneralParameters", "MaximumAllowedError", parameters.maximumAllowedError, DEFAULT_PARAMETERS.maximumAllowedError);
+	parametersHelper.AddParameter<float>("GeneralParameters", "MaximumAllowedDeterminantError", parameters.maximumAllowedDeterminantError, DEFAULT_PARAMETERS.maximumAllowedDeterminantError);
 
 	configurationFilePath = "";
 }
@@ -53,6 +54,7 @@ void CeresEstimation::process()
 	InitializeTransforms(transformList);
 	float error = SolveEstimation(inMatches, numberOfCameras, transformList);
 	
+	DEBUG_PRINT_TO_LOG("error", error);
 	if (error > parameters.maximumAllowedError)
 		{
 		outSuccess = false;
@@ -141,7 +143,8 @@ ceres::CostFunction* CeresEstimation::Transform3DCostFunctor::Create(Point3D sou
 
 const CeresEstimation::CeresEstimationOptionsSet CeresEstimation::DEFAULT_PARAMETERS =
 {
-	.maximumAllowedError = 0.01
+	.maximumAllowedError = 0.01,
+	.maximumAllowedDeterminantError = 0.05
 };
 
 int CeresEstimation::ComputeNumberOfCameras(int numberOfCorrespondenceMaps)
@@ -177,7 +180,6 @@ void CeresEstimation::InitializeTransforms(std::vector<Transform3d>& transformLi
 			{
 			solution = SolveLinearSystem(coefficientMatrix, valueMatrix, error);
 			}
-
 		for(int componentIndex = 0; componentIndex < 12; componentIndex++)
 			{
 			transform[componentIndex] = success ? solution.at<float>(componentIndex) : 0;
@@ -259,7 +261,7 @@ bool CeresEstimation::SetOutputPoses(const std::vector<Transform3d>& transformLi
 			transform[8], transform[9], transform[10] );
 		double rotationDeterminant = cv::determinant(rotation);
 		
-		if (std::abs(rotationDeterminant) >= 0.99 && std::abs(rotationDeterminant) <= 1.01)
+		if (std::abs(rotationDeterminant) >= 1 - parameters.maximumAllowedDeterminantError && std::abs(rotationDeterminant) <= 1 + parameters.maximumAllowedDeterminantError)
 			{
 			cv::Mat translation = (cv::Mat_<double>(3, 1) << transform[3], transform[7], transform[11] );
 			cv::Mat position = - rotation.inv() * translation;

@@ -177,6 +177,7 @@ void AdjustmentFromStereo::run()
 		if(firstTimeBundle)
 			{
 			outputPose = AddAllPointCloudsToMap();
+			firstTimeBundle = false;
 			}
 		else
 			{
@@ -484,20 +485,19 @@ PoseWrapper::Pose3DConstPtr AdjustmentFromStereo::AddAllPointCloudsToMap()
 
 PoseWrapper::Pose3DConstPtr AdjustmentFromStereo::AddLastPointCloudToMap()
 	{
-	const Pose3D& inversePose = GetPose(*latestCameraPoses, 1);
+	const Pose3D& inversePose = GetPose(*latestCameraPoses, 0);
 	
-	float newPoseX = GetXPosition(*previousCameraPose) - GetXPosition(inversePose);
-	float newPoseY = GetYPosition(*previousCameraPose) - GetYPosition(inversePose);
-	float newPoseZ = GetZPosition(*previousCameraPose) - GetZPosition(inversePose);
-	float newOrientationX = GetXOrientation(*previousCameraPose) - GetXOrientation(inversePose);
-	float newOrientationY = GetYOrientation(*previousCameraPose) - GetYOrientation(inversePose);
-	float newOrientationZ = GetZOrientation(*previousCameraPose) - GetZOrientation(inversePose);
-	float newOrientationW = GetWOrientation(*previousCameraPose) - GetWOrientation(inversePose);
-	float norm = std::sqrt(newOrientationX*newOrientationX + newOrientationY * newOrientationY + newOrientationZ * newOrientationZ + newOrientationW * newOrientationW);
+	Pose3D lastPose;
+	SetPosition(lastPose, -GetXPosition(inversePose), -GetYPosition(inversePose), -GetZPosition(inversePose) );
+	
+	float qx = GetXOrientation(inversePose);
+	float qy = GetYOrientation(inversePose);
+	float qz = GetZOrientation(inversePose);
+	float qw = GetWOrientation(inversePose);
+	float squaredNorm = qx*qx + qy*qy + qz*qz + qw*qw;
+	SetOrientation(lastPose, -qx/squaredNorm, -qy/squaredNorm, -qz/squaredNorm, qw/squaredNorm);
 
-	SetPosition(*previousCameraPose, newPoseX, newPoseY, newPoseZ);
-	SetOrientation(*previousCameraPose, newOrientationX/norm, newOrientationY/norm, newOrientationZ/norm, newOrientationW/norm);
-
+	pointCloudMap.AddPointCloud(imagesCloud, emptyFeaturesVector, &lastPose);
 	return previousCameraPose;
 	}
 
