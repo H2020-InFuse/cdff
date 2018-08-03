@@ -54,8 +54,7 @@ void CeresEstimation::process()
 	InitializeTransforms(transformList);
 	float error = SolveEstimation(inMatches, numberOfCameras, transformList);
 	
-	PRINT_TO_LOG("error", error);
-	PRINT_TO_LOG("maximum error", parameters.maximumAllowedError);
+	DEBUG_PRINT_TO_LOG("error", error);
 	if (error > parameters.maximumAllowedError)
 		{
 		outSuccess = false;
@@ -181,7 +180,6 @@ void CeresEstimation::InitializeTransforms(std::vector<Transform3d>& transformLi
 			{
 			solution = SolveLinearSystem(coefficientMatrix, valueMatrix, error);
 			}
-		PRINT_TO_LOG("Linear system success", success);
 		for(int componentIndex = 0; componentIndex < 12; componentIndex++)
 			{
 			transform[componentIndex] = success ? solution.at<float>(componentIndex) : 0;
@@ -263,7 +261,6 @@ bool CeresEstimation::SetOutputPoses(const std::vector<Transform3d>& transformLi
 			transform[8], transform[9], transform[10] );
 		double rotationDeterminant = cv::determinant(rotation);
 		
-		PRINT_TO_LOG("determinant", rotationDeterminant);
 		if (std::abs(rotationDeterminant) >= 1 - parameters.maximumAllowedDeterminantError && std::abs(rotationDeterminant) <= 1 + parameters.maximumAllowedDeterminantError)
 			{
 			cv::Mat translation = (cv::Mat_<double>(3, 1) << transform[3], transform[7], transform[11] );
@@ -286,7 +283,6 @@ bool CeresEstimation::SetOutputPoses(const std::vector<Transform3d>& transformLi
 
 		AddPose(outTransforms, pose);		
 		}
-	PRINT_TO_LOG("valid transforms count", validTransformCount);
 	return (validTransformCount > 0);
 	}
 
