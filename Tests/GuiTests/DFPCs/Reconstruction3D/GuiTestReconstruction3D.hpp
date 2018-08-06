@@ -39,12 +39,6 @@
 #include <PointCloud.hpp>
 
 #include <Converters/SupportTypes.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
-#include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -92,19 +86,6 @@ class GuiTestReconstruction3D
 	 * --------------------------------------------------------------------
 	 */
 	private:
-
-		Stubs::CacheHandler<FrameWrapper::FrameConstPtr, cv::Mat>* stubFrameCache;
-		Mocks::FrameToMatConverter* mockFrameConverter;
-
-		Stubs::CacheHandler<cv::Mat, FrameWrapper::FrameConstPtr>* stubInverseFrameCache;
-		Mocks::MatToFrameConverter* mockInverseFrameConverter;
-
-		Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudWrapper::PointCloudConstPtr>* stubCloudCache;
-		Mocks::PclPointCloudToPointCloudConverter* mockCloudConverter;
-
-		Stubs::CacheHandler<PointCloudWrapper::PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInverseCloudCache;
-		Mocks::PointCloudToPclPointCloudConverter* mockInverseCloudConverter;
-
 		std::string imageFilesFolder;
 		std::string configurationFilePath;
 		std::vector<std::string> imageFileNamesList;
@@ -113,7 +94,6 @@ class GuiTestReconstruction3D
 
 		Converters::MatToFrameConverter frameConverter;
 
-		void SetUpMocksAndStubs();
 		void LoadImagesList(std::string imagesListFileName);
 		bool LoadNextImages(FrameWrapper::FrameConstPtr& leftImage, FrameWrapper::FrameConstPtr& rightImage);
 

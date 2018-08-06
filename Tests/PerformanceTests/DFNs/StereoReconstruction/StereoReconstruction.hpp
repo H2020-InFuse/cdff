@@ -33,10 +33,6 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <MatToFrameConverter.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>

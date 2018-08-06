@@ -29,7 +29,6 @@
 #include "StereoReconstruction.hpp"
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace PointCloudWrapper;

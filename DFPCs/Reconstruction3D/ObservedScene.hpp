@@ -35,6 +35,7 @@
 #include <opencv2/core/core.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
+#include <PclPointCloudToPointCloudConverter.hpp>
 
 namespace dfpc_ci {
 
@@ -88,6 +89,7 @@ namespace dfpc_ci {
 		std::vector<FrameNode> framesMap;
 		unsigned referenceFrameId;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr scene;	
+		Converters::PclPointCloudToPointCloudConverter pointCloudConverter;
 
 		AffineTransform IdentityTransform();
 		AffineTransform Convert(PoseWrapper::Transform3DConstPtr transform);
