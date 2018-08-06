@@ -82,7 +82,8 @@ EstimationFromStereo::EstimationFromStereo()
 	rightTimeCorrespondenceMap = NULL;
 	triangulatedKeypointCloud = NULL;
 
-	correspondenceMapSequence = NewCorrespondenceMaps3DSequence();
+	historyCorrespondenceMapSequence = NewCorrespondenceMaps3DSequence();
+	workingCorrespondenceMapSequence = NULL;
 	cameraPoseList = NewPoses3DSequence();
 	previousCameraPose = NewPose3D();
 	emptyFeaturesVector = NewVisualPointFeatureVector3D();
@@ -127,7 +128,8 @@ EstimationFromStereo::~EstimationFromStereo()
 	DELETE_PREVIOUS(rightTimeCorrespondenceMap);
 	DELETE_PREVIOUS(triangulatedKeypointCloud);
 
-	delete(correspondenceMapSequence);
+	delete(historyCorrespondenceMapSequence);
+	DELETE_PREVIOUS(workingCorrespondenceMapSequence);
 	delete(cameraPoseList);
 	DELETE_PREVIOUS(emptyFeaturesVector);
 	DELETE_PREVIOUS(previousCameraPose);
@@ -160,17 +162,17 @@ void EstimationFromStereo::run()
 
 	if (currentInputNumber+1 < parameters.numberOfAdjustedStereoPairs)
 		{
-		currentInputNumber++;
 		outSuccess = false;
 		}
 	else
 		{
-		currentInputNumber = parameters.numberOfAdjustedStereoPairs;
 		outSuccess = ComputeCameraPoses();
 		}
 
 	if (outSuccess)
 		{
+		UpdateHistory();
+
 		Pose3DConstPtr outputPose;
 		if(firstTimeBundle)
 			{
@@ -187,6 +189,14 @@ void EstimationFromStereo::run()
 		Copy(*outputPointCloud, outPointCloud); 
 		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 		DELETE_PREVIOUS(outputPointCloud);
+		}
+	else if (firstTimeBundle)
+		{
+		UpdateHistory();
+		}
+	else
+		{
+		ClearDiscardedData();
 		}
 	}
 
@@ -314,7 +324,7 @@ void EstimationFromStereo::ComputeStereoPointCloud()
 		}
 
 	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*imageCloud));
-	DEBUG_SHOW_POINT_CLOUD(imageCloud);
+	//DEBUG_SHOW_POINT_CLOUD(imageCloud);
 	}
 
 #define MINIMUM(a, b) ( a < b ? a : b )
@@ -326,99 +336,15 @@ void EstimationFromStereo::ComputeVisualPointFeatures()
 	DescribeFeatures(filteredLeftImage, leftKeypointVector, leftFeatureVector);
 	DescribeFeatures(filteredRightImage, rightKeypointVector, rightFeatureVector);
 	leftRightCorrespondenceMap = MatchFeatures(leftFeatureVector, rightFeatureVector);
-	DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
+	//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
 	ComputeKeypointCloud(leftRightCorrespondenceMap);
 
-	int pastLength, startIndex;
-	if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
-		{
-		#ifdef TESTING
-		Copy(*filteredLeftImage, *(leftImageList.at(currentInputNumber)));
-		Copy(*filteredRightImage, *(rightImageList.at(currentInputNumber)));
-		#endif
-		leftFeatureVectorList.at(currentInputNumber) = leftFeatureVector;
-		rightFeatureVectorList.at(currentInputNumber) = rightFeatureVector;
-		leftRightCorrespondenceMapList.at(currentInputNumber) = leftRightCorrespondenceMap;
-		triangulatedKeypointCloudList.at(currentInputNumber) = triangulatedKeypointCloud;
-		pastLength = currentInputNumber + 1;
-		startIndex = currentInputNumber - 1;
-		}
-	else
-		{
-		#ifdef TESTING
-		Copy(*filteredLeftImage, *(leftImageList.at(oldestCameraIndex)));
-		Copy(*filteredRightImage, *(rightImageList.at(oldestCameraIndex)));	
-		#endif	
-		DELETE_PREVIOUS( leftFeatureVectorList.at(oldestCameraIndex) );
-		leftFeatureVectorList.at(oldestCameraIndex) = leftFeatureVector;
-		DELETE_PREVIOUS( rightFeatureVectorList.at(oldestCameraIndex) );
-		rightFeatureVectorList.at(oldestCameraIndex) = rightFeatureVector;
-		DELETE_PREVIOUS( leftRightCorrespondenceMapList.at(oldestCameraIndex) );
-		leftRightCorrespondenceMapList.at(oldestCameraIndex) = leftRightCorrespondenceMap;
-		DELETE_PREVIOUS( triangulatedKeypointCloudList.at(oldestCameraIndex) );
-		triangulatedKeypointCloudList.at(oldestCameraIndex) = triangulatedKeypointCloud;
-		pastLength = parameters.numberOfAdjustedStereoPairs;
-		startIndex = (oldestCameraIndex - 1) > 0 ? (oldestCameraIndex - 1) : parameters.numberOfAdjustedStereoPairs - 1;
-		oldestCameraIndex = (oldestCameraIndex+1) % parameters.numberOfAdjustedStereoPairs;
-		}
-	DEBUG_PRINT_TO_LOG("pastLength", pastLength);
-	DEBUG_PRINT_TO_LOG("oldestCameraIndex", oldestCameraIndex);
-
-	//Computing the correspondences between current and past features and adding them to storage
-	CorrespondenceMaps3DSequencePtr newSequence = NewCorrespondenceMaps3DSequence();	
-	DEBUG_PRINT_TO_LOG("startIndex", startIndex);
-	for(int time = 0; time < pastLength - 1; time++)
-		{
-		DEBUG_PRINT_TO_LOG("time", time);
-		int cameraIndex = (startIndex - time) % parameters.numberOfAdjustedStereoPairs;
-		if (cameraIndex < 0)
-			{
-			cameraIndex = cameraIndex + parameters.numberOfAdjustedStereoPairs;
-			}
-		DEBUG_PRINT_TO_LOG("camera index", cameraIndex);
-		leftTimeCorrespondenceMap = MatchFeatures( leftFeatureVector, leftFeatureVectorList.at(cameraIndex) );
-		rightTimeCorrespondenceMap = MatchFeatures( rightFeatureVector, rightFeatureVectorList.at(cameraIndex) );		
-		CorrespondenceMap2DConstPtr pastCorrespondenceMap = leftRightCorrespondenceMapList.at(cameraIndex);
-		PointCloudConstPtr pastKeypointCloud = triangulatedKeypointCloudList.at(cameraIndex);
-
-		std::vector<CorrespondenceMap2DConstPtr> correspondenceMapList = {leftRightCorrespondenceMap, leftTimeCorrespondenceMap, rightTimeCorrespondenceMap, pastCorrespondenceMap};
-		std::vector<PointCloudConstPtr> pointCloudList = {triangulatedKeypointCloud, pastKeypointCloud};
-		#ifdef TESTING
-		std::vector<FrameConstPtr> imageList = { filteredLeftImage, filteredRightImage, leftImageList.at(cameraIndex), rightImageList.at(cameraIndex) };
-		DEBUG_SHOW_QUADRUPLE_2D_CORRESPONDENCES( imageList, correspondenceMapList );
-		#endif
-
-		CorrespondenceMap3DPtr newCorrespondenceMap = Extract3DCorrespondencesFromTwoImagePairs(correspondenceMapList, pointCloudList);
-		AddCorrespondenceMap(*newSequence, *newCorrespondenceMap);
-		} 
-	DEBUG_PRINT_TO_LOG("correspondenceMapSequence size", GetNumberOfCorrespondenceMaps(*correspondenceMapSequence));
-	DEBUG_PRINT_TO_LOG("currentInputNumber", currentInputNumber);
-
-	//Adding the old correspondences to the current ones. All correspondences are taken except those with the oldest left and right images
-	if (0 < currentInputNumber && currentInputNumber < parameters.numberOfAdjustedStereoPairs)
-		{
-		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondenceMaps(*correspondenceMapSequence); correspondenceIndex++)
-			{
-			AddCorrespondenceMap(*newSequence, GetCorrespondenceMap(*correspondenceMapSequence, correspondenceIndex));
-			}
-		}
-	else if (currentInputNumber > 0)
-		{
-		int correspondenceIndex = 0;
-		for(int sourceIndex = 0; sourceIndex < (parameters.numberOfAdjustedStereoPairs - 1); sourceIndex++)
-			{
-			for(int sinkIndex = sourceIndex + 1; sinkIndex < (parameters.numberOfAdjustedStereoPairs - 1); sinkIndex++)
-				{
-				AddCorrespondenceMap(*newSequence, GetCorrespondenceMap(*correspondenceMapSequence, correspondenceIndex));	
-				correspondenceIndex++;
-				}
-			correspondenceIndex += 2;
-			}
-		}
+	CorrespondenceMaps3DSequencePtr newSequence = CreateCorrespondenceMapsSequence();
 
 	//Updating the latestCorrespondenceMapsSequence
-	DELETE_PREVIOUS(correspondenceMapSequence);
-	correspondenceMapSequence = newSequence;
+	DELETE_PREVIOUS(workingCorrespondenceMapSequence);
+	workingCorrespondenceMapSequence = newSequence;
+	DEBUG_PRINT_TO_LOG("working correspondenceMapSequence size", GetNumberOfCorrespondenceMaps(*workingCorrespondenceMapSequence));	
 	}
 
 void EstimationFromStereo::ExtractFeatures(FrameWrapper::FrameConstPtr filteredImage, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& keypointVector)
@@ -462,12 +388,38 @@ CorrespondenceMap2DConstPtr EstimationFromStereo::MatchFeatures(VisualPointFeatu
 	CorrespondenceMap2DPtr newCorrespondence = NewCorrespondenceMap2D();
 	Copy(featuresMatcher2d->matchesOutput(), *newCorrespondence);	
 	DEBUG_PRINT_TO_LOG("Correspondences", GetNumberOfCorrespondences(*newCorrespondence) );
+
+	//Cleaning repeated source and sink points within the same map
+	std::vector<BaseTypesWrapper::T_UInt32> removeIndexList;
+	for(int correspondenceIndex1=0; correspondenceIndex1< GetNumberOfCorrespondences(*newCorrespondence); correspondenceIndex1++)
+		{
+		BaseTypesWrapper::Point2D source1 = GetSource(*newCorrespondence, correspondenceIndex1);
+		BaseTypesWrapper::Point2D sink1 = GetSink(*newCorrespondence, correspondenceIndex1);
+		if (source1.x != source1.x || source1.y != source1.y || sink1.x != sink1.x || sink1.y != sink1.y)
+			{
+			removeIndexList.push_back(correspondenceIndex1);
+			continue;
+			}
+		bool found = false;
+		for (int correspondenceIndex2=0; correspondenceIndex2<correspondenceIndex1 && !found; correspondenceIndex2++)
+			{
+			BaseTypesWrapper::Point2D source2 = GetSource(*newCorrespondence, correspondenceIndex2);
+			BaseTypesWrapper::Point2D sink2 = GetSink(*newCorrespondence, correspondenceIndex2);
+			if ( (source1.x == source2.x && source1.y == source2.y) || (sink1.x == sink2.x && sink1.y == sink2.y) )
+				{
+				removeIndexList.push_back(correspondenceIndex1);
+				found = true;
+				}
+			}
+		}
+	RemoveCorrespondences(*newCorrespondence, removeIndexList);
+
 	return newCorrespondence;
 	}
 
 bool EstimationFromStereo::ComputeCameraPoses()
 	{
-	transformEstimator->matchesInput(*correspondenceMapSequence);
+	transformEstimator->matchesInput(*workingCorrespondenceMapSequence);
 	transformEstimator->process();
 	bool successOutput = transformEstimator->successOutput();
 	
@@ -551,7 +503,7 @@ void EstimationFromStereo::ComputeKeypointCloud(CorrespondenceMap2DConstPtr inpu
 	PointCloudPtr newPointCloud = NewPointCloud();
 	Copy( reconstructor3dfrom2dmatches->pointcloudOutput(), *newPointCloud);
 	DEBUG_PRINT_TO_LOG("Left Right Point Cloud", GetNumberOfPoints(*newPointCloud));
-	DEBUG_SHOW_POINT_CLOUD(newPointCloud);	
+	//DEBUG_SHOW_POINT_CLOUD(newPointCloud);	
 	triangulatedKeypointCloud = newPointCloud;
 
 	bool thereIsOne3dPointForEachCorrespondence = GetNumberOfPoints(*newPointCloud) == GetNumberOfCorrespondences( *inputCorrespondenceMap );
@@ -641,6 +593,132 @@ CorrespondenceMap3DPtr EstimationFromStereo::Extract3DCorrespondencesFromTwoImag
 			}
 		}
 	return newCorrespondenceMap;
+	}
+
+void EstimationFromStereo::UpdateHistory()
+	{
+	PRINT_TO_LOG("Updating history on currentInputNumber", currentInputNumber);
+	if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
+		{
+		#ifdef TESTING
+		Copy(*filteredLeftImage, *(leftImageList.at(currentInputNumber)));
+		Copy(*filteredRightImage, *(rightImageList.at(currentInputNumber)));
+		#endif
+
+		leftFeatureVectorList.at(currentInputNumber) = leftFeatureVector;
+		rightFeatureVectorList.at(currentInputNumber) = rightFeatureVector;
+		leftRightCorrespondenceMapList.at(currentInputNumber) = leftRightCorrespondenceMap;
+		triangulatedKeypointCloudList.at(currentInputNumber) = triangulatedKeypointCloud;
+
+		oldestCameraIndex = 0;
+		}
+	else
+		{
+		#ifdef TESTING
+		Copy(*filteredLeftImage, *(leftImageList.at(oldestCameraIndex)));
+		Copy(*filteredRightImage, *(rightImageList.at(oldestCameraIndex)));	
+		#endif	
+
+		DELETE_PREVIOUS( leftFeatureVectorList.at(oldestCameraIndex) );
+		leftFeatureVectorList.at(oldestCameraIndex) = leftFeatureVector;
+		DELETE_PREVIOUS( rightFeatureVectorList.at(oldestCameraIndex) );
+		rightFeatureVectorList.at(oldestCameraIndex) = rightFeatureVector;
+		DELETE_PREVIOUS( leftRightCorrespondenceMapList.at(oldestCameraIndex) );
+		leftRightCorrespondenceMapList.at(oldestCameraIndex) = leftRightCorrespondenceMap;
+		DELETE_PREVIOUS( triangulatedKeypointCloudList.at(oldestCameraIndex) );
+		triangulatedKeypointCloudList.at(oldestCameraIndex) = triangulatedKeypointCloud;
+
+		oldestCameraIndex = (oldestCameraIndex+1) % parameters.numberOfAdjustedStereoPairs;
+		}
+
+	//Updating history correspondence map
+	DELETE_PREVIOUS(historyCorrespondenceMapSequence);
+	historyCorrespondenceMapSequence = workingCorrespondenceMapSequence;
+	workingCorrespondenceMapSequence = NULL; //So that it won't be deleted
+
+	//Updating currentInputNumber for next round
+	//if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
+		{
+		currentInputNumber++;
+		}
+	}
+
+void EstimationFromStereo::ClearDiscardedData()
+	{
+	DELETE_PREVIOUS( leftFeatureVector );	
+	DELETE_PREVIOUS( rightFeatureVector );	
+	DELETE_PREVIOUS( leftRightCorrespondenceMap );	
+	DELETE_PREVIOUS( triangulatedKeypointCloud );	
+	}
+
+CorrespondenceMaps3DSequencePtr EstimationFromStereo::CreateCorrespondenceMapsSequence()
+	{
+	int startIndex, endIndex;
+	if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
+		{
+		startIndex = currentInputNumber-1;
+		endIndex = 0;
+		}	
+	else
+		{
+		startIndex = (oldestCameraIndex - 1) >= 0 ? (oldestCameraIndex - 1) : parameters.numberOfAdjustedStereoPairs - 1;
+		endIndex = (oldestCameraIndex + 1) % parameters.numberOfAdjustedStereoPairs;
+		}
+	DEBUG_PRINT_TO_LOG("startIndex", startIndex);
+	DEBUG_PRINT_TO_LOG("endIndex", endIndex);
+
+	//Adding the new correspondences found because of the new frame
+	CorrespondenceMaps3DSequencePtr newSequence = NewCorrespondenceMaps3DSequence();
+	bool historyCycleComplete = (startIndex < 0);
+	int stereoIndex = startIndex;	
+	while(!historyCycleComplete)
+		{
+		DEBUG_PRINT_TO_LOG("camera index", stereoIndex);
+		leftTimeCorrespondenceMap = MatchFeatures( leftFeatureVector, leftFeatureVectorList.at(stereoIndex) );
+		rightTimeCorrespondenceMap = MatchFeatures( rightFeatureVector, rightFeatureVectorList.at(stereoIndex) );		
+		CorrespondenceMap2DConstPtr pastCorrespondenceMap = leftRightCorrespondenceMapList.at(stereoIndex);
+		PointCloudConstPtr pastKeypointCloud = triangulatedKeypointCloudList.at(stereoIndex);
+
+		std::vector<CorrespondenceMap2DConstPtr> correspondenceMapList = {leftRightCorrespondenceMap, leftTimeCorrespondenceMap, rightTimeCorrespondenceMap, pastCorrespondenceMap};
+		std::vector<PointCloudConstPtr> pointCloudList = {triangulatedKeypointCloud, pastKeypointCloud};
+		#ifdef TESTING
+		std::vector<FrameConstPtr> imageList = { filteredLeftImage, filteredRightImage, leftImageList.at(stereoIndex), rightImageList.at(stereoIndex) };
+		DEBUG_SHOW_QUADRUPLE_2D_CORRESPONDENCES( imageList, correspondenceMapList );
+		#endif
+
+		CorrespondenceMap3DPtr newCorrespondenceMap = Extract3DCorrespondencesFromTwoImagePairs(correspondenceMapList, pointCloudList);
+		AddCorrespondenceMap(*newSequence, *newCorrespondenceMap);
+		DEBUG_PRINT_TO_LOG("New correspondence map size", GetNumberOfCorrespondences(*newCorrespondenceMap) );
+
+		historyCycleComplete = (stereoIndex == endIndex);
+		stereoIndex = (stereoIndex - 1) >= 0 ? stereoIndex - 1 : parameters.numberOfAdjustedStereoPairs - 1;
+		} 
+	DEBUG_PRINT_TO_LOG("history correspondenceMapSequence size", GetNumberOfCorrespondenceMaps(*historyCorrespondenceMapSequence));
+	DEBUG_PRINT_TO_LOG("currentInputNumber", currentInputNumber);
+
+	//Adding the old correspondences to the current ones. All correspondences are taken except those with the oldest left and right images
+	if (0 < currentInputNumber && currentInputNumber < parameters.numberOfAdjustedStereoPairs)
+		{
+		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondenceMaps(*historyCorrespondenceMapSequence); correspondenceIndex++)
+			{
+			AddCorrespondenceMap(*newSequence, GetCorrespondenceMap(*historyCorrespondenceMapSequence, correspondenceIndex));
+			}
+		}
+	else if (currentInputNumber > 0)
+		{
+		int correspondenceIndex = 0;
+		for(int sourceIndex = 0; sourceIndex < (parameters.numberOfAdjustedStereoPairs - 1); sourceIndex++)
+			{
+			for(int sinkIndex = sourceIndex + 1; sinkIndex < (parameters.numberOfAdjustedStereoPairs - 1); sinkIndex++)
+				{
+				AddCorrespondenceMap(*newSequence, GetCorrespondenceMap(*historyCorrespondenceMapSequence, correspondenceIndex));	
+				correspondenceIndex++;
+				}
+			correspondenceIndex += 2;
+			}
+		}
+
+	return newSequence;
 	}
 
 }

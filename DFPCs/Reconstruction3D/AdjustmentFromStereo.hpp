@@ -140,7 +140,8 @@ namespace dfpc_ci {
 		* The correspondences between images are stored in the following order (L0-R0), (L0-L1), (L0-R1), ..., (L0-RN), (R0-L0), (R0-L1), (R0-R1), ..., 
 		* (R0, LN), (L1-R1), (L1-L2), ..., (L1-RN), ...., (LN-RN). The number N is defined by the parameter numberOfAdjustedStereoPairs.
 		* Only the most recent N image pairs are kept in storage, the others will be discarded. */
-		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr latestCorrespondenceMaps;
+		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr historyCorrespondenceMaps;
+		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr workingCorrespondenceMaps;
 		PoseWrapper::Poses3DSequencePtr latestCameraPoses;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr emptyFeaturesVector;
 		PoseWrapper::Pose3DPtr previousCameraPose;
@@ -178,6 +179,8 @@ namespace dfpc_ci {
 		void ComputeStereoPointCloud(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputCorrespondenceMap);
 		void CleanBundleAdjustmentInputs();
 		int StaticCastToInt(float value);
+		void UpdateHistory();
+		void ClearDiscardedData();
 
 		PoseWrapper::Pose3DConstPtr AddAllPointCloudsToMap();
 		PoseWrapper::Pose3DConstPtr AddLastPointCloudToMap();

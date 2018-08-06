@@ -29,7 +29,6 @@
 #include "Reconstruction3D.hpp"
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace PointCloudWrapper;
@@ -165,7 +164,6 @@ Reconstruction3DTestInterface::MeasuresMap Reconstruction3DTestInterface::Extrac
 		std::stringstream outputFilePath;
 		outputFilePath << outputCloudFileBaseName << testId << ".ply";
 
-		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 		pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclPointCloud = pointCloudConverter.Convert(pointCloud);
 
 		pcl::PLYWriter writer;

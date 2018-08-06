@@ -6,15 +6,15 @@
 */
 
 /*!
- * @file AdjustmentFromStereo.cpp
- * @date 29/06/2018
+ * @file EstimationFromStereo.cpp
+ * @date 03/08/2018
  * @author Alessandro Bianco
  */
 
 /*!
  * @addtogroup DFNsTest
  * 
- * Validity Test 4.1.1.6 for DFPC implementation AdjustmentFromStereo.
+ * Validity Test 4.1.1.6 for DFPC implementation EstimationFromStereo.
  * "Resulting point cloud should be within the expected bounds of error described in D5.2", and
  * "Expected performance is no more than 10% outliers as estimated by a human inspecting the point cloud", and 
  * "position estimation less than 1% of R, where R is the maximum operational distance of the camera/sensor", and 
@@ -30,7 +30,7 @@
  * --------------------------------------------------------------------------
  */
 #include "ReconstructionExecutor.hpp"
-#include <Reconstruction3D/AdjustmentFromStereo.hpp>
+#include <Reconstruction3D/EstimationFromStereo.hpp>
 #include <Errors/Assert.hpp>
 
 using namespace dfpc_ci;
@@ -51,7 +51,7 @@ Mode (a. ComputePointCloud) in this mode the stereo reconstruction dfn is execut
 (a.iii) 3rd parameter is the folder containing the images list file; \n \
 (a.iv) 4th is the image list file name (the file contains three blank lines, and then a triple for each line of the form: timeFloat pathToLeftImage pathToRightImage; \n \
 (a.v) 5th is the output cloud file path, in ply format; \n \n \
-Example usage: ./quality_adjustment_from_stereo ComputePointCloud ../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcRegistrationFromStereo_DevonIsland.yaml \
+Example usage: ./quality_estimation_from_stereo ComputePointCloud ../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcRegistrationFromStereo_DevonIsland.yaml \
 ../tests/Data/Images ImagesList.txt ../tests/Data/PointClouds/Road.ply \n \n \n \
 After you run (a), you should open the result with the tool DataGenerator/detect_outliers. Using the tool, you should detect those cloud points which should not appear in the scene. \
 The result is used by the second step of the program to assess the quality of the point cloud. \n \n \
@@ -61,14 +61,14 @@ Mode (b. EvaluateOutliers) the program will assess whether the data meets the ou
 (b.iii) 3rd parameter is the file containing the outliers in xml format \n \
 Optionally you can add one more parameter: \n \
 (b.iv) 4th optional parameter is outliers percentage threshold for the quality check. It must be a number between 0 and 1; The default is 0.10. \n \n \
-Example usage: ./quality_adjustment_from_stereo EvaluateOutliers ../tests/Data/PointClouds/Road.ply ../tests/Data/PointClouds/RoadOutliers.xml \n \n \n \
+Example usage: ./quality_estimation_from_stereo EvaluateOutliers ../tests/Data/PointClouds/Road.ply ../tests/Data/PointClouds/RoadOutliers.xml \n \n \n \
 Mode (c. EvaluateDistanceToCamera) the program will assess whether the data meets the required quality in terms of distances to the camera. In this case the parameters have the following meaning: \n \
 (c.ii) 2nd parameter is the point cloud file produced by the application of the dfn, it is in ply format. \n \
 (c.iii) 3rd parameter is the file containing the measures of the distances in xml format \n \
 (c.iv) 4th parameter is the camera maximum operational distance expressed in meters \n \
 Optionally you can add one more parameter: \n \
 (c.v) 5th optional parameter is the camera distance percentage error with respect to the operating distance. It must be a number betwee 0 and 1; The default is 0.01. \n \n \
-Example usage: ./quality_adjustment_from_stereo EvaluateDistanceToCamera ../tests/Data/PointClouds/Road.ply ../tests/Data/PointClouds/RoadMeasures.xml 10 \n \n \n \
+Example usage: ./quality_estimation_from_stereo EvaluateDistanceToCamera ../tests/Data/PointClouds/Road.ply ../tests/Data/PointClouds/RoadMeasures.xml 10 \n \n \n \
 Mode (d. EvaluateDimensions) the program will assess whether the data meets the required quality in terms of objects dimensions. In this case the parameters have the following meaning: \n \
 (b.ii) 2nd parameter is the point cloud file produced by the application of the dfn, it is in ply format. \n \
 (b.iii) 3rd parameter is the file containing the measures of the distances in xml format \n \
@@ -76,7 +76,7 @@ Optionally you can add three more parameters: \n \
 (b.iv) 4th optional parameter is the shape similarity threshold. It must be a number betwee 0 and 1; The default is 0.90. \n \
 (b.v) 5th optional parameter is the dimensional error threshold. It must be a number betwee 0 and 1; The default is 0.10. \n \
 (b.vi) 6th optional parameter is the theshold on the object component that determines how large a component should be with respect to the whole object in order to be considered in the evaluation of the dimensional error. It must be a number betwee 0 and 1; The default is 0.10. \n \n \
-Example usage: ./quality_adjustment_from_stereo EvaluateDimensions ../tests/Data/PointClouds/Road.ply ../tests/Data/PointClouds/RoadMeasures.xml \n";
+Example usage: ./quality_estimation_from_stereo EvaluateDimensions ../tests/Data/PointClouds/Road.ply ../tests/Data/PointClouds/RoadMeasures.xml \n";
 
 float ExtractOutliersPercentageThreshold(char* argument)
 	{
@@ -297,8 +297,8 @@ int main(int argc, char** argv)
 	std::string mode = argv[1];
 	if (mode == "ComputePointCloud")
 		{
-		AdjustmentFromStereo* registrationFromStereo = new AdjustmentFromStereo();
-		return mainComputePointCloudMode(argc, argv, registrationFromStereo);
+		EstimationFromStereo* estimationFromStereo = new EstimationFromStereo();
+		return mainComputePointCloudMode(argc, argv, estimationFromStereo);
 		}
 	else if (mode == "EvaluateOutliers")
 		{

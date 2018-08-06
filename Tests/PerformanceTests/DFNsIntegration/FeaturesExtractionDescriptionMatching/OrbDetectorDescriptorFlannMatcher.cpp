@@ -33,11 +33,6 @@
 #include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
 #include <FeaturesMatching2D/FlannMatcher.hpp>
 
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector2DToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <MatToFrameConverter.hpp>
 
 #include <Errors/Assert.hpp>
@@ -45,7 +40,6 @@
 
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;

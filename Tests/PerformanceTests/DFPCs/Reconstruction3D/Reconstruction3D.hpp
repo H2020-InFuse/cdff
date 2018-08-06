@@ -45,22 +45,7 @@
 #include <Pose.hpp>
 #include <PointCloud.hpp>
 
-#include <Converters/SupportTypes.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector2DToMatConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/MatToTransform3DConverter.hpp>
-#include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
-#include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclNormalsCloudConverter.hpp>
-#include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.hpp>
-
+#include <PointCloudToPclPointCloudConverter.hpp>
 #include <PerformanceTests/DFPCs/PerformanceTestInterface.hpp>
 
 class Reconstruction3DTestInterface : public PerformanceTestInterface
@@ -91,6 +76,7 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 		std::string imagesListFileName;
 		std::string outputCloudFileBaseName;
 		bool saveOutputCloud;
+		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 
 		dfpc_ci::ObservedScene* map;
 		dfpc_ci::Reconstruction3DInterface* reconstructor;

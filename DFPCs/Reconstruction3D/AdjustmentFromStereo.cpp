@@ -75,7 +75,8 @@ AdjustmentFromStereo::AdjustmentFromStereo()
 	rightKeypointsVector = NULL;
 	leftFeaturesVector = NULL;
 	rightFeaturesVector = NULL;
-	latestCorrespondenceMaps = NULL;
+	historyCorrespondenceMaps = NULL;
+	workingCorrespondenceMaps = NULL;
 	latestCameraPoses = NewPoses3DSequence();
 	emptyFeaturesVector = NewVisualPointFeatureVector3D();
 	previousCameraPose = NewPose3D();
@@ -119,7 +120,8 @@ AdjustmentFromStereo::~AdjustmentFromStereo()
 	DELETE_PREVIOUS(imagesCloud);
 	DELETE_PREVIOUS(leftKeypointsVector);
 	DELETE_PREVIOUS(rightKeypointsVector);
-	DELETE_PREVIOUS(latestCorrespondenceMaps);
+	DELETE_PREVIOUS(historyCorrespondenceMaps);
+	DELETE_PREVIOUS(workingCorrespondenceMaps);
 	delete(latestCameraPoses);
 	DELETE_PREVIOUS(emptyFeaturesVector);
 	DELETE_PREVIOUS(previousCameraPose);
@@ -162,17 +164,16 @@ void AdjustmentFromStereo::run()
 
 	if (currentInputNumber+1 < parameters.numberOfAdjustedStereoPairs)
 		{
-		currentInputNumber++;
 		outSuccess = false;
 		}
 	else
 		{
-		currentInputNumber = parameters.numberOfAdjustedStereoPairs;
 		outSuccess = ComputeCameraPoses();
 		}
 
 	if (outSuccess)
 		{
+		UpdateHistory();
 		Pose3DConstPtr outputPose;
 		if(firstTimeBundle)
 			{
@@ -189,6 +190,14 @@ void AdjustmentFromStereo::run()
 		Copy(*outputPointCloud, outPointCloud); 
 		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 		DELETE_PREVIOUS(outputPointCloud);
+		}
+	else if (firstTimeBundle)
+		{
+		UpdateHistory();
+		}
+	else	
+		{
+		ClearDiscardedData();
 		}
 	}
 
@@ -343,7 +352,6 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures()
 		currentLeftCameraIndex = 2 * currentInputNumber + 1;
 		currentRightCameraIndex = 2 * currentInputNumber;
 		mostRecentPastCameraIndex = (currentInputNumber > 0) ? 2 * currentInputNumber - 1 : 2 * parameters.numberOfAdjustedStereoPairs - 1;
-		oldestCameraIndex = 0;
 		endIndex = 2 * parameters.numberOfAdjustedStereoPairs - 1;
 		}
 	else
@@ -351,23 +359,30 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures()
  		currentLeftCameraIndex = oldestCameraIndex + 1;
 		currentRightCameraIndex = oldestCameraIndex;
 		mostRecentPastCameraIndex = (2 * parameters.numberOfAdjustedStereoPairs + currentRightCameraIndex - 1) % (parameters.numberOfAdjustedStereoPairs * 2);
-		oldestCameraIndex = (oldestCameraIndex + 2) % (parameters.numberOfAdjustedStereoPairs * 2);
 		endIndex = currentLeftCameraIndex;
 		}
-	DELETE_PREVIOUS( featuresVectorsList.at(currentLeftCameraIndex) );
-	DELETE_PREVIOUS( featuresVectorsList.at(currentRightCameraIndex) );
-	featuresVectorsList.at(currentLeftCameraIndex) = leftFeaturesVector;
-	featuresVectorsList.at(currentRightCameraIndex) = rightFeaturesVector;
 
 	//Computing the correspondences between current and past features and adding them to storage
 	CorrespondenceMaps2DSequencePtr newSequence = NewCorrespondenceMaps2DSequence();
 	for(int imageIndex = currentRightCameraIndex; imageIndex != endIndex; imageIndex = (2 * parameters.numberOfAdjustedStereoPairs + imageIndex - 1) % (parameters.numberOfAdjustedStereoPairs * 2) )
 		{
-		CorrespondenceMap2DConstPtr newCorrespondence = MatchFeatures( leftFeaturesVector, featuresVectorsList.at(imageIndex) );
+		DEBUG_PRINT_TO_LOG("Matching", currentLeftCameraIndex);
+		DEBUG_PRINT_TO_LOG("With", imageIndex);		
+		CorrespondenceMap2DConstPtr newCorrespondence;
+		if (imageIndex != currentRightCameraIndex)
+			{
+			newCorrespondence = MatchFeatures( leftFeaturesVector, featuresVectorsList.at(imageIndex) );
+			}
+		else
+			{
+			newCorrespondence = MatchFeatures( leftFeaturesVector, rightFeaturesVector );			
+			}
 		AddCorrespondenceMap(*newSequence, *newCorrespondence);
 		}
 	for(int imageIndex = mostRecentPastCameraIndex; imageIndex != endIndex; imageIndex = (2 * parameters.numberOfAdjustedStereoPairs + imageIndex - 1) % (parameters.numberOfAdjustedStereoPairs * 2) )
 		{
+		DEBUG_PRINT_TO_LOG("Matching", currentRightCameraIndex);
+		DEBUG_PRINT_TO_LOG("With", imageIndex);	
 		CorrespondenceMap2DConstPtr newCorrespondence = MatchFeatures( rightFeaturesVector, featuresVectorsList.at(imageIndex) );
 		AddCorrespondenceMap(*newSequence, *newCorrespondence);
 		}
@@ -375,9 +390,9 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures()
 	//Adding the old correspondences to thec current ones. All correspondences are taken except those with the oldest left and right images
 	if (0 < currentInputNumber && currentInputNumber < parameters.numberOfAdjustedStereoPairs)
 		{
-		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondenceMaps(*latestCorrespondenceMaps); correspondenceIndex++)
+		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondenceMaps(*historyCorrespondenceMaps); correspondenceIndex++)
 			{
-			AddCorrespondenceMap(*newSequence, GetCorrespondenceMap(*latestCorrespondenceMaps, correspondenceIndex));
+			AddCorrespondenceMap(*newSequence, GetCorrespondenceMap(*historyCorrespondenceMaps, correspondenceIndex));
 			}
 		}
 	else if (currentInputNumber > 0)
@@ -387,16 +402,17 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures()
 			{
 			for(int sinkIndex = sourceIndex + 1; sinkIndex < 2 * (parameters.numberOfAdjustedStereoPairs - 1); sinkIndex++)
 				{
-				AddCorrespondenceMap(*newSequence, GetCorrespondenceMap(*latestCorrespondenceMaps, correspondenceIndex));	
+				AddCorrespondenceMap(*newSequence, GetCorrespondenceMap(*historyCorrespondenceMaps, correspondenceIndex));	
 				correspondenceIndex++;
 				}
 			correspondenceIndex += 2;
 			}
 		}
 
-	//Updating the latestCorrespondenceMapsSequence
-	DELETE_PREVIOUS(latestCorrespondenceMaps);
-	latestCorrespondenceMaps = newSequence;
+	//Updating the historyCorrespondenceMaps
+	DELETE_PREVIOUS(workingCorrespondenceMaps);
+	workingCorrespondenceMaps = newSequence;
+	DEBUG_PRINT_TO_LOG("number of woring correspondence maps", GetNumberOfCorrespondenceMaps(*workingCorrespondenceMaps));
 	}
 
 void AdjustmentFromStereo::ExtractFeatures(FrameWrapper::FrameConstPtr filteredImage, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& keypointsVector)
@@ -440,11 +456,34 @@ CorrespondenceMap2DConstPtr AdjustmentFromStereo::MatchFeatures(VisualPointFeatu
 	CorrespondenceMap2DPtr newCorrespondence = NewCorrespondenceMap2D();
 	Copy(featuresMatcher2d->matchesOutput(), *newCorrespondence);	
 	DEBUG_PRINT_TO_LOG("Correspondences", GetNumberOfCorrespondences(*newCorrespondence) );
+
+	//Cleaning repeated source and sink points within the same map
+	std::vector<BaseTypesWrapper::T_UInt32> removeIndexList;
+	for(int correspondenceIndex1=0; correspondenceIndex1< GetNumberOfCorrespondences(*newCorrespondence); correspondenceIndex1++)
+		{
+		for (int correspondenceIndex2=0; correspondenceIndex2<correspondenceIndex1; correspondenceIndex2++)
+			{
+			BaseTypesWrapper::Point2D source1 = GetSource(*newCorrespondence, correspondenceIndex1);
+			BaseTypesWrapper::Point2D sink1 = GetSink(*newCorrespondence, correspondenceIndex1);
+			BaseTypesWrapper::Point2D source2 = GetSource(*newCorrespondence, correspondenceIndex2);
+			BaseTypesWrapper::Point2D sink2 = GetSink(*newCorrespondence, correspondenceIndex2);
+			if ( (source1.x == source2.x && source1.y == source2.y) || (sink1.x == sink2.x && sink1.y == sink2.y) )
+				{
+				if ( removeIndexList.size() == 0 || correspondenceIndex1 != removeIndexList.at( removeIndexList.size()-1 ) )
+					{
+					removeIndexList.push_back(correspondenceIndex1);
+					}
+				}
+			}
+		}
+	RemoveCorrespondences(*newCorrespondence, removeIndexList);
+
 	return newCorrespondence;
 	}
 
 bool AdjustmentFromStereo::ComputeCameraPoses()
 	{
+	DEBUG_PRINT_TO_LOG("About to execute bundle adjustment", "");
 	if (parameters.useBundleInitialEstimation)
 		{
 		EstimatePointCloud(); //Estimates point cloud from the most recent image pair
@@ -455,7 +494,7 @@ bool AdjustmentFromStereo::ComputeCameraPoses()
 		bundleAdjuster->guessedPointCloudInput(*estimatedPointCloud);
 		}
 
-	bundleAdjuster->correspondenceMapsSequenceInput(*latestCorrespondenceMaps);
+	bundleAdjuster->correspondenceMapsSequenceInput(*workingCorrespondenceMaps);
 	bundleAdjuster->process();
 	bool successOutput = bundleAdjuster->successOutput();
 	
@@ -503,7 +542,7 @@ PoseWrapper::Pose3DConstPtr AdjustmentFromStereo::AddLastPointCloudToMap()
 
 bool AdjustmentFromStereo::EstimatePointCloud()
 	{
-	const CorrespondenceMap2D& recentLeftRightCorrespondence = GetCorrespondenceMap( *latestCorrespondenceMaps, 0 );
+	const CorrespondenceMap2D& recentLeftRightCorrespondence = GetCorrespondenceMap( *workingCorrespondenceMaps, 0 );
 	ComputeStereoPointCloud( &recentLeftRightCorrespondence );
 	bool thereIsOne3dPointForEachCorrespondence = GetNumberOfPoints(*estimatedPointCloud) == GetNumberOfCorrespondences( recentLeftRightCorrespondence );
 	VERIFY( thereIsOne3dPointForEachCorrespondence, 
@@ -520,7 +559,7 @@ bool AdjustmentFromStereo::EstimateCameraPoses()
 	for(int stereoIndex = 0; stereoIndex < numberOfStereoCameras - 1; stereoIndex++)
 		{
 		pastLeftCorrespondenceIndex += (numberOfCameras - 2*stereoIndex - 1) + (numberOfCameras - 2*stereoIndex - 2);
-		const CorrespondenceMap2D& leftPastLeftCorrespondence = GetCorrespondenceMap( *latestCorrespondenceMaps, pastLeftCorrespondenceIndex );
+		const CorrespondenceMap2D& leftPastLeftCorrespondence = GetCorrespondenceMap( *workingCorrespondenceMaps, pastLeftCorrespondenceIndex );
 		bool success = ComputeFundamentalMatrix(&leftPastLeftCorrespondence, fundamentalMatrix);
 		success = success && ComputeCameraTransform(&leftPastLeftCorrespondence, fundamentalMatrix, cameraTransform);
 		if (!success)
@@ -590,14 +629,14 @@ void AdjustmentFromStereo::CleanBundleAdjustmentInputs()
 			indexToRemoveList.push_back(pointIndex);
 			}
 		}
-	RemoveCorrespondences(*latestCorrespondenceMaps, 0, indexToRemoveList);
+	RemoveCorrespondences(*workingCorrespondenceMaps, 0, indexToRemoveList);
 	RemovePoints(*estimatedPointCloud, indexToRemoveList);
 
 	//Removing repeated source points
-	for(int mapIndex = 0; mapIndex < GetNumberOfCorrespondenceMaps(*latestCorrespondenceMaps); mapIndex++)
+	for(int mapIndex = 0; mapIndex < GetNumberOfCorrespondenceMaps(*workingCorrespondenceMaps); mapIndex++)
 		{
 		indexToRemoveList.clear();
-		const CorrespondenceMap2D& correspondenceMap = GetCorrespondenceMap(*latestCorrespondenceMaps, mapIndex);
+		const CorrespondenceMap2D& correspondenceMap = GetCorrespondenceMap(*workingCorrespondenceMaps, mapIndex);
 		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(correspondenceMap); correspondenceIndex++)
 			{
 			BaseTypesWrapper::Point2D sourcePoint = GetSource(correspondenceMap, correspondenceIndex);
@@ -612,7 +651,7 @@ void AdjustmentFromStereo::CleanBundleAdjustmentInputs()
 					}
 				}
 			}
-		RemoveCorrespondences(*latestCorrespondenceMaps, mapIndex, indexToRemoveList);
+		RemoveCorrespondences(*workingCorrespondenceMaps, mapIndex, indexToRemoveList);
 		if (mapIndex == 0)
 			{
 			RemovePoints(*estimatedPointCloud, indexToRemoveList);
@@ -620,10 +659,10 @@ void AdjustmentFromStereo::CleanBundleAdjustmentInputs()
 		}
 
 	//Removing repeated sink points
-	for(int mapIndex = 0; mapIndex < GetNumberOfCorrespondenceMaps(*latestCorrespondenceMaps); mapIndex++)
+	for(int mapIndex = 0; mapIndex < GetNumberOfCorrespondenceMaps(*workingCorrespondenceMaps); mapIndex++)
 		{
 		indexToRemoveList.clear();
-		const CorrespondenceMap2D& correspondenceMap = GetCorrespondenceMap(*latestCorrespondenceMaps, mapIndex);
+		const CorrespondenceMap2D& correspondenceMap = GetCorrespondenceMap(*workingCorrespondenceMaps, mapIndex);
 		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(correspondenceMap); correspondenceIndex++)
 			{
 			BaseTypesWrapper::Point2D sinkPoint = GetSink(correspondenceMap, correspondenceIndex);
@@ -638,7 +677,7 @@ void AdjustmentFromStereo::CleanBundleAdjustmentInputs()
 					}
 				}
 			}
-		RemoveCorrespondences(*latestCorrespondenceMaps, mapIndex, indexToRemoveList);
+		RemoveCorrespondences(*workingCorrespondenceMaps, mapIndex, indexToRemoveList);
 		if (mapIndex == 0)
 			{
 			RemovePoints(*estimatedPointCloud, indexToRemoveList);
@@ -665,6 +704,46 @@ int AdjustmentFromStereo::StaticCastToInt(float value)
 		value = value + 1;
 		}
 	return integerValue;
+	}
+
+void AdjustmentFromStereo::UpdateHistory()
+	{
+	PRINT_TO_LOG("Updating history on currentInputNumber", currentInputNumber);
+	//Adding the extracted features to storage
+	int currentLeftCameraIndex, currentRightCameraIndex;
+	if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
+		{
+		currentLeftCameraIndex = 2 * currentInputNumber + 1;
+		currentRightCameraIndex = 2 * currentInputNumber;
+		oldestCameraIndex = 0;
+		}
+	else
+		{
+ 		currentLeftCameraIndex = oldestCameraIndex + 1;
+		currentRightCameraIndex = oldestCameraIndex;
+		oldestCameraIndex = (oldestCameraIndex + 2) % (parameters.numberOfAdjustedStereoPairs * 2);
+		}
+	DELETE_PREVIOUS( featuresVectorsList.at(currentLeftCameraIndex) );
+	DELETE_PREVIOUS( featuresVectorsList.at(currentRightCameraIndex) );
+	featuresVectorsList.at(currentLeftCameraIndex) = leftFeaturesVector;
+	featuresVectorsList.at(currentRightCameraIndex) = rightFeaturesVector;
+
+	//Updating history correspondence map
+	DELETE_PREVIOUS(historyCorrespondenceMaps);
+	historyCorrespondenceMaps = workingCorrespondenceMaps;
+	workingCorrespondenceMaps = NULL; //So that it won't be deleted
+
+	//Updating currentInputNumber for next round
+	if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
+		{
+		currentInputNumber++;
+		}
+	}
+
+void AdjustmentFromStereo::ClearDiscardedData()
+	{
+	DELETE_PREVIOUS( leftFeaturesVector );	
+	DELETE_PREVIOUS( rightFeaturesVector );
 	}
 
 }

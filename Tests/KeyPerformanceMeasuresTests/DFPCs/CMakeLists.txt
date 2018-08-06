@@ -39,6 +39,16 @@ target_link_libraries(
 )
 
 add_executable(
+    quality_estimation_from_stereo
+    Reconstruction3D/EstimationFromStereo.cpp
+    Reconstruction3D/ReconstructionExecutor.cpp
+)
+target_link_libraries(
+	quality_estimation_from_stereo
+	estimation_from_stereo converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator
+)
+
+add_executable(
     quality_reconstruction_from_stereo
     Reconstruction3D/ReconstructionFromStereo.cpp
     Reconstruction3D/ReconstructionExecutor.cpp

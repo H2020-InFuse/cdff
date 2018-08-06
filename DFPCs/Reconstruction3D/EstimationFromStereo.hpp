@@ -154,7 +154,8 @@ namespace dfpc_ci {
 		* The correspondences between images are stored in the following order (L0-R0), (L0-L1), (L0-R1), ..., (L0-RN), (R0-L0), (R0-L1), (R0-R1), ..., 
 		* (R0, LN), (L1-R1), (L1-L2), ..., (L1-RN), ...., (LN-RN). The number N is defined by the parameter numberOfAdjustedStereoPairs.
 		* Only the most recent N image pairs are kept in storage, the others will be discarded. */
-		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr correspondenceMapSequence;
+		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr historyCorrespondenceMapSequence;
+		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr workingCorrespondenceMapSequence;
 		PoseWrapper::Poses3DSequencePtr cameraPoseList;
 		PoseWrapper::Pose3DPtr previousCameraPose;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr emptyFeaturesVector;
@@ -180,6 +181,9 @@ namespace dfpc_ci {
 		void ComputeKeypointCloud(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputCorrespondenceMap);
 		CorrespondenceMap3DWrapper::CorrespondenceMap3DPtr Extract3DCorrespondencesFromTwoImagePairs(std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> mapList,
 			std::vector<PointCloudWrapper::PointCloudConstPtr> pointCloudList);
+		void UpdateHistory();
+		void ClearDiscardedData();
+		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr CreateCorrespondenceMapsSequence();
 
 		PoseWrapper::Pose3DConstPtr AddAllPointCloudsToMap();
 		PoseWrapper::Pose3DConstPtr AddLastPointCloudToMap();

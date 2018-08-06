@@ -44,13 +44,6 @@
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclNormalsCloudConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.hpp>
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
@@ -60,6 +53,7 @@
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>
 #include <PerformanceTests/Aggregator.hpp>
+#include <Pose.hpp>
 
 #include <Eigen/Geometry>
 

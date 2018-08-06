@@ -30,7 +30,6 @@
 #include <fstream>
 
 using namespace dfn_ci;
-using namespace Common;
 using namespace Converters;
 using namespace FrameWrapper;
 

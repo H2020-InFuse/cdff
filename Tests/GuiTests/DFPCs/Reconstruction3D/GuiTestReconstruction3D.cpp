@@ -34,7 +34,6 @@ using namespace dfpc_ci;
 using namespace FrameWrapper;
 using namespace Converters;
 using namespace PoseWrapper;
-using namespace Common;
 using namespace PointCloudWrapper;
 
 /* --------------------------------------------------------------------------
@@ -49,23 +48,12 @@ GuiTestReconstruction3D::GuiTestReconstruction3D(std::string configurationFilePa
 	this->imageFilesFolder = imageFilesFolder;
 	this->imageFilesType = imageFilesType;
 
-	SetUpMocksAndStubs();
 	LoadImagesList(imagesListFileName);
 	}
 
 GuiTestReconstruction3D::~GuiTestReconstruction3D()
 	{
-	delete(stubFrameCache);
-	delete(mockFrameConverter);
 
-	delete(stubInverseFrameCache);
-	delete(mockInverseFrameConverter);
-
-	delete(stubCloudCache);
-	delete(mockCloudConverter);
-
-	delete(stubInverseCloudCache);
-	delete(mockInverseCloudConverter);
 	}
 
 void GuiTestReconstruction3D::Run(dfpc_ci::Reconstruction3DInterface& reconstructor3d)
@@ -96,25 +84,6 @@ void GuiTestReconstruction3D::Run(dfpc_ci::Reconstruction3DInterface& reconstruc
  *
  * --------------------------------------------------------------------------
  */
-void GuiTestReconstruction3D::SetUpMocksAndStubs()
-	{
-	stubFrameCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	mockFrameConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubFrameCache, mockFrameConverter);
-
-	stubInverseFrameCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>();
-	mockInverseFrameConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubInverseFrameCache, mockInverseFrameConverter);
-
-	stubCloudCache = new Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr>;
-	mockCloudConverter = new Mocks::PclPointCloudToPointCloudConverter();
-	ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Instance(stubCloudCache, mockCloudConverter);
-
-	stubInverseCloudCache = new Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>;
-	mockInverseCloudConverter = new Mocks::PointCloudToPclPointCloudConverter();
-	ConversionCache<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudToPclPointCloudConverter>::Instance(stubInverseCloudCache, mockInverseCloudConverter);
-	}
-
 void GuiTestReconstruction3D::LoadImagesList(std::string imagesListFileName)
 	{
 	std::stringstream imagesListFilePath;
