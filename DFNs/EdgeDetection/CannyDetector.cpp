@@ -32,12 +32,6 @@ CannyDetector::CannyDetector()
 
 CannyDetector::~CannyDetector()
 {
-
-	configurationFilePath = "";
-}
-
-CannyDetector::~CannyDetector()
-{
 }
 
 void CannyDetector::configure()
