@@ -50,7 +50,7 @@ void CannyDetector::process()
 	cv::Mat edges = Canny(inputImage);
 
 	// Write data to output port
-	FrameConstPtr tmp = matToFrame.Convert(edges);
+	const Frame* tmp = matToFrame.Convert(edges);
 	Copy(*tmp, outEdgeMap);
 	delete tmp;
 }

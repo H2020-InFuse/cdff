@@ -53,11 +53,11 @@ void SobelDerivative::process()
 	cv::Mat scharrGradY = sobely(inputImage);
 
 	// Write data to output ports
-	FrameConstPtr tmpX = matToFrame.Convert(scharrGradX);
+	const Frame* tmpX = matToFrame.Convert(scharrGradX);
 	Copy(*tmpX, outSobelGradientX);
 	delete tmpX;
 
-	FrameConstPtr tmpY = matToFrame.Convert(scharrGradY);
+	const Frame* tmpY = matToFrame.Convert(scharrGradY);
 	Copy(*tmpY, outSobelGradientY);
 	delete tmpY;
 }
