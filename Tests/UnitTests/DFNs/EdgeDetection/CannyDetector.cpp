@@ -31,7 +31,7 @@ TEST_CASE( "Call to process (Canny edge detector)", "[process]" )
 	cv::Mat gray;
 	cv::cvtColor(rgb, gray, cv::COLOR_RGB2GRAY);
 
-	const Frame* input = MatToFrameConverter().Convert(gray);
+	FrameConstPtr input = MatToFrameConverter().Convert(gray);
 
 	// Instantiate DFN
 	CannyDetector* detector = new CannyDetector;
