@@ -31,8 +31,7 @@ TEST_CASE( "Call to process (Sobel derivatives)", "[process]" )
 	cv::Mat gray;
 	cv::cvtColor(rgb, gray, cv::COLOR_RGB2GRAY);
 
-	MatToFrameConverter converter;
-	const Frame* input = converter.Convert(gray);
+	const Frame* input = MatToFrameConverter().Convert(gray);
 
 	// Instantiate DFN
 	SobelDerivative* sobelGradient = new SobelDerivative;
