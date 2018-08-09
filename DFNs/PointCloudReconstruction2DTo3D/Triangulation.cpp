@@ -106,6 +106,11 @@ cv::Mat Triangulation::ConvertToMat(CameraMatrix cameraMatrix)
 
 cv::Mat Triangulation::Triangulate(cv::Mat projectionMatrix, cv::Mat pointsVectorAtSource, cv::Mat pointsVectorAtSink)
 {
+	if (pointsVectorAtSource.cols == 0 || pointsVectorAtSource.rows == 0)
+		{
+		return cv::Mat();
+		}
+
 	// The projection matrix of the first camera is [I|0] according to result
 	// 9.14 of Richard Hartley and Andrew Zisserman, "Multiple View Geometry
 	// in Computer Vision"

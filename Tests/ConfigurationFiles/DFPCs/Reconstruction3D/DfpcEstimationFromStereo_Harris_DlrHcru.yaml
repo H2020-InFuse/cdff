@@ -4,7 +4,7 @@
     Baseline: 1
     PointCloudMapResolution: 0.1
     SearchRadius: 80
-    NumberOfAdjustedStereoPairs: 3
+    NumberOfAdjustedStereoPairs: 4
     UseBundleInitialEstimation: false
 - Name: reconstructor3d
   Type: StereoReconstruction
@@ -56,7 +56,22 @@
     LimitZ: 35
 - Name: featuresExtractor2d
   Type: FeaturesExtraction2D
-  Implementation: OrbDetectorDescriptor
+  Implementation: HarrisDetector2D
+  Parameters:
+  - Name: GeneralParameters
+    ApertureSize: 5
+    BlockSize: 3
+    ParameterK: 0.04
+    DetectionThreshold: 200
+    UseGaussianBlur: true
+  - Name: GaussianBlur
+    KernelWidth: 3
+    KernelHeight: 3
+    WidthStandardDeviation: 0
+    HeightStandardDeviation: 0
+- Name: featuresDescriptor2d
+  Type: FeaturesDescription2D
+  Implementation: OrbDescriptor
   Parameters:
   - Name: GeneralParameters
     EdgeThreshold: 31
@@ -66,7 +81,7 @@
     LevelsNumber: 8
     PatchSize: 31
     ScaleFactor: 1.20
-    ScoreType: HarrisScore
+    ScoreType: 0
     SizeOfBrightnessTestSet: 2
 - Name: featuresMatcher2d
   Type: FeaturesMatching2D
@@ -80,9 +95,9 @@
     TableNumber: 6
     KeySize: 12
     MultiProbeLevel: 1
-- Name: bundleAdjuster
-  Type: BundleAdjustment
-  Implementation: CeresAdjustment
+- Name: reconstructor3dfrom2dmatches
+  Type: PointCloudReconstruction2DTo3D
+  Implementation: Triangulation
   Parameters:
   - Name: FirstCameraMatrix
     FocalLengthX: 868.664
@@ -95,6 +110,11 @@
     PrinciplePointX: 519.111
     PrinciplePointY: 390.755
   - Name: GeneralParameters
-    Baseline: 0.09290672099999999
-    SquaredPixelErrorTolerance: 100000000
-    
+    OutputInvalidPoints: true
+- Name: transformEstimator
+  Type: Transform3DEstimation
+  Implementation: CeresEstimation
+  Parameters:
+  - Name: GeneralParameters
+    MaximumAllowedError: 100000
+    MaximumAllowedDeterminantError: 0.1

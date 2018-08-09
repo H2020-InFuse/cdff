@@ -60,6 +60,10 @@
 #include <Pose.hpp>
 #include <Matrix.hpp>
 
+#ifdef TESTING
+#include <fstream>
+#endif
+
 
 namespace dfpc_ci {
 
@@ -123,6 +127,9 @@ namespace dfpc_ci {
 		dfn_ci::CamerasTransformEstimationInterface* cameraTransformEstimator;
 		dfn_ci::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
 
+		#ifdef TESTING
+		std::ofstream logFile;
+		#endif
 		FrameWrapper::FramePtr leftImage;
 		FrameWrapper::FramePtr rightImage;
 		FrameWrapper::FramePtr filteredLeftImage;

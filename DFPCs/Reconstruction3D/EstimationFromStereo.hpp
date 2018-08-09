@@ -64,6 +64,10 @@
 #include <Pose.hpp>
 #include <Matrix.hpp>
 
+#ifdef TESTING
+#include <fstream>
+#endif
+
 
 namespace dfpc_ci {
 
@@ -142,6 +146,7 @@ namespace dfpc_ci {
 		PointCloudWrapper::PointCloudConstPtr triangulatedKeypointCloud;
 
 		#ifdef TESTING
+		std::ofstream logFile;
 		std::vector<FrameWrapper::FramePtr> leftImageList;
 		std::vector<FrameWrapper::FramePtr> rightImageList;
 		#endif
