@@ -28,6 +28,7 @@ SobelDerivative::SobelDerivative()
 	parametersHelper.AddParameter<DepthMode, DepthModeHelper>("GeneralParameters", "DepthMode", parameters.depthMode, DEFAULT_PARAMETERS.depthMode);
 	parametersHelper.AddParameter<double>("SobelParameters", "Scale", parameters.sobelParameters.scale, DEFAULT_PARAMETERS.sobelParameters.scale);
 	parametersHelper.AddParameter<double>("SobelParameters", "Delta", parameters.sobelParameters.delta, DEFAULT_PARAMETERS.sobelParameters.delta);
+	parametersHelper.AddParameter<int>("SobelParameters", "KernelSize", parameters.sobelParameters.kernelSize, DEFAULT_PARAMETERS.sobelParameters.kernelSize);
 
 	configurationFilePath = "";
 }
@@ -124,7 +125,8 @@ const SobelDerivative::SobelDerivativeOptionsSet SobelDerivative::DEFAULT_PARAME
 	.sobelParameters =
 	{
 		.scale = 1.0,
-		.delta = 0.0
+		.delta = 0.0,
+		.kernelSize = 3
 	}
 };
 
@@ -173,11 +175,14 @@ cv::Mat SobelDerivative::sobelx(cv::Mat inputImage)
 
 	double scale = parameters.sobelParameters.scale;
 	double delta = parameters.sobelParameters.delta;
+	int kernelSize =  parameters.sobelParameters.kernelSize;
 
 	cv::Mat gradientX, abs_gradientX;
-
-	cv::Scharr(inputImage, gradientX, depthMode, 1, 0, scale, delta, borderMode);
-	convertScaleAbs(gradientX, abs_gradientX);
+        if(kernelSize == 3)
+	  cv::Scharr(inputImage, gradientX, depthMode, 1, 0, scale, delta, borderMode);
+	else
+	  cv::Sobel(inputImage, gradientX, depthMode, 1, 0, kernelSize, scale, delta, borderMode);
+	cv::convertScaleAbs(gradientX, abs_gradientX);
 
 	return abs_gradientX;
 }
@@ -227,11 +232,16 @@ cv::Mat SobelDerivative::sobely(cv::Mat inputImage)
 
 	double scale = parameters.sobelParameters.scale;
 	double delta = parameters.sobelParameters.delta;
+	int kernelSize =  parameters.sobelParameters.kernelSize;
 
 	cv::Mat gradientY, abs_gradientY;
-
-	cv::Scharr(inputImage, gradientY, depthMode, 0, 1, scale, delta, borderMode);
-	convertScaleAbs(gradientY, abs_gradientY);
+	
+	if(kernelSize == 3)
+	  cv::Scharr(inputImage, gradientY, depthMode, 0, 1, scale, delta, borderMode);
+	else
+	  cv::Sobel(inputImage, gradientY, depthMode, 0, 1, kernelSize, scale, delta, borderMode);
+	
+	cv::convertScaleAbs(gradientY, abs_gradientY);
 
 	return abs_gradientY;
 }

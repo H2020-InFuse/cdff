@@ -81,6 +81,7 @@ namespace dfn_ci
 			{
 				double scale;
 				double delta;
+				int kernelSize;
 			};
 
 			struct SobelDerivativeOptionsSet
