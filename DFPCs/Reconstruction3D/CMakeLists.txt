@@ -70,6 +70,7 @@ add_library(
     estimation_from_stereo
     EstimationFromStereo.cpp
     PointCloudMap.cpp
+    BundleHistory.cpp
 )
 target_link_libraries(
     estimation_from_stereo

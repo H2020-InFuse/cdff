@@ -1,6 +1,7 @@
 add_library(
     stereoReconstruction
     StereoReconstructionInterface.cpp
+    StereoReconstructionExecutor.cpp
 )
 
 add_library(

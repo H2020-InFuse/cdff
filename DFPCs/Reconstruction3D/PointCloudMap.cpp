@@ -48,6 +48,8 @@ PointCloudMap::PointCloudMap() :
 	pointCloud( new pcl::PointCloud<pcl::PointXYZ>() )
 	{
 	resolution = DEFAULT_RESOLUTION;
+	SetPosition(poseOfLatestPointCloud, 0, 0, 0);
+	SetOrientation(poseOfLatestPointCloud, 0, 0, 0, 1);
 	}
 
 PointCloudMap::~PointCloudMap()
@@ -72,6 +74,35 @@ void PointCloudMap::AddPointCloud(PointCloudConstPtr pointCloudInput, VisualPoin
 	AddPointCloud(pointCloudInput, affineTransform);
 
 	DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(pointCloud, 500);
+	Copy(*cloudPoseInMap, poseOfLatestPointCloud);
+	}
+
+void PointCloudMap::AttachPointCloud(PointCloudConstPtr pointCloudInput, VisualPointFeatureVector3DConstPtr pointCloudFeaturesVector, Pose3DConstPtr cloudPoseDisplacement)
+	{
+	Pose3D cloudPoseInMap;
+
+	float x = GetXPosition(	poseOfLatestPointCloud ) + GetXPosition( *cloudPoseDisplacement );
+	float y = GetYPosition(	poseOfLatestPointCloud ) + GetYPosition( *cloudPoseDisplacement );
+	float z = GetZPosition(	poseOfLatestPointCloud ) + GetZPosition( *cloudPoseDisplacement );
+	SetPosition(cloudPoseInMap, x, y, z);
+
+	float qx = GetXOrientation( poseOfLatestPointCloud );
+	float qy = GetYOrientation( poseOfLatestPointCloud );
+	float qz = GetZOrientation( poseOfLatestPointCloud );
+	float qw = GetWOrientation( poseOfLatestPointCloud );
+
+	float rx = GetXOrientation( *cloudPoseDisplacement );
+	float ry = GetYOrientation( *cloudPoseDisplacement );
+	float rz = GetZOrientation( *cloudPoseDisplacement );
+	float rw = GetWOrientation( *cloudPoseDisplacement );
+
+	float tx = (rw * qx + rx * qw - ry * qz + rz * qy);
+	float ty = (rw * qy + rx * qz + ry * qw - rz * qx);
+	float tz = (rw * qz - rx * qy + ry * qx + rz * qw);
+	float tw = (rw * qw - rx * qx - ry * qy - rz * qz);
+	SetOrientation(cloudPoseInMap, tx, ty, tz, tw);
+
+	AddPointCloud(pointCloudInput, pointCloudFeaturesVector, &cloudPoseInMap);
 	}
 
 PointCloudConstPtr PointCloudMap::GetScenePointCloud(Pose3DConstPtr origin,  float radius)
@@ -155,6 +186,11 @@ VisualPointFeatureVector3DConstPtr PointCloudMap::GetSceneFeaturesVector(Pose3DC
 		}
 
 	return featuresVector;
+	}
+
+const PoseWrapper::Pose3D& PointCloudMap::GetLatestPose()
+	{
+	return poseOfLatestPointCloud;
 	}
 
 void PointCloudMap::SetResolution(float resolution)

@@ -72,6 +72,17 @@ namespace dfpc_ci {
 						PoseWrapper::Pose3DConstPtr cloudPoseInMap);
 
 		/*
+		* @brief Adds a point cloud at a given position.
+		*
+		* @param pointCloud, the point cloud to add;
+		* @param pointCloudFeaturesVector, the vector of relevant features extracted from the point cloud
+		* @param cloudPoseDisplacement, the pose of the point cloud with respect to the latest added cloud
+		*
+		*/
+		void AttachPointCloud(PointCloudWrapper::PointCloudConstPtr pointCloudInput, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr pointCloudFeaturesVector,
+						PoseWrapper::Pose3DConstPtr cloudPoseDisplacement);
+
+		/*
 		* @brief Retrieves a point cloud given by all the mapped points which are within a given radius from a center, the output points coordinate are relative to the scene origin.
 		*
 		* @param origin, the reference center for the retrivial
@@ -97,6 +108,12 @@ namespace dfpc_ci {
 		*/
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr GetSceneFeaturesVector(PoseWrapper::Pose3DConstPtr origin,  float radius);
 
+		/*
+		* @brief Retrieves the pose of the latest added point cloud.
+		*
+		* @output, the pose of the latest added point cloud.
+		*/
+		const PoseWrapper::Pose3D& GetLatestPose();
 
 		/*
 		* @brief Set the resolution of the point cloud
@@ -131,6 +148,7 @@ namespace dfpc_ci {
 
 		float resolution;
 		unsigned descriptorLength;
+		PoseWrapper::Pose3D poseOfLatestPointCloud;
 		std::vector<FeaturePoint> featuresList;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud;
 	

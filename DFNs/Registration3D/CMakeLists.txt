@@ -1,6 +1,7 @@
 add_library(
     registration_3d
     Registration3DInterface.cpp
+    Registration3DExecutor.cpp
 )
 
 add_library(
