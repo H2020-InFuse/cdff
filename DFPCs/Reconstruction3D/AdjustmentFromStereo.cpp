@@ -153,6 +153,9 @@ AdjustmentFromStereo::~AdjustmentFromStereo()
 
 void AdjustmentFromStereo::run() 
 	{
+	#ifdef TESTING
+	logFile.open("/InFuse/myLog.txt", std::ios::app);
+	#endif
 	DEBUG_PRINT_TO_LOG("Adjustment from stereo start", "");
  
 	Copy(inLeftImage, *leftImage);
@@ -199,6 +202,10 @@ void AdjustmentFromStereo::run()
 		{
 		ClearDiscardedData();
 		}
+	#ifdef TESTING
+	logFile << std::endl;
+	logFile.close();
+	#endif
 	}
 
 void AdjustmentFromStereo::setup()
@@ -412,7 +419,7 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures()
 	//Updating the historyCorrespondenceMaps
 	DELETE_PREVIOUS(workingCorrespondenceMaps);
 	workingCorrespondenceMaps = newSequence;
-	DEBUG_PRINT_TO_LOG("number of woring correspondence maps", GetNumberOfCorrespondenceMaps(*workingCorrespondenceMaps));
+	DEBUG_PRINT_TO_LOG("number of working correspondence maps", GetNumberOfCorrespondenceMaps(*workingCorrespondenceMaps));
 	}
 
 void AdjustmentFromStereo::ExtractFeatures(FrameWrapper::FrameConstPtr filteredImage, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& keypointsVector)
@@ -484,6 +491,7 @@ CorrespondenceMap2DConstPtr AdjustmentFromStereo::MatchFeatures(VisualPointFeatu
 bool AdjustmentFromStereo::ComputeCameraPoses()
 	{
 	DEBUG_PRINT_TO_LOG("About to execute bundle adjustment", "");
+	DEBUG_PRINT_TO_LOG("currentInputNumber", currentInputNumber );
 	if (parameters.useBundleInitialEstimation)
 		{
 		EstimatePointCloud(); //Estimates point cloud from the most recent image pair
@@ -493,6 +501,15 @@ bool AdjustmentFromStereo::ComputeCameraPoses()
 		bundleAdjuster->guessedPosesSequenceInput(*estimatedCameraPoses);
 		bundleAdjuster->guessedPointCloudInput(*estimatedPointCloud);
 		}
+	#ifdef TESTING
+	logFile << "corr" << " ";
+	logFile << GetNumberOfCorrespondenceMaps(*workingCorrespondenceMaps) << " ";
+	for(int i=0; i<GetNumberOfCorrespondenceMaps(*workingCorrespondenceMaps); i++)
+		{
+		const CorrespondenceMap2D& map = GetCorrespondenceMap(*workingCorrespondenceMaps, i);
+		logFile << GetNumberOfCorrespondences(map) << " ";
+		}
+	#endif
 
 	bundleAdjuster->correspondenceMapsSequenceInput(*workingCorrespondenceMaps);
 	bundleAdjuster->process();
@@ -507,6 +524,12 @@ bool AdjustmentFromStereo::ComputeCameraPoses()
 		{
 		DEBUG_PRINT_TO_LOG("Bundle adjustement failure", "");
 		}
+
+	DEBUG_PRINT_TO_LOG("Error:", bundleAdjuster->errorOutput());
+
+	#ifdef TESTING
+	logFile << bundleAdjuster->errorOutput() << " " << successOutput << " ";
+	#endif
 
 	return successOutput;
 	}
@@ -683,6 +706,9 @@ void AdjustmentFromStereo::CleanBundleAdjustmentInputs()
 			RemovePoints(*estimatedPointCloud, indexToRemoveList);
 			} 
 		}
+
+	DEBUG_PRINT_TO_LOG("Number of working correspondences", GetNumberOfCorrespondenceMaps(*workingCorrespondenceMaps) );
+	DEBUG_PRINT_TO_LOG("Number of historical correspondences", GetNumberOfCorrespondenceMaps(*historyCorrespondenceMaps) );
 	}
 
 int AdjustmentFromStereo::StaticCastToInt(float value)
@@ -734,7 +760,7 @@ void AdjustmentFromStereo::UpdateHistory()
 	workingCorrespondenceMaps = NULL; //So that it won't be deleted
 
 	//Updating currentInputNumber for next round
-	if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
+	//if (currentInputNumber < parameters.numberOfAdjustedStereoPairs)
 		{
 		currentInputNumber++;
 		}

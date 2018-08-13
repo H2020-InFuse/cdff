@@ -287,7 +287,7 @@ cv::Mat HirschmullerDisparityMapping::ComputePointCloudFromDisparity(cv::Mat dis
 	float baseline = parameters.stereoCameraParameters.baseline;
 	float focalLength = parameters.stereoCameraParameters.leftFocalLength;
 
-	float depthScale = baseline * focalLength * 16;
+	float depthScale = baseline * focalLength;
 	cv::Mat pointCloud(disparity.rows, disparity.cols, CV_32FC3, cv::Scalar(0,0,0));
 	for (unsigned row = 0; row < disparity.rows; row++)
 	{

@@ -31,6 +31,11 @@ bool Transform3DEstimationInterface::successOutput() const
     return outSuccess;
 }
 
+float Transform3DEstimationInterface::errorOutput() const
+{
+    return outError;
+}
+
 }
 
 /** @} */

@@ -21,5 +21,9 @@ output_ports:
       doc: "boolean flag indicating successful computation of the pose of O2 in O1, 
 	   only when the input matches contain a single map, map(01-02). If the
 	   matches contain multiple maps, this output is always true."
+    - mame: error
+      type: float
+      doc: "The square error of the optimal transform estimation"
 implementations:
     - LeastSquaresMinimization
+    - CeresEstimation

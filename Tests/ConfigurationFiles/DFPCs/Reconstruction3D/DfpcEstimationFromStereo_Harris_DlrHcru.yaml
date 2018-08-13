@@ -1,11 +1,11 @@
 - Name: DFNsChain
   Parameters:
   - Name: GeneralParameters
-    Baseline: 0.09290672099999999
+    Baseline: 1
     PointCloudMapResolution: 0.01
     SearchRadius: 80
-    UseBundleInitialEstimation: true
-    NumberOfAdjustedStereoPairs: 2
+    NumberOfAdjustedStereoPairs: 4
+    UseBundleInitialEstimation: false
 - Name: reconstructor3d
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
@@ -15,18 +15,18 @@
     UseFullScaleTwoPassAlgorithm: false
     UseDisparityToDepthMap: false
   - Name: Prefilter
-    Maximum: 25
+    Maximum: 11
   - Name: Disparities
     Minimum: 0
     NumberOfIntervals: 256
     UseMaximumDifference: true
-    MaximumDifference: 5
-    SpeckleRange: 22
-    SpeckleWindow: 300
+    MaximumDifference: 10
+    SpeckleRange: 8
+    SpeckleWindow: 10
     SmoothnessParameter1: 600
-    SmoothnessParameter2: 2000
+    SmoothnessParameter2: 10000
   - Name: BlocksMatching
-    BlockSize: 15
+    BlockSize: 11
     UniquenessRatio: 1
   - Name: DisparityToDepthMap
     Element_0_0: 1
@@ -46,17 +46,32 @@
     Element_3_2: 3.3436329786051
     Element_3_3: -0
   - Name: StereoCamera
-    LeftFocalLength: 871.118
-    LeftPrinciplePointX: 519.487
-    LeftPrinciplePointY: 385.304
+    LeftFocalLength: 868.664
+    LeftPrinciplePointX: 519.775
+    LeftPrinciplePointY: 383.36
     Baseline: 0.09290672099999999
   - Name: ReconstructionSpace
-    LimitX: 1.5
-    LimitY: 1.5
-    LimitZ: 1.5
+    LimitX: 3.5
+    LimitY: 3.5
+    LimitZ: 3.5
 - Name: featuresExtractor2d
   Type: FeaturesExtraction2D
-  Implementation: OrbDetectorDescriptor
+  Implementation: HarrisDetector2D
+  Parameters:
+  - Name: GeneralParameters
+    ApertureSize: 5
+    BlockSize: 3
+    ParameterK: 0.04
+    DetectionThreshold: 200
+    UseGaussianBlur: true
+  - Name: GaussianBlur
+    KernelWidth: 3
+    KernelHeight: 3
+    WidthStandardDeviation: 0
+    HeightStandardDeviation: 0
+- Name: featuresDescriptor2d
+  Type: FeaturesDescription2D
+  Implementation: OrbDescriptor
   Parameters:
   - Name: GeneralParameters
     EdgeThreshold: 31
@@ -66,7 +81,7 @@
     LevelsNumber: 8
     PatchSize: 31
     ScaleFactor: 1.20
-    ScoreType: HarrisScore
+    ScoreType: 0
     SizeOfBrightnessTestSet: 2
 - Name: featuresMatcher2d
   Type: FeaturesMatching2D
@@ -80,60 +95,26 @@
     TableNumber: 6
     KeySize: 12
     MultiProbeLevel: 1
-- Name: bundleAdjuster
-  Type: BundleAdjustment
-  Implementation: CeresAdjustment
-  Parameters:
-  - Name: LeftCameraMatrix
-    FocalLengthX: 871.118
-    FocalLengthY: 872.007
-    PrincipalPointX: 518.813
-    PrincipalPointY: 384.272
-  - Name: RightCameraMatrix
-    FocalLengthX: 868.904
-    FocalLengthY: 869.596
-    PrincipalPointX: 519.487
-    PrincipalPointY: 385.304
-  - Name: GeneralParameters
-    Baseline: 0.09290672099999999
-    SquaredPixelErrorTolerance: 1e-4
-- Name: fundamentalMatrixComputer
-  Type: FundamentalMatrixComputation
-  Implementation: FundamentalMatrixRansac
-  Parameters:
-  - Name: GeneralParameters
-    OutlierThreshold: 1 
-    Confidence: 0.90
-- Name: cameraTransformEstimator
-  Type: CamerasTransformEstimation
-  Implementation: EssentialMatrixDecomposition
-  Parameters:
-  - Name: GeneralParameters
-    NumberOfTestPoints: 20
-  - Name: FirstCameraMatrix
-    FocalLengthX: 871.118
-    FocalLengthY: 872.007
-    PrinciplePointX: 518.813
-    PrinciplePointY: 384.272
-  - Name: SecondCameraMatrix
-    FocalLengthX: 868.904
-    FocalLengthY: 869.596
-    PrinciplePointX: 519.487
-    PrinciplePointY: 385.304
 - Name: reconstructor3dfrom2dmatches
   Type: PointCloudReconstruction2DTo3D
   Implementation: Triangulation
   Parameters:
   - Name: FirstCameraMatrix
-    FocalLengthX: 871.118
-    FocalLengthY: 872.007
-    PrinciplePointX: 518.813
-    PrinciplePointY: 384.272
+    FocalLengthX: 868.664
+    FocalLengthY: 868.505
+    PrinciplePointX: 519.775
+    PrinciplePointY: 383.36
   - Name: SecondCameraMatrix
-    FocalLengthX: 868.904
-    FocalLengthY: 869.596
-    PrinciplePointX: 519.487
-    PrinciplePointY: 385.304
+    FocalLengthX: 867.226
+    FocalLengthY: 867.128
+    PrinciplePointX: 519.111
+    PrinciplePointY: 390.755
   - Name: GeneralParameters
     OutputInvalidPoints: true
-    
+- Name: transformEstimator
+  Type: Transform3DEstimation
+  Implementation: CeresEstimation
+  Parameters:
+  - Name: GeneralParameters
+    MaximumAllowedError: 100000
+    MaximumAllowedDeterminantError: 0.1

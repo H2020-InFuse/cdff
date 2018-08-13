@@ -69,6 +69,12 @@ namespace dfn_ci
              */
             virtual bool successOutput() const;
 
+            /**
+             * Query value from output port "error"
+             * @return error: the squared estimation error.
+             */
+            virtual float errorOutput() const;
+
         protected:
 
             asn1SccCorrespondenceMaps2DSequence inCorrespondenceMapsSequence;
@@ -76,6 +82,7 @@ namespace dfn_ci
 	    asn1SccPointcloud inGuessedPointCloud;
             asn1SccPosesSequence outPosesSequence;
             bool outSuccess;
+	    float outError;
     };
 }
 

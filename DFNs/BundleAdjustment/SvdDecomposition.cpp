@@ -74,6 +74,7 @@ void SvdDecomposition::process()
 	DecomposeMeasurementMatrix(measurementMatrix, compatibleRotationMatrix, compatiblePositionMatrix);
 
 	ConvertRotationTranslationMatricesToPosesSequence(translationMatrix, compatibleRotationMatrix, outPosesSequence);
+	outError = -1;
 	outSuccess = true;
 }
 

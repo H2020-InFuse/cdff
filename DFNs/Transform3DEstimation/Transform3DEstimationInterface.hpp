@@ -50,12 +50,18 @@ namespace dfn_ci
 	     *         matches contain multiple maps, this output is always true.
              */
             virtual bool successOutput() const;
+            /**
+             * Query value from output port "error"
+             * @return error: The square error of the optimal transform estimation
+             */
+            virtual float errorOutput() const;
 
         protected:
 
             asn1SccCorrespondenceMaps3DSequence inMatches;
             asn1SccPosesSequence outTransforms;
             bool outSuccess;
+	    float outError;
     };
 }
 

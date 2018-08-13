@@ -41,6 +41,11 @@ bool BundleAdjustmentInterface::successOutput() const
     return outSuccess;
 }
 
+float BundleAdjustmentInterface::errorOutput() const
+{
+    return outError;
+}
+
 }
 
 /** @} */

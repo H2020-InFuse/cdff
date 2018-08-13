@@ -151,6 +151,9 @@ EstimationFromStereo::~EstimationFromStereo()
 
 void EstimationFromStereo::run() 
 	{
+	#ifdef TESTING
+	logFile.open("/InFuse/myLog.txt", std::ios::app);
+	#endif
 	DEBUG_PRINT_TO_LOG("Estimation from stereo start", "");
  
 	Copy(inLeftImage, *leftImage);
@@ -198,6 +201,10 @@ void EstimationFromStereo::run()
 		{
 		ClearDiscardedData();
 		}
+	#ifdef TESTING
+	logFile << std::endl;
+	logFile.close();
+	#endif
 	}
 
 void EstimationFromStereo::setup()
@@ -335,6 +342,9 @@ void EstimationFromStereo::ComputeVisualPointFeatures()
 	ExtractFeatures(filteredRightImage, rightKeypointVector);
 	DescribeFeatures(filteredLeftImage, leftKeypointVector, leftFeatureVector);
 	DescribeFeatures(filteredRightImage, rightKeypointVector, rightFeatureVector);
+	#ifdef TESTING
+	logFile << "current" << " ";
+	#endif
 	leftRightCorrespondenceMap = MatchFeatures(leftFeatureVector, rightFeatureVector);
 	//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
 	ComputeKeypointCloud(leftRightCorrespondenceMap);
@@ -413,6 +423,9 @@ CorrespondenceMap2DConstPtr EstimationFromStereo::MatchFeatures(VisualPointFeatu
 			}
 		}
 	RemoveCorrespondences(*newCorrespondence, removeIndexList);
+	#ifdef TESTING
+	logFile << GetNumberOfCorrespondences(*newCorrespondence) << " ";
+	#endif
 
 	return newCorrespondence;
 	}
@@ -438,6 +451,9 @@ bool EstimationFromStereo::ComputeCameraPoses()
 	
 	if (!successOutput)
 		{
+		#ifdef TESTING
+		logFile << transformEstimator->errorOutput() << " " << successOutput << " ";
+		#endif
 		return successOutput;
 		}
 
@@ -451,6 +467,11 @@ bool EstimationFromStereo::ComputeCameraPoses()
 		{
 		DEBUG_PRINT_TO_LOG("The first pose is NOT valid", "");
 		}
+	DEBUG_PRINT_TO_LOG("Error:", transformEstimator->errorOutput());
+
+	#ifdef TESTING
+	logFile << transformEstimator->errorOutput() << " " << validPose << " ";
+	#endif
 	return validPose;
 	}
 
@@ -671,6 +692,9 @@ CorrespondenceMaps3DSequencePtr EstimationFromStereo::CreateCorrespondenceMapsSe
 	CorrespondenceMaps3DSequencePtr newSequence = NewCorrespondenceMaps3DSequence();
 	bool historyCycleComplete = (startIndex < 0);
 	int stereoIndex = startIndex;	
+	#ifdef TESTING
+	logFile << "past" << " ";
+	#endif
 	while(!historyCycleComplete)
 		{
 		DEBUG_PRINT_TO_LOG("camera index", stereoIndex);
@@ -717,6 +741,15 @@ CorrespondenceMaps3DSequencePtr EstimationFromStereo::CreateCorrespondenceMapsSe
 			correspondenceIndex += 2;
 			}
 		}
+	#ifdef TESTING
+	logFile << "corr" << " ";
+	logFile << GetNumberOfCorrespondenceMaps(*newSequence) << " ";
+	for(int i=0; i<GetNumberOfCorrespondenceMaps(*newSequence); i++)
+		{
+		const CorrespondenceMap3D& map = GetCorrespondenceMap(*newSequence, i);
+		logFile << GetNumberOfCorrespondences(map) << " ";
+		}
+	#endif
 
 	return newSequence;
 	}
