@@ -58,6 +58,7 @@
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
+#include "MultipleCorrespondencesRecorder.hpp"
 
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
@@ -139,19 +140,15 @@ namespace dfpc_ci {
 		dfn_ci::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
 		dfn_ci::Transform3DEstimationExecutor* transformEstimator;
 
-		
+		//Helpers
 		BundleHistory* bundleHistory;
+		MultipleCorrespondencesRecorder* correspondencesRecorder;
 		PoseWrapper::Pose3D rightToLeftCameraPose;
 
-		/*This is the storage of correspondence Maps, let (L0, R0), (L1, R1), ..., (LN, RN) be a sequence of image pair from the most recent to the oldest.
-		* The correspondences between images are stored in the following order (L0-R0), (L0-L1), (L0-R1), ..., (L0-RN), (R0-L0), (R0-L1), (R0-R1), ..., 
-		* (R0, LN), (L1-R1), (L1-L2), ..., (L1-RN), ...., (LN-RN). The number N is defined by the parameter numberOfAdjustedStereoPairs.
-		* Only the most recent N image pairs are kept in storage, the others will be discarded. */
+		//Intermediate data
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr cleanCorrespondenceMap;
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr leftTimeCorrespondenceMap;
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr rightTimeCorrespondenceMap;
-		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr workingCorrespondenceMapSequence;
-		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr historyCorrespondenceMapSequence;
 
 		void ConfigureExtraParameters();
 		void InstantiateDFNExecutors();
@@ -165,8 +162,6 @@ namespace dfpc_ci {
 		void AddAllPointCloudsToMap(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
 		void AddLastPointCloudToMap(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
 
-		CorrespondenceMap3DWrapper::CorrespondenceMap3DPtr Extract3DCorrespondencesFromTwoImagePairs(std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> mapList,
-			std::vector<PointCloudWrapper::PointCloudConstPtr> pointCloudList);
 		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr CreateCorrespondenceMapsSequence();
     };
 }

@@ -102,4 +102,4 @@
   Parameters:
   - Name: GeneralParameters
     MaximumAllowedError: 100000
-    MaximumAllowedDeterminantError: 0.1
+    MaximumAllowedDeterminantError: 0.5

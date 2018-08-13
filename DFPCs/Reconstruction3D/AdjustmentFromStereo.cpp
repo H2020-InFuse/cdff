@@ -559,7 +559,7 @@ PoseWrapper::Pose3DConstPtr AdjustmentFromStereo::AddLastPointCloudToMap()
 	float squaredNorm = qx*qx + qy*qy + qz*qz + qw*qw;
 	SetOrientation(lastPose, -qx/squaredNorm, -qy/squaredNorm, -qz/squaredNorm, qw/squaredNorm);
 
-	pointCloudMap.AddPointCloud(imagesCloud, emptyFeaturesVector, &lastPose);
+	pointCloudMap.AttachPointCloud(imagesCloud, emptyFeaturesVector, &lastPose);
 	return previousCameraPose;
 	}
 
