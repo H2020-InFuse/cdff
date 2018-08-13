@@ -1,7 +1,7 @@
 - Name: DFNsChain
   Parameters:
   - Name: GeneralParameters
-    PointCloudMapResolution: 0.1
+    PointCloudMapResolution: 0.01
     SearchRadius: 80
 - Name: reconstructor3D
   Type: StereoReconstruction
@@ -48,9 +48,9 @@
     LeftPrinciplePointY: 463.537109375
     Baseline: 0.239977002
   - Name: ReconstructionSpace
-    LimitX: 80
-    LimitY: 80
-    LimitZ: 80
+    LimitX: 8.0
+    LimitY: 8.0
+    LimitZ: 8.0
 - Name: cloudRegistrator
   Type: Registration3D
   Implementation: IcpCC

@@ -2,7 +2,7 @@
   Parameters:
   - Name: GeneralParameters
     Baseline: 0.09290672099999999
-    PointCloudMapResolution: 0.1
+    PointCloudMapResolution: 0.01
     SearchRadius: 80
     UseBundleInitialEstimation: true
     NumberOfAdjustedStereoPairs: 2
@@ -51,9 +51,9 @@
     LeftPrinciplePointY: 385.304
     Baseline: 0.09290672099999999
   - Name: ReconstructionSpace
-    LimitX: 15
-    LimitY: 15
-    LimitZ: 15
+    LimitX: 1.5
+    LimitY: 1.5
+    LimitZ: 1.5
 - Name: featuresExtractor2d
   Type: FeaturesExtraction2D
   Implementation: OrbDetectorDescriptor
