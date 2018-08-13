@@ -25,6 +25,7 @@ BundleHistory::BundleHistory(int size) :
 	if (pointer != NULL) \
 		{ \
 		delete (pointer); \
+		pointer = NULL; \
 		}
 
 #define DELETE_MAP_ENTRY(vectorMap, ListType, index) \
@@ -82,6 +83,7 @@ void BundleHistory::AddImages(FrameConstPtr leftImage, FrameConstPtr rightImage)
 	{
 	if ( mostRecentEntryIndex != NO_RECENT_ENTRY && (mostRecentEntryIndex+1) % size == oldestEntryIndex)
 		{
+		PRINT_TO_LOG("Deleting", "");
 		DELETE_ALL(oldestEntryIndex);
 		leftImageList.at(oldestEntryIndex) = leftImage;
 		rightImageList.at(oldestEntryIndex) = rightImage;
@@ -90,6 +92,7 @@ void BundleHistory::AddImages(FrameConstPtr leftImage, FrameConstPtr rightImage)
 		}
 	else
 		{
+		PRINT_TO_LOG("Not Deleting", "");
 		mostRecentEntryIndex = (mostRecentEntryIndex + 1) % size;
 		leftImageList.at(mostRecentEntryIndex) = leftImage;
 		rightImageList.at(mostRecentEntryIndex) = rightImage;		
@@ -218,6 +221,7 @@ void BundleHistory::RemoveEntry(int backwardSteps)
 		RemoveOldestEntry();
 		}
 
+	DELETE_ALL(index);
 	while (index != mostRecentEntryIndex)
 		{
 		int nextIndex = (index+1) % size;
@@ -249,6 +253,7 @@ void BundleHistory::RemoveEntry(int backwardSteps)
 
 void BundleHistory::RemoveOldestEntry()
 	{
+	DELETE_ALL(oldestEntryIndex);
 	if (mostRecentEntryIndex == NO_RECENT_ENTRY)
 		{
 		return;

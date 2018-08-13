@@ -149,6 +149,10 @@ void EstimationFromStereo::run()
 		{
 		bundleHistory->RemoveEntry(0);
 		DELETE_PREVIOUS(workingCorrespondenceMapSequence);
+		#ifdef TESTING
+		logFile << std::endl;
+		logFile.close();
+		#endif
 		return;
 		}
 
@@ -334,11 +338,11 @@ bool EstimationFromStereo::ComputeCameraPoses(Poses3DSequenceConstPtr& cameraPos
 	bool validPose = GetXOrientation(firstPose) > 0 || GetYOrientation(firstPose) > 0 || GetZOrientation(firstPose) > 0 || GetWOrientation(firstPose) > 0;
 	if (validPose)
 		{
-		DEBUG_PRINT_TO_LOG("The first pose is valid", "");
+		DEBUG_PRINT_TO_LOG("The first pose is valid", ToString(firstPose) );
 		}
 	else
 		{
-		DEBUG_PRINT_TO_LOG("The first pose is NOT valid", "");
+		DEBUG_PRINT_TO_LOG("The first pose is NOT valid", ToString(firstPose) );
 		}
 	DEBUG_PRINT_TO_LOG("Error:", error);
 	#ifdef TESTING
@@ -496,7 +500,7 @@ void EstimationFromStereo::CreateWorkingCorrespondences()
 		std::vector<FrameConstPtr> imageList = { 
 			bundleHistory->GetLeftImage(0), bundleHistory->GetRightImage(0), bundleHistory->GetLeftImage(backwardSteps), bundleHistory->GetRightImage(backwardSteps) 
 			};
-		//DEBUG_SHOW_QUADRUPLE_2D_CORRESPONDENCES( imageList, correspondenceMapList );
+		DEBUG_SHOW_QUADRUPLE_2D_CORRESPONDENCES( imageList, correspondenceMapList );
 		#endif
 
 		CorrespondenceMap3DPtr newCorrespondenceMap = Extract3DCorrespondencesFromTwoImagePairs(correspondenceMapList, pointCloudList);
