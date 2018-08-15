@@ -21,7 +21,11 @@
 #include <opencv2/features2d.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesExtraction2D
 {
 	/**
 	 * Extraction of keypoints from a 2D image using ORB (modified FAST detector
@@ -77,6 +81,8 @@ namespace dfn_ci
 
 			static int ConvertToScoreType(std::string scoreType);
 	};
+}
+}
 }
 
 #endif // ORBDETECTORDESCRIPTOR_HPP

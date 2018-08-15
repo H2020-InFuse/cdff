@@ -20,7 +20,11 @@ using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesExtraction2D
 {
 
 HarrisDetector2D::HarrisDetector2D()
@@ -172,6 +176,8 @@ void HarrisDetector2D::ValidateInputs(cv::Mat inputImage)
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "HarrisDetector2D error: input image is empty");
 }
 
+}
+}
 }
 
 /** @} */

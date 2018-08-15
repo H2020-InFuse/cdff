@@ -12,12 +12,14 @@
 #include <Sequences.h>
 #include <Eigen.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that estimates the geometric transformation between two sets of matched 3d points
      */
-    class Transform3DEstimationInterface : public DFNCommonInterface
+    class Transform3DEstimationInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -63,6 +65,7 @@ namespace dfn_ci
             bool outSuccess;
 	    float outError;
     };
+}
 }
 
 #endif // TRANSFORM3DESTIMATION_INTERFACE_HPP

@@ -33,7 +33,7 @@
 #include <Errors/Assert.hpp>
 
 using namespace dfpc_ci;
-using namespace dfn_ci;
+using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 
 /* --------------------------------------------------------------------------
  *

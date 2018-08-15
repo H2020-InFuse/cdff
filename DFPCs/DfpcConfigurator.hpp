@@ -83,7 +83,7 @@ namespace dfpc_ci {
 	    * @param optional, if this parameter is false, an error will be generated if the dfn was not successfully instantiated, if the parameter is true the method will return NULL if the dfn was not
 	    *		previously generated.
 	    */
-	    dfn_ci::DFNCommonInterface* GetDfn(std::string dfnName, bool optional = false);
+	    CDFF::DFN::DFNCommonInterface* GetDfn(std::string dfnName, bool optional = false);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -92,7 +92,7 @@ namespace dfpc_ci {
         protected:
 	    std::string extraParametersConfigurationFilePath;
 
-	    std::map<std::string, dfn_ci::DFNCommonInterface*> dfnsSet;
+	    std::map<std::string, CDFF::DFN::DFNCommonInterface*> dfnsSet;
 	    std::map<std::string, std::string> configurationFilesSet;
 
 	/* --------------------------------------------------------------------

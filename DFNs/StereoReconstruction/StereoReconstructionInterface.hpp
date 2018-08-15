@@ -14,13 +14,15 @@
 	#include <opencv2/imgproc/imgproc.hpp>
 #endif
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 	/**
 	 * DFN that turns a pair of stereo images into a reconstructed 3D scene
 	 * (in the form of a 3D pointcloud)
 	 */
-	class StereoReconstructionInterface : public DFNCommonInterface
+	class StereoReconstructionInterface : public CDFF::DFN::DFNCommonInterface
 	{
 		public:
 
@@ -65,6 +67,7 @@ namespace dfn_ci
 		#endif // TESTING
 
 	};
+}
 }
 
 #endif // STEREORECONSTRUCTION_INTERFACE_HPP

@@ -25,7 +25,11 @@
 
 #include <string>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Registration3D
 {
 	/**
 	 * Registration of Point clouds using the ICP algorithm and the CC library
@@ -110,6 +114,8 @@ namespace dfn_ci
 			void ValidateInputs(CCLib::ChunkedPointCloud* sourceCloud, CCLib::ChunkedPointCloud* sinkCloud);
 			void ValidateCloud(CCLib::ChunkedPointCloud* cloud);
 	};
+}
+}
 }
 
 #endif // ICPCC_HPP

@@ -27,7 +27,11 @@
 #include <stdlib.h>
 #include <string>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesDescription3D
 {
 	/**
 	 * Computation of descriptors for input 3D keypoints using SHOT (provided
@@ -130,6 +134,8 @@ namespace dfn_ci
 			void ValidateMandatoryInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, pcl::IndicesConstPtr indicesList);
 			bool IsNormalsCloudValid(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, pcl::PointCloud<pcl::Normal>::ConstPtr normalsCloud);
 	};
+}
+}
 }
 
 #endif // SHOTDESCRIPTOR3D_HPP

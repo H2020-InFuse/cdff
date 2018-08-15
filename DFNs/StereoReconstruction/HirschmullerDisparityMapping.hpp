@@ -18,7 +18,11 @@
 
 #include <opencv2/core/core.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace StereoReconstruction
 {
 	/**
 	 * Scene reconstruction (as a 3D pointcloud) from 2D stereo images, using
@@ -174,6 +178,8 @@ namespace dfn_ci
 				#define SAVE_DISPARITY_MATRIX(disparity)
 			#endif
 	};
+}
+}
 }
 
 #endif // HIRSCHMULLERDISPARITYMAPPING_HPP

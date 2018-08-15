@@ -35,7 +35,7 @@
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <FeaturesMatching3D/Icp3D.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 
 const std::string USAGE =
 " \n \

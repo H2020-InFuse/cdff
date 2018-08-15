@@ -32,7 +32,7 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::StereoReconstruction;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace FrameWrapper;
@@ -70,7 +70,7 @@ QualityTester::~QualityTester()
 	DELETE_IF_NOT_NULL(outputPointCloud);
 	}
 
-void QualityTester::SetDfn(std::string configurationFilePath, dfn_ci::StereoReconstructionInterface* dfn)
+void QualityTester::SetDfn(std::string configurationFilePath, CDFF::DFN::StereoReconstructionInterface* dfn)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;

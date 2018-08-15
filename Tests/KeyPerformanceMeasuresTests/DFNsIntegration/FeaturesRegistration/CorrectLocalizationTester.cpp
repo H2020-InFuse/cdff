@@ -31,7 +31,7 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;

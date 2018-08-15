@@ -41,7 +41,7 @@
 
 namespace dfpc_ci {
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
 using namespace CorrespondenceMap2DWrapper;

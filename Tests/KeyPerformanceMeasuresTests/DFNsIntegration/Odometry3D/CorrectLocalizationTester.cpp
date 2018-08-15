@@ -31,7 +31,7 @@
 #include<pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
@@ -112,7 +112,7 @@ void CorrectLocalizationTester::SetConfigurationFiles(std::string extractorConfi
 		}
 	}
 
-void CorrectLocalizationTester::SetDfns(dfn_ci::FeaturesExtraction3DInterface* extractor, dfn_ci::FeaturesDescription3DInterface* descriptor, dfn_ci::FeaturesMatching3DInterface* matcher)
+void CorrectLocalizationTester::SetDfns(CDFF::DFN::FeaturesExtraction3DInterface* extractor, CDFF::DFN::FeaturesDescription3DInterface* descriptor, CDFF::DFN::FeaturesMatching3DInterface* matcher)
 	{
 	this->extractor = extractor;
 	this->descriptor = descriptor;

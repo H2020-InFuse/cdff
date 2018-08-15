@@ -31,7 +31,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesExtraction2D;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
@@ -49,7 +49,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-SelectionTester::SelectionTester(std::string configurationFilePath, dfn_ci::FeaturesExtraction2DInterface* dfn) 
+SelectionTester::SelectionTester(std::string configurationFilePath, CDFF::DFN::FeaturesExtraction2DInterface* dfn) 
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;

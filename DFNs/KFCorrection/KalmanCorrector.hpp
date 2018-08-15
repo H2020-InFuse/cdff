@@ -17,7 +17,11 @@
 #include <opencv2/video/tracking.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace KFCorrection
 {
 	/**
 	 * Kalman corrector DFN (algorithm provided by OpenCV)
@@ -62,6 +66,8 @@ namespace dfn_ci
 			void ValidateInputs(cv::Mat inputState);
 			void Configure(const YAML::Node& configurationNode);
 	};
+}
+}
 }
 
 #endif // KALMANCORRECTOR_HPP

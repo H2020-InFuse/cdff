@@ -5,7 +5,9 @@
 
 #include "Registration3DInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 Registration3DInterface::Registration3DInterface()
@@ -46,6 +48,7 @@ bool Registration3DInterface::successOutput() const
     return outSuccess;
 }
 
+}
 }
 
 /** @} */

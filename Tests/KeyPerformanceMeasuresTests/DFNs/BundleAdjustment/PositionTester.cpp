@@ -31,7 +31,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <Eigen/Dense>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::BundleAdjustment;
 using namespace Converters;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
@@ -48,7 +48,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-PositionTester::PositionTester(std::string configurationFilePath, dfn_ci::BundleAdjustmentInterface* dfn) 
+PositionTester::PositionTester(std::string configurationFilePath, CDFF::DFN::BundleAdjustmentInterface* dfn) 
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;

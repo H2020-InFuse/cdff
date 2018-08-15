@@ -74,9 +74,9 @@ namespace dfpc_ci {
 	private:
 		DfpcConfigurator configurator;
 
-		dfn_ci::FeaturesExtraction3DInterface* featuresExtractor3d;
-		dfn_ci::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
-		dfn_ci::FeaturesMatching3DInterface* featuresMatcher3d;
+		CDFF::DFN::FeaturesExtraction3DInterface* featuresExtractor3d;
+		CDFF::DFN::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
+		CDFF::DFN::FeaturesMatching3DInterface* featuresMatcher3d;
 
 		PointCloudWrapper::PointCloudPtr sceneCloud;
 		PointCloudWrapper::PointCloudPtr lastModelCloud;

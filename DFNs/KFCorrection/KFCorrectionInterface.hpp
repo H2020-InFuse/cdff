@@ -9,12 +9,14 @@
 #include "DFNCommonInterface.hpp"
 #include <RigidBodyState.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN for Kalman filtering
      */
-    class KFCorrectionInterface : public DFNCommonInterface
+    class KFCorrectionInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -56,6 +58,7 @@ namespace dfn_ci
             asn1SccRigidBodyState outCorrectedState;
             asn1SccRigidBodyState outStateCovariance;
     };
+}
 }
 
 #endif // KFCORRECTION_INTERFACE_HPP

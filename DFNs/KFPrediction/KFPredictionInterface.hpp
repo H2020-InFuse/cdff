@@ -10,12 +10,14 @@
 #include <Time.h>
 #include <RigidBodyState.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN for Kalman filtering
      */
-    class KFPredictionInterface : public DFNCommonInterface
+    class KFPredictionInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -51,6 +53,7 @@ namespace dfn_ci
             asn1SccRigidBodyState outPredictedState;
             asn1SccRigidBodyState outPredictedStateCovariance;
     };
+}
 }
 
 #endif // KFPREDICTION_INTERFACE_HPP

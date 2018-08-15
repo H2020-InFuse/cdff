@@ -20,7 +20,11 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace StereoReconstruction
 {
 	/**
 	 * Scene reconstruction (as a 3D pointcloud) from 2D stereo images, using
@@ -155,6 +159,8 @@ namespace dfn_ci
 				#define SAVE_DISPARITY_MATRIX(visualMap)
 			#endif
 	};
+}
+}
 }
 
 #endif // SCANLINEOPTIMIZATION_HPP

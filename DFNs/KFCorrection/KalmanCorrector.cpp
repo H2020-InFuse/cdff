@@ -14,7 +14,11 @@
 
 using namespace Helpers;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace KFCorrection
 {
 
 KalmanCorrector::KalmanCorrector() : KF(12, 6, 0)
@@ -145,6 +149,8 @@ void KalmanCorrector::ValidateInputs(cv::Mat inputState)
 		"Kalman Corrector: input must be 12-element column vector");
 }
 
+}
+}
 }
 
 /** @} */

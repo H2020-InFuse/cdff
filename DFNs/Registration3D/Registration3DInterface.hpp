@@ -10,12 +10,14 @@
 #include <Pointcloud.h>
 #include <Pose.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that registers a source point cloud on a sink point cloud
      */
-    class Registration3DInterface : public DFNCommonInterface
+    class Registration3DInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -81,6 +83,7 @@ namespace dfn_ci
             asn1SccPose outTransform;
             bool outSuccess;
     };
+}
 }
 
 #endif // REGISTRATION3D_INTERFACE_HPP

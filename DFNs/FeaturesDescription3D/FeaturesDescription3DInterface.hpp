@@ -10,12 +10,14 @@
 #include <VisualPointFeatureVector3D.h>
 #include <Pointcloud.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that computes descriptors for 3D keypoints
      */
-    class FeaturesDescription3DInterface : public DFNCommonInterface
+    class FeaturesDescription3DInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -77,6 +79,7 @@ namespace dfn_ci
             asn1SccPointcloud inNormals;
             asn1SccVisualPointFeatureVector3D outFeatures;
     };
+}
 }
 
 #endif // FEATURESDESCRIPTION3D_INTERFACE_HPP

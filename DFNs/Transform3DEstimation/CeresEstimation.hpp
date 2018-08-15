@@ -24,7 +24,11 @@
 #include <yaml-cpp/yaml.h>
 #include <ceres/ceres.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Transform3DEstimation
 {
 
 	/**
@@ -92,6 +96,8 @@ namespace dfn_ci
 			void ValidateParameters();
 			void ValidateInputs(const CorrespondenceMap3DWrapper::CorrespondenceMap3D& map);
 	};
+}
+}
 }
 
 #endif // CERESESTIMATION_HPP

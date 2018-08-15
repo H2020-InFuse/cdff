@@ -14,7 +14,11 @@ using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace PointCloudReconstruction2DTo3D
 {
 
 Triangulation::Triangulation()
@@ -199,6 +203,8 @@ void Triangulation::ValidateInputs(const CorrespondenceMap2D& matches, const Pos
 	// TODO
 }
 
+}
+}
 }
 
 /** @} */

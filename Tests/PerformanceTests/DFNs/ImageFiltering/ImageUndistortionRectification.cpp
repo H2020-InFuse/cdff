@@ -29,7 +29,7 @@
 #include "ImageFiltering.hpp"
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::ImageFiltering;
 
 const std::string USAGE =
 	"The program takes up to five optional parameters: \n \

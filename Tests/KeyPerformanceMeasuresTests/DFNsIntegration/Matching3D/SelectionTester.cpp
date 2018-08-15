@@ -32,7 +32,7 @@
 #include<pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
@@ -89,7 +89,7 @@ SelectionTester::~SelectionTester()
 	DELETE_IF_NOT_NULL(sourcePoseInSink);
 	}
 
-void SelectionTester::SetDfns(dfn_ci::FeaturesDescription3DInterface* descriptor, dfn_ci::FeaturesMatching3DInterface* matcher)
+void SelectionTester::SetDfns(CDFF::DFN::FeaturesDescription3DInterface* descriptor, CDFF::DFN::FeaturesMatching3DInterface* matcher)
 	{
 	this->descriptor = descriptor;
 	this->matcher = matcher;

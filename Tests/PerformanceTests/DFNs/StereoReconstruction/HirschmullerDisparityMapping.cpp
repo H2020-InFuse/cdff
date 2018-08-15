@@ -29,7 +29,7 @@
 #include "StereoReconstruction.hpp"
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::StereoReconstruction;
 
 
 const std::string USAGE =

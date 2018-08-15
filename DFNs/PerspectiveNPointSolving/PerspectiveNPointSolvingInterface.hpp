@@ -11,12 +11,14 @@
 #include <Pointcloud.h>
 #include <VisualPointFeatureVector2D.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that solves the Perspective-n-Point problem
      */
-    class PerspectiveNPointSolvingInterface : public DFNCommonInterface
+    class PerspectiveNPointSolvingInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -56,6 +58,7 @@ namespace dfn_ci
             asn1SccPose outCamera;
             bool outSuccess;
     };
+}
 }
 
 #endif // PERSPECTIVENPOINTSOLVING_INTERFACE_HPP

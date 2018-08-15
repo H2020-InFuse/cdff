@@ -9,12 +9,14 @@
 #include "DFNCommonInterface.hpp"
 #include <Frame.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that applies an image processing filter to a 2D image
      */
-    class ImageFilteringInterface : public DFNCommonInterface
+    class ImageFilteringInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -38,6 +40,7 @@ namespace dfn_ci
             asn1SccFrame inImage;
             asn1SccFrame outImage;
     };
+}
 }
 
 #endif // IMAGEFILTERING_INTERFACE_HPP

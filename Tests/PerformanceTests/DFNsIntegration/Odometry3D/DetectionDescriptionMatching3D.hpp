@@ -62,9 +62,9 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 	public:
 		struct DFNsSet
 			{
-			dfn_ci::FeaturesExtraction3DInterface* extractor;
-			dfn_ci::FeaturesDescription3DInterface* descriptor;
-			dfn_ci::FeaturesMatching3DInterface* matcher;
+			CDFF::DFN::FeaturesExtraction3DInterface* extractor;
+			CDFF::DFN::FeaturesDescription3DInterface* descriptor;
+			CDFF::DFN::FeaturesMatching3DInterface* matcher;
 			};
 
 		DetectionDescriptionMatching3DTestInterface(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName, DFNsSet dfnsSet);
@@ -91,9 +91,9 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 		bool icpSuccess;
 		PoseWrapper::Pose3DConstPtr modelPoseInScene;
 
-		dfn_ci::FeaturesExtraction3DInterface* extractor;
-		dfn_ci::FeaturesDescription3DInterface* descriptor;
-		dfn_ci::FeaturesMatching3DInterface* matcher;
+		CDFF::DFN::FeaturesExtraction3DInterface* extractor;
+		CDFF::DFN::FeaturesDescription3DInterface* descriptor;
+		CDFF::DFN::FeaturesMatching3DInterface* matcher;
 
 		Aggregator* groundPositionDistanceAggregator;
 		Aggregator* groundOrientationDistanceAggregator;

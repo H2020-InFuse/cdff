@@ -36,7 +36,7 @@
 #include <string>
 #include <vector>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 
 /* --------------------------------------------------------------------------
  *

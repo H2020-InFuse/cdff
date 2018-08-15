@@ -20,7 +20,11 @@ using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
 using namespace BaseTypesWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace BundleAdjustment
 {
 
 SvdDecomposition::SvdDecomposition()
@@ -264,6 +268,8 @@ cv::Mat SvdDecomposition::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatri
 
 	return cvCameraMatrix;
 	}
+}
+}
 }
 
 /** @} */

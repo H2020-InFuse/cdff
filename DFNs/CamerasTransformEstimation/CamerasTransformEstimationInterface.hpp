@@ -11,14 +11,16 @@
 #include <CorrespondenceMap2D.h>
 #include <Eigen.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that estimates the geometric transformation between two cameras
      * based on pairs of 2D matching keypoints found in two images that the
      * cameras captured
      */
-    class CamerasTransformEstimationInterface : public DFNCommonInterface
+    class CamerasTransformEstimationInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -69,6 +71,7 @@ namespace dfn_ci
             asn1SccPose outTransform;
             bool outSuccess;
     };
+}
 }
 
 #endif // CAMERASTRANSFORMESTIMATION_INTERFACE_HPP

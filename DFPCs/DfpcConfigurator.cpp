@@ -33,7 +33,7 @@
 
 namespace dfpc_ci {
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 
 /* --------------------------------------------------------------------------
  *
@@ -77,7 +77,7 @@ std::string DfpcConfigurator::GetExtraParametersConfigurationFilePath()
 
 DFNCommonInterface* DfpcConfigurator::GetDfn(std::string dfnName, bool optional)
 	{
-	std::map<std::string, dfn_ci::DFNCommonInterface*>::iterator dfnElement = dfnsSet.find(dfnName);
+	std::map<std::string, CDFF::DFN::DFNCommonInterface*>::iterator dfnElement = dfnsSet.find(dfnName);
 	if ( dfnElement != dfnsSet.end() )
 		{
 		return dfnElement->second;

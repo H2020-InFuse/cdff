@@ -31,7 +31,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
@@ -84,7 +84,7 @@ SelectionTester::~SelectionTester()
 	DELETE_IF_NOT_NULL(referenceCorrespondenceMap);
 	}
 
-void SelectionTester::SetDfns(dfn_ci::FeaturesDescription2DInterface* descriptor, dfn_ci::FeaturesMatching2DInterface* matcher)
+void SelectionTester::SetDfns(CDFF::DFN::FeaturesDescription2DInterface* descriptor, CDFF::DFN::FeaturesMatching2DInterface* matcher)
 	{
 	this->descriptor = descriptor;
 	this->matcher = matcher;

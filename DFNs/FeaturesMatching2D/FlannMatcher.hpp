@@ -22,7 +22,11 @@
 #include <opencv2/opencv_modules.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesMatching2D
 {
 	/**
 	 * 2D feature matching using FLANN (provided by OpenCV).
@@ -191,6 +195,8 @@ namespace dfn_ci
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix);
 	};
+}
+}
 }
 
 #endif // FLANNMATCHER_HPP

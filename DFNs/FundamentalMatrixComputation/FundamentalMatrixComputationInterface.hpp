@@ -10,13 +10,15 @@
 #include <Eigen.h>
 #include <CorrespondenceMap2D.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that estimates the fundamental matrix of a camera pair based on pairs
      * of 2D matching keypoints found in two images that the cameras captured
      */
-    class FundamentalMatrixComputationInterface : public DFNCommonInterface
+    class FundamentalMatrixComputationInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -55,6 +57,7 @@ namespace dfn_ci
             asn1SccMatrix3d outFundamentalMatrix;
             bool outSuccess;
     };
+}
 }
 
 #endif // FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP

@@ -98,14 +98,14 @@ namespace dfpc_ci {
 		ReconstructionFromStereoOptionsSet parameters;
 		static const ReconstructionFromStereoOptionsSet DEFAULT_PARAMETERS;
 
-		dfn_ci::ImageFilteringInterface* leftFilter;
-		dfn_ci::ImageFilteringInterface* rightFilter;
-		dfn_ci::FeaturesExtraction2DInterface* featuresExtractor;
-		dfn_ci::FeaturesDescription2DInterface* optionalFeaturesDescriptor;
-		dfn_ci::FeaturesMatching2DInterface* featuresMatcher;	
-		dfn_ci::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;	
-		dfn_ci::CamerasTransformEstimationInterface* cameraTransformEstimator;
-		dfn_ci::StereoReconstructionInterface* reconstructor3D;
+		CDFF::DFN::ImageFilteringInterface* leftFilter;
+		CDFF::DFN::ImageFilteringInterface* rightFilter;
+		CDFF::DFN::FeaturesExtraction2DInterface* featuresExtractor;
+		CDFF::DFN::FeaturesDescription2DInterface* optionalFeaturesDescriptor;
+		CDFF::DFN::FeaturesMatching2DInterface* featuresMatcher;	
+		CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;	
+		CDFF::DFN::CamerasTransformEstimationInterface* cameraTransformEstimator;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3D;
 
 		FrameWrapper::FrameConstPtr pastLeftImage;
 		FrameWrapper::FramePtr currentLeftImage;

@@ -23,7 +23,11 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Transform3DEstimation
 {
 
 	/**
@@ -70,6 +74,8 @@ namespace dfn_ci
 			void ValidateParameters();
 			void ValidateInputs(const CorrespondenceMap3DWrapper::CorrespondenceMap3D& map);
 	};
+}
+}
 }
 
 #endif // LEASTSQUARESMINIMIZATION_HPP

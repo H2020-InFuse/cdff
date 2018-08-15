@@ -18,7 +18,11 @@
 #include <SupportTypes.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesMatching3D
 {
 	/**
 	 * 3D feature matching using ICP (provided by PCL): detect and find the
@@ -78,6 +82,8 @@ namespace dfn_ci
 			void ValidateCloud(
 				Converters::SupportTypes::PointCloudWithFeatures cloud);
 	};
+}
+}
 }
 
 #endif // ICP3D_HPP

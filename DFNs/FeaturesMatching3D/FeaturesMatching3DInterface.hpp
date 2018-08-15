@@ -10,12 +10,14 @@
 #include <VisualPointFeatureVector3D.h>
 #include <Pose.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that matches 3D keypoints
      */
-    class FeaturesMatching3DInterface : public DFNCommonInterface
+    class FeaturesMatching3DInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -60,6 +62,7 @@ namespace dfn_ci
             asn1SccPose outTransform;
             bool outSuccess;
     };
+}
 }
 
 #endif // FEATURESMATCHING3D_INTERFACE_HPP

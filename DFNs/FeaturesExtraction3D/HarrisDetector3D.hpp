@@ -25,7 +25,11 @@
 #include <stdlib.h>
 #include <string>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesExtraction3D
 {
 	/**
 	 * Extraction of keypoints in a 3D pointcloud using the Harris Detector
@@ -104,6 +108,8 @@ namespace dfn_ci
 			void ValidateParameters();
 			void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 	};
+}
+}
 }
 
 #endif // HARRISDETECTOR3D_HPP

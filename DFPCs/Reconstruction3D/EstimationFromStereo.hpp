@@ -119,14 +119,14 @@ namespace dfpc_ci {
 		static const EstimationFromStereoOptionsSet DEFAULT_PARAMETERS;
 
 		//Necessary DFNs
-		dfn_ci::ImageFilteringInterface* optionalLeftFilter;
-		dfn_ci::ImageFilteringInterface* optionalRightFilter;
-		dfn_ci::StereoReconstructionInterface* reconstructor3d;
-		dfn_ci::FeaturesExtraction2DInterface* featuresExtractor2d;
-		dfn_ci::FeaturesDescription2DInterface* optionalFeaturesDescriptor2d;
-		dfn_ci::FeaturesMatching2DInterface* featuresMatcher2d;
-		dfn_ci::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
-		dfn_ci::Transform3DEstimationInterface* transformEstimator;
+		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
+		CDFF::DFN::FeaturesExtraction2DInterface* featuresExtractor2d;
+		CDFF::DFN::FeaturesDescription2DInterface* optionalFeaturesDescriptor2d;
+		CDFF::DFN::FeaturesMatching2DInterface* featuresMatcher2d;
+		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
+		CDFF::DFN::Transform3DEstimationInterface* transformEstimator;
 
 		//Required Variables for DFNs processing
 		FrameWrapper::FramePtr leftImage;
@@ -172,7 +172,7 @@ namespace dfpc_ci {
 
 		void FilterImages();
 		void ComputeVisualPointFeatures();
-		void FilterImage(FrameWrapper::FramePtr image, dfn_ci::ImageFilteringInterface* filter, FrameWrapper::FramePtr& filteredImage);
+		void FilterImage(FrameWrapper::FramePtr image, CDFF::DFN::ImageFilteringInterface* filter, FrameWrapper::FramePtr& filteredImage);
 		void ComputeStereoPointCloud();
 		void ExtractFeatures(FrameWrapper::FrameConstPtr filteredImage, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& keypointsVector);
 		void DescribeFeatures(

@@ -18,7 +18,11 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/video/tracking.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace KFPrediction
 {
 	/**
 	 * Kalman predictor DFN (algorithm provided by OpenCV)
@@ -76,6 +80,8 @@ namespace dfn_ci
 
 			void Configure(const YAML::Node& configurationNode);
 	};
+}
+}
 }
 
 #endif // KALMANPREDICTOR_HPP

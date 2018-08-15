@@ -21,7 +21,11 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace CamerasTransformEstimation
 {
 
 	/**
@@ -100,6 +104,8 @@ namespace dfn_ci
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat fundamentalMatrix, cv::Mat CorrespondenceMap);
 	};
+}
+}
 }
 
 #endif // ESSENTIALMATRIXDECOMPOSITION_HPP

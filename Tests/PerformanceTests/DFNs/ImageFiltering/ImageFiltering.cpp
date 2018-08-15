@@ -29,7 +29,7 @@
 #include "ImageFiltering.hpp"
 #include <fstream>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::ImageFiltering;
 using namespace Converters;
 using namespace FrameWrapper;
 

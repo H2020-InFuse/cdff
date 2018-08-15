@@ -29,7 +29,7 @@
 #include "StereoReconstruction.hpp"
 #include <StereoReconstruction/ScanlineOptimization.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::StereoReconstruction;
 
 const std::string USAGE =
 	"This method takes up to eight optional parameters: \n \

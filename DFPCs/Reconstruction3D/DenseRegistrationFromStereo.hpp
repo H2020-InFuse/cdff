@@ -91,10 +91,10 @@ namespace dfpc_ci {
 		DenseRegistrationFromStereoOptionsSet parameters;
 		static const DenseRegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
 
-		dfn_ci::ImageFilteringInterface* optionalLeftFilter;
-		dfn_ci::ImageFilteringInterface* optionalRightFilter;
-		dfn_ci::StereoReconstructionInterface* reconstructor3D;
-		dfn_ci::Registration3DInterface* cloudRegistrator;
+		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3D;
+		CDFF::DFN::Registration3DInterface* cloudRegistrator;
 
 		FrameWrapper::FramePtr leftImage;
 		FrameWrapper::FramePtr rightImage;

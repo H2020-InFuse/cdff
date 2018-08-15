@@ -10,12 +10,14 @@
 #include <VisualPointFeatureVector2D.h>
 #include <CorrespondenceMap2D.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that matches 2D keypoints
      */
-    class FeaturesMatching2DInterface : public DFNCommonInterface
+    class FeaturesMatching2DInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -45,6 +47,7 @@ namespace dfn_ci
             asn1SccVisualPointFeatureVector2D inSinkFeatures;
             asn1SccCorrespondenceMap2D outMatches;
     };
+}
 }
 
 #endif // FEATURESMATCHING2D_INTERFACE_HPP

@@ -11,13 +11,15 @@
 #include <Pose.h>
 #include <Pointcloud.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that turns pairs of 2D matching keypoints into a reconstructed
      * 3D pointcloud of keypoints
      */
-    class PointCloudReconstruction2DTo3DInterface : public DFNCommonInterface
+    class PointCloudReconstruction2DTo3DInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -55,6 +57,7 @@ namespace dfn_ci
             asn1SccPose inPose;
             asn1SccPointcloud outPointcloud;
     };
+}
 }
 
 #endif // POINTCLOUDRECONSTRUCTION2DTO3D_INTERFACE_HPP

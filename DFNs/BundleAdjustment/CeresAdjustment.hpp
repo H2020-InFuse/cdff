@@ -21,7 +21,11 @@
 #include <ceres/ceres.h>
 #include <CorrespondenceMaps2DSequenceToMatConverter.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace BundleAdjustment
 {
 	/**
 	 * Implementation of the factorization algorithm by Tomasi and Kanade
@@ -93,6 +97,8 @@ namespace dfn_ci
 			cv::Mat CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix);
 
 	};
+}
+}
 }
 
 #endif // CERESADJUSTMENT_HPP

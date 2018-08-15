@@ -11,12 +11,14 @@
 #include <PosesSequence.hpp>
 #include <PointCloud.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that determines the poses of a camera from the images taken at those poses.
      */
-    class BundleAdjustmentInterface : public DFNCommonInterface
+    class BundleAdjustmentInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -84,6 +86,7 @@ namespace dfn_ci
             bool outSuccess;
 	    float outError;
     };
+}
 }
 
 #endif // BUNDLEADJUSTMENT_INTERFACE_HPP

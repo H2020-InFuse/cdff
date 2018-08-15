@@ -11,7 +11,7 @@
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesDescription3D;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace VisualPointFeatureVector3DWrapper;

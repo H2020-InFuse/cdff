@@ -93,12 +93,12 @@ namespace dfpc_ci {
 		RegistrationFromStereoOptionsSet parameters;
 		static const RegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
 
-		dfn_ci::ImageFilteringInterface* optionalLeftFilter;
-		dfn_ci::ImageFilteringInterface* optionalRightFilter;
-		dfn_ci::StereoReconstructionInterface* reconstructor3D;
-		dfn_ci::FeaturesExtraction3DInterface* featuresExtractor3d;
-		dfn_ci::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
-		dfn_ci::FeaturesMatching3DInterface* featuresMatcher3d;
+		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3D;
+		CDFF::DFN::FeaturesExtraction3DInterface* featuresExtractor3d;
+		CDFF::DFN::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
+		CDFF::DFN::FeaturesMatching3DInterface* featuresMatcher3d;
 
 		FrameWrapper::FramePtr leftImage;
 		FrameWrapper::FramePtr rightImage;

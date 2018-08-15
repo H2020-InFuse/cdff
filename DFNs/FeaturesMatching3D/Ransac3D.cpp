@@ -28,7 +28,11 @@ using namespace PoseWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace SupportTypes;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesMatching3D
 {
 
 Ransac3D::Ransac3D()
@@ -204,6 +208,8 @@ void Ransac3D::ValidateCloud(PointCloudWithFeatures cloud)
 	}
 }
 
+}
+}
 }
 
 /** @} */

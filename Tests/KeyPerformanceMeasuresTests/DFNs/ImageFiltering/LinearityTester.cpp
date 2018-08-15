@@ -32,7 +32,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::ImageFiltering;
 using namespace Converters;
 using namespace FrameWrapper;
 
@@ -63,7 +63,7 @@ LinearityTester::~LinearityTester()
 	DELETE_IF_NOT_NULL(outputFrame);
 	}
 
-void LinearityTester::SetDfn(std::string configurationFilePath, dfn_ci::ImageFilteringInterface* dfn)
+void LinearityTester::SetDfn(std::string configurationFilePath, CDFF::DFN::ImageFilteringInterface* dfn)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;

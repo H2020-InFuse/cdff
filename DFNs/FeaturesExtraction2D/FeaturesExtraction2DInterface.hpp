@@ -10,12 +10,14 @@
 #include <VisualPointFeatureVector2D.h>
 #include <Frame.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that extracts 2D keypoints from a 2D image
      */
-    class FeaturesExtraction2DInterface : public DFNCommonInterface
+    class FeaturesExtraction2DInterface : public CDFF::DFN::DFNCommonInterface
     {
         public:
 
@@ -39,6 +41,7 @@ namespace dfn_ci
             asn1SccFrame inFrame;
             asn1SccVisualPointFeatureVector2D outFeatures;
     };
+}
 }
 
 #endif // FEATURESEXTRACTION2D_INTERFACE_HPP

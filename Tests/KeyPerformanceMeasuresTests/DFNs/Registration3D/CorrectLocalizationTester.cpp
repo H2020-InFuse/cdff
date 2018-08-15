@@ -31,7 +31,7 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::Registration3D;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
@@ -48,7 +48,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-CorrectLocalizationTester::CorrectLocalizationTester(std::string configurationFile, dfn_ci::Registration3DInterface* dfn) 
+CorrectLocalizationTester::CorrectLocalizationTester(std::string configurationFile, CDFF::DFN::Registration3DInterface* dfn) 
 	{
 	this->configurationFile = configurationFile;
 	this->dfn = dfn;

@@ -20,7 +20,11 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Registration3D
 {
 	/**
 	 * Registration of pointclouds using the ICP algorithm
@@ -63,6 +67,8 @@ namespace dfn_ci
 			void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
 			void ValidateCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
 	};
+}
+}
 }
 
 #endif // ICP3D_HPP

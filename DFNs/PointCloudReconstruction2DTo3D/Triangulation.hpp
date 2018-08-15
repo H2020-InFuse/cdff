@@ -20,7 +20,11 @@
 
 #include <opencv2/calib3d.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace PointCloudReconstruction2DTo3D
 {
 
 	/**
@@ -86,6 +90,8 @@ namespace dfn_ci
 			void ValidateParameters();
 			void ValidateInputs(const CorrespondenceMap2DWrapper::CorrespondenceMap2D& matches, const PoseWrapper::Pose3D& pose);
 	};
+}
+}
 }
 
 #endif // TRIANGULATION_HPP

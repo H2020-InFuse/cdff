@@ -34,7 +34,7 @@
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 
 /* --------------------------------------------------------------------------
  *

@@ -21,7 +21,11 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace ImageFiltering
 {
 	/**
 	 * Undistort and rectify a 2D image (two-in-one filter provided by OpenCV).
@@ -183,6 +187,8 @@ namespace dfn_ci
 			void ConvertParametersToCvMatrices();
 			void ComputeUndistortionRectificationMap();
 	};
+}
+}
 }
 
 #endif // IMAGEUNDISTORTIONRECTIFICATION_HPP

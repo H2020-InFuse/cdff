@@ -19,7 +19,11 @@
 
 #include <opencv2/core/core.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace PerspectiveNPointSolving
 {
 	/**
 	 * Iterative Perspective-n-Point algorithm (provided by OpenCV).
@@ -65,6 +69,8 @@ namespace dfn_ci
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat points, cv::Mat projections);
 	};
+}
+}
 }
 
 #endif // ITERATIVEPNPSOLVER_HPP

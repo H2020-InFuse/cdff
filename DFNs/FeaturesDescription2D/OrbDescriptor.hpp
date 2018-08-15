@@ -21,7 +21,11 @@
 #include <opencv2/features2d.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesDescription2D
 {
 	/**
 	 * Computation of descriptors for input 2D keypoints using ORB (rotated
@@ -78,6 +82,8 @@ namespace dfn_ci
 
 			static int ConvertToScoreType(std::string scoreType);
 	};
+}
+}
 }
 
 #endif // ORBDESCRIPTOR_HPP
