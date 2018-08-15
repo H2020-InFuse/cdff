@@ -1,7 +1,6 @@
-name: VisualSlam
+name: VisualSlamDepth
 doc: Simultaneous Localization and Mapping which relies on odometry, stereo images and depths images.
 dfns:
-    - name: FeatAndSigExtractorStereo
     - name: FeatAndSigExtractorDepth
     - name: PoseEstimator
     - name: Relocaliser
@@ -21,18 +20,6 @@ input_ports:
       connections:
         - dfn: FeatAndSigExtractorDepth
           port: leftImage
-    - name: leftImage
-      type: asn1SccFrame
-      doc: ""
-      connections:
-        - dfn: FeatAndSigExtractorStereo
-          port: leftImage
-    - name: rightImage
-      type: asn1SccFrame
-      doc: ""
-      connections:
-        - dfn: FeatAndSigExtractorStereo
-          port: rightImage
     - name: roverPose
       type: asn1SccTransformWithCovariance
       doc: "Estimated pose of the rover from Odometry"
@@ -53,25 +40,6 @@ output_ports:
 #          - output_type: asn1SccMap
 #            doc : "Delivers the current Map"
 internal_connections:
-    - from:
-        dfn: FeatAndSigExtractorStereo
-        port: descriptors
-      to:
-        dfn: Relocaliser
-        port: curFeatSig
-    - from:
-        dfn: FeatAndSigExtractorStereo
-        port: descriptors
-      to:
-        dfn: LoopClosure
-        port: curFeatSig
-    # TODO Ask if the following connection is missing in their description
-    #- from:
-    #    dfn: FeatAndSigExtractorStereo
-    #    port: descriptors
-    #  to:
-    #    dfn: Tracker
-    #    port: curFeatSig
     - from:
         dfn: FeatAndSigExtractorDepth
         port: descriptors

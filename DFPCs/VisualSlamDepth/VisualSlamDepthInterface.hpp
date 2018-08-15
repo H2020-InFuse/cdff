@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef VISUALSLAM_INTERFACE_HPP
-#define VISUALSLAM_INTERFACE_HPP
+#ifndef VISUALSLAMDEPTH_INTERFACE_HPP
+#define VISUALSLAMDEPTH_INTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
 #include <Frame.h>
@@ -15,12 +15,12 @@ namespace dfpc_ci
     /**
      * Simultaneous Localization and Mapping which relies on odometry, stereo images and depths images.
      */
-    class VisualSlamInterface : public DFPCCommonInterface
+    class VisualSlamDepthInterface : public DFPCCommonInterface
     {
         public:
 
-            VisualSlamInterface();
-            virtual ~VisualSlamInterface();
+            VisualSlamDepthInterface();
+            virtual ~VisualSlamDepthInterface();
 
             /**
              * Send value to input port "depthImage"
@@ -32,16 +32,6 @@ namespace dfpc_ci
              * @param rgbImage: 
              */
             virtual void rgbImageInput(const asn1SccFrame& data);
-            /**
-             * Send value to input port "leftImage"
-             * @param leftImage: 
-             */
-            virtual void leftImageInput(const asn1SccFrame& data);
-            /**
-             * Send value to input port "rightImage"
-             * @param rightImage: 
-             */
-            virtual void rightImageInput(const asn1SccFrame& data);
             /**
              * Send value to input port "roverPose"
              * @param roverPose: Estimated pose of the rover from Odometry
@@ -59,14 +49,12 @@ namespace dfpc_ci
 
             asn1SccFrame inDepthImage;
             asn1SccFrame inRgbImage;
-            asn1SccFrame inLeftImage;
-            asn1SccFrame inRightImage;
             asn1SccTransformWithCovariance inRoverPose;
             asn1SccTransformWithCovariance outEstimatedPose;
 
     };
 }
 
-#endif //  VISUALSLAM_INTERFACE_HPP
+#endif //  VISUALSLAMDEPTH_INTERFACE_HPP
 
 /** @} */
