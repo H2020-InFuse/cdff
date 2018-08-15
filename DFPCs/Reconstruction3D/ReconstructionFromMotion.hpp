@@ -54,7 +54,12 @@
 #include <Matrix.hpp>
 
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -160,6 +165,8 @@ namespace dfpc_ci {
 		bool ComputePastToCurrentTransform();
 		void ComputeStereoPointCloud();
     };
+}
+}
 }
 #endif
 /* ReconstructionFromMotion.hpp */

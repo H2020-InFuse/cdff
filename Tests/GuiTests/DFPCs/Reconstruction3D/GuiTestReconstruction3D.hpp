@@ -72,7 +72,7 @@ class GuiTestReconstruction3D
 		GuiTestReconstruction3D(std::string configurationFilePath, std::string imageFilesFolder, std::string imagesListFileName, ImageFilesType imageFilesType);
 		~GuiTestReconstruction3D();
 
-		void Run(dfpc_ci::Reconstruction3DInterface& reconstructor3d);
+		void Run(CDFF::DFPC::Reconstruction3DInterface& reconstructor3d);
 
 	/* --------------------------------------------------------------------
 	 * Protected

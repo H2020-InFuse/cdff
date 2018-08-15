@@ -33,7 +33,7 @@
 #include <Reconstruction3D/RegistrationFromStereo.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::Reconstruction3D;
 
 /* --------------------------------------------------------------------------
  *

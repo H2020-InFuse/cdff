@@ -11,9 +11,11 @@
 #include <Pose.h>
 #include <Pointcloud.h>
 
-namespace dfpc_ci
+namespace CDFF
 {
-    class Reconstruction3DInterface : public DFPCCommonInterface
+namespace DFPC
+{
+    class Reconstruction3DInterface : public CDFF::DFPC::DFPCCommonInterface
     {
         public:
 
@@ -57,6 +59,7 @@ namespace dfpc_ci
             bool outSuccess;
 
     };
+}
 }
 
 #endif //  RECONSTRUCTION3D_INTERFACE_HPP

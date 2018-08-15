@@ -36,7 +36,12 @@
 #include <BaseTypes.hpp>
 #include <Frame.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -132,6 +137,8 @@ namespace dfpc_ci {
 	private:
 
     };
+}
+}
 }
 #endif
 /* Map.hpp */

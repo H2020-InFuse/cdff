@@ -37,7 +37,12 @@
 #include <pcl/point_types.h>
 #include <PclPointCloudToPointCloudConverter.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -98,6 +103,8 @@ namespace dfpc_ci {
 
 
     };
+}
+}
 }
 #endif
 /* Map.hpp */

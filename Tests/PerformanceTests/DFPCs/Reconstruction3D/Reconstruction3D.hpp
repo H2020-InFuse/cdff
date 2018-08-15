@@ -55,7 +55,7 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		Reconstruction3DTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, dfpc_ci::Reconstruction3DInterface* reconstructor);
+		Reconstruction3DTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, CDFF::DFPC::Reconstruction3DInterface* reconstructor);
 		~Reconstruction3DTestInterface();
 
 		void SetImageFilesPath(std::string baseFolderPath, std::string imagesListFileName);
@@ -78,8 +78,8 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 		bool saveOutputCloud;
 		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 
-		dfpc_ci::ObservedScene* map;
-		dfpc_ci::Reconstruction3DInterface* reconstructor;
+		CDFF::DFPC::ObservedScene* map;
+		CDFF::DFPC::Reconstruction3DInterface* reconstructor;
 		void ReadImagesList();
 	
 		std::vector<std::string> leftImageFileNamesList;

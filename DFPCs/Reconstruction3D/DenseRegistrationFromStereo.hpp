@@ -46,7 +46,12 @@
 #include <Pose.hpp>
 
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -116,6 +121,8 @@ namespace dfpc_ci {
 		void ComputeStereoPointCloud();
 		bool RegisterPointCloudOnScene();
     };
+}
+}
 }
 #endif
 /* DenseRegistrationFromStereo.hpp */

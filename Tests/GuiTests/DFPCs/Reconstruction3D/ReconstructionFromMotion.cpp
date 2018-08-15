@@ -32,7 +32,7 @@
 #include <Reconstruction3D/ReconstructionFromMotion.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::Reconstruction3D;
 
 const std::string CONFIGURATION_FILE_PATH = "../../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcReconstructionFromMotion_conf02.yaml";
 const std::string IMAGE_FILES_FOLDER = "../../tests/Data/Images/";

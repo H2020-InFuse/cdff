@@ -39,7 +39,12 @@
 		} \
 	} \
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 using namespace VisualPointFeatureVector2DWrapper;
@@ -505,6 +510,8 @@ void ReconstructionFromMotion::ComputeStereoPointCloud()
 	DEBUG_SHOW_POINT_CLOUD(pointCloud);
 	}
 
+}
+}
 }
 
 

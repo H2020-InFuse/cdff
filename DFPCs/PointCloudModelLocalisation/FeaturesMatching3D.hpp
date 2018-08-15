@@ -41,7 +41,12 @@
 #include <PointCloud.hpp>
 
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace PointCloudModelLocalisation
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -93,6 +98,8 @@ namespace dfpc_ci {
 		void DescribeModelFeatures();
 		bool EstimateModelPose();
     };
+}
+}
 }
 #endif
 /* FeaturesMatching3D.hpp */

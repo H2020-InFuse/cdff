@@ -40,7 +40,12 @@
 		} \
 	} \
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 using namespace FrameWrapper;
@@ -296,6 +301,8 @@ bool SparseRegistrationFromStereo::RegisterImagesCloudOnScene()
 	return registrationSuccess;
 	}
 
+}
+}
 }
 
 

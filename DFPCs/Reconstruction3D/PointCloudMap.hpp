@@ -42,7 +42,12 @@
 #include <stdlib.h>
 #include <memory>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -143,6 +148,8 @@ namespace dfpc_ci {
 
 		bool NoCloseFeature(const pcl::PointXYZ& point);
     };
+}
+}
 }
 #endif
 /* PointCloudMap.hpp */

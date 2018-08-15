@@ -10,9 +10,11 @@
 #include <Pose.h>
 #include <Pointcloud.h>
 
-namespace dfpc_ci
+namespace CDFF
 {
-    class PointCloudModelLocalisationInterface : public DFPCCommonInterface
+namespace DFPC
+{
+    class PointCloudModelLocalisationInterface : public CDFF::DFPC::DFPCCommonInterface
     {
         public:
 
@@ -56,6 +58,7 @@ namespace dfpc_ci
             bool outSuccess;
 
     };
+}
 }
 
 #endif //  POINTCLOUDMODELLOCALISATION_INTERFACE_HPP

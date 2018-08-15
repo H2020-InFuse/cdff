@@ -48,7 +48,12 @@
 #include <Pose.hpp>
 
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -124,6 +129,8 @@ namespace dfpc_ci {
 		PointCloudWrapper::PointCloudConstPtr FromKeypointsToCloud(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr keypointsVector);
 		bool RegisterImagesCloudOnScene();
     };
+}
+}
 }
 #endif
 /* SparseRegistrationFromStereo.hpp */

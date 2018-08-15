@@ -30,7 +30,7 @@
 #include "GuiTestReconstruction3D.hpp"
 #include <boost/algorithm/string.hpp>
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::Reconstruction3D;
 using namespace FrameWrapper;
 using namespace Converters;
 using namespace PoseWrapper;
@@ -56,7 +56,7 @@ GuiTestReconstruction3D::~GuiTestReconstruction3D()
 
 	}
 
-void GuiTestReconstruction3D::Run(dfpc_ci::Reconstruction3DInterface& reconstructor3d)
+void GuiTestReconstruction3D::Run(CDFF::DFPC::Reconstruction3DInterface& reconstructor3d)
 	{
 	reconstructor3d.setConfigurationFile(configurationFilePath);
 	reconstructor3d.setup();

@@ -48,7 +48,12 @@
 #include <Pose.hpp>
 #include <VisualPointFeatureVector3D.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -124,6 +129,8 @@ namespace dfpc_ci {
 		void DescribePointCloudFeatures();
 		bool MatchPointCloudWithSceneFeatures();
     };
+}
+}
 }
 #endif
 /* RegistrationFromStereo.hpp */

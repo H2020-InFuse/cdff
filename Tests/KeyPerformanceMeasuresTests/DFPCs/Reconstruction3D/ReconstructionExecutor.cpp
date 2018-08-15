@@ -32,7 +32,7 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::Reconstruction3D;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
@@ -75,7 +75,7 @@ ReconstructionExecutor::~ReconstructionExecutor()
 	DELETE_IF_NOT_NULL(outputCameraPose);
 	}
 
-void ReconstructionExecutor::SetDfpc(std::string configurationFilePath, dfpc_ci::Reconstruction3DInterface* dfpc)
+void ReconstructionExecutor::SetDfpc(std::string configurationFilePath, CDFF::DFPC::Reconstruction3DInterface* dfpc)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfpc = dfpc;

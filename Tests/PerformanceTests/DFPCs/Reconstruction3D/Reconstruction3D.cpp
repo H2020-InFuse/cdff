@@ -43,7 +43,7 @@ using namespace PoseWrapper;
  * --------------------------------------------------------------------------
  */
 Reconstruction3DTestInterface::Reconstruction3DTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, 
-	dfpc_ci::Reconstruction3DInterface* reconstructor) : PerformanceTestInterface(folderPath, baseConfigurationFileName, performanceMeasuresFileName)
+	CDFF::DFPC::Reconstruction3DInterface* reconstructor) : PerformanceTestInterface(folderPath, baseConfigurationFileName, performanceMeasuresFileName)
 	{
 	this->reconstructor = reconstructor;
 	SetDfpc(reconstructor);

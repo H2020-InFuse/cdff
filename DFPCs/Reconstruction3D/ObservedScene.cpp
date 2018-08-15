@@ -32,7 +32,12 @@
 #include <pcl/filters/voxel_grid.h>
 #include <Visualizers/PclVisualizer.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 using namespace FrameWrapper;
 using namespace PoseWrapper;
@@ -218,5 +223,7 @@ pcl::PointXYZ ObservedScene::TransformPoint(pcl::PointXYZ point, AffineTransform
 	return transformedPoint;
 	}
 
+}
+}
 }
 /** @} */

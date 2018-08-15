@@ -32,7 +32,7 @@
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::WHICH-DFPC(S)-IF-ANY?;
 using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 
 /* --------------------------------------------------------------------------
