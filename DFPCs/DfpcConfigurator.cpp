@@ -31,7 +31,10 @@
 #include <fstream>
 #include <DFNsBuilder.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
 
 using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 
@@ -179,6 +182,6 @@ void DfpcConfigurator::DestroyDfns()
 	}
 
 }
-
+}
 
 /** @} */

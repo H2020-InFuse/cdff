@@ -43,7 +43,10 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -106,6 +109,7 @@ namespace dfpc_ci {
 		void ConfigureDfns();
 		void DestroyDfns();
     };
+}
 }
 #endif
 /* DfpcConfigurator.h */
