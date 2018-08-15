@@ -1,5 +1,3 @@
-Tests/Stubs/DFNs/FeaturesExtraction2D/StubFeaturesExtraction2D.hpp:namespace dfn_ci {
-Tests/Stubs/DFNs/FeaturesExtraction2D/StubFeaturesExtraction2D.cpp:namespace dfn_ci {
 DFPCs/DfpcConfigurator.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 DFPCs/Reconstruction3D/ReconstructionFromStereo.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 DFPCs/Reconstruction3D/RegistrationFromStereo.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
