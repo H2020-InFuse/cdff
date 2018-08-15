@@ -1,5 +1,3 @@
-DFNs/DFNsBuilder.cpp:namespace dfn_ci {
-DFNs/DFNsBuilder.hpp:namespace dfn_ci {
 Tests/Stubs/DFNs/FeaturesExtraction2D/StubFeaturesExtraction2D.hpp:namespace dfn_ci {
 Tests/Stubs/DFNs/FeaturesExtraction2D/StubFeaturesExtraction2D.cpp:namespace dfn_ci {
 DFPCs/DfpcConfigurator.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
