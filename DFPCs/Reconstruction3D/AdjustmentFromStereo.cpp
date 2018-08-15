@@ -536,10 +536,22 @@ bool AdjustmentFromStereo::ComputeCameraPoses()
 
 PoseWrapper::Pose3DConstPtr AdjustmentFromStereo::AddAllPointCloudsToMap()
 	{
-	for(int stereoIndex = 0; stereoIndex < parameters.numberOfAdjustedStereoPairs; stereoIndex++)
+	int pointCloudIndex = (currentInputNumber < parameters.numberOfAdjustedStereoPairs ? currentInputNumber : oldestCameraIndex/2);
+	for(int stereoIndex = parameters.numberOfAdjustedStereoPairs - 1; stereoIndex >= 0; stereoIndex--)
 		{
-		const Pose3D& pose = GetPose(*latestCameraPoses, parameters.numberOfAdjustedStereoPairs - 1 - stereoIndex);
-		pointCloudMap.AddPointCloud(pointCloudsList.at(stereoIndex), emptyFeaturesVector, &pose);
+		if (stereoIndex == 0)
+			{
+			Pose3D zeroPose;
+			SetPosition(zeroPose, 0, 0, 0);
+			SetOrientation(zeroPose, 0, 0, 0, 1);
+			pointCloudMap.AddPointCloud( pointCloudsList.at(pointCloudIndex), emptyFeaturesVector, &zeroPose);
+			}
+		else
+			{
+			const Pose3D& pose = GetPose(*latestCameraPoses, stereoIndex);
+			pointCloudMap.AddPointCloud(pointCloudsList.at(pointCloudIndex), emptyFeaturesVector, &pose);
+			}
+		pointCloudIndex = (pointCloudIndex + parameters.numberOfAdjustedStereoPairs - 1) % parameters.numberOfAdjustedStereoPairs;
 		}
 	Copy(GetPose(*latestCameraPoses, 0), *previousCameraPose);
 	return previousCameraPose;

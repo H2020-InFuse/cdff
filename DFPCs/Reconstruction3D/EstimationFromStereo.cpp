@@ -374,8 +374,11 @@ void EstimationFromStereo::AddAllPointCloudsToMap(Poses3DSequenceConstPtr& camer
 			SetOrientation(zeroPose, 0, 0, 0, 1);
 			pointCloudMap.AddPointCloud( bundleHistory->GetPointCloud(stereoIndex, STEREO_CLOUD_CATEGORY), EMPTY_FEATURE_VECTOR, &zeroPose);
 			}
-		const Pose3D& pose = GetPose(*cameraPoses, stereoIndex);
-		pointCloudMap.AddPointCloud(bundleHistory->GetPointCloud(stereoIndex, STEREO_CLOUD_CATEGORY), EMPTY_FEATURE_VECTOR, &pose);
+		else
+			{
+			const Pose3D& pose = GetPose(*cameraPoses, stereoIndex);
+			pointCloudMap.AddPointCloud(bundleHistory->GetPointCloud(stereoIndex, STEREO_CLOUD_CATEGORY), EMPTY_FEATURE_VECTOR, &pose);
+			}
 		}
 	}
 
