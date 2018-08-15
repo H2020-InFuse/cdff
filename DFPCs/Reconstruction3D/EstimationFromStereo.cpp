@@ -192,7 +192,8 @@ void EstimationFromStereo::setup()
 	InstantiateDFNExecutors();
 
 	bundleHistory = new BundleHistory(parameters.numberOfAdjustedStereoPairs + 1);
-	correspondencesRecorder = new MultipleCorrespondencesRecorder(parameters.numberOfAdjustedStereoPairs);
+	correspondencesRecorder = new MultipleCorrespondencesRecorder(parameters.numberOfAdjustedStereoPairs);	
+
 	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
 
 	SetPosition(rightToLeftCameraPose, -parameters.baseline, 0, 0);

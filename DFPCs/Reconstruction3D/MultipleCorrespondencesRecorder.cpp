@@ -1,5 +1,6 @@
 #include "MultipleCorrespondencesRecorder.hpp"
 #include "Errors/Assert.hpp"
+#include <cmath>
 
 namespace dfpc_ci {
 
@@ -55,12 +56,13 @@ void MultipleCorrespondencesRecorder::InitializeNewSequence()
 		}
 	Clear(*workingCorrespondenceMapSequence);
 
-	if (numberOfOldPoses < MAXIMUM_NUMBER_OF_POSES)
+	if (numberOfOldPoses <= MAXIMUM_NUMBER_OF_POSES) // When numberOfOldPoses is equal to MAXIMUM_NUMBER_OF_POSES+1, it actually means any number beyond MAXIMUM_NUMBER_OF_POSES.
 		{
 		numberOfOldPoses++;
 		}
 
 	addingNewSequence = true;
+	numberOfMapsAddedSinceLastInitialization = 0;
 	}
 
 #define CONTINUE_ON_INVALID_2D_POINT(point) \
@@ -137,11 +139,16 @@ void MultipleCorrespondencesRecorder::AddCorrespondencesFromTwoImagePairs(std::v
 		}
 
 	AddCorrespondenceMap(*workingCorrespondenceMapSequence, *temporaryMap);
+	numberOfMapsAddedSinceLastInitialization++;
 	}
+
+#define MIN(a, b) ( a < b ? a : b )
 
 void MultipleCorrespondencesRecorder::CompleteNewSequence()
 	{
 	ASSERT(addingNewSequence, "AddCorrespondencesFromTwoImagePairs, method  InitializeNewSequence was not called before");
+	ASSERT(numberOfMapsAddedSinceLastInitialization == MIN(numberOfOldPoses, MAXIMUM_NUMBER_OF_POSES-1), "Correspondences Recorder, complete new sequence, unexpected number of maps");
+
 	if (numberOfOldPoses < MAXIMUM_NUMBER_OF_POSES)
 		{
 		for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondenceMaps(*historyCorrespondenceMapSequence); correspondenceIndex++)
@@ -152,9 +159,9 @@ void MultipleCorrespondencesRecorder::CompleteNewSequence()
 	else
 		{
 		int correspondenceIndex = 0;
-		for(int sourceIndex = 0; sourceIndex < (MAXIMUM_NUMBER_OF_POSES - 1); sourceIndex++)
+		for(int sourceIndex = 0; sourceIndex < MAXIMUM_NUMBER_OF_POSES-1; sourceIndex++)
 			{
-			for(int sinkIndex = sourceIndex + 1; sinkIndex < (MAXIMUM_NUMBER_OF_POSES - 1); sinkIndex++)
+			for(int sinkIndex = sourceIndex + 1; sinkIndex < MAXIMUM_NUMBER_OF_POSES-1; sinkIndex++)
 				{
 				AddCorrespondenceMap(*workingCorrespondenceMapSequence, GetCorrespondenceMap(*historyCorrespondenceMapSequence, correspondenceIndex));	
 				correspondenceIndex++;
@@ -169,7 +176,14 @@ void MultipleCorrespondencesRecorder::CompleteNewSequence()
 
 CorrespondenceMaps3DSequencePtr MultipleCorrespondencesRecorder::GetLatestCorrespondences()
 	{
-	return workingCorrespondenceMapSequence;
+	if (oneCorrespondenceWasAddedSinceLastDiscard)
+		{
+		return workingCorrespondenceMapSequence;
+		}
+	else
+		{
+		return historyCorrespondenceMapSequence;
+		}
 	}
 
 void MultipleCorrespondencesRecorder::DiscardLatestCorrespondences()

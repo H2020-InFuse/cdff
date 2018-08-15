@@ -83,7 +83,6 @@ void BundleHistory::AddImages(FrameConstPtr leftImage, FrameConstPtr rightImage)
 	{
 	if ( mostRecentEntryIndex != NO_RECENT_ENTRY && (mostRecentEntryIndex+1) % size == oldestEntryIndex)
 		{
-		PRINT_TO_LOG("Deleting", "");
 		DELETE_ALL(oldestEntryIndex);
 		leftImageList.at(oldestEntryIndex) = leftImage;
 		rightImageList.at(oldestEntryIndex) = rightImage;
@@ -92,7 +91,6 @@ void BundleHistory::AddImages(FrameConstPtr leftImage, FrameConstPtr rightImage)
 		}
 	else
 		{
-		PRINT_TO_LOG("Not Deleting", "");
 		mostRecentEntryIndex = (mostRecentEntryIndex + 1) % size;
 		leftImageList.at(mostRecentEntryIndex) = leftImage;
 		rightImageList.at(mostRecentEntryIndex) = rightImage;		
@@ -111,6 +109,10 @@ void BundleHistory::AddFeatures(VisualPointFeatureVector2DConstPtr featureVector
 			featureVectorList[featureCategory].at(index) = NULL;
 			}
 		}
+	else
+		{
+		delete( featureVectorList[featureCategory].at(mostRecentEntryIndex) );
+		}
 	featureVectorList[featureCategory].at(mostRecentEntryIndex) = featureVector;
 	}
 
@@ -125,6 +127,10 @@ void BundleHistory::AddMatches(CorrespondenceMap2DConstPtr leftRightCorresponden
 			leftRightCorrespondenceMapList[correspondenceCategory].at(index) = NULL;
 			}
 		}
+	else
+		{
+		delete( leftRightCorrespondenceMapList[correspondenceCategory].at(mostRecentEntryIndex) );
+		}
 	leftRightCorrespondenceMapList[correspondenceCategory].at(mostRecentEntryIndex) = leftRightCorrespondenceMap;
 	}
 
@@ -138,6 +144,10 @@ void BundleHistory::AddPointCloud(PointCloudConstPtr pointCloud, std::string clo
 			{
 			pointCloudList[cloudCategory].at(index) = NULL;
 			}
+		}
+	else
+		{
+		delete( pointCloudList[cloudCategory].at(mostRecentEntryIndex) );
 		}
 	pointCloudList[cloudCategory].at(mostRecentEntryIndex) = pointCloud;
 	}
@@ -171,6 +181,11 @@ VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr BundleHist
 		{
 		return NULL;
 		}
+	std::map<std::string, FeatureVectorList>::iterator list = featureVectorList.find(featureCategory);	
+	if (list == featureVectorList.end())
+		{
+		return NULL;
+		}
 
 	return featureVectorList[featureCategory].at(index);
 	}
@@ -182,6 +197,11 @@ CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr BundleHistory::GetMatche
 		{
 		return NULL;
 		}
+	std::map<std::string, CorrespondenceMapList>::iterator list = leftRightCorrespondenceMapList.find(correspondenceCategory);
+	if (list == leftRightCorrespondenceMapList.end())
+		{
+		return NULL;
+		}
 
 	return leftRightCorrespondenceMapList[correspondenceCategory].at(index);
 	}
@@ -190,6 +210,11 @@ PointCloudWrapper::PointCloudConstPtr BundleHistory::GetPointCloud(int backwardS
 	{
 	int index = BackwardStepsToIndex(backwardSteps);
 	if (index < 0)
+		{
+		return NULL;
+		}
+	std::map<std::string, PointCloudList>::iterator list = pointCloudList.find(cloudCategory);
+	if (list == pointCloudList.end())
 		{
 		return NULL;
 		}

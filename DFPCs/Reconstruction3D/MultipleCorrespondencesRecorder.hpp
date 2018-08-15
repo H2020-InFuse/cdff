@@ -72,6 +72,7 @@ class MultipleCorrespondencesRecorder
 		int numberOfOldPoses;
 		bool addingNewSequence;
 		bool oneCorrespondenceWasAddedSinceLastDiscard;
+		int numberOfMapsAddedSinceLastInitialization;
 
 		WorkingSequence latestSequence;
 		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr firstCorrespondenceMapSequence;
