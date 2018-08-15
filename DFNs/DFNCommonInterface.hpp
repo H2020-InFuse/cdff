@@ -14,7 +14,9 @@
 #include <stdlib.h>
 #include <string>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN Common Interface: interface that every DFN must implement
@@ -76,6 +78,7 @@ namespace dfn_ci
             LogLevel logLevel;
             std::string configurationFilePath;
     };
+}
 }
 
 #endif // DFN_COMMON_INTERFACE_HPP

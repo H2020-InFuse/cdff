@@ -1,5 +1,4 @@
 DFNs/DFNsBuilder.cpp:namespace dfn_ci {
-DFNs/DFNCommonInterface.hpp:namespace dfn_ci
 DFNs/DFNsBuilder.hpp:namespace dfn_ci {
 Tests/Stubs/DFNs/FeaturesExtraction2D/StubFeaturesExtraction2D.hpp:namespace dfn_ci {
 Tests/Stubs/DFNs/FeaturesExtraction2D/StubFeaturesExtraction2D.cpp:namespace dfn_ci {

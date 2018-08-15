@@ -1,4 +1,3 @@
-DFPCs/DFPCCommonInterface.hpp:namespace dfpc_ci
 DFPCs/DfpcConfigurator.cpp:namespace dfpc_ci {
 DFPCs/DfpcConfigurator.hpp:namespace dfpc_ci {
 Tests/UnitTests/DFPCs/DfpcConfigurator.cpp:using namespace CDFF::DFPC::WHICH-DFPC(S)-IF-ANY?;

@@ -14,7 +14,9 @@
 #include <stdlib.h>
 #include <string>
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
     /**
      * DFPC Common Interface: interface that every DFPC must implement
@@ -54,6 +56,7 @@ namespace dfpc_ci
             LogLevel logLevel;
             std::string configurationFilePath;
     };
+}
 }
 
 #endif // DFPC_COMMON_INTERFACE_HPP
