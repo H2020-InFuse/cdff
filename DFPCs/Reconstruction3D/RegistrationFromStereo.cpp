@@ -46,7 +46,7 @@ namespace DFPC
 namespace Reconstruction3D
 {
 
-using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
+using namespace CDFF::DFN;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace FrameWrapper;
 using namespace PoseWrapper;

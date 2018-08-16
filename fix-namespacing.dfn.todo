@@ -1,10 +1,3 @@
-DFPCs/Reconstruction3D/ReconstructionFromStereo.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-DFPCs/Reconstruction3D/RegistrationFromStereo.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-DFPCs/Reconstruction3D/DenseRegistrationFromStereo.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-DFPCs/Reconstruction3D/EstimationFromStereo.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-DFPCs/Reconstruction3D/ReconstructionFromMotion.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-DFPCs/Reconstruction3D/SparseRegistrationFromStereo.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-DFPCs/Reconstruction3D/AdjustmentFromStereo.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 Tests/GuiTests/DFNsIntegration/DFNsIntegrationTestInterface.hpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 Tests/GuiTests/DFNs/DFNTestInterface.hpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 Tests/UnitTests/DFPCs/DfpcConfigurator.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
