@@ -32,8 +32,9 @@
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace CDFF::DFPC::WHICH-DFPC(S)-IF-ANY?;
-using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
+using namespace CDFF::DFPC;
+using namespace CDFF::DFN::ImageFiltering;
+using namespace CDFF::DFN::ShotDescriptor3D;
 
 /* --------------------------------------------------------------------------
  *
