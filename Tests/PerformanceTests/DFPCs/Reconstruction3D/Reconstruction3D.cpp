@@ -28,7 +28,7 @@
  */
 #include "Reconstruction3D.hpp"
 
-using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace PointCloudWrapper;

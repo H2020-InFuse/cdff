@@ -10,9 +10,3 @@ Tests/KeyPerformanceMeasuresTests/DFNsIntegration/FeaturesReconstruction/Reconst
 Tests/KeyPerformanceMeasuresTests/DFNsIntegration/FeaturesReconstruction/EssentialMatrixDecompositionTriangulation.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 Tests/KeyPerformanceMeasuresTests/DFNsIntegration/FeaturesRegistration/HarrisIcpCC.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 Tests/KeyPerformanceMeasuresTests/DFNsIntegration/FeaturesRegistration/CorrectLocalizationTester.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-Tests/PerformanceTests/DFNsIntegration/Odometry3D/HarrisShotIcp.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-Tests/PerformanceTests/DFNsIntegration/Odometry3D/DetectionDescriptionMatching3D.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-Tests/PerformanceTests/DFNsIntegration/Odometry3D/HarrisShotRansac.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-Tests/PerformanceTests/DFNsIntegration/FeaturesExtractionDescriptionMatching/OrbDetectorDescriptorFlannMatcher.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-Tests/PerformanceTests/DFNsIntegration/VisualOdometry/OrbFlannRansacDecomposition.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-Tests/PerformanceTests/DFPCs/Reconstruction3D/Reconstruction3D.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
