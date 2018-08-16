@@ -46,7 +46,7 @@ namespace DFPC
 namespace PointCloudModelLocalisation
 {
 
-using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
+using namespace CDFF::DFN;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
