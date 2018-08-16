@@ -36,8 +36,6 @@
 #include <string>
 #include <vector>
 
-using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-
 /**
  * The DFNTestInterface is the base class for all the GUI Tests.
  */
@@ -52,7 +50,7 @@ class DFNTestInterface
 		virtual ~DFNTestInterface() = default;
 
 		void Run();
-		void SetDFN(DFNCommonInterface* dfn);
+		void SetDFN(CDFF::DFN::DFNCommonInterface* dfn);
 		void AddParameter(std::string groupName, std::string name, int defaultValue, int maxValue);
 		void AddParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
 		void AddSignedParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
@@ -74,7 +72,7 @@ class DFNTestInterface
 	private:
 		MainInterface mainInterface;
 		ParametersInterface parametersInterface;
-		DFNCommonInterface* dfn;
+		CDFF::DFN::DFNCommonInterface* dfn;
 		static const std::string filePath;
 		double processingTime;
 	

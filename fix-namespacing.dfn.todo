@@ -1,5 +1,3 @@
-Tests/GuiTests/DFNsIntegration/DFNsIntegrationTestInterface.hpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
-Tests/GuiTests/DFNs/DFNTestInterface.hpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 Tests/UnitTests/DFPCs/DfpcConfigurator.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 Tests/KeyPerformanceMeasuresTests/DFNsIntegration/Matching2D/OrbFlann.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
 Tests/KeyPerformanceMeasuresTests/DFNsIntegration/Matching2D/SelectionTester.cpp:using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
