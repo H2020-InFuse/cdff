@@ -49,6 +49,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
     DFPCs/Reconstruction3D/BundleHistory.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
+    DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
 #[=[DFPCs/DfpcConfigurator.cpp]=]
 #[=[DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp]=]
 #[=[DFPCs/Reconstruction3D/ObservedScene.cpp]=]
@@ -118,6 +119,7 @@ set(UNITTEST_LIBRARIES Catch
     synthetic_generators
     triangulation
     estimation_from_stereo
+    adjustment_from_stereo
 )
 
 # Make the Catch executable that runs the unit tests

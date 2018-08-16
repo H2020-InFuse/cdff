@@ -43,7 +43,6 @@
 #include <FeaturesExtraction2D/FeaturesExtraction2DExecutor.hpp>
 #include <FeaturesDescription2D/FeaturesDescription2DExecutor.hpp>
 #include <FeaturesMatching2D/FeaturesMatching2DExecutor.hpp>
-#include <BundleAdjustment/BundleAdjustmentExecutor.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationExecutor.hpp>
 #include <CamerasTransformEstimation/CamerasTransformEstimationExecutor.hpp>
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>

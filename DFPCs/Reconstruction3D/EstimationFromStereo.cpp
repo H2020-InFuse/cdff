@@ -191,7 +191,10 @@ void EstimationFromStereo::setup()
 
 	InstantiateDFNExecutors();
 
+	DELETE_PREVIOUS(bundleHistory);
 	bundleHistory = new BundleHistory(parameters.numberOfAdjustedStereoPairs + 1);
+
+	DELETE_PREVIOUS(correspondencesRecorder);
 	correspondencesRecorder = new MultipleCorrespondencesRecorder(parameters.numberOfAdjustedStereoPairs);	
 
 	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);

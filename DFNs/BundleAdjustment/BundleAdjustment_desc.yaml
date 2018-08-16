@@ -38,3 +38,4 @@ output_ports:
       doc: the squared estimation error.
 implementations:
     - UdvDecomposition
+    - CeresAdjustment
