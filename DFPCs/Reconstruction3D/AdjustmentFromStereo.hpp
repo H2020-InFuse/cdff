@@ -148,8 +148,7 @@ namespace dfpc_ci {
 
 		//Intermediate data
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr cleanCorrespondenceMap;
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr leftTimeCorrespondenceMap;
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr rightTimeCorrespondenceMap;
+		PointCloudWrapper::PointCloudPtr triangulatedKeypointCloud;
 		PoseWrapper::Poses3DSequencePtr estimatedCameraPoses;
 
 		void ConfigureExtraParameters();
@@ -157,9 +156,10 @@ namespace dfpc_ci {
 
 		void ComputeVisualPointFeatures(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
 		void CleanLowScoringMatches(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr leftRightCorrespondenceMap, CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr output);
-		void CleanUnmatchedFeatures(CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr map, PointCloudWrapper::PointCloudConstPtr cloud);
+		void CleanUnmatchedFeatures(CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr map, PointCloudWrapper::PointCloudPtr cloud);
 		void ComputeStereoPointCloud(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
 		void CreateWorkingCorrespondences();
+		void CreateWorkingCorrespondences(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featureVector);
 		bool ComputeCameraPoses(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
 
 		void EstimateCameraPoses();

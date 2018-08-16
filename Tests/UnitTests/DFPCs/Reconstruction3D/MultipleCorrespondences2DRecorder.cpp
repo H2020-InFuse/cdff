@@ -47,16 +47,26 @@ TEST_CASE( "Add and Get (MultipleCorrespondences2DRecorder)", "[AddAndGet]" )
 	CorrespondenceMap2DPtr mapL1R1 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr mapL2R2 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr mapL2L1 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapL2R1 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapR2L1 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr mapR2R1 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr mapL3R3 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr mapL3L2 = NewCorrespondenceMap2D();
-	CorrespondenceMap2DPtr mapR3R2 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapL3R2 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr mapL3L1 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapL3R1 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapR3L2 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapR3R2 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapR3L1 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr mapR3R1 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr mapL4R4 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr mapL4L3 = NewCorrespondenceMap2D();
-	CorrespondenceMap2DPtr mapR4R3 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapL4R3 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr mapL4L2 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapL4R2 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapR4L3 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapR4R3 = NewCorrespondenceMap2D();
+	CorrespondenceMap2DPtr mapR4L2 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr mapR4R2 = NewCorrespondenceMap2D();
 
 	Point2D left1, right1, left2, right2, left3, right3, left4, right4;
@@ -67,23 +77,27 @@ TEST_CASE( "Add and Get (MultipleCorrespondences2DRecorder)", "[AddAndGet]" )
 	AddCorrespondence(*mapL1R1, left1, right1, 1);
 	AddCorrespondence(*mapL2R2, left2, right2, 1);
 	AddCorrespondence(*mapL2L1, left2, left1, 1);
+	AddCorrespondence(*mapL2R1, left2, right1, 1);
+	AddCorrespondence(*mapR2L1, right2, left1, 1);
 	AddCorrespondence(*mapR2R1, right2, right1, 1);
 	AddCorrespondence(*mapL3R3, left3, right3, 1);
 	AddCorrespondence(*mapL3L2, left3, left2, 1);
-	AddCorrespondence(*mapR3R2, right3, right2, 1);
+	AddCorrespondence(*mapL3R2, left3, right2, 1);
 	AddCorrespondence(*mapL3L1, left3, left1, 1);
+	AddCorrespondence(*mapL3R1, left3, right1, 1);
+	AddCorrespondence(*mapR3L2, right3, left2, 1);
+	AddCorrespondence(*mapR3R2, right3, right2, 1);
+	AddCorrespondence(*mapR3L1, right3, left1, 1);
 	AddCorrespondence(*mapR3R1, right3, right1, 1);
 	AddCorrespondence(*mapL4R4, left4, right4, 1);
 	AddCorrespondence(*mapL4L3, left4, left3, 1);
-	AddCorrespondence(*mapR4R3, right4, right3, 1);
+	AddCorrespondence(*mapL4R3, left4, right3, 1);
 	AddCorrespondence(*mapL4L2, left4, left2, 1);
+	AddCorrespondence(*mapL4R2, left4, right2, 1);
+	AddCorrespondence(*mapR4L3, right4, left3, 1);
+	AddCorrespondence(*mapR4R3, right4, right3, 1);
+	AddCorrespondence(*mapR4L2, right4, left2, 1);
 	AddCorrespondence(*mapR4R2, right4, right2, 1);
-
-	std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> mapList21 = {mapL2R2, mapL2L1, mapR2R1, mapL1R1};
-	std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> mapList32 = {mapL3R3, mapL3L2, mapR3R2, mapL2R2};
-	std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> mapList31 = {mapL3R3, mapL3L1, mapR3R1, mapL1R1};
-	std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> mapList43 = {mapL4R4, mapL4L3, mapR4R3, mapL3R3};
-	std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> mapList42 = {mapL4R4, mapL4L2, mapR4R2, mapL2R2};
 
 
 	MultipleCorrespondences2DRecorder* recorder = new MultipleCorrespondences2DRecorder(3);
@@ -91,7 +105,7 @@ TEST_CASE( "Add and Get (MultipleCorrespondences2DRecorder)", "[AddAndGet]" )
 	REQUIRE( GetNumberOfCorrespondenceMaps(*sequenceM1) == 0);
 
 	recorder->InitializeNewSequence();
-	recorder->AddCorrespondencesFromOneImagePair(mapL1R1);
+	recorder->AddCorrespondences(mapL1R1);
 	recorder->CompleteNewSequence();
 	CorrespondenceMaps2DSequencePtr sequence0 = recorder->GetLatestCorrespondences();
 	REQUIRE( GetNumberOfCorrespondenceMaps(*sequence0) == 1);
@@ -101,7 +115,11 @@ TEST_CASE( "Add and Get (MultipleCorrespondences2DRecorder)", "[AddAndGet]" )
 	REQUIRE( GetSink(refMap0, 0).x == 2);	
 
 	recorder->InitializeNewSequence();
-	recorder->AddCorrespondencesFromTwoImagePairs(mapList21);
+	recorder->AddCorrespondences(mapL2R2);
+	recorder->AddCorrespondences(mapL2L1);
+	recorder->AddCorrespondences(mapL2R1);
+	recorder->AddCorrespondences(mapR2L1);
+	recorder->AddCorrespondences(mapR2R1);
 	recorder->CompleteNewSequence();
 
 	CorrespondenceMaps2DSequencePtr sequence1 = recorder->GetLatestCorrespondences();
@@ -140,7 +158,11 @@ TEST_CASE( "Add and Get (MultipleCorrespondences2DRecorder)", "[AddAndGet]" )
 	REQUIRE( GetSink(refMap2, 0).x == 2);
 
 	recorder->InitializeNewSequence();
-	recorder->AddCorrespondencesFromTwoImagePairs(mapList21);
+	recorder->AddCorrespondences(mapL2R2);
+	recorder->AddCorrespondences(mapL2L1);
+	recorder->AddCorrespondences(mapL2R1);
+	recorder->AddCorrespondences(mapR2L1);
+	recorder->AddCorrespondences(mapR2R1);
 	recorder->CompleteNewSequence();
 
 	CorrespondenceMaps2DSequencePtr sequence3 = recorder->GetLatestCorrespondences();
@@ -171,8 +193,15 @@ TEST_CASE( "Add and Get (MultipleCorrespondences2DRecorder)", "[AddAndGet]" )
 	REQUIRE( GetSink(refMap2F, 0).x == 2);
 
 	recorder->InitializeNewSequence();
-	recorder->AddCorrespondencesFromTwoImagePairs(mapList32);
-	recorder->AddCorrespondencesFromTwoImagePairs(mapList31);
+	recorder->AddCorrespondences(mapL3R3);
+	recorder->AddCorrespondences(mapL3L2);
+	recorder->AddCorrespondences(mapL3R2);
+	recorder->AddCorrespondences(mapL3L1);
+	recorder->AddCorrespondences(mapL3R1);
+	recorder->AddCorrespondences(mapR3L2);
+	recorder->AddCorrespondences(mapR3R2);
+	recorder->AddCorrespondences(mapR3L1);
+	recorder->AddCorrespondences(mapR3R1);
 	recorder->CompleteNewSequence();
 
 	CorrespondenceMaps2DSequencePtr sequence4 = recorder->GetLatestCorrespondences();
@@ -239,8 +268,15 @@ TEST_CASE( "Add and Get (MultipleCorrespondences2DRecorder)", "[AddAndGet]" )
 	REQUIRE( GetSink(refMap3O, 0).x == 2);
 
 	recorder->InitializeNewSequence();
-	recorder->AddCorrespondencesFromTwoImagePairs(mapList43);
-	recorder->AddCorrespondencesFromTwoImagePairs(mapList42);
+	recorder->AddCorrespondences(mapL4R4);
+	recorder->AddCorrespondences(mapL4L3);
+	recorder->AddCorrespondences(mapL4R3);
+	recorder->AddCorrespondences(mapL4L2);
+	recorder->AddCorrespondences(mapL4R2);
+	recorder->AddCorrespondences(mapR4L3);
+	recorder->AddCorrespondences(mapR4R3);
+	recorder->AddCorrespondences(mapR4L2);
+	recorder->AddCorrespondences(mapR4R2);
 	recorder->CompleteNewSequence();
 
 	CorrespondenceMaps2DSequencePtr sequence5 = recorder->GetLatestCorrespondences();

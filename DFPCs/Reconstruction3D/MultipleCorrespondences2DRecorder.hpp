@@ -52,8 +52,7 @@ class MultipleCorrespondences2DRecorder
 		~MultipleCorrespondences2DRecorder();
 
 		void InitializeNewSequence();
-		void AddCorrespondencesFromOneImagePair(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr map);
-		void AddCorrespondencesFromTwoImagePairs(std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> mapList);
+		void AddCorrespondences(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr map);
 		void CompleteNewSequence();
 		
 		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr GetLatestCorrespondences();
@@ -72,8 +71,7 @@ class MultipleCorrespondences2DRecorder
 		int numberOfOldPoses;
 		bool addingNewSequence;
 		bool oneCorrespondenceWasAddedSinceLastDiscard;
-		int numberOfMapsAddedSinceLastInitialization;
-		int numberOfTemporaryRightMaps;
+		int expectedMapsToAdd;
 
 		WorkingSequence latestSequence;
 		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr firstCorrespondenceMapSequence;
@@ -81,9 +79,6 @@ class MultipleCorrespondences2DRecorder
 
 		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr workingCorrespondenceMapSequence;
 		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr historyCorrespondenceMapSequence;
-
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr temporaryLeftPastRightMap;
-		std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr> temporaryRightMaps;
 	
 	};
 
