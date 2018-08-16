@@ -34,7 +34,7 @@
 
 using namespace CDFF::DFPC;
 using namespace CDFF::DFN::ImageFiltering;
-using namespace CDFF::DFN::ShotDescriptor3D;
+using namespace CDFF::DFN::FeaturesDescription3D;
 
 /* --------------------------------------------------------------------------
  *
