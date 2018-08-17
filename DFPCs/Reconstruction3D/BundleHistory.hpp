@@ -3,6 +3,7 @@
 
 #include <Frame.hpp>
 #include <VisualPointFeatureVector2D.hpp>
+#include <VisualPointFeatureVector3D.hpp>
 #include <PointCloud.hpp>
 #include <CorrespondenceMap2D.hpp>
 
@@ -16,6 +17,7 @@ class BundleHistory
 	public:
 		typedef std::vector<FrameWrapper::FrameConstPtr> ImageList;
 		typedef std::vector<VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr> FeatureVectorList;
+		typedef std::vector<VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr> FeatureVector3dList;
 		typedef std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> CorrespondenceMapList;
 		typedef std::vector<PointCloudWrapper::PointCloudConstPtr> PointCloudList;
 
@@ -24,12 +26,14 @@ class BundleHistory
 
 		void AddImages(const FrameWrapper::Frame& leftImage, const FrameWrapper::Frame& rightImage);
 		void AddFeatures(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& featureVector, std::string featureCategory = "DEFAULT");
+		void AddFeatures3d(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& featureVector, std::string featureCategory = "DEFAULT");
 		void AddMatches(const CorrespondenceMap2DWrapper::CorrespondenceMap2D& leftRightCorrespondenceMap, std::string correspondenceCategory = "DEFAULT");
 		void AddPointCloud(const PointCloudWrapper::PointCloud&, std::string cloudCategory = "DEFAULT");
 		
 		FrameWrapper::FrameConstPtr GetLeftImage(int backwardSteps);
 		FrameWrapper::FrameConstPtr GetRightImage(int backwardSteps);
 		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr GetFeatures(int backwardSteps, std::string featureCategory = "DEFAULT");
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr GetFeatures3d(int backwardSteps, std::string featureCategory = "DEFAULT");
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr GetMatches(int backwardSteps, std::string correspondenceCategory = "DEFAULT");
 		PointCloudWrapper::PointCloudConstPtr GetPointCloud(int backwardSteps, std::string cloudCategory = "DEFAULT");
 
@@ -47,11 +51,13 @@ class BundleHistory
 		ImageList leftImageList;
 		ImageList rightImageList;
 		std::map<std::string, FeatureVectorList> featureVectorList;
+		std::map<std::string, FeatureVector3dList> featureVector3dList;
 		std::map<std::string, CorrespondenceMapList> leftRightCorrespondenceMapList;
 		std::map<std::string, PointCloudList> pointCloudList;
 
 		void AddImages(FrameWrapper::FrameConstPtr leftImage, FrameWrapper::FrameConstPtr rightImage);
 		void AddFeatures(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featureVector, std::string featureCategory = "DEFAULT");
+		void AddFeatures3d(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr featureVector, std::string featureCategory = "DEFAULT");
 		void AddMatches(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr leftRightCorrespondenceMap, std::string correspondenceCategory = "DEFAULT");
 		void AddPointCloud(PointCloudWrapper::PointCloudConstPtr, std::string cloudCategory = "DEFAULT");
 

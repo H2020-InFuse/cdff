@@ -2,6 +2,7 @@
 
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PointCloudWrapper;
 
@@ -38,6 +39,7 @@ BundleHistory::BundleHistory(int size) :
 		DELETE_IF_NOT_NULL( leftImageList.at(index) ); \
 		DELETE_IF_NOT_NULL( rightImageList.at(index) ); \
 		DELETE_MAP_ENTRY( featureVectorList, FeatureVectorList, index); \
+		DELETE_MAP_ENTRY( featureVector3dList, FeatureVector3dList, index); \
 		DELETE_MAP_ENTRY( leftRightCorrespondenceMapList, CorrespondenceMapList, index); \
 		DELETE_MAP_ENTRY( pointCloudList, PointCloudList, index); \
 
@@ -63,6 +65,13 @@ void BundleHistory::AddFeatures(const VisualPointFeatureVector2D& featureVector,
 	VisualPointFeatureVector2DPtr copy = NewVisualPointFeatureVector2D();
 	Copy(featureVector, *copy);
 	AddFeatures(copy, featureCategory);
+	}
+
+void BundleHistory::AddFeatures3d(const VisualPointFeatureVector3D& featureVector, std::string featureCategory)
+	{
+	VisualPointFeatureVector3DPtr copy = NewVisualPointFeatureVector3D();
+	Copy(featureVector, *copy);
+	AddFeatures3d(copy, featureCategory);
 	}
 
 void BundleHistory::AddMatches(const CorrespondenceMap2D& leftRightCorrespondenceMap, std::string correspondenceCategory)
@@ -114,6 +123,25 @@ void BundleHistory::AddFeatures(VisualPointFeatureVector2DConstPtr featureVector
 		delete( featureVectorList[featureCategory].at(mostRecentEntryIndex) );
 		}
 	featureVectorList[featureCategory].at(mostRecentEntryIndex) = featureVector;
+	}
+
+void BundleHistory::AddFeatures3d(VisualPointFeatureVector3DConstPtr featureVector, std::string featureCategory)
+	{
+	std::map<std::string, FeatureVector3dList>::iterator list = featureVector3dList.find(featureCategory);
+	
+	if (list == featureVector3dList.end())
+		{
+		featureVector3dList[featureCategory] = FeatureVector3dList(size);
+		for (int index = 0; index < size; index++)
+			{
+			featureVector3dList[featureCategory].at(index) = NULL;
+			}
+		}
+	else
+		{
+		delete( featureVector3dList[featureCategory].at(mostRecentEntryIndex) );
+		}
+	featureVector3dList[featureCategory].at(mostRecentEntryIndex) = featureVector;
 	}
 
 void BundleHistory::AddMatches(CorrespondenceMap2DConstPtr leftRightCorrespondenceMap, std::string correspondenceCategory)
@@ -190,6 +218,22 @@ VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr BundleHist
 	return featureVectorList[featureCategory].at(index);
 	}
 
+VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr BundleHistory::GetFeatures3d(int backwardSteps, std::string featureCategory)
+	{
+	int index = BackwardStepsToIndex(backwardSteps);
+	if (index < 0)
+		{
+		return NULL;
+		}
+	std::map<std::string, FeatureVector3dList>::iterator list = featureVector3dList.find(featureCategory);	
+	if (list == featureVector3dList.end())
+		{
+		return NULL;
+		}
+
+	return featureVector3dList[featureCategory].at(index);
+	}
+
 CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr BundleHistory::GetMatches(int backwardSteps, std::string correspondenceCategory)
 	{
 	int index = BackwardStepsToIndex(backwardSteps);
@@ -254,6 +298,7 @@ void BundleHistory::RemoveEntry(int backwardSteps)
 		leftImageList.at(index) = leftImageList.at(nextIndex);
 		rightImageList.at(index) = rightImageList.at(nextIndex);
 		REPLACE_INDEX_BY_INDEX_ON_MAP(featureVectorList, FeatureVectorList, index, nextIndex);
+		REPLACE_INDEX_BY_INDEX_ON_MAP(featureVector3dList, FeatureVector3dList, index, nextIndex);
 		REPLACE_INDEX_BY_INDEX_ON_MAP(leftRightCorrespondenceMapList, CorrespondenceMapList, index, nextIndex);
 		REPLACE_INDEX_BY_INDEX_ON_MAP(pointCloudList, PointCloudList, index, nextIndex);
 
@@ -263,6 +308,7 @@ void BundleHistory::RemoveEntry(int backwardSteps)
 	leftImageList.at(mostRecentEntryIndex) = NULL;
 	rightImageList.at(mostRecentEntryIndex) = NULL;
 	REPLACE_INDEX_BY_NULL_ON_MAP(featureVectorList, FeatureVectorList, mostRecentEntryIndex);
+	REPLACE_INDEX_BY_NULL_ON_MAP(featureVector3dList, FeatureVector3dList, mostRecentEntryIndex);
 	REPLACE_INDEX_BY_NULL_ON_MAP(leftRightCorrespondenceMapList, CorrespondenceMapList, mostRecentEntryIndex);
 	REPLACE_INDEX_BY_NULL_ON_MAP(pointCloudList, PointCloudList, mostRecentEntryIndex);
 

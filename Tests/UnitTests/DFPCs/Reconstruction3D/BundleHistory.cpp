@@ -32,6 +32,7 @@
 
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PointCloudWrapper;
 using namespace BaseTypesWrapper;
@@ -53,6 +54,7 @@ TEST_CASE( "Add and Get (BundleHistory)", "[AddAndGet]" )
 	FramePtr rightFrame = NewFrame();
 	VisualPointFeatureVector2DPtr leftFeature = NewVisualPointFeatureVector2D();
 	VisualPointFeatureVector2DPtr rightFeature = NewVisualPointFeatureVector2D();
+	VisualPointFeatureVector3DPtr cloudFeature = NewVisualPointFeatureVector3D();
 	CorrespondenceMap2DPtr correspondence1 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr correspondence2 = NewCorrespondenceMap2D();
 	PointCloudPtr pointCloud1 = NewPointCloud();
@@ -66,6 +68,7 @@ TEST_CASE( "Add and Get (BundleHistory)", "[AddAndGet]" )
 	
 	AddPoint(*leftFeature, 1, 1);
 	AddPoint(*rightFeature, 2, 2);
+	AddPoint(*cloudFeature, 3, 3, 3);
 	
 	Point2D source1, source2, sink1, sink2;
 	source1.x = 1; source1.y = 1;
@@ -82,6 +85,7 @@ TEST_CASE( "Add and Get (BundleHistory)", "[AddAndGet]" )
 	bundleHistory->AddImages(*leftFrame, *rightFrame);
 	bundleHistory->AddFeatures(*leftFeature, "first");
 	bundleHistory->AddFeatures(*rightFeature, "second");
+	bundleHistory->AddFeatures3d(*cloudFeature, "first");
 	bundleHistory->AddMatches(*correspondence1, "one");
 	bundleHistory->AddMatches(*correspondence2, "two");
 	bundleHistory->AddPointCloud(*pointCloud1, "one");	
@@ -95,6 +99,7 @@ TEST_CASE( "Add and Get (BundleHistory)", "[AddAndGet]" )
 	FrameConstPtr frame2 = bundleHistory->GetRightImage(0);
 	VisualPointFeatureVector2DConstPtr features1 = bundleHistory->GetFeatures(0, "first");
 	VisualPointFeatureVector2DConstPtr features2 = bundleHistory->GetFeatures(0, "second");
+	VisualPointFeatureVector3DConstPtr features3d = bundleHistory->GetFeatures3d(0, "second");
 	CorrespondenceMap2DConstPtr map1 = bundleHistory->GetMatches(0, "one");
 	CorrespondenceMap2DConstPtr map2 = bundleHistory->GetMatches(0, "two");
 	PointCloudConstPtr cloud1 = bundleHistory->GetPointCloud(0, "first");
@@ -108,6 +113,7 @@ TEST_CASE( "Add and Get (BundleHistory)", "[AddAndGet]" )
 	REQUIRE( GetDataByte(*frame2, 0) == byte(0x2) );
 	REQUIRE( features1 == NULL );
 	REQUIRE( features2 == NULL );
+	REQUIRE( features3d == NULL );
 	REQUIRE( map1 == NULL );
 	REQUIRE( map2 == NULL );
 	REQUIRE( cloud1 == NULL );
@@ -119,6 +125,7 @@ TEST_CASE( "Add and Get (BundleHistory)", "[AddAndGet]" )
 	FrameConstPtr frame4 = bundleHistory->GetRightImage(1);
 	VisualPointFeatureVector2DConstPtr features3 = bundleHistory->GetFeatures(1, "first");
 	VisualPointFeatureVector2DConstPtr features4 = bundleHistory->GetFeatures(1, "second");
+	VisualPointFeatureVector3DConstPtr features5 = bundleHistory->GetFeatures3d(1, "first");
 	CorrespondenceMap2DConstPtr map3 = bundleHistory->GetMatches(1, "one");
 	CorrespondenceMap2DConstPtr map4 = bundleHistory->GetMatches(1, "two");
 	PointCloudConstPtr cloud3 = bundleHistory->GetPointCloud(1, "first");
@@ -137,6 +144,9 @@ TEST_CASE( "Add and Get (BundleHistory)", "[AddAndGet]" )
 	REQUIRE( features4 != NULL );
 	REQUIRE( GetNumberOfPoints(*features4) == 1 );
 	REQUIRE( GetXCoordinate(*features4, 0) == 2 );
+	REQUIRE( features5 != NULL );
+	REQUIRE( GetNumberOfPoints(*features5) == 1 );
+	REQUIRE( GetXCoordinate(*features5, 0) == 3 );
 	REQUIRE( map3 != NULL );
 	REQUIRE( GetNumberOfCorrespondences(*map3) == 1 );
 	REQUIRE( GetSource(*map3, 0).x == 1 );
@@ -154,6 +164,7 @@ TEST_CASE( "Add and Get (BundleHistory)", "[AddAndGet]" )
 	frame4 = bundleHistory->GetRightImage(0);
 	features3 = bundleHistory->GetFeatures(0, "first");
 	features4 = bundleHistory->GetFeatures(0, "second");
+	VisualPointFeatureVector3DConstPtr features8 = bundleHistory->GetFeatures3d(0, "first");
 	map3 = bundleHistory->GetMatches(0, "one");
 	map4 = bundleHistory->GetMatches(0, "two");
 	cloud3 = bundleHistory->GetPointCloud(0, "first");
@@ -172,6 +183,9 @@ TEST_CASE( "Add and Get (BundleHistory)", "[AddAndGet]" )
 	REQUIRE( features4 != NULL );
 	REQUIRE( GetNumberOfPoints(*features4) == 1 );
 	REQUIRE( GetXCoordinate(*features4, 0) == 2 );
+	REQUIRE( features8 != NULL );
+	REQUIRE( GetNumberOfPoints(*features8) == 1 );
+	REQUIRE( GetXCoordinate(*features8, 0) == 3 );
 	REQUIRE( map3 != NULL );
 	REQUIRE( GetNumberOfCorrespondences(*map3) == 1 );
 	REQUIRE( GetSource(*map3, 0).x == 1 );
@@ -189,6 +203,7 @@ TEST_CASE( "Add and Get (BundleHistory)", "[AddAndGet]" )
 	delete(rightFrame);
 	delete(leftFeature);
 	delete(rightFeature);
+	delete(cloudFeature);
 	delete(correspondence1);
 	delete(correspondence2);
 	delete(pointCloud1);
