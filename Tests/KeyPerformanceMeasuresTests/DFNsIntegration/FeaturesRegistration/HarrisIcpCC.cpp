@@ -32,7 +32,8 @@
 #include <Registration3D/IcpCC.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
+using namespace CDFF::DFN::FeaturesExtraction3D;
+using namespace CDFF::DFN::Registration3D;
 
 /* --------------------------------------------------------------------------
  *

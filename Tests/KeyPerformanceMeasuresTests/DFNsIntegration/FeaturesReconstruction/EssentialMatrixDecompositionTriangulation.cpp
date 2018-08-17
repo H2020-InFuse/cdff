@@ -32,7 +32,9 @@
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
+using namespace CDFF::DFN::FundamentalMatrixComputation;
+using namespace CDFF::DFN::CamerasTransformEstimation;
+using namespace CDFF::DFN::PointCloudReconstruction2DTo3D;
 
 /* --------------------------------------------------------------------------
  *

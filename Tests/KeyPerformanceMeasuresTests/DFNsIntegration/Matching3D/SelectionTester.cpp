@@ -32,7 +32,8 @@
 #include<pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
+using namespace CDFF::DFN::FeaturesDescription3D;
+using namespace CDFF::DFN::FeaturesMatching3D;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;

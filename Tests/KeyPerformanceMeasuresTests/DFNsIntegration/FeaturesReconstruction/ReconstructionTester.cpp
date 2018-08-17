@@ -31,7 +31,9 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <ctime>
 
-using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
+using namespace CDFF::DFN::FundamentalMatrixComputation;
+using namespace CDFF::DFN::CamerasTransformEstimation;
+using namespace CDFF::DFN::PointCloudReconstruction2DTo3D;
 using namespace PointCloudWrapper;
 using namespace MatrixWrapper;
 using namespace PoseWrapper;

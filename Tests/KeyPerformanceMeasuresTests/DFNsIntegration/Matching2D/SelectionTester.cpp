@@ -31,7 +31,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <ctime>
 
-using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
+using namespace CDFF::DFN::FeaturesDescription2D;
+using namespace CDFF::DFN::FeaturesMatching2D;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;

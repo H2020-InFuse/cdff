@@ -32,7 +32,8 @@
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace CDFF::DFN::WHICH-DFN(S)-IF-ANY?;
+using namespace CDFF::DFN::FeaturesDescription3D;
+using namespace CDFF::DFN::FeaturesMatching3D;
 
 /* --------------------------------------------------------------------------
  *
