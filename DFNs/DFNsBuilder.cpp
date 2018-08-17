@@ -113,11 +113,11 @@ BundleAdjustmentInterface* DFNsBuilder::CreateBundleAdjustment(std::string dfnIm
 {
 	if (dfnImplementation == "CeresAdjustment")
 	{
-		return new CeresAdjustment;
+		return new BundleAdjustment::CeresAdjustment;
 	}
 	else if (dfnImplementation == "SvdDecomposition")
 	{
-		return new SvdDecomposition;
+		return new BundleAdjustment::SvdDecomposition;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -127,7 +127,7 @@ CamerasTransformEstimationInterface* DFNsBuilder::CreateCamerasTransformEstimati
 {
 	if (dfnImplementation == "EssentialMatrixDecomposition")
 	{
-		return new EssentialMatrixDecomposition;
+		return new CamerasTransformEstimation::EssentialMatrixDecomposition;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -137,7 +137,7 @@ FeaturesDescription2DInterface* DFNsBuilder::CreateFeaturesDescription2D(std::st
 {
 	if (dfnImplementation == "OrbDescriptor")
 	{
-		return new OrbDescriptor;
+		return new FeaturesDescription2D::OrbDescriptor;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -147,7 +147,7 @@ FeaturesDescription3DInterface* DFNsBuilder::CreateFeaturesDescription3D(std::st
 {
 	if (dfnImplementation == "ShotDescriptor3D")
 	{
-		return new ShotDescriptor3D;
+		return new FeaturesDescription3D::ShotDescriptor3D;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -157,11 +157,11 @@ FeaturesExtraction2DInterface* DFNsBuilder::CreateFeaturesExtraction2D(std::stri
 {
 	if (dfnImplementation == "HarrisDetector2D")
 	{
-		return new HarrisDetector2D;
+		return new FeaturesExtraction2D::HarrisDetector2D;
 	}
 	else if (dfnImplementation == "OrbDetectorDescriptor")
 	{
-		return new OrbDetectorDescriptor;
+		return new FeaturesExtraction2D::OrbDetectorDescriptor;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -171,7 +171,7 @@ FeaturesExtraction3DInterface* DFNsBuilder::CreateFeaturesExtraction3D(std::stri
 {
 	if (dfnImplementation == "HarrisDetector3D")
 	{
-		return new HarrisDetector3D;
+		return new FeaturesExtraction3D::HarrisDetector3D;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -181,7 +181,7 @@ FeaturesMatching2DInterface* DFNsBuilder::CreateFeaturesMatching2D(std::string d
 {
 	if (dfnImplementation == "FlannMatcher")
 	{
-		return new FlannMatcher;
+		return new FeaturesMatching2D::FlannMatcher;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -191,11 +191,11 @@ FeaturesMatching3DInterface* DFNsBuilder::CreateFeaturesMatching3D(std::string d
 {
 	if (dfnImplementation == "Icp3D")
 	{
-		return new Icp3D;
+		return new FeaturesMatching3D::Icp3D;
 	}
 	else if (dfnImplementation == "Ransac3D")
 	{
-		return new Ransac3D;
+		return new FeaturesMatching3D::Ransac3D;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -205,7 +205,7 @@ FundamentalMatrixComputationInterface* DFNsBuilder::CreateFundamentalMatrixCompu
 {
 	if (dfnImplementation == "FundamentalMatrixRansac")
 	{
-		return new FundamentalMatrixRansac;
+		return new FundamentalMatrixComputation::FundamentalMatrixRansac;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -215,11 +215,11 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(std::string dfnImplem
 {
 	if (dfnImplementation == "ImageUndistortion")
 	{
-		return new ImageUndistortion;
+		return new ImageFiltering::ImageUndistortion;
 	}
 	else if (dfnImplementation == "ImageUndistortionRectification")
 	{
-		return new ImageUndistortionRectification;
+		return new ImageFiltering::ImageUndistortionRectification;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -229,7 +229,7 @@ PerspectiveNPointSolvingInterface* DFNsBuilder::CreatePerspectiveNPointSolving(s
 {
 	if (dfnImplementation == "IterativePnpSolver")
 	{
-		return new IterativePnpSolver;
+		return new PerspectiveNPointSolving::IterativePnpSolver;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -239,7 +239,7 @@ PointCloudReconstruction2DTo3DInterface* DFNsBuilder::CreatePointCloudReconstruc
 {
 	if (dfnImplementation == "Triangulation")
 	{
-		return new Triangulation;
+		return new PointCloudReconstruction2DTo3D::Triangulation;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -249,11 +249,11 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(std::string dfnImplem
 {
 	if (dfnImplementation == "Icp3D")
 	{
-		return new Icp3D;
+		return new Registration3D::Icp3D;
 	}
 	else if (dfnImplementation == "IcpCC")
 	{
-		return new IcpCC;
+		return new Registration3D::IcpCC;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -263,15 +263,15 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(std::stri
 {
 	if (dfnImplementation == "DisparityMapping")
 	{
-		return new DisparityMapping;
+		return new StereoReconstruction::DisparityMapping;
 	}
 	else if (dfnImplementation == "HirschmullerDisparityMapping")
 	{
-		return new HirschmullerDisparityMapping;
+		return new StereoReconstruction::HirschmullerDisparityMapping;
 	}
 	else if (dfnImplementation == "ScanlineOptimization")
 	{
-		return new ScanlineOptimization;
+		return new StereoReconstruction::ScanlineOptimization;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -281,11 +281,11 @@ Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(std::st
 {
 	if (dfnImplementation == "CeresEstimation")
 	{
-		return new CeresEstimation;
+		return new Transform3DEstimation::CeresEstimation;
 	}
 	else if (dfnImplementation == "LeastSquaresMinimization")
 	{
-		return new LeastSquaresMinimization;
+		return new Transform3DEstimation::LeastSquaresMinimization;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
