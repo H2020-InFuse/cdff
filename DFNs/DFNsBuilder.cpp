@@ -111,13 +111,13 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 
 BundleAdjustmentInterface* DFNsBuilder::CreateBundleAdjustment(std::string dfnImplementation)
 {
-	if (dfnImplementation == "SvdDecomposition")
-	{
-		return new SvdDecomposition;
-	}
-	else if (dfnImplementation == "CeresAdjustment")
+	if (dfnImplementation == "CeresAdjustment")
 	{
 		return new CeresAdjustment;
+	}
+	else if (dfnImplementation == "SvdDecomposition")
+	{
+		return new SvdDecomposition;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -247,13 +247,13 @@ PointCloudReconstruction2DTo3DInterface* DFNsBuilder::CreatePointCloudReconstruc
 
 Registration3DInterface* DFNsBuilder::CreateRegistration3D(std::string dfnImplementation)
 {
-	if (dfnImplementation == "IcpCC")
-	{
-		return new IcpCC;
-	}
-	else if (dfnImplementation == "Icp3D")
+	if (dfnImplementation == "Icp3D")
 	{
 		return new Icp3D;
+	}
+	else if (dfnImplementation == "IcpCC")
+	{
+		return new IcpCC;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
@@ -279,13 +279,13 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(std::stri
 
 Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(std::string dfnImplementation)
 {
-	if (dfnImplementation == "LeastSquaresMinimization")
-	{
-		return new LeastSquaresMinimization;
-	}
-	else if (dfnImplementation == "CeresEstimation")
+	if (dfnImplementation == "CeresEstimation")
 	{
 		return new CeresEstimation;
+	}
+	else if (dfnImplementation == "LeastSquaresMinimization")
+	{
+		return new LeastSquaresMinimization;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
