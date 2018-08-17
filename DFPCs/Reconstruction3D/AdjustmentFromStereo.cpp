@@ -197,7 +197,7 @@ void AdjustmentFromStereo::setup()
 	bundleHistory = new BundleHistory(parameters.numberOfAdjustedStereoPairs + 1);
 
 	DELETE_PREVIOUS(correspondencesRecorder);
-	correspondencesRecorder = new MultipleCorrespondences2DRecorder(parameters.numberOfAdjustedStereoPairs);	
+	correspondencesRecorder = new MultipleCorrespondences2DRecorder(parameters.numberOfAdjustedStereoPairs, true);	
 
 	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
 
@@ -416,7 +416,7 @@ bool AdjustmentFromStereo::ComputeCameraPoses(PoseWrapper::Poses3DSequenceConstP
 	bool success;
 	float error;
 
-	CorrespondenceMaps2DSequencePtr workingCorrespondenceMapSequence = correspondencesRecorder->GetLatestCorrespondences();
+	CorrespondenceMaps2DSequenceConstPtr workingCorrespondenceMapSequence = correspondencesRecorder->GetLatestCorrespondences();
 	for(int mapIndex = 0; mapIndex < GetNumberOfCorrespondenceMaps(*workingCorrespondenceMapSequence); mapIndex++)
 		{
 		DEBUG_PRINT_TO_LOG(std::to_string(mapIndex), std::to_string( GetNumberOfCorrespondences( GetCorrespondenceMap(*workingCorrespondenceMapSequence, mapIndex) ) ) );

@@ -48,14 +48,14 @@ namespace dfpc_ci {
 class MultipleCorrespondences2DRecorder
 	{
 	public:
-		MultipleCorrespondences2DRecorder(int maximumNumberOfPoses);
+		MultipleCorrespondences2DRecorder(int maximumNumberOfPoses, bool filterPointsThatDoNotAppearInAllMatches = false);
 		~MultipleCorrespondences2DRecorder();
 
 		void InitializeNewSequence();
 		void AddCorrespondences(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr map);
 		void CompleteNewSequence();
 		
-		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr GetLatestCorrespondences();
+		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequenceConstPtr GetLatestCorrespondences();
 		void DiscardLatestCorrespondences();
 	
 	protected:
@@ -72,6 +72,7 @@ class MultipleCorrespondences2DRecorder
 		bool addingNewSequence;
 		bool oneCorrespondenceWasAddedSinceLastDiscard;
 		int expectedMapsToAdd;
+		bool useFilter;
 
 		WorkingSequence latestSequence;
 		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr firstCorrespondenceMapSequence;
@@ -79,6 +80,14 @@ class MultipleCorrespondences2DRecorder
 
 		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr workingCorrespondenceMapSequence;
 		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr historyCorrespondenceMapSequence;
+
+		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr filteredCorrespondenceMapSequence;
+
+		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequenceConstPtr Filter(CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequenceConstPtr sequenceToFilter);
+		std::vector<BaseTypesWrapper::T_UInt32> ComputeChainFrom(int correspondenceIndex);
+		int GetPointConnectedSourceToSource(int mapIndex1, int correspondenceIndex, int mapIndex2);
+		int GetPointConnectedSinkToSource(int mapIndex1, int correspondenceIndex, int mapIndex2);
+		bool LastSinkIsValid(const std::vector<BaseTypesWrapper::T_UInt32>& chain, int sourceIndex);
 	
 	};
 
