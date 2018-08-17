@@ -25,9 +25,11 @@
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
-#include <Registration3D/IcpCC.hpp> // TODO missing Icp3D
+#include <Registration3D/Icp3D.hpp>
+#include <Registration3D/IcpCC.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
-#include <StereoReconstruction/HirschmullerDisparityMapping.hpp> // TODO missing ScanlineOptimization
+#include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
+#include <StereoReconstruction/ScanlineOptimization>
 #include <Transform3DEstimation/CeresEstimation.hpp>
 #include <Transform3DEstimation/LeastSquaresMinimization.hpp>
 
@@ -249,6 +251,10 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(std::string dfnImplem
 	{
 		return new IcpCC();
 	}
+	else if (dfnImplementation == "Icp3D")
+	{
+		return new Icp3D();
+	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
 }
@@ -262,6 +268,10 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(std::stri
 	else if (dfnImplementation == "HirschmullerDisparityMapping")
 	{
 		return new HirschmullerDisparityMapping();
+	}
+	else if (dfnImplementation == "ScanlineOptimization")
+	{
+		return new ScanlineOptimization();
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
