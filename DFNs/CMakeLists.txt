@@ -34,12 +34,14 @@ target_link_libraries(
   image_undistortion_rectification
   disparity_mapping
   hirschmuller_disparity_mapping
+  scanline_optimization
   orb_detector_descriptor
   flann_matcher
   iterative_pnp_solver
   triangulation
   harris_detector_3d
   kalman_predictor
+  registration_icp_3d
   registration_icp_cc
   ceres_adjustment
   svd_decomposition
@@ -65,6 +67,6 @@ target_link_libraries(
   pcl_keypoints
   pcl_surface
   pcl_segmentation
-  pcl_sample_consensus 
+  pcl_sample_consensus
   pcl_stereo
 )
