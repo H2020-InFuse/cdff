@@ -5,7 +5,7 @@
     PointCloudMapResolution: 0.01
     SearchRadius: 80
     UseBundleInitialEstimation: true
-    NumberOfAdjustedStereoPairs: 2
+    NumberOfAdjustedStereoPairs: 4
 - Name: reconstructor3d
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping

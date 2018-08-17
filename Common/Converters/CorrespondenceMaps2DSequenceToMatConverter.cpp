@@ -168,7 +168,7 @@ void CorrespondenceMaps2DSequenceToMatConverter::AddChainToMeasurementMatrix(con
 
 int CorrespondenceMaps2DSequenceToMatConverter::ComputeNumberOfImages(const CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequence& correspondenceMapsSequence)
 	{	
-	for(int candidateNumber = 0; candidateNumber < MAXIMUM_NUMBER_OF_IMAGES; candidateNumber++)
+	for(int candidateNumber = 0; candidateNumber <= MAXIMUM_NUMBER_OF_IMAGES; candidateNumber++)
 		{
 		int expectedCorrespondencesNumber = (candidateNumber * (candidateNumber - 1)) / 2;
 		if (expectedCorrespondencesNumber == GetNumberOfCorrespondenceMaps(correspondenceMapsSequence) )
