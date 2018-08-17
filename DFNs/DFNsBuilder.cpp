@@ -29,7 +29,7 @@
 #include <Registration3D/IcpCC.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
-#include <StereoReconstruction/ScanlineOptimization>
+#include <StereoReconstruction/ScanlineOptimization.hpp>
 #include <Transform3DEstimation/CeresEstimation.hpp>
 #include <Transform3DEstimation/LeastSquaresMinimization.hpp>
 
