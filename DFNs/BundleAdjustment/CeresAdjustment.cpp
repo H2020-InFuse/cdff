@@ -203,7 +203,7 @@ std::vector<cv::Mat> CeresAdjustment::SolveBundleAdjustment(cv::Mat measurementM
 				);		
 			}
 		}
-	bundleAdjustment.SetParameterBlockConstant(mutableTransforms3dStructure.at(0));
+	//bundleAdjustment.SetParameterBlockConstant(mutableTransforms3dStructure.at(0));
 
 	//Calling the solver
 	ceres::Solver::Options ceresOptions;
@@ -215,18 +215,19 @@ std::vector<cv::Mat> CeresAdjustment::SolveBundleAdjustment(cv::Mat measurementM
 
 	//Converting in expected output form
 	std::vector<cv::Mat> projectionMatricesList(numberOfImages);
+	Transform3d& firstTransform =  mutableTransforms3dStructure.at(0);
 	for(int imageIndex = 0; imageIndex < numberOfImages; imageIndex++)
 		{
 		Transform3d& transform3d =  mutableTransforms3dStructure.at(imageIndex/2);
-		double rotation[3] = { transform3d[3], transform3d[4], transform3d[5] };
+		double rotation[3] = { transform3d[3] - firstTransform[3], transform3d[4] - firstTransform[4], transform3d[5] - firstTransform[5] };
 		double rotationMatrix[9];
 		ceres::AngleAxisToRotationMatrix(rotation, rotationMatrix);
 
 		float baselineDisplacement = (imageIndex % 2 == 0) ? 0 : parameters.baseline;
 		projectionMatricesList.at(imageIndex) = (cv::Mat_<float>(3, 4, CV_32FC1) <<
-			rotationMatrix[0], rotationMatrix[3], rotationMatrix[6], transform3d[0] - baselineDisplacement,
-			rotationMatrix[1], rotationMatrix[4], rotationMatrix[7], transform3d[1],
-			rotationMatrix[2], rotationMatrix[5], rotationMatrix[8], transform3d[2]);
+			rotationMatrix[0], rotationMatrix[3], rotationMatrix[6], transform3d[0] - firstTransform[0] - baselineDisplacement,
+			rotationMatrix[1], rotationMatrix[4], rotationMatrix[7], transform3d[1] - firstTransform[1],
+			rotationMatrix[2], rotationMatrix[5], rotationMatrix[8], transform3d[2] - firstTransform[2]);
 		}
 
 	//Check convergence

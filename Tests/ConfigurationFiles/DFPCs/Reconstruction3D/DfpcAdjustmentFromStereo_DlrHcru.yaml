@@ -4,7 +4,7 @@
     Baseline: 0.09290672099999999
     PointCloudMapResolution: 0.01
     SearchRadius: 80
-    NumberOfAdjustedStereoPairs: 3
+    NumberOfAdjustedStereoPairs: 4
     UseBundleInitialEstimation: false
 - Name: reconstructor3d
   Type: StereoReconstruction
