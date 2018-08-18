@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the GuiTestReconstruction3D class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -30,7 +30,6 @@
 #include "GuiTestReconstruction3D.hpp"
 #include <boost/algorithm/string.hpp>
 
-using namespace CDFF::DFPC::Reconstruction3D;
 using namespace FrameWrapper;
 using namespace Converters;
 using namespace PoseWrapper;
@@ -42,7 +41,7 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-GuiTestReconstruction3D::GuiTestReconstruction3D(std::string configurationFilePath, std::string imageFilesFolder, std::string imagesListFileName, ImageFilesType imageFilesType) 
+GuiTestReconstruction3D::GuiTestReconstruction3D(std::string configurationFilePath, std::string imageFilesFolder, std::string imagesListFileName, ImageFilesType imageFilesType)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->imageFilesFolder = imageFilesFolder;
@@ -91,7 +90,7 @@ void GuiTestReconstruction3D::LoadImagesList(std::string imagesListFileName)
 	std::ifstream listFile( imagesListFilePath.str().c_str() );
 
 	ASSERT(listFile.good(), "Error, could not open images list file");
-	
+
 	std::string line;
 
 	std::getline(listFile, line);
@@ -109,7 +108,7 @@ void GuiTestReconstruction3D::LoadImagesList(std::string imagesListFileName)
 			{
 			secondImageFileNamesList.push_back( stringsList.at(2) );
 			}
-		}	
+		}
 
 	listFile.close();
 	}

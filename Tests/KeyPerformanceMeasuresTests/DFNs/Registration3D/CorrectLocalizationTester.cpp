@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the CorrectLocalizationTester class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -31,7 +31,7 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace CDFF::DFN::Registration3D;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
@@ -48,12 +48,12 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-CorrectLocalizationTester::CorrectLocalizationTester(std::string configurationFile, CDFF::DFN::Registration3DInterface* dfn) 
+CorrectLocalizationTester::CorrectLocalizationTester(std::string configurationFile, CDFF::DFN::Registration3DInterface* dfn)
 	{
 	this->configurationFile = configurationFile;
 	this->dfn = dfn;
 	ConfigureDfn();
-	
+
 	modelCloudFilePath = "";
 	sceneCloudFilePath = "";
 
@@ -61,7 +61,7 @@ CorrectLocalizationTester::CorrectLocalizationTester(std::string configurationFi
 	inputModelCloud = NULL;
 	inputTruthModelPoseInScene = NULL;
 	inputGuessModelPoseInScene = NULL;
-	
+
 	outputMatcherSuccess = false;
 	inputsWereLoaded = false;
 	groundTruthWasLoaded = false;
@@ -95,7 +95,7 @@ void CorrectLocalizationTester::SetGuessModelPoseInScene(std::string guessPoseFi
 
 void CorrectLocalizationTester::ExecuteDfn()
 	{
-	ASSERT(inputsWereLoaded && groundTruthWasLoaded, "Error: there was a call to ExecuteDfns before actually loading inputs");	
+	ASSERT(inputsWereLoaded && groundTruthWasLoaded, "Error: there was a call to ExecuteDfns before actually loading inputs");
 
 	dfn->sourceCloudInput(*inputModelCloud);
 	dfn->sinkCloudInput(*inputSceneCloud);
@@ -177,13 +177,13 @@ void CorrectLocalizationTester::LoadPointClouds()
 	pcl::PointCloud<pcl::PointXYZ>::Ptr baseScenePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(sceneCloudFilePath, *baseScenePclCloud);
 
-	DELETE_IF_NOT_NULL(inputSceneCloud);	
+	DELETE_IF_NOT_NULL(inputSceneCloud);
 	inputSceneCloud = pointCloudConverter.Convert(baseScenePclCloud);
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr baseModelPclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(modelCloudFilePath, *baseModelPclCloud);
 
-	DELETE_IF_NOT_NULL(inputModelCloud);	
+	DELETE_IF_NOT_NULL(inputModelCloud);
 	inputModelCloud = pointCloudConverter.Convert(baseModelPclCloud);
 
 	inputsWereLoaded = true;
@@ -249,17 +249,17 @@ float CorrectLocalizationTester::ComputeOrientationError(float modelSize)
 	const Transform3D& outputModelPoseInScene = dfn->transformOutput();
 	Eigen::Quaternion<float> outputRotation
 		(
-		GetWOrientation(outputModelPoseInScene), 
-		GetXOrientation(outputModelPoseInScene), 
-		GetYOrientation(outputModelPoseInScene), 
+		GetWOrientation(outputModelPoseInScene),
+		GetXOrientation(outputModelPoseInScene),
+		GetYOrientation(outputModelPoseInScene),
 		GetZOrientation(outputModelPoseInScene)
 		);
 
 	Eigen::Quaternion<float> truthRotation
 		(
-		GetWOrientation(*inputTruthModelPoseInScene), 
-		GetXOrientation(*inputTruthModelPoseInScene), 
-		GetYOrientation(*inputTruthModelPoseInScene), 
+		GetWOrientation(*inputTruthModelPoseInScene),
+		GetXOrientation(*inputTruthModelPoseInScene),
+		GetYOrientation(*inputTruthModelPoseInScene),
 		GetZOrientation(*inputTruthModelPoseInScene)
 		);
 

@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Implementation of the class ImageFilteringTestInterface.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -29,7 +29,7 @@
 #include "ImageFiltering.hpp"
 #include <fstream>
 
-using namespace CDFF::DFN::ImageFiltering;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace FrameWrapper;
 
@@ -91,7 +91,7 @@ void ImageFilteringTestInterface::ReadImageFileNamesList()
 	listFilePath << baseImageFolder << "/" << imagesListFileName;
 
 	std::ifstream file(listFilePath.str().c_str());
-	
+
 	while(file.good())
 		{
 		std::string newString;
@@ -129,7 +129,7 @@ bool ImageFilteringTestInterface::SetNextInputs()
 		time++;
 		return true;
 		}
-	
+
 	return false;
 	}
 
@@ -143,13 +143,13 @@ ImageFilteringTestInterface::MeasuresMap ImageFilteringTestInterface::ExtractMea
 	Copy( filter->imageOutput(), *outputFrame);
 
 	FrameToMatConverter converter;
-	cv::Mat cvImage = converter.Convert(outputFrame); 
+	cv::Mat cvImage = converter.Convert(outputFrame);
 
 	if (saveOutput)
 		{
 		unsigned fileNumber = testId - 1; // This is to match DLR dataset
 		std::stringstream fileStream;
-		fileStream << baseImageFolder << "/" << imagesOutputFileBaseName << (fileNumber < 100 ? "0" : "") << (fileNumber < 10 ? "0" : "") << fileNumber << imagesOutputExtension; 
+		fileStream << baseImageFolder << "/" << imagesOutputFileBaseName << (fileNumber < 100 ? "0" : "") << (fileNumber < 10 ? "0" : "") << fileNumber << imagesOutputExtension;
 		std::string fileString = fileStream.str();
 		PRINT_TO_LOG("Saving", fileString);
 		cv::imwrite(fileString, cvImage);

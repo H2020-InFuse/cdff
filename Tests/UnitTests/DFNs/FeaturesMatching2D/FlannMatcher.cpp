@@ -36,6 +36,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+using namespace CDFF::DFN::FeaturesExtraction2D;
 using namespace CDFF::DFN::FeaturesMatching2D;
 using namespace Converters;
 using namespace FrameWrapper;

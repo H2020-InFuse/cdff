@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * This is the test interface for the implementation of the performance test for DFPC Reconstruction 3D
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -78,10 +78,10 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 		bool saveOutputCloud;
 		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 
-		CDFF::DFPC::ObservedScene* map;
+		CDFF::DFPC::Reconstruction3D::ObservedScene* map;
 		CDFF::DFPC::Reconstruction3DInterface* reconstructor;
 		void ReadImagesList();
-	
+
 		std::vector<std::string> leftImageFileNamesList;
 		std::vector<std::string> rightImageFileNamesList;
 		std::vector<FrameWrapper::FrameConstPtr> leftImagesList;

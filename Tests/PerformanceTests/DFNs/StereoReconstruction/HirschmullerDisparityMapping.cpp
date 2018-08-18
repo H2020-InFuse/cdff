@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Performance Test for the DFN Hirschmuller Disparity Mapping.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -29,8 +29,8 @@
 #include "StereoReconstruction.hpp"
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 
+using namespace CDFF::DFN;
 using namespace CDFF::DFN::StereoReconstruction;
-
 
 const std::string USAGE =
 	"This method takes up to eight optional parameters: \n \
@@ -62,12 +62,12 @@ int main(int argc, char** argv)
 
 	StereoReconstructionInterface* reconstructor = new HirschmullerDisparityMapping();
 	StereoReconstructionTestInterface interface("../tests/ConfigurationFiles/DFNs/StereoReconstruction", configurationFileName, "HirschmullerOutput.txt", reconstructor);
-	
+
 	if (argc >= 5)
 		{
 		std::string useReferenceDisparity = argv[4];
-		ASSERT(useReferenceDisparity == "UseReferenceDisparity" || useReferenceDisparity == "NoReferenceDisparity", 
-			"Error: 4th parameter has to be either UseReferenceDisparity or NoReferenceDisparity"); 
+		ASSERT(useReferenceDisparity == "UseReferenceDisparity" || useReferenceDisparity == "NoReferenceDisparity",
+			"Error: 4th parameter has to be either UseReferenceDisparity or NoReferenceDisparity");
 		interface.SetImageFilesPath(argv[2], argv[3], (useReferenceDisparity == "UseReferenceDisparity") );
 		}
 

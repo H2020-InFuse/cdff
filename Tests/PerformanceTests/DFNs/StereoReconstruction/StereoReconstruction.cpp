@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Implementation of the Test interface for the performance test of DFN Stereo Reconstruction
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -28,7 +28,7 @@
  */
 #include "StereoReconstruction.hpp"
 
-using namespace CDFF::DFN::StereoReconstruction;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace PointCloudWrapper;
@@ -40,14 +40,14 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, 
+StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName,
 	StereoReconstructionInterface* reconstructor) : PerformanceTestInterface(folderPath, baseConfigurationFileName, performanceMeasuresFileName)
 	{
 	this->reconstructor = reconstructor;
 	SetDfn(this->reconstructor);
 
 	baseFolderPath = "../tests/Data/Images";
-	
+
 	std::string uniqueLeftImage = "RectifiedChair40Left.png";
 	std::string uniqueRightImage = "RectifiedChair40Right.png";
 	std::string uniqueDisparityImage = "chairDepth40.yml";
@@ -115,7 +115,7 @@ void StereoReconstructionTestInterface::ReadImagesList(bool useReferenceDisparit
 		std::vector<std::string> stringsList;
 		boost::split(stringsList, line, boost::is_any_of(" "));
 		ASSERT(stringsList.size() >= 2, "Error reading file, bad line");
-		
+
 		leftImagesNameList.push_back( std::string(stringsList.at(0)) );
 		rightImagesNameList.push_back( std::string(stringsList.at(1)) );
 		if (useReferenceDisparity)
@@ -135,7 +135,7 @@ void StereoReconstructionTestInterface::SetReferenceDisparity(std::string refere
 
 	cv::normalize(referenceDisparity, normalizedReferenceDisparity, 0, 255, cv::NORM_MINMAX, CV_8UC1);
 	std::stringstream stream;
-	stream << "../tests/ConfigurationFiles/DFNs/StereoReconstruction/ReferenceDisparity.jpg"; 
+	stream << "../tests/ConfigurationFiles/DFNs/StereoReconstruction/ReferenceDisparity.jpg";
 	cv::imwrite(stream.str(), normalizedReferenceDisparity);
 	}
 
@@ -172,7 +172,7 @@ bool StereoReconstructionTestInterface::SetNextInputs()
 		time++;
 		return true;
 		}
-	
+
 	return false;
 	}
 
@@ -192,7 +192,7 @@ StereoReconstructionTestInterface::MeasuresMap StereoReconstructionTestInterface
 	ComputeValidDisparityColumns(normalizedDisparity, firstValidColumn, numberOfValidColumns);
 
 	/** Sometimes completely white images are in the output, this loop determines whether the image is completely white**/
-	measuresMap["OutputQuality"] = IsBadDisparity(normalizedDisparity, firstValidColumn) ? 0 : 1;	
+	measuresMap["OutputQuality"] = IsBadDisparity(normalizedDisparity, firstValidColumn) ? 0 : 1;
 
 	if (useReferenceDisparity)
 		{
@@ -259,7 +259,7 @@ double StereoReconstructionTestInterface::ComputeDisparityCost(const cv::Mat& no
 				{
 				unsigned validColumn = firstValidColumn + (column * numberOfValidColumns / normalizedReferenceDisparity.cols );
 				uint8_t disparityValue = normalizedDisparity.at<uint8_t>(row, validColumn);
-				cost += std::abs(static_cast<int16_t>(disparityValue) - static_cast<int16_t>(255 - referenceDisparityValue));	
+				cost += std::abs(static_cast<int16_t>(disparityValue) - static_cast<int16_t>(255 - referenceDisparityValue));
 				pixelsNumber++;
 				}
 			}
@@ -270,14 +270,14 @@ double StereoReconstructionTestInterface::ComputeDisparityCost(const cv::Mat& no
 void StereoReconstructionTestInterface::SaveOutputDisparity(const cv::Mat& disparity, unsigned testId)
 	{
 	std::stringstream disparityOutputPath;
-	disparityOutputPath << baseFolderPath << "/" << outputDisparityFileBaseName << testId << outputDisparityFileExtension; 
+	disparityOutputPath << baseFolderPath << "/" << outputDisparityFileBaseName << testId << outputDisparityFileExtension;
 	cv::imwrite(disparityOutputPath.str(), disparity);
 	}
 
 void StereoReconstructionTestInterface::SaveOutputCloud(PointCloudWrapper::PointCloudConstPtr pointCloud, unsigned testId)
 	{
 	std::stringstream cloudOutputPath;
-	cloudOutputPath << baseFolderPath << "/" << outputCloudFileBaseName << testId << outputCloudFileExtension; 
+	cloudOutputPath << baseFolderPath << "/" << outputCloudFileBaseName << testId << outputCloudFileExtension;
 
 	PointCloudToPclPointCloudConverter pclConverter;
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclCloud = pclConverter.Convert(pointCloud);

@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the QualityTester class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -32,7 +32,7 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace CDFF::DFN::StereoReconstruction;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace FrameWrapper;
@@ -49,7 +49,7 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
-QualityTester::QualityTester() 
+QualityTester::QualityTester()
 	{
 	inputLeftFrame = NULL;
 	inputRightFrame = NULL;
@@ -95,7 +95,7 @@ void QualityTester::SetOutputFilePath(std::string outputPointCloudFilePath)
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::io::loadPLYFile(outputPointCloudFilePath, *pclPointCloud);
-	
+
 	DELETE_IF_NOT_NULL(outputPointCloud);
 	outputPointCloud = inverseCloudConverter.Convert(pclPointCloud);
 
@@ -145,7 +145,7 @@ bool QualityTester::IsOutliersQualitySufficient(float outliersPercentageThreshol
 
 	PRINT_TO_LOG("Point cloud size is", GetNumberOfPoints(*outputPointCloud));
 	PRINT_TO_LOG("Number of outliers is", outliersMatrix.rows);
-	
+
 	float outlierPercentage = ((float)outliersMatrix.rows) / ( (float)GetNumberOfPoints(*outputPointCloud) );
 	PRINT_TO_LOG("Outlier percentage is: ", outlierPercentage);
 
@@ -162,7 +162,7 @@ bool QualityTester::IsOutliersQualitySufficient(float outliersPercentageThreshol
 bool QualityTester::IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage)
 	{
 	ASSERT(outputPointCloudWasLoaded && measuresReferenceWasLoaded, "Error: you have to load cloud and measures");
-	
+
 	float distanceToCameraErrorThreshold = cameraDistanceErrorPercentage * cameraOperationDistance;
 	float cameraDistanceError = ComputeCameraDistanceError();
 	bool withinCameraError = (cameraDistanceError <= distanceToCameraErrorThreshold);
@@ -197,7 +197,7 @@ bool QualityTester::IsDimensionsQualitySufficient(float shapeSimilarityPercentan
 void QualityTester::SaveOutputPointCloud(std::string outputPointCloudFilePath)
 	{
 	ASSERT(dfnExecuted, "Cannot save output cloud if DFN was not executed before");
-	
+
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclPointCloud = pointCloudConverter.Convert(outputPointCloud);
 
 	pcl::PLYWriter writer;
@@ -215,7 +215,7 @@ void QualityTester::LoadInputImage(std::string filePath, FrameWrapper::FrameCons
 	cv::Mat cvImage = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
 	ASSERT(cvImage.cols > 0 && cvImage.rows >0, "Error: Loaded input image is empty");
 
-	DELETE_IF_NOT_NULL(frame);	
+	DELETE_IF_NOT_NULL(frame);
 	frame = frameConverter.Convert(cvImage);
 	}
 
@@ -246,7 +246,7 @@ void QualityTester::LoadMeasuresReference()
 			{
 			Object newObject;
 			objectsList.push_back(newObject);
-			}	
+			}
 
 		Line newLine;
 		newLine.sourceIndex = objectsMatrix.at<float>(lineIndex, 0);
@@ -269,7 +269,7 @@ float QualityTester::ComputeCameraDistanceError()
 		{
 		int32_t originalPointIndex = pointsToCameraMatrix.at<float>(pointIndex, 0);
 		float measuredDistance = pointsToCameraMatrix.at<float>(pointIndex, 1);
-		
+
 		float x = GetXCoordinate(*outputPointCloud, originalPointIndex);
 		float y = GetYCoordinate(*outputPointCloud, originalPointIndex);
 		float z = GetZCoordinate(*outputPointCloud, originalPointIndex);
@@ -293,8 +293,8 @@ float QualityTester::ComputeShapeSimilarity()
 			{
 			totalShapeSimilarity += ComputeObjectShapeSimilarity(objectIndex);
 			}
-		}	
-	float averageShapeSimilarity = totalShapeSimilarity / (float)objectsList.size(); 
+		}
+	float averageShapeSimilarity = totalShapeSimilarity / (float)objectsList.size();
 
 	PRINT_TO_LOG("The average shape similarity", averageShapeSimilarity);
 	return averageShapeSimilarity;
@@ -313,7 +313,7 @@ bool QualityTester::EvaluateDimensionalError(float dimensionalErrorPercentage, f
 				{
 				continue;
 				}
-			
+
 			float lineRelativeError = ComputeLineAbsoluteError(currentLine) / currentLine.length;
 			if (lineRelativeError >= dimensionalErrorPercentage)
 				{
@@ -344,10 +344,10 @@ float QualityTester::ComputeLineAbsoluteError(const Line& line)
 	{
 	float sourceX = GetXCoordinate(*outputPointCloud, line.sourceIndex);
 	float sourceY = GetYCoordinate(*outputPointCloud, line.sourceIndex);
-	float sourceZ = GetZCoordinate(*outputPointCloud, line.sourceIndex);	
+	float sourceZ = GetZCoordinate(*outputPointCloud, line.sourceIndex);
 	float sinkX = GetXCoordinate(*outputPointCloud, line.sinkIndex);
 	float sinkY = GetYCoordinate(*outputPointCloud, line.sinkIndex);
-	float sinkZ = GetZCoordinate(*outputPointCloud, line.sinkIndex);	
+	float sinkZ = GetZCoordinate(*outputPointCloud, line.sinkIndex);
 	float differenceX = sourceX - sinkX;
 	float differenceY = sourceY - sinkY;
 	float differenceZ = sourceZ - sinkZ;
@@ -359,7 +359,7 @@ float QualityTester::ComputeLineAbsoluteError(const Line& line)
 float QualityTester::ComputeObjectShapeSimilarity(int objectIndex)
 	{
 	float dimension = ComputeObjectDimension(objectIndex);
-	
+
 	float totalAbsoluteError = 0;
 	for(int lineIndex = 0; lineIndex < objectsList.at(objectIndex).size(); lineIndex++)
 		{
@@ -368,7 +368,7 @@ float QualityTester::ComputeObjectShapeSimilarity(int objectIndex)
 		totalAbsoluteError += lineAbsoluteError;
 		}
 	float averageAbsoluteError = totalAbsoluteError / (float)objectsList.at(objectIndex).size();
-	
+
 	return (1 - (averageAbsoluteError/dimension));
 	}
 

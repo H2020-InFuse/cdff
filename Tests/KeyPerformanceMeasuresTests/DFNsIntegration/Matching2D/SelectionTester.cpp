@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the SelectionTester class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -31,8 +31,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <ctime>
 
-using namespace CDFF::DFN::FeaturesDescription2D;
-using namespace CDFF::DFN::FeaturesMatching2D;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
@@ -50,7 +49,7 @@ using namespace CorrespondenceMap2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-SelectionTester::SelectionTester() 
+SelectionTester::SelectionTester()
 	{
 	featuresDescriptorConfigurationFilePath = "";
 	featuresMatcherConfigurationFilePath = "";
@@ -74,7 +73,7 @@ SelectionTester::SelectionTester()
 	}
 
 SelectionTester::~SelectionTester()
-	{	
+	{
 	DELETE_IF_NOT_NULL(inputSourceFrame);
 	DELETE_IF_NOT_NULL(inputSinkFrame);
 	DELETE_IF_NOT_NULL(inputSourceKeypointsVector);
@@ -263,9 +262,9 @@ bool SelectionTester::ValidateCorrespondences(float percentageThreshold)
 bool SelectionTester::CorrespondencesAreTheSame(int referenceIndex, int outputIndex)
 	{
 	BaseTypesWrapper::Point2D referenceSource = GetSource(*referenceCorrespondenceMap, referenceIndex);
-	BaseTypesWrapper::Point2D referenceSink = GetSink(*referenceCorrespondenceMap, referenceIndex);		
+	BaseTypesWrapper::Point2D referenceSink = GetSink(*referenceCorrespondenceMap, referenceIndex);
 	BaseTypesWrapper::Point2D outputSource = GetSource(*outputCorrespondenceMap, outputIndex);
-	BaseTypesWrapper::Point2D outputSink = GetSink(*outputCorrespondenceMap, outputIndex);	
+	BaseTypesWrapper::Point2D outputSink = GetSink(*outputCorrespondenceMap, outputIndex);
 
 	return (referenceSource.x == outputSource.x && referenceSource.y == outputSource.y && referenceSink.x == outputSink.x && referenceSink.y == outputSink.y);
 	}

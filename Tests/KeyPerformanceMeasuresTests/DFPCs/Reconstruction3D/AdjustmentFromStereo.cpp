@@ -13,13 +13,13 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Validity Test 4.1.1.6 for DFPC implementation AdjustmentFromStereo.
  * "Resulting point cloud should be within the expected bounds of error described in D5.2", and
- * "Expected performance is no more than 10% outliers as estimated by a human inspecting the point cloud", and 
- * "position estimation less than 1% of R, where R is the maximum operational distance of the camera/sensor", and 
+ * "Expected performance is no more than 10% outliers as estimated by a human inspecting the point cloud", and
+ * "position estimation less than 1% of R, where R is the maximum operational distance of the camera/sensor", and
  * "90% similarity in shape to the object viewed with less than 10% error in dimensional analysis (only for components larger than 10% of the total size of the object)"
- * 
+ *
  * @{
  */
 
@@ -33,6 +33,7 @@
 #include <Reconstruction3D/AdjustmentFromStereo.hpp>
 #include <Errors/Assert.hpp>
 
+using namespace CDFF::DFPC;
 using namespace CDFF::DFPC::Reconstruction3D;
 
 /* --------------------------------------------------------------------------
@@ -83,7 +84,7 @@ float ExtractOutliersPercentageThreshold(char* argument)
 	const std::string errorMessage = "The 4th parameter numberPercentageThreshold has to be a floating point number between 0 and 1";
 	float outliersPercentageThreshold;
 
-	try 
+	try
 		{
 		outliersPercentageThreshold = std::stof(argument);
 		}
@@ -92,7 +93,7 @@ float ExtractOutliersPercentageThreshold(char* argument)
 		ASSERT(false, errorMessage);
 		}
 	ASSERT(outliersPercentageThreshold >= 0 && outliersPercentageThreshold <= 1, errorMessage);
-	
+
 	return outliersPercentageThreshold;
 	}
 
@@ -101,7 +102,7 @@ float ExtractCameraOperationaDistance(char* argument)
 	const std::string errorMessage = "The 4th parameter camera maximum operational distance has to be a floating point greater than 0";
 	float cameraOperationalDistance;
 
-	try 
+	try
 		{
 		cameraOperationalDistance = std::stof(argument);
 		}
@@ -110,7 +111,7 @@ float ExtractCameraOperationaDistance(char* argument)
 		ASSERT(false, errorMessage);
 		}
 	ASSERT(cameraOperationalDistance >= 0, errorMessage);
-	
+
 	return cameraOperationalDistance;
 	}
 
@@ -119,7 +120,7 @@ float ExtractCameraDistanceError(char* argument)
 	const std::string errorMessage = "The 5th parameter cameraDistanceError has to be a floating point number between 0 and 1";
 	float cameraDistanceError;
 
-	try 
+	try
 		{
 		cameraDistanceError = std::stof(argument);
 		}
@@ -128,7 +129,7 @@ float ExtractCameraDistanceError(char* argument)
 		ASSERT(false, errorMessage);
 		}
 	ASSERT(cameraDistanceError >= 0 && cameraDistanceError <= 1, errorMessage);
-	
+
 	return cameraDistanceError;
 	}
 
@@ -137,7 +138,7 @@ float ExtractShapeSimilarityThreshold(char* argument)
 	const std::string errorMessage = "The 4th parameter shapeSimilarityThreshold has to be a floating point number between 0 and 1";
 	float shapeSimilarityThreshold;
 
-	try 
+	try
 		{
 		shapeSimilarityThreshold = std::stof(argument);
 		}
@@ -146,7 +147,7 @@ float ExtractShapeSimilarityThreshold(char* argument)
 		ASSERT(false, errorMessage);
 		}
 	ASSERT(shapeSimilarityThreshold >= 0 && shapeSimilarityThreshold <= 1, errorMessage);
-	
+
 	return shapeSimilarityThreshold;
 	}
 
@@ -155,7 +156,7 @@ float ExtractDimensionalErrorThreshold(char* argument)
 	const std::string errorMessage = "The 5th parameter dimensionalErrorThreshold has to be a floating point number between 0 and 1";
 	float dimensionalErrorThreshold;
 
-	try 
+	try
 		{
 		dimensionalErrorThreshold = std::stof(argument);
 		}
@@ -164,7 +165,7 @@ float ExtractDimensionalErrorThreshold(char* argument)
 		ASSERT(false, errorMessage);
 		}
 	ASSERT(dimensionalErrorThreshold >= 0 && dimensionalErrorThreshold <= 1, errorMessage);
-	
+
 	return dimensionalErrorThreshold;
 	}
 
@@ -173,7 +174,7 @@ float ExtractComponentSizeThreshold(char* argument)
 	const std::string errorMessage = "The 6th parameter componentSizeThreshold has to be a floating point number between 0 and 1";
 	float componentSizeThreshold;
 
-	try 
+	try
 		{
 		componentSizeThreshold = std::stof(argument);
 		}
@@ -182,7 +183,7 @@ float ExtractComponentSizeThreshold(char* argument)
 		ASSERT(false, errorMessage);
 		}
 	ASSERT(componentSizeThreshold >= 0 && componentSizeThreshold <= 1, errorMessage);
-	
+
 	return componentSizeThreshold;
 	}
 
@@ -293,7 +294,7 @@ int mainEvaluateDimensions(int argc, char** argv)
 int main(int argc, char** argv)
 	{
 	ASSERT(argc >= 2, USAGE);
-	
+
 	std::string mode = argv[1];
 	if (mode == "ComputePointCloud")
 		{
@@ -312,7 +313,7 @@ int main(int argc, char** argv)
 		{
 		return mainEvaluateDimensions(argc, argv);
 		}
-	
+
 	ASSERT(false, USAGE);
 	return 0;
 	}
