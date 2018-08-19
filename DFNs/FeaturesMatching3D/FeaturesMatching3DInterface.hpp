@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef FEATURESMATCHING3D_INTERFACE_HPP
-#define FEATURESMATCHING3D_INTERFACE_HPP
+#ifndef FEATURESMATCHING3D_FEATURESMATCHING3DINTERFACE_HPP
+#define FEATURESMATCHING3D_FEATURESMATCHING3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <VisualPointFeatureVector3D.h>
@@ -17,7 +17,7 @@ namespace DFN
     /**
      * DFN that matches 3D keypoints
      */
-    class FeaturesMatching3DInterface : public CDFF::DFN::DFNCommonInterface
+    class FeaturesMatching3DInterface : public DFNCommonInterface
     {
         public:
 
@@ -65,6 +65,6 @@ namespace DFN
 }
 }
 
-#endif // FEATURESMATCHING3D_INTERFACE_HPP
+#endif // FEATURESMATCHING3D_FEATURESMATCHING3DINTERFACE_HPP
 
 /** @} */

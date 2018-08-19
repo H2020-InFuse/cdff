@@ -1,37 +1,15 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file FeaturesMatching3D.hpp
- * @date 23/02/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
- * @addtogroup DFNs
- * 
- *  This DFN Chains detects a point cloud model within a point cloud scene by execution of the following DFNs:
- *
- * (i) 3d keypoints extraction on the model and the scene;  
- * (ii) computation of the features descriptors for the keypoints extracted from the model and the scene;
- * (iii) matching of the features and computation of the model pose within the coordinate system of the scene.
- *
+/**
+ * @addtogroup DFPCs
  * @{
  */
 
-#ifndef FEATURES_MATCHING_3D_HPP
-#define FEATURES_MATCHING_3D_HPP
+#ifndef POINTCLOUDMODELLOCALISATION_FEATURESMATCHING3D_HPP
+#define POINTCLOUDMODELLOCALISATION_FEATURESMATCHING3D_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include <PointCloudModelLocalisation/PointCloudModelLocalisationInterface.hpp>
 #include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
@@ -40,42 +18,27 @@
 #include <VisualPointFeatureVector3D.hpp>
 #include <PointCloud.hpp>
 
-
 namespace CDFF
 {
 namespace DFPC
 {
 namespace PointCloudModelLocalisation
 {
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class FeaturesMatching3D : public PointCloudModelLocalisationInterface
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+	/**
+	 * This DFN Chains detects a point cloud model within a point cloud scene by execution of the following DFNs:
+	 *
+	 * (i) 3d keypoints extraction on the model and the scene;
+	 * (ii) computation of the features descriptors for the keypoints extracted from the model and the scene;
+	 * (iii) matching of the features and computation of the model pose within the coordinate system of the scene.
 	 */
-        public:
+	class FeaturesMatching3D : public PointCloudModelLocalisationInterface
+	{
+	public:
 		FeaturesMatching3D();
 		~FeaturesMatching3D();
 		void run();
 		void setup();
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
-
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
 	private:
 		DfpcConfigurator configurator;
 
@@ -97,10 +60,11 @@ namespace PointCloudModelLocalisation
 		void DescribeSceneFeatures();
 		void DescribeModelFeatures();
 		bool EstimateModelPose();
-    };
+	};
 }
 }
 }
-#endif
-/* FeaturesMatching3D.hpp */
+
+#endif // POINTCLOUDMODELLOCALISATION_FEATURESMATCHING3D_HPP
+
 /** @} */

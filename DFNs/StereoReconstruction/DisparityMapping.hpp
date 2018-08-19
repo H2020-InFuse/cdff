@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef DISPARITYMAPPING_HPP
-#define DISPARITYMAPPING_HPP
+#ifndef STEREORECONSTRUCTION_DISPARITYMAPPING_HPP
+#define STEREORECONSTRUCTION_DISPARITYMAPPING_HPP
 
 #include "StereoReconstructionInterface.hpp"
 
@@ -204,6 +204,6 @@ namespace StereoReconstruction
 }
 }
 
-#endif // DISPARITYMAPPING_HPP
+#endif // STEREORECONSTRUCTION_DISPARITYMAPPING_HPP
 
 /** @} */

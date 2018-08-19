@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef FLANNMATCHER_HPP
-#define FLANNMATCHER_HPP
+#ifndef FEATURESMATCHING2D_FLANNMATCHER_HPP
+#define FEATURESMATCHING2D_FLANNMATCHER_HPP
 
 #include "FeaturesMatching2DInterface.hpp"
 
@@ -199,6 +199,6 @@ namespace FeaturesMatching2D
 }
 }
 
-#endif // FLANNMATCHER_HPP
+#endif // FEATURESMATCHING2D_FLANNMATCHER_HPP
 
 /** @} */

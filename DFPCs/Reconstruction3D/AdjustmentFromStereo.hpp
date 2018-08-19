@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Adjustment From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows: 
@@ -26,8 +26,8 @@
  * @{
  */
 
-#ifndef ADJUSTMENTFROMSTEREO
-#define ADJUSTMENTFROMSTEREO
+#ifndef RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
+#define RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -200,6 +200,7 @@ namespace Reconstruction3D
 }
 }
 }
-#endif
-/* AdjustmentFromStereo.hpp */
+
+#endif // RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
+
 /** @} */

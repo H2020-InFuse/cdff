@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
-#define FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
+#ifndef FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXCOMPUTATIONINTERFACE_HPP
+#define FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXCOMPUTATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Eigen.h>
@@ -18,7 +18,7 @@ namespace DFN
      * DFN that estimates the fundamental matrix of a camera pair based on pairs
      * of 2D matching keypoints found in two images that the cameras captured
      */
-    class FundamentalMatrixComputationInterface : public CDFF::DFN::DFNCommonInterface
+    class FundamentalMatrixComputationInterface : public DFNCommonInterface
     {
         public:
 
@@ -60,6 +60,6 @@ namespace DFN
 }
 }
 
-#endif // FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
+#endif // FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXCOMPUTATIONINTERFACE_HPP
 
 /** @} */

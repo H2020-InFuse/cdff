@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef LEASTSQUARESMINIMIZATION_HPP
-#define LEASTSQUARESMINIMIZATION_HPP
+#ifndef TRANSFORM3DESTIMATION_LEASTSQUARESMINIMIZATION_HPP
+#define TRANSFORM3DESTIMATION_LEASTSQUARESMINIMIZATION_HPP
 
 #include "Transform3DEstimationInterface.hpp"
 
@@ -29,7 +29,6 @@ namespace DFN
 {
 namespace Transform3DEstimation
 {
-
 	/**
 	 * Estimation of the geometric transformation between matches of 3d points,
 	 * by least squares minimization.
@@ -41,7 +40,7 @@ namespace Transform3DEstimation
 	 * (iii) Computation of the pose from the output of the linear system.
 	 *
 	 * @param maximumAllowedError
-	 *        this is the maximum error allowed (root of the squared error), if a 
+	 *        this is the maximum error allowed (root of the squared error), if a
 	 *	  a transform estimation exceeds this error, no transform output is provided.
 	 */
 	class LeastSquaresMinimization : public Transform3DEstimationInterface
@@ -78,6 +77,6 @@ namespace Transform3DEstimation
 }
 }
 
-#endif // LEASTSQUARESMINIMIZATION_HPP
+#endif // TRANSFORM3DESTIMATION_LEASTSQUARESMINIMIZATION_HPP
 
 /** @} */

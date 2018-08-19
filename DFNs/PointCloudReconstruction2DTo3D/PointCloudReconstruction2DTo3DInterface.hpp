@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef POINTCLOUDRECONSTRUCTION2DTO3D_INTERFACE_HPP
-#define POINTCLOUDRECONSTRUCTION2DTO3D_INTERFACE_HPP
+#ifndef POINTCLOUDRECONSTRUCTION2DTO3D_POINTCLOUDRECONSTRUCTION2DTO3DINTERFACE_HPP
+#define POINTCLOUDRECONSTRUCTION2DTO3D_POINTCLOUDRECONSTRUCTION2DTO3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <CorrespondenceMap2D.h>
@@ -19,7 +19,7 @@ namespace DFN
      * DFN that turns pairs of 2D matching keypoints into a reconstructed
      * 3D pointcloud of keypoints
      */
-    class PointCloudReconstruction2DTo3DInterface : public CDFF::DFN::DFNCommonInterface
+    class PointCloudReconstruction2DTo3DInterface : public DFNCommonInterface
     {
         public:
 
@@ -60,6 +60,6 @@ namespace DFN
 }
 }
 
-#endif // POINTCLOUDRECONSTRUCTION2DTO3D_INTERFACE_HPP
+#endif // POINTCLOUDRECONSTRUCTION2DTO3D_POINTCLOUDRECONSTRUCTION2DTO3DINTERFACE_HPP
 
 /** @} */

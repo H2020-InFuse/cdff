@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef ORBDESCRIPTOR_HPP
-#define ORBDESCRIPTOR_HPP
+#ifndef FEATURESDESCRIPTION2D_ORBDESCRIPTOR_HPP
+#define FEATURESDESCRIPTION2D_ORBDESCRIPTOR_HPP
 
 #include "FeaturesDescription2DInterface.hpp"
 #include <Frame.hpp>
@@ -86,6 +86,6 @@ namespace FeaturesDescription2D
 }
 }
 
-#endif // ORBDESCRIPTOR_HPP
+#endif // FEATURESDESCRIPTION2D_ORBDESCRIPTOR_HPP
 
 /** @} */

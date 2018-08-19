@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef KALMANPREDICTOR_HPP
-#define KALMANPREDICTOR_HPP
+#ifndef KFPREDICTION_KALMANPREDICTOR_HPP
+#define KFPREDICTION_KALMANPREDICTOR_HPP
 
 #include "KFPredictionInterface.hpp"
 
@@ -84,6 +84,6 @@ namespace KFPrediction
 }
 }
 
-#endif // KALMANPREDICTOR_HPP
+#endif // KFPREDICTION_KALMANPREDICTOR_HPP
 
 /** @} */

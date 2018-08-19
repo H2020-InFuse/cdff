@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef HARRISDETECTOR3D_HPP
-#define HARRISDETECTOR3D_HPP
+#ifndef FEATURESEXTRACTION3D_HARRISDETECTOR3D_HPP
+#define FEATURESEXTRACTION3D_HARRISDETECTOR3D_HPP
 
 #include "FeaturesExtraction3DInterface.hpp"
 
@@ -112,6 +112,6 @@ namespace FeaturesExtraction3D
 }
 }
 
-#endif // HARRISDETECTOR3D_HPP
+#endif // FEATURESEXTRACTION3D_HARRISDETECTOR3D_HPP
 
 /** @} */

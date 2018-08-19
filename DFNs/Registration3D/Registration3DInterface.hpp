@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef REGISTRATION3D_INTERFACE_HPP
-#define REGISTRATION3D_INTERFACE_HPP
+#ifndef REGISTRATION3D_REGISTRATION3DINTERFACE_HPP
+#define REGISTRATION3D_REGISTRATION3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Pointcloud.h>
@@ -17,7 +17,7 @@ namespace DFN
     /**
      * DFN that registers a source point cloud on a sink point cloud
      */
-    class Registration3DInterface : public CDFF::DFN::DFNCommonInterface
+    class Registration3DInterface : public DFNCommonInterface
     {
         public:
 
@@ -86,6 +86,6 @@ namespace DFN
 }
 }
 
-#endif // REGISTRATION3D_INTERFACE_HPP
+#endif // REGISTRATION3D_REGISTRATION3DINTERFACE_HPP
 
 /** @} */

@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef SHOTDESCRIPTOR3D_HPP
-#define SHOTDESCRIPTOR3D_HPP
+#ifndef FEATURESDESCRIPTION3D_SHOTDESCRIPTOR3D_HPP
+#define FEATURESDESCRIPTION3D_SHOTDESCRIPTOR3D_HPP
 
 #include "FeaturesDescription3DInterface.hpp"
 
@@ -138,6 +138,6 @@ namespace FeaturesDescription3D
 }
 }
 
-#endif // SHOTDESCRIPTOR3D_HPP
+#endif // FEATURESDESCRIPTION3D_SHOTDESCRIPTOR3D_HPP
 
 /** @} */

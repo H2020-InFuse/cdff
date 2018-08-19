@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef FEATURESDESCRIPTION3D_INTERFACE_HPP
-#define FEATURESDESCRIPTION3D_INTERFACE_HPP
+#ifndef FEATURESDESCRIPTION3DINTERFACE_HPP
+#define FEATURESDESCRIPTION3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <VisualPointFeatureVector3D.h>
@@ -17,7 +17,7 @@ namespace DFN
     /**
      * DFN that computes descriptors for 3D keypoints
      */
-    class FeaturesDescription3DInterface : public CDFF::DFN::DFNCommonInterface
+    class FeaturesDescription3DInterface : public DFNCommonInterface
     {
         public:
 
@@ -82,6 +82,6 @@ namespace DFN
 }
 }
 
-#endif // FEATURESDESCRIPTION3D_INTERFACE_HPP
+#endif // FEATURESDESCRIPTION3D_FEATURESDESCRIPTION3DINTERFACE_HPP
 
 /** @} */

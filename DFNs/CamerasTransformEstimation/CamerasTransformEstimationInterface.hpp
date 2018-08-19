@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef CAMERASTRANSFORMESTIMATION_INTERFACE_HPP
-#define CAMERASTRANSFORMESTIMATION_INTERFACE_HPP
+#ifndef CAMERASTRANSFORMESTIMATION_CAMERASTRANSFORMESTIMATIONINTERFACE_HPP
+#define CAMERASTRANSFORMESTIMATION_CAMERASTRANSFORMESTIMATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Pose.h>
@@ -20,7 +20,7 @@ namespace DFN
      * based on pairs of 2D matching keypoints found in two images that the
      * cameras captured
      */
-    class CamerasTransformEstimationInterface : public CDFF::DFN::DFNCommonInterface
+    class CamerasTransformEstimationInterface : public DFNCommonInterface
     {
         public:
 
@@ -74,6 +74,6 @@ namespace DFN
 }
 }
 
-#endif // CAMERASTRANSFORMESTIMATION_INTERFACE_HPP
+#endif // CAMERASTRANSFORMESTIMATION_CAMERASTRANSFORMESTIMATIONINTERFACE_HPP
 
 /** @} */

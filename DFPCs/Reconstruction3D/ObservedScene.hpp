@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This is an example implementation of the Map interface for the Reconstruction3D DFPC.
  *  
@@ -20,8 +20,8 @@
  * @{
  */
 
-#ifndef OBSERVED_SCENE_HPP
-#define OBSERVED_SCENE_HPP
+#ifndef RECONSTRUCTION3D_OBSERVEDSCENE_HPP
+#define RECONSTRUCTION3D_OBSERVEDSCENE_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -106,6 +106,7 @@ namespace Reconstruction3D
 }
 }
 }
-#endif
-/* Map.hpp */
+
+#endif // RECONSTRUCTION3D_OBSERVEDSCENE_HPP
+
 /** @} */

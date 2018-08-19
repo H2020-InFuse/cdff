@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef ICP3D_HPP_FIXME_UNIQUIFY_INCLUDE_GUARDS
-#define ICP3D_HPP_FIXME_UNIQUIFY_INCLUDE_GUARDS
+#ifndef FEATURESMATCHING3D_ICP3D_HPP
+#define FEATURESMATCHING3D_ICP3D_HPP
 
 #include "FeaturesMatching3DInterface.hpp"
 
@@ -86,6 +86,6 @@ namespace FeaturesMatching3D
 }
 }
 
-#endif // ICP3D_HPP_FIXME_UNIQUIFY_INCLUDE_GUARDS
+#endif // FEATURESMATCHING3D_ICP3D_HPP
 
 /** @} */

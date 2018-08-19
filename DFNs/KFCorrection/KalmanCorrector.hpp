@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef KALMANCORRECTOR_HPP
-#define KALMANCORRECTOR_HPP
+#ifndef KFCORRECTION_KALMANCORRECTOR_HPP
+#define KFCORRECTION_KALMANCORRECTOR_HPP
 
 #include "KFCorrectionInterface.hpp"
 #include <Helpers/ParametersListHelper.hpp>
@@ -42,7 +42,7 @@ namespace KFCorrection
 			virtual ~KalmanCorrector();
 			virtual void configure();
 			virtual void process();
-			
+
 
 		private:
 
@@ -70,6 +70,6 @@ namespace KFCorrection
 }
 }
 
-#endif // KALMANCORRECTOR_HPP
+#endif // KFCORRECTION_KALMANCORRECTOR_HPP
 
 /** @} */

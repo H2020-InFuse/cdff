@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef IMAGEUNDISTORTION_HPP
-#define IMAGEUNDISTORTION_HPP
+#ifndef IMAGEFILTERING_IMAGEUNDISTORTION_HPP
+#define IMAGEFILTERING_IMAGEUNDISTORTION_HPP
 
 #include "ImageFilteringInterface.hpp"
 
@@ -88,6 +88,6 @@ namespace ImageFiltering
 }
 }
 
-#endif // IMAGEUNDISTORTION_HPP
+#endif // IMAGEFILTERING_IMAGEUNDISTORTION_HPP
 
 /** @} */

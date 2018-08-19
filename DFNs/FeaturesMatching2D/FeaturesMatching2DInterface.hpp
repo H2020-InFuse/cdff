@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef FEATURESMATCHING2D_INTERFACE_HPP
-#define FEATURESMATCHING2D_INTERFACE_HPP
+#ifndef FEATURESMATCHING2D_FEATURESMATCHING2DINTERFACE_HPP
+#define FEATURESMATCHING2D_FEATURESMATCHING2DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <VisualPointFeatureVector2D.h>
@@ -17,7 +17,7 @@ namespace DFN
     /**
      * DFN that matches 2D keypoints
      */
-    class FeaturesMatching2DInterface : public CDFF::DFN::DFNCommonInterface
+    class FeaturesMatching2DInterface : public DFNCommonInterface
     {
         public:
 
@@ -50,6 +50,6 @@ namespace DFN
 }
 }
 
-#endif // FEATURESMATCHING2D_INTERFACE_HPP
+#endif // FEATURESMATCHING2D_FEATURESMATCHING2DINTERFACE_HPP
 
 /** @} */

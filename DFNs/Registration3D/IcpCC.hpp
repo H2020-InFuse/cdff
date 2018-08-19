@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef ICPCC_HPP
-#define ICPCC_HPP
+#ifndef REGISTRATION3D_ICPCC_HPP
+#define REGISTRATION3D_ICPCC_HPP
 
 #include "Registration3DInterface.hpp"
 
@@ -118,6 +118,6 @@ namespace Registration3D
 }
 }
 
-#endif // ICPCC_HPP
+#endif // REGISTRATION3D_ICPCC_HPP
 
 /** @} */

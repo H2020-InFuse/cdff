@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef RANSAC3D_HPP
-#define RANSAC3D_HPP
+#ifndef FEATURESMATCHING3D_RANSAC3D_HPP
+#define FEATURESMATCHING3D_RANSAC3D_HPP
 
 #include "FeaturesMatching3DInterface.hpp"
 
@@ -98,6 +98,6 @@ namespace FeaturesMatching3D
 }
 }
 
-#endif // RANSAC3D_HPP
+#endif // FEATURESMATCHING3D_RANSAC3D_HPP
 
 /** @} */

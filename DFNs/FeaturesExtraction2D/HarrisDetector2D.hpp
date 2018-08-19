@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef HARRISDETECTOR2D_HPP
-#define HARRISDETECTOR2D_HPP
+#ifndef FEATURESEXTRACTION2D_HARRISDETECTOR2D_HPP
+#define FEATURESEXTRACTION2D_HARRISDETECTOR2D_HPP
 
 #include "FeaturesExtraction2DInterface.hpp"
 #include <Frame.hpp>
@@ -98,6 +98,6 @@ namespace FeaturesExtraction2D
 }
 }
 
-#endif // HARRISDETECTOR2D_HPP
+#endif // FEATURESEXTRACTION2D_HARRISDETECTOR2D_HPP
 
 /** @} */

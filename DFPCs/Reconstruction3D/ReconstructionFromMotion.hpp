@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Reconstruction From Motion as implementation of the DPFC for Reconsrtruction3D.
  *  This chain operates as follows: 
@@ -23,8 +23,8 @@
  * @{
  */
 
-#ifndef RECONSTRUCTION_FROM_MOTION_HPP
-#define RECONSTRUCTION_FROM_MOTION_HPP
+#ifndef RECONSTRUCTION3D_RECONSTRUCTIONFROMMOTION_HPP
+#define RECONSTRUCTION3D_RECONSTRUCTIONFROMMOTION_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -168,6 +168,7 @@ namespace Reconstruction3D
 }
 }
 }
-#endif
-/* ReconstructionFromMotion.hpp */
+
+#endif // RECONSTRUCTION3D_RECONSTRUCTIONFROMMOTION_HPP
+
 /** @} */

@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef POINTCLOUDMODELLOCALISATION_INTERFACE_HPP
-#define POINTCLOUDMODELLOCALISATION_INTERFACE_HPP
+#ifndef POINTCLOUDMODELLOCALISATION_POINTCLOUDMODELLOCALISATIONINTERFACE_HPP
+#define POINTCLOUDMODELLOCALISATION_POINTCLOUDMODELLOCALISATIONINTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
 #include <Pose.h>
@@ -14,7 +14,7 @@ namespace CDFF
 {
 namespace DFPC
 {
-    class PointCloudModelLocalisationInterface : public CDFF::DFPC::DFPCCommonInterface
+    class PointCloudModelLocalisationInterface : public DFPCCommonInterface
     {
         public:
 
@@ -61,6 +61,6 @@ namespace DFPC
 }
 }
 
-#endif //  POINTCLOUDMODELLOCALISATION_INTERFACE_HPP
+#endif // POINTCLOUDMODELLOCALISATION_POINTCLOUDMODELLOCALISATIONINTERFACE_HPP
 
 /** @} */

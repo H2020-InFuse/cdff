@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef TRIANGULATION_HPP
-#define TRIANGULATION_HPP
+#ifndef POINTCLOUDRECONSTRUCTION2DTO3D_TRIANGULATION_HPP
+#define POINTCLOUDRECONSTRUCTION2DTO3D_TRIANGULATION_HPP
 
 #include "PointCloudReconstruction2DTo3DInterface.hpp"
 
@@ -94,6 +94,6 @@ namespace PointCloudReconstruction2DTo3D
 }
 }
 
-#endif // TRIANGULATION_HPP
+#endif // POINTCLOUDRECONSTRUCTION2DTO3D_TRIANGULATION_HPP
 
 /** @} */

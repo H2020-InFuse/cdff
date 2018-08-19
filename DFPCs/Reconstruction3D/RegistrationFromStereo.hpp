@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Registration From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows: 
@@ -23,8 +23,8 @@
  * @{
  */
 
-#ifndef REGISTRATION_FROM_STEREO_HPP
-#define REGISTRATION_FROM_STEREO_HPP
+#ifndef RECONSTRUCTION3D_REGISTRATIONFROMSTEREO_HPP
+#define RECONSTRUCTION3D_REGISTRATIONFROMSTEREO_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -132,6 +132,7 @@ namespace Reconstruction3D
 }
 }
 }
-#endif
-/* RegistrationFromStereo.hpp */
+
+#endif // RECONSTRUCTION3D_REGISTRATIONFROMSTEREO_HPP
+
 /** @} */

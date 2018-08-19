@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef KFPREDICTION_INTERFACE_HPP
-#define KFPREDICTION_INTERFACE_HPP
+#ifndef KFPREDICTION_KFPREDICTIONINTERFACE_HPP
+#define KFPREDICTION_KFPREDICTIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Time.h>
@@ -17,7 +17,7 @@ namespace DFN
     /**
      * DFN for Kalman filtering
      */
-    class KFPredictionInterface : public CDFF::DFN::DFNCommonInterface
+    class KFPredictionInterface : public DFNCommonInterface
     {
         public:
 
@@ -56,6 +56,6 @@ namespace DFN
 }
 }
 
-#endif // KFPREDICTION_INTERFACE_HPP
+#endif // KFPREDICTION_KFPREDICTIONINTERFACE_HPP
 
 /** @} */

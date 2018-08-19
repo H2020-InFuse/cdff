@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef IMAGEFILTERING_INTERFACE_HPP
-#define IMAGEFILTERING_INTERFACE_HPP
+#ifndef IMAGEFILTERING_IMAGEFILTERINGINTERFACE_HPP
+#define IMAGEFILTERING_IMAGEFILTERINGINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Frame.h>
@@ -16,7 +16,7 @@ namespace DFN
     /**
      * DFN that applies an image processing filter to a 2D image
      */
-    class ImageFilteringInterface : public CDFF::DFN::DFNCommonInterface
+    class ImageFilteringInterface : public DFNCommonInterface
     {
         public:
 
@@ -43,6 +43,6 @@ namespace DFN
 }
 }
 
-#endif // IMAGEFILTERING_INTERFACE_HPP
+#endif // IMAGEFILTERING_IMAGEFILTERINGINTERFACE_HPP
 
 /** @} */

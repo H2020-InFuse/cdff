@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef STEREORECONSTRUCTION_INTERFACE_HPP
-#define STEREORECONSTRUCTION_INTERFACE_HPP
+#ifndef STEREORECONSTRUCTION_STEREORECONSTRUCTIONINTERFACE_HPP
+#define STEREORECONSTRUCTION_STEREORECONSTRUCTIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Frame.h>
@@ -22,7 +22,7 @@ namespace DFN
 	 * DFN that turns a pair of stereo images into a reconstructed 3D scene
 	 * (in the form of a 3D pointcloud)
 	 */
-	class StereoReconstructionInterface : public CDFF::DFN::DFNCommonInterface
+	class StereoReconstructionInterface : public DFNCommonInterface
 	{
 		public:
 
@@ -70,6 +70,6 @@ namespace DFN
 }
 }
 
-#endif // STEREORECONSTRUCTION_INTERFACE_HPP
+#endif // STEREORECONSTRUCTION_STEREORECONSTRUCTIONINTERFACE_HPP
 
 /** @} */

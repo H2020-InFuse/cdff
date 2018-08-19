@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef FEATURESDESCRIPTION2D_INTERFACE_HPP
-#define FEATURESDESCRIPTION2D_INTERFACE_HPP
+#ifndef FEATURESDESCRIPTION2D_FEATURESDESCRIPTION2DINTERFACE_HPP
+#define FEATURESDESCRIPTION2D_FEATURESDESCRIPTION2DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <VisualPointFeatureVector2D.h>
@@ -17,7 +17,7 @@ namespace DFN
     /**
      * DFN that computes descriptors for 2D keypoints
      */
-    class FeaturesDescription2DInterface : public CDFF::DFN::DFNCommonInterface
+    class FeaturesDescription2DInterface : public DFNCommonInterface
     {
         public:
 
@@ -50,6 +50,6 @@ namespace DFN
 }
 }
 
-#endif // FEATURESDESCRIPTION2D_INTERFACE_HPP
+#endif // FEATURESDESCRIPTION2D_FEATURESDESCRIPTION2DINTERFACE_HPP
 
 /** @} */

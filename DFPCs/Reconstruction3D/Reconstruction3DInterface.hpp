@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef RECONSTRUCTION3D_INTERFACE_HPP
-#define RECONSTRUCTION3D_INTERFACE_HPP
+#ifndef RECONSTRUCTION3D_RECONSTRUCTION3DINTERFACE_HPP
+#define RECONSTRUCTION3D_RECONSTRUCTION3DINTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
 #include <Frame.h>
@@ -15,7 +15,7 @@ namespace CDFF
 {
 namespace DFPC
 {
-    class Reconstruction3DInterface : public CDFF::DFPC::DFPCCommonInterface
+    class Reconstruction3DInterface : public DFPCCommonInterface
     {
         public:
 
@@ -49,7 +49,6 @@ namespace DFPC
              */
             virtual bool successOutput() const;
 
-
         protected:
 
             asn1SccFrame inLeftImage;
@@ -57,11 +56,10 @@ namespace DFPC
             asn1SccPointcloud outPointCloud;
             asn1SccPose outPose;
             bool outSuccess;
-
     };
 }
 }
 
-#endif //  RECONSTRUCTION3D_INTERFACE_HPP
+#endif // RECONSTRUCTION3D_RECONSTRUCTION3DINTERFACE_HPP
 
 /** @} */

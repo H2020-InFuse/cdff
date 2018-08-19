@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef PERSPECTIVENPOINTSOLVING_INTERFACE_HPP
-#define PERSPECTIVENPOINTSOLVING_INTERFACE_HPP
+#ifndef PERSPECTIVENPOINTSOLVING_PERSPECTIVENPOINTSOLVINGINTERFACE_HPP
+#define PERSPECTIVENPOINTSOLVING_PERSPECTIVENPOINTSOLVINGINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Pose.h>
@@ -18,7 +18,7 @@ namespace DFN
     /**
      * DFN that solves the Perspective-n-Point problem
      */
-    class PerspectiveNPointSolvingInterface : public CDFF::DFN::DFNCommonInterface
+    class PerspectiveNPointSolvingInterface : public DFNCommonInterface
     {
         public:
 
@@ -61,6 +61,6 @@ namespace DFN
 }
 }
 
-#endif // PERSPECTIVENPOINTSOLVING_INTERFACE_HPP
+#endif // PERSPECTIVENPOINTSOLVING_PERSPECTIVENPOINTSOLVINGINTERFACE_HPP
 
 /** @} */

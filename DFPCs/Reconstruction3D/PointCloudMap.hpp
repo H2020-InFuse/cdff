@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  * @brief This class reconstruct a 3d point cloud map by assembling smaller point clouds.
  *  
@@ -22,8 +22,8 @@
  * @{
  */
 
-#ifndef POINT_CLOUD_MAP_HPP
-#define POINT_CLOUD_MAP_HPP
+#ifndef RECONSTRUCTION3D_POINTCLOUDMAP_HPP
+#define RECONSTRUCTION3D_POINTCLOUDMAP_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -151,6 +151,7 @@ namespace Reconstruction3D
 }
 }
 }
-#endif
-/* PointCloudMap.hpp */
+
+#endif // RECONSTRUCTION3D_POINTCLOUDMAP_HPP
+
 /** @} */

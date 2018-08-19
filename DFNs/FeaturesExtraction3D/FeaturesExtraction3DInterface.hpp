@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef FEATURESEXTRACTION3D_INTERFACE_HPP
-#define FEATURESEXTRACTION3D_INTERFACE_HPP
+#ifndef FEATURESEXTRACTION3D_FEATURESEXTRACTION3DINTERFACE_HPP
+#define FEATURESEXTRACTION3D_FEATURESEXTRACTION3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Pointcloud.h>
@@ -17,7 +17,7 @@ namespace DFN
     /**
      * DFN that extracts 3D keypoints from a 3D pointcloud
      */
-    class FeaturesExtraction3DInterface : public CDFF::DFN::DFNCommonInterface
+    class FeaturesExtraction3DInterface : public DFNCommonInterface
     {
         public:
 
@@ -46,6 +46,6 @@ namespace DFN
 }
 }
 
-#endif // FEATURESEXTRACTION3D_INTERFACE_HPP
+#endif // FEATURESEXTRACTION3D_FEATURESEXTRACTION3DINTERFACE_HPP
 
 /** @} */

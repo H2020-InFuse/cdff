@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef KFCORRECTION_INTERFACE_HPP
-#define KFCORRECTION_INTERFACE_HPP
+#ifndef KFCORRECTION_KFCORRECTIONINTERFACE_HPP
+#define KFCORRECTION_KFCORRECTIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <RigidBodyState.h>
@@ -16,7 +16,7 @@ namespace DFN
     /**
      * DFN for Kalman filtering
      */
-    class KFCorrectionInterface : public CDFF::DFN::DFNCommonInterface
+    class KFCorrectionInterface : public DFNCommonInterface
     {
         public:
 
@@ -61,6 +61,6 @@ namespace DFN
 }
 }
 
-#endif // KFCORRECTION_INTERFACE_HPP
+#endif // KFCORRECTION_KFCORRECTIONINTERFACE_HPP
 
 /** @} */
