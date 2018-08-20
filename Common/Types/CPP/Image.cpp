@@ -17,21 +17,25 @@ using namespace BaseTypesWrapper;
 
 void Copy(const Image& source, Image& destination)
 {
-    SetImageTime(destination, GetImageTime(source));
+	SetImageTime(destination, GetImageTime(source));
 	SetReceivedTime(destination, GetReceivedTime(source));
 	SetDataDepth(destination, GetDataDepth(source));
 	SetPixelSize(destination, GetPixelSize(source));
 	SetRowSize(destination, GetRowSize(source));
-    SetImageMode(destination, GetImageMode(source));
-    SetImageStatus(destination, GetImageStatus(source));
-    SetImageSize(destination, GetImageSize(source));
+	SetImageMode(destination, GetImageMode(source));
+	SetImageStatus(destination, GetImageStatus(source));
+	SetImageSize(destination, GetImageSize(source));
+
 	ClearAttributes(destination);
-	for (unsigned attributeIndex = 0; attributeIndex < GetNumberOfAttributes(source); attributeIndex++)
+	int numberOfAttributes = GetNumberOfAttributes(source);
+	for (unsigned attributeIndex = 0; attributeIndex < numberOfAttributes; attributeIndex++)
 	{
 		AddAttribute(destination, GetAttribute(source, attributeIndex));
 	}
+
 	ClearData(destination);
-	for (int dataByteIndex = 0; dataByteIndex < GetNumberOfDataBytes(source); dataByteIndex++)
+	int numberOfBytes = GetNumberOfDataBytes(source);
+	for (int dataByteIndex = 0; dataByteIndex < numberOfBytes; dataByteIndex++)
 	{
 		AddDataByte(destination, GetDataByte(source, dataByteIndex));
 	}
