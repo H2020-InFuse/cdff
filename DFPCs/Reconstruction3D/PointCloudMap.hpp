@@ -66,7 +66,7 @@ namespace Reconstruction3D
 		~PointCloudMap();
 
 		/*
-		* @brief Adds a point cloud at a given position.
+		* @brief Adds a point cloud at a given absolute position.
 		*
 		* @param pointCloud, the point cloud to add;
 		* @param pointCloudFeaturesVector, the vector of relevant features extracted from the point cloud
@@ -77,7 +77,7 @@ namespace Reconstruction3D
 						PoseWrapper::Pose3DConstPtr cloudPoseInMap);
 
 		/*
-		* @brief Adds a point cloud at a given position.
+		* @brief Attach a point cloud at a given position relative to the reference system of the last added or attached point cloud.
 		*
 		* @param pointCloud, the point cloud to add;
 		* @param pointCloudFeaturesVector, the vector of relevant features extracted from the point cloud
