@@ -12,7 +12,9 @@
 #include <PosesSequence.hpp>
 #include <PointCloud.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
     class BundleAdjustmentExecutor
@@ -46,6 +48,7 @@ namespace dfn_ci
 
             BundleAdjustmentInterface* dfn;
     };
+}
 }
 
 #endif // BUNDLEADJUSTMENT_EXECUTOR_HPP

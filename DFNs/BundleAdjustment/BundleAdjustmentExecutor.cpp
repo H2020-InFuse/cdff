@@ -10,7 +10,9 @@ using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 BundleAdjustmentExecutor::BundleAdjustmentExecutor(BundleAdjustmentInterface* dfn)
@@ -91,6 +93,7 @@ void BundleAdjustmentExecutor::Execute(const CorrespondenceMaps2DSequence& input
 	success = dfn->successOutput();
 	error = dfn->errorOutput();
 	}
+}
 }
 
 /** @} */

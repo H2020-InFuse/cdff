@@ -11,7 +11,9 @@
 #include <PointCloud.hpp>
 #include <Pose.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
     class Registration3DExecutor
@@ -49,6 +51,7 @@ namespace dfn_ci
 
             Registration3DInterface* dfn;
     };
+}
 }
 
 #endif // REGISTRATION3D_EXECUTOR_HPP

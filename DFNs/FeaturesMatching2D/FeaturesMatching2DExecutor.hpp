@@ -11,7 +11,9 @@
 #include <VisualPointFeatureVector2D.hpp>
 #include <CorrespondenceMap2D.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     class FeaturesMatching2DExecutor
     {
@@ -36,6 +38,7 @@ namespace dfn_ci
 
             FeaturesMatching2DInterface* dfn;
     };
+}
 }
 
 #endif // FEATURESMATCHING2D_EXECUTOR_HPP

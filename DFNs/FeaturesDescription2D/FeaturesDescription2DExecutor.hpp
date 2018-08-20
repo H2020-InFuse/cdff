@@ -13,7 +13,9 @@
 #include <Frame.hpp>
 #include <VisualPointFeatureVector2D.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     class FeaturesDescription2DExecutor
     {
@@ -38,6 +40,7 @@ namespace dfn_ci
 
             FeaturesDescription2DInterface* dfn;
     };
+}
 }
 
 #endif // FEATURESDESCRIPTION2D_EXECUTOR_HPP

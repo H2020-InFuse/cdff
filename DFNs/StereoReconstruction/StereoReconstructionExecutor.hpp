@@ -11,7 +11,9 @@
 #include <PointCloud.hpp>
 #include <Frame.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     class StereoReconstructionExecutor
     {
@@ -32,6 +34,7 @@ namespace dfn_ci
 
             StereoReconstructionInterface* dfn;
     };
+}
 }
 
 #endif // STEREORECONSTRUCTION_EXECUTOR_HPP

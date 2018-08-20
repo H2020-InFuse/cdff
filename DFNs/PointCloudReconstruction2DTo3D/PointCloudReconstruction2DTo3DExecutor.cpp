@@ -10,7 +10,9 @@ using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 PointCloudReconstruction2DTo3DExecutor::PointCloudReconstruction2DTo3DExecutor(PointCloudReconstruction2DTo3DInterface* dfn)
@@ -51,6 +53,7 @@ void PointCloudReconstruction2DTo3DExecutor::Execute(const CorrespondenceMap2D& 
 	dfn->process();
 	Copy( dfn->pointcloudOutput(), outputCloud);
 	}
+}
 }
 
 /** @} */

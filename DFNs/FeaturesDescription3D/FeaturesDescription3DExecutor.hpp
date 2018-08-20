@@ -11,7 +11,9 @@
 #include <PointCloud.hpp>
 #include <VisualPointFeatureVector3D.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     class FeaturesDescription3DExecutor
     {
@@ -48,6 +50,7 @@ namespace dfn_ci
 
             FeaturesDescription3DInterface* dfn;
     };
+}
 }
 
 #endif // FEATURESDESCRIPTION3D_EXECUTOR_HPP

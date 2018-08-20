@@ -11,7 +11,9 @@
 #include <CorrespondenceMaps3DSequence.hpp>
 #include <PosesSequence.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     class Transform3DEstimationExecutor
     {
@@ -32,6 +34,7 @@ namespace dfn_ci
 
             Transform3DEstimationInterface* dfn;
     };
+}
 }
 
 #endif // TRANSFORM3DESTIMATION_EXECUTOR_HPP

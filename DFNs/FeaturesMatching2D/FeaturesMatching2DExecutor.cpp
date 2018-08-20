@@ -9,7 +9,9 @@
 using namespace CorrespondenceMap2DWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FeaturesMatching2DExecutor::FeaturesMatching2DExecutor(FeaturesMatching2DInterface* dfn)
@@ -50,6 +52,7 @@ void FeaturesMatching2DExecutor::Execute(const VisualPointFeatureVector2D& input
 	dfn->process();
 	Copy( dfn->matchesOutput(), outputMatches);
 	}
+}
 }
 
 /** @} */

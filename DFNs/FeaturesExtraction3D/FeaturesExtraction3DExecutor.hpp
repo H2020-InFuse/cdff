@@ -11,7 +11,9 @@
 #include <PointCloud.hpp>
 #include <VisualPointFeatureVector3D.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     class FeaturesExtraction3DExecutor
     {
@@ -29,6 +31,7 @@ namespace dfn_ci
 
             FeaturesExtraction3DInterface* dfn;
     };
+}
 }
 
 #endif // FEATURESEXTRACTION3D_EXECUTOR_HPP

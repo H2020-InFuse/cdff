@@ -13,7 +13,9 @@
 #include <CorrespondenceMap2D.hpp>
 #include <Pose.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
     class CamerasTransformEstimationExecutor
@@ -39,6 +41,7 @@ namespace dfn_ci
 
             CamerasTransformEstimationInterface* dfn;
     };
+}
 }
 
 #endif // CAMERASTRANSFORESTIMATION_EXECUTOR_HPP

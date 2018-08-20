@@ -10,7 +10,9 @@
 #include "ImageFilteringInterface.hpp"
 #include <Frame.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     class ImageFilteringExecutor
     {
@@ -31,6 +33,7 @@ namespace dfn_ci
 
             ImageFilteringInterface* dfn;
     };
+}
 }
 
 #endif // IMAGEFILTERING_EXECUTOR_HPP

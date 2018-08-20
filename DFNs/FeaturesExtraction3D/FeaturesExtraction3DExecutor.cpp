@@ -9,7 +9,9 @@
 using namespace PointCloudWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FeaturesExtraction3DExecutor::FeaturesExtraction3DExecutor(FeaturesExtraction3DInterface* dfn)
@@ -48,6 +50,7 @@ void FeaturesExtraction3DExecutor::Execute(const PointCloud& inputCloud, VisualP
 	dfn->process();
 	Copy( dfn->featuresOutput(), outputVector);
 	}
+}
 }
 
 /** @} */

@@ -9,9 +9,10 @@
 using namespace CorrespondenceMap2DWrapper;
 using namespace MatrixWrapper;
 
-namespace dfn_ci
+namespace CDFF
 {
-
+namespace DFN
+{
 FundamentalMatrixComputationExecutor::FundamentalMatrixComputationExecutor(FundamentalMatrixComputationInterface* dfn)
 	{
 	this->dfn = dfn;
@@ -50,6 +51,7 @@ void FundamentalMatrixComputationExecutor::Execute(const CorrespondenceMap2D& in
 	Copy( dfn->fundamentalMatrixOutput(), outputMatrix);
 	success = dfn->successOutput();
 	}
+}
 }
 
 /** @} */

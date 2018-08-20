@@ -13,7 +13,9 @@
 #include <Frame.hpp>
 #include <VisualPointFeatureVector2D.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     class FeaturesExtraction2DExecutor
     {
@@ -31,6 +33,7 @@ namespace dfn_ci
 
             FeaturesExtraction2DInterface* dfn;
     };
+}
 }
 
 #endif // FEATURESEXTRACTION2D_INTERFACE_HPP

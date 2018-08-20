@@ -8,7 +8,9 @@
 
 using namespace FrameWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 ImageFilteringExecutor::ImageFilteringExecutor(ImageFilteringInterface* dfn)
@@ -56,6 +58,7 @@ void ImageFilteringExecutor::Execute(const Frame& inputFrame, Frame& outputFrame
 	dfn->process();
 	Copy( dfn->imageOutput(), outputFrame);
 	}
+}
 }
 
 /** @} */

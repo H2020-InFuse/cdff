@@ -11,7 +11,9 @@
 #include <Matrix.hpp>
 #include <CorrespondenceMap2D.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     class FundamentalMatrixComputationExecutor
     {
@@ -32,6 +34,7 @@ namespace dfn_ci
 
             FundamentalMatrixComputationInterface* dfn;
     };
+}
 }
 
 #endif // FUNDAMENTALMATRIXCOMPUTATION_EXECUTOR_HPP

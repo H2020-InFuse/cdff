@@ -137,14 +137,14 @@ namespace Reconstruction3D
 		#endif
 
 		//DFN Executors
-		dfn_ci::ImageFilteringExecutor* optionalLeftFilter;
-		dfn_ci::ImageFilteringExecutor* optionalRightFilter;
-		dfn_ci::StereoReconstructionExecutor* reconstructor3d;
-		dfn_ci::FeaturesExtraction2DExecutor* featuresExtractor2d;
-		dfn_ci::FeaturesDescription2DExecutor* optionalFeaturesDescriptor2d;
-		dfn_ci::FeaturesMatching2DExecutor* featuresMatcher2d;
-		dfn_ci::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
-		dfn_ci::Transform3DEstimationExecutor* transformEstimator;
+		CDFF::DFN::ImageFilteringExecutor* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringExecutor* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionExecutor* reconstructor3d;
+		CDFF::DFN::FeaturesExtraction2DExecutor* featuresExtractor2d;
+		CDFF::DFN::FeaturesDescription2DExecutor* optionalFeaturesDescriptor2d;
+		CDFF::DFN::FeaturesMatching2DExecutor* featuresMatcher2d;
+		CDFF::DFN::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
+		CDFF::DFN::Transform3DEstimationExecutor* transformEstimator;
 
 		//Helpers
 		BundleHistory* bundleHistory;

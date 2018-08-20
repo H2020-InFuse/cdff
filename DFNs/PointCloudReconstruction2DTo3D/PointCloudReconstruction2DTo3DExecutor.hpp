@@ -12,7 +12,9 @@
 #include <CorrespondenceMap2D.hpp>
 #include <PointCloud.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     class PointCloudReconstruction2DTo3DExecutor
     {
@@ -34,7 +36,7 @@ namespace dfn_ci
             PointCloudReconstruction2DTo3DInterface* dfn;
     };
 }
-
+}
 #endif // POINTCLOUDRECONSTRUCTION2DTO3D_EXECUTOR_HPP
 
 /** @} */

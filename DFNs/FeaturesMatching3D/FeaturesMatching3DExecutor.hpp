@@ -11,7 +11,9 @@
 #include <VisualPointFeatureVector3D.hpp>
 #include <Pose.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     class FeaturesMatching3DExecutor
     {
@@ -36,6 +38,7 @@ namespace dfn_ci
 
             FeaturesMatching3DInterface* dfn;
     };
+}
 }
 
 #endif // FEATURESMATCHING3D_EXECUTOR_HPP
