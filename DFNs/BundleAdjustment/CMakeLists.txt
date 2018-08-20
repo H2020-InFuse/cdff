@@ -1,6 +1,7 @@
 add_library(
     bundle_adjustment
     BundleAdjustmentInterface.cpp
+    BundleAdjustmentExecutor.cpp
 )
 
 add_library(
