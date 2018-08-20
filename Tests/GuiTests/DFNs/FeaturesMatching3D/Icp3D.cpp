@@ -29,7 +29,7 @@
 #include <signal.h>
 #include <execinfo.h>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesMatching3D;
 using namespace Converters;
 using namespace PoseWrapper;
 using namespace VisualPointFeatureVector3DWrapper;

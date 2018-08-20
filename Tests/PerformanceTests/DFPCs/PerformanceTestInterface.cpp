@@ -48,7 +48,7 @@ PerformanceTestInterface::~PerformanceTestInterface()
 
 	}
 
-void PerformanceTestInterface::SetDfpc(dfpc_ci::DFPCCommonInterface* dfpc)
+void PerformanceTestInterface::SetDfpc(CDFF::DFPC::DFPCCommonInterface* dfpc)
 	{
 	this->dfpc = dfpc;
 	}

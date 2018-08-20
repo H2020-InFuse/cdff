@@ -5,7 +5,9 @@
 
 #include "PerspectiveNPointSolvingInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 PerspectiveNPointSolvingInterface::PerspectiveNPointSolvingInterface()
@@ -36,6 +38,7 @@ bool PerspectiveNPointSolvingInterface::successOutput() const
     return outSuccess;
 }
 
+}
 }
 
 /** @} */

@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef ICPCC_HPP
-#define ICPCC_HPP
+#ifndef REGISTRATION3D_ICPCC_HPP
+#define REGISTRATION3D_ICPCC_HPP
 
 #include "Registration3DInterface.hpp"
 
@@ -25,7 +25,11 @@
 
 #include <string>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Registration3D
 {
 	/**
 	 * Registration of Point clouds using the ICP algorithm and the CC library
@@ -111,7 +115,9 @@ namespace dfn_ci
 			void ValidateCloud(CCLib::ChunkedPointCloud* cloud);
 	};
 }
+}
+}
 
-#endif // ICPCC_HPP
+#endif // REGISTRATION3D_ICPCC_HPP
 
 /** @} */

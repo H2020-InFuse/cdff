@@ -22,7 +22,11 @@ using namespace PoseWrapper;
 using namespace BaseTypesWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace BundleAdjustment
 {
 
 CeresAdjustment::CeresAdjustment()
@@ -492,6 +496,8 @@ cv::Mat CeresAdjustment::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix
 
 	return cvCameraMatrix;
 	}
+}
+}
 }
 
 /** @} */

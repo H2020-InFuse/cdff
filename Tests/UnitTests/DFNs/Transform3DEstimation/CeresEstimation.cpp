@@ -32,7 +32,7 @@
 #include <CorrespondenceMaps3DSequence.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::Transform3DEstimation;
 using namespace BaseTypesWrapper;
 using namespace PoseWrapper;
 using namespace CorrespondenceMap3DWrapper;

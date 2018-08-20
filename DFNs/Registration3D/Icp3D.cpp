@@ -21,7 +21,11 @@ using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Registration3D
 {
 
 Icp3D::Icp3D()
@@ -142,6 +146,8 @@ void Icp3D::ValidateCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
 	}
 }
 
+}
+}
 }
 
 /** @} */

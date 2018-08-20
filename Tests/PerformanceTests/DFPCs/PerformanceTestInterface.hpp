@@ -77,14 +77,14 @@ class PerformanceTestInterface : public PerformanceTestBase
 		* @brief The function defines the main DFN the performance test is executed upon.
 		*
 		*/
-		void SetDfpc(dfpc_ci::DFPCCommonInterface* dfpc);
+		void SetDfpc(CDFF::DFPC::DFPCCommonInterface* dfpc);
 
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
 	 */
 	protected:	
-		dfpc_ci::DFPCCommonInterface* dfpc;
+		CDFF::DFPC::DFPCCommonInterface* dfpc;
 
 	/* --------------------------------------------------------------------
 	 * Private

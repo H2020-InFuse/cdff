@@ -17,7 +17,11 @@
 
 using namespace Helpers;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace KFPrediction
 {
 
 KalmanPredictor::KalmanPredictor()
@@ -190,6 +194,8 @@ void KalmanPredictor::ValidateInputs(cv::Mat pose)
 	ASSERT(pose.rows == 6 && pose.cols ==1, "Kalman Predictor: Predictor input is 6-d column vector");
 }
 
+}
+}
 }
 
 /** @} */

@@ -32,7 +32,7 @@
 #include <Errors/Assert.hpp>
 #include <DataGenerators/SyntheticGenerators/CameraPair.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::CamerasTransformEstimation;
 using namespace Converters;
 using namespace BaseTypesWrapper;
 using namespace PoseWrapper;

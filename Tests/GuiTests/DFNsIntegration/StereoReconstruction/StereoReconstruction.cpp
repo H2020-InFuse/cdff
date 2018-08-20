@@ -61,7 +61,7 @@
 #include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
 
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::StereoReconstruction;
 using namespace Converters;
 using namespace Common;
 using namespace FrameWrapper;

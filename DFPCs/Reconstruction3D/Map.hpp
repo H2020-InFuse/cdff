@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  * @brief This a general interface for accessing a map database, a future implementation should link to the DPM.
  *  
@@ -22,8 +22,8 @@
  * @{
  */
 
-#ifndef MAP_HPP
-#define MAP_HPP
+#ifndef RECONSTRUCTION3D_MAP_HPP
+#define RECONSTRUCTION3D_MAP_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -36,7 +36,12 @@
 #include <BaseTypes.hpp>
 #include <Frame.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -133,6 +138,9 @@ namespace dfpc_ci {
 
     };
 }
-#endif
-/* Map.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_MAP_HPP
+
 /** @} */

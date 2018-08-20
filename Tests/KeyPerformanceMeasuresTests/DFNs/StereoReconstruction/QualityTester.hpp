@@ -64,7 +64,7 @@ class QualityTester
 		QualityTester();
 		~QualityTester();
 
-		void SetDfn(std::string configurationFilePath, dfn_ci::StereoReconstructionInterface* dfn);
+		void SetDfn(std::string configurationFilePath, CDFF::DFN::StereoReconstructionInterface* dfn);
 		void SetInputFilesPaths(std::string inputLeftImageFilePath, std::string inputRightImageFilePath);
 		void SetOutputFilePath(std::string outputPointCloudFilePath);
 		void SetOutliersFilePath(std::string outliersReferenceFilePath);
@@ -114,7 +114,7 @@ class QualityTester
 		Converters::MatToFrameConverter frameConverter;
 		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 		Converters::PclPointCloudToPointCloudConverter inverseCloudConverter;
-		dfn_ci::StereoReconstructionInterface* dfn;
+		CDFF::DFN::StereoReconstructionInterface* dfn;
 
 		bool inputImagesWereLoaded;
 		bool outputPointCloudWasLoaded;

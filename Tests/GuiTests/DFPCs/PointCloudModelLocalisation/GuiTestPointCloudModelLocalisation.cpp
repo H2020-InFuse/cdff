@@ -29,7 +29,7 @@
  */
 #include "GuiTestPointCloudModelLocalisation.hpp"
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::PointCloudModelLocalisation;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PoseWrapper;
@@ -79,7 +79,7 @@ GuiTestPointCloudModelLocalisation::~GuiTestPointCloudModelLocalisation()
 	delete(mockOutputConverter);
 	}
 
-void GuiTestPointCloudModelLocalisation::Run(dfpc_ci::PointCloudModelLocalisationInterface& detector3d)
+void GuiTestPointCloudModelLocalisation::Run(CDFF::DFPC::PointCloudModelLocalisationInterface& detector3d)
 	{
 	detector3d.setConfigurationFile(configurationFilePath);
 	detector3d.setup();

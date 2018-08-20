@@ -23,7 +23,7 @@
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::StereoReconstruction;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace PointCloudWrapper;

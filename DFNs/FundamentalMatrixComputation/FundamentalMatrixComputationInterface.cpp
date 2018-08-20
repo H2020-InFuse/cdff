@@ -5,7 +5,9 @@
 
 #include "FundamentalMatrixComputationInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FundamentalMatrixComputationInterface::FundamentalMatrixComputationInterface()
@@ -31,6 +33,7 @@ bool FundamentalMatrixComputationInterface::successOutput() const
     return outSuccess;
 }
 
+}
 }
 
 /** @} */

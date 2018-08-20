@@ -43,7 +43,7 @@
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::Reconstruction3D;
 using namespace FrameWrapper;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;

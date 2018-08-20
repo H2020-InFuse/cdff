@@ -28,7 +28,7 @@
  */
 #include "DetectionDescriptionMatching3D.hpp"
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace VisualPointFeatureVector3DWrapper;

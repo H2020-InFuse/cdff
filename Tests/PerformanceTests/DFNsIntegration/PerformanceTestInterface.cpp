@@ -48,7 +48,7 @@ PerformanceTestInterface::~PerformanceTestInterface()
 
 	}
 
-void PerformanceTestInterface::AddDfn(dfn_ci::DFNCommonInterface* dfn)
+void PerformanceTestInterface::AddDfn(CDFF::DFN::DFNCommonInterface* dfn)
 	{
 	dfnsList.push_back(dfn);
 	}
@@ -64,7 +64,7 @@ void PerformanceTestInterface::Configure()
 	ASSERT(dfnsList.size() == temporaryConfigurationFilePathsList.size(), "Configuration error, the number of dfns is not the same as the number of configuration files");
 	for(unsigned dfnIndex = 0; dfnIndex < dfnsList.size(); dfnIndex++)
 		{
-		dfn_ci::DFNCommonInterface* dfn = dfnsList.at(dfnIndex);
+		CDFF::DFN::DFNCommonInterface* dfn = dfnsList.at(dfnIndex);
 		dfn->setConfigurationFile( temporaryConfigurationFilePathsList.at(dfnIndex) );
 		dfn->configure();
 		}

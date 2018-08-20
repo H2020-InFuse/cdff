@@ -35,6 +35,10 @@
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <FeaturesMatching3D/Ransac3D.hpp>
 
+using namespace CDFF::DFN::FeaturesExtraction3D;
+using namespace CDFF::DFN::FeaturesDescription3D;
+using namespace CDFF::DFN::FeaturesMatching3D;
+
 const std::string USAGE =
 " \n \
 This programs requires four parameters: \n \
@@ -46,8 +50,6 @@ In addition to the four parameters you will need to configure the yaml configura
 ShotDescriptor3d_PerformanceTest_1.yaml, Ransac3d_PerformanceTest_1.yaml. They should be located in Tests/ConfigurationFiles/DFNsIntegration/Odometry3D/ folder \n \n \
 The output of the execution will be located in build/Tests/tests/ConfigurationFiles/DFNsIntegration/Odometry3D/Harris_Shot_Icp.txt \n \n \
 Example Usage: ./harris_shot_ransac ../tests/Data/PointClouds/bunny0.ply 0.001 ../tests/Data/PointCloud/Transform.txt ../test/Data/PointCloud/bunnyPart1.ply  ../test/Data/PointCloud/bunnyPart2.ply \n \n";
-
-using namespace dfn_ci;
 
 int main(int argc, char** argv)
 	{
