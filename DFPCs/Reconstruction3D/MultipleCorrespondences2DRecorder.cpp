@@ -2,7 +2,12 @@
 #include "Errors/Assert.hpp"
 #include <cmath>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 using namespace CorrespondenceMap2DWrapper;
 using namespace CorrespondenceMap2DWrapper;
@@ -304,5 +309,7 @@ bool MultipleCorrespondences2DRecorder::LastSinkIsValid(const std::vector<BaseTy
 	return ( sinkPoint1.x == sinkPoint2.x && sinkPoint1.y == sinkPoint2.y);
 	}
 
+}
+}
 }
 /** @} */

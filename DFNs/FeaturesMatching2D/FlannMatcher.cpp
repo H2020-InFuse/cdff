@@ -20,7 +20,11 @@ using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace CorrespondenceMap2DWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesMatching2D
 {
 
 FlannMatcher::FlannMatcher()
@@ -412,6 +416,8 @@ void FlannMatcher::ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeat
 	ASSERT( sourceFeaturesMatrix.cols > 0, "FlannMatcher Error: Input features vectors are empty");
 }
 
+}
+}
 }
 
 /** @} */

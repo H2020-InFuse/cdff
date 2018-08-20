@@ -63,7 +63,7 @@ class ReconstructionExecutor
 		ReconstructionExecutor();
 		~ReconstructionExecutor();
 
-		void SetDfpc(std::string configurationFilePath, dfpc_ci::Reconstruction3DInterface* dfpc);
+		void SetDfpc(std::string configurationFilePath, CDFF::DFPC::Reconstruction3DInterface* dfpc);
 		void SetInputFilesPaths(std::string inputImagesFolder, std::string inputImagesListFileName);
 		void SetOutputFilePath(std::string outputPointCloudFilePath);
 		void SetOutliersFilePath(std::string outliersReferenceFilePath);
@@ -117,7 +117,7 @@ class ReconstructionExecutor
 		Converters::MatToFrameConverter frameConverter;
 		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 		Converters::PclPointCloudToPointCloudConverter inverseCloudConverter;
-		dfpc_ci::Reconstruction3DInterface* dfpc;
+		CDFF::DFPC::Reconstruction3DInterface* dfpc;
 
 		bool inputImagesWereLoaded;
 		bool outputPointCloudWasLoaded;

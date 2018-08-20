@@ -37,7 +37,7 @@
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
 
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesExtraction2D;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;

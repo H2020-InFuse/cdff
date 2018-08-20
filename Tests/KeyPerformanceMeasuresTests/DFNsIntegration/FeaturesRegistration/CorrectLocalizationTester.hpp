@@ -59,7 +59,7 @@ class CorrectLocalizationTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		CorrectLocalizationTester(std::string configurationFile, dfn_ci::Registration3DInterface* dfn, std::string extractorConfigurationFile, dfn_ci::FeaturesExtraction3DInterface* extractor);
+		CorrectLocalizationTester(std::string configurationFile, CDFF::DFN::Registration3DInterface* dfn, std::string extractorConfigurationFile, CDFF::DFN::FeaturesExtraction3DInterface* extractor);
 		~CorrectLocalizationTester();
 
 		void SetInputClouds(std::string sceneCloudFilePath, std::string modelCloudFilePath, std::string groundTruthPoseFilePath);
@@ -83,8 +83,8 @@ class CorrectLocalizationTester
 		std::string configurationFile, extractorConfigurationFile;
 		std::string sceneCloudFilePath, modelCloudFilePath, groundTruthPoseFilePath;
 		std::string guessPoseFilePath;
-		dfn_ci::Registration3DInterface* dfn;
-		dfn_ci::FeaturesExtraction3DInterface* extractor;
+		CDFF::DFN::Registration3DInterface* dfn;
+		CDFF::DFN::FeaturesExtraction3DInterface* extractor;
 
 		PointCloudWrapper::PointCloudConstPtr inputSceneCloud;
 		PointCloudWrapper::PointCloudConstPtr inputModelCloud;

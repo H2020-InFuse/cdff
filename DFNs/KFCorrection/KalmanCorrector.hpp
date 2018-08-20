@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef KALMANCORRECTOR_HPP
-#define KALMANCORRECTOR_HPP
+#ifndef KFCORRECTION_KALMANCORRECTOR_HPP
+#define KFCORRECTION_KALMANCORRECTOR_HPP
 
 #include "KFCorrectionInterface.hpp"
 #include <Helpers/ParametersListHelper.hpp>
@@ -17,7 +17,11 @@
 #include <opencv2/video/tracking.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace KFCorrection
 {
 	/**
 	 * Kalman corrector DFN (algorithm provided by OpenCV)
@@ -38,7 +42,7 @@ namespace dfn_ci
 			virtual ~KalmanCorrector();
 			virtual void configure();
 			virtual void process();
-			
+
 
 		private:
 
@@ -63,7 +67,9 @@ namespace dfn_ci
 			void Configure(const YAML::Node& configurationNode);
 	};
 }
+}
+}
 
-#endif // KALMANCORRECTOR_HPP
+#endif // KFCORRECTION_KALMANCORRECTOR_HPP
 
 /** @} */

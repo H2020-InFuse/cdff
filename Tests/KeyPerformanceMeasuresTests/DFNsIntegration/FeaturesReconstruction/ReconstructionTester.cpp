@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the ReconstructionTester class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -31,7 +31,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace PointCloudWrapper;
 using namespace MatrixWrapper;
 using namespace PoseWrapper;
@@ -49,7 +49,7 @@ using namespace CorrespondenceMap2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-ReconstructionTester::ReconstructionTester() 
+ReconstructionTester::ReconstructionTester()
 	{
 	fundamentalMatrixEstimatorFilePath = "";
 	poseEstimatorConfigurationFilePath = "";
@@ -76,7 +76,7 @@ ReconstructionTester::~ReconstructionTester()
 	DELETE_IF_NOT_NULL(outputPointCloud);
 	}
 
-void ReconstructionTester::SetDfns(FundamentalMatrixComputationInterface* fundamentalMatrixEstimator, 
+void ReconstructionTester::SetDfns(FundamentalMatrixComputationInterface* fundamentalMatrixEstimator,
 				CamerasTransformEstimationInterface* poseEstimator, PointCloudReconstruction2DTo3DInterface* reconstructor)
 	{
 	this->fundamentalMatrixEstimator = fundamentalMatrixEstimator;
@@ -158,7 +158,7 @@ void ReconstructionTester::ExecuteDfns()
 	DELETE_IF_NOT_NULL(outputPointCloud);
 	PointCloudPtr newOutputPointCloud = NewPointCloud();
 	Copy( reconstructor->pointcloudOutput(), *newOutputPointCloud);
-	outputPointCloud = newOutputPointCloud;	
+	outputPointCloud = newOutputPointCloud;
 	dfnsWereExecuted = true;
 
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
@@ -181,7 +181,7 @@ bool ReconstructionTester::AreTriangulatedPointsValid(float fieldOfViewX, float 
 		}
 
 	bool pointsAreValid = AllPointsAreInTheFieldOfView(fieldOfViewX, fieldOfViewY);
-	
+
 	if (!pointsAreValid)
 		{
 		PRINT_TO_LOG("Some triangulated points lay outside the field of view cone of the camera", "");
@@ -250,7 +250,7 @@ bool ReconstructionTester::AllPointsAreInTheFieldOfView(float fieldOfViewX, floa
 
 		float horizontalAngle = std::atan2(x, z);
 		float verticalAngle = std::atan2(y, z);
-		
+
 		if ( std::abs(horizontalAngle) > fieldOfViewX || std::abs(verticalAngle) > fieldOfViewY )
 			{
 			std::stringstream pointStream;

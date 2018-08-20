@@ -67,7 +67,7 @@ class CorrectLocalizationTester
 
 		void SetInputClouds(std::string sceneCloudFilePath, std::string modelCloudFilePath, std::string groundTruthPoseFilePath);
 		void SetConfigurationFiles(std::string extractorConfigurationFile, std::string descriptorConfigurationFile, std::string matcherConfigurationFile);
-		void SetDfns(dfn_ci::FeaturesExtraction3DInterface* extractor, dfn_ci::FeaturesDescription3DInterface* descriptor, dfn_ci::FeaturesMatching3DInterface* matcher);
+		void SetDfns(CDFF::DFN::FeaturesExtraction3DInterface* extractor, CDFF::DFN::FeaturesDescription3DInterface* descriptor, CDFF::DFN::FeaturesMatching3DInterface* matcher);
 
 		void ExecuteDfns();
 		bool IsOutputCorrect(float relativeLocationError, float relativeOrientationError, float absoluteLocationError);
@@ -86,9 +86,9 @@ class CorrectLocalizationTester
 	private:
 		std::string extractorConfigurationFile, descriptorConfigurationFile, matcherConfigurationFile;
 		std::string sceneCloudFilePath, modelCloudFilePath, groundTruthPoseFilePath;
-		dfn_ci::FeaturesExtraction3DInterface* extractor;
-		dfn_ci::FeaturesDescription3DInterface* descriptor;
-		dfn_ci::FeaturesMatching3DInterface* matcher;
+		CDFF::DFN::FeaturesExtraction3DInterface* extractor;
+		CDFF::DFN::FeaturesDescription3DInterface* descriptor;
+		CDFF::DFN::FeaturesMatching3DInterface* matcher;
 
 		PointCloudWrapper::PointCloudConstPtr inputSceneCloud;
 		PointCloudWrapper::PointCloudConstPtr inputModelCloud;

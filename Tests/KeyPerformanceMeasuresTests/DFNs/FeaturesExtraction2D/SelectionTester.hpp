@@ -61,7 +61,7 @@ class SelectionTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		SelectionTester(std::string configurationFilePath, dfn_ci::FeaturesExtraction2DInterface* dfn);
+		SelectionTester(std::string configurationFilePath, CDFF::DFN::FeaturesExtraction2DInterface* dfn);
 		~SelectionTester();
 
 		void SetFilesPaths(std::string inputImageFilePath, std::string numberReferenceFilePath, std::string precisionReferenceFilePath);
@@ -90,7 +90,7 @@ class SelectionTester
 		cv::Mat precisionKeypointsMatrix;
 
 		Converters::MatToFrameConverter frameConverter;
-		dfn_ci::FeaturesExtraction2DInterface* dfn;
+		CDFF::DFN::FeaturesExtraction2DInterface* dfn;
 
 		bool inputImageWasLoaded;
 		bool numberReferenceWasLoaded;

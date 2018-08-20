@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the ReconstructionExecutor class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -32,7 +32,7 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
@@ -52,7 +52,7 @@ using namespace SupportTypes;
  *
  * --------------------------------------------------------------------------
  */
-ReconstructionExecutor::ReconstructionExecutor() 
+ReconstructionExecutor::ReconstructionExecutor()
 	{
 	inputLeftFrame = NULL;
 	inputRightFrame = NULL;
@@ -75,7 +75,7 @@ ReconstructionExecutor::~ReconstructionExecutor()
 	DELETE_IF_NOT_NULL(outputCameraPose);
 	}
 
-void ReconstructionExecutor::SetDfpc(std::string configurationFilePath, dfpc_ci::Reconstruction3DInterface* dfpc)
+void ReconstructionExecutor::SetDfpc(std::string configurationFilePath, CDFF::DFPC::Reconstruction3DInterface* dfpc)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfpc = dfpc;
@@ -99,7 +99,7 @@ void ReconstructionExecutor::SetOutputFilePath(std::string outputPointCloudFileP
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::io::loadPLYFile(outputPointCloudFilePath, *pclPointCloud);
-	
+
 	DELETE_IF_NOT_NULL(outputPointCloud);
 	outputPointCloud = inverseCloudConverter.Convert(pclPointCloud);
 
@@ -149,7 +149,7 @@ void ReconstructionExecutor::ExecuteDfpc()
 		PointCloudPtr newOutputPointCloud = NewPointCloud();
 		Copy( dfpc->pointCloudOutput(), *newOutputPointCloud);
 		outputPointCloud = newOutputPointCloud;
-	
+
 		DELETE_IF_NOT_NULL(outputCameraPose);
 		Pose3DPtr newOutputCameraPose = NewPose3D();
 		Copy( dfpc->poseOutput(), *newOutputCameraPose);
@@ -172,7 +172,7 @@ bool ReconstructionExecutor::IsOutliersQualitySufficient(float outliersPercentag
 
 	PRINT_TO_LOG("Point cloud size is", GetNumberOfPoints(*outputPointCloud));
 	PRINT_TO_LOG("Number of outliers is", outliersMatrix.rows);
-	
+
 	float outlierPercentage = ((float)outliersMatrix.rows) / ( (float)GetNumberOfPoints(*outputPointCloud) );
 	PRINT_TO_LOG("Outlier percentage is: ", outlierPercentage);
 
@@ -189,7 +189,7 @@ bool ReconstructionExecutor::IsOutliersQualitySufficient(float outliersPercentag
 bool ReconstructionExecutor::IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage)
 	{
 	ASSERT(outputPointCloudWasLoaded && measuresReferenceWasLoaded, "Error: you have to load cloud and measures");
-	
+
 	float distanceToCameraErrorThreshold = cameraDistanceErrorPercentage * cameraOperationDistance;
 	float cameraDistanceError = ComputeCameraDistanceError();
 	bool withinCameraError = (cameraDistanceError <= distanceToCameraErrorThreshold);
@@ -224,7 +224,7 @@ bool ReconstructionExecutor::IsDimensionsQualitySufficient(float shapeSimilarity
 void ReconstructionExecutor::SaveOutputPointCloud(std::string outputPointCloudFilePath)
 	{
 	ASSERT(dfpcExecuted, "Cannot save output cloud if DFPC was not executed before");
-	
+
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclPointCloud = pointCloudConverter.Convert(outputPointCloud);
 
 	pcl::PLYWriter writer;
@@ -242,7 +242,7 @@ void ReconstructionExecutor::LoadInputImage(std::string filePath, FrameWrapper::
 	cv::Mat cvImage = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
 	ASSERT(cvImage.cols > 0 && cvImage.rows >0, "Error: Loaded input image is empty");
 
-	DELETE_IF_NOT_NULL(frame);	
+	DELETE_IF_NOT_NULL(frame);
 	frame = frameConverter.Convert(cvImage);
 	}
 
@@ -252,7 +252,7 @@ void ReconstructionExecutor::LoadInputImagesList()
 	imagesListFilePath << inputImagesFolder << "/" << inputImagesListFileName;
 	std::ifstream imagesListFile(imagesListFilePath.str().c_str());
 	ASSERT(imagesListFile.good(), "Error it was not possible to open the images list file");
-	
+
 	std::string line;
 	std::getline(imagesListFile, line);
 	std::getline(imagesListFile, line);
@@ -262,7 +262,7 @@ void ReconstructionExecutor::LoadInputImagesList()
 		std::vector<std::string> stringsList;
 		boost::split(stringsList, line, boost::is_any_of(" "));
 		ASSERT(stringsList.size() == 3, "Error reading file, bad line");
-		
+
 		leftImageFileNamesList.push_back( std::string(stringsList.at(1)) );
 		rightImageFileNamesList.push_back( std::string(stringsList.at(2)) );
 		}
@@ -297,7 +297,7 @@ void ReconstructionExecutor::LoadMeasuresReference()
 			{
 			Object newObject;
 			objectsList.push_back(newObject);
-			}	
+			}
 
 		Line newLine;
 		newLine.sourceIndex = objectsMatrix.at<float>(lineIndex, 0);
@@ -320,7 +320,7 @@ float ReconstructionExecutor::ComputeCameraDistanceError()
 		{
 		int32_t originalPointIndex = pointsToCameraMatrix.at<float>(pointIndex, 0);
 		float measuredDistance = pointsToCameraMatrix.at<float>(pointIndex, 1);
-		
+
 		float x = GetXCoordinate(*outputPointCloud, originalPointIndex);
 		float y = GetYCoordinate(*outputPointCloud, originalPointIndex);
 		float z = GetZCoordinate(*outputPointCloud, originalPointIndex);
@@ -344,8 +344,8 @@ float ReconstructionExecutor::ComputeShapeSimilarity()
 			{
 			totalShapeSimilarity += ComputeObjectShapeSimilarity(objectIndex);
 			}
-		}	
-	float averageShapeSimilarity = totalShapeSimilarity / (float)objectsList.size(); 
+		}
+	float averageShapeSimilarity = totalShapeSimilarity / (float)objectsList.size();
 
 	PRINT_TO_LOG("The average shape similarity", averageShapeSimilarity);
 	return averageShapeSimilarity;
@@ -364,7 +364,7 @@ bool ReconstructionExecutor::EvaluateDimensionalError(float dimensionalErrorPerc
 				{
 				continue;
 				}
-			
+
 			float lineRelativeError = ComputeLineAbsoluteError(currentLine) / currentLine.length;
 			if (lineRelativeError >= dimensionalErrorPercentage)
 				{
@@ -395,10 +395,10 @@ float ReconstructionExecutor::ComputeLineAbsoluteError(const Line& line)
 	{
 	float sourceX = GetXCoordinate(*outputPointCloud, line.sourceIndex);
 	float sourceY = GetYCoordinate(*outputPointCloud, line.sourceIndex);
-	float sourceZ = GetZCoordinate(*outputPointCloud, line.sourceIndex);	
+	float sourceZ = GetZCoordinate(*outputPointCloud, line.sourceIndex);
 	float sinkX = GetXCoordinate(*outputPointCloud, line.sinkIndex);
 	float sinkY = GetYCoordinate(*outputPointCloud, line.sinkIndex);
-	float sinkZ = GetZCoordinate(*outputPointCloud, line.sinkIndex);	
+	float sinkZ = GetZCoordinate(*outputPointCloud, line.sinkIndex);
 	float differenceX = sourceX - sinkX;
 	float differenceY = sourceY - sinkY;
 	float differenceZ = sourceZ - sinkZ;
@@ -410,7 +410,7 @@ float ReconstructionExecutor::ComputeLineAbsoluteError(const Line& line)
 float ReconstructionExecutor::ComputeObjectShapeSimilarity(int objectIndex)
 	{
 	float dimension = ComputeObjectDimension(objectIndex);
-	
+
 	float totalAbsoluteError = 0;
 	for(int lineIndex = 0; lineIndex < objectsList.at(objectIndex).size(); lineIndex++)
 		{
@@ -419,7 +419,7 @@ float ReconstructionExecutor::ComputeObjectShapeSimilarity(int objectIndex)
 		totalAbsoluteError += lineAbsoluteError;
 		}
 	float averageAbsoluteError = totalAbsoluteError / (float)objectsList.at(objectIndex).size();
-	
+
 	return (1 - (averageAbsoluteError/dimension));
 	}
 

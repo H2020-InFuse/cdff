@@ -37,7 +37,12 @@
 #include "PointCloud.hpp"
 
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -91,6 +96,8 @@ class MultipleCorrespondences2DRecorder
 	
 	};
 
+}
+}
 }
 #endif
 /* MultipleCorrespondences2DRecorder.hpp */

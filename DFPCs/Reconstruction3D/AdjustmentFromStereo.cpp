@@ -41,9 +41,14 @@
 		} \
 	} \
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace FrameWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
@@ -530,6 +535,8 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 		}
 	}
 
+}
+}
 }
 
 

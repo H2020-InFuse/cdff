@@ -18,7 +18,11 @@
 using namespace Converters;
 using namespace FrameWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace ImageFiltering
 {
 
 ImageUndistortion::ImageUndistortion()
@@ -142,6 +146,8 @@ void ImageUndistortion::ValidateInputs(cv::Mat inputImage)
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "Image Undistortion error: input image is empty");
 }
 
+}
+}
 }
 
 /** @} */

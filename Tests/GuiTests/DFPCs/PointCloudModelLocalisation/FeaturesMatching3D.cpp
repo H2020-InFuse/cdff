@@ -53,7 +53,7 @@
 
 #include <boost/make_shared.hpp>
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::PointCloudModelLocalisation;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PoseWrapper;

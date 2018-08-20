@@ -17,7 +17,7 @@
 #include <Errors/Assert.hpp>
 #include <iostream>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::KFPrediction;
 
 enum states{ORIENTATION, POSITION, ANGULAR_VELOCITY, VELOCITY};
 

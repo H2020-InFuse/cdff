@@ -43,7 +43,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
-#[=[DFNs/Registration3D/Icp3D.cpp]=] # FIXME: name collision, issue #56
+    DFNs/Registration3D/Icp3D.cpp
     DFNs/Registration3D/IcpCC.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
@@ -112,7 +112,7 @@ set(UNITTEST_LIBRARIES Catch
     pcl_visualization
     ransac_3d
 #[=[reconstruction_from_stereo]=]
-#[=[registration_icp_3d]=] # FIXME: name collision, issue #56
+    registration_icp_3d
     registration_icp_cc
     shot_descriptor_3d
     svd_decomposition

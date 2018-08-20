@@ -10,7 +10,9 @@ using namespace MatrixWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 CamerasTransformEstimationExecutor::CamerasTransformEstimationExecutor(CamerasTransformEstimationInterface* dfn)
@@ -53,6 +55,7 @@ void CamerasTransformEstimationExecutor::Execute(const Matrix3d& inputMatrix, co
 	Copy( dfn->transformOutput(), outputTransform);
 	success = dfn->successOutput();
 	}
+}
 }
 
 /** @} */

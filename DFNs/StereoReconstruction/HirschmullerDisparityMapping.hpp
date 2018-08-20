@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef HIRSCHMULLERDISPARITYMAPPING_HPP
-#define HIRSCHMULLERDISPARITYMAPPING_HPP
+#ifndef STEREORECONSTRUCTION_HIRSCHMULLERDISPARITYMAPPING_HPP
+#define STEREORECONSTRUCTION_HIRSCHMULLERDISPARITYMAPPING_HPP
 
 #include "StereoReconstructionInterface.hpp"
 
@@ -18,7 +18,11 @@
 
 #include <opencv2/core/core.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace StereoReconstruction
 {
 	/**
 	 * Scene reconstruction (as a 3D pointcloud) from 2D stereo images, using
@@ -175,7 +179,9 @@ namespace dfn_ci
 			#endif
 	};
 }
+}
+}
 
-#endif // HIRSCHMULLERDISPARITYMAPPING_HPP
+#endif // STEREORECONSTRUCTION_HIRSCHMULLERDISPARITYMAPPING_HPP
 
 /** @} */

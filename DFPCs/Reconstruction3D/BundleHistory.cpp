@@ -5,7 +5,12 @@ using namespace VisualPointFeatureVector2DWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 BundleHistory::BundleHistory(int size) :
 	size(size),
@@ -318,6 +323,8 @@ int BundleHistory::BackwardStepsToIndex(int backwardSteps)
 	return NO_RECENT_ENTRY;
 	}
 
+}
+}
 }
 /** @} */
 

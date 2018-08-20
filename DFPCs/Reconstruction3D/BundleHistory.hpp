@@ -9,7 +9,12 @@
 #include <vector>
 #include <map>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 class BundleHistory
 	{
@@ -58,6 +63,8 @@ class BundleHistory
 		int BackwardStepsToIndex(int backwardSteps);
 	};
 
+}
+}
 }
 #endif
 /* BundleHistory.hpp */

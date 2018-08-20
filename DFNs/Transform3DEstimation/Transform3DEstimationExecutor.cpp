@@ -9,7 +9,9 @@
 using namespace CorrespondenceMap3DWrapper;
 using namespace PoseWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 Transform3DEstimationExecutor::Transform3DEstimationExecutor(Transform3DEstimationInterface* dfn)
@@ -52,6 +54,7 @@ void Transform3DEstimationExecutor::Execute(const CorrespondenceMaps3DSequence& 
 	success = dfn->successOutput();
 	error = dfn->errorOutput();
 	}
+}
 }
 
 /** @} */

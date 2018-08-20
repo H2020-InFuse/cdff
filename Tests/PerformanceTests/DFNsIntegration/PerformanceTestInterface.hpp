@@ -78,14 +78,14 @@ class PerformanceTestInterface : public PerformanceTestBase
 		* @brief The function defines the main DFNs the performance test is executed upon.
 		*
 		*/
-		void AddDfn(dfn_ci::DFNCommonInterface* dfn);		
+		void AddDfn(CDFF::DFN::DFNCommonInterface* dfn);		
 
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
 	 */
 	protected:
-		std::vector<dfn_ci::DFNCommonInterface*> dfnsList;
+		std::vector<CDFF::DFN::DFNCommonInterface*> dfnsList;
 
 	/* --------------------------------------------------------------------
 	 * Private

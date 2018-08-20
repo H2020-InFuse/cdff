@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Adjustment From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows: 
@@ -26,8 +26,8 @@
  * @{
  */
 
-#ifndef ADJUSTMENTFROMSTEREO
-#define ADJUSTMENTFROMSTEREO
+#ifndef RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
+#define RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -70,7 +70,12 @@
 #endif
 
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -119,6 +124,7 @@ namespace dfpc_ci {
 		Helpers::ParametersListHelper parametersHelper;
 		AdjustmentFromStereoOptionsSet parameters;
 		static const AdjustmentFromStereoOptionsSet DEFAULT_PARAMETERS;
+
 		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;
 		const std::string LEFT_FEATURE_CATEGORY;
 		const std::string RIGHT_FEATURE_CATEGORY;
@@ -126,16 +132,16 @@ namespace dfpc_ci {
 		const std::string TRIANGULATION_CLOUD_CATEGORY;
 
 		//DFN Executors
-		dfn_ci::ImageFilteringExecutor* optionalLeftFilter;
-		dfn_ci::ImageFilteringExecutor* optionalRightFilter;
-		dfn_ci::StereoReconstructionExecutor* reconstructor3d;
-		dfn_ci::FeaturesExtraction2DExecutor* featuresExtractor2d;
-		dfn_ci::FeaturesDescription2DExecutor* optionalFeaturesDescriptor2d;
-		dfn_ci::FeaturesMatching2DExecutor* featuresMatcher2d;
-		dfn_ci::BundleAdjustmentExecutor* bundleAdjuster;
-		dfn_ci::FundamentalMatrixComputationExecutor* fundamentalMatrixComputer;
-		dfn_ci::CamerasTransformEstimationExecutor* cameraTransformEstimator;
-		dfn_ci::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
+		CDFF::DFN::ImageFilteringExecutor* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringExecutor* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionExecutor* reconstructor3d;
+		CDFF::DFN::FeaturesExtraction2DExecutor* featuresExtractor2d;
+		CDFF::DFN::FeaturesDescription2DExecutor* optionalFeaturesDescriptor2d;
+		CDFF::DFN::FeaturesMatching2DExecutor* featuresMatcher2d;
+		CDFF::DFN::BundleAdjustmentExecutor* bundleAdjuster;
+		CDFF::DFN::FundamentalMatrixComputationExecutor* fundamentalMatrixComputer;
+		CDFF::DFN::CamerasTransformEstimationExecutor* cameraTransformEstimator;
+		CDFF::DFN::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
 
 		#ifdef TESTING
 		std::ofstream logFile;
@@ -168,6 +174,9 @@ namespace dfpc_ci {
 		void AddLastPointCloudToMap(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
     };
 }
-#endif
-/* AdjustmentFromStereo.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
+
 /** @} */

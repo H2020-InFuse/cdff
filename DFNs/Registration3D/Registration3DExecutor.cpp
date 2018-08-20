@@ -9,7 +9,9 @@
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 Registration3DExecutor::Registration3DExecutor(Registration3DInterface* dfn)
@@ -93,6 +95,7 @@ void Registration3DExecutor::Execute(const PointCloud& inputSourceCloud, const P
 	success = dfn->successOutput();
 	}
 
+}
 }
 
 /** @} */

@@ -21,7 +21,11 @@
 using namespace PointCloudWrapper;
 using namespace FrameWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace StereoReconstruction
 {
 
 ScanlineOptimization::ScanlineOptimization()
@@ -268,6 +272,8 @@ cv::Mat ScanlineOptimization::PclImageToCvMatrix(PclImagePtr pclImage)
 	return cvImage;
 }
 
+}
+}
 }
 
 /** @} */

@@ -18,7 +18,7 @@
 
 #include <boost/make_shared.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::Registration3D;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;

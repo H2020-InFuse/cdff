@@ -9,7 +9,9 @@
 using namespace PoseWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FeaturesMatching3DExecutor::FeaturesMatching3DExecutor(FeaturesMatching3DInterface* dfn)
@@ -52,6 +54,7 @@ void FeaturesMatching3DExecutor::Execute(const VisualPointFeatureVector3D& input
 	Copy( dfn->transformOutput(), outputTransform);
 	success = dfn->successOutput();
 	}
+}
 }
 
 /** @} */

@@ -9,7 +9,9 @@
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FeaturesDescription2DExecutor::FeaturesDescription2DExecutor(FeaturesDescription2DInterface* dfn)
@@ -59,6 +61,7 @@ void FeaturesDescription2DExecutor::Execute(const Frame& inputFrame, const Visua
 	dfn->process();
 	Copy( dfn->featuresOutput(), outputVector);
 	}
+}
 }
 
 /** @} */

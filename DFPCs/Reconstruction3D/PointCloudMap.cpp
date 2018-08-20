@@ -31,7 +31,12 @@
 #include <pcl/filters/voxel_grid.h>
 #include <Visualizers/PclVisualizer.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PoseWrapper;
@@ -290,6 +295,8 @@ bool PointCloudMap::NoCloseFeature(const pcl::PointXYZ& point)
 	return true;
 	}
 
+}
+}
 }
 
 /** @} */

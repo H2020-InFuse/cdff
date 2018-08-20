@@ -5,7 +5,9 @@
 
 #include "Reconstruction3DInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 Reconstruction3DInterface::Reconstruction3DInterface()
@@ -41,6 +43,7 @@ bool Reconstruction3DInterface::successOutput() const
     return outSuccess;
 }
 
+}
 }
 
 /** @} */

@@ -9,7 +9,9 @@
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FeaturesExtraction2DExecutor::FeaturesExtraction2DExecutor(FeaturesExtraction2DInterface* dfn)
@@ -48,6 +50,7 @@ void FeaturesExtraction2DExecutor::Execute(const Frame& inputFrame, VisualPointF
 	dfn->process();
 	Copy( dfn->featuresOutput(), outputVector);
 	}
+}
 }
 
 /** @} */

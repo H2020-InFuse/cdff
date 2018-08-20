@@ -3,14 +3,16 @@
  * @{
  */
 
-#ifndef KFPREDICTION_INTERFACE_HPP
-#define KFPREDICTION_INTERFACE_HPP
+#ifndef KFPREDICTION_KFPREDICTIONINTERFACE_HPP
+#define KFPREDICTION_KFPREDICTIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Time.h>
 #include <RigidBodyState.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN for Kalman filtering
@@ -52,7 +54,8 @@ namespace dfn_ci
             asn1SccRigidBodyState outPredictedStateCovariance;
     };
 }
+}
 
-#endif // KFPREDICTION_INTERFACE_HPP
+#endif // KFPREDICTION_KFPREDICTIONINTERFACE_HPP
 
 /** @} */

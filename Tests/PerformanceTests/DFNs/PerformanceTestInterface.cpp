@@ -48,7 +48,7 @@ PerformanceTestInterface::~PerformanceTestInterface()
 
 	}
 
-void PerformanceTestInterface::SetDfn(dfn_ci::DFNCommonInterface* dfn)
+void PerformanceTestInterface::SetDfn(CDFF::DFN::DFNCommonInterface* dfn)
 	{
 	this->dfn = dfn;
 	}
