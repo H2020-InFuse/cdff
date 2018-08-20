@@ -16,6 +16,27 @@ namespace CDFF
 namespace DFN
 {
 
+/**
+* All the methods in this class execute the DFN for the computation of the position of the sink point cloud in the reference system of the source point cloud. 
+* A DFN instance has to be passed in the constructor of these class. 
+* The first four methods take the following parameters:
+* @param inputSourceCloud: input source cloud;
+* @param inputSinkCloud: input sink cloud;
+* @param outputTransform: pose of the source cloud in the reference of the sink cloud;
+* @param success: boolean telling whether the computation was successfull.
+*
+* The second four methods take the following parameters:
+* @param inputSourceCloud: input source cloud;
+* @param inputSinkCloud: input sink cloud;
+* @param poseGuess: initial estimation of the second cloud in the reference of the first cloud;
+* @param outputTransform: pose of the source cloud in the reference of the sink cloud;
+* @param success: boolean telling whether the computation was successfull.
+*
+* The main difference within each group of four methods are input and output types:
+* Methods (i) and (ii) have the constant pointer as input, Methods (iii)  and (iv) have a constant reference as input;
+* Methods (i) and (iii) are non-creation methods, they give constant pointers as output, the output is just the output reference in the DFN;
+* Methods (ii) and (iv) are creation methods, they copy the output of the DFN in the referenced output variable. Method (ii) takes a pointer, method (iv) takes a reference.
+*/
     class Registration3DExecutor
     {
         public:
