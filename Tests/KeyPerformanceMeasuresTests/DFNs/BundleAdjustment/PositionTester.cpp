@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the PositionTester class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -31,7 +31,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <Eigen/Dense>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
@@ -48,7 +48,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-PositionTester::PositionTester(std::string configurationFilePath, dfn_ci::BundleAdjustmentInterface* dfn) 
+PositionTester::PositionTester(std::string configurationFilePath, CDFF::DFN::BundleAdjustmentInterface* dfn)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;
@@ -219,17 +219,17 @@ float PositionTester::ComputeOrientationError(float poseIndex, float modelSize)
 
 	Eigen::Quaternion<float> outputRotation
 		(
-		GetWOrientation(outputPose), 
-		GetXOrientation(outputPose), 
-		GetYOrientation(outputPose), 
+		GetWOrientation(outputPose),
+		GetXOrientation(outputPose),
+		GetYOrientation(outputPose),
 		GetZOrientation(outputPose)
 		);
 
 	Eigen::Quaternion<float> referenceRotation
 		(
-		GetWOrientation(referencePose), 
-		GetXOrientation(referencePose), 
-		GetYOrientation(referencePose), 
+		GetWOrientation(referencePose),
+		GetXOrientation(referencePose),
+		GetYOrientation(referencePose),
 		GetZOrientation(referencePose)
 		);
 

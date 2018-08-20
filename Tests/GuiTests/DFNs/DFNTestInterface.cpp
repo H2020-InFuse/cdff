@@ -33,6 +33,8 @@
 #include <fstream>
 #include <stdio.h>
 
+using namespace CDFF::DFN;
+
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions

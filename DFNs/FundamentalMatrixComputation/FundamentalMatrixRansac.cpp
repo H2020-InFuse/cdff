@@ -21,7 +21,11 @@ using namespace MatrixWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace BaseTypesWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FundamentalMatrixComputation
 {
 
 FundamentalMatrixRansac::FundamentalMatrixRansac()
@@ -174,6 +178,8 @@ void FundamentalMatrixRansac::ValidateInputs(const std::vector<cv::Point2d>& fir
 	ASSERT(firstImagePointsVector.size() == secondImagePointsVector.size(), "FundamentalMatrixRansac Error: Points vector do not have the same size");
 }
 
+}
+}
 }
 
 /** @} */

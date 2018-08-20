@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Reconstruction From Motion as implementation of the DPFC for Reconsrtruction3D.
  *  This chain operates as follows: 
@@ -23,8 +23,8 @@
  * @{
  */
 
-#ifndef RECONSTRUCTION_FROM_MOTION_HPP
-#define RECONSTRUCTION_FROM_MOTION_HPP
+#ifndef RECONSTRUCTION3D_RECONSTRUCTIONFROMMOTION_HPP
+#define RECONSTRUCTION3D_RECONSTRUCTIONFROMMOTION_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -54,7 +54,12 @@
 #include <Matrix.hpp>
 
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -111,14 +116,14 @@ namespace dfpc_ci {
 		Map* map;
 		PoseWrapper::Pose3DPtr rightToLeftCameraPose;
 
-		dfn_ci::ImageFilteringInterface* leftFilter;
-		dfn_ci::ImageFilteringInterface* rightFilter;		
-		dfn_ci::FeaturesExtraction2DInterface* featuresExtractor;
-		dfn_ci::FeaturesDescription2DInterface* optionalFeaturesDescriptor;
-		dfn_ci::FeaturesMatching2DInterface* featuresMatcher;	
-		dfn_ci::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;	
-		dfn_ci::CamerasTransformEstimationInterface* cameraTransformEstimator;
-		dfn_ci::PointCloudReconstruction2DTo3DInterface* reconstructor3D;
+		CDFF::DFN::ImageFilteringInterface* leftFilter;
+		CDFF::DFN::ImageFilteringInterface* rightFilter;		
+		CDFF::DFN::FeaturesExtraction2DInterface* featuresExtractor;
+		CDFF::DFN::FeaturesDescription2DInterface* optionalFeaturesDescriptor;
+		CDFF::DFN::FeaturesMatching2DInterface* featuresMatcher;	
+		CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;	
+		CDFF::DFN::CamerasTransformEstimationInterface* cameraTransformEstimator;
+		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3D;
 
 		FrameWrapper::FrameConstPtr pastLeftImage;
 		FrameWrapper::FramePtr currentLeftImage;
@@ -161,6 +166,9 @@ namespace dfpc_ci {
 		void ComputeStereoPointCloud();
     };
 }
-#endif
-/* ReconstructionFromMotion.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_RECONSTRUCTIONFROMMOTION_HPP
+
 /** @} */

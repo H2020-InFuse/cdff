@@ -65,7 +65,7 @@ class SelectionTester
 		SelectionTester();
 		~SelectionTester();
 
-		void SetDfns(dfn_ci::FeaturesDescription3DInterface* descriptor, dfn_ci::FeaturesMatching3DInterface* matcher);
+		void SetDfns(CDFF::DFN::FeaturesDescription3DInterface* descriptor, CDFF::DFN::FeaturesMatching3DInterface* matcher);
 		void SetConfigurationFilePaths(std::string featuresDescriptorConfigurationFilePath, std::string featuresMatcherConfigurationFilePath);
 		void SetInputFilesPaths(std::string sourceCloudFilePath, std::string sinkCloudFilePath, std::string correspondencesFilePath);
 		void ExecuteDfns();
@@ -100,8 +100,8 @@ class SelectionTester
 		bool matcherSuccess;
 
 		Converters::PclPointCloudToPointCloudConverter pointCloudConverter;
-		dfn_ci::FeaturesDescription3DInterface* descriptor;
-		dfn_ci::FeaturesMatching3DInterface* matcher;
+		CDFF::DFN::FeaturesDescription3DInterface* descriptor;
+		CDFF::DFN::FeaturesMatching3DInterface* matcher;
 
 		bool dfnsWereLoaded;
 		bool inputCloudsWereLoaded;

@@ -3,14 +3,16 @@
  * @{
  */
 
-#ifndef FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
-#define FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
+#ifndef FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXCOMPUTATIONINTERFACE_HPP
+#define FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXCOMPUTATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Eigen.h>
 #include <CorrespondenceMap2D.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that estimates the fundamental matrix of a camera pair based on pairs
@@ -56,7 +58,8 @@ namespace dfn_ci
             bool outSuccess;
     };
 }
+}
 
-#endif // FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
+#endif // FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXCOMPUTATIONINTERFACE_HPP
 
 /** @} */

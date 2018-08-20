@@ -5,7 +5,9 @@
 
 #include "CamerasTransformEstimationInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 CamerasTransformEstimationInterface::CamerasTransformEstimationInterface()
@@ -36,6 +38,7 @@ bool CamerasTransformEstimationInterface::successOutput() const
     return outSuccess;
 }
 
+}
 }
 
 /** @} */

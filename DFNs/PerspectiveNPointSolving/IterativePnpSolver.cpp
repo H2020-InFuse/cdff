@@ -18,7 +18,11 @@
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace PerspectiveNPointSolving
 {
 
 IterativePnpSolver::IterativePnpSolver()
@@ -128,6 +132,8 @@ void IterativePnpSolver::ValidateInputs(cv::Mat points, cv::Mat projections)
 		"IterativePnpSolver Error: the points and their projections are in a different number");
 }
 
+}
+}
 }
 
 /** @} */

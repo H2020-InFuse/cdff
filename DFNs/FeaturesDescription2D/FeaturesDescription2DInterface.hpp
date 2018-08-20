@@ -3,14 +3,16 @@
  * @{
  */
 
-#ifndef FEATURESDESCRIPTION2D_INTERFACE_HPP
-#define FEATURESDESCRIPTION2D_INTERFACE_HPP
+#ifndef FEATURESDESCRIPTION2D_FEATURESDESCRIPTION2DINTERFACE_HPP
+#define FEATURESDESCRIPTION2D_FEATURESDESCRIPTION2DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <VisualPointFeatureVector2D.h>
 #include <Frame.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that computes descriptors for 2D keypoints
@@ -46,7 +48,8 @@ namespace dfn_ci
             asn1SccVisualPointFeatureVector2D outFeatures;
     };
 }
+}
 
-#endif // FEATURESDESCRIPTION2D_INTERFACE_HPP
+#endif // FEATURESDESCRIPTION2D_FEATURESDESCRIPTION2DINTERFACE_HPP
 
 /** @} */

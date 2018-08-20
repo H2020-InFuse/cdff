@@ -21,7 +21,11 @@ using namespace PointCloudWrapper;
 using namespace PoseWrapper;
 using namespace CCLib;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Registration3D
 {
 
 IcpCC::IcpCC()
@@ -249,6 +253,8 @@ void IcpCC::ValidateCloud(ChunkedPointCloud* cloud)
 	}
 }
 
+}
+}
 }
 
 /** @} */

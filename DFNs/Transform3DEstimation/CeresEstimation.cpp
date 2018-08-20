@@ -24,7 +24,11 @@ using namespace CorrespondenceMap3DWrapper;
 using namespace Helpers;
 using namespace BaseTypesWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Transform3DEstimation
 {
 
 CeresEstimation::CeresEstimation()
@@ -376,6 +380,8 @@ void CeresEstimation::ValidateInputs(const CorrespondenceMap3D& map)
 	
 }
 
+}
+}
 }
 
 /** @} */

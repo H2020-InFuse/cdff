@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Adjustment From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows: 
@@ -27,8 +27,8 @@
  * @{
  */
 
-#ifndef ESTIMATIONFROMSTEREO
-#define ESTIMATIONFROMSTEREO
+#ifndef RECONSTRUCTION3D_ESTIMATIONFROMSTEREO_HPP
+#define RECONSTRUCTION3D_ESTIMATIONFROMSTEREO_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -72,7 +72,12 @@
 #endif
 
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -120,6 +125,7 @@ namespace dfpc_ci {
 		Helpers::ParametersListHelper parametersHelper;
 		EstimationFromStereoOptionsSet parameters;
 		static const EstimationFromStereoOptionsSet DEFAULT_PARAMETERS;
+
 		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;
 		const std::string LEFT_FEATURE_CATEGORY;
 		const std::string RIGHT_FEATURE_CATEGORY;
@@ -165,6 +171,9 @@ namespace dfpc_ci {
 		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr CreateCorrespondenceMapsSequence();
     };
 }
-#endif
-/* EstimationFromStereo.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_ESTIMATIONFROMSTEREO_HPP
+
 /** @} */

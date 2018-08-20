@@ -24,7 +24,11 @@ using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesDescription3D
 {
 
 ShotDescriptor3D::ShotDescriptor3D()
@@ -340,6 +344,8 @@ bool ShotDescriptor3D::IsNormalsCloudValid(pcl::PointCloud<pcl::PointXYZ>::Const
 	return true;
 }
 
+}
+}
 }
 
 /** @} */

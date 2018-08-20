@@ -18,7 +18,11 @@ using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesDescription2D
 {
 
 OrbDescriptor::OrbDescriptor()
@@ -173,6 +177,8 @@ int OrbDescriptor::ConvertToScoreType(std::string scoreType)
 	ASSERT(false, "Orb Detector Descriptor Configuration Error: Score type should be either HarrisScore or FastScore (1, or 2)");
 }
 
+}
+}
 }
 
 /** @} */

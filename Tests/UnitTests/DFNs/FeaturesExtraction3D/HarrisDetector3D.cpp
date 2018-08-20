@@ -11,7 +11,7 @@
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesExtraction3D;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace VisualPointFeatureVector3DWrapper;

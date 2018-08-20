@@ -39,7 +39,7 @@
 #include <pcl/filters/voxel_grid.h>
 #include <Visualizers/PclVisualizer.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::Registration3D;
 using namespace Converters;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;

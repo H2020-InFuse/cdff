@@ -61,7 +61,7 @@ class LinearityTester
 		LinearityTester();
 		~LinearityTester();
 
-		void SetDfn(std::string configurationFilePath, dfn_ci::ImageFilteringInterface* dfn);
+		void SetDfn(std::string configurationFilePath, CDFF::DFN::ImageFilteringInterface* dfn);
 		void SetFilesPaths(std::string inputImageFilePath, std::string outputImageFilePath);
 		void ExecuteDfn();
 		bool IsResultLinear(std::string referenceLinesFilePath, float relativeDistortionDifference);
@@ -102,7 +102,7 @@ class LinearityTester
 
 		Converters::MatToFrameConverter frameConverter;
 		Converters::FrameToMatConverter inverseFrameConverter;
-		dfn_ci::ImageFilteringInterface* dfn;
+		CDFF::DFN::ImageFilteringInterface* dfn;
 
 		bool dfnWasSet;
 		bool inputImageWasLoaded;

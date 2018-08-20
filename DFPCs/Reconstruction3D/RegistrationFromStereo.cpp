@@ -39,9 +39,14 @@
 		} \
 	} \
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace FrameWrapper;
 using namespace PoseWrapper;
@@ -316,6 +321,8 @@ bool RegistrationFromStereo::MatchPointCloudWithSceneFeatures()
 	return matching3dSuccess;
 	}
 
+}
+}
 }
 
 

@@ -5,7 +5,9 @@
 
 #include "FeaturesExtraction2DInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FeaturesExtraction2DInterface::FeaturesExtraction2DInterface()
@@ -26,6 +28,7 @@ const asn1SccVisualPointFeatureVector2D& FeaturesExtraction2DInterface::features
     return outFeatures;
 }
 
+}
 }
 
 /** @} */

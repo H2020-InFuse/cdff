@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Adjustment From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows: 
@@ -26,8 +26,8 @@
  * @{
  */
 
-#ifndef ADJUSTMENTFROMSTEREO
-#define ADJUSTMENTFROMSTEREO
+#ifndef RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
+#define RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -65,7 +65,12 @@
 #endif
 
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -115,17 +120,17 @@ namespace dfpc_ci {
 		AdjustmentFromStereoOptionsSet parameters;
 		static const AdjustmentFromStereoOptionsSet DEFAULT_PARAMETERS;
 
-		dfn_ci::ImageFilteringInterface* optionalLeftFilter;
-		dfn_ci::ImageFilteringInterface* optionalRightFilter;
-		dfn_ci::StereoReconstructionInterface* reconstructor3d;
-		dfn_ci::FeaturesExtraction2DInterface* featuresExtractor2d;
-		dfn_ci::FeaturesDescription2DInterface* optionalFeaturesDescriptor2d;
-		dfn_ci::FeaturesMatching2DInterface* featuresMatcher2d;
-		dfn_ci::BundleAdjustmentInterface* bundleAdjuster;
+		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
+		CDFF::DFN::FeaturesExtraction2DInterface* featuresExtractor2d;
+		CDFF::DFN::FeaturesDescription2DInterface* optionalFeaturesDescriptor2d;
+		CDFF::DFN::FeaturesMatching2DInterface* featuresMatcher2d;
+		CDFF::DFN::BundleAdjustmentInterface* bundleAdjuster;
 
-		dfn_ci::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;
-		dfn_ci::CamerasTransformEstimationInterface* cameraTransformEstimator;
-		dfn_ci::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
+		CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;
+		CDFF::DFN::CamerasTransformEstimationInterface* cameraTransformEstimator;
+		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
 
 		#ifdef TESTING
 		std::ofstream logFile;
@@ -164,7 +169,7 @@ namespace dfpc_ci {
 		void FilterImages();
 		void ComputeVisualPointFeatures();
 
-		void FilterImage(FrameWrapper::FramePtr image, dfn_ci::ImageFilteringInterface* filter, FrameWrapper::FramePtr& filteredImage);
+		void FilterImage(FrameWrapper::FramePtr image, CDFF::DFN::ImageFilteringInterface* filter, FrameWrapper::FramePtr& filteredImage);
 		void ComputeStereoPointCloud();
 		void ExtractFeatures(FrameWrapper::FrameConstPtr filteredImage, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& keypointsVector);
 		void DescribeFeatures(
@@ -193,6 +198,9 @@ namespace dfpc_ci {
 		PoseWrapper::Pose3DConstPtr AddLastPointCloudToMap();
     };
 }
-#endif
-/* AdjustmentFromStereo.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
+
 /** @} */

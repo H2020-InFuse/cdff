@@ -32,7 +32,7 @@
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::ImageFiltering;
 
 /* --------------------------------------------------------------------------
  *

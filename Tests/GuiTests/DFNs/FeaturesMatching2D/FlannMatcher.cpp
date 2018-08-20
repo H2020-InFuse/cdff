@@ -37,7 +37,7 @@
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
 #include <BaseTypes.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesMatching2D;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace CorrespondenceMap2DWrapper;
 

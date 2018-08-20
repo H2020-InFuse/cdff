@@ -22,7 +22,11 @@
 
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace StereoReconstruction
 {
 
 HirschmullerDisparityMapping::HirschmullerDisparityMapping()
@@ -332,6 +336,8 @@ void HirschmullerDisparityMapping::ValidateParameters()
 	ASSERT(parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
 }
 
+}
+}
 }
 
 /** @} */

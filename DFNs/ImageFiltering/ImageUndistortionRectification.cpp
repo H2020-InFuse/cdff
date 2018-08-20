@@ -19,7 +19,11 @@
 using namespace Converters;
 using namespace FrameWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace ImageFiltering
 {
 
 ImageUndistortionRectification::ImageUndistortionRectification()
@@ -313,6 +317,8 @@ void ImageUndistortionRectification::ComputeUndistortionRectificationMap()
 	);
 }
 
+}
+}
 }
 
 /** @} */

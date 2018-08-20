@@ -39,9 +39,14 @@
 		} \
 	} \
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace PointCloudModelLocalisation
+{
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
@@ -190,6 +195,8 @@ bool FeaturesMatching3D::EstimateModelPose()
 		}
 	return matching3dSuccess;
 	}
+}
+}
 }
 
 

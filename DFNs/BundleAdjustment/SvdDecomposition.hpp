@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef SVDDECOMPOSITION_HPP
-#define SVDDECOMPOSITION_HPP
+#ifndef BUNDLEADJUSTMENT_SVDDECOMPOSITION_HPP
+#define BUNDLEADJUSTMENT_SVDDECOMPOSITION_HPP
 
 #include "BundleAdjustmentInterface.hpp"
 #include <FramesSequence.hpp>
@@ -20,13 +20,17 @@
 #include <Eigen/Dense>
 #include <CorrespondenceMaps2DSequenceToMatConverter.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace BundleAdjustment
 {
 	/**
 	 * Implementation of the factorization algorithm by Tomasi and Kanade
-	 * 
-	 * @param, leftCameraMatrix: the camera matrix of the left camera
-	 * @param, rightCameraMatrix: the camera maxtrix of the right camera 
+	 *
+	 * @param leftCameraMatrix: the camera matrix of the left camera
+	 * @param rightCameraMatrix: the camera maxtrix of the right camera
 	 */
 	class SvdDecomposition : public BundleAdjustmentInterface
 	{
@@ -72,13 +76,15 @@ namespace dfn_ci
 			void CentreMeasurementMatrix(cv::Mat centroidMatrix, cv::Mat& measurementMatrix);
 			void ConvertRotationTranslationMatricesToPosesSequence(cv::Mat translationMatrix, cv::Mat rotationMatrix, PoseWrapper::Poses3DSequence& posesSequence);
 			cv::Mat ComputeMetricRotationMatrix(cv::Mat rotationMatrix, int poseIndex);
-	
+
 			void ValidateParameters();
 			void ValidateInputs();
 			cv::Mat CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix);
 	};
 }
+}
+}
 
-#endif // SVDDECOMPOSITION_HPP
+#endif // BUNDLEADJUSTMENT_SVDDECOMPOSITION_HPP
 
 /** @} */

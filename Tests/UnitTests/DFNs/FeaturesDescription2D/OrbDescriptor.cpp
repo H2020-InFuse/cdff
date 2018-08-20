@@ -30,7 +30,7 @@
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <MatToFrameConverter.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesDescription2D;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;

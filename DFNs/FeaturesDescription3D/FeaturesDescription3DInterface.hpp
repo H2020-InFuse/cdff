@@ -3,14 +3,16 @@
  * @{
  */
 
-#ifndef FEATURESDESCRIPTION3D_INTERFACE_HPP
-#define FEATURESDESCRIPTION3D_INTERFACE_HPP
+#ifndef FEATURESDESCRIPTION3DINTERFACE_HPP
+#define FEATURESDESCRIPTION3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <VisualPointFeatureVector3D.h>
 #include <Pointcloud.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that computes descriptors for 3D keypoints
@@ -78,7 +80,8 @@ namespace dfn_ci
             asn1SccVisualPointFeatureVector3D outFeatures;
     };
 }
+}
 
-#endif // FEATURESDESCRIPTION3D_INTERFACE_HPP
+#endif // FEATURESDESCRIPTION3D_FEATURESDESCRIPTION3DINTERFACE_HPP
 
 /** @} */
