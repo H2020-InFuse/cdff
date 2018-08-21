@@ -69,6 +69,7 @@ void FundamentalMatrixRansac::process()
 		Copy(*tmp, outFundamentalMatrix);
 		delete(tmp);
 		outSuccess = true;
+		ComputeInliers(fundamentalMatrix);
 	}
 }
 
@@ -166,6 +167,24 @@ Point2DConstPtr FundamentalMatrixRansac::ComputeSecondEpipole(const std::vector<
 
 	return secondEpipolePtr;
 }
+
+void FundamentalMatrixRansac::ComputeInliers(cv::Mat fundamentalMatrix)
+	{
+	ClearCorrespondences(outInlierMatches);
+	int numberOfInputCorrespondences = GetNumberOfCorrespondences(inMatches);
+	for(int correspondenceIndex = 0; correspondenceIndex < numberOfInputCorrespondences; correspondenceIndex++)
+		{
+		BaseTypesWrapper::Point2D sourcePoint = GetSource(inMatches, correspondenceIndex);
+		BaseTypesWrapper::Point2D sinkPoint = GetSink(inMatches, correspondenceIndex);
+		cv::Mat source = (cv::Mat_<double>(3, 1, CV_32FC1) << sourcePoint.x, sourcePoint.y, 1.0);
+		cv::Mat sink = (cv::Mat_<double>(3, 1, CV_32FC1) << sinkPoint.x, sinkPoint.y, 1.0);
+		cv::Mat error = sink.t() * fundamentalMatrix * source;
+		if (error.at<double>(0,0) < parameters.outlierThreshold)
+			{
+			AddCorrespondence(outInlierMatches, sourcePoint, sinkPoint, 1);
+			}
+		}
+	}
 
 void FundamentalMatrixRansac::ValidateParameters()
 {
