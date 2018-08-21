@@ -102,7 +102,7 @@
   Implementation: FundamentalMatrixRansac
   Parameters:
   - Name: GeneralParameters
-    OutlierThreshold: 1 
+    OutlierThreshold: 0.05
     Confidence: 0.90
 - Name: cameraTransformEstimator
   Type: CamerasTransformEstimation

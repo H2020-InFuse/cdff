@@ -84,7 +84,6 @@ EstimationFromStereo::EstimationFromStereo() :
 	bundleHistory = NULL;
 	correspondencesRecorder = NULL;
 
-	cleanCorrespondenceMap = NewCorrespondenceMap2D();
 	leftTimeCorrespondenceMap = NewCorrespondenceMap2D();
 	rightTimeCorrespondenceMap = NewCorrespondenceMap2D();
 
@@ -104,7 +103,6 @@ EstimationFromStereo::~EstimationFromStereo()
 
 	DeleteIfNotNull(bundleHistory);
 	DeleteIfNotNull(correspondencesRecorder);
-	DeleteIfNotNull(cleanCorrespondenceMap);
 	DeleteIfNotNull(leftTimeCorrespondenceMap);
 	DeleteIfNotNull(rightTimeCorrespondenceMap);
 	}
@@ -278,12 +276,11 @@ void EstimationFromStereo::ComputeVisualPointFeatures(FrameConstPtr filteredLeft
 	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = NULL;
 	featuresMatcher2d->Execute(leftFeatureVector, rightFeatureVector,leftRightCorrespondenceMap);
 	PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
-	CleanLowScoringMatches(leftRightCorrespondenceMap);
 
 	MatrixWrapper::Matrix3dConstPtr fundamentalMatrix = NULL;
 	bool success = false;
 	CorrespondenceMap2DConstPtr inlierCorrespondenceMap = NULL;
-	fundamentalMatrixComputer->Execute(cleanCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
+	fundamentalMatrixComputer->Execute(leftRightCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
 
 	PointCloudConstPtr triangulatedKeypointCloud = NULL;
 	if (success)
@@ -294,42 +291,13 @@ void EstimationFromStereo::ComputeVisualPointFeatures(FrameConstPtr filteredLeft
 		}
 	else
 		{
-		bundleHistory->AddMatches(*cleanCorrespondenceMap);
-		PRINT_TO_LOG("Clean Correspondences Number", GetNumberOfCorrespondences(*cleanCorrespondenceMap) );
-		reconstructor3dfrom2dmatches->Execute(cleanCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
+		bundleHistory->AddMatches(*leftRightCorrespondenceMap);
+		PRINT_TO_LOG("Clean Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
+		reconstructor3dfrom2dmatches->Execute(leftRightCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
 		}
 	//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
 	bundleHistory->AddPointCloud(*triangulatedKeypointCloud, TRIANGULATION_CLOUD_CATEGORY);
 	PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
-	}
-
-void EstimationFromStereo::CleanLowScoringMatches(CorrespondenceMap2DConstPtr leftRightCorrespondenceMap)
-	{
-	Copy(*leftRightCorrespondenceMap, *cleanCorrespondenceMap);
-
-	std::vector<BaseTypesWrapper::T_UInt32> removeIndexList;
-	for(int correspondenceIndex1=0; correspondenceIndex1< GetNumberOfCorrespondences(*cleanCorrespondenceMap); correspondenceIndex1++)
-		{
-		BaseTypesWrapper::Point2D source1 = GetSource(*cleanCorrespondenceMap, correspondenceIndex1);
-		BaseTypesWrapper::Point2D sink1 = GetSink(*cleanCorrespondenceMap, correspondenceIndex1);
-		if (source1.x != source1.x || source1.y != source1.y || sink1.x != sink1.x || sink1.y != sink1.y)
-			{
-			removeIndexList.push_back(correspondenceIndex1);
-			continue;
-			}
-		bool found = false;
-		for (int correspondenceIndex2=0; correspondenceIndex2<correspondenceIndex1 && !found; correspondenceIndex2++)
-			{
-			BaseTypesWrapper::Point2D source2 = GetSource(*cleanCorrespondenceMap, correspondenceIndex2);
-			BaseTypesWrapper::Point2D sink2 = GetSink(*cleanCorrespondenceMap, correspondenceIndex2);
-			if ( (source1.x == source2.x && source1.y == source2.y) || (sink1.x == sink2.x && sink1.y == sink2.y) )
-				{
-				removeIndexList.push_back(correspondenceIndex1);
-				found = true;
-				}
-			}
-		}
-	RemoveCorrespondences(*cleanCorrespondenceMap, removeIndexList);
 	}
 
 bool EstimationFromStereo::ComputeCameraPoses(Poses3DSequenceConstPtr& cameraPoses)

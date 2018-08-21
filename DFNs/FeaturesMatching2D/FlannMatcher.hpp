@@ -189,6 +189,8 @@ namespace FeaturesMatching2D
 
 			cv::Ptr<cv::flann::IndexParams> ConvertParameters();
 			std::vector< cv::DMatch > ComputeMatches(cv::Mat sourceDescriptorsMatrix, cv::Mat sinkDescriptorsMatrix);
+			void CleanLowScoringMatches(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap, 
+				CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr cleanMap);
 			cv::Mat ConvertToValidType(cv::Mat floatDescriptorsMatrix);
 			CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr Convert(std::vector<cv::DMatch> matchesVector, cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix);
 

@@ -108,5 +108,5 @@
   Implementation: FundamentalMatrixRansac
   Parameters:
   - Name: GeneralParameters
-    OutlierThreshold: 1 
+    OutlierThreshold: 0.005
     Confidence: 0.90
