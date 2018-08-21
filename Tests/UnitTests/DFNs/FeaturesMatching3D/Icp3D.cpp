@@ -148,12 +148,12 @@ TEST_CASE( "DFN processing step succeeds with data (3D ICP)", "[configure]" )
 			{
 			AddPoint(*sourceCloud, x, y, z);
 			AddPoint(*sinkCloud, x+1, y+1, z);
-			pointCounter++;
 			if (z > 0.5 - INCREMENT/2 && z < 0.5 + INCREMENT/2 && x == 0 && y == 0)
 				{
 				AddPoint(*sourceSet, pointCounter);
 				AddPoint(*sinkSet, pointCounter);
 				}
+			pointCounter++;
 			}
 		}
 	for(int x = 0; x <=1; x++) for(int z=0; z<=1; z++)
