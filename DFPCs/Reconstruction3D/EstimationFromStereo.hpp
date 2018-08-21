@@ -43,7 +43,6 @@
 #include <FeaturesExtraction2D/FeaturesExtraction2DExecutor.hpp>
 #include <FeaturesDescription2D/FeaturesDescription2DExecutor.hpp>
 #include <FeaturesMatching2D/FeaturesMatching2DExecutor.hpp>
-#include <BundleAdjustment/BundleAdjustmentExecutor.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationExecutor.hpp>
 #include <CamerasTransformEstimation/CamerasTransformEstimationExecutor.hpp>
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>
@@ -169,6 +168,21 @@ namespace Reconstruction3D
 		void AddLastPointCloudToMap(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
 
 		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr CreateCorrespondenceMapsSequence();
+
+		/*
+		* Inline Methods
+		*
+		*/
+
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
     };
 }
 }

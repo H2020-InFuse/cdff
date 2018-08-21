@@ -30,6 +30,8 @@ add_library(
     adjustment_from_stereo
     AdjustmentFromStereo.cpp
     PointCloudMap.cpp
+    BundleHistory.cpp
+    MultipleCorrespondences2DRecorder.cpp
 )
 target_link_libraries(
     adjustment_from_stereo

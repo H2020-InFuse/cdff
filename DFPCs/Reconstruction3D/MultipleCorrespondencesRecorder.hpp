@@ -87,6 +87,25 @@ class MultipleCorrespondencesRecorder
 		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr historyCorrespondenceMapSequence;
 
 		CorrespondenceMap3DWrapper::CorrespondenceMap3DPtr temporaryMap;
+
+		/*
+		* Inline Methods
+		*
+		*/
+		inline bool Point2DIsInvalid(const BaseTypesWrapper::Point2D& point)
+			{
+			return (point.x != point.x || point.y != point.y);
+			}
+
+		inline bool Point3DIsInvalid(const BaseTypesWrapper::Point3D& point)
+			{
+			return (point.x != point.x || point.y != point.y || point.z != point.z);
+			}
+
+		inline bool PointsAreDistinct(const BaseTypesWrapper::Point2D& point1, const BaseTypesWrapper::Point2D& point2)
+			{
+			return (point1.x != point2.x || point1.y != point2.y);
+			}		
 	
 	};
 

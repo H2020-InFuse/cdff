@@ -61,6 +61,57 @@ class BundleHistory
 		void AddPointCloud(PointCloudWrapper::PointCloudConstPtr, std::string cloudCategory = "DEFAULT");
 
 		int BackwardStepsToIndex(int backwardSteps);
+
+	/*
+	* Inline Methods
+	*
+	*/
+		template <typename Type>
+		inline void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL)
+				{
+				delete (pointer);
+				pointer = NULL;
+				}
+			}
+
+		template <typename Type>
+		inline void DeleteMapEntry(std::map<std::string, Type>& vectorMap, int index)
+			{
+			for(typename std::map<std::string, Type>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); iterator++)
+				{
+				DeleteIfNotNull( iterator->second.at(index) );
+				}
+			}
+
+		inline void DeleteAllDataAt(int index)
+			{
+			DeleteIfNotNull( leftImageList.at(index) );
+			DeleteIfNotNull( rightImageList.at(index) );
+			DeleteMapEntry( featureVectorList, index );
+			DeleteMapEntry( leftRightCorrespondenceMapList, index );
+			DeleteMapEntry( pointCloudList, index );
+			}
+
+		template <typename Type>
+		inline void ReplaceIndexByIndexOnMap(std::map<std::string, Type>& vectorMap, int replacedIndex, int replacingIndex)
+			{
+			for(typename std::map<std::string, Type>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); iterator++)
+				{
+				iterator->second.at(replacedIndex) = iterator->second.at(replacingIndex);
+				}
+			}
+
+		template <typename Type>
+		inline void ReplaceIndexByNullOnMap(std::map<std::string, Type>& vectorMap, int replacedIndex)
+			{
+			for(typename std::map<std::string, Type>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); iterator++)
+				{
+				iterator->second.at(replacedIndex) = NULL;
+				}
+			}
+
 	};
 
 }
