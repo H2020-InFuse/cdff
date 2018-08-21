@@ -31,14 +31,6 @@
 #include <Visualizers/OpencvVisualizer.hpp>
 #include <Visualizers/PclVisualizer.hpp>
 
-#define DELETE_PREVIOUS(object) \
-	{ \
-	if (object != NULL) \
-		{ \
-		delete(object); \
-		} \
-	} \
-
 namespace CDFF
 {
 namespace DFPC
@@ -78,14 +70,14 @@ RegistrationFromStereo::RegistrationFromStereo()
 
 RegistrationFromStereo::~RegistrationFromStereo()
 	{
-	DELETE_PREVIOUS(optionalLeftFilter);
-	DELETE_PREVIOUS(optionalRightFilter);
-	DELETE_PREVIOUS(reconstructor3d);
-	DELETE_PREVIOUS(featuresExtractor3d);
-	DELETE_PREVIOUS(optionalFeaturesDescriptor3d);
-	DELETE_PREVIOUS(featuresMatcher3d);
+	DeleteIfNotNull(optionalLeftFilter);
+	DeleteIfNotNull(optionalRightFilter);
+	DeleteIfNotNull(reconstructor3d);
+	DeleteIfNotNull(featuresExtractor3d);
+	DeleteIfNotNull(optionalFeaturesDescriptor3d);
+	DeleteIfNotNull(featuresMatcher3d);
 
-	DELETE_PREVIOUS(bundleHistory);
+	DeleteIfNotNull(bundleHistory);
 	}
 
 /**
@@ -145,7 +137,7 @@ void RegistrationFromStereo::run()
 		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
 
 		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
-		DELETE_PREVIOUS(outputPointCloud);
+		DeleteIfNotNull(outputPointCloud);
 		}
 	}
 

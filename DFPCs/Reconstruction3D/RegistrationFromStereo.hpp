@@ -112,6 +112,21 @@ namespace Reconstruction3D
 
 		void ConfigureExtraParameters();
 		void InstantiateDFNExecutors();
+
+		/*
+		* Inline Methods
+		*
+		*/
+
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
     };
 }
 }
