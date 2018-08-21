@@ -69,11 +69,13 @@ namespace FundamentalMatrixComputation
 				const std::vector<cv::Point2d>& firstImagePointsVector,
 				const std::vector<cv::Point2d>& secondImagePointsVector,
 				cv::Mat fundamentalMatrix);
+			void ComputeInliers(cv::Mat fundamentalMatrix);
 			void Convert(
 				CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap,
 				std::vector<cv::Point2d>& firstImagePointsVector,
 				std::vector<cv::Point2d>& secondImagePointsVector);
 			MatrixWrapper::Matrix3dConstPtr Convert(cv::Mat matrix);
+
 
 			void ValidateParameters();
 			void ValidateInputs(

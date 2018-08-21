@@ -34,13 +34,15 @@
  */
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
 
-#include <ImageFiltering/ImageFilteringInterface.hpp>
-#include <StereoReconstruction/StereoReconstructionInterface.hpp>
-#include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
-#include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
-#include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
+#include <ImageFiltering/ImageFilteringExecutor.hpp>
+#include <StereoReconstruction/StereoReconstructionExecutor.hpp>
+#include <FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
+#include <FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
+#include <FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
 
 #include "PointCloudMap.hpp"
+#include "BundleHistory.hpp"
+
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
 #include <Frame.hpp>
@@ -98,36 +100,33 @@ namespace Reconstruction3D
 		RegistrationFromStereoOptionsSet parameters;
 		static const RegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
 
-		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
-		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
-		CDFF::DFN::StereoReconstructionInterface* reconstructor3D;
-		CDFF::DFN::FeaturesExtraction3DInterface* featuresExtractor3d;
-		CDFF::DFN::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
-		CDFF::DFN::FeaturesMatching3DInterface* featuresMatcher3d;
+		CDFF::DFN::ImageFilteringExecutor* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringExecutor* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionExecutor* reconstructor3d;
+		CDFF::DFN::FeaturesExtraction3DExecutor* featuresExtractor3d;
+		CDFF::DFN::FeaturesDescription3DExecutor* optionalFeaturesDescriptor3d;
+		CDFF::DFN::FeaturesMatching3DExecutor* featuresMatcher3d;
 
-		FrameWrapper::FramePtr leftImage;
-		FrameWrapper::FramePtr rightImage;
-		FrameWrapper::FramePtr filteredLeftImage;
-		FrameWrapper::FramePtr filteredRightImage;
-		PointCloudWrapper::PointCloudPtr pointCloud;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr pointCloudKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr pointCloudFeaturesVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneFeaturesVector;
-		PoseWrapper::Pose3DPtr cameraPoseInScene;
-		PoseWrapper::Pose3DPtr previousCameraPoseInScene;
+		//Helpers
+		BundleHistory* bundleHistory;
 
 		void ConfigureExtraParameters();
-		void AssignDfnsAlias();
+		void InstantiateDFNExecutors();
 
-		bool ComputeCameraMovement();
-		void ComputePointCloud();
+		/*
+		* Inline Methods
+		*
+		*/
 
-		void FilterLeftImage();
-		void FilterRightImage();
-		void ComputeStereoPointCloud();
-		void ExtractPointCloudFeatures();
-		void DescribePointCloudFeatures();
-		bool MatchPointCloudWithSceneFeatures();
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
     };
 }
 }

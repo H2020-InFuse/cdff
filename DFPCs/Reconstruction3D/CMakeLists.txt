@@ -62,6 +62,7 @@ add_library(
     registration_from_stereo
     RegistrationFromStereo.cpp
     PointCloudMap.cpp
+    BundleHistory.cpp
 )
 target_link_libraries(
     registration_from_stereo

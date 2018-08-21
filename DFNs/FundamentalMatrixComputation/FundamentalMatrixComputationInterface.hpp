@@ -50,12 +50,18 @@ namespace DFN
              *         returned matrix is meaningless.
              */
             virtual bool successOutput() const;
+            /**
+             * Query value from output port "inlierMatches"
+             * @return inlierMatches: "keypoints matches whose reprojection error is below a given threshold."
+             */
+            virtual const asn1SccCorrespondenceMap2D& inlierMatchesOutput() const;
 
         protected:
 
             asn1SccCorrespondenceMap2D inMatches;
             asn1SccMatrix3d outFundamentalMatrix;
             bool outSuccess;
+	    asn1SccCorrespondenceMap2D outInlierMatches;
     };
 }
 }

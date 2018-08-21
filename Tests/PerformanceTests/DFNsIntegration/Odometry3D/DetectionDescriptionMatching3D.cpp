@@ -178,7 +178,14 @@ void DetectionDescriptionMatching3DTestInterface::LoadCloud(pcl::PointCloud<pcl:
 		}
 	else
 		{
-		cloud = finitePointsPclCloud;
+		int cloudSize = finitePointsPclCloud->points.size();
+		cloud->points.resize(cloudSize);
+		for(int pointIndex = 0; pointIndex < cloudSize; pointIndex++)
+			{
+			cloud->points.at(pointIndex).x = finitePointsPclCloud->points.at(pointIndex).x;
+			cloud->points.at(pointIndex).y = finitePointsPclCloud->points.at(pointIndex).y;
+			cloud->points.at(pointIndex).z = finitePointsPclCloud->points.at(pointIndex).z;
+			}
 		}
 	}
 
