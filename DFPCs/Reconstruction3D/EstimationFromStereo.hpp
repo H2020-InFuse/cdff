@@ -144,6 +144,7 @@ namespace Reconstruction3D
 		CDFF::DFN::FeaturesMatching2DExecutor* featuresMatcher2d;
 		CDFF::DFN::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
 		CDFF::DFN::Transform3DEstimationExecutor* transformEstimator;
+		CDFF::DFN::FundamentalMatrixComputationExecutor* fundamentalMatrixComputer;
 
 		//Helpers
 		BundleHistory* bundleHistory;

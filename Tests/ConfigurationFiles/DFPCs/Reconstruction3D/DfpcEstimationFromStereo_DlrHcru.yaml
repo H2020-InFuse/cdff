@@ -103,3 +103,10 @@
   - Name: GeneralParameters
     MaximumAllowedError: 100000
     MaximumAllowedDeterminantError: 0.5
+- Name: fundamentalMatrixComputer
+  Type: FundamentalMatrixComputation
+  Implementation: FundamentalMatrixRansac
+  Parameters:
+  - Name: GeneralParameters
+    OutlierThreshold: 1 
+    Confidence: 0.90

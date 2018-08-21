@@ -508,10 +508,12 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 		Matrix3dConstPtr fundamentalMatrix = NULL;
 		Pose3DConstPtr pose = NULL;
 		bool success;
-		fundamentalMatrixComputer->Execute(pastLeftRightCorrespondenceMap, fundamentalMatrix, success);
+		CorrespondenceMap2DConstPtr inlierCorrespondenceMap = NULL;
+		fundamentalMatrixComputer->Execute(pastLeftRightCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
+		DEBUG_PRINT_TO_LOG("Number of inlier correspondences", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
 		if (success)
 			{
-			cameraTransformEstimator->Execute(fundamentalMatrix, pastLeftRightCorrespondenceMap, pose, success);
+			cameraTransformEstimator->Execute(fundamentalMatrix, inlierCorrespondenceMap, pose, success);
 			}
 		if (success)
 			{

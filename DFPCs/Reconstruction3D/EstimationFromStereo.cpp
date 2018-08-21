@@ -237,6 +237,7 @@ void EstimationFromStereo::InstantiateDFNExecutors()
 	featuresMatcher2d = new FeaturesMatching2DExecutor( static_cast<FeaturesMatching2DInterface*>( configurator.GetDfn("featuresMatcher2d") ) );
 	reconstructor3dfrom2dmatches = new PointCloudReconstruction2DTo3DExecutor( static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3dfrom2dmatches", true) ) );
 	transformEstimator = new Transform3DEstimationExecutor( static_cast<Transform3DEstimationInterface*>( configurator.GetDfn("transformEstimator") ) );
+	fundamentalMatrixComputer = new FundamentalMatrixComputationExecutor( static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") ) );
 	}
 
 void EstimationFromStereo::ComputeStereoPointCloud(FrameConstPtr filteredLeftImage, FrameConstPtr filteredRightImage)
@@ -278,8 +279,21 @@ void EstimationFromStereo::ComputeVisualPointFeatures(FrameConstPtr filteredLeft
 	featuresMatcher2d->Execute(leftFeatureVector, rightFeatureVector,leftRightCorrespondenceMap);
 	PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
 	CleanLowScoringMatches(leftRightCorrespondenceMap);
-	bundleHistory->AddMatches(*cleanCorrespondenceMap);
-	PRINT_TO_LOG("Clean Correspondences Number", GetNumberOfCorrespondences(*cleanCorrespondenceMap) );
+
+	MatrixWrapper::Matrix3dConstPtr fundamentalMatrix = NULL;
+	bool success = false;
+	CorrespondenceMap2DConstPtr inlierCorrespondenceMap = NULL;
+	fundamentalMatrixComputer->Execute(cleanCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
+	if (success)
+		{
+		bundleHistory->AddMatches(*inlierCorrespondenceMap);
+		PRINT_TO_LOG("Clean Inlier Correspondences Number", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
+		}
+	else
+		{
+		bundleHistory->AddMatches(*cleanCorrespondenceMap);
+		PRINT_TO_LOG("Clean Correspondences Number", GetNumberOfCorrespondences(*cleanCorrespondenceMap) );
+		}
 
 	PointCloudConstPtr triangulatedKeypointCloud = NULL;
 	reconstructor3dfrom2dmatches->Execute(cleanCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);

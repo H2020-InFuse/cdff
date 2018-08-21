@@ -178,8 +178,15 @@ void FundamentalMatrixRansac::ComputeInliers(cv::Mat fundamentalMatrix)
 		BaseTypesWrapper::Point2D sinkPoint = GetSink(inMatches, correspondenceIndex);
 		cv::Mat source = (cv::Mat_<double>(3, 1, CV_32FC1) << sourcePoint.x, sourcePoint.y, 1.0);
 		cv::Mat sink = (cv::Mat_<double>(3, 1, CV_32FC1) << sinkPoint.x, sinkPoint.y, 1.0);
-		cv::Mat error = sink.t() * fundamentalMatrix * source;
-		if (error.at<double>(0,0) < parameters.outlierThreshold)
+		cv::Mat epipolarError = sink.t() * fundamentalMatrix * source;
+		cv::Mat sourceEpipolarLine = fundamentalMatrix * source;
+		cv::Mat sinkEpipolarLine = fundamentalMatrix * sink;
+		double l1 = sourceEpipolarLine.at<double>(0, 0);
+		double l2 = sourceEpipolarLine.at<double>(1, 0);
+		double p1 = sinkEpipolarLine.at<double>(0, 0);
+		double p2 = sinkEpipolarLine.at<double>(1, 0);
+		double error = ( 1.0/ ( l1*l1 + l2*l2) + 1.0 / (p1*p1 + p2*p2) ) * epipolarError.at<double>(0,0);
+		if (error < parameters.outlierThreshold)
 			{
 			AddCorrespondence(outInlierMatches, sourcePoint, sinkPoint, 1);
 			}
