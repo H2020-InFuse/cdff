@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef CERESESTIMATION_HPP
-#define CERESESTIMATION_HPP
+#ifndef TRANSFORM3DESTIMATION_CERESESTIMATION_HPP
+#define TRANSFORM3DESTIMATION_CERESESTIMATION_HPP
 
 #include "Transform3DEstimationInterface.hpp"
 
@@ -24,9 +24,12 @@
 #include <yaml-cpp/yaml.h>
 #include <ceres/ceres.h>
 
-namespace dfn_ci
+namespace CDFF
 {
-
+namespace DFN
+{
+namespace Transform3DEstimation
+{
 	/**
 	 * Estimation of the geometric transformation between matches of 3d points,
 	 * with Ceres Library.
@@ -38,7 +41,7 @@ namespace dfn_ci
 	 * (iii) Computation of the pose from the output of the linear system.
 	 *
 	 * @param maximumAllowedError
-	 *        this is the maximum error allowed (root of the squared error), if a 
+	 *        this is the maximum error allowed (root of the squared error), if a
 	 *	  a transform estimation exceeds this error, no transform output is provided.
 	 */
 	class CeresEstimation : public Transform3DEstimationInterface
@@ -61,8 +64,8 @@ namespace dfn_ci
 				float maximumAllowedDeterminantError;
 			};
 
-			struct Transform3DCostFunctor 
-				{
+			struct Transform3DCostFunctor
+			{
 				Transform3DCostFunctor(BaseTypesWrapper::Point3D source, BaseTypesWrapper::Point3D sink);
 				template <typename T>
 				bool operator()(const T* const cameraTransform, T* residual) const;
@@ -75,7 +78,7 @@ namespace dfn_ci
 				static ceres::CostFunction* Create(BaseTypesWrapper::Point3D source, BaseTypesWrapper::Point3D sink, int transformChainLength);
 				BaseTypesWrapper::Point3D source;
 				BaseTypesWrapper::Point3D sink;
-				};
+			};
 			typedef double Transform3d[12];
 
 			CeresEstimationOptionsSet parameters;
@@ -93,7 +96,9 @@ namespace dfn_ci
 			void ValidateInputs(const CorrespondenceMap3DWrapper::CorrespondenceMap3D& map);
 	};
 }
+}
+}
 
-#endif // CERESESTIMATION_HPP
+#endif // TRANSFORM3DESTIMATION_CERESESTIMATION_HPP
 
 /** @} */

@@ -2,7 +2,12 @@
 #include "Errors/Assert.hpp"
 #include <cmath>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 using namespace CorrespondenceMap3DWrapper;
 using namespace CorrespondenceMap2DWrapper;
@@ -204,6 +209,7 @@ void MultipleCorrespondencesRecorder::DiscardLatestCorrespondences()
 		}
 	oneCorrespondenceWasAddedSinceLastDiscard = false;
 	}
-
+}
+}
 }
 /** @} */

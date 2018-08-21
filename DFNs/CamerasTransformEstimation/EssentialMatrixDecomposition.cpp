@@ -24,7 +24,11 @@ using namespace CorrespondenceMap2DWrapper;
 using namespace Converters;
 using namespace Helpers;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace CamerasTransformEstimation
 {
 
 EssentialMatrixDecomposition::EssentialMatrixDecomposition()
@@ -259,6 +263,8 @@ void EssentialMatrixDecomposition::ValidateInputs(cv::Mat fundamentalMatrix, cv:
 {
 }
 
+}
+}
 }
 
 /** @} */

@@ -19,11 +19,13 @@ namespace VisualPointFeatureVector2DWrapper
 void Copy(const VisualPointFeatureVector2D& source, VisualPointFeatureVector2D& destination)
 {
 	ClearPoints(destination);
-	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(source); pointIndex++)
+	int numberOfPoints = GetNumberOfPoints(source);
+	for (int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 	{
 		AddPoint(destination, GetXCoordinate(source, pointIndex), GetYCoordinate(source, pointIndex));
 		ClearDescriptor(destination, pointIndex);
-		for (int componentIndex = 0; componentIndex < GetNumberOfDescriptorComponents(source, pointIndex); componentIndex++)
+		int numberOfDescriptorComponents = GetNumberOfDescriptorComponents(source, pointIndex);
+		for (int componentIndex = 0; componentIndex < numberOfDescriptorComponents; componentIndex++)
 		{
 			AddDescriptorComponent(destination, pointIndex, GetDescriptorComponent(source, pointIndex, componentIndex));
 		}

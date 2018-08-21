@@ -59,7 +59,7 @@ class PositionTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		PositionTester(std::string configurationFilePath, dfn_ci::BundleAdjustmentInterface* dfn);
+		PositionTester(std::string configurationFilePath, CDFF::DFN::BundleAdjustmentInterface* dfn);
 		~PositionTester();
 
 		void SetFilesPaths(std::string inputCorrespondenceFilePath, std::string positionReferenceFilePath);
@@ -88,7 +88,7 @@ class PositionTester
 		bool bundleAdjustmentSuccess;
 
 		Converters::MatToCorrespondenceMaps2DSequenceConverter correspondenceConverter;
-		dfn_ci::BundleAdjustmentInterface* dfn;
+		CDFF::DFN::BundleAdjustmentInterface* dfn;
 
 		bool correspondencesWereLoaded;
 		bool positionReferencesWereLoaded;

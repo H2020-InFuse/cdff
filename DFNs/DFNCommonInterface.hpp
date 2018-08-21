@@ -1,53 +1,30 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file DFNCommonInterface.hpp
- * @date 23/10/2017
+/**
  * @author Alexander Fabisch 
  */
 
-/*!
- * @addtogroup TestCommon
- * 
- *  This is the DFN Common Interface which all DFNs should implement. 
- * 
+/**
+ * @addtogroup DFNs
  * @{
  */
+
 #ifndef DFN_COMMON_INTERFACE_HPP
 #define DFN_COMMON_INTERFACE_HPP
 
-
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
 #include <stdint.h>
 #include <stdlib.h>
 #include <string>
 
-namespace dfn_ci {
-
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
+namespace CDFF
+{
+namespace DFN
+{
+    /**
+     * DFN Common Interface: interface that every DFN must implement
+     */
     class DFNCommonInterface
     {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
-	 */
         public:
+
             enum LogLevel
             {
                 OFF,
@@ -82,35 +59,28 @@ namespace dfn_ci {
             {
                 executionTime = data;
             }
+
             // DISCUSS: loggingIsActivated is an input port for each DFN.
             virtual void loggingIsActivatedInput(LogLevel data)
             {
                 logLevel = data;
             }
-	
+
             virtual void setConfigurationFile(std::string configurationFilePath)
             {
                 this->configurationFilePath = configurationFilePath;
             }
 
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
         protected:
+
             bool outputUpdated;
             int64_t executionTime;
             LogLevel logLevel;
-	    std::string configurationFilePath;
-
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */
-	private:
-
+            std::string configurationFilePath;
     };
 }
-#endif
-/* DFNCommonInterface.h */
+}
+
+#endif // DFN_COMMON_INTERFACE_HPP
+
 /** @} */

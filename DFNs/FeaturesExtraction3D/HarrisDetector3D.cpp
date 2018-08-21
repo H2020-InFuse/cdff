@@ -21,7 +21,11 @@ using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesExtraction3D
 {
 
 HarrisDetector3D::HarrisDetector3D()
@@ -191,6 +195,8 @@ void HarrisDetector3D::ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr p
 	}
 }
 
+}
+}
 }
 
 /** @} */

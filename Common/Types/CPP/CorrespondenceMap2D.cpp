@@ -18,7 +18,8 @@ using namespace BaseTypesWrapper;
 void Copy(const CorrespondenceMap2D& source, CorrespondenceMap2D& destination)
 {
 	ClearCorrespondences(destination);
-	for (int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(source); correspondenceIndex++)
+	int numberOfCorrespondences = GetNumberOfCorrespondences(source);
+	for (int correspondenceIndex = 0; correspondenceIndex < numberOfCorrespondences; correspondenceIndex++)
 	{
 		AddCorrespondence(
 			destination,

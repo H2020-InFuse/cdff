@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef SCANLINEOPTIMIZATION_HPP
-#define SCANLINEOPTIMIZATION_HPP
+#ifndef STEREORECONSTRUCTION_SCANLINEOPTIMIZATION_HPP
+#define STEREORECONSTRUCTION_SCANLINEOPTIMIZATION_HPP
 
 #include "StereoReconstructionInterface.hpp"
 
@@ -20,7 +20,11 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace StereoReconstruction
 {
 	/**
 	 * Scene reconstruction (as a 3D pointcloud) from 2D stereo images, using
@@ -156,7 +160,9 @@ namespace dfn_ci
 			#endif
 	};
 }
+}
+}
 
-#endif // SCANLINEOPTIMIZATION_HPP
+#endif // STEREORECONSTRUCTION_SCANLINEOPTIMIZATION_HPP
 
 /** @} */

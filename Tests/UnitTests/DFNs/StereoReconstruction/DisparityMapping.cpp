@@ -16,7 +16,7 @@
 #include <MatToFrameConverter.hpp>
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::StereoReconstruction;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace FrameWrapper;

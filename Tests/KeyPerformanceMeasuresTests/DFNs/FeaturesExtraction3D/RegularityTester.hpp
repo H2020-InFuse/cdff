@@ -64,7 +64,7 @@ class RegularityTester
 			CLOSEST_NEIGHBOUR_DISTANCE
 			};
 
-		RegularityTester(std::string configurationFilePath, std::string pointCloudFilePath, AverageSeparationType averageSeparationType, dfn_ci::FeaturesExtraction3DInterface* dfn);
+		RegularityTester(std::string configurationFilePath, std::string pointCloudFilePath, AverageSeparationType averageSeparationType, CDFF::DFN::FeaturesExtraction3DInterface* dfn);
 		~RegularityTester();
 
 		void ExecuteDfn();
@@ -90,7 +90,7 @@ class RegularityTester
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr outputFeaturesVector;
 
 		Converters::PclPointCloudToPointCloudConverter pointCloudConverter;
-		dfn_ci::FeaturesExtraction3DInterface* dfn;
+		CDFF::DFN::FeaturesExtraction3DInterface* dfn;
 
 		AverageSeparationType averageSeparationType;
 		std::vector<Cluster> clustersList;

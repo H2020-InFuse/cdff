@@ -3,13 +3,15 @@
  * @{
  */
 
-#ifndef IMAGEFILTERING_INTERFACE_HPP
-#define IMAGEFILTERING_INTERFACE_HPP
+#ifndef IMAGEFILTERING_IMAGEFILTERINGINTERFACE_HPP
+#define IMAGEFILTERING_IMAGEFILTERINGINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Frame.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that applies an image processing filter to a 2D image
@@ -39,7 +41,8 @@ namespace dfn_ci
             asn1SccFrame outImage;
     };
 }
+}
 
-#endif // IMAGEFILTERING_INTERFACE_HPP
+#endif // IMAGEFILTERING_IMAGEFILTERINGINTERFACE_HPP
 
 /** @} */

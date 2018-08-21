@@ -3,14 +3,16 @@
  * @{
  */
 
-#ifndef FEATURESEXTRACTION3D_INTERFACE_HPP
-#define FEATURESEXTRACTION3D_INTERFACE_HPP
+#ifndef FEATURESEXTRACTION3D_FEATURESEXTRACTION3DINTERFACE_HPP
+#define FEATURESEXTRACTION3D_FEATURESEXTRACTION3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Pointcloud.h>
 #include <VisualPointFeatureVector3D.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that extracts 3D keypoints from a 3D pointcloud
@@ -42,7 +44,8 @@ namespace dfn_ci
             asn1SccVisualPointFeatureVector3D outFeatures;
     };
 }
+}
 
-#endif // FEATURESEXTRACTION3D_INTERFACE_HPP
+#endif // FEATURESEXTRACTION3D_FEATURESEXTRACTION3DINTERFACE_HPP
 
 /** @} */

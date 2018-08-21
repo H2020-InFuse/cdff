@@ -32,18 +32,14 @@
 #include <Visualizers/PclVisualizer.hpp>
 #include <VisualPointFeatureVector3D.hpp>
 
-#define DELETE_PREVIOUS(object) \
-	{ \
-	if (object != NULL) \
-		{ \
-		delete(object); \
-		object = NULL; \
-		} \
-	} \
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
-namespace dfpc_ci {
-
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace FrameWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
@@ -97,20 +93,20 @@ EstimationFromStereo::EstimationFromStereo() :
 
 EstimationFromStereo::~EstimationFromStereo()
 	{
-	DELETE_PREVIOUS(optionalLeftFilter);
-	DELETE_PREVIOUS(optionalRightFilter);
-	DELETE_PREVIOUS(reconstructor3d);
-	DELETE_PREVIOUS(featuresExtractor2d);
-	DELETE_PREVIOUS(optionalFeaturesDescriptor2d);
-	DELETE_PREVIOUS(featuresMatcher2d);
-	DELETE_PREVIOUS(reconstructor3dfrom2dmatches);
-	DELETE_PREVIOUS(transformEstimator);
+	DeleteIfNotNull(optionalLeftFilter);
+	DeleteIfNotNull(optionalRightFilter);
+	DeleteIfNotNull(reconstructor3d);
+	DeleteIfNotNull(featuresExtractor2d);
+	DeleteIfNotNull(optionalFeaturesDescriptor2d);
+	DeleteIfNotNull(featuresMatcher2d);
+	DeleteIfNotNull(reconstructor3dfrom2dmatches);
+	DeleteIfNotNull(transformEstimator);
 
-	DELETE_PREVIOUS(bundleHistory);
-	DELETE_PREVIOUS(correspondencesRecorder);
-	DELETE_PREVIOUS(cleanCorrespondenceMap);
-	DELETE_PREVIOUS(leftTimeCorrespondenceMap);
-	DELETE_PREVIOUS(rightTimeCorrespondenceMap);
+	DeleteIfNotNull(bundleHistory);
+	DeleteIfNotNull(correspondencesRecorder);
+	DeleteIfNotNull(cleanCorrespondenceMap);
+	DeleteIfNotNull(leftTimeCorrespondenceMap);
+	DeleteIfNotNull(rightTimeCorrespondenceMap);
 	}
 
 
@@ -173,7 +169,7 @@ void EstimationFromStereo::run()
 		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
 
 		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
-		DELETE_PREVIOUS(outputPointCloud);
+		DeleteIfNotNull(outputPointCloud);
 		}
 
 	currentInputNumber++;
@@ -191,10 +187,10 @@ void EstimationFromStereo::setup()
 
 	InstantiateDFNExecutors();
 
-	DELETE_PREVIOUS(bundleHistory);
+	DeleteIfNotNull(bundleHistory);
 	bundleHistory = new BundleHistory(parameters.numberOfAdjustedStereoPairs + 1);
 
-	DELETE_PREVIOUS(correspondencesRecorder);
+	DeleteIfNotNull(correspondencesRecorder);
 	correspondencesRecorder = new MultipleCorrespondencesRecorder(parameters.numberOfAdjustedStereoPairs);	
 
 	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
@@ -440,6 +436,8 @@ void EstimationFromStereo::CreateWorkingCorrespondences()
 	correspondencesRecorder->CompleteNewSequence();
 	}
 
+}
+}
 }
 
 

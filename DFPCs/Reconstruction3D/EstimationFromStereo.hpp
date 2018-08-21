@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Adjustment From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows: 
@@ -27,8 +27,8 @@
  * @{
  */
 
-#ifndef ESTIMATIONFROMSTEREO
-#define ESTIMATIONFROMSTEREO
+#ifndef RECONSTRUCTION3D_ESTIMATIONFROMSTEREO_HPP
+#define RECONSTRUCTION3D_ESTIMATIONFROMSTEREO_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -71,7 +71,12 @@
 #endif
 
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -119,6 +124,7 @@ namespace dfpc_ci {
 		Helpers::ParametersListHelper parametersHelper;
 		EstimationFromStereoOptionsSet parameters;
 		static const EstimationFromStereoOptionsSet DEFAULT_PARAMETERS;
+
 		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;
 		const std::string LEFT_FEATURE_CATEGORY;
 		const std::string RIGHT_FEATURE_CATEGORY;
@@ -130,14 +136,14 @@ namespace dfpc_ci {
 		#endif
 
 		//DFN Executors
-		dfn_ci::ImageFilteringExecutor* optionalLeftFilter;
-		dfn_ci::ImageFilteringExecutor* optionalRightFilter;
-		dfn_ci::StereoReconstructionExecutor* reconstructor3d;
-		dfn_ci::FeaturesExtraction2DExecutor* featuresExtractor2d;
-		dfn_ci::FeaturesDescription2DExecutor* optionalFeaturesDescriptor2d;
-		dfn_ci::FeaturesMatching2DExecutor* featuresMatcher2d;
-		dfn_ci::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
-		dfn_ci::Transform3DEstimationExecutor* transformEstimator;
+		CDFF::DFN::ImageFilteringExecutor* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringExecutor* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionExecutor* reconstructor3d;
+		CDFF::DFN::FeaturesExtraction2DExecutor* featuresExtractor2d;
+		CDFF::DFN::FeaturesDescription2DExecutor* optionalFeaturesDescriptor2d;
+		CDFF::DFN::FeaturesMatching2DExecutor* featuresMatcher2d;
+		CDFF::DFN::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
+		CDFF::DFN::Transform3DEstimationExecutor* transformEstimator;
 
 		//Helpers
 		BundleHistory* bundleHistory;
@@ -162,8 +168,26 @@ namespace dfpc_ci {
 		void AddLastPointCloudToMap(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
 
 		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr CreateCorrespondenceMapsSequence();
+
+		/*
+		* Inline Methods
+		*
+		*/
+
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
     };
 }
-#endif
-/* EstimationFromStereo.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_ESTIMATIONFROMSTEREO_HPP
+
 /** @} */

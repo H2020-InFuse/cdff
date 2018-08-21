@@ -5,7 +5,9 @@
 
 #include "ImageFilteringInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 ImageFilteringInterface::ImageFilteringInterface()
@@ -26,6 +28,7 @@ const asn1SccFrame& ImageFilteringInterface::imageOutput() const
     return outImage;
 }
 
+}
 }
 
 /** @} */

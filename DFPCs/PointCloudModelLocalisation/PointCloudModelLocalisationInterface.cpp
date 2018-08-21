@@ -5,7 +5,9 @@
 
 #include "PointCloudModelLocalisationInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 PointCloudModelLocalisationInterface::PointCloudModelLocalisationInterface()
@@ -41,6 +43,7 @@ bool PointCloudModelLocalisationInterface::successOutput() const
     return outSuccess;
 }
 
+}
 }
 
 /** @} */

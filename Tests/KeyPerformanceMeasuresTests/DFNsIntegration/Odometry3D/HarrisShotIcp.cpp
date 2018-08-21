@@ -33,7 +33,9 @@
 #include <FeaturesMatching3D/Icp3D.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesExtraction3D;
+using namespace CDFF::DFN::FeaturesDescription3D;
+using namespace CDFF::DFN::FeaturesMatching3D;
 
 /* --------------------------------------------------------------------------
  *

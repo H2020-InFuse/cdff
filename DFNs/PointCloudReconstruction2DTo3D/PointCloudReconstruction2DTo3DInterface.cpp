@@ -5,7 +5,9 @@
 
 #include "PointCloudReconstruction2DTo3DInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 PointCloudReconstruction2DTo3DInterface::PointCloudReconstruction2DTo3DInterface()
@@ -31,6 +33,7 @@ const asn1SccPointcloud& PointCloudReconstruction2DTo3DInterface::pointcloudOutp
     return outPointcloud;
 }
 
+}
 }
 
 /** @} */

@@ -5,7 +5,9 @@
 
 #include "KFCorrectionInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 KFCorrectionInterface::KFCorrectionInterface()
@@ -41,6 +43,7 @@ const asn1SccRigidBodyState& KFCorrectionInterface::stateCovarianceOutput() cons
     return outStateCovariance;
 }
 
+}
 }
 
 /** @} */

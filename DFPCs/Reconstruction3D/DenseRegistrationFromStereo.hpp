@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Registration From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows: 
@@ -23,8 +23,8 @@
  * @{
  */
 
-#ifndef DENSE_REGISTRATION_FROM_STEREO_HPP
-#define DENSE_REGISTRATION_FROM_STEREO_HPP
+#ifndef RECONSTRUCTION3D_DENSEREGISTRATIONFROMSTEREO_HPP
+#define RECONSTRUCTION3D_DENSEREGISTRATIONFROMSTEREO_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -46,7 +46,12 @@
 #include <Pose.hpp>
 
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -91,10 +96,10 @@ namespace dfpc_ci {
 		DenseRegistrationFromStereoOptionsSet parameters;
 		static const DenseRegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
 
-		dfn_ci::ImageFilteringInterface* optionalLeftFilter;
-		dfn_ci::ImageFilteringInterface* optionalRightFilter;
-		dfn_ci::StereoReconstructionInterface* reconstructor3D;
-		dfn_ci::Registration3DInterface* cloudRegistrator;
+		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3D;
+		CDFF::DFN::Registration3DInterface* cloudRegistrator;
 
 		FrameWrapper::FramePtr leftImage;
 		FrameWrapper::FramePtr rightImage;
@@ -117,6 +122,9 @@ namespace dfpc_ci {
 		bool RegisterPointCloudOnScene();
     };
 }
-#endif
-/* DenseRegistrationFromStereo.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_DENSEREGISTRATIONFROMSTEREO_HPP
+
 /** @} */

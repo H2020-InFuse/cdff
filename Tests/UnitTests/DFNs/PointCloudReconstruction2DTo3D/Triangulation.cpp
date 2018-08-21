@@ -16,7 +16,7 @@
 #include <DataGenerators/SyntheticGenerators/CameraPair.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::PointCloudReconstruction2DTo3D;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;

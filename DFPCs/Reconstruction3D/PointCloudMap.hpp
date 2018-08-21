@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  * @brief This class reconstruct a 3d point cloud map by assembling smaller point clouds.
  *  
@@ -22,8 +22,8 @@
  * @{
  */
 
-#ifndef POINT_CLOUD_MAP_HPP
-#define POINT_CLOUD_MAP_HPP
+#ifndef RECONSTRUCTION3D_POINTCLOUDMAP_HPP
+#define RECONSTRUCTION3D_POINTCLOUDMAP_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -42,7 +42,12 @@
 #include <stdlib.h>
 #include <memory>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -61,7 +66,7 @@ namespace dfpc_ci {
 		~PointCloudMap();
 
 		/*
-		* @brief Adds a point cloud at a given position.
+		* @brief Adds a point cloud at a given absolute position.
 		*
 		* @param pointCloud, the point cloud to add;
 		* @param pointCloudFeaturesVector, the vector of relevant features extracted from the point cloud
@@ -72,7 +77,7 @@ namespace dfpc_ci {
 						PoseWrapper::Pose3DConstPtr cloudPoseInMap);
 
 		/*
-		* @brief Adds a point cloud at a given position.
+		* @brief Attach a point cloud at a given position relative to the reference system of the last added or attached point cloud.
 		*
 		* @param pointCloud, the point cloud to add;
 		* @param pointCloudFeaturesVector, the vector of relevant features extracted from the point cloud
@@ -162,6 +167,9 @@ namespace dfpc_ci {
 		bool NoCloseFeature(const pcl::PointXYZ& point);
     };
 }
-#endif
-/* PointCloudMap.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_POINTCLOUDMAP_HPP
+
 /** @} */

@@ -6,7 +6,12 @@ using namespace VisualPointFeatureVector3DWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 BundleHistory::BundleHistory(int size) :
 	size(size),
@@ -22,32 +27,11 @@ BundleHistory::BundleHistory(int size) :
 		}
 	}
 
-#define DELETE_IF_NOT_NULL(pointer) \
-	if (pointer != NULL) \
-		{ \
-		delete (pointer); \
-		pointer = NULL; \
-		}
-
-#define DELETE_MAP_ENTRY(vectorMap, ListType, index) \
-	for(std::map<std::string, ListType>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); iterator++) \
-		{ \
-		DELETE_IF_NOT_NULL( iterator->second.at(index) ); \
-		}
-
-#define DELETE_ALL(index) \
-		DELETE_IF_NOT_NULL( leftImageList.at(index) ); \
-		DELETE_IF_NOT_NULL( rightImageList.at(index) ); \
-		DELETE_MAP_ENTRY( featureVectorList, FeatureVectorList, index); \
-		DELETE_MAP_ENTRY( featureVector3dList, FeatureVector3dList, index); \
-		DELETE_MAP_ENTRY( leftRightCorrespondenceMapList, CorrespondenceMapList, index); \
-		DELETE_MAP_ENTRY( pointCloudList, PointCloudList, index); \
-
 BundleHistory::~BundleHistory()
 	{
 	for(int index= 0; index < size; index++)
 		{
-		DELETE_ALL(index);
+		DeleteAllDataAt(index);
 		}
 	}
 
@@ -92,7 +76,7 @@ void BundleHistory::AddImages(FrameConstPtr leftImage, FrameConstPtr rightImage)
 	{
 	if ( mostRecentEntryIndex != NO_RECENT_ENTRY && (mostRecentEntryIndex+1) % size == oldestEntryIndex)
 		{
-		DELETE_ALL(oldestEntryIndex);
+		DeleteAllDataAt(oldestEntryIndex);
 		leftImageList.at(oldestEntryIndex) = leftImage;
 		rightImageList.at(oldestEntryIndex) = rightImage;
 		mostRecentEntryIndex = oldestEntryIndex;
@@ -266,18 +250,6 @@ PointCloudWrapper::PointCloudConstPtr BundleHistory::GetPointCloud(int backwardS
 	return pointCloudList[cloudCategory].at(index);
 	}
 
-#define REPLACE_INDEX_BY_INDEX_ON_MAP(vectorMap, ListType, replacedIndex, replacingIndex) \
-	for(std::map<std::string, ListType>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); iterator++) \
-		{ \
-		iterator->second.at(replacedIndex) = iterator->second.at(replacingIndex); \
-		}
-
-#define REPLACE_INDEX_BY_NULL_ON_MAP(vectorMap, ListType, replacedIndex) \
-	for(std::map<std::string, ListType>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); iterator++) \
-		{ \
-		iterator->second.at(replacedIndex) = NULL; \
-		}
-
 void BundleHistory::RemoveEntry(int backwardSteps)
 	{
 	int index = BackwardStepsToIndex(backwardSteps);
@@ -290,27 +262,24 @@ void BundleHistory::RemoveEntry(int backwardSteps)
 		RemoveOldestEntry();
 		}
 
-	DELETE_ALL(index);
+	DeleteAllDataAt(index);
 	while (index != mostRecentEntryIndex)
 		{
 		int nextIndex = (index+1) % size;
 
 		leftImageList.at(index) = leftImageList.at(nextIndex);
 		rightImageList.at(index) = rightImageList.at(nextIndex);
-		REPLACE_INDEX_BY_INDEX_ON_MAP(featureVectorList, FeatureVectorList, index, nextIndex);
-		REPLACE_INDEX_BY_INDEX_ON_MAP(featureVector3dList, FeatureVector3dList, index, nextIndex);
-		REPLACE_INDEX_BY_INDEX_ON_MAP(leftRightCorrespondenceMapList, CorrespondenceMapList, index, nextIndex);
-		REPLACE_INDEX_BY_INDEX_ON_MAP(pointCloudList, PointCloudList, index, nextIndex);
-
+		ReplaceIndexByIndexOnMap(featureVectorList, index, nextIndex);
+		ReplaceIndexByIndexOnMap(leftRightCorrespondenceMapList, index, nextIndex);
+		ReplaceIndexByIndexOnMap(pointCloudList, index, nextIndex);
 		index = nextIndex;		
 		}
 	
 	leftImageList.at(mostRecentEntryIndex) = NULL;
 	rightImageList.at(mostRecentEntryIndex) = NULL;
-	REPLACE_INDEX_BY_NULL_ON_MAP(featureVectorList, FeatureVectorList, mostRecentEntryIndex);
-	REPLACE_INDEX_BY_NULL_ON_MAP(featureVector3dList, FeatureVector3dList, mostRecentEntryIndex);
-	REPLACE_INDEX_BY_NULL_ON_MAP(leftRightCorrespondenceMapList, CorrespondenceMapList, mostRecentEntryIndex);
-	REPLACE_INDEX_BY_NULL_ON_MAP(pointCloudList, PointCloudList, mostRecentEntryIndex);
+	ReplaceIndexByNullOnMap(featureVectorList, mostRecentEntryIndex);
+	ReplaceIndexByNullOnMap(leftRightCorrespondenceMapList, mostRecentEntryIndex);
+	ReplaceIndexByNullOnMap(pointCloudList, mostRecentEntryIndex);
 
 	if (mostRecentEntryIndex == oldestEntryIndex)
 		{
@@ -324,7 +293,7 @@ void BundleHistory::RemoveEntry(int backwardSteps)
 
 void BundleHistory::RemoveOldestEntry()
 	{
-	DELETE_ALL(oldestEntryIndex);
+	DeleteAllDataAt(oldestEntryIndex);
 	if (mostRecentEntryIndex == NO_RECENT_ENTRY)
 		{
 		return;
@@ -364,6 +333,8 @@ int BundleHistory::BackwardStepsToIndex(int backwardSteps)
 	return NO_RECENT_ENTRY;
 	}
 
+}
+}
 }
 /** @} */
 

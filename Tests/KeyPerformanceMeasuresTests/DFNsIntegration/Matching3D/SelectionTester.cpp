@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the SelectionTester class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -32,7 +32,7 @@
 #include<pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
@@ -52,7 +52,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-SelectionTester::SelectionTester() 
+SelectionTester::SelectionTester()
 	{
 	featuresDescriptorConfigurationFilePath = "";
 	featuresMatcherConfigurationFilePath = "";
@@ -89,7 +89,7 @@ SelectionTester::~SelectionTester()
 	DELETE_IF_NOT_NULL(sourcePoseInSink);
 	}
 
-void SelectionTester::SetDfns(dfn_ci::FeaturesDescription3DInterface* descriptor, dfn_ci::FeaturesMatching3DInterface* matcher)
+void SelectionTester::SetDfns(CDFF::DFN::FeaturesDescription3DInterface* descriptor, CDFF::DFN::FeaturesMatching3DInterface* matcher)
 	{
 	this->descriptor = descriptor;
 	this->matcher = matcher;
@@ -180,7 +180,7 @@ bool SelectionTester::AreCorrespondencesValid(float percentageThreshold)
 		PRINT_TO_LOG("3D features matching failed", "");
 		return false;
 		}
-	
+
 	PRINT_TO_LOG("Estimate source pose in sink is:", ToString(*sourcePoseInSink));
 	ComputeMatchesFromPose();
 	bool correspondencesAreValid = ValidateCorrespondences(percentageThreshold);
@@ -282,9 +282,9 @@ bool SelectionTester::ValidateCorrespondences(float percentageThreshold)
 bool SelectionTester::CorrespondencesAreTheSame(int referenceIndex, int outputIndex)
 	{
 	BaseTypesWrapper::Point3D referenceSource = GetSource(*referenceCorrespondenceMap, referenceIndex);
-	BaseTypesWrapper::Point3D referenceSink = GetSink(*referenceCorrespondenceMap, referenceIndex);		
+	BaseTypesWrapper::Point3D referenceSink = GetSink(*referenceCorrespondenceMap, referenceIndex);
 	BaseTypesWrapper::Point3D outputSource = GetSource(*outputCorrespondenceMap, outputIndex);
-	BaseTypesWrapper::Point3D outputSink = GetSink(*outputCorrespondenceMap, outputIndex);	
+	BaseTypesWrapper::Point3D outputSink = GetSink(*outputCorrespondenceMap, outputIndex);
 
 	bool sameSource = (referenceSource.x == outputSource.x && referenceSource.y == outputSource.y && referenceSource.z == outputSource.z);
 	bool sameSink = (referenceSink.x == outputSink.x && referenceSink.y == outputSink.y && referenceSink.z == outputSink.z);
@@ -309,7 +309,7 @@ void SelectionTester::ComputeMatchesFromPose()
 
 		BaseTypesWrapper::Point3D transformedSourcePoint = TransformPoint(sourcePoint, affineTransform);
 		float closestDistance;
-		BaseTypesWrapper::Point3D sinkPoint = FindClosestSinkPointTo(transformedSourcePoint, closestDistance);	
+		BaseTypesWrapper::Point3D sinkPoint = FindClosestSinkPointTo(transformedSourcePoint, closestDistance);
 		totalDistance += closestDistance;
 
 		AddCorrespondence(*newOutputCorrespondenceMap, sourcePoint, sinkPoint, 1);
@@ -348,15 +348,15 @@ BaseTypesWrapper::Point3D SelectionTester::FindClosestSinkPointTo(const BaseType
 		float differenceY = sourcePoint.y - sinkPoint.y;
 		float differenceZ = sourcePoint.z - sinkPoint.z;
 		float distance = std::sqrt(differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ);
-		
+
 		if ( closestDistance == -1 || (closestDistance > distance) )
 			{
 			closestDistance = distance;
-			closestPoint = sinkPoint;	
+			closestPoint = sinkPoint;
 			}
 		}
 
-	return closestPoint;	
+	return closestPoint;
 	}
 
 /** @} */

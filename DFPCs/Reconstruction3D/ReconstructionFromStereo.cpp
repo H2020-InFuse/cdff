@@ -39,9 +39,14 @@
 		} \
 	} \
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
 using namespace CorrespondenceMap2DWrapper;
@@ -471,6 +476,8 @@ void ReconstructionFromStereo::ComputeStereoPointCloud()
 	DEBUG_SHOW_POINT_CLOUD(pointCloud);
 	}
 
+}
+}
 }
 
 

@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Registration From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows: 
@@ -23,8 +23,8 @@
  * @{
  */
 
-#ifndef REGISTRATION_FROM_STEREO_HPP
-#define REGISTRATION_FROM_STEREO_HPP
+#ifndef RECONSTRUCTION3D_REGISTRATIONFROMSTEREO_HPP
+#define RECONSTRUCTION3D_REGISTRATIONFROMSTEREO_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -50,7 +50,12 @@
 #include <Pose.hpp>
 #include <VisualPointFeatureVector3D.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -95,12 +100,12 @@ namespace dfpc_ci {
 		RegistrationFromStereoOptionsSet parameters;
 		static const RegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
 
-		dfn_ci::ImageFilteringExecutor* optionalLeftFilter;
-		dfn_ci::ImageFilteringExecutor* optionalRightFilter;
-		dfn_ci::StereoReconstructionExecutor* reconstructor3d;
-		dfn_ci::FeaturesExtraction3DExecutor* featuresExtractor3d;
-		dfn_ci::FeaturesDescription3DExecutor* optionalFeaturesDescriptor3d;
-		dfn_ci::FeaturesMatching3DExecutor* featuresMatcher3d;
+		CDFF::DFN::ImageFilteringExecutor* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringExecutor* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionExecutor* reconstructor3d;
+		CDFF::DFN::FeaturesExtraction3DExecutor* featuresExtractor3d;
+		CDFF::DFN::FeaturesDescription3DExecutor* optionalFeaturesDescriptor3d;
+		CDFF::DFN::FeaturesMatching3DExecutor* featuresMatcher3d;
 
 		//Helpers
 		BundleHistory* bundleHistory;
@@ -109,6 +114,9 @@ namespace dfpc_ci {
 		void InstantiateDFNExecutors();
     };
 }
-#endif
-/* RegistrationFromStereo.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_REGISTRATIONFROMSTEREO_HPP
+
 /** @} */

@@ -3,14 +3,16 @@
  * @{
  */
 
-#ifndef FEATURESMATCHING2D_INTERFACE_HPP
-#define FEATURESMATCHING2D_INTERFACE_HPP
+#ifndef FEATURESMATCHING2D_FEATURESMATCHING2DINTERFACE_HPP
+#define FEATURESMATCHING2D_FEATURESMATCHING2DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <VisualPointFeatureVector2D.h>
 #include <CorrespondenceMap2D.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that matches 2D keypoints
@@ -46,7 +48,8 @@ namespace dfn_ci
             asn1SccCorrespondenceMap2D outMatches;
     };
 }
+}
 
-#endif // FEATURESMATCHING2D_INTERFACE_HPP
+#endif // FEATURESMATCHING2D_FEATURESMATCHING2DINTERFACE_HPP
 
 /** @} */

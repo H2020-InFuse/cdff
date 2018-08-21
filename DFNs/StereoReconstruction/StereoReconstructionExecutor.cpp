@@ -9,7 +9,9 @@
 using namespace FrameWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 StereoReconstructionExecutor::StereoReconstructionExecutor(StereoReconstructionInterface* dfn)
@@ -50,6 +52,7 @@ void StereoReconstructionExecutor::Execute(const Frame& leftInputFrame, const Fr
 	dfn->process();
 	Copy( dfn->pointcloudOutput(), outputCloud);
 	}
+}
 }
 
 /** @} */

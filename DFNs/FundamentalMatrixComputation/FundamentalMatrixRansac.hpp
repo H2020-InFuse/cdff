@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef FUNDAMENTALMATRIXRANSAC_HPP
-#define FUNDAMENTALMATRIXRANSAC_HPP
+#ifndef FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXRANSAC_HPP
+#define FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXRANSAC_HPP
 
 #include "FundamentalMatrixComputationInterface.hpp"
 
@@ -21,7 +21,11 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FundamentalMatrixComputation
 {
 	/**
 	 * Estimation of the fundamental matrix of a camera pair from a set of 2D
@@ -77,7 +81,9 @@ namespace dfn_ci
 				const std::vector<cv::Point2d>& secondImagePointsVector);
 	};
 }
+}
+}
 
-#endif // FUNDAMENTALMATRIXRANSAC_HPP
+#endif // FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXRANSAC_HPP
 
 /** @} */

@@ -5,7 +5,9 @@
 
 #include "FeaturesExtraction3DInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FeaturesExtraction3DInterface::FeaturesExtraction3DInterface()
@@ -26,6 +28,7 @@ const asn1SccVisualPointFeatureVector3D& FeaturesExtraction3DInterface::features
     return outFeatures;
 }
 
+}
 }
 
 /** @} */

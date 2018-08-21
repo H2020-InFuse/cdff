@@ -46,7 +46,7 @@ class ImageFilteringTestInterface : public PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		ImageFilteringTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, dfn_ci::ImageFilteringInterface* filter);
+		ImageFilteringTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, CDFF::DFN::ImageFilteringInterface* filter);
 		~ImageFilteringTestInterface();
 
 		void SetImageFilePath(std::string baseImageFolder, std::string imagesListFileName);
@@ -72,7 +72,7 @@ class ImageFilteringTestInterface : public PerformanceTestInterface
 
 		FrameWrapper::FrameConstPtr inputFrame;
 
-		dfn_ci::ImageFilteringInterface* filter;
+		CDFF::DFN::ImageFilteringInterface* filter;
 		void ReadImageFileNamesList();
 
 		bool SetNextInputs();

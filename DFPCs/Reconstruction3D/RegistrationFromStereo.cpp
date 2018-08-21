@@ -39,9 +39,14 @@
 		} \
 	} \
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace FrameWrapper;
 using namespace PoseWrapper;
@@ -189,6 +194,8 @@ void RegistrationFromStereo::InstantiateDFNExecutors()
 	featuresMatcher3d = new FeaturesMatching3DExecutor( static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") ) );
 	}
 
+}
+}
 }
 
 

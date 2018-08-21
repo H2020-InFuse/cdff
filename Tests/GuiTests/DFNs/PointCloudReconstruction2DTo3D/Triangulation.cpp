@@ -23,7 +23,7 @@
 #include <opencv2/core/core.hpp>
 #include <pcl/visualization/pcl_visualizer.h>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::PointCloudReconstruction2DTo3D;
 using namespace BaseTypesWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;

@@ -36,7 +36,7 @@
 
 #include <time.h>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FundamentalMatrixComputation;
 using namespace Converters;
 using namespace BaseTypesWrapper;
 using namespace MatrixWrapper;

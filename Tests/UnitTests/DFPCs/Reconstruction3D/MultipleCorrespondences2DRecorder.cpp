@@ -32,7 +32,7 @@
 
 using namespace CorrespondenceMap2DWrapper;
 using namespace PointCloudWrapper;
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::Reconstruction3D;
 using namespace BaseTypesWrapper;
 
 /* --------------------------------------------------------------------------

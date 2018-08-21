@@ -32,18 +32,14 @@
 #include <Visualizers/PclVisualizer.hpp>
 #include <VisualPointFeatureVector3D.hpp>
 
-#define DELETE_PREVIOUS(object) \
-	{ \
-	if (object != NULL) \
-		{ \
-		delete(object); \
-		object = NULL; \
-		} \
-	} \
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
-namespace dfpc_ci {
-
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace FrameWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
@@ -109,11 +105,11 @@ AdjustmentFromStereo::~AdjustmentFromStereo()
 	delete(cameraTransformEstimator);
 	delete(reconstructor3dfrom2dmatches);
 
-	DELETE_PREVIOUS(bundleHistory);
-	DELETE_PREVIOUS(correspondencesRecorder);
-	DELETE_PREVIOUS(cleanCorrespondenceMap);
-	DELETE_PREVIOUS(triangulatedKeypointCloud);
-	DELETE_PREVIOUS(estimatedCameraPoses);
+	DeleteIfNotNull(bundleHistory);
+	DeleteIfNotNull(correspondencesRecorder);
+	DeleteIfNotNull(cleanCorrespondenceMap);
+	DeleteIfNotNull(triangulatedKeypointCloud);
+	DeleteIfNotNull(estimatedCameraPoses);
 	}
 
 
@@ -175,7 +171,7 @@ void AdjustmentFromStereo::run()
 		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
 
 		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
-		DELETE_PREVIOUS(outputPointCloud);
+		DeleteIfNotNull(outputPointCloud);
 		}
 
 	currentInputNumber++;
@@ -193,10 +189,10 @@ void AdjustmentFromStereo::setup()
 
 	InstantiateDFNExecutors();
 
-	DELETE_PREVIOUS(bundleHistory);
+	DeleteIfNotNull(bundleHistory);
 	bundleHistory = new BundleHistory(parameters.numberOfAdjustedStereoPairs + 1);
 
-	DELETE_PREVIOUS(correspondencesRecorder);
+	DeleteIfNotNull(correspondencesRecorder);
 	correspondencesRecorder = new MultipleCorrespondences2DRecorder(parameters.numberOfAdjustedStereoPairs, true);	
 
 	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
@@ -530,6 +526,8 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 		}
 	}
 
+}
+}
 }
 
 

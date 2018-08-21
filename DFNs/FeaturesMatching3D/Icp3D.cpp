@@ -24,7 +24,11 @@ using namespace PoseWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace SupportTypes;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesMatching3D
 {
 
 Icp3D::Icp3D()
@@ -180,6 +184,8 @@ void Icp3D::ValidateCloud(PointCloudWithFeatures cloud)
 	}
 }
 
+}
+}
 }
 
 /** @} */
