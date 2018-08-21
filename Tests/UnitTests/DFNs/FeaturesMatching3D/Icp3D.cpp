@@ -113,14 +113,12 @@ TEST_CASE( "DFN processing step succeeds with data (3D ICP)", "[configure]" )
 	VisualPointFeatureVector3DPtr sinkSet = NewVisualPointFeatureVector3D();
 
 	const float INCREMENT = 0.01;
-	int pointCounter = 0;
 	for(int x = 0; x <= 1; x++)
 		{
 		for(float y = INCREMENT; y < 1; y += INCREMENT) for(float z = INCREMENT; z < 1; z += INCREMENT)
 			{
 			AddPoint(*sourceCloud, x, y, z);
 			AddPoint(*sinkCloud, x+1, y+1, z);
-			pointCounter++;
 			}
 		}
 	for(int y = 0; y <= 1; y++)
@@ -129,7 +127,6 @@ TEST_CASE( "DFN processing step succeeds with data (3D ICP)", "[configure]" )
 			{
 			AddPoint(*sourceCloud, x, y, z);
 			AddPoint(*sinkCloud, x+1, y+1, z);
-			pointCounter++;
 			}
 		}
 	for(int z = 0; z <= 1; z++)
@@ -138,7 +135,6 @@ TEST_CASE( "DFN processing step succeeds with data (3D ICP)", "[configure]" )
 			{
 			AddPoint(*sourceCloud, x, y, z);
 			AddPoint(*sinkCloud, x+1, y+1, z);
-			pointCounter++;
 			}
 		}
 
@@ -150,10 +146,10 @@ TEST_CASE( "DFN processing step succeeds with data (3D ICP)", "[configure]" )
 			AddPoint(*sinkCloud, x+1, y+1, z);
 			if (z > 0.5 - INCREMENT/2 && z < 0.5 + INCREMENT/2 && x == 0 && y == 0)
 				{
+				int pointCounter = GetNumberOfPoints(*sourceCloud) - 1;
 				AddPoint(*sourceSet, pointCounter);
 				AddPoint(*sinkSet, pointCounter);
 				}
-			pointCounter++;
 			}
 		}
 	for(int x = 0; x <=1; x++) for(int z=0; z<=1; z++)
@@ -164,10 +160,10 @@ TEST_CASE( "DFN processing step succeeds with data (3D ICP)", "[configure]" )
 			AddPoint(*sinkCloud, x+1, y+1, z);
 			if (y > 0.5 - INCREMENT/2 && y < 0.5 + INCREMENT/2 && x == 0 && z == 0)
 				{
+				int pointCounter = GetNumberOfPoints(*sourceCloud) - 1;
 				AddPoint(*sourceSet, pointCounter);
 				AddPoint(*sinkSet, pointCounter);
 				}
-			pointCounter++;
 			}
 		}
 	for(int z = 0; z <=1; z++) for(int y=0; y<=1; y++)
@@ -178,10 +174,10 @@ TEST_CASE( "DFN processing step succeeds with data (3D ICP)", "[configure]" )
 			AddPoint(*sinkCloud, x+1, y+1, z);
 			if (x > 0.5 - INCREMENT/2 && x < 0.5 + INCREMENT/2 && z == 0 && y == 0)
 				{
+				int pointCounter = GetNumberOfPoints(*sourceCloud) - 1;
 				AddPoint(*sourceSet, pointCounter);
 				AddPoint(*sinkSet, pointCounter);
 				}
-			pointCounter++;
 			}
 		}
 
@@ -189,9 +185,9 @@ TEST_CASE( "DFN processing step succeeds with data (3D ICP)", "[configure]" )
 		{
 		AddPoint(*sourceCloud, x, y, z);
 		AddPoint(*sinkCloud, x+1, y+1, z);
+		int pointCounter = GetNumberOfPoints(*sourceCloud) - 1;
 		AddPoint(*sourceSet, pointCounter);
 		AddPoint(*sinkSet, pointCounter);
-		pointCounter++;
 		}
 
 	ShotDescriptor3D* shot = new ShotDescriptor3D;
