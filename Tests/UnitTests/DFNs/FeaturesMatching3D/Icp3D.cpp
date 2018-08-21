@@ -22,6 +22,8 @@
 #include <boost/make_shared.hpp>
 
 using namespace CDFF::DFN::FeaturesMatching3D;
+using namespace CDFF::DFN::FeaturesDescription3D;
+using namespace CDFF::DFN::FeaturesExtraction3D;
 using namespace Converters;
 using namespace PoseWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
