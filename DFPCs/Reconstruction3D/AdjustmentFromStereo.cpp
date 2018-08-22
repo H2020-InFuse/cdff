@@ -364,27 +364,19 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 		if (success)
 			{
 			reconstructor3dfrom2dmatches->Execute(inlierCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
+			CleanUnmatchedFeatures(inlierCorrespondenceMap, triangulatedKeypointCloud);
 			}
 		else
 			{
 			reconstructor3dfrom2dmatches->Execute(leftRightCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
+			CleanUnmatchedFeatures(leftRightCorrespondenceMap, triangulatedKeypointCloud);
 			}
 		//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
 		PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
-		CleanUnmatchedFeatures(leftRightCorrespondenceMap, triangulatedKeypointCloud);
 		bundleHistory->AddPointCloud(*triangulatedKeypointCloud, TRIANGULATION_CLOUD_CATEGORY);
 		bundleHistory->AddMatches(*cleanCorrespondenceMap);
 		#ifdef TESTING
-		int validPointCounter = 0;
-		int numberOfPoints = GetNumberOfPoints(*triangulatedKeypointCloud);
-		for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
-			{
-			if ( GetXCoordinate(*triangulatedKeypointCloud, pointIndex) == GetXCoordinate(*triangulatedKeypointCloud, pointIndex) )
-				{
-				validPointCounter++;
-				}
-			}
-		logFile << validPointCounter << " " << GetNumberOfCorrespondences(*cleanCorrespondenceMap) << " ";
+		logFile << GetNumberOfPoints(*triangulatedKeypointCloud) << " " << GetNumberOfCorrespondences(*cleanCorrespondenceMap) << " ";
 		#endif
 		}
 	else
