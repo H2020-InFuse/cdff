@@ -39,6 +39,9 @@ namespace FundamentalMatrixComputation
 	 * @param confidence
 	 *        Lowest accepted value for the probability that a RANSAC model
 	 *        represents the set of points defined by the set of keypoint pairs.
+	 * @param maximumSymmetricEpipolarDistance
+	 *	  Lowest accepted symmetric epipolar distance error to accept
+	 *	  a correspondence as an inlier.
 	 */
 	class FundamentalMatrixRansac : public FundamentalMatrixComputationInterface
 	{
@@ -56,6 +59,7 @@ namespace FundamentalMatrixComputation
 			{
 				double outlierThreshold; // in pixels
 				double confidence;       // probability value (in [0,1])
+				double maximumSymmetricEpipolarDistance; //in pixels
 			};
 
 			Helpers::ParametersListHelper parametersHelper;

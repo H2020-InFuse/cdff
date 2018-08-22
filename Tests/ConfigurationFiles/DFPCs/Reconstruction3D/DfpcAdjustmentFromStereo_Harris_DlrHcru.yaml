@@ -119,4 +119,4 @@
   - Name: GeneralParameters
     OutlierThreshold: 1 
     Confidence: 0.90
-    
+    MaximumSymmetricEpipolarDistance: 0.05    
