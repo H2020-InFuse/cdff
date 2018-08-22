@@ -96,6 +96,7 @@
     PrinciplePointY: 385.304
   - Name: GeneralParameters
     OutputInvalidPoints: true
+    MaximumReprojectionError: 0.5
 - Name: transformEstimator
   Type: Transform3DEstimation
   Implementation: CeresEstimation

@@ -137,3 +137,4 @@
     PrinciplePointY: 390.755
   - Name: GeneralParameters
     OutputInvalidPoints: true
+    MaximumReprojectionError: 0.5

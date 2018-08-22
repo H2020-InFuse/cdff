@@ -42,6 +42,7 @@ Triangulation::Triangulation()
 		parameters.secondCameraMatrix.principalPoint.y, DEFAULT_PARAMETERS.secondCameraMatrix.principalPoint.y);
 
 	parametersHelper.AddParameter<bool>("GeneralParameters", "OutputInvalidPoints", parameters.outputInvalidPoints, DEFAULT_PARAMETERS.outputInvalidPoints);
+	parametersHelper.AddParameter<float>("GeneralParameters", "MaximumReprojectionError", parameters.maximumReprojectionError, DEFAULT_PARAMETERS.maximumReprojectionError);
 
 	firstCameraMatrix = ConvertToMat(DEFAULT_PARAMETERS.firstCameraMatrix);
 	secondCameraMatrix = ConvertToMat(DEFAULT_PARAMETERS.secondCameraMatrix);
@@ -94,7 +95,8 @@ const Triangulation::TriangulationOptionsSet Triangulation::DEFAULT_PARAMETERS =
 		.focalLengthY = 1.0,
 		.principalPoint = cv::Point2d(0, 0)
 	},
-	.outputInvalidPoints = false
+	.outputInvalidPoints = false,
+	.maximumReprojectionError = 1
 };
 
 cv::Mat Triangulation::ConvertToMat(CameraMatrix cameraMatrix)
@@ -130,6 +132,40 @@ cv::Mat Triangulation::Triangulate(cv::Mat projectionMatrix, cv::Mat pointsVecto
 		pointsVectorAtSource,
 		pointsVectorAtSink,
 		homogeneousPointCloudMatrix);
+
+	/* Filtering By reprojection error */
+	for (int pointIndex = 0; pointIndex < homogeneousPointCloudMatrix.cols; pointIndex++)
+		{
+		cv::Mat point3d = (cv::Mat_<float>(4, 1, CV_32FC1) << homogeneousPointCloudMatrix.at<float>(0, pointIndex), homogeneousPointCloudMatrix.at<float>(1, pointIndex), 
+				homogeneousPointCloudMatrix.at<float>(2, pointIndex), homogeneousPointCloudMatrix.at<float>(3, pointIndex) );
+
+		float sourceX = pointsVectorAtSource.at<float>(0, pointIndex);
+		float sourceY = pointsVectorAtSource.at<float>(1, pointIndex);
+		float sinkX = pointsVectorAtSink.at<float>(0, pointIndex);
+		float sinkY = pointsVectorAtSink.at<float>(1, pointIndex);
+	
+		cv::Mat reprojectedSourceCameraPoint = firstCameraMatrix * identityProjection * point3d;
+		cv::Mat reprojectedSinkCameraPoint = secondCameraMatrix * projectionMatrix * point3d;
+
+		float reprojectedSourceX = reprojectedSourceCameraPoint.at<float>(0) / reprojectedSourceCameraPoint.at<float>(2);
+		float reprojectedSourceY = reprojectedSourceCameraPoint.at<float>(1) / reprojectedSourceCameraPoint.at<float>(2);
+		float reprojectedSinkX = reprojectedSinkCameraPoint.at<float>(0) / reprojectedSinkCameraPoint.at<float>(2);
+		float reprojectedSinkY = reprojectedSinkCameraPoint.at<float>(1) / reprojectedSinkCameraPoint.at<float>(2);
+
+		float sourceErrorX = sourceX - reprojectedSourceX;
+		float sourceErrorY = sourceY - reprojectedSourceY;
+		float sinkErrorX = sinkX - reprojectedSinkX;
+		float sinkErrorY = sinkY - reprojectedSinkY;
+
+		float squaredReprojectionError = sourceErrorX*sourceErrorX + sourceErrorY*sourceErrorY + sinkErrorX*sinkErrorX + sinkErrorY*sinkErrorY;
+		float reprojectionError = std::sqrt(squaredReprojectionError);
+
+		if (reprojectionError > parameters.maximumReprojectionError)
+			{
+			homogeneousPointCloudMatrix.at<float>(3, pointIndex) = 0; //This will cause the point to be filtered out
+			}
+
+		}
 
 	return homogeneousPointCloudMatrix;
 }
@@ -196,6 +232,7 @@ void Triangulation::ValidateParameters()
 		"Triangulation Error: the focal length of the first camera is not strictly positive");
 	ASSERT(parameters.secondCameraMatrix.focalLengthX > 0 && parameters.secondCameraMatrix.focalLengthY > 0,
 		"Triangulation Error: the focal length of the second camera is not strictly positive");
+	ASSERT(parameters.maximumReprojectionError > 0,	"Triangulation Error: the maximumReprojectionError is not strictly positive");
 }
 
 void Triangulation::ValidateInputs(const CorrespondenceMap2D& matches, const Pose3D& pose)
