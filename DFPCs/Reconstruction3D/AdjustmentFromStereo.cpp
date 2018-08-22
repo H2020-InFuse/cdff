@@ -93,7 +93,7 @@ AdjustmentFromStereo::AdjustmentFromStereo() :
 
 	#ifdef TESTING
 	logFile.open("/InFuse/myLog.txt");
-	logFile << "denseCloud  leftKeypoints leftFeatures rightKeypoints rightFeatures correspondences FMFiltersuccess inlierCorrespondences sparseCloud ";
+	logFile << "denseCloud leftKeypoints leftFeatures rightKeypoints rightFeatures correspondences FMFiltersuccess inlierCorrespondences sparseCloud ";
 	logFile << "Correspondences error success validPose X Y Z QX QY QZ QW output X Y Z QX QY QZ QW cloud SpaceX SpaceY SpaceZ" << std::endl;
 	logFile.close();
 	#endif
@@ -469,10 +469,6 @@ bool AdjustmentFromStereo::ComputeCameraPoses(PoseWrapper::Poses3DSequenceConstP
 	float error;
 
 	CorrespondenceMaps2DSequenceConstPtr workingCorrespondenceMapSequence = correspondencesRecorder->GetLatestCorrespondences();
-	for(int mapIndex = 0; mapIndex < GetNumberOfCorrespondenceMaps(*workingCorrespondenceMapSequence); mapIndex++)
-		{
-		DEBUG_PRINT_TO_LOG(std::to_string(mapIndex), std::to_string( GetNumberOfCorrespondences( GetCorrespondenceMap(*workingCorrespondenceMapSequence, mapIndex) ) ) );
-		}
 	if (parameters.useBundleInitialEstimation)
 		{
 		PointCloudConstPtr triangulatedKeypointCloud = bundleHistory->GetPointCloud(0, TRIANGULATION_CLOUD_CATEGORY);
@@ -542,7 +538,10 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 	SetPosition(zeroPose, 0, 0, 0);
 	SetOrientation(zeroPose, 0, 0, 0, 1);
 	Clear(*estimatedCameraPoses);
-
+	#ifdef TESTING
+	logFile << "Estimated Poses ";
+	#endif
+	
 	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
 	for(int backwardSteps = 1; backwardSteps < parameters.numberOfAdjustedStereoPairs; backwardSteps++)
 		{
@@ -561,7 +560,7 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 		fundamentalMatrixComputer->Execute(leftCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
 		DEBUG_PRINT_TO_LOG("Number of inlier correspondences", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
 		#ifdef TESTING
-		logFile << "Estimated Poses ";
+		logFile << GetNumberOfCorrespondences(*inlierCorrespondenceMap) << " ";
 		#endif
 		if (success)
 			{
