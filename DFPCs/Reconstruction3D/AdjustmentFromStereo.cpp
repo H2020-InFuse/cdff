@@ -94,7 +94,7 @@ AdjustmentFromStereo::AdjustmentFromStereo() :
 	#ifdef TESTING
 	logFile.open("/InFuse/myLog.txt");
 	logFile << "denseCloud  leftKeypoints leftFeatures rightKeypoints rightFeatures correspondences FMFiltersuccess inlierCorrespondences sparseCloud ";
-	logFile << "Correspondences error success validPose X Y Z QX QY QZ QW output X Y Z QX QY QZ QW cloud SpaceX SpaceY SpaceZ";
+	logFile << "Correspondences error success validPose X Y Z QX QY QZ QW output X Y Z QX QY QZ QW cloud SpaceX SpaceY SpaceZ" << std::endl;
 	logFile.close();
 	#endif
 	}
@@ -192,11 +192,11 @@ void AdjustmentFromStereo::run()
 				{
 				bool change[6];
 				change[0] = minMax[0] < GetXCoordinate(outPointCloud, pointIndex);
-				change[1] = minMax[1] < GetXCoordinate(outPointCloud, pointIndex);
+				change[1] = minMax[1] > GetXCoordinate(outPointCloud, pointIndex);
 				change[2] = minMax[2] < GetXCoordinate(outPointCloud, pointIndex);
-				change[3] = minMax[3] < GetXCoordinate(outPointCloud, pointIndex);
+				change[3] = minMax[3] > GetXCoordinate(outPointCloud, pointIndex);
 				change[4] = minMax[4] < GetXCoordinate(outPointCloud, pointIndex);
-				change[5] = minMax[5] < GetXCoordinate(outPointCloud, pointIndex);
+				change[5] = minMax[5] > GetXCoordinate(outPointCloud, pointIndex);
 				minMax[0] = change[0] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[0];
 				minMax[1] = change[1] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[1];
 				minMax[2] = change[2] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[2];
@@ -286,10 +286,10 @@ void AdjustmentFromStereo::InstantiateDFNExecutors()
 	optionalFeaturesDescriptor2d = new FeaturesDescription2DExecutor( static_cast<FeaturesDescription2DInterface*>( configurator.GetDfn("featuresDescriptor2d", true) ) );
 	featuresMatcher2d = new FeaturesMatching2DExecutor( static_cast<FeaturesMatching2DInterface*>( configurator.GetDfn("featuresMatcher2d") ) );
 	bundleAdjuster = new BundleAdjustmentExecutor( static_cast<BundleAdjustmentInterface*>( configurator.GetDfn("bundleAdjuster") ) );
+	fundamentalMatrixComputer = new FundamentalMatrixComputationExecutor( static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") ) );
 
 	if (parameters.useBundleInitialEstimation)
-		{
-		fundamentalMatrixComputer = new FundamentalMatrixComputationExecutor( static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") ) );
+		{		
 		cameraTransformEstimator = new CamerasTransformEstimationExecutor( static_cast<CamerasTransformEstimationInterface*>( configurator.GetDfn("cameraTransformEstimator") ) );
 		reconstructor3dfrom2dmatches = new PointCloudReconstruction2DTo3DExecutor( static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3dfrom2dmatches") ) );
 		}
@@ -353,6 +353,7 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 	bool success = false;
 	CorrespondenceMap2DConstPtr inlierCorrespondenceMap = NULL;
 	fundamentalMatrixComputer->Execute(leftRightCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
+	PRINT_TO_LOG("Inlier Correspondences Number", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
 
 	#ifdef TESTING
 	logFile << success << " " << GetNumberOfCorrespondences(*inlierCorrespondenceMap) << " ";
@@ -374,7 +375,16 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 		bundleHistory->AddPointCloud(*triangulatedKeypointCloud, TRIANGULATION_CLOUD_CATEGORY);
 		bundleHistory->AddMatches(*cleanCorrespondenceMap);
 		#ifdef TESTING
-		logFile << GetNumberOfPoints(*triangulatedKeypointCloud) << " " << GetNumberOfCorrespondences(*cleanCorrespondenceMap) << " ";
+		int validPointCounter = 0;
+		int numberOfPoints = GetNumberOfPoints(*triangulatedKeypointCloud);
+		for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+			{
+			if ( GetXCoordinate(*triangulatedKeypointCloud, pointIndex) == GetXCoordinate(*triangulatedKeypointCloud, pointIndex) )
+				{
+				validPointCounter++;
+				}
+			}
+		logFile << validPointCounter << " " << GetNumberOfCorrespondences(*cleanCorrespondenceMap) << " ";
 		#endif
 		}
 	else

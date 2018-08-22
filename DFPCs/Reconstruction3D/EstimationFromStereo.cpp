@@ -91,7 +91,7 @@ EstimationFromStereo::EstimationFromStereo() :
 	#ifdef TESTING
 	logFile.open("/InFuse/myLog.txt");
 	logFile << "denseCloud leftKeypoints leftFeatures rightKeypoints rightFeatures correspondences FMFiltersuccess inlierCorrespondences sparseCloud ";
-	logFile << "Correspondences error success validPose X Y Z QX QY QZ QW output X Y Z QX QY QZ QW cloud SpaceX SpaceY SpaceZ";
+	logFile << "Correspondences error success validPose X Y Z QX QY QZ QW output X Y Z QX QY QZ QW cloud SpaceX SpaceY SpaceZ" << std::endl;
 	logFile.close();
 	#endif
 	}
@@ -187,11 +187,11 @@ void EstimationFromStereo::run()
 				{
 				bool change[6];
 				change[0] = minMax[0] < GetXCoordinate(outPointCloud, pointIndex);
-				change[1] = minMax[1] < GetXCoordinate(outPointCloud, pointIndex);
+				change[1] = minMax[1] > GetXCoordinate(outPointCloud, pointIndex);
 				change[2] = minMax[2] < GetXCoordinate(outPointCloud, pointIndex);
-				change[3] = minMax[3] < GetXCoordinate(outPointCloud, pointIndex);
+				change[3] = minMax[3] > GetXCoordinate(outPointCloud, pointIndex);
 				change[4] = minMax[4] < GetXCoordinate(outPointCloud, pointIndex);
-				change[5] = minMax[5] < GetXCoordinate(outPointCloud, pointIndex);
+				change[5] = minMax[5] > GetXCoordinate(outPointCloud, pointIndex);
 				minMax[0] = change[0] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[0];
 				minMax[1] = change[1] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[1];
 				minMax[2] = change[2] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[2];
@@ -355,7 +355,16 @@ void EstimationFromStereo::ComputeVisualPointFeatures(FrameConstPtr filteredLeft
 	bundleHistory->AddPointCloud(*triangulatedKeypointCloud, TRIANGULATION_CLOUD_CATEGORY);
 	PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
 	#ifdef TESTING
-	logFile << GetNumberOfPoints(*triangulatedKeypointCloud) << " ";
+	int validPointCounter = 0;
+	int numberOfPoints = GetNumberOfPoints(*triangulatedKeypointCloud);
+	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+		{
+		if ( GetXCoordinate(*triangulatedKeypointCloud, pointIndex) == GetXCoordinate(*triangulatedKeypointCloud, pointIndex) )
+			{
+			validPointCounter++;
+			}
+		}
+	logFile << validPointCounter << " ";
 	#endif
 	}
 

@@ -73,6 +73,7 @@ class MultipleCorrespondences2DRecorder
 			SECOND_SEQUENCE = 1,
 			};
 		const int MAXIMUM_NUMBER_OF_POSES;
+		const int MAXIMUM_NUMBER_OF_MAPS;
 		int numberOfOldPoses;
 		bool addingNewSequence;
 		bool oneCorrespondenceWasAddedSinceLastDiscard;

@@ -15,7 +15,8 @@ using namespace PointCloudWrapper;
 using namespace BaseTypesWrapper;
 
 MultipleCorrespondences2DRecorder::MultipleCorrespondences2DRecorder(int maximumNumberOfPoses, bool filterPointsThatDoNotAppearInAllMatches) :
-	MAXIMUM_NUMBER_OF_POSES(maximumNumberOfPoses)
+	MAXIMUM_NUMBER_OF_POSES(maximumNumberOfPoses),
+	MAXIMUM_NUMBER_OF_MAPS( maximumNumberOfPoses * (maximumNumberOfPoses-1) / 2 )
 	{
 	firstCorrespondenceMapSequence = NewCorrespondenceMaps2DSequence();
 	secondCorrespondenceMapSequence = NewCorrespondenceMaps2DSequence();
@@ -169,7 +170,7 @@ CorrespondenceMaps2DSequenceConstPtr MultipleCorrespondences2DRecorder::Filter(C
 	Copy(*sequenceToFilter, *filteredCorrespondenceMapSequence);
 
 	int numberOfMaps = GetNumberOfCorrespondenceMaps(*filteredCorrespondenceMapSequence);
-	if ( numberOfMaps == 0 )
+	if ( numberOfMaps < MAXIMUM_NUMBER_OF_MAPS )
 		{
 		return filteredCorrespondenceMapSequence;
 		}
