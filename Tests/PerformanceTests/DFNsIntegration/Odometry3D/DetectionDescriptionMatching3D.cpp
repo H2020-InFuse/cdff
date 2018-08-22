@@ -44,25 +44,22 @@ using namespace SupportTypes;
 DetectionDescriptionMatching3DTestInterface::DetectionDescriptionMatching3DTestInterface(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, 
 	std::string performanceMeasuresFileName, DFNsSet dfnsSet) : PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName)
 	{
-	extractor = dfnsSet.extractor;
-	AddDfn(extractor);
-	descriptor = dfnsSet.descriptor;
-	AddDfn(descriptor);
-	matcher = dfnsSet.matcher;
-	AddDfn(matcher);
+	extractor = new CDFF::DFN::FeaturesExtraction3DExecutor(dfnsSet.extractor);
+	AddDfn(dfnsSet.extractor);
+	descriptor = new CDFF::DFN::FeaturesDescription3DExecutor(dfnsSet.descriptor);
+	AddDfn(dfnsSet.descriptor);
+	matcher = new CDFF::DFN::FeaturesMatching3DExecutor(dfnsSet.matcher);
+	AddDfn(dfnsSet.matcher);
 
 	groundPositionDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
 	AddAggregator("PositionDistance", groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
 	groundOrientationDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("AngleDistace", groundOrientationDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	AddAggregator("AngleDistance", groundOrientationDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
 
 	scenePointCloud = NULL;
 	modelPointCloud = NULL;
-	sceneKeypointsVector = NULL;
-	modelKeypointsVector = NULL;
-	sceneFeaturesVector = NULL;
-	modelFeaturesVector = NULL;
-	modelPoseInScene = NULL;
+	sceneFeatureVector = NewVisualPointFeatureVector3D();
+	modelPoseInScene = NewPose3D();
 	icpSuccess = false;
 
 	inputId = -1;
@@ -77,6 +74,9 @@ DetectionDescriptionMatching3DTestInterface::DetectionDescriptionMatching3DTestI
 
 DetectionDescriptionMatching3DTestInterface::~DetectionDescriptionMatching3DTestInterface()
 	{
+	delete(extractor);
+	delete(descriptor);
+	delete(matcher);
 	if (scenePointCloud != NULL)
 		{
 		delete(scenePointCloud);
@@ -85,26 +85,8 @@ DetectionDescriptionMatching3DTestInterface::~DetectionDescriptionMatching3DTest
 		{
 		delete(modelPointCloud);
 		}
-	if (sceneKeypointsVector != NULL)
-		{
-		delete(sceneKeypointsVector);
-		}
-	if (modelKeypointsVector != NULL)
-		{
-		delete(modelKeypointsVector);
-		}
-	if (sceneFeaturesVector != NULL)
-		{
-		delete(sceneFeaturesVector);
-		}
-	if (modelFeaturesVector != NULL)
-		{
-		delete(modelFeaturesVector);
-		}
-	if (modelPoseInScene != NULL)
-		{
-		delete(modelPoseInScene);
-		}
+	delete(sceneFeatureVector);
+	delete(modelPoseInScene);
 	}
 
 void DetectionDescriptionMatching3DTestInterface::SetInputCloud(std::string inputCloudFile, float voxelGridFilterSize)
@@ -224,59 +206,18 @@ bool DetectionDescriptionMatching3DTestInterface::SetNextInputs()
 
 void DetectionDescriptionMatching3DTestInterface::ExecuteDfns()
 	{
-	if (sceneKeypointsVector != NULL)
-		{
-		delete(sceneKeypointsVector);
-		}
-	extractor->pointcloudInput(*scenePointCloud);
-	extractor->process();
-	VisualPointFeatureVector3DPtr newSceneKeypointsVector = NewVisualPointFeatureVector3D();
-	Copy( extractor->featuresOutput(), *newSceneKeypointsVector);
-	sceneKeypointsVector = newSceneKeypointsVector;
+	VisualPointFeatureVector3DConstPtr sceneKeypointVector = NULL;
+	extractor->Execute(scenePointCloud, sceneKeypointVector);
+	descriptor->Execute(scenePointCloud, sceneKeypointVector, sceneFeatureVector);
+	numberOfSceneKeypoints = GetNumberOfPoints(*sceneFeatureVector);
 
-	if (modelKeypointsVector != NULL)
-		{
-		delete(modelKeypointsVector);
-		}
-	extractor->pointcloudInput(*modelPointCloud);
-	extractor->process();
-	VisualPointFeatureVector3DPtr newModelKeypointsVector = NewVisualPointFeatureVector3D();
-	Copy( extractor->featuresOutput(), *newModelKeypointsVector);
-	modelKeypointsVector = newModelKeypointsVector;
+	VisualPointFeatureVector3DConstPtr modelKeypointVector = NULL;
+	VisualPointFeatureVector3DConstPtr modelFeatureVector = NULL;
+	extractor->Execute(modelPointCloud, modelKeypointVector);
+	descriptor->Execute(modelPointCloud, modelKeypointVector, modelFeatureVector);
+	numberOfModelKeypoints = GetNumberOfPoints(*modelFeatureVector);
 
-	if (sceneFeaturesVector != NULL)
-		{
-		delete(sceneFeaturesVector);
-		}
-	descriptor->pointcloudInput(*scenePointCloud);
-	descriptor->featuresInput(*sceneKeypointsVector);
-	descriptor->process();
-	VisualPointFeatureVector3DPtr newSceneFeaturesVector = NewVisualPointFeatureVector3D();
-	Copy( descriptor->featuresOutput(), *newSceneFeaturesVector);
-	sceneFeaturesVector = newSceneFeaturesVector;
-
-	if (modelFeaturesVector != NULL)
-		{
-		delete(modelFeaturesVector);
-		}
-	descriptor->pointcloudInput(*modelPointCloud);
-	descriptor->featuresInput(*modelKeypointsVector);
-	descriptor->process();
-	VisualPointFeatureVector3DPtr newModelFeaturesVector = NewVisualPointFeatureVector3D();
-	Copy( descriptor->featuresOutput(), *newModelFeaturesVector);
-	modelFeaturesVector = newModelFeaturesVector;
-
-	if (modelPoseInScene != NULL)
-		{
-		delete(modelPoseInScene);
-		}
-	matcher->sourceFeaturesInput(*modelFeaturesVector);
-	matcher->sinkFeaturesInput(*sceneFeaturesVector);
-	matcher->process();
-	icpSuccess = matcher->successOutput();
-	Pose3DPtr newModelPoseInScene = NewPose3D();
-	Copy( matcher->transformOutput(), *newModelPoseInScene);
-	modelPoseInScene = newModelPoseInScene;
+	matcher->Execute(modelFeatureVector, sceneFeatureVector, modelPoseInScene, icpSuccess);
 	}
 
 DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMatching3DTestInterface::ExtractMeasures()
@@ -284,8 +225,11 @@ DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMat
 	MeasuresMap measuresMap;
 
 	measuresMap["IcpSuccess"] = icpSuccess;
-	measuresMap["SceneKeypoints"] = GetNumberOfPoints(*sceneKeypointsVector);
-	measuresMap["ModelKeypoints"] = GetNumberOfPoints(*modelKeypointsVector);
+	measuresMap["SceneKeypoints"] = numberOfSceneKeypoints;
+	measuresMap["ModelKeypoints"] = numberOfModelKeypoints;
+	measuresMap["PositionX"] = GetXPosition(*modelPoseInScene);
+	measuresMap["PositionY"] = GetYPosition(*modelPoseInScene);
+	measuresMap["PositionZ"] = GetZPosition(*modelPoseInScene);
 
 	if (icpSuccess)
 		{
@@ -293,12 +237,12 @@ DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMat
 		ComputeDistanceToGroundTruth(positionDistance, angleDistance);
 
 		measuresMap["PositionDistance"] = positionDistance;
-		measuresMap["AngleDistace"] = angleDistance;				
+		measuresMap["AngleDistance"] = angleDistance;				
 		}
 	else
 		{
 		measuresMap["PositionDistance"] = 1;
-		measuresMap["AngleDistace"] = 1;
+		measuresMap["AngleDistance"] = 1;
 		}
 
 	return measuresMap;

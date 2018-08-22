@@ -65,9 +65,7 @@ void Icp3D::process()
 	if (GetNumberOfPoints(inSourceFeatures) == 0 || GetNumberOfPoints(inSinkFeatures) == 0)
 	{
 		outSuccess = false;
-		Pose3D transform;
-		Reset(transform);
-		outTransform = transform;
+		Reset(outTransform);
 		return;
 	}
 

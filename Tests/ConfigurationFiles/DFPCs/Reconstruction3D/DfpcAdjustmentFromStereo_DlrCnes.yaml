@@ -97,4 +97,11 @@
   - Name: GeneralParameters
     Baseline: 0.09290672099999999
     SquaredPixelErrorTolerance: 1e-4
+- Name: fundamentalMatrixComputer
+  Type: FundamentalMatrixComputation
+  Implementation: FundamentalMatrixRansac
+  Parameters:
+  - Name: GeneralParameters
+    OutlierThreshold: 1 
+    Confidence: 0.90
     

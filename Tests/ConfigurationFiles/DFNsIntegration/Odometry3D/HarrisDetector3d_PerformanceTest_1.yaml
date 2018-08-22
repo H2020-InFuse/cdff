@@ -2,7 +2,7 @@
   Radius: 0.01 0.1 0.001
   SearchRadius: 0.01 0.1 0.001
   NonMaxSuppression: true
-  DetectionThreshold: 0.01 0.1 0.001
+  DetectionThreshold: 0.001 0.01 0.0001
   EnableRefinement: false
   NumberOfThreads: 0
   HarrisMethod: Harris
