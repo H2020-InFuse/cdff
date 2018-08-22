@@ -50,6 +50,10 @@
 #include <Pose.hpp>
 #include <VisualPointFeatureVector3D.hpp>
 
+#ifdef TESTING
+#include <fstream>
+#endif
+
 namespace CDFF
 {
 namespace DFPC
@@ -106,6 +110,10 @@ namespace Reconstruction3D
 		CDFF::DFN::FeaturesExtraction3DExecutor* featuresExtractor3d;
 		CDFF::DFN::FeaturesDescription3DExecutor* optionalFeaturesDescriptor3d;
 		CDFF::DFN::FeaturesMatching3DExecutor* featuresMatcher3d;
+
+		#ifdef TESTING
+		std::ofstream logFile;
+		#endif
 
 		//Helpers
 		BundleHistory* bundleHistory;

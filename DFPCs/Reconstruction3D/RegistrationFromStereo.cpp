@@ -66,6 +66,11 @@ RegistrationFromStereo::RegistrationFromStereo()
 	featuresMatcher3d = NULL;
 
 	bundleHistory = new BundleHistory(2);
+
+	#ifdef TESTING
+	logFile.open("/InFuse/myLog.txt");
+	logFile.close();
+	#endif
 	}
 
 RegistrationFromStereo::~RegistrationFromStereo()
@@ -89,6 +94,9 @@ RegistrationFromStereo::~RegistrationFromStereo()
 **/
 void RegistrationFromStereo::run() 
 	{
+	#ifdef TESTING
+	logFile.open("/InFuse/myLog.txt", std::ios::app);
+	#endif
 	DEBUG_PRINT_TO_LOG("Registration from stereo start", "");
 
 	bundleHistory->AddImages(inLeftImage, inRightImage);
@@ -110,6 +118,12 @@ void RegistrationFromStereo::run()
 	bundleHistory->AddFeatures3d(*featureVector);
 	DEBUG_PRINT_TO_LOG("Described Features:", GetNumberOfPoints(*featureVector));
 
+	#ifdef TESTING
+	logFile << GetNumberOfPoints(*imageCloud) << " ";
+	logFile << GetNumberOfPoints(*keypointVector) << " ";
+	logFile << GetNumberOfPoints(*featureVector) << " ";
+	#endif
+
 	if (firstInput)
 		{
 		firstInput = false;
@@ -125,6 +139,16 @@ void RegistrationFromStereo::run()
 		Pose3DConstPtr previousPoseToPose = NULL;
 		featuresMatcher3d->Execute( bundleHistory->GetFeatures3d(1), featureVector, previousPoseToPose, outSuccess);
 		pointCloudMap.AttachPointCloud( imageCloud, featureVector, previousPoseToPose);
+		#ifdef TESTING
+		logFile << outSuccess << " ";
+		logFile << GetXPosition(*previousPoseToPose) << " ";
+		logFile << GetYPosition(*previousPoseToPose) << " ";
+		logFile << GetZPosition(*previousPoseToPose) << " ";
+		logFile << GetXOrientation(*previousPoseToPose) << " ";
+		logFile << GetYOrientation(*previousPoseToPose) << " ";
+		logFile << GetZOrientation(*previousPoseToPose) << " ";
+		logFile << GetWOrientation(*previousPoseToPose) << " ";
+		#endif
 		}
 
 	if (outSuccess)
@@ -136,9 +160,57 @@ void RegistrationFromStereo::run()
 		DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
 
+		#ifdef TESTING
+		logFile << GetNumberOfPoints(outPointCloud) << " ";
+		logFile << GetXPosition(outPose) << " ";
+		logFile << GetYPosition(outPose) << " ";
+		logFile << GetZPosition(outPose) << " ";
+		logFile << GetXOrientation(outPose) << " ";
+		logFile << GetYOrientation(outPose) << " ";
+		logFile << GetZOrientation(outPose) << " ";
+		logFile << GetWOrientation(outPose) << " ";
+
+		if ( GetNumberOfPoints(outPointCloud) > 0)
+			{
+			float minMax[6] = { GetXCoordinate(outPointCloud, 0), GetXCoordinate(outPointCloud, 0), GetYCoordinate(outPointCloud, 0), 
+				GetYCoordinate(outPointCloud, 0), GetZCoordinate(outPointCloud, 0), GetZCoordinate(outPointCloud, 0)};
+			int numberOfPoints = GetNumberOfPoints(outPointCloud);
+			for (int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+				{
+				bool change[6];
+				change[0] = minMax[0] < GetXCoordinate(outPointCloud, pointIndex);
+				change[1] = minMax[1] > GetXCoordinate(outPointCloud, pointIndex);
+				change[2] = minMax[2] < GetYCoordinate(outPointCloud, pointIndex);
+				change[3] = minMax[3] > GetYCoordinate(outPointCloud, pointIndex);
+				change[4] = minMax[4] < GetZCoordinate(outPointCloud, pointIndex);
+				change[5] = minMax[5] > GetZCoordinate(outPointCloud, pointIndex);
+				minMax[0] = change[0] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[0];
+				minMax[1] = change[1] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[1];
+				minMax[2] = change[2] ? GetYCoordinate(outPointCloud, pointIndex) : minMax[2];
+				minMax[3] = change[3] ? GetYCoordinate(outPointCloud, pointIndex) : minMax[3];
+				minMax[4] = change[4] ? GetZCoordinate(outPointCloud, pointIndex) : minMax[4];
+				minMax[5] = change[5] ? GetZCoordinate(outPointCloud, pointIndex) : minMax[5];
+				}
+			logFile << (minMax[0] - minMax[1]) << " ";
+			logFile << (minMax[2] - minMax[3]) << " ";
+			logFile << (minMax[4] - minMax[5]) << " ";
+			}
+		else	
+			{
+			logFile << 0 << " ";
+			logFile << 0 << " ";
+			logFile << 0 << " ";
+			}
+		#endif
+
 		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 		DeleteIfNotNull(outputPointCloud);
 		}
+
+	#ifdef TESTING
+	logFile << std::endl;
+	logFile.close();
+	#endif
 	}
 
 void RegistrationFromStereo::setup()
