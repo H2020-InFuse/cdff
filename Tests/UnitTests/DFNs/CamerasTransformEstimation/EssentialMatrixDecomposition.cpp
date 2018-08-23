@@ -49,7 +49,7 @@ using namespace DataGenerators;
 class EssentialMatrixTest
 	{
 	public:
-		static void RandomCorrespondencesTest(PoseWrapper::Pose3DConstPtr secondCameraPose, unsigned numberOfCorrespondences = 20);
+		static void RandomCorrespondencesTest(PoseWrapper::Pose3DConstPtr secondCameraPose, unsigned numberOfCorrespondences = 20, float noiseVariance = 0);
 		static void FailureTest();
 
 	private:
@@ -58,13 +58,13 @@ class EssentialMatrixTest
 		static void ValidateOutput(PoseWrapper::Transform3DConstPtr output, PoseWrapper::Pose3DConstPtr secondCameraPose);
 	};
 
-void EssentialMatrixTest::RandomCorrespondencesTest(PoseWrapper::Pose3DConstPtr secondCameraPose, unsigned numberOfCorrespondences)
+void EssentialMatrixTest::RandomCorrespondencesTest(PoseWrapper::Pose3DConstPtr secondCameraPose, unsigned numberOfCorrespondences, float noiseVariance)
 	{
 	CameraPair cameraPair;
 	cameraPair.SetSecondCameraPose(secondCameraPose);
 
 	cv::Mat cvFundamentalMatrix = cameraPair.GetFundamentalMatrix();
-	CorrespondenceMap2DConstPtr input = cameraPair.GetSomeRandomCorrespondences(numberOfCorrespondences);
+	CorrespondenceMap2DConstPtr input = cameraPair.GetSomeRandomCorrespondences(numberOfCorrespondences, noiseVariance);
 
 	Matrix3dPtr fundamentalMatrix = Convert(cvFundamentalMatrix);
 
@@ -170,6 +170,15 @@ TEST_CASE( "Success Call to process for RotoTranslation 2", "[processRototransla
 	SetOrientation(*secondCameraPose, 0, 0, std::sin(M_PI/4), std::sin(M_PI/4));
 
 	EssentialMatrixTest::RandomCorrespondencesTest(secondCameraPose);
+	}
+
+TEST_CASE( "Success Call to process for RotoTranslation with noise", "[processRototranslationNoise]" )
+	{
+	Pose3DPtr secondCameraPose = new Pose3D();
+	SetPosition(*secondCameraPose, 0, 1, 0);
+	SetOrientation(*secondCameraPose, 0, 0, std::sin(M_PI/4), std::sin(M_PI/4));
+
+	EssentialMatrixTest::RandomCorrespondencesTest(secondCameraPose, 20, 0.01);
 	}
 
 TEST_CASE( "Fail Call to process (essential matrix decomposition)", "[processFail]" )
