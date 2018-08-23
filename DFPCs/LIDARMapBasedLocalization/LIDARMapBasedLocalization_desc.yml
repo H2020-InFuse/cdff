@@ -13,7 +13,7 @@ input_ports:
           port: newPC
     - name: odoPose
       type: asn1SccTransformWithCovariance
-      doc: "Estimated pose from odometry"
+      doc: "Estimated pose"
       connections:
         - dfn: PCMatcher
           port: odoPose

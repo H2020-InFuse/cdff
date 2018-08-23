@@ -4,80 +4,74 @@ dfns:
     - name: StereoRectification
     - name: FeatAndSigExtractorLeft
     - name: FeatAndSigExtractorRight
-    - name: FeatureMatching1
-    - name: FeatureMatching2 #why the second DFN?
+    - name: StereoFeatureMatching
     - name: 3DPointTriangulation
-    - name: 3D3DMotionEstimation
+    - name: TemporalFeatureMatching
+    - name: 3D2DMotionEstimation
 
 input_ports:
     - name: leftImage
       type: asn1SccFrame
       doc: "Left image frame"
       connections:
-        - dfn: StereoRectification
+        - dfn: FeatandSigExtractorLeft
           port: leftImage
     - name: rightImage
       type: asn1SccFrame
       doc: "Right image frame"
       connections:
-        - dfn: StereoRectification
+        - dfn: FeatandSigExtractorRight
           port: rightImage
+    -name: motionGuess
+     type: asn1SccTransformWithCovariance
+     doc: "Optional prediction of the motion (e.g. from Wheel Odometry)"
+      connections:
+        - dfn: 3D2DMotionEstimation
+          port: motionGuess
 
 output_ports:
     - name: estimatedMotion
       type: asn1SccTransformWithCovariance
-      doc: "Pose estimated from the VisualOdometry_LAAS DFPC"
+      doc: "Estimated transformation between the two frames"
       connections:
-          dfn: 3D3DMotionEstimation
+          dfn: 3D2DMotionEstimation
           port: estimatedMotion
 
 internal_connections:
     - from:
-        dfn: StereoRectification
-        port: leftImageRectified
-      to:
         dfn: FeatAndSigExtractorLeft
-        port: leftImage
-    - from:
-        dfn: StereoRectification
-        port: rightImageRectified
+        port: leftFeatures
       to:
-        dfn: FeatAndSigExtractorRight
-        port: rightImage
-    - from:
-        dfn: FeatAndSigExtractorLeft
-        port: features
-      to:
-        dfn: FeatureMatching1
+        dfn: StereoFeatureMatching
         port: leftFeatures
     - from:
         dfn: FeatAndSigExtractorRight
-        port: features
+        port: rightFeatures
       to:
-        dfn: FeatureMatching1
+        dfn: StereoFeatureMatching
         port: rightFeatures
     - from:
-        dfn: FeatureMatching1
-        port: leftMatchedFeatures
+        dfn: StereoFeatureMatching
+        port: stereoMatchedFeatures
       to:
         dfn: 3DPointComputation
-        port: leftMatchedFeatures
-    - from:
-        dfn: FeatureMatching1
-        port: rightMatchedFeatures
-      to:
-        dfn: 3DPointComputation
-        port: rightMatchedFeatures
+        port: matches
     - from:
         dfn: 3DPointComputation
         port: 3DPoints
       to:
-        dfn: 3D3DMotionEstimation
+        dfn: 3D2DMotionEstimation
         port: curr3DPoints
-    - from: #ask LAAS if this connection is correct?
-        dfn: FeatureMatching1
-        port: leftMatchedFeatures
+    - from:
+        dfn: FeatuAndSigExtractorsLeft
+        port: currLeftMatchedFeatures
       to:
-        dfn: FeatureMatching2
+        dfn: TemporalFeatureMatching
         port: currMatchedFeatures
+    - from:
+        dfn: TemporalFeatureMatching
+        port: prevLeftMatchedFeatures
+      to:
+        dfn: 3D2DMotionEstimation
+        port: prevLeftMatchedFeatures    
 

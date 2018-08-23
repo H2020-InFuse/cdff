@@ -4,28 +4,28 @@ dfns:
     - name: KalmanFilter
     - name: MapOptimizer
 input_ports:
-    - name: wheelOdometry
+    - name: poseEstimation1
       type: asn1SccTransformWithCovariance
-      doc: ""
+      doc: "first pose estimation"
       connections:
         - dfn: KalmanFilter
-          port: wheelPoseEstimation
-    - name: visualOdometry
+          port: readingPoseEstimation1
+    - name: poseEstimation2
       type: asn1SccTransformWithCovariance
-      doc: ""
+      doc: "Second pose estimation"
       connections:
         - dfn: KalmanFilter
-          port: visualPoseEstimantion
+          port: readingPoseEstimation2
 output_ports:
     - name: estimatedCurrentPose
       type: asn1SccTransformWithCovariance
-      doc: "Pose estimated from the SLAM DFPC"
+      doc: "Current estimated pose"
       connections:
           dfn: MapOptimizer
           port: fusedPoseEstimation
     - name: estimatedPastPoses
       type: asn1SccTransformWithCovariance
-      doc: "Past pose estimated from the SLAM DFPC"
+      doc: "Eventual past poses estimated from the SLAM DFPC"
       connections:
           dfn: MapOptimizer
           port: fusedPastPoseEstimation #Are these poses coming from here?

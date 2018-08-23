@@ -23,7 +23,7 @@ input_ports:
           port: readingPC
     - name: odometryPose
       type: asn1SccTransformWithCovariance
-      doc: "Estimated pose from localization"
+      doc: "Estimated pose from other sources"
       connections:
         - dfn: LocalMatcher
           port: odoPose
@@ -31,12 +31,12 @@ input_ports:
 output_ports:
     - name: poseEstimate
       type: asn1SccTransformWithCovariance
-      doc: "Ground truth pose from GPS localization"
+      doc: "Pose estimated from the LIDAR pose graph SLAM DFPC"
       connections:
         - dfn: OptimizeGraph
           port: optimizedPose
 
-    # TODO: Clarify which type should the poseGraph  output be
+    # TODO: Clarify which type should the poseGraph output be
     #- name: poseGraph 
 
 internal_connections:
