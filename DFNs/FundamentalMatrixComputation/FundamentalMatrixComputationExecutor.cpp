@@ -65,7 +65,7 @@ void FundamentalMatrixComputationExecutor::Execute(CorrespondenceMap2DConstPtr i
 
 void FundamentalMatrixComputationExecutor::Execute(const CorrespondenceMap2D& inputMatches, MatrixWrapper::Matrix3dConstPtr& outputMatrix, bool& success, CorrespondenceMap2DConstPtr& outputInlierMatches)
 	{
-	ASSERT( outputMatrix == NULL, "FundamentalMatrixComputationExecutor, Calling instance creation executor with a non-NULL pointer");
+	ASSERT( outputMatrix == NULL && outputInlierMatches == NULL, "FundamentalMatrixComputationExecutor, Calling instance creation executor with a non-NULL pointer");
 	dfn->matchesInput(inputMatches);
 	dfn->process();
 	outputMatrix = & ( dfn->fundamentalMatrixOutput() );

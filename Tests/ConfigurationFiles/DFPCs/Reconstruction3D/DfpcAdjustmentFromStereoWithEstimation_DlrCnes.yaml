@@ -104,6 +104,7 @@
   - Name: GeneralParameters
     OutlierThreshold: 1 
     Confidence: 0.90
+    MaximumSymmetricEpipolarDistance: 1
 - Name: cameraTransformEstimator
   Type: CamerasTransformEstimation
   Implementation: EssentialMatrixDecomposition
@@ -136,4 +137,4 @@
     PrinciplePointY: 385.304
   - Name: GeneralParameters
     OutputInvalidPoints: true
-    
+    MaximumReprojectionError: 0.5

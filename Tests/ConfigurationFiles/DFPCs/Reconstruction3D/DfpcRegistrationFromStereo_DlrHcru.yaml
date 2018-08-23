@@ -59,7 +59,7 @@
     Radius: 0.01
     SearchRadius: 0.01
     NonMaxSuppression: true
-    DetectionThreshold: 0.001
+    DetectionThreshold: 0.009
     EnableRefinement: false
     NumberOfThreads: 0
     HarrisMethod: Harris
@@ -75,14 +75,14 @@
     EnableNormalsEstimation: true
     ForceNormalsEstimation: true
   - Name: NormalEstimationParameters
-    SearchRadius: 0.1
+    SearchRadius: 0.01
     NeighboursSetSize: 0
 - Name: featuresMatcher3d
   Type: FeaturesMatching3D
   Implementation: Icp3D
   Parameters:
   - Name: GeneralParameters
-    MaxCorrespondenceDistance: 0.01
+    MaxCorrespondenceDistance: 0.08
     MaximumIterations: 200
     TransformationEpsilon: 1e-8
     EuclideanFitnessEpsilon: 1

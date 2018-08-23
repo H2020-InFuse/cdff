@@ -102,8 +102,9 @@
   Implementation: FundamentalMatrixRansac
   Parameters:
   - Name: GeneralParameters
-    OutlierThreshold: 1 
+    OutlierThreshold: 0.05
     Confidence: 0.90
+    MaximumSymmetricEpipolarDistance: 0.5
 - Name: cameraTransformEstimator
   Type: CamerasTransformEstimation
   Implementation: EssentialMatrixDecomposition
@@ -136,4 +137,4 @@
     PrinciplePointY: 390.755
   - Name: GeneralParameters
     OutputInvalidPoints: true
-    
+    MaximumReprojectionError: 6.5

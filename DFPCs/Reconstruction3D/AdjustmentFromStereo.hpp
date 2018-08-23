@@ -161,8 +161,7 @@ namespace Reconstruction3D
 		void InstantiateDFNExecutors();
 
 		void ComputeVisualPointFeatures(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
-		void CleanLowScoringMatches(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr leftRightCorrespondenceMap, CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr output);
-		void CleanUnmatchedFeatures(CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr map, PointCloudWrapper::PointCloudPtr cloud);
+		void CleanUnmatchedFeatures(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr map, PointCloudWrapper::PointCloudPtr cloud);
 		void ComputeStereoPointCloud(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
 		void CreateWorkingCorrespondences();
 		void CreateWorkingCorrespondences(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featureVector);

@@ -72,6 +72,7 @@ namespace PointCloudReconstruction2DTo3D
 				CameraMatrix firstCameraMatrix;
 				CameraMatrix secondCameraMatrix;
 				bool outputInvalidPoints;
+				float maximumReprojectionError;
 			};
 
 			cv::Mat firstCameraMatrix;

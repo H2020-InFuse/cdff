@@ -153,7 +153,7 @@ bool CeresAdjustment::StereoImagePointCostFunctor::operator()(const T* const lef
 	rightProjectedPoint[1] = rightFy * transformedPoint[1] + rightPy * transformedPoint[2];
 	rightProjectedPoint[2] = transformedPoint[2];
 
-	residual[0] = (transformedPoint[2] > TOLERANCE_W) ? T(0) : TOLERANCE_COST_FACTOR*(transformedPoint[2] - TOLERANCE_W);
+	residual[0] = (transformedPoint[2] > TOLERANCE_W) ? T(0) : TOLERANCE_COST_FACTOR*(TOLERANCE_W - transformedPoint[2]);
 	residual[1] = leftProjectedPoint[0] / leftProjectedPoint[2] - leftObservedX;
 	residual[2] = leftProjectedPoint[1] / leftProjectedPoint[2] - leftObservedY;
 	residual[3] = rightProjectedPoint[0] / rightProjectedPoint[2] - rightObservedX;

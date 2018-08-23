@@ -32,6 +32,7 @@ FundamentalMatrixRansac::FundamentalMatrixRansac()
 {
 	parametersHelper.AddParameter<double>("GeneralParameters", "OutlierThreshold", parameters.outlierThreshold, DEFAULT_PARAMETERS.outlierThreshold);
 	parametersHelper.AddParameter<double>("GeneralParameters", "Confidence", parameters.confidence, DEFAULT_PARAMETERS.confidence);
+	parametersHelper.AddParameter<double>("GeneralParameters", "MaximumSymmetricEpipolarDistance", parameters.maximumSymmetricEpipolarDistance, DEFAULT_PARAMETERS.maximumSymmetricEpipolarDistance);
 
 	configurationFilePath = "";
 }
@@ -58,7 +59,7 @@ void FundamentalMatrixRansac::process()
 	cv::Mat fundamentalMatrix = ComputeFundamentalMatrix(firstImagePointsVector, secondImagePointsVector);
 
 	// Write data to output port
-	if (fundamentalMatrix.rows == 0 && fundamentalMatrix.cols == 0)
+	if (fundamentalMatrix.rows != 3 || fundamentalMatrix.cols != 3)
 	{
 		SetZeroMatrix(outFundamentalMatrix);
 		outSuccess = false;
@@ -122,7 +123,8 @@ Matrix3dConstPtr FundamentalMatrixRansac::Convert(cv::Mat matrix)
 const FundamentalMatrixRansac::FundamentalMatrixRansacOptionsSet FundamentalMatrixRansac::DEFAULT_PARAMETERS =
 {
 	.outlierThreshold = 1.3,
-	.confidence = 0.99
+	.confidence = 0.99,
+	.maximumSymmetricEpipolarDistance = 1.3
 };
 
 cv::Mat FundamentalMatrixRansac::ComputeFundamentalMatrix(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector)
@@ -137,7 +139,14 @@ cv::Mat FundamentalMatrixRansac::ComputeFundamentalMatrix(const std::vector<cv::
 		parameters.confidence
 	);
 
-	return fundamentalMatrix;
+	if (fundamentalMatrix.rows > 3 && fundamentalMatrix.cols > 3)
+		{
+		return fundamentalMatrix(cv::Rect(0, 0, 3, 3));
+		}
+	else
+		{
+		return fundamentalMatrix;
+		}
 }
 
 /**
@@ -178,8 +187,17 @@ void FundamentalMatrixRansac::ComputeInliers(cv::Mat fundamentalMatrix)
 		BaseTypesWrapper::Point2D sinkPoint = GetSink(inMatches, correspondenceIndex);
 		cv::Mat source = (cv::Mat_<double>(3, 1, CV_32FC1) << sourcePoint.x, sourcePoint.y, 1.0);
 		cv::Mat sink = (cv::Mat_<double>(3, 1, CV_32FC1) << sinkPoint.x, sinkPoint.y, 1.0);
-		cv::Mat error = sink.t() * fundamentalMatrix * source;
-		if (error.at<double>(0,0) < parameters.outlierThreshold)
+		cv::Mat epipolarError = sink.t() * fundamentalMatrix * source;
+		cv::Mat sourceEpipolarLine = fundamentalMatrix * source;
+		cv::Mat sinkEpipolarLine = fundamentalMatrix * sink;
+		double l1 = sourceEpipolarLine.at<double>(0, 0);
+		double l2 = sourceEpipolarLine.at<double>(1, 0);
+		double p1 = sinkEpipolarLine.at<double>(0, 0);
+		double p2 = sinkEpipolarLine.at<double>(1, 0);
+
+		/* Fundamental Matrix Estimation: A Study of Error Criteria. M.E. Fathy, A.S. Hussein, M.F. Tolba */
+		double symmetricEpipolarDistance = ( 1.0/ ( l1*l1 + l2*l2) + 1.0 / (p1*p1 + p2*p2) ) * epipolarError.at<double>(0,0);
+		if (symmetricEpipolarDistance < parameters.maximumSymmetricEpipolarDistance)
 			{
 			AddCorrespondence(outInlierMatches, sourcePoint, sinkPoint, 1);
 			}
@@ -190,6 +208,7 @@ void FundamentalMatrixRansac::ValidateParameters()
 {
 	ASSERT(parameters.outlierThreshold >= 0, "FundamentalMatrixRansac Configuration Error: outlierThreshold is negative");
 	ASSERT(parameters.confidence >= 0 && parameters.confidence <= 1, "FundamentalMatrixRansac Configuration Error: confidence should be a probability value between 0 and 1");
+	ASSERT(parameters.maximumSymmetricEpipolarDistance >= 0, "FundamentalMatrixRansac Configuration Error: maximumSymmetricEpipolarDistance is negative");
 }
 
 void FundamentalMatrixRansac::ValidateInputs(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector)

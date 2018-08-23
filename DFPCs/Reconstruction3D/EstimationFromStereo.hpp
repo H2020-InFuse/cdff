@@ -144,6 +144,7 @@ namespace Reconstruction3D
 		CDFF::DFN::FeaturesMatching2DExecutor* featuresMatcher2d;
 		CDFF::DFN::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
 		CDFF::DFN::Transform3DEstimationExecutor* transformEstimator;
+		CDFF::DFN::FundamentalMatrixComputationExecutor* fundamentalMatrixComputer;
 
 		//Helpers
 		BundleHistory* bundleHistory;
@@ -151,7 +152,6 @@ namespace Reconstruction3D
 		PoseWrapper::Pose3D rightToLeftCameraPose;
 
 		//Intermediate data
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr cleanCorrespondenceMap;
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr leftTimeCorrespondenceMap;
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr rightTimeCorrespondenceMap;
 
@@ -159,7 +159,6 @@ namespace Reconstruction3D
 		void InstantiateDFNExecutors();
 
 		void ComputeVisualPointFeatures(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
-		void CleanLowScoringMatches(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr leftRightCorrespondenceMap);
 		void ComputeStereoPointCloud(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
 		void CreateWorkingCorrespondences();
 		bool ComputeCameraPoses(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
