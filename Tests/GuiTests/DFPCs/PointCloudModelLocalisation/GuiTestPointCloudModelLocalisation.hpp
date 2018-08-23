@@ -39,18 +39,7 @@
 #include <VisualPointFeatureVector3D.hpp>
 #include <Pose.hpp>
 #include <PointCloud.hpp>
-
-#include <Converters/SupportTypes.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/MatToTransform3DConverter.hpp>
-#include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
-#include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclNormalsCloudConverter.hpp>
-#include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.cpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -73,7 +62,7 @@ class GuiTestPointCloudModelLocalisation
 		GuiTestPointCloudModelLocalisation(std::string configurationFilePath, std::string sceneFilePath, std::string modelFilePath);
 		~GuiTestPointCloudModelLocalisation();
 
-		void Run(CDFF::DFPC::PointCloudModelLocalisationInterface& detector3d);
+		void Run(CDFF::DFPC::PointCloudModelLocalisationInterface* detector3d);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -87,39 +76,13 @@ class GuiTestPointCloudModelLocalisation
 	 * --------------------------------------------------------------------
 	 */
 	private:
-
-		Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>* stubEssentialPoseCache;
-		Mocks::MatToPose3DConverter* mockEssentialPoseConverter;
-
-		Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>* stubTriangulationPoseCache;
-		Mocks::Pose3DToMatConverter* mockTriangulationPoseConverter;
-
-		Stubs::CacheHandler<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr>* stubCloudCache;
-		Mocks::PclPointCloudToPointCloudConverter* mockCloudConverter;
-
-		Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::PointXYZ>::ConstPtr>* stubInverseCloudCache;
-		Mocks::PointCloudToPclPointCloudConverter* mockInverseCloudConverter;
-
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector3DConstPtr>* stubFeatures3dCache;
-		Mocks::MatToVisualPointFeatureVector3DConverter* mockFeatures3dConverter;
-
-		Stubs::CacheHandler<PointCloudConstPtr, pcl::PointCloud<pcl::Normal>::ConstPtr>* stubInputNormalsCache;
-		Mocks::PointCloudToPclNormalsCloudConverter* mockInputNormalsConverter;
-
-		Stubs::CacheHandler<VisualPointFeatureVector3DConstPtr, PointCloudWithFeatures>* stubInputCache;
-		Mocks::VisualPointFeatureVector3DToPclPointCloudConverter* mockInputConverter;
-
-		Stubs::CacheHandler<Eigen::Matrix4f, Transform3DConstPtr>* stubOutputCache;
-		Mocks::EigenTransformToTransform3DConverter* mockOutputConverter;
-
 		std::string modelFilePath;
 		std::string sceneFilePath;
 		std::string configurationFilePath;
 
-		Converters::PclPointCloudToPointCloudConverter frameConverter;
+		Converters::PclPointCloudToPointCloudConverter pointCloudConverter;
 
-		void SetUpMocksAndStubs();
-		void LoadPointClouds(PointCloudWrapper::PointCloudConstPtr& scene, PointCloudWrapper::PointCloudConstPtr& model);
+		PointCloudWrapper::PointCloudConstPtr LoadPointCloud(std::string file);
 
 	};
 

@@ -59,52 +59,56 @@ using namespace VisualPointFeatureVector3DWrapper;
  */
 FeaturesMatching3D::FeaturesMatching3D()
 	{
-	sceneCloud = NULL;
-	lastModelCloud = NULL;
-	sceneKeypointsVector = NewVisualPointFeatureVector3D();
-	modelKeypointsVector = NewVisualPointFeatureVector3D();
-	sceneFeaturesVector = NULL;
-	modelFeaturesVector = NULL;
-
 	featuresExtractor3d = NULL;
 	optionalFeaturesDescriptor3d = NULL;
 	featuresMatcher3d = NULL;
 
+	modelFeatureVector = NewVisualPointFeatureVector3D();
+
 	configurationFilePath = "";
+	modelFeaturesAvailable = false;
 	}
 
 FeaturesMatching3D::~FeaturesMatching3D()
 	{
-	delete(sceneKeypointsVector);
-	delete(modelKeypointsVector);
-	if (optionalFeaturesDescriptor3d != NULL)
-		{
-		DELETE_PREVIOUS(sceneFeaturesVector);
-		DELETE_PREVIOUS(modelFeaturesVector);
-		}
+	DeleteIfNotNull(featuresExtractor3d);
+	DeleteIfNotNull(optionalFeaturesDescriptor3d);
+	DeleteIfNotNull(featuresMatcher3d);
+
+	DeleteIfNotNull(modelFeatureVector);
 	}
 
 void FeaturesMatching3D::run() 
 	{
 	DEBUG_PRINT_TO_LOG("FeaturesMatching3D start", "");
-	sceneCloud = &inScene;
 
-	ExtractSceneFeatures();
-	DescribeSceneFeatures();
-
-	if (lastModelCloud != &inModel || inComputeModelFeatures)
-		{
-		lastModelCloud = &inModel;
-		ExtractModelFeatures();
-		DescribeModelFeatures();		
+	if (!modelFeaturesAvailable)
+		{	
+		VisualPointFeatureVector3DConstPtr modelKeypointVector = NULL;
+		featuresExtractor3d->Execute(inModel, modelKeypointVector);
+		optionalFeaturesDescriptor3d->Execute(&inModel, modelKeypointVector, modelFeatureVector);
+		modelFeaturesAvailable = true;
 		}
-	outSuccess = EstimateModelPose();
+
+
+	VisualPointFeatureVector3DConstPtr sceneKeypointVector = NULL;
+	VisualPointFeatureVector3DConstPtr sceneFeatureVector = NULL;
+	featuresExtractor3d->Execute(inScene, sceneKeypointVector);
+	optionalFeaturesDescriptor3d->Execute(&inScene, sceneKeypointVector, sceneFeatureVector);
+
+	featuresMatcher3d->Execute(modelFeatureVector, sceneFeatureVector, &outPose, outSuccess);
 	}
 
 void FeaturesMatching3D::setup()
 	{
 	configurator.configure(configurationFilePath);
-	AssignDfnsAlias();
+	InstantiateDFNExecutors();
+	}
+
+void FeaturesMatching3D::modelInput(const asn1SccPointcloud& data)
+	{
+	modelFeaturesAvailable = false;
+	PointCloudModelLocalisationInterface::modelInput(data);
 	}
 
 /* --------------------------------------------------------------------------
@@ -114,87 +118,13 @@ void FeaturesMatching3D::setup()
  * --------------------------------------------------------------------------
  */
 
-void FeaturesMatching3D::AssignDfnsAlias()
+void FeaturesMatching3D::InstantiateDFNExecutors()
 	{
-	featuresExtractor3d = static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") );
-	optionalFeaturesDescriptor3d = static_cast<FeaturesDescription3DInterface*>( configurator.GetDfn("featuresDescriptor3d", true) );
-	featuresMatcher3d = static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") );
-
-	ASSERT(featuresExtractor3d != NULL, "DFPC Structure from motion error: featuresExtractor3d DFN configured incorrectly");
-	ASSERT(featuresMatcher3d != NULL, "DFPC Structure from motion error: featuresMatcher3d DFN configured incorrectly");
-
-	if (optionalFeaturesDescriptor3d != NULL)
-		{
-		sceneFeaturesVector = NewVisualPointFeatureVector3D();
-		modelFeaturesVector = NewVisualPointFeatureVector3D();
-		}
+	featuresExtractor3d = new FeaturesExtraction3DExecutor( static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") ) );
+	optionalFeaturesDescriptor3d = new FeaturesDescription3DExecutor( static_cast<FeaturesDescription3DInterface*>( configurator.GetDfn("featuresDescriptor3d", true) ) );
+	featuresMatcher3d = new FeaturesMatching3DExecutor( static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") ) );
 	}
 
-void FeaturesMatching3D::ExtractSceneFeatures()
-	{
-	featuresExtractor3d->pointcloudInput(*sceneCloud);
-	featuresExtractor3d->process();
-	Copy( featuresExtractor3d->featuresOutput(), *sceneKeypointsVector);
-	DEBUG_PRINT_TO_LOG("Extracted Scene Features", GetNumberOfPoints(*sceneKeypointsVector));
-	DEBUG_SHOW_3D_VISUAL_FEATURES(sceneCloud, sceneKeypointsVector);
-	}
-
-void FeaturesMatching3D::ExtractModelFeatures()
-	{
-	featuresExtractor3d->pointcloudInput(*lastModelCloud);
-	featuresExtractor3d->process();
-	Copy( featuresExtractor3d->featuresOutput(), *modelKeypointsVector);
-	DEBUG_PRINT_TO_LOG("Extracted Model Features", GetNumberOfPoints(*modelKeypointsVector));
-	DEBUG_SHOW_3D_VISUAL_FEATURES(lastModelCloud, modelKeypointsVector);
-	}
-
-void FeaturesMatching3D::DescribeSceneFeatures()
-	{
-	if (optionalFeaturesDescriptor3d != NULL)
-		{
-		optionalFeaturesDescriptor3d->pointcloudInput(*sceneCloud);
-		optionalFeaturesDescriptor3d->featuresInput(*sceneKeypointsVector);
-		optionalFeaturesDescriptor3d->process();
-		Copy( optionalFeaturesDescriptor3d->featuresOutput(), *sceneFeaturesVector);
-		DEBUG_PRINT_TO_LOG("Described Scene Features", GetNumberOfPoints(*sceneFeaturesVector));
-		}
-	else
-		{
-		sceneFeaturesVector = sceneKeypointsVector;
-		}
-	}
-
-void FeaturesMatching3D::DescribeModelFeatures()
-	{
-	if (optionalFeaturesDescriptor3d != NULL)
-		{
-		optionalFeaturesDescriptor3d->pointcloudInput(*lastModelCloud);
-		optionalFeaturesDescriptor3d->featuresInput(*modelKeypointsVector);
-		optionalFeaturesDescriptor3d->process();
-		Copy( optionalFeaturesDescriptor3d->featuresOutput(), *modelFeaturesVector);
-		DEBUG_PRINT_TO_LOG("Described Model Features", GetNumberOfPoints(*modelFeaturesVector));
-		}
-	else
-		{
-		modelFeaturesVector = modelKeypointsVector;
-		}
-	}
-
-bool FeaturesMatching3D::EstimateModelPose()
-	{
-	featuresMatcher3d->sourceFeaturesInput(*modelFeaturesVector);
-	featuresMatcher3d->sinkFeaturesInput(*sceneFeaturesVector);
-	featuresMatcher3d->process();
-	Copy( featuresMatcher3d->transformOutput(), outPose);
-	bool matching3dSuccess = featuresMatcher3d->successOutput();
-	DEBUG_PRINT_TO_LOG("Matching 3d", matching3dSuccess);
-	if(matching3dSuccess)
-		{
-		DEBUG_SHOW_POSE(&outPose);
-		DEBUG_PLACE_POINT_CLOUD(sceneCloud, lastModelCloud, &outPose);
-		}
-	return matching3dSuccess;
-	}
 }
 }
 }
