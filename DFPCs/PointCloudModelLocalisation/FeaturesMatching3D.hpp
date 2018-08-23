@@ -11,9 +11,9 @@
 #define POINTCLOUDMODELLOCALISATION_FEATURESMATCHING3D_HPP
 
 #include <PointCloudModelLocalisation/PointCloudModelLocalisationInterface.hpp>
-#include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
-#include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
-#include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
+#include <FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
+#include <FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
+#include <FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
 #include <DfpcConfigurator.hpp>
 #include <VisualPointFeatureVector3D.hpp>
 #include <PointCloud.hpp>
@@ -38,28 +38,40 @@ namespace PointCloudModelLocalisation
 		~FeaturesMatching3D();
 		void run();
 		void setup();
+		void modelInput(const asn1SccPointcloud& data);
 
 	private:
 		DfpcConfigurator configurator;
 
-		CDFF::DFN::FeaturesExtraction3DInterface* featuresExtractor3d;
-		CDFF::DFN::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
-		CDFF::DFN::FeaturesMatching3DInterface* featuresMatcher3d;
+		CDFF::DFN::FeaturesExtraction3DExecutor* featuresExtractor3d;
+		CDFF::DFN::FeaturesDescription3DExecutor* optionalFeaturesDescriptor3d;
+		CDFF::DFN::FeaturesMatching3DExecutor* featuresMatcher3d;
 
-		PointCloudWrapper::PointCloudPtr sceneCloud;
-		PointCloudWrapper::PointCloudPtr lastModelCloud;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr sceneKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr modelKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr sceneFeaturesVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr modelFeaturesVector;
+		bool modelFeaturesAvailable;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr modelFeatureVector;
 
-		void AssignDfnsAlias();
+		void InstantiateDFNExecutors();
 
 		void ExtractSceneFeatures();
 		void ExtractModelFeatures();
 		void DescribeSceneFeatures();
 		void DescribeModelFeatures();
 		bool EstimateModelPose();
+
+		/*
+		* Inline Methods
+		*
+		*/
+
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
 	};
 }
 }
