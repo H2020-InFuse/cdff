@@ -5,7 +5,9 @@
 
 #include "VisualOdometry_LAASInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 VisualOdometry_LAASInterface::VisualOdometry_LAASInterface()
@@ -32,5 +34,5 @@ const asn1SccTransformWithCovariance& VisualOdometry_LAASInterface::estimatedMot
 }
 
 }
-
+}
 /** @} */

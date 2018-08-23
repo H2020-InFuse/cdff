@@ -8,7 +8,9 @@
 
 #include "VisualOdometry_LAASInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
     /**
      * TODO Class documentation
@@ -24,6 +26,7 @@ namespace dfpc_ci
             virtual void run();
 
     };
+}
 }
 
 #endif // VISUALODOMETRY_LAAS_HPP

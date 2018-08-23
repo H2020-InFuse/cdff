@@ -10,7 +10,9 @@
 #include <Pointcloud.h>
 #include <TransformWithCovariance.h>
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
     /**
      * Localization based on LIDAR pointcloud and rover odometry.
@@ -47,6 +49,7 @@ namespace dfpc_ci
             asn1SccTransformWithCovariance outLidarPose;
 
     };
+}
 }
 
 #endif //  LIDARMAPBASEDLOCALIZATION_INTERFACE_HPP

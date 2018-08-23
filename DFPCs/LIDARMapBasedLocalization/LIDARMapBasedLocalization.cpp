@@ -5,7 +5,9 @@
 
 #include "LIDARMapBasedLocalization.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 LIDARMapBasedLocalization::LIDARMapBasedLocalization()
@@ -26,6 +28,7 @@ void LIDARMapBasedLocalization::run()
     // TODO DFPC running steps
 }
 
+}
 }
 
 /** @} */

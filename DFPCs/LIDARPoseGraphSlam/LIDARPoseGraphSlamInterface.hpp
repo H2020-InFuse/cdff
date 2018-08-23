@@ -10,7 +10,9 @@
 #include <Pointcloud.h>
 #include <TransformWithCovariance.h>
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
     /**
      * This processing compound simultaneously builds an environment model composed of a series of LIDAR point clouds and provides pose estimates for the rover.
@@ -47,6 +49,7 @@ namespace dfpc_ci
             asn1SccTransformWithCovariance outPoseEstimate;
 
     };
+}
 }
 
 #endif //  LIDARPOSEGRAPHSLAM_INTERFACE_HPP

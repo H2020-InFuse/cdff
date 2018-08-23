@@ -5,7 +5,9 @@
 
 #include "DEMBuildingInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 DEMBuildingInterface::DEMBuildingInterface()
@@ -26,11 +28,14 @@ void DEMBuildingInterface::estimatedPoseInput(const asn1SccTransformWithCovarian
     inEstimatedPose = data;
 }
 
-const asn1SccMap& DEMBuildingInterface::updatedMapOutput() const
-{
-    return outUpdatedMap;
-}
+/*
+*const asn1SccMap& DEMBuildingInterface::updatedMapOutput() const
+*{
+*    return outUpdatedMap;
+*}
+*/
 
+}
 }
 
 /** @} */

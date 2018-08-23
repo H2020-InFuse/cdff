@@ -5,7 +5,9 @@
 
 #include "VisualOdometry_LAAS.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 VisualOdometry_LAAS::VisualOdometry_LAAS()
@@ -26,6 +28,7 @@ void VisualOdometry_LAAS::run()
     // TODO DFPC running steps
 }
 
+}
 }
 
 /** @} */

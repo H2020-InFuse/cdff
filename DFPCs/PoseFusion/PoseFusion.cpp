@@ -5,7 +5,9 @@
 
 #include "PoseFusion.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 PoseFusion::PoseFusion()
@@ -26,6 +28,7 @@ void PoseFusion::run()
     // TODO DFPC running steps
 }
 
+}
 }
 
 /** @} */

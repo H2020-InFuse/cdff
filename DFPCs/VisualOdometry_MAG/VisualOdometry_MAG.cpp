@@ -5,7 +5,9 @@
 
 #include "VisualOdometry_MAG.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 VisualOdometry_MAG::VisualOdometry_MAG()
@@ -26,6 +28,7 @@ void VisualOdometry_MAG::run()
     // TODO DFPC running steps
 }
 
+}
 }
 
 /** @} */

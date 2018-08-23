@@ -10,7 +10,9 @@
 #include <Pointcloud.h>
 #include <TransformWithCovariance.h>
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
     /**
      * Digital elevation map building that replies on LIDAR or stereo Pointcloud and the estimated pose of the rover.
@@ -37,16 +39,17 @@ namespace dfpc_ci
              * Query value from output port "updatedMap"
              * @return updatedMap: Updated DEM
              */
-            virtual const asn1SccMap& updatedMapOutput() const;
+            //virtual const asn1SccMap& updatedMapOutput() const;
 
 
         protected:
 
             asn1SccPointcloud inLPC;
             asn1SccTransformWithCovariance inEstimatedPose;
-            asn1SccMap outUpdatedMap;
+            //asn1SccMap outUpdatedMap;
 
     };
+}
 }
 
 #endif //  DEMBUILDING_INTERFACE_HPP

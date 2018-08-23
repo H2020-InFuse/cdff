@@ -5,7 +5,9 @@
 
 #include "VisualSlamStereo.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 VisualSlamStereo::VisualSlamStereo()
@@ -26,6 +28,7 @@ void VisualSlamStereo::run()
     // TODO DFPC running steps
 }
 
+}
 }
 
 /** @} */

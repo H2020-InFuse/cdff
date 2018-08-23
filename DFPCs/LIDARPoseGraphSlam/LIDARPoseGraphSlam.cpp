@@ -5,7 +5,9 @@
 
 #include "LIDARPoseGraphSlam.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 LIDARPoseGraphSlam::LIDARPoseGraphSlam()
@@ -26,6 +28,7 @@ void LIDARPoseGraphSlam::run()
     // TODO DFPC running steps
 }
 
+}
 }
 
 /** @} */

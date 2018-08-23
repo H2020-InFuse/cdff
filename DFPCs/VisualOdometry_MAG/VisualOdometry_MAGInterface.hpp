@@ -10,7 +10,9 @@
 #include <TransformWithCovariance.h>
 #include <Frame.h>
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
     /**
      * Visual odometry which relies on wheel odometry and stereo images developed by Magellium.
@@ -53,6 +55,7 @@ namespace dfpc_ci
             asn1SccTransformWithCovariance outEstimateMotion;
 
     };
+}
 }
 
 #endif //  VISUALODOMETRY_MAG_INTERFACE_HPP

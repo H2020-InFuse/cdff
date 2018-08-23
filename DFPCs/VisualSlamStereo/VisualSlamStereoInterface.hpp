@@ -10,7 +10,9 @@
 #include <TransformWithCovariance.h>
 #include <Frame.h>
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
     /**
      * Simultaneous Localization and Mapping which relies on odometry, stereo images and depths images.
@@ -54,6 +56,9 @@ namespace dfpc_ci
 
     };
 }
+
+}
+
 
 #endif //  VISUALSLAMSTEREO_INTERFACE_HPP
 

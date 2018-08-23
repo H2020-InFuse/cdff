@@ -10,7 +10,9 @@
 #include <Frame.h>
 #include <TransformWithCovariance.h>
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
     /**
      * Visual odometry which relies on wheel odometry and stereo images developed by LAAS.
@@ -47,6 +49,7 @@ namespace dfpc_ci
             asn1SccTransformWithCovariance outEstimatedMotion;
 
     };
+}
 }
 
 #endif //  VISUALODOMETRY_LAAS_INTERFACE_HPP

@@ -5,7 +5,9 @@
 
 #include "DEMBuilding.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 DEMBuilding::DEMBuilding()
@@ -27,5 +29,5 @@ void DEMBuilding::run()
 }
 
 }
-
+}
 /** @} */

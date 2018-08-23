@@ -5,7 +5,9 @@
 
 #include "VisualSlamDepth.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 VisualSlamDepth::VisualSlamDepth()
@@ -26,6 +28,7 @@ void VisualSlamDepth::run()
     // TODO DFPC running steps
 }
 
+}
 }
 
 /** @} */

@@ -5,7 +5,9 @@
 
 #include "VisualSlamDepthInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 VisualSlamDepthInterface::VisualSlamDepthInterface()
@@ -36,6 +38,7 @@ const asn1SccTransformWithCovariance& VisualSlamDepthInterface::estimatedPoseOut
     return outEstimatedPose;
 }
 
+}
 }
 
 /** @} */

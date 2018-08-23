@@ -5,7 +5,9 @@
 
 #include "VisualOdometry_MAGInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 VisualOdometry_MAGInterface::VisualOdometry_MAGInterface()
@@ -36,6 +38,7 @@ const asn1SccTransformWithCovariance& VisualOdometry_MAGInterface::estimateMotio
     return outEstimateMotion;
 }
 
+}
 }
 
 /** @} */

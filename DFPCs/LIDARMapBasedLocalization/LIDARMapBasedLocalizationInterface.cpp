@@ -5,7 +5,9 @@
 
 #include "LIDARMapBasedLocalizationInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 LIDARMapBasedLocalizationInterface::LIDARMapBasedLocalizationInterface()
@@ -31,6 +33,7 @@ const asn1SccTransformWithCovariance& LIDARMapBasedLocalizationInterface::lidarP
     return outLidarPose;
 }
 
+}
 }
 
 /** @} */

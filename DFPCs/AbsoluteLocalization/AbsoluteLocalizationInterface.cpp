@@ -5,7 +5,9 @@
 
 #include "AbsoluteLocalizationInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 AbsoluteLocalizationInterface::AbsoluteLocalizationInterface()
@@ -39,6 +41,8 @@ void AbsoluteLocalizationInterface::orbitalImageInput(const asn1SccFrame& data)
 const asn1SccTransformWithCovariance& AbsoluteLocalizationInterface::finalPoseOutput() const
 {
     return outFinalPose;
+}
+
 }
 
 }

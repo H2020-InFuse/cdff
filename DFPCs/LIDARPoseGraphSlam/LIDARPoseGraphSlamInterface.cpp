@@ -5,7 +5,9 @@
 
 #include "LIDARPoseGraphSlamInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 LIDARPoseGraphSlamInterface::LIDARPoseGraphSlamInterface()
@@ -31,6 +33,7 @@ const asn1SccTransformWithCovariance& LIDARPoseGraphSlamInterface::poseEstimateO
     return outPoseEstimate;
 }
 
+}
 }
 
 /** @} */

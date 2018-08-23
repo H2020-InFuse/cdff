@@ -5,7 +5,9 @@
 
 #include "AbsoluteLocalization.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 AbsoluteLocalization::AbsoluteLocalization()
@@ -24,6 +26,8 @@ void AbsoluteLocalization::setup()
 void AbsoluteLocalization::run()
 {
     // TODO DFPC running steps
+}
+
 }
 
 }

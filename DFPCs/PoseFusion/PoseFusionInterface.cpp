@@ -5,7 +5,9 @@
 
 #include "PoseFusionInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 PoseFusionInterface::PoseFusionInterface()
@@ -36,6 +38,7 @@ const asn1SccTransformWithCovariance& PoseFusionInterface::estimatedPastPosesOut
     return outEstimatedPastPoses;
 }
 
+}
 }
 
 /** @} */

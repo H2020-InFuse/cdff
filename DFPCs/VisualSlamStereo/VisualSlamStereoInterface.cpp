@@ -5,7 +5,9 @@
 
 #include "VisualSlamStereoInterface.hpp"
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
 
 VisualSlamStereoInterface::VisualSlamStereoInterface()
@@ -34,6 +36,8 @@ void VisualSlamStereoInterface::roverPoseInput(const asn1SccTransformWithCovaria
 const asn1SccTransformWithCovariance& VisualSlamStereoInterface::estimatedPoseOutput() const
 {
     return outEstimatedPose;
+}
+
 }
 
 }

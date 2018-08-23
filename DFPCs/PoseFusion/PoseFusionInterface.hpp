@@ -9,7 +9,9 @@
 #include "DFPCCommonInterface.hpp"
 #include <TransformWithCovariance.h>
 
-namespace dfpc_ci
+namespace CDFF
+{
+namespace DFPC
 {
     /**
      * Integrate data corresponding to past poses, and to produce updated past poses after the application of a pose fusion process.
@@ -53,7 +55,7 @@ namespace dfpc_ci
 
     };
 }
-
+}
 #endif //  POSEFUSION_INTERFACE_HPP
 
 /** @} */
