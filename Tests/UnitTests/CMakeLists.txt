@@ -48,6 +48,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
     DFPCs/Reconstruction3D/BundleHistory.cpp
+    DFPCs/Reconstruction3D/PointCloudMap.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
 #[=[DFPCs/DfpcConfigurator.cpp]=]
