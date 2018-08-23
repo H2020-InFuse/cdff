@@ -28,16 +28,17 @@
  */
 #include "ObservedScene.hpp"
 #include "Errors/Assert.hpp"
-#include <PclPointCloudToPointCloudConverter.hpp>
 #include <Transform3DToEigenTransformConverter.hpp>
-#include <ConversionCache/ConversionCache.hpp>
 #include <pcl/filters/voxel_grid.h>
 #include <Visualizers/PclVisualizer.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
-using namespace Common;
-using namespace Converters;
 using namespace FrameWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
@@ -154,7 +155,7 @@ PointCloudConstPtr ObservedScene::GetPartialScene(Point3D origin, float radius)
 		PRINT_TO_LOG("Stored point cloud is too large, only a part will be used for matching", "");
 		}
 
-	return ConversionCache<pcl::PointCloud<pcl::PointXYZ>::ConstPtr, PointCloudConstPtr, PclPointCloudToPointCloudConverter>::Convert(partialScene);
+	return pointCloudConverter.Convert(partialScene);
 	}
 
 PointCloudWrapper::PointCloudConstPtr ObservedScene::GetPartialScene(float radius)
@@ -222,5 +223,7 @@ pcl::PointXYZ ObservedScene::TransformPoint(pcl::PointXYZ point, AffineTransform
 	return transformedPoint;
 	}
 
+}
+}
 }
 /** @} */

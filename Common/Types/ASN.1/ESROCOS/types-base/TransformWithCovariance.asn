@@ -4,22 +4,45 @@
 ----------------------------------------------------------------
 TransformWithCovariance-Types DEFINITIONS ::=
 BEGIN
-IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes Matrix4d FROM Eigen-Types Quaterniond FROM Eigen-Types Position FROM Pose-Types Covariance FROM Covariance-Types;
+IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes Matrix4d FROM Eigen-Types Quaterniond FROM Eigen-Types Position FROM Pose-Types Covariance FROM Covariance-Types Time FROM Time-Types;
 
 
 
 ---  Definition TRANSFORMWITHCOVARIANCE Starts 
 
----- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+--- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
 
----- END of typedefs defined in this module 
-TransformWithCovariance   ::= 
+transformWithCovariance-version T-UInt32 ::= 1
+
+TransformWithCovariance-Metadata ::= 
 SEQUENCE
 {
-translation				Position,
-orientation				Quaterniond,
-cov						Covariance
+    msgVersion	        T-UInt32,		            -- Message version
+    producerId          T-String,                           -- Name of the module producing the pose
+    dataEstimated       SEQUENCE(SIZE(7)) OF BOOLEAN,       -- Which variables in translation/orientation are estimated by the pose
+
+
+    parentFrameId  	T-String, 	                    -- Frame IN WHICH the Pose is represented
+    parentTime     	Time, 	 		            -- Timestamp AT WHICH we consider the Parent Frame
+    childFrameId   	T-String,		            -- Frame OF WHICH the Pose is represented
+    childTime      	Time			            -- Timestamp AT WHICH we consider the Child Frame
 }
 
+---- END of typedefs defined in this module 
+
+TransformWithCovariance-Data  ::= 
+SEQUENCE
+{
+    translation		Position,
+    orientation		Quaterniond,
+    cov			Covariance
+}
+
+TransformWithCovariance ::= 
+SEQUENCE
+{
+    metadata            TransformWithCovariance-Metadata,
+    data                TransformWithCovariance-Data
+}
 ---  Definition TRANSFORMWITHCOVARIANCE Ends 
 END

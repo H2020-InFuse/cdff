@@ -61,8 +61,8 @@ namespace DataGenerators {
 		void SetSecondCameraTranslation( float x, float y, float z);
 		void SetSecondCameraPose(PoseWrapper::Pose3DConstPtr secondCameraPose);
 		cv::Mat GetFundamentalMatrix();
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr GetSomeRandomCorrespondences(unsigned correspondencesNumber);
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr GetSomeRandomCorrespondences(unsigned correspondencesNumber, cv::Mat& pointCloud);
+		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr GetSomeRandomCorrespondences(unsigned correspondencesNumber, float noiseStandardDeviation = 0);
+		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr GetSomeRandomCorrespondences(unsigned correspondencesNumber, cv::Mat& pointCloud, float noiseStandardDeviation = 0);
 
 	/* --------------------------------------------------------------------
 	 * Protected

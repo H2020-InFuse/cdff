@@ -1,0 +1,101 @@
+- Name: DFNsChain
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudMapResolution: 0.01
+- Name: featureExtractor
+  Type: FeaturesExtraction2D
+  Implementation: OrbDetectorDescriptor
+  Parameters:
+  - Name: GeneralParameters
+    EdgeThreshold: 31
+    FastThreshold: 20
+    FirstLevel: 0
+    MaxFeaturesNumber: 500
+    LevelsNumber: 8
+    PatchSize: 31
+    ScaleFactor: 1.20
+    ScoreType: HarrisScore
+    SizeOfBrightnessTestSet: 2
+- Name: featuresMatcher
+  Type: FeaturesMatching2D
+  Implementation: FlannMatcher
+  Parameters:
+  - Name: GeneralParameters
+    DistanceThreshold: 0.02
+    MatcherMethod: 4
+    AcceptanceRatio: 0.75
+  - Name: LocalitySensitiveHashingParameters
+    TableNumber: 6
+    KeySize: 12
+    MultiProbeLevel: 1
+- Name: fundamentalMatrixComputer
+  Type: FundamentalMatrixComputation
+  Implementation: FundamentalMatrixRansac
+  Parameters:
+  - Name: GeneralParameters
+    OutlierThreshold: 1 
+    Confidence: 0.90
+- Name: cameraTransformEstimator
+  Type: CamerasTransformEstimation
+  Implementation: EssentialMatrixDecomposition
+  Parameters:
+  - Name: GeneralParameters
+    NumberOfTestPoints: 20
+  - Name: FirstCameraMatrix
+    FocalLengthX: 868.664
+    FocalLengthY: 868.505
+    PrinciplePointX: 519.775
+    PrinciplePointY: 383.36
+  - Name: SecondCameraMatrix
+    FocalLengthX: 867.226
+    FocalLengthY: 867.128
+    PrinciplePointX: 519.111
+    PrinciplePointY: 390.755
+- Name: reconstructor3D
+  Type: StereoReconstruction
+  Implementation: HirschmullerDisparityMapping
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudSamplingDensity: 0.1
+    UseFullScaleTwoPassAlgorithm: false
+    UseDisparityToDepthMap: false
+  - Name: Prefilter
+    Maximum: 25
+  - Name: Disparities
+    Minimum: 0
+    NumberOfIntervals: 256
+    UseMaximumDifference: true
+    MaximumDifference: 5
+    SpeckleRange: 22
+    SpeckleWindow: 300
+    SmoothnessParameter1: 600
+    SmoothnessParameter2: 2000
+  - Name: BlocksMatching
+    BlockSize: 15
+    UniquenessRatio: 1
+  - Name: DisparityToDepthMap
+    Element_0_0: 1
+    Element_0_1: 0
+    Element_0_2: 0
+    Element_0_3: -279.0498046875
+    Element_1_0: 0
+    Element_1_1: 1
+    Element_1_2: 0
+    Element_1_3: 29.868621826172
+    Element_2_0: 0
+    Element_2_1: 0
+    Element_2_2: 0
+    Element_2_3: -8192.8300337838
+    Element_3_0: 0
+    Element_3_1: 0
+    Element_3_2: 3.3436329786051
+    Element_3_3: -0
+  - Name: StereoCamera
+    LeftFocalLength: 868.664
+    LeftPrinciplePointX: 519.775
+    LeftPrinciplePointY: 383.36
+    Baseline: 0.09290672099999999
+  - Name: ReconstructionSpace
+    LimitX: 3.5
+    LimitY: 3.5
+    LimitZ: 3.5

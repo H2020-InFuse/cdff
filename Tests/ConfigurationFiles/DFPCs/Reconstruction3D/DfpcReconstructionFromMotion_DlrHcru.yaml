@@ -1,0 +1,75 @@
+- Name: DFNsChain
+  Parameters:
+  - Name: RightToLeftCameraPose
+    PositionX: -0.09290672099999999
+    PositionY: 0
+    PositionZ: 0
+    OrientationX: 0
+    OrientationY: 0
+    OrientationZ: 0
+    OrientationW: 1
+  - Name: GeneralParameters
+    PointCloudMapResolution: 0.01
+- Name: featureExtractor
+  Type: FeaturesExtraction2D
+  Implementation: OrbDetectorDescriptor
+  Parameters:
+  - Name: GeneralParameters
+    EdgeThreshold: 31
+    FastThreshold: 20
+    FirstLevel: 0
+    MaxFeaturesNumber: 500
+    LevelsNumber: 8
+    PatchSize: 31
+    ScaleFactor: 1.20
+    ScoreType: HarrisScore
+    SizeOfBrightnessTestSet: 2
+- Name: featuresMatcher
+  Type: FeaturesMatching2D
+  Implementation: FlannMatcher
+  Parameters:
+  - Name: GeneralParameters
+    DistanceThreshold: 0.02
+    MatcherMethod: 4
+    AcceptanceRatio: 0.75
+  - Name: LocalitySensitiveHashingParameters
+    TableNumber: 6
+    KeySize: 12
+    MultiProbeLevel: 1
+- Name: fundamentalMatrixComputer
+  Type: FundamentalMatrixComputation
+  Implementation: FundamentalMatrixRansac
+  Parameters:
+  - Name: GeneralParameters
+    OutlierThreshold: 1 
+    Confidence: 0.90
+- Name: cameraTransformEstimator
+  Type: CamerasTransformEstimation
+  Implementation: EssentialMatrixDecomposition
+  Parameters:
+  - Name: GeneralParameters
+    NumberOfTestPoints: 20
+  - Name: FirstCameraMatrix
+    FocalLengthX: 868.664
+    FocalLengthY: 868.505
+    PrinciplePointX: 519.775
+    PrinciplePointY: 383.36
+  - Name: SecondCameraMatrix
+    FocalLengthX: 867.226
+    FocalLengthY: 867.128
+    PrinciplePointX: 519.111
+    PrinciplePointY: 390.755
+- Name: reconstructor3D
+  Type: PointCloudReconstruction2DTo3D
+  Implementation: Triangulation
+  Parameters:
+  - Name: FirstCameraMatrix
+    FocalLengthX: 868.664
+    FocalLengthY: 868.505
+    PrinciplePointX: 519.775
+    PrinciplePointY: 383.36
+  - Name: SecondCameraMatrix
+    FocalLengthX: 867.226
+    FocalLengthY: 867.128
+    PrinciplePointX: 519.111
+    PrinciplePointY: 390.755

@@ -62,8 +62,8 @@ class ReconstructionTester
 		ReconstructionTester();
 		~ReconstructionTester();
 
-		void SetDfns(dfn_ci::FundamentalMatrixComputationInterface* fundamentalMatrixEstimator, 
-				dfn_ci::CamerasTransformEstimationInterface* poseEstimator, dfn_ci::PointCloudReconstruction2DTo3DInterface* reconstructor);
+		void SetDfns(CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixEstimator, 
+				CDFF::DFN::CamerasTransformEstimationInterface* poseEstimator, CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor);
 		void SetConfigurationFilePaths(std::string fundamentalMatrixEstimatorFilePath, std::string poseEstimatorConfigurationFilePath, std::string reconstructorConfigurationFilePath);
 		void SetInputFilePath(std::string inputCorrespodencesFilePath);
 		void ExecuteDfns();
@@ -93,9 +93,9 @@ class ReconstructionTester
 		bool poseEstimatorWasSuccessful;
 		PointCloudWrapper::PointCloudConstPtr outputPointCloud;
 
-		dfn_ci::FundamentalMatrixComputationInterface* fundamentalMatrixEstimator;
-		dfn_ci::CamerasTransformEstimationInterface* poseEstimator;
-		dfn_ci::PointCloudReconstruction2DTo3DInterface* reconstructor;
+		CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixEstimator;
+		CDFF::DFN::CamerasTransformEstimationInterface* poseEstimator;
+		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor;
 
 		bool dfnsWereLoaded;
 		bool inputCorrespondencesWereLoaded;

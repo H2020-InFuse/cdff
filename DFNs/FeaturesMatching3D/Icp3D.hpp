@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef ICP3D_HPP
-#define ICP3D_HPP
+#ifndef FEATURESMATCHING3D_ICP3D_HPP
+#define FEATURESMATCHING3D_ICP3D_HPP
 
 #include "FeaturesMatching3DInterface.hpp"
 
@@ -18,7 +18,11 @@
 #include <SupportTypes.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesMatching3D
 {
 	/**
 	 * 3D feature matching using ICP (provided by PCL): detect and find the
@@ -79,7 +83,9 @@ namespace dfn_ci
 				Converters::SupportTypes::PointCloudWithFeatures cloud);
 	};
 }
+}
+}
 
-#endif // ICP3D_HPP
+#endif // FEATURESMATCHING3D_ICP3D_HPP
 
 /** @} */

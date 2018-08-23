@@ -44,8 +44,6 @@ Pose3DSharedPtr NewSharedPose3D()
 
 void Reset(Pose3D& pose)
 {
-	pose.pos.nCount = 3;
-	pose.orient.nCount = 4;
 	SetPosition(pose, 0, 0, 0);
 	SetOrientation(pose, 0, 0, 0, 0);
 }
@@ -174,7 +172,6 @@ Pose2DSharedPtr NewSharedPose2D()
 
 void Reset(Pose2D& pose)
 {
-	pose.position.nCount = 2;
 	SetPosition(pose, 0, 0);
 	SetOrientation(pose, 0);
 }

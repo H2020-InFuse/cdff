@@ -15,7 +15,7 @@
 #include <KFCorrection/KalmanCorrector.hpp>
 #include <iostream>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::KFCorrection;
 
 enum correctedState {ORIENTATION, POSITION};
 void printUpdated(const asn1SccRigidBodyState& output, correctedState state)

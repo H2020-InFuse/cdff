@@ -28,8 +28,7 @@
  */
 #include "Reconstruction3D.hpp"
 
-using namespace dfn_ci;
-using namespace Common;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace PointCloudWrapper;
@@ -44,7 +43,7 @@ using namespace PoseWrapper;
  * --------------------------------------------------------------------------
  */
 Reconstruction3DTestInterface::Reconstruction3DTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, 
-	dfpc_ci::Reconstruction3DInterface* reconstructor) : PerformanceTestInterface(folderPath, baseConfigurationFileName, performanceMeasuresFileName)
+	CDFF::DFPC::Reconstruction3DInterface* reconstructor) : PerformanceTestInterface(folderPath, baseConfigurationFileName, performanceMeasuresFileName)
 	{
 	this->reconstructor = reconstructor;
 	SetDfpc(reconstructor);
@@ -165,7 +164,6 @@ Reconstruction3DTestInterface::MeasuresMap Reconstruction3DTestInterface::Extrac
 		std::stringstream outputFilePath;
 		outputFilePath << outputCloudFileBaseName << testId << ".ply";
 
-		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 		pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclPointCloud = pointCloudConverter.Convert(pointCloud);
 
 		pcl::PLYWriter writer;

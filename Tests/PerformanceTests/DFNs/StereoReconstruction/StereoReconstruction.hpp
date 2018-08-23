@@ -33,10 +33,6 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <MatToFrameConverter.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
@@ -51,7 +47,7 @@ class StereoReconstructionTestInterface : public PerformanceTestInterface
 	 */
 	public:
 		StereoReconstructionTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, 
-			dfn_ci::StereoReconstructionInterface* reconstructor);
+			CDFF::DFN::StereoReconstructionInterface* reconstructor);
 		~StereoReconstructionTestInterface();
 
 		void SetImageFilesPath(std::string baseFolderPath, std::string imagesListFileName, bool useReferenceDisparity);
@@ -86,7 +82,7 @@ class StereoReconstructionTestInterface : public PerformanceTestInterface
 		std::string outputCloudFileBaseName;
 		std::string outputCloudFileExtension;
 
-		dfn_ci::StereoReconstructionInterface* reconstructor;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor;
 		void ReadImagesList(bool useReferenceDisparity);
 		void SetReferenceDisparity(std::string referenceDisparityFilePath);
 

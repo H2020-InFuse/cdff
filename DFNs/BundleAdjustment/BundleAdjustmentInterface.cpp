@@ -5,7 +5,9 @@
 
 #include "BundleAdjustmentInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 BundleAdjustmentInterface::BundleAdjustmentInterface()
@@ -41,6 +43,12 @@ bool BundleAdjustmentInterface::successOutput() const
     return outSuccess;
 }
 
+float BundleAdjustmentInterface::errorOutput() const
+{
+    return outError;
+}
+
+}
 }
 
 /** @} */

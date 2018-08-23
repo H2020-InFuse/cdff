@@ -22,7 +22,11 @@ using namespace PoseWrapper;
 using namespace BaseTypesWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace BundleAdjustment
 {
 
 CeresAdjustment::CeresAdjustment()
@@ -149,7 +153,7 @@ bool CeresAdjustment::StereoImagePointCostFunctor::operator()(const T* const lef
 	rightProjectedPoint[1] = rightFy * transformedPoint[1] + rightPy * transformedPoint[2];
 	rightProjectedPoint[2] = transformedPoint[2];
 
-	residual[0] = (transformedPoint[2] > TOLERANCE_W) ? T(0) : TOLERANCE_COST_FACTOR*(transformedPoint[2] - TOLERANCE_W);
+	residual[0] = (transformedPoint[2] > TOLERANCE_W) ? T(0) : TOLERANCE_COST_FACTOR*(TOLERANCE_W - transformedPoint[2]);
 	residual[1] = leftProjectedPoint[0] / leftProjectedPoint[2] - leftObservedX;
 	residual[2] = leftProjectedPoint[1] / leftProjectedPoint[2] - leftObservedY;
 	residual[3] = rightProjectedPoint[0] / rightProjectedPoint[2] - rightObservedX;
@@ -230,7 +234,7 @@ std::vector<cv::Mat> CeresAdjustment::SolveBundleAdjustment(cv::Mat measurementM
 		}
 
 	//Check convergence
-	for (int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+	/*for (int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 		{
 		cv::Mat point3d = (cv::Mat_<float>(4, 1, CV_32FC1) << mutablePoints3dStructure.at(pointIndex)[0], mutablePoints3dStructure.at(pointIndex)[1], mutablePoints3dStructure.at(pointIndex)[2], 1);
 		for(int imageIndex = 0; imageIndex < numberOfImages; imageIndex++)
@@ -247,15 +251,20 @@ std::vector<cv::Mat> CeresAdjustment::SolveBundleAdjustment(cv::Mat measurementM
 				{
 				success = false;
 				return projectionMatricesList;
-				}	
+				}
 			}
 		}
-	success = true;
+	success = true;*/
+	float numberOfResiduals = static_cast<float>(5 * numberOfPoints * numberOfImages/2);
+	outError = summary.final_cost / numberOfResiduals;
+	success = outError < parameters.squaredPixelErrorTolerance;
 	return projectionMatricesList;
 	}
 
 void CeresAdjustment::ConvertProjectionMatricesListToPosesSequence(std::vector<cv::Mat> projectionMatricesList, PoseWrapper::Poses3DSequence& posesSequence)
 	{
+	Clear(posesSequence);
+	DEBUG_PRINT_TO_LOG("Projection matrices list size", projectionMatricesList.size() );
 	for(int imageIndex = 0; imageIndex < projectionMatricesList.size(); imageIndex++)
 		{
 		cv::Mat projectionMatrix = projectionMatricesList.at(imageIndex);
@@ -275,6 +284,7 @@ void CeresAdjustment::ConvertProjectionMatricesListToPosesSequence(std::vector<c
 
 		AddPose(posesSequence, newPose);	
 		}
+	DEBUG_PRINT_TO_LOG("pose vector size", GetNumberOfPoses(posesSequence) );
 	}
 
 void CeresAdjustment::InitializePoints(std::vector<Point3d>& pointCloud, cv::Mat measurementMatrix)
@@ -486,6 +496,8 @@ cv::Mat CeresAdjustment::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix
 
 	return cvCameraMatrix;
 	}
+}
+}
 }
 
 /** @} */

@@ -3,15 +3,17 @@
  * @{
  */
 
-#ifndef CAMERASTRANSFORMESTIMATION_INTERFACE_HPP
-#define CAMERASTRANSFORMESTIMATION_INTERFACE_HPP
+#ifndef CAMERASTRANSFORMESTIMATION_CAMERASTRANSFORMESTIMATIONINTERFACE_HPP
+#define CAMERASTRANSFORMESTIMATION_CAMERASTRANSFORMESTIMATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Pose.h>
 #include <CorrespondenceMap2D.h>
 #include <Eigen.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that estimates the geometric transformation between two cameras
@@ -70,7 +72,8 @@ namespace dfn_ci
             bool outSuccess;
     };
 }
+}
 
-#endif // CAMERASTRANSFORMESTIMATION_INTERFACE_HPP
+#endif // CAMERASTRANSFORMESTIMATION_CAMERASTRANSFORMESTIMATIONINTERFACE_HPP
 
 /** @} */

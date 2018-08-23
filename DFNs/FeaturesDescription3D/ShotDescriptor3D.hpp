@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef SHOTDESCRIPTOR3D_HPP
-#define SHOTDESCRIPTOR3D_HPP
+#ifndef FEATURESDESCRIPTION3D_SHOTDESCRIPTOR3D_HPP
+#define FEATURESDESCRIPTION3D_SHOTDESCRIPTOR3D_HPP
 
 #include "FeaturesDescription3DInterface.hpp"
 
@@ -27,7 +27,11 @@
 #include <stdlib.h>
 #include <string>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesDescription3D
 {
 	/**
 	 * Computation of descriptors for input 3D keypoints using SHOT (provided
@@ -131,7 +135,9 @@ namespace dfn_ci
 			bool IsNormalsCloudValid(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, pcl::PointCloud<pcl::Normal>::ConstPtr normalsCloud);
 	};
 }
+}
+}
 
-#endif // SHOTDESCRIPTOR3D_HPP
+#endif // FEATURESDESCRIPTION3D_SHOTDESCRIPTOR3D_HPP
 
 /** @} */

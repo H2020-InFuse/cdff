@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef ESSENTIALMATRIXDECOMPOSITION_HPP
-#define ESSENTIALMATRIXDECOMPOSITION_HPP
+#ifndef CAMERASTRANSFORMESTIMATION_ESSENTIALMATRIXDECOMPOSITION_HPP
+#define CAMERASTRANSFORMESTIMATION_ESSENTIALMATRIXDECOMPOSITION_HPP
 
 #include "CamerasTransformEstimationInterface.hpp"
 
@@ -21,7 +21,11 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace CamerasTransformEstimation
 {
 
 	/**
@@ -101,7 +105,9 @@ namespace dfn_ci
 			void ValidateInputs(cv::Mat fundamentalMatrix, cv::Mat CorrespondenceMap);
 	};
 }
+}
+}
 
-#endif // ESSENTIALMATRIXDECOMPOSITION_HPP
+#endif // CAMERASTRANSFORMESTIMATION_ESSENTIALMATRIXDECOMPOSITION_HPP
 
 /** @} */

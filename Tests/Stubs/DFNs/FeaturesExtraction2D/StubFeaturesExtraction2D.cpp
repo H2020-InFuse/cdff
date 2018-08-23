@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  * Implementation of the StubFeaturesExtraction2D class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -29,9 +29,12 @@
 #include "StubFeaturesExtraction2D.hpp"
 #include "Errors/Assert.hpp"
 
-namespace dfn_ci {
-
-
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesExtraction2D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -49,22 +52,19 @@ StubFeaturesExtraction2D::~StubFeaturesExtraction2D()
 
 	}
 
-void StubFeaturesExtraction2D::configure() 
+void StubFeaturesExtraction2D::configure()
 	{
 
 	}
 
 
-void StubFeaturesExtraction2D::process() 
+void StubFeaturesExtraction2D::process()
 	{
 
 	}
-
-
-
 
 }
-
+}
+}
 
 /** @} */
-

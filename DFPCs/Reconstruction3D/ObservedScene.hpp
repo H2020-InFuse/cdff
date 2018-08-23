@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This is an example implementation of the Map interface for the Reconstruction3D DFPC.
  *  
@@ -20,8 +20,8 @@
  * @{
  */
 
-#ifndef OBSERVED_SCENE_HPP
-#define OBSERVED_SCENE_HPP
+#ifndef RECONSTRUCTION3D_OBSERVEDSCENE_HPP
+#define RECONSTRUCTION3D_OBSERVEDSCENE_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -35,8 +35,14 @@
 #include <opencv2/core/core.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
+#include <PclPointCloudToPointCloudConverter.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -88,6 +94,7 @@ namespace dfpc_ci {
 		std::vector<FrameNode> framesMap;
 		unsigned referenceFrameId;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr scene;	
+		Converters::PclPointCloudToPointCloudConverter pointCloudConverter;
 
 		AffineTransform IdentityTransform();
 		AffineTransform Convert(PoseWrapper::Transform3DConstPtr transform);
@@ -97,6 +104,9 @@ namespace dfpc_ci {
 
     };
 }
-#endif
-/* Map.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_OBSERVEDSCENE_HPP
+
 /** @} */

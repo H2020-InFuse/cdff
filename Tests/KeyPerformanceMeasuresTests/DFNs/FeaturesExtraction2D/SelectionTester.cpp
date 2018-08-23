@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the SelectionTester class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -31,7 +31,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
@@ -49,7 +49,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-SelectionTester::SelectionTester(std::string configurationFilePath, dfn_ci::FeaturesExtraction2DInterface* dfn) 
+SelectionTester::SelectionTester(std::string configurationFilePath, CDFF::DFN::FeaturesExtraction2DInterface* dfn)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;
@@ -135,7 +135,7 @@ void SelectionTester::LoadInputImage()
 	cv::Mat cvImage = cv::imread(inputImageFilePath, CV_LOAD_IMAGE_COLOR);
 	ASSERT(cvImage.cols > 0 && cvImage.rows >0, "Error: Loaded input image is empty");
 
-	DELETE_IF_NOT_NULL(inputFrame);	
+	DELETE_IF_NOT_NULL(inputFrame);
 	inputFrame = frameConverter.Convert(cvImage);
 	}
 

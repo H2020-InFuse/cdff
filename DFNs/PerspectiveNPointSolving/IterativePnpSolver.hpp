@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef ITERATIVEPNPSOLVER_HPP
-#define ITERATIVEPNPSOLVER_HPP
+#ifndef PERSPECTIVENPOINTSOLVING_ITERATIVEPNPSOLVER_HPP
+#define PERSPECTIVENPOINTSOLVING_ITERATIVEPNPSOLVER_HPP
 
 #include "PerspectiveNPointSolvingInterface.hpp"
 
@@ -19,7 +19,11 @@
 
 #include <opencv2/core/core.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace PerspectiveNPointSolving
 {
 	/**
 	 * Iterative Perspective-n-Point algorithm (provided by OpenCV).
@@ -66,7 +70,9 @@ namespace dfn_ci
 			void ValidateInputs(cv::Mat points, cv::Mat projections);
 	};
 }
+}
+}
 
-#endif // ITERATIVEPNPSOLVER_HPP
+#endif // PERSPECTIVENPOINTSOLVING_ITERATIVEPNPSOLVER_HPP
 
 /** @} */

@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef FUNDAMENTALMATRIXRANSAC_HPP
-#define FUNDAMENTALMATRIXRANSAC_HPP
+#ifndef FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXRANSAC_HPP
+#define FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXRANSAC_HPP
 
 #include "FundamentalMatrixComputationInterface.hpp"
 
@@ -21,7 +21,11 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FundamentalMatrixComputation
 {
 	/**
 	 * Estimation of the fundamental matrix of a camera pair from a set of 2D
@@ -35,6 +39,9 @@ namespace dfn_ci
 	 * @param confidence
 	 *        Lowest accepted value for the probability that a RANSAC model
 	 *        represents the set of points defined by the set of keypoint pairs.
+	 * @param maximumSymmetricEpipolarDistance
+	 *	  Lowest accepted symmetric epipolar distance error to accept
+	 *	  a correspondence as an inlier.
 	 */
 	class FundamentalMatrixRansac : public FundamentalMatrixComputationInterface
 	{
@@ -52,6 +59,7 @@ namespace dfn_ci
 			{
 				double outlierThreshold; // in pixels
 				double confidence;       // probability value (in [0,1])
+				double maximumSymmetricEpipolarDistance; //in pixels
 			};
 
 			Helpers::ParametersListHelper parametersHelper;
@@ -65,11 +73,13 @@ namespace dfn_ci
 				const std::vector<cv::Point2d>& firstImagePointsVector,
 				const std::vector<cv::Point2d>& secondImagePointsVector,
 				cv::Mat fundamentalMatrix);
+			void ComputeInliers(cv::Mat fundamentalMatrix);
 			void Convert(
 				CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap,
 				std::vector<cv::Point2d>& firstImagePointsVector,
 				std::vector<cv::Point2d>& secondImagePointsVector);
 			MatrixWrapper::Matrix3dConstPtr Convert(cv::Mat matrix);
+
 
 			void ValidateParameters();
 			void ValidateInputs(
@@ -77,7 +87,9 @@ namespace dfn_ci
 				const std::vector<cv::Point2d>& secondImagePointsVector);
 	};
 }
+}
+}
 
-#endif // FUNDAMENTALMATRIXRANSAC_HPP
+#endif // FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXRANSAC_HPP
 
 /** @} */

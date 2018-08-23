@@ -30,7 +30,7 @@
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <MatToFrameConverter.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesDescription2D;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
@@ -46,7 +46,7 @@ TEST_CASE( "Call to process (ORB descriptor)", "[process]" )
 	// Prepare input data
 	cv::Mat inputImage(500, 500, CV_8UC3, cv::Scalar(100, 100, 100));
 	FrameConstPtr inputFrame = MatToFrameConverter().Convert(inputImage);
-	VisualPointFeatureVector2DConstPtr inputFeatures = new VisualPointFeatureVector2D;
+	VisualPointFeatureVector2DConstPtr inputFeatures = NewVisualPointFeatureVector2D();
 
 	// Instantiate DFN
 	OrbDescriptor* orb = new OrbDescriptor;

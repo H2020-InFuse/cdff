@@ -44,13 +44,10 @@
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclNormalsCloudConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector3DConverter.hpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/EigenTransformToTransform3DConverter.hpp>
+#include <FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
+#include <FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
+#include <FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
+
 #include <MatToVisualPointFeatureVector3DConverter.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
@@ -60,6 +57,7 @@
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>
 #include <PerformanceTests/Aggregator.hpp>
+#include <Pose.hpp>
 
 #include <Eigen/Geometry>
 
@@ -68,9 +66,9 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 	public:
 		struct DFNsSet
 			{
-			dfn_ci::FeaturesExtraction3DInterface* extractor;
-			dfn_ci::FeaturesDescription3DInterface* descriptor;
-			dfn_ci::FeaturesMatching3DInterface* matcher;
+			CDFF::DFN::FeaturesExtraction3DInterface* extractor;
+			CDFF::DFN::FeaturesDescription3DInterface* descriptor;
+			CDFF::DFN::FeaturesMatching3DInterface* matcher;
 			};
 
 		DetectionDescriptionMatching3DTestInterface(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName, DFNsSet dfnsSet);
@@ -90,16 +88,15 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 
 		PointCloudWrapper::PointCloudConstPtr scenePointCloud;
 		PointCloudWrapper::PointCloudConstPtr modelPointCloud;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneFeaturesVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelFeaturesVector;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr sceneFeatureVector;
 		bool icpSuccess;
-		PoseWrapper::Pose3DConstPtr modelPoseInScene;
+		PoseWrapper::Pose3DPtr modelPoseInScene;
+		int numberOfSceneKeypoints;
+		int numberOfModelKeypoints;
 
-		dfn_ci::FeaturesExtraction3DInterface* extractor;
-		dfn_ci::FeaturesDescription3DInterface* descriptor;
-		dfn_ci::FeaturesMatching3DInterface* matcher;
+		CDFF::DFN::FeaturesExtraction3DExecutor* extractor;
+		CDFF::DFN::FeaturesDescription3DExecutor* descriptor;
+		CDFF::DFN::FeaturesMatching3DExecutor* matcher;
 
 		Aggregator* groundPositionDistanceAggregator;
 		Aggregator* groundOrientationDistanceAggregator;

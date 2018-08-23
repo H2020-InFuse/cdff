@@ -4,13 +4,16 @@
 ----------------------------------------------------------------
 Point-Types DEFINITIONS ::=
 BEGIN
-IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes Vector3d FROM Eigen-Types;
+IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes Vector3d, Vector2d FROM Eigen-Types;
 
 
 ---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
 
 ---- Type: Point defined as Vector3d translated according to configuration
 Point ::= Vector3d
+
+Point2D ::= Vector2d
+Point3D ::= Vector3d
 
 ---- END of typedefs defined in this module 
 END

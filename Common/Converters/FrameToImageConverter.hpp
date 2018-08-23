@@ -6,22 +6,22 @@
 */
 
 /*!
- * @file CacheHandler.hpp
- * @date 21/11/2017
- * @author Alessandro Bianco
+ * @file FrameToImageConverter.hpp
+ * @date 02/08/2018
+ * @author Vincent Bissonnette
  */
 
 /*!
- * @addtogroup Stubs
+ * @addtogroup Converters
  * 
- *  This is a stub for the cache handler. It always says that the conversion was not previously computed.
+ *  This is the class for type conversion from Image to Image.
  *  
  *
  * @{
  */
 
-#ifndef STUB_CACHE_HANDLER
-#define STUB_CACHE_HANDLER
+#ifndef FRAME_TO_IMAGE_CONVERTER_HPP
+#define FRAME_TO_IMAGE_CONVERTER_HPP
 
 
 /* --------------------------------------------------------------------------
@@ -30,9 +30,10 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <ConversionCache/CacheHandler.hpp>
+#include <Frame.hpp>
+#include <Image.hpp>
 
-namespace Stubs {
+namespace Converters {
 
 /* --------------------------------------------------------------------------
  *
@@ -40,25 +41,15 @@ namespace Stubs {
  *
  * --------------------------------------------------------------------------
  */
-template<class FromType, class ToType>
-class CacheHandler : public Common::CacheHandler<FromType, ToType>
+class FrameToImageConverter
 	{
-
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		bool Find(const FromType& from, ToType& to)
-			{
-
-			return false;
-			}
-		
-		void Insert(const FromType& from, const ToType& to)
-			{
-
-			}
+        virtual const ImageWrapper::ImageConstPtr Convert(const FrameWrapper::FrameConstPtr& frame);
+        const ImageWrapper::ImageSharedConstPtr ConvertShared(const FrameWrapper::FrameSharedConstPtr& frame);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -69,14 +60,14 @@ class CacheHandler : public Common::CacheHandler<FromType, ToType>
 	/* --------------------------------------------------------------------
 	 * Private
 	 * --------------------------------------------------------------------
-	 */
+	 */	
 	private:
-
+    const ImageWrapper::ImageMode ConvertFrameModeToImageMode(const FrameWrapper::FrameMode& frameMode);
 	};
 
 }
 
 #endif
 
-/* CacheHandler.hpp */
+/* FrameToImageConverter.hpp */
 /** @} */

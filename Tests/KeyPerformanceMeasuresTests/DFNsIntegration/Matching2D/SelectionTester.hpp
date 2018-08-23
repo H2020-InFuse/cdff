@@ -66,7 +66,7 @@ class SelectionTester
 		SelectionTester();
 		~SelectionTester();
 
-		void SetDfns(dfn_ci::FeaturesDescription2DInterface* descriptor, dfn_ci::FeaturesMatching2DInterface* matcher);
+		void SetDfns(CDFF::DFN::FeaturesDescription2DInterface* descriptor, CDFF::DFN::FeaturesMatching2DInterface* matcher);
 		void SetConfigurationFilePaths(std::string featuresDescriptorConfigurationFilePath, std::string featuresMatcherConfigurationFilePath);
 		void SetInputFilesPaths(std::string sourceImageFilePath, std::string sinkImageFilePath, std::string correspondencesImageFilePath);
 		void ExecuteDfns();
@@ -97,8 +97,8 @@ class SelectionTester
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr referenceCorrespondenceMap;
 
 		Converters::MatToFrameConverter frameConverter;
-		dfn_ci::FeaturesDescription2DInterface* descriptor;
-		dfn_ci::FeaturesMatching2DInterface* matcher;
+		CDFF::DFN::FeaturesDescription2DInterface* descriptor;
+		CDFF::DFN::FeaturesMatching2DInterface* matcher;
 
 		bool dfnsWereLoaded;
 		bool inputImagesWereLoaded;

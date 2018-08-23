@@ -5,7 +5,9 @@
 
 #include "FeaturesMatching2DInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FeaturesMatching2DInterface::FeaturesMatching2DInterface()
@@ -31,6 +33,7 @@ const asn1SccCorrespondenceMap2D& FeaturesMatching2DInterface::matchesOutput() c
     return outMatches;
 }
 
+}
 }
 
 /** @} */

@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef HARRISDETECTOR2D_HPP
-#define HARRISDETECTOR2D_HPP
+#ifndef FEATURESEXTRACTION2D_HARRISDETECTOR2D_HPP
+#define FEATURESEXTRACTION2D_HARRISDETECTOR2D_HPP
 
 #include "FeaturesExtraction2DInterface.hpp"
 #include <Frame.hpp>
@@ -20,7 +20,11 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesExtraction2D
 {
 	/**
 	 * Extraction of keypoints in a 2D image using Harris-Stephens Corner
@@ -91,7 +95,9 @@ namespace dfn_ci
 			void Configure(const YAML::Node& configurationNode);
 	};
 }
+}
+}
 
-#endif // HARRISDETECTOR2D_HPP
+#endif // FEATURESEXTRACTION2D_HARRISDETECTOR2D_HPP
 
 /** @} */

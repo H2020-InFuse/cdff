@@ -32,8 +32,9 @@
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfpc_ci;
-using namespace dfn_ci;
+using namespace CDFF::DFPC;
+using namespace CDFF::DFN::ImageFiltering;
+using namespace CDFF::DFN::FeaturesDescription3D;
 
 /* --------------------------------------------------------------------------
  *

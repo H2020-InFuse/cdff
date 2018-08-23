@@ -6,22 +6,23 @@
 */
 
 /*!
- * @file CacheHandler.hpp
- * @date 20/11/2017
+ * @file MatToCorrespondenceMaps3DSequenceConverter.hpp
+ * @date 24/07/2018
  * @author Alessandro Bianco
  */
 
 /*!
- * @addtogroup Common
+ * @addtogroup Converters
  * 
- *  This is the class for Handling the cache. It is supposed to manage the pairs of previous conversions.
- *  This is a template class, it depends on the origin type, and then end type.
+ *  This is the class for type conversion from Measurement opencv matrix to CorrespondenceMapsSequence.
+ *  
  *
  * @{
  */
 
-#ifndef CACHE_HANDLER_HPP
-#define CACHE_HANDLER_HPP
+#ifndef MAT_TO_CORRESPONDENCE_MAPS_3D_SEQUENCE_CONVERTER
+#define MAT_TO_CORRESPONDENCE_MAPS_3D_SEQUENCE_CONVERTER
+
 
 /* --------------------------------------------------------------------------
  *
@@ -29,11 +30,10 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <Errors/Assert.hpp>
+#include <CorrespondenceMaps3DSequence.hpp>
+#include <opencv2/core/core.hpp>
 
-
-
-namespace Common {
+namespace Converters {
 
 /* --------------------------------------------------------------------------
  *
@@ -41,35 +41,15 @@ namespace Common {
  *
  * --------------------------------------------------------------------------
  */
-template<class FromType, class ToType>
-class CacheHandler
+class MatToCorrespondenceMaps3DSequenceConverter
 	{
 	/* --------------------------------------------------------------------
 	 * Public
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		CacheHandler()
-			{
-
-			}
-
-		virtual ~CacheHandler()
-			{
-
-			}
-
-		virtual bool Find(const FromType& from, ToType& to)
-			{
-			ASSERT(false, "Find method of cache handler was not implemented");
-			return false;
-			}
-		
-		virtual void Insert(const FromType& from, const ToType& to)
-			{
-			ASSERT(false, "Insert method of cache handler was not implemented");
-			ASSERT(false, "Write a test to make sure that a this method creates a copy of the shared pointers, otherwise the objects will be eventually deleted");
-			}
+		virtual CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequenceConstPtr Convert(const cv::Mat&  measurementMatrix);
+		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequenceSharedConstPtr ConvertShared(const cv::Mat&  measurementMatrix);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -80,15 +60,15 @@ class CacheHandler
 	/* --------------------------------------------------------------------
 	 * Private
 	 * --------------------------------------------------------------------
-	 */
+	 */	
 	private:
-	
-	};
+		static const int MAXIMUM_NUMBER_OF_CLOUDS = 8;
 
+	};
 
 }
 
 #endif
 
-/* CacheHandler.hpp */
+/* MatToCorrespondenceMaps3DSequenceConverter.hpp */
 /** @} */

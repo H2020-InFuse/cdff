@@ -31,7 +31,7 @@
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesExtraction3D;
 
 /* --------------------------------------------------------------------------
  *

@@ -32,6 +32,7 @@
 #include <ctime>
 #include <Errors/Assert.hpp>
 #include <BaseTypes.hpp>
+#include <random>
 
 using namespace CorrespondenceMap2DWrapper;
 using namespace BaseTypesWrapper;
@@ -156,14 +157,17 @@ cv::Mat CameraPair::GetFundamentalMatrix()
 	return fundamentalMatrix;
 	}
 
-CorrespondenceMap2DConstPtr CameraPair::GetSomeRandomCorrespondences(unsigned correspondencesNumber)
+CorrespondenceMap2DConstPtr CameraPair::GetSomeRandomCorrespondences(unsigned correspondencesNumber, float noiseStandardDeviation)
 	{
 	cv::Mat pointCloud;
-	return GetSomeRandomCorrespondences(correspondencesNumber, pointCloud);
+	return GetSomeRandomCorrespondences(correspondencesNumber, pointCloud, noiseStandardDeviation);
 	}
 
-CorrespondenceMap2DConstPtr CameraPair::GetSomeRandomCorrespondences(unsigned correspondencesNumber, cv::Mat& pointCloud)
+CorrespondenceMap2DConstPtr CameraPair::GetSomeRandomCorrespondences(unsigned correspondencesNumber, cv::Mat& pointCloud, float noiseStandardDeviation)
 	{
+	std::default_random_engine generator;
+	std::normal_distribution<double> distribution(0.0, noiseStandardDeviation);
+
 	const double EPSILON = 0.001;
 	PrepareCameraPair();
 	
@@ -189,10 +193,10 @@ CorrespondenceMap2DConstPtr CameraPair::GetSomeRandomCorrespondences(unsigned co
 
 		Point2D source, sink;
 
-		source.x = firstPoint2d.at<float>(0, 0) / firstPoint2d.at<float>(2, 0);
-		source.y = firstPoint2d.at<float>(1, 0) / firstPoint2d.at<float>(2, 0);
-		sink.x = secondPoint2d.at<float>(0, 0) / secondPoint2d.at<float>(2, 0);
-		sink.y = secondPoint2d.at<float>(1, 0) / secondPoint2d.at<float>(2, 0);
+		source.x = firstPoint2d.at<float>(0, 0) / firstPoint2d.at<float>(2, 0) + distribution(generator);
+		source.y = firstPoint2d.at<float>(1, 0) / firstPoint2d.at<float>(2, 0) + distribution(generator);
+		sink.x = secondPoint2d.at<float>(0, 0) / secondPoint2d.at<float>(2, 0) + distribution(generator);
+		sink.y = secondPoint2d.at<float>(1, 0) / secondPoint2d.at<float>(2, 0) + distribution(generator);
 
 		AddCorrespondence(*input, source, sink, 1);
 		}

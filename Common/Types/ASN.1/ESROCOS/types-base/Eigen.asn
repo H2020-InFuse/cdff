@@ -10,49 +10,49 @@ IMPORTS T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes T-I
 ---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
 
 ---- Type: Affine3d defined as Eigen::Transform translated according to configuration
-Affine3d ::= SEQUENCE (SIZE(1..4)) OF SEQUENCE (SIZE(1..4)) OF T-Double
+Affine3d ::= SEQUENCE (SIZE(4)) OF SEQUENCE (SIZE(4)) OF T-Double
 
 ---- Type: Matrix6d defined as Eigen::Matrix translated according to configuration
-Matrix6d ::= SEQUENCE (SIZE(1..6)) OF SEQUENCE (SIZE(1..6)) OF T-Double
+Matrix6d ::= SEQUENCE (SIZE(6)) OF SEQUENCE (SIZE(6)) OF T-Double
 
 ---- Type: Matrix3d defined as Eigen::Matrix translated according to configuration
-Matrix3d ::= SEQUENCE (SIZE(1..3)) OF SEQUENCE (SIZE(1..3)) OF T-Double
+Matrix3d ::= SEQUENCE (SIZE(3)) OF SEQUENCE (SIZE(3)) OF T-Double
 
 ---- Type: Vector6d defined as Eigen::Matrix translated according to configuration
-Vector6d ::= SEQUENCE (SIZE(1..6)) OF T-Double
+Vector6d ::= SEQUENCE (SIZE(6)) OF T-Double
 
 ---- Type: Vector3d defined as Eigen::Matrix translated according to configuration
-Vector3d ::= SEQUENCE (SIZE(1..3)) OF T-Double
+Vector3d ::= SEQUENCE (SIZE(3)) OF T-Double
 
 ---- Type: MatrixXd defined as Eigen::Matrix translated according to configuration
-MatrixXd ::= SEQUENCE (SIZE(1..20)) OF SEQUENCE (SIZE(1..20)) OF T-Double
+MatrixXd ::= SEQUENCE (SIZE(0..20)) OF SEQUENCE (SIZE(0..20)) OF T-Double
 
 ---- Type: Quaterniond defined as Eigen::Quaternion translated according to configuration
-Quaterniond ::= SEQUENCE (SIZE(1..4)) OF T-Double
+Quaterniond ::= SEQUENCE (SIZE(4)) OF T-Double
 
 ---- Type: VectorXd defined as Eigen::Matrix translated according to configuration
-VectorXd ::= SEQUENCE (SIZE(1..100)) OF T-Double
+VectorXd ::= SEQUENCE (SIZE(0..100)) OF T-Double
 
 ---- Type: Isometry3d defined as Eigen::Transform translated according to configuration
-Isometry3d ::= SEQUENCE (SIZE(1..4)) OF SEQUENCE (SIZE(1..4)) OF T-Double
+Isometry3d ::= SEQUENCE (SIZE(4)) OF SEQUENCE (SIZE(4)) OF T-Double
 
 ---- Type: Matrix2d defined as Eigen::Matrix translated according to configuration
-Matrix2d ::= SEQUENCE (SIZE(1..2)) OF SEQUENCE (SIZE(1..2)) OF T-Double
+Matrix2d ::= SEQUENCE (SIZE(2)) OF SEQUENCE (SIZE(2)) OF T-Double
 
 ---- Type: Vector2d defined as Eigen::Matrix translated according to configuration
-Vector2d ::= SEQUENCE (SIZE(1..2)) OF T-Double
+Vector2d ::= SEQUENCE (SIZE(2)) OF T-Double
 
 ---- Type: Matrix4d defined as Eigen::Matrix translated according to configuration
-Matrix4d ::= SEQUENCE (SIZE(1..4)) OF SEQUENCE (SIZE(1..4)) OF T-Double
+Matrix4d ::= SEQUENCE (SIZE(4)) OF SEQUENCE (SIZE(4)) OF T-Double
 
 ---- Type: Transform3d defined as Affine3d translated according to configuration
-Transform3d ::= SEQUENCE (SIZE(1..4)) OF SEQUENCE (SIZE(1..4)) OF T-Double
+Transform3d ::= SEQUENCE (SIZE(4)) OF SEQUENCE (SIZE(4)) OF T-Double
 
 ---- Type: Vector4d defined as Eigen::Matrix translated according to configuration
-Vector4d ::= SEQUENCE (SIZE(1..4)) OF T-Double
+Vector4d ::= SEQUENCE (SIZE(4)) OF T-Double
 
 ---- Type: AngleAxisd defined as Eigen::AngleAxis translated according to configuration
-AngleAxisd ::= SEQUENCE (SIZE(1..4)) OF T-Double
+AngleAxisd ::= SEQUENCE (SIZE(4)) OF T-Double
 
 ---- END of typedefs defined in this module 
 END

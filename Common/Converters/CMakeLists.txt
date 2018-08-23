@@ -2,6 +2,7 @@ add_library(
     converters_opencv
     FrameToMatConverter.cpp
     MatToFrameConverter.cpp
+    FrameToImageConverter.cpp
     MatToVisualPointFeatureVector2DConverter.cpp
     VisualPointFeatureVector2DToMatConverter.cpp
     MatToVisualPointFeatureVector3DConverter.cpp
@@ -18,6 +19,8 @@ add_library(
     PclNormalsCloudToPointCloudConverter.cpp  
     CorrespondenceMaps2DSequenceToMatConverter.cpp
     MatToCorrespondenceMaps2DSequenceConverter.cpp
+    CorrespondenceMaps3DSequenceToMatConverter.cpp
+    MatToCorrespondenceMaps3DSequenceConverter.cpp
 )
 target_link_libraries(converters_opencv opencv_core cdff_types)
 

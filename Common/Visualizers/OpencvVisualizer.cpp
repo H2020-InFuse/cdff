@@ -27,18 +27,15 @@
  */
 #include "OpencvVisualizer.hpp"
 #include <Errors/Assert.hpp>
-
-#include <ConversionCache/ConversionCache.hpp>
-#include <Converters/FrameToMatConverter.hpp>
 #include <BaseTypes.hpp>
 
 using namespace FrameWrapper;
 using namespace Converters;
-using namespace Common;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
 using namespace MatrixWrapper;
+using namespace BaseTypesWrapper;
 
 #define RETURN_IF_DISABLED \
 	if (!enabled) \
@@ -66,14 +63,14 @@ void OpencvVisualizer::ShowImage(FrameConstPtr frame)
 	{
 	RETURN_IF_DISABLED
 
-	cv::Mat image = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(frame);
+	cv::Mat image = converter.Convert(frame);
 	ShowImage(image);
 	}
 
 void OpencvVisualizer::ShowVisualFeatures(FrameConstPtr frame, VisualPointFeatureVector2DConstPtr featuresVector)
 	{
 	RETURN_IF_DISABLED
-	cv::Mat image = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(frame);
+	cv::Mat image = converter.Convert(frame);
 
 	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
 		{
@@ -86,8 +83,8 @@ void OpencvVisualizer::ShowVisualFeatures(FrameConstPtr frame, VisualPointFeatur
 void OpencvVisualizer::ShowCorrespondences(FrameConstPtr frame1, FrameConstPtr frame2, CorrespondenceMap2DConstPtr correspondenceMap)
 	{
 	RETURN_IF_DISABLED
-	cv::Mat sourceImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(frame1);
-	cv::Mat sinkImage = ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Convert(frame2);
+	cv::Mat sourceImage = converter.Convert(frame1);
+	cv::Mat sinkImage = converter.Convert(frame2);
 
 	std::vector<cv::KeyPoint> sourceVector, sinkVector;
 	std::vector<cv::DMatch> matchesVector;
@@ -116,6 +113,95 @@ void OpencvVisualizer::ShowCorrespondences(FrameConstPtr frame1, FrameConstPtr f
 		cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
 		);
 	ShowImage(outputImage);
+	}
+
+#define CONTINUE_ON_INVALID_2D_POINT(point) \
+	if (point.x != point.x || point.y != point.y) \
+		{ \
+		continue; \
+		}
+#define CONTINUE_ON_DISTINCT_POINTS(point1, point2) \
+	if (point1.x != point2.x || point1.y != point2.y) \
+		{ \
+		continue; \
+		}
+
+void OpencvVisualizer::ShowQuadrupleCorrespondences(std::vector<FrameConstPtr> frameList, std::vector<CorrespondenceMap2DConstPtr> correspondenceMapList)
+	{
+	RETURN_IF_DISABLED
+	ASSERT(frameList.size() == 4 && correspondenceMapList.size() == 4, "Opencv Visualizer, ShowQuadrupleCorrespondences, Both inputs should have size 4");
+	int rows = 0;
+	int cols = 0;
+
+	cv::Mat imageList[4];
+	for(int imageIndex = 0; imageIndex < 4; imageIndex++)
+		{
+		imageList[imageIndex] = converter.Convert(frameList.at(imageIndex));
+		if (imageIndex == 0)
+			{
+			rows = imageList[imageIndex].rows;
+			cols = imageList[imageIndex].cols;
+			}
+		else
+			{
+			ASSERT( rows == imageList[imageIndex].rows && cols == imageList[imageIndex].cols, "Image dimensions do not match" );
+			}
+		}
+
+	cv::Mat temporaryList1[2] = { imageList[0], imageList[1] };
+	cv::Mat temporaryList2[2] = { imageList[2], imageList[3] };
+	cv::Mat outputImage1, outputImage2, outputImage3;
+	cv::hconcat(temporaryList1, 2, outputImage1);
+	cv::hconcat(temporaryList2, 2, outputImage2);
+	cv::Mat temporaryList3[2] = { outputImage1, outputImage2 };
+	cv::vconcat(temporaryList3, 2, outputImage3);
+	
+	int count = 0;
+	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = correspondenceMapList.at(0);
+	for(int correspondenceIndex1 = 0; correspondenceIndex1 < GetNumberOfCorrespondences(*leftRightCorrespondenceMap); correspondenceIndex1++)
+		{
+		Point2D leftRightSource = GetSource(*leftRightCorrespondenceMap, correspondenceIndex1);
+		Point2D leftRightSink = GetSink(*leftRightCorrespondenceMap, correspondenceIndex1);
+		CONTINUE_ON_INVALID_2D_POINT(leftRightSource);
+		CONTINUE_ON_INVALID_2D_POINT(leftRightSink);
+		CorrespondenceMap2DConstPtr leftTimeCorrespondenceMap = correspondenceMapList.at(1);
+		for(int correspondenceIndex2 = 0; correspondenceIndex2 < GetNumberOfCorrespondences(*leftTimeCorrespondenceMap); correspondenceIndex2++)
+			{
+			Point2D leftTimeSource = GetSource(*leftTimeCorrespondenceMap, correspondenceIndex2);
+			Point2D leftTimeSink = GetSink(*leftTimeCorrespondenceMap, correspondenceIndex2);
+			CONTINUE_ON_INVALID_2D_POINT(leftTimeSource);
+			CONTINUE_ON_INVALID_2D_POINT(leftTimeSink);
+			CONTINUE_ON_DISTINCT_POINTS(leftRightSource, leftTimeSource);
+			CorrespondenceMap2DConstPtr rightTimeCorrespondenceMap = correspondenceMapList.at(2);
+			for(int correspondenceIndex3 = 0; correspondenceIndex3 < GetNumberOfCorrespondences(*rightTimeCorrespondenceMap); correspondenceIndex3++)
+				{
+				Point2D rightTimeSource = GetSource(*rightTimeCorrespondenceMap, correspondenceIndex3);
+				Point2D rightTimeSink = GetSink(*rightTimeCorrespondenceMap, correspondenceIndex3);
+				CONTINUE_ON_INVALID_2D_POINT(rightTimeSource);
+				CONTINUE_ON_INVALID_2D_POINT(rightTimeSink);
+				CONTINUE_ON_DISTINCT_POINTS(leftRightSink, rightTimeSource);
+				CorrespondenceMap2DConstPtr pastCorrespondenceMap = correspondenceMapList.at(3);
+				for(int correspondenceIndex4 = 0; correspondenceIndex4 < GetNumberOfCorrespondences(*pastCorrespondenceMap); correspondenceIndex4++)
+					{
+					Point2D pastSource = GetSource(*pastCorrespondenceMap, correspondenceIndex4);
+					Point2D pastSink = GetSink(*pastCorrespondenceMap, correspondenceIndex4);
+					CONTINUE_ON_INVALID_2D_POINT(pastSource);
+					CONTINUE_ON_INVALID_2D_POINT(pastSink);
+					CONTINUE_ON_DISTINCT_POINTS(pastSource, leftTimeSink);
+					CONTINUE_ON_DISTINCT_POINTS(pastSink, rightTimeSink);
+
+					count++;
+					cv::Scalar color( (50 + count * 100) % 255, (50 + count * 10) % 255, (50 + count * 1000) % 255);
+					cv::line(outputImage3, cv::Point(leftRightSource.x, leftRightSource.y), cv::Point(leftRightSink.x + cols, leftRightSink.y), color);
+					cv::line(outputImage3, cv::Point(leftTimeSource.x, leftTimeSource.y), cv::Point(leftTimeSink.x, leftTimeSink.y + rows), color); 
+					cv::line(outputImage3, cv::Point(rightTimeSource.x + cols, rightTimeSource.y), cv::Point(rightTimeSink.x + cols, rightTimeSink.y + rows), color); 
+					cv::line(outputImage3, cv::Point(pastSource.x, pastSource.y + rows), cv::Point(pastSink.x + cols, pastSink.y + rows), color); 
+					}
+				}
+			}
+		}
+
+	ShowImage(outputImage3);
 	}
 
 void OpencvVisualizer::ShowDisparity(cv::Mat disparity)
@@ -177,6 +263,7 @@ OpencvVisualizer::OpencvVisualizer()
  */
 const std::string OpencvVisualizer::WINDOW_NAME = "Opencv Visualizer";
 bool OpencvVisualizer::enabled = false;
+FrameToMatConverter OpencvVisualizer::converter;
 
 }
 /** @} */

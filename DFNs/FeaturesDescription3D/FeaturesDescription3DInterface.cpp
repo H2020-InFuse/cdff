@@ -5,7 +5,9 @@
 
 #include "FeaturesDescription3DInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FeaturesDescription3DInterface::FeaturesDescription3DInterface()
@@ -36,6 +38,7 @@ const asn1SccVisualPointFeatureVector3D& FeaturesDescription3DInterface::feature
     return outFeatures;
 }
 
+}
 }
 
 /** @} */

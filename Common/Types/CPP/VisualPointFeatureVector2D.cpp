@@ -19,11 +19,13 @@ namespace VisualPointFeatureVector2DWrapper
 void Copy(const VisualPointFeatureVector2D& source, VisualPointFeatureVector2D& destination)
 {
 	ClearPoints(destination);
-	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(source); pointIndex++)
+	int numberOfPoints = GetNumberOfPoints(source);
+	for (int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 	{
 		AddPoint(destination, GetXCoordinate(source, pointIndex), GetYCoordinate(source, pointIndex));
 		ClearDescriptor(destination, pointIndex);
-		for (int componentIndex = 0; componentIndex < GetNumberOfDescriptorComponents(source, pointIndex); componentIndex++)
+		int numberOfDescriptorComponents = GetNumberOfDescriptorComponents(source, pointIndex);
+		for (int componentIndex = 0; componentIndex < numberOfDescriptorComponents; componentIndex++)
 		{
 			AddDescriptorComponent(destination, pointIndex, GetDescriptorComponent(source, pointIndex, componentIndex));
 		}
@@ -53,8 +55,8 @@ void AddPoint(VisualPointFeatureVector2D& featuresVector, uint16_t x, uint16_t y
 {
 	ASSERT_ON_TEST(featuresVector.nCount < MAX_FEATURE_2D_POINTS, "Features descriptor vector maximum capacity has been reached");
 	int currentIndex = featuresVector.nCount;
-	featuresVector.arr[currentIndex].point.x = x;
-	featuresVector.arr[currentIndex].point.y = y;
+	featuresVector.arr[currentIndex].point.arr[0] = x;
+	featuresVector.arr[currentIndex].point.arr[1] = y;
 	featuresVector.arr[currentIndex].descriptor.nCount = 0;
 	featuresVector.nCount++;
 }
@@ -72,13 +74,13 @@ int GetNumberOfPoints(const VisualPointFeatureVector2D& featuresVector)
 int GetXCoordinate(const VisualPointFeatureVector2D& featuresVector, int pointIndex)
 {
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
-	return featuresVector.arr[pointIndex].point.x;
+	return featuresVector.arr[pointIndex].point.arr[0];
 }
 
 int GetYCoordinate(const VisualPointFeatureVector2D& featuresVector, int pointIndex)
 {
 	ASSERT_ON_TEST(pointIndex < featuresVector.nCount, "A missing point was requested from a features vector 2D");
-	return featuresVector.arr[pointIndex].point.y;
+	return featuresVector.arr[pointIndex].point.arr[1];
 }
 
 void AddDescriptorComponent(VisualPointFeatureVector2D& featuresVector, int pointIndex, float component)

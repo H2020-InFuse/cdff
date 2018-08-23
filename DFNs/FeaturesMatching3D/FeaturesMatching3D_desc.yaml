@@ -13,7 +13,8 @@ output_ports:
     - name: transform
       type: asn1SccPose
       doc: best geometric transformation that matches the source keypoints to
-           the sink keypoints
+           the sink keypoints. Stated otherwise, this is the pose of the source cloud
+	   in the reference system of the sink cloud.
     - name: success
       type: bool
       doc: boolean flag indicating successful computation of the geometric

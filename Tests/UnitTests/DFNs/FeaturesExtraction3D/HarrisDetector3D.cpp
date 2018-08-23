@@ -11,7 +11,7 @@
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesExtraction3D;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
@@ -35,7 +35,7 @@ TEST_CASE( "DFN processing step succeeds (3D Harris detector)", "[process]" )
 	*/
 
 	// Prepare simpler input data (nothing)
-	PointCloudConstPtr pc = new PointCloud;
+	PointCloudConstPtr pc = NewPointCloud();
 
 	// Instantiate DFN
 	HarrisDetector3D* harris = new HarrisDetector3D;

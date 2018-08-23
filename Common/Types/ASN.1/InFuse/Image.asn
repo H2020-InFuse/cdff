@@ -1,0 +1,123 @@
+----------------------------------------------------------------
+--!  The types defined here correspond to the former Frame types
+----------------------------------------------------------------
+
+Image-Types DEFINITIONS ::=
+BEGIN
+IMPORTS 
+T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes 
+Time FROM Time-Types;
+
+
+--- Definition of enum Image_mode_t follows 
+
+Image-mode-t ::= ENUMERATED 
+{
+     mode-undefined, 
+     mode-grayscale, 
+     mode-rgb, 
+     mode-uyvy, 
+     mode-bgr, 
+     mode-rgb32, 
+     raw-modes, 
+     mode-bayer, 
+     mode-bayer-rggb, 
+     mode-bayer-grbg, 
+     mode-bayer-bggr, 
+     mode-bayer-gbrg, 
+     compressed-modes, 
+     mode-pjpg, 
+     mode-jpeg, 
+     mode-png 
+}
+
+--- End Definition of enum Image_mode_t
+
+
+--- Definition of enum Image_status_t follows 
+
+Image-status-t ::= ENUMERATED 
+{
+ 	status-empty, 
+     status-valid, 
+     status-invalid 
+}
+
+--- End Definition of enum Image_status_t
+
+
+---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+
+---- END of typedefs defined in this module 
+
+
+---  Definition Image_ATTRIB_T Starts 
+Image-attrib-t   ::= 
+SEQUENCE
+{
+    data			T-String,
+    att-name		T-String
+}
+
+---  Definition Image_ATTRIB_T Ends 
+
+
+---  Definition Image_SIZE_T Starts 
+Image-size-t   ::= 
+SEQUENCE
+{
+    width			T-UInt16,
+    height		T-UInt16
+}
+
+---  Definition Image_SIZE_T Ends 
+
+
+---  Image sizes (manually defined)
+
+-- 3840(width) x 2160(height) x 3(bytes-per-pixel)
+imageMaxBytes            T-UInt32 ::= 24883200
+imageMaxRows             T-UInt32 ::= 2160
+imageMaxCols             T-UInt32 ::= 3840
+imageMaxAttributes       T-UInt32 ::= 5
+
+---  END of Image sizes
+
+
+
+---  Definition Image Starts 
+
+---- Beginning of typedefs defined in the module: note that they could require to be adjusted manually 
+
+---- END of typedefs defined in this module 
+Image   ::= 
+SEQUENCE
+{
+    frame-time				Time,
+    received-time			Time,
+    image				OCTET STRING (SIZE(0..imageMaxBytes)),
+    attributes				SEQUENCE (SIZE(0..imageMaxAttributes)) OF Image-attrib-t,
+    datasize				Image-size-t,
+    data-depth				T-UInt32,
+    pixel-size				T-UInt32,
+    row-size				T-UInt32,
+    frame-mode				Image-mode-t,
+    frame-status			Image-status-t
+}
+
+---  Definition Image Ends 
+
+
+---  Definition ImagePAIR Starts 
+ImagePair   ::= 
+SEQUENCE
+{
+    frame-time				Time,
+    first					Image,
+    second				Image,
+    id					T-UInt32
+}
+
+---  Definition ImagePAIR Ends 
+END

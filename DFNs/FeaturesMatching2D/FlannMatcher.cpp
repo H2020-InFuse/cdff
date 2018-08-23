@@ -20,7 +20,11 @@ using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace CorrespondenceMap2DWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesMatching2D
 {
 
 FlannMatcher::FlannMatcher()
@@ -92,7 +96,7 @@ void FlannMatcher::process()
 
 	// Write data to output port
 	CorrespondenceMap2DConstPtr tmp = Convert(matchesMatrix, sourceFeaturesMatrix, sinkFeaturesMatrix);
-	Copy(*tmp, outMatches);
+	CleanLowScoringMatches(tmp, &outMatches);
 	delete(tmp);
 }
 
@@ -331,6 +335,35 @@ std::vector<cv::DMatch> FlannMatcher::ComputeMatches(cv::Mat sourceDescriptorsMa
 	return sequenceOfSelectedMatches;
 }
 
+void FlannMatcher::CleanLowScoringMatches(CorrespondenceMap2DConstPtr correspondenceMap, CorrespondenceMap2DPtr cleanMap)
+	{
+	Copy(*correspondenceMap, *cleanMap);
+
+	std::vector<BaseTypesWrapper::T_UInt32> removeIndexList;
+	for(int correspondenceIndex1=0; correspondenceIndex1< GetNumberOfCorrespondences(*cleanMap); correspondenceIndex1++)
+		{
+		BaseTypesWrapper::Point2D source1 = GetSource(*cleanMap, correspondenceIndex1);
+		BaseTypesWrapper::Point2D sink1 = GetSink(*cleanMap, correspondenceIndex1);
+		if (source1.x != source1.x || source1.y != source1.y || sink1.x != sink1.x || sink1.y != sink1.y)
+			{
+			removeIndexList.push_back(correspondenceIndex1);
+			continue;
+			}
+		bool found = false;
+		for (int correspondenceIndex2=0; correspondenceIndex2<correspondenceIndex1 && !found; correspondenceIndex2++)
+			{
+			BaseTypesWrapper::Point2D source2 = GetSource(*cleanMap, correspondenceIndex2);
+			BaseTypesWrapper::Point2D sink2 = GetSink(*cleanMap, correspondenceIndex2);
+			if ( (source1.x == source2.x && source1.y == source2.y) || (sink1.x == sink2.x && sink1.y == sink2.y) )
+				{
+				removeIndexList.push_back(correspondenceIndex1);
+				found = true;
+				}
+			}
+		}
+	RemoveCorrespondences(*cleanMap, removeIndexList);
+	}
+
 cv::Mat FlannMatcher::ConvertToValidType(cv::Mat floatDescriptorsMatrix)
 {
 	if (parameters.generalOptionsSet.matcherMethod == LOCALITY_SENSITIVE_HASHING)
@@ -412,6 +445,8 @@ void FlannMatcher::ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeat
 	ASSERT( sourceFeaturesMatrix.cols > 0, "FlannMatcher Error: Input features vectors are empty");
 }
 
+}
+}
 }
 
 /** @} */

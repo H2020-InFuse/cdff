@@ -65,6 +65,7 @@ class MatToFrameConverter
 	private:
 		void ConvertRGB(const cv::Mat& image, FrameWrapper::Frame& frame);
 		void ConvertGrayscale(const cv::Mat& image, FrameWrapper::Frame& frame);
+	    void ConvertFloat(const cv::Mat& image, FrameWrapper::Frame& frame);
 	};
 
 }

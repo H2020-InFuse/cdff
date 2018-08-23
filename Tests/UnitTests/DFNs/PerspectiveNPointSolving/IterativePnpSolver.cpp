@@ -21,7 +21,7 @@
 
 #include <opencv2/core/core.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::PerspectiveNPointSolving;
 using namespace PointCloudWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace PoseWrapper;

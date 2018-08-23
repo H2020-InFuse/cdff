@@ -14,10 +14,16 @@
 #define FRAME_HPP
 
 #include <Frame.h>
+#include <Array3D.h>
+#include <Array3D.hpp>
+#include <taste-extended.h>
 
 #include "BaseTypes.hpp"
 #include <stdlib.h>
 #include <memory>
+#include "Errors/Assert.hpp"
+#include <cstring>
+#include <Types/C/Frame.h>
 
 /**
  *  The `Frame` type is the C++ interface to the compiled ASN.1 Frame. A
@@ -30,7 +36,7 @@
  *   - `datasize`, the size of the frame in pixels,
  *   - `data-depth`, the number of bits per channel,
  *   - `pixel-size`, the size of a single pixel in bytes. This is
- *     `number_of_channels * bytes_per_channel`,
+ *     `number_of_channels * bytes_per_channel (data-depth)`,
  *   - `row-size`, the size of a row in bytes, this is `pixel-size *
  *     datasize.width`. This value will be inaccurate for compressed image modes
  *     since they use a varying number of bytes per pixel,
@@ -65,61 +71,54 @@ namespace FrameWrapper
 
 // Types
 
-/// The `FrameMode` documents the pixel format used for the frame data. The
-// frame modes can indicate the packing of the colour components of each pixel
-/// (RGB, BGR, Grayscale, ...) or the type of compression used on the data
-// (PNG, JPEG, ...).
-typedef asn1SccFrame_mode_t FrameMode;
-
-/// The `FrameStatus` indicates whether the data buffer contains valid data or not.
-typedef asn1SccFrame_status_t FrameStatus;
-
-/// The `FrameSize` contains the size of the image in rows and columns.
-typedef asn1SccFrame_size_t FrameSize;
-
-/// ???
+typedef asn1SccFrame_error_t FrameError;
+typedef asn1SccFrame_metadata_t_errValues FrameMetadataError;
 typedef asn1SccFrame_attrib_t FrameAttribute;
-
-/// The actual image data. The `FrameImage` is a struct composed of a fixed
-/// size buffer of byte (`arr`) and a size member (`nCount`) which indicates
-/// the number of bytes used to store the image.
-typedef asn1SccFrame_image FrameImage;
-
-typedef asn1SccFrame_attributes FrameAttributesList;
-
-/// Container type for the raw image data and metadata
+typedef asn1SccFrame_metadata_t_attributes FrameMetadataAttributeList;
+typedef asn1SccFrame_extrinsic_t FrameExtrinsic;
+typedef asn1SccFrame_pixelModel_t FramePixelMode;
+typedef asn1SccFrame_mode_t FrameMode;
+typedef asn1SccFrame_status_t FrameStatus;
+typedef asn1SccFrame_metadata_t FrameMetadata;
+typedef asn1SccFrame_cameraModel_t FrameCameraModel;
+typedef asn1SccFrame_intrinsic_t FrameIntrinsic;
 typedef asn1SccFrame Frame;
-
-// Container types for synchronised frame pairs (e.g. stereo pairs)
 typedef asn1SccFramePair FramePair;
 
 // Enumerated types
 
-const FrameMode MODE_UNDEFINED = asn1Sccmode_undefined;
-const FrameMode MODE_GRAYSCALE = asn1Sccmode_grayscale;
-const FrameMode MODE_RGB = asn1Sccmode_rgb;
-const FrameMode MODE_UYVY = asn1Sccmode_uyvy;
-const FrameMode MODE_BGR = asn1Sccmode_bgr;
-const FrameMode MODE_RGB32 = asn1Sccmode_rgb32;
-const FrameMode RAW_MODES = asn1Sccraw_modes;
-const FrameMode MODE_BAYER = asn1Sccmode_bayer;
-const FrameMode MODE_BAYER_RGGB = asn1Sccmode_bayer_rggb;
-const FrameMode MODE_BAYER_GRBG = asn1Sccmode_bayer_grbg;
-const FrameMode MODE_BAYER_BGGR = asn1Sccmode_bayer_bggr;
-const FrameMode MODE_BAYER_GBRG = asn1Sccmode_bayer_gbrg;
-const FrameMode COMPRESSED_MODES = asn1Scccompressed_modes;
-const FrameMode MODE_PJPG = asn1SccFrame_mode_t_mode_pjpg;
-const FrameMode MODE_JPEG = asn1Sccmode_jpeg;
-const FrameMode MODE_PNG = asn1Sccmode_png;
+const FrameMode MODE_UNDEFINED = asn1Sccmode_UNDEF;
+const FrameMode MODE_GRAYSCALE = asn1Sccmode_GRAY;
+const FrameMode MODE_RGB = asn1Sccmode_RGB;
+const FrameMode MODE_RGBA = asn1Sccmode_RGBA;
+const FrameMode MODE_BGR = asn1Sccmode_BGR;
+const FrameMode MODE_BGRA = asn1Sccmode_BGRA;
+const FrameMode MODE_HSV = asn1Sccmode_HSV;
+const FrameMode MODE_HLS = asn1Sccmode_HLS;
+const FrameMode MODE_YUV = asn1Sccmode_YUV;
+const FrameMode MODE_UYVY = asn1Sccmode_UYVY;
+const FrameMode MODE_LAB = asn1Sccmode_Lab;
+const FrameMode MODE_LUV = asn1Sccmode_Luv;
+const FrameMode MODE_XYZ = asn1Sccmode_XYZ;
+const FrameMode MODE_YCRCB = asn1Sccmode_YCrCb;
+const FrameMode MODE_RGB32 = asn1Sccmode_RGB32;
+const FrameMode MODE_BAYER_RGGB = asn1Sccmode_Bayer_RGGB;
+const FrameMode MODE_BAYER_GRBG = asn1Sccmode_Bayer_GRBG;
+const FrameMode MODE_BAYER_BGGR = asn1Sccmode_Bayer_BGGR;
+const FrameMode MODE_BAYER_GBRG = asn1Sccmode_Bayer_GBRG;
+const FrameMode MODE_PJPG = asn1Sccmode_PJPG;
+const FrameMode MODE_JPEG = asn1Sccmode_JPEG;
+const FrameMode MODE_PNG = asn1Sccmode_PNG;
 
-const FrameStatus STATUS_EMPTY = asn1Sccstatus_empty;
-const FrameStatus STATUS_VALID = asn1Sccstatus_valid;
-const FrameStatus STATUS_INVALID = asn1Sccstatus_invalid;
+const FrameStatus STATUS_EMPTY = asn1Sccstatus_EMPTY;
+const FrameStatus STATUS_VALID = asn1Sccstatus_VALID;
+const FrameStatus STATUS_INVALID = asn1Sccstatus_INVALID;
 
 // Global constant variables
 
 const int MAX_FRAME_ATTRIBUTES = frameMaxAttributes;
-const int MAX_DATA_BYTE_SIZE = frameMaxBytes;
+const int MAX_FRAME_ERROR_VALUES = frameMaxErrValues;
+const int FRAME_VERSION = frame_Version;
 
 // Pointer types
 
@@ -129,7 +128,6 @@ typedef std::shared_ptr<Frame> FrameSharedPtr;
 typedef std::shared_ptr<const Frame> FrameSharedConstPtr;
 
 // Functions
-
 
 FramePtr NewFrame();
 FrameSharedPtr NewSharedFrame();
@@ -151,41 +149,22 @@ void Initialize(Frame& frame);
  */
 void Copy(const Frame& source, Frame& destination);
 
-void SetFrameTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
-BaseTypesWrapper::T_Int64 GetFrameTime(const Frame& frame);
-
-void SetReceivedTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
-BaseTypesWrapper::T_Int64 GetReceivedTime(const Frame& frame);
-
-void SetDataDepth(Frame& frame, BaseTypesWrapper::T_UInt32 dataDepth);
-BaseTypesWrapper::T_UInt32 GetDataDepth(const Frame& frame);
-
-void SetPixelSize(Frame& frame, BaseTypesWrapper::T_UInt32 pizelSize);
-BaseTypesWrapper::T_UInt32 GetPixelSize(const Frame& frame);
-
-void SetRowSize(Frame& frame, BaseTypesWrapper::T_UInt32 rowSize);
-BaseTypesWrapper::T_UInt32 GetRowSize(const Frame& frame);
-
 void SetFrameMode(Frame& frame, FrameMode frameMode);
 FrameMode GetFrameMode(const Frame& frame);
+
+void SetFrameSize(Frame& frame, BaseTypesWrapper::T_UInt16 width, BaseTypesWrapper::T_UInt16 height);
+BaseTypesWrapper::T_UInt16 GetFrameWidth(const Frame& frame);
+BaseTypesWrapper::T_UInt16 GetFrameHeight(const Frame& frame);
+
+void SetFrameTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
+BaseTypesWrapper::T_UInt64 GetFrameTime(const Frame& frame);
+
+void SetFrameReceivedTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
+BaseTypesWrapper::T_UInt64 GetFrameReceivedTime(const Frame& frame);
 
 void SetFrameStatus(Frame& frame, FrameStatus frameStatus);
 FrameStatus GetFrameStatus(const Frame& frame);
 
-void SetFrameSize(Frame& frame, BaseTypesWrapper::T_UInt16 width, BaseTypesWrapper::T_UInt16 height);
-void SetFrameSize(Frame& frame, FrameSize frameSize);
-BaseTypesWrapper::T_UInt16 GetFrameWidth(const Frame& frame);
-BaseTypesWrapper::T_UInt16 GetFrameHeight(const Frame& frame);
-FrameSize GetFrameSize(const Frame& frame);
-
-void AddAttribute(Frame& frame, BaseTypesWrapper::T_String data, BaseTypesWrapper::T_String name);
-void AddAttribute(Frame& frame, FrameAttribute attribute);
-void ClearAttributes(Frame& frame);
-void RemoveAttribute(Frame& frame, int index);
-FrameAttribute GetAttribute(const Frame& frame, int index);
-unsigned GetNumberOfAttributes(const Frame& frame);
-
-void AddDataByte(Frame& frame, byte data);
 void ClearData(Frame& frame);
 byte GetDataByte(const Frame& frame, int index);
 int GetNumberOfDataBytes(const Frame& frame);
@@ -193,6 +172,14 @@ int GetNumberOfDataBytes(const Frame& frame);
 BitStream ConvertToBitStream(const Frame& frame);
 void ConvertFromBitStream(BitStream bitStream, Frame& frame);
 
+    /* !! ASSUMES Little Endian */
+    template<typename T>
+    void AppendData(Frame &frame, T data)
+    {
+        ASSERT_ON_TEST(frame.data.data.nCount + static_cast<int>(sizeof(T)) < Array3DWrapper::MAX_ARRAY3D_BYTE_SIZE, "Image data will exceed limits");
+        std::memcpy(&frame.data.data.arr[frame.data.data.nCount], &data, sizeof (T));
+        frame.data.data.nCount+= sizeof (T);
+    }
 }
 
 #endif // FRAME_HPP

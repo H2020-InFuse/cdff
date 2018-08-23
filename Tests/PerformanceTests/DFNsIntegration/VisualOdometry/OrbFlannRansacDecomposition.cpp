@@ -38,12 +38,6 @@
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <ConversionCache/ConversionCache.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector2DToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/MatToTransform3DConverter.hpp>
 #include <MatToFrameConverter.hpp>
 
 #include <Errors/Assert.hpp>
@@ -53,8 +47,10 @@
 #include <Eigen/Geometry>
 
 
-using namespace dfn_ci;
-using namespace Common;
+using namespace CDFF::DFN::FeaturesExtraction2D;
+using namespace CDFF::DFN::FeaturesMatching2D;
+using namespace CDFF::DFN::FundamentalMatrixComputation;
+using namespace CDFF::DFN::CamerasTransformEstimation;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;

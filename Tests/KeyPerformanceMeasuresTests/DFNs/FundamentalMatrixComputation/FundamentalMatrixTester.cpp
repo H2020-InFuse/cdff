@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the FundamentalMatrixTester class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -31,7 +31,7 @@
 #include <ctime>
 
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace MatrixWrapper;
 using namespace CorrespondenceMap2DWrapper;
 
@@ -47,7 +47,7 @@ using namespace CorrespondenceMap2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-FundamentalMatrixTester::FundamentalMatrixTester(std::string configurationFilePath, dfn_ci::FundamentalMatrixComputationInterface* dfn) 
+FundamentalMatrixTester::FundamentalMatrixTester(std::string configurationFilePath, CDFF::DFN::FundamentalMatrixComputationInterface* dfn)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;

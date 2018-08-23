@@ -22,7 +22,11 @@
 
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace StereoReconstruction
 {
 
 DisparityMapping::DisparityMapping()
@@ -336,7 +340,7 @@ cv::Mat DisparityMapping::ComputePointCloudFromDisparity(cv::Mat disparity)
 	float baseline = parameters.stereoCameraParameters.baseline;
 	float focalLength = parameters.stereoCameraParameters.leftFocalLength;
 
-	float depthScale = baseline * focalLength * 16;
+	float depthScale = baseline * focalLength;
 	cv::Mat pointCloud(disparity.rows, disparity.cols, CV_32FC3, cv::Scalar(0,0,0));
 	for (unsigned row = 0; row < disparity.rows; row++)
 	{
@@ -379,6 +383,8 @@ void DisparityMapping::ValidateParameters()
 	ASSERT(parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
 }
 
+}
+}
 }
 
 /** @} */

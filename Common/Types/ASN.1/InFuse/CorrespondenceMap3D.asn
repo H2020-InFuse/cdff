@@ -24,7 +24,7 @@ CorrespondenceMap3DNS DEFINITIONS ::=
 BEGIN
 
 IMPORTS
-Point3D FROM GeometryNS
+Point3D FROM Point-Types
 T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
 T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes;
 

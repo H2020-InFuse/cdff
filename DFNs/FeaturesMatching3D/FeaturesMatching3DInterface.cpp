@@ -5,7 +5,9 @@
 
 #include "FeaturesMatching3DInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FeaturesMatching3DInterface::FeaturesMatching3DInterface()
@@ -36,6 +38,7 @@ bool FeaturesMatching3DInterface::successOutput() const
     return outSuccess;
 }
 
+}
 }
 
 /** @} */

@@ -5,6 +5,10 @@ This directory contains the `Dockerfiles` and the necessary build context requir
 * The Docker image used by the continuous integration (CI) pipeline of this Git repository on Space Applications' GitLab server. The resulting image must be tagged `nexus.spaceapplications.com/repository/infuse/cdff-ci:<version>` and must be uploaded to Space Applications' registry (Nexus):
 
     ```shell
+    # Make sure the base image is up-to-date
+    $ docker pull ubuntu:16.04
+
+    # Build InFuse CI image
     $ cd /path/to/this/directory
     $ docker build [--no-cache] --tag=nexus.spaceapplications.com/repository/infuse/cdff-ci:<version> ./
     ```
@@ -17,6 +21,10 @@ This directory contains the `Dockerfiles` and the necessary build context requir
     The resulting image must be tagged `h2020infuse/cdff:<version>` and `h2020infuse/cdff:latest` and both tags must be pushed to the default registry (Docker Hub):
 
     ```shell
+    # Make sure the base image is up-to-date
+    $ docker pull ubuntu:16.04
+
+    # Build InFuse user image
     $ cd /path/to/this/directory
     $ docker build [--no-cache] --tag=h2020infuse/cdff:<version> --tag=h2020infuse/cdff:latest --file=Dockerfile.user ./
     $ docker push h2020infuse/cdff:<version>

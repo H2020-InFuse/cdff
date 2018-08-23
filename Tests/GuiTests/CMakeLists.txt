@@ -318,6 +318,20 @@ target_link_libraries(
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
+add_executable(
+    EstimationFromStereoGuiTest
+    DFPCs/Reconstruction3D/EstimationFromStereo.cpp
+    DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
+)
+set_target_properties(EstimationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    EstimationFromStereoGuiTest
+    estimation_from_stereo
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
 #[======================================================================[
 
 add_executable(

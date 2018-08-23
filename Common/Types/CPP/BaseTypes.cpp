@@ -36,6 +36,16 @@ void DeallocateBitStreamBuffer(BitStream& bitStream)
 		}
 	}
 
+
+void CopyString(const asn1SccT_String& source, asn1SccT_String& destination)
+{
+    ASSERT_ON_TEST(source.nCount < MAX_STRING_SIZE, "String size exceeds limits");
+    destination.nCount = source.nCount;
+    for(int index = 0; index < source.nCount; index++)
+        {
+        destination.arr[index] = source.arr[index];
+        }
+}
 }
 
 /** @} */
