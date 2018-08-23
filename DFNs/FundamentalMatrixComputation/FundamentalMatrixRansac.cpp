@@ -59,7 +59,7 @@ void FundamentalMatrixRansac::process()
 	cv::Mat fundamentalMatrix = ComputeFundamentalMatrix(firstImagePointsVector, secondImagePointsVector);
 
 	// Write data to output port
-	if (fundamentalMatrix.rows == 0 && fundamentalMatrix.cols == 0)
+	if (fundamentalMatrix.rows != 3 || fundamentalMatrix.cols != 3)
 	{
 		SetZeroMatrix(outFundamentalMatrix);
 		outSuccess = false;
@@ -139,7 +139,14 @@ cv::Mat FundamentalMatrixRansac::ComputeFundamentalMatrix(const std::vector<cv::
 		parameters.confidence
 	);
 
-	return fundamentalMatrix;
+	if (fundamentalMatrix.rows > 3 && fundamentalMatrix.cols > 3)
+		{
+		return fundamentalMatrix(cv::Rect(0, 0, 3, 3));
+		}
+	else
+		{
+		return fundamentalMatrix;
+		}
 }
 
 /**
