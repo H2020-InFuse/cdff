@@ -332,6 +332,20 @@ target_link_libraries(
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
+add_executable(
+    FeaturesMatching3DGuiTest
+    DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
+    DFPCs/PointCloudModelLocalisation/GuiTestPointCloudModelLocalisation.cpp
+)
+set_target_properties(FeaturesMatching3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    FeaturesMatching3DGuiTest
+    dfpc_implementation_features_matching_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
 #[======================================================================[
 
 add_executable(
@@ -363,19 +377,6 @@ target_link_libraries(
     ${GRAPHICALTEST_CDFF_LIBRARIES} mock
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
-    boost_system yaml-cpp ${VTK_LIBRARIES}
-)
-
-add_executable(
-    FeaturesMatching3DGuiTest
-    DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
-)
-set_target_properties(FeaturesMatching3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_link_libraries(
-    FeaturesMatching3DGuiTest
-    dfpc_implementation_features_matching_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
-    ${GRAPHICALTEST_OPENCV_LIBRARIES}
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
