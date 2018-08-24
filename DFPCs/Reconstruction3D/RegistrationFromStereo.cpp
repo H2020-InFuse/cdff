@@ -136,21 +136,21 @@ void RegistrationFromStereo::run()
 		}
 	else
 		{
-		Pose3DConstPtr previousPoseToPose = NULL;
-		featuresMatcher3d->Execute( bundleHistory->GetFeatures3d(1), featureVector, previousPoseToPose, outSuccess);
+		Pose3DConstPtr poseToPreviousPose = NULL;
+		featuresMatcher3d->Execute( featureVector, bundleHistory->GetFeatures3d(1), poseToPreviousPose, outSuccess);
 		if (outSuccess)
 			{
-			pointCloudMap.AttachPointCloud( imageCloud, featureVector, previousPoseToPose);
+			pointCloudMap.AttachPointCloud( imageCloud, featureVector, poseToPreviousPose);
 			}
 		#ifdef TESTING
 		logFile << outSuccess << " ";
-		logFile << GetXPosition(*previousPoseToPose) << " ";
-		logFile << GetYPosition(*previousPoseToPose) << " ";
-		logFile << GetZPosition(*previousPoseToPose) << " ";
-		logFile << GetXOrientation(*previousPoseToPose) << " ";
-		logFile << GetYOrientation(*previousPoseToPose) << " ";
-		logFile << GetZOrientation(*previousPoseToPose) << " ";
-		logFile << GetWOrientation(*previousPoseToPose) << " ";
+		logFile << GetXPosition(*poseToPreviousPose) << " ";
+		logFile << GetYPosition(*poseToPreviousPose) << " ";
+		logFile << GetZPosition(*poseToPreviousPose) << " ";
+		logFile << GetXOrientation(*poseToPreviousPose) << " ";
+		logFile << GetYOrientation(*poseToPreviousPose) << " ";
+		logFile << GetZOrientation(*poseToPreviousPose) << " ";
+		logFile << GetWOrientation(*poseToPreviousPose) << " ";
 		#endif
 		}
 
