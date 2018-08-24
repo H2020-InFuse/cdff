@@ -44,7 +44,7 @@
 #include <FeaturesMatching2D/FeaturesMatching2DExecutor.hpp>
 #include <BundleAdjustment/BundleAdjustmentExecutor.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationExecutor.hpp>
-#include <CamerasTransformEstimation/CamerasTransformEstimationExecutor.hpp>
+#include <PerspectiveNPointSolving/PerspectiveNPointSolvingExecutor.hpp>
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>
 
 #include <VisualPointFeatureVector2D.hpp>
@@ -140,7 +140,7 @@ namespace Reconstruction3D
 		CDFF::DFN::FeaturesMatching2DExecutor* featuresMatcher2d;
 		CDFF::DFN::BundleAdjustmentExecutor* bundleAdjuster;
 		CDFF::DFN::FundamentalMatrixComputationExecutor* fundamentalMatrixComputer;
-		CDFF::DFN::CamerasTransformEstimationExecutor* cameraTransformEstimator;
+		CDFF::DFN::PerspectiveNPointSolvingExecutor* perspectiveNPointSolver;
 		CDFF::DFN::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
 
 		#ifdef TESTING
@@ -155,7 +155,11 @@ namespace Reconstruction3D
 		//Intermediate data
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr cleanCorrespondenceMap;
 		PointCloudWrapper::PointCloudPtr triangulatedKeypointCloud;
+
+		//Support data when using initial estimation
 		PoseWrapper::Poses3DSequencePtr estimatedCameraPoses;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr presentKeypointVector; 
+		PointCloudWrapper::PointCloudPtr keypointCloud;
 
 		void ConfigureExtraParameters();
 		void InstantiateDFNExecutors();
@@ -166,6 +170,9 @@ namespace Reconstruction3D
 		void CreateWorkingCorrespondences();
 		void CreateWorkingCorrespondences(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featureVector);
 		bool ComputeCameraPoses(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
+		void EstimatePose(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr pastLeftRightCorrespondenceMap, 
+			CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr leftPresentPastCorrespondenceMap, 
+			PointCloudWrapper::PointCloudConstPtr pastCloud, PoseWrapper::Pose3DConstPtr& pose, bool& success);
 
 		void EstimateCameraPoses();
 

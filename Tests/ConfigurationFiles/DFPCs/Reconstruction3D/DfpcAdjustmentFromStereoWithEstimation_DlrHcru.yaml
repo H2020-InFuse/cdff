@@ -138,3 +138,21 @@
   - Name: GeneralParameters
     OutputInvalidPoints: true
     MaximumReprojectionError: 6.5
+- Name: perspectiveNPointSolver
+  Type: PerspectiveNPointSolving
+  Implementation: IterativePnpSolver
+  Parameters:
+  - Name: CameraMatrix
+    FocalLengthX: 868.664
+    FocalLengthY: 868.505
+    PrinciplePointX: 519.775
+    PrinciplePointY: 383.36
+  - Name: Distortion
+    K1: 0
+    K2: 0
+    P1: 0
+    P2: 0
+    K3: 0
+    K4: 0
+    K5: 0
+    K6: 0
