@@ -161,7 +161,7 @@ VisualPointFeatureVector3DConstPtr HarrisDetector3D::Convert(const pcl::PointClo
 {
 	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
 	ClearPoints(*featuresVector);
-	for (unsigned pointIndex = 0; pointIndex < indicesList->indices.size(); pointIndex++)
+	for (unsigned pointIndex = 0; pointIndex < indicesList->indices.size() && pointIndex < MAX_FEATURE_3D_POINTS; pointIndex++)
 	{
 		if (parameters.outputFormat == POSITIONS_OUTPUT)
 		{
