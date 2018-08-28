@@ -259,7 +259,7 @@ PointCloudMap::AffineTransform PointCloudMap::ConvertCloudPoseToInversionTransfo
 	{
 	Eigen::Quaternion<float> rotation(GetWRotation(*cloudPoseInMap), GetXRotation(*cloudPoseInMap), GetYRotation(*cloudPoseInMap), GetZRotation(*cloudPoseInMap));
 	Eigen::Translation<float, 3> translation( GetXPosition(*cloudPoseInMap), GetYPosition(*cloudPoseInMap), GetZPosition(*cloudPoseInMap));
-	AffineTransform affineTransform = rotation * translation;
+	AffineTransform affineTransform = translation * rotation;
 	return affineTransform.inverse();
 	}
 

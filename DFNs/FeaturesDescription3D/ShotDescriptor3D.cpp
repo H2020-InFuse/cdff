@@ -250,7 +250,7 @@ VisualPointFeatureVector3DConstPtr ShotDescriptor3D::Convert(
 	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
 	ClearPoints(*featuresVector);
 	bool computedNanFeature = false;
-	for (unsigned pointIndex = 0; pointIndex < indicesList->size(); pointIndex++)
+	for (unsigned pointIndex = 0; pointIndex < indicesList->size() && pointIndex < MAX_FEATURE_3D_POINTS; pointIndex++)
 	{
 		if (parameters.baseOptions.outputFormat == POSITIONS_OUTPUT)
 		{

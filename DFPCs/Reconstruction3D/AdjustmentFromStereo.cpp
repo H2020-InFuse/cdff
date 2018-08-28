@@ -79,7 +79,7 @@ AdjustmentFromStereo::AdjustmentFromStereo() :
 	featuresMatcher2d = NULL;
 	bundleAdjuster = NULL;
 	fundamentalMatrixComputer = NULL;
-	cameraTransformEstimator = NULL;
+	perspectiveNPointSolver = NULL;
 	reconstructor3dfrom2dmatches = NULL;
 
 	bundleHistory = NULL;
@@ -87,7 +87,10 @@ AdjustmentFromStereo::AdjustmentFromStereo() :
 
 	cleanCorrespondenceMap = NewCorrespondenceMap2D();
 	triangulatedKeypointCloud = NewPointCloud();
+
 	estimatedCameraPoses = NULL;
+	presentKeypointVector = NULL;
+	keypointCloud = NULL;
 
 	configurationFilePath = "";
 
@@ -109,14 +112,17 @@ AdjustmentFromStereo::~AdjustmentFromStereo()
 	delete(featuresMatcher2d);
 	delete(bundleAdjuster);
 	delete(fundamentalMatrixComputer);
-	delete(cameraTransformEstimator);
+	delete(perspectiveNPointSolver);
 	delete(reconstructor3dfrom2dmatches);
 
 	DeleteIfNotNull(bundleHistory);
 	DeleteIfNotNull(correspondencesRecorder);
 	DeleteIfNotNull(cleanCorrespondenceMap);
 	DeleteIfNotNull(triangulatedKeypointCloud);
+
 	DeleteIfNotNull(estimatedCameraPoses);
+	DeleteIfNotNull(presentKeypointVector);
+	DeleteIfNotNull(keypointCloud);
 	}
 
 
@@ -245,6 +251,8 @@ void AdjustmentFromStereo::setup()
 	if (parameters.useBundleInitialEstimation && estimatedCameraPoses == NULL)
 		{
 		estimatedCameraPoses = NewPoses3DSequence();
+		presentKeypointVector = NewVisualPointFeatureVector2D();
+		keypointCloud = NewPointCloud();
 		}
 	}
 
@@ -290,7 +298,7 @@ void AdjustmentFromStereo::InstantiateDFNExecutors()
 
 	if (parameters.useBundleInitialEstimation)
 		{		
-		cameraTransformEstimator = new CamerasTransformEstimationExecutor( static_cast<CamerasTransformEstimationInterface*>( configurator.GetDfn("cameraTransformEstimator") ) );
+		perspectiveNPointSolver = new PerspectiveNPointSolvingExecutor( static_cast<PerspectiveNPointSolvingInterface*>( configurator.GetDfn("perspectiveNPointSolver") ) );
 		reconstructor3dfrom2dmatches = new PointCloudReconstruction2DTo3DExecutor( static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3dfrom2dmatches") ) );
 		}
 	}
@@ -546,6 +554,8 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 	for(int backwardSteps = 1; backwardSteps < parameters.numberOfAdjustedStereoPairs; backwardSteps++)
 		{
 		VisualPointFeatureVector2DConstPtr pastLeftFeatureVector = bundleHistory->GetFeatures(backwardSteps, LEFT_FEATURE_CATEGORY);
+		CorrespondenceMap2DConstPtr pastCorrespondenceMap = bundleHistory->GetMatches(backwardSteps);
+		PointCloudConstPtr pastTriangulatedCloud = bundleHistory->GetPointCloud(backwardSteps, TRIANGULATION_CLOUD_CATEGORY);
 		if (pastLeftFeatureVector == NULL)
 			{
 			break;
@@ -564,7 +574,8 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 		#endif
 		if (success)
 			{
-			cameraTransformEstimator->Execute(fundamentalMatrix, inlierCorrespondenceMap, pose, success);
+			//cameraTransformEstimator->Execute(fundamentalMatrix, inlierCorrespondenceMap, pose, success);
+			EstimatePose(pastCorrespondenceMap, inlierCorrespondenceMap, pastTriangulatedCloud, pose, success);
 			}
 		if (success)
 			{
@@ -584,6 +595,35 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 			#endif
 			}
 		}
+	}
+
+void AdjustmentFromStereo::EstimatePose(CorrespondenceMap2DConstPtr pastLeftRightCorrespondenceMap, CorrespondenceMap2DConstPtr leftPresentPastCorrespondenceMap, 
+	PointCloudConstPtr pastCloud, Pose3DConstPtr& pose, bool& success)
+	{
+	int leftPresentPastCorrespondenceNumber = GetNumberOfCorrespondences(*leftPresentPastCorrespondenceMap);
+	int pastLeftRightCorrespondenceNumber = GetNumberOfCorrespondences(*pastLeftRightCorrespondenceMap);
+	ASSERT( GetNumberOfPoints(*pastCloud) == pastLeftRightCorrespondenceNumber, "Error: Cloud and correspondences do not have the same cardinality");
+
+	ClearPoints(*presentKeypointVector);
+	ClearPoints(*keypointCloud);
+	for(int leftPresentPastIndex=0; leftPresentPastIndex<leftPresentPastCorrespondenceNumber; leftPresentPastIndex++)
+		{
+		BaseTypesWrapper::Point2D leftPoint = GetSource(*leftPresentPastCorrespondenceMap, leftPresentPastIndex);
+		BaseTypesWrapper::Point2D pastLeftPoint = GetSink(*leftPresentPastCorrespondenceMap, leftPresentPastIndex);
+		for(int pastLeftRightIndex=0; pastLeftRightIndex<pastLeftRightCorrespondenceNumber; pastLeftRightIndex++)
+			{
+			BaseTypesWrapper::Point2D correspondingPastLeftPoint = GetSource(*pastLeftRightCorrespondenceMap, pastLeftRightIndex);
+			if ( correspondingPastLeftPoint.x == pastLeftPoint.x && correspondingPastLeftPoint.y == pastLeftPoint.y )
+				{
+				AddPoint(*presentKeypointVector, leftPoint.x, leftPoint.y);
+				AddPoint(*keypointCloud, GetXCoordinate(*pastCloud, pastLeftRightIndex), GetYCoordinate(*pastCloud, pastLeftRightIndex), GetZCoordinate(*pastCloud, pastLeftRightIndex) );
+				break;
+				}
+			}
+		}
+
+	pose = NULL;
+	perspectiveNPointSolver->Execute(keypointCloud, presentKeypointVector, pose, success);
 	}
 
 }

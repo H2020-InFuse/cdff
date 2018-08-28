@@ -428,18 +428,7 @@ void EstimationFromStereo::AddAllPointCloudsToMap(Poses3DSequenceConstPtr& camer
 
 void EstimationFromStereo::AddLastPointCloudToMap(Poses3DSequenceConstPtr& cameraPoses)
 	{
-	const Pose3D& poseOfPastCameraInCurrentCamera = GetPose(*cameraPoses, 0);
-
-	//Inverting the pose.
-	Pose3D poseOfCurrentCameraInPastCamera;
-	SetPosition(poseOfCurrentCameraInPastCamera, -GetXPosition(poseOfPastCameraInCurrentCamera), -GetYPosition(poseOfPastCameraInCurrentCamera), -GetZPosition(poseOfPastCameraInCurrentCamera) );
-
-	float qx = GetXOrientation(poseOfPastCameraInCurrentCamera);
-	float qy = GetYOrientation(poseOfPastCameraInCurrentCamera);
-	float qz = GetZOrientation(poseOfPastCameraInCurrentCamera);
-	float qw = GetWOrientation(poseOfPastCameraInCurrentCamera);
-	float squaredNorm = qx*qx + qy*qy + qz*qz + qw*qw;
-	SetOrientation(poseOfCurrentCameraInPastCamera, -qx/squaredNorm, -qy/squaredNorm, -qz/squaredNorm, qw/squaredNorm);
+	const Pose3D& poseOfCurrentCameraInPastCamera = GetPose(*cameraPoses, 0);
 
 	pointCloudMap.AttachPointCloud(bundleHistory->GetPointCloud(0, STEREO_CLOUD_CATEGORY), EMPTY_FEATURE_VECTOR, &poseOfCurrentCameraInPastCamera);
 	}

@@ -80,7 +80,7 @@ void PointCloudTransformer::TransformCloud(float positionX, float positionY, flo
 	Eigen::Quaternion<float> rotation(rotationW, rotationX, rotationY, rotationZ);
 	Eigen::Translation<float, 3> translation(positionX, positionY, positionZ);
 
-	AffineTransform affineTransform = rotation * translation;
+	AffineTransform affineTransform = translation * rotation;
 	
 	for(unsigned pointIndex = 0; pointIndex < transformedCloud->points.size(); pointIndex++)
 		{
