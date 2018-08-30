@@ -112,14 +112,6 @@ ReconstructionFromStereo::~ReconstructionFromStereo()
 	delete(EMPTY_FEATURE_VECTOR);
 	}
 
-/**
-* The process method is split into three steps 
-* (i) computation of the camera transform between the current camera pose and the pose of the camera at an appropriate past time instant, the appropriate time instant is the most recent one that allows
-* a computation of the transform, if there exists one
-* (ii) if a camera transform is computed, then a point cloud is computed from the left and right images of the stereo camera
-* (iii) the point cloud rover map is updated with the newly computed point cloud.
-*
-**/
 void ReconstructionFromStereo::run() 
 	{
 	#ifdef TESTING
@@ -227,15 +219,6 @@ void ReconstructionFromStereo::InstantiateDFNExecutors()
 	reconstructor3dfrom2dmatches = new PointCloudReconstruction2DTo3DExecutor( static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3dfrom2dmatches") ) );
 	}
 
-/**
-* The ComputeCameraMovement Method performs the following operation
-*
-* (i) Filtering, features extraction and computation of features descriptor applied to the current left camera image;
-* (ii) Search of an appropriate past image, this is a linear search on all the past images starting with the most recent one;
-*      (ii a) for each past image, there is a filtering, features extraction and computation of features descriptor applied to the past left camera image;
-*      (ii b) features matching, computation of the fundamental matrix and extimation of the transform between present and past pose are performed on the base of the extracted features
-*      (ii c) the search stops when a transform is successfully estimated or there are no more past images
-**/
 void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftImage, FrameConstPtr filteredRightImage)
 	{
 	VisualPointFeatureVector2DConstPtr keypointVector = NULL;
