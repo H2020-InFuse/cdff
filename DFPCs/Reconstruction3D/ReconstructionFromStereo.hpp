@@ -34,16 +34,18 @@
  */
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
 
-#include <ImageFiltering/ImageFilteringInterface.hpp>
-#include <StereoReconstruction/StereoReconstructionInterface.hpp>
-#include <FeaturesMatching2D/FeaturesMatching2DInterface.hpp>
-#include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
-#include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
-#include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
-#include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
+#include <ImageFiltering/ImageFilteringExecutor.hpp>
+#include <StereoReconstruction/StereoReconstructionExecutor.hpp>
+#include <FeaturesMatching2D/FeaturesMatching2DExecutor.hpp>
+#include <FeaturesExtraction2D/FeaturesExtraction2DExecutor.hpp>
+#include <FeaturesDescription2D/FeaturesDescription2DExecutor.hpp>
+#include <FundamentalMatrixComputation/FundamentalMatrixComputationExecutor.hpp>
+#include <PerspectiveNPointSolving/PerspectiveNPointSolvingExecutor.hpp>
+#include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>
 
-#include "Map.hpp"
-#include "ObservedScene.hpp"
+#include "PointCloudMap.hpp"
+#include "BundleHistory.hpp"
+
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
 #include <Frame.hpp>
@@ -53,6 +55,9 @@
 #include <CorrespondenceMap2D.hpp>
 #include <Matrix.hpp>
 
+#ifdef TESTING
+#include <fstream>
+#endif
 
 namespace CDFF
 {
@@ -74,7 +79,7 @@ namespace Reconstruction3D
 	 * --------------------------------------------------------------------
 	 */
         public:
-		ReconstructionFromStereo(Map* map = NULL);
+		ReconstructionFromStereo();
 		~ReconstructionFromStereo();
 		void run();
 		void setup();
@@ -91,66 +96,72 @@ namespace Reconstruction3D
 	 */	
 	private:
 		DfpcConfigurator configurator;
-		Map* map;
+		PointCloudMap pointCloudMap;
+		bool firstInput;
 
 		struct ReconstructionFromStereoOptionsSet
 			{
 			float searchRadius;
 			float pointCloudMapResolution;
+			float baseline;
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
 		ReconstructionFromStereoOptionsSet parameters;
 		static const ReconstructionFromStereoOptionsSet DEFAULT_PARAMETERS;
 
-		CDFF::DFN::ImageFilteringInterface* leftFilter;
-		CDFF::DFN::ImageFilteringInterface* rightFilter;
-		CDFF::DFN::FeaturesExtraction2DInterface* featuresExtractor;
-		CDFF::DFN::FeaturesDescription2DInterface* optionalFeaturesDescriptor;
-		CDFF::DFN::FeaturesMatching2DInterface* featuresMatcher;	
-		CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;	
-		CDFF::DFN::CamerasTransformEstimationInterface* cameraTransformEstimator;
-		CDFF::DFN::StereoReconstructionInterface* reconstructor3D;
+		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;
+		const std::string LEFT_FEATURE_CATEGORY;
+		const std::string RIGHT_FEATURE_CATEGORY;
+		const std::string STEREO_CLOUD_CATEGORY;
+		const std::string TRIANGULATION_CLOUD_CATEGORY;
 
-		FrameWrapper::FrameConstPtr pastLeftImage;
-		FrameWrapper::FramePtr currentLeftImage;
-		FrameWrapper::FramePtr currentRightImage;
-		FrameWrapper::FramePtr filteredPastLeftImage;
-		FrameWrapper::FramePtr filteredCurrentLeftImage;
-		FrameWrapper::FramePtr filteredCurrentRightImage;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr pastLeftKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentLeftKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentRightKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr pastLeftFeaturesVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentLeftFeaturesVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentRightFeaturesVector;
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr pastToCurrentCorrespondenceMap;
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr leftToRightCorrespondenceMap;
-		MatrixWrapper::Matrix3dPtr fundamentalMatrix;
-		PoseWrapper::Pose3DPtr pastToCurrentCameraTransform;
-		PointCloudWrapper::PointCloudPtr pointCloud;
+		CDFF::DFN::ImageFilteringExecutor* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringExecutor* optionalRightFilter;
+		CDFF::DFN::FeaturesExtraction2DExecutor* featuresExtractor;
+		CDFF::DFN::FeaturesDescription2DExecutor* optionalFeaturesDescriptor;
+		CDFF::DFN::FeaturesMatching2DExecutor* featuresMatcher;	
+		CDFF::DFN::FundamentalMatrixComputationExecutor* fundamentalMatrixComputer;	
+		CDFF::DFN::PerspectiveNPointSolvingExecutor* perspectiveNPointSolver;
+		CDFF::DFN::StereoReconstructionExecutor* reconstructor3d;
+		CDFF::DFN::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
+
+		#ifdef TESTING
+		std::ofstream logFile;
+		#endif
+
+		//Data Helpers
+		PointCloudWrapper::PointCloudPtr perspectiveCloud;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr perspectiveVector;
+		PointCloudWrapper::PointCloudPtr triangulatedKeypointCloud;
+		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr cleanCorrespondenceMap;
+
+		//Helpers
+		BundleHistory* bundleHistory;
+		PoseWrapper::Pose3D rightToLeftCameraPose;
 
 		void ConfigureExtraParameters();
-		void AssignDfnsAlias();
+		void InstantiateDFNExecutors();
 
-		bool ComputeCameraMovement();
-		void ComputePointCloud();
-		void UpdateScene();
+		void ComputeCurrentMatches(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
+		bool ComputeCameraMovement(PoseWrapper::Pose3DConstPtr& previousPoseToPose);
+		void CleanUnmatchedFeatures(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr map, PointCloudWrapper::PointCloudPtr cloud);
 
-		void FilterCurrentLeftImage();
-		void FilterPastLeftImage();
-		void FilterCurrentRightImage();
-		void ExtractCurrentLeftFeatures();
-		void ExtractPastLeftFeatures();
-		void ExtractCurrentRightFeatures();
-		void DescribeCurrentLeftFeatures();
-		void DescribePastLeftFeatures();
-		void DescribeCurrentRightFeatures();
-		void MatchCurrentAndPastFeatures();
-		void MatchLeftAndRightFeatures();
-		bool ComputeFundamentalMatrix();
-		bool ComputePastToCurrentTransform();
-		void ComputeStereoPointCloud();
+
+		/*
+		* Inline Methods
+		*
+		*/
+
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
     };
 }
 }
