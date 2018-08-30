@@ -111,6 +111,8 @@ EstimationFromStereo::~EstimationFromStereo()
 	DeleteIfNotNull(correspondencesRecorder);
 	DeleteIfNotNull(leftTimeCorrespondenceMap);
 	DeleteIfNotNull(rightTimeCorrespondenceMap);
+
+	delete(EMPTY_FEATURE_VECTOR);
 	}
 
 
@@ -302,7 +304,7 @@ void EstimationFromStereo::ComputeVisualPointFeatures(FrameConstPtr filteredLeft
 	featuresExtractor2d->Execute(filteredLeftImage, keypointVector);
 	optionalFeaturesDescriptor2d->Execute(filteredLeftImage, keypointVector, featureVector);
 	bundleHistory->AddFeatures(*featureVector, LEFT_FEATURE_CATEGORY);
-	PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
+	DEBUG_PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
 	#ifdef TESTING
 	logFile << GetNumberOfPoints(*keypointVector) << " " << GetNumberOfPoints(*featureVector) << " ";
@@ -313,7 +315,7 @@ void EstimationFromStereo::ComputeVisualPointFeatures(FrameConstPtr filteredLeft
 	featuresExtractor2d->Execute(filteredRightImage, keypointVector);
 	optionalFeaturesDescriptor2d->Execute(filteredRightImage, keypointVector, featureVector);
 	bundleHistory->AddFeatures(*featureVector, RIGHT_FEATURE_CATEGORY);
-	PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
+	DEBUG_PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
 	#ifdef TESTING
 	logFile << GetNumberOfPoints(*keypointVector) << " " << GetNumberOfPoints(*featureVector) << " ";
@@ -323,7 +325,7 @@ void EstimationFromStereo::ComputeVisualPointFeatures(FrameConstPtr filteredLeft
 	VisualPointFeatureVector2DConstPtr rightFeatureVector = bundleHistory->GetFeatures(0, RIGHT_FEATURE_CATEGORY);
 	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = NULL;
 	featuresMatcher2d->Execute(leftFeatureVector, rightFeatureVector,leftRightCorrespondenceMap);
-	PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
+	DEBUG_PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
 
 	#ifdef TESTING
 	logFile << GetNumberOfCorrespondences(*leftRightCorrespondenceMap) << " ";
@@ -342,18 +344,18 @@ void EstimationFromStereo::ComputeVisualPointFeatures(FrameConstPtr filteredLeft
 	if (success)
 		{
 		bundleHistory->AddMatches(*inlierCorrespondenceMap);
-		PRINT_TO_LOG("Clean Inlier Correspondences Number", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
+		DEBUG_PRINT_TO_LOG("Clean Inlier Correspondences Number", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
 		reconstructor3dfrom2dmatches->Execute(inlierCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
 		}
 	else
 		{
 		bundleHistory->AddMatches(*leftRightCorrespondenceMap);
-		PRINT_TO_LOG("Clean Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
+		DEBUG_PRINT_TO_LOG("Clean Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
 		reconstructor3dfrom2dmatches->Execute(leftRightCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
 		}
 	//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
 	bundleHistory->AddPointCloud(*triangulatedKeypointCloud, TRIANGULATION_CLOUD_CATEGORY);
-	PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
+	DEBUG_PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
 	#ifdef TESTING
 	int validPointCounter = 0;
 	int numberOfPoints = GetNumberOfPoints(*triangulatedKeypointCloud);

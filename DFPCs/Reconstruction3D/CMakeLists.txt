@@ -51,7 +51,8 @@ target_link_libraries(
 add_library(
     reconstruction_from_stereo
     ReconstructionFromStereo.cpp
-    ObservedScene.cpp
+    PointCloudMap.cpp
+    BundleHistory.cpp
 )
 target_link_libraries(
     reconstruction_from_stereo
