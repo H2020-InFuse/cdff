@@ -254,7 +254,7 @@ void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftI
 	featuresExtractor->Execute(filteredRightImage, keypointVector);
 	optionalFeaturesDescriptor->Execute(filteredRightImage, keypointVector, featureVector);
 	bundleHistory->AddFeatures(*featureVector, RIGHT_FEATURE_CATEGORY);
-	PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
+	DEBUG_PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
 	#ifdef TESTING
 	logFile << GetNumberOfPoints(*keypointVector) << " " << GetNumberOfPoints(*featureVector) << " ";
@@ -264,7 +264,7 @@ void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftI
 	VisualPointFeatureVector2DConstPtr rightFeatureVector = bundleHistory->GetFeatures(0, RIGHT_FEATURE_CATEGORY);
 	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = NULL;
 	featuresMatcher->Execute(leftFeatureVector, rightFeatureVector,leftRightCorrespondenceMap);
-	PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
+	DEBUG_PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
 
 	#ifdef TESTING
 	logFile << GetNumberOfCorrespondences(*leftRightCorrespondenceMap) << " ";
@@ -274,7 +274,7 @@ void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftI
 	bool success = false;
 	CorrespondenceMap2DConstPtr inlierCorrespondenceMap = NULL;
 	fundamentalMatrixComputer->Execute(leftRightCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
-	PRINT_TO_LOG("Inlier Correspondences Number", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
+	DEBUG_PRINT_TO_LOG("Inlier Correspondences Number", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
 
 	if (success)
 		{
@@ -287,8 +287,8 @@ void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftI
 		CleanUnmatchedFeatures(leftRightCorrespondenceMap, triangulatedKeypointCloud);
 		}
 	//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
-	PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
-	PRINT_TO_LOG("Clean Matches Number", GetNumberOfCorrespondences(*cleanCorrespondenceMap) );
+	DEBUG_PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
+	DEBUG_PRINT_TO_LOG("Clean Matches Number", GetNumberOfCorrespondences(*cleanCorrespondenceMap) );
 	bundleHistory->AddPointCloud(*triangulatedKeypointCloud, TRIANGULATION_CLOUD_CATEGORY);
 	bundleHistory->AddMatches(*cleanCorrespondenceMap);
 	#ifdef TESTING
@@ -302,7 +302,7 @@ bool ReconstructionFromStereo::ComputeCameraMovement(Pose3DConstPtr& previousPos
 	VisualPointFeatureVector2DConstPtr pastLeftFeatureVector = bundleHistory->GetFeatures(1, LEFT_FEATURE_CATEGORY);
 	CorrespondenceMap2DConstPtr pastLeftCorrespondenceMap = NULL;
 	featuresMatcher->Execute(leftFeatureVector, pastLeftFeatureVector, pastLeftCorrespondenceMap);
-	PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*pastLeftCorrespondenceMap) );
+	DEBUG_PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*pastLeftCorrespondenceMap) );
 
 	#ifdef TESTING
 	logFile << GetNumberOfCorrespondences(*pastLeftCorrespondenceMap) << " ";
@@ -312,7 +312,7 @@ bool ReconstructionFromStereo::ComputeCameraMovement(Pose3DConstPtr& previousPos
 	bool pastSuccess = false;
 	CorrespondenceMap2DConstPtr pastInlierCorrespondenceMap = NULL;
 	fundamentalMatrixComputer->Execute(pastLeftCorrespondenceMap, pastLeftFundamentalMatrix, pastSuccess, pastInlierCorrespondenceMap);
-	PRINT_TO_LOG("Inlier Correspondences Number", GetNumberOfCorrespondences(*pastInlierCorrespondenceMap) );
+	DEBUG_PRINT_TO_LOG("Inlier Correspondences Number", GetNumberOfCorrespondences(*pastInlierCorrespondenceMap) );
 	
 	CorrespondenceMap2DConstPtr pastCorrespondenceMap = pastSuccess ? pastInlierCorrespondenceMap : pastLeftCorrespondenceMap;
 	CorrespondenceMap2DConstPtr currentCorrespondenceMap = bundleHistory->GetMatches(0);
