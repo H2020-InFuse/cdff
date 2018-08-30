@@ -39,8 +39,8 @@ namespace DFN
 
             /**
              * Query value from output port "transforms"
-             * @return transforms: this is an estimation of the poses of O1 in O2, O1 in O3, ..., On in O1, 
-	     *         O3 in O2, O4 in O2, ..., On in O2, ..., On in On-1.
+             * @return transforms: this is an estimation of the poses of O1 in O2, O1 in O3, ..., O1 in On, 
+	     *         O2 in O3, O2 in O4, ..., O2 in On, ..., On-1 in On.
              *         A pose has null quaternion if it was impossible to compute, as computation
              *         may fail if matches are not good enough.
              */

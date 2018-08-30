@@ -17,7 +17,7 @@
  *  This DFN chain implements the Reconstruction From Stereo as implementation of the DPFC for Reconsrtruction3D.
  *  This chain operates as follows: 
  *  the left and right images are used to reconstruct a 3D point cloud throught computation of a disparity map
- *  camera movement is estimated by matching features in the left images taken at two distinct time instants,
+ *  camera movement is estimated by matching features in the past left image with the 3d points extracted from the current stereo pair,
  *  point clouds at different time instants are merged together taking into account the movement of the camera.
  * 
  * @{
