@@ -340,9 +340,11 @@ bool ReconstructionFromStereo::ComputeCameraMovement(Pose3DConstPtr& previousPos
 
 	previousPoseToPose = NULL;
 	bool success;
+	DEBUG_PRINT_TO_LOG("Perspective cloud", GetNumberOfPoints(*perspectiveCloud) );
+	DEBUG_PRINT_TO_LOG("Perspective vector", GetNumberOfPoints(*perspectiveVector) );
 	perspectiveNPointSolver->Execute(perspectiveCloud, perspectiveVector, previousPoseToPose, success);
 	DEBUG_PRINT_TO_LOG("Estimated pose", ToString(*previousPoseToPose));
-
+	DEBUG_PRINT_TO_LOG("success", (success ? "yes" : "no") );
 	return success;
 	}
 
