@@ -1,0 +1,119 @@
+name: VisualOdometry_MAG
+doc: Visual odometry which relies on wheel odometry and stereo images developed by Magellium.
+dfns:
+    - name: CNESStereoRectification
+    - name: CNESStereoDisparity
+    - name: HarrisVisualFeaturesExtraction
+    - name: 3DPointComputation
+    - name: TemporalMatching
+    - name: 3DMotionEstimation
+    - name: PointTracking
+    - name: MotionEstimationLeastSquares
+
+input_ports:
+    - name: leftImage
+      type: asn1SccFrame
+      doc: "Left image frame"
+      connections:
+        - dfn: CNESStereoRectification
+          port: leftImage
+    - name: rightImage
+      type: asn1SccFrame
+      doc: "Right image frame"
+      connections:
+        - dfn: CNESStereoRectification
+          port: rightImage
+    - name: odoMotion
+      type: asn1SccTransformWithCovariance
+      doc: "Estimated pose of the rover from Odometry"
+      connections:
+        - dfn: TemporalMatching
+          port: odoMotion
+
+output_ports:
+    - name: estimateMotion
+      type: asn1SccTransformWithCovariance
+      doc: "Pose estimated from the VisualOdometry_MAG DFPC"
+      connections:
+          dfn: MotionEstimationLeastSquares
+          port: estimateMotion
+
+internal_connections:
+    - from:
+        dfn: CNESStereoRectification
+        port: leftImageRectified
+      to:
+        dfn: HarrisVisualFeaturesExtraction
+        port: image
+    - from:
+        dfn: CNESStereoRectification
+        port: leftImageRectified
+      to:
+        dfn: CNESStereoRectification
+        port: leftImage
+    - from:
+        dfn: CNESStereoRectification
+        port: rightImageRectified
+      to:
+        dfn: CNESStereoDisparity
+        port: rightImage
+    - from:
+        dfn: HarrisVisualFeaturesExtraction
+        port: features
+      to:
+        dfn: 3DPointComputation
+        port: features
+    - from:
+        dfn: HarrisVisualFeaturesExtraction
+        port: features
+      to:
+        dfn: PointTracking
+        port: features
+    - from:
+        dfn: CNESStereoDisparity
+        port: disparityMap
+      to:
+        dfn: 3DPointComputation
+        port: disparityMap
+    - from:
+        dfn: 3DPointComputation
+        port: 3DPoints
+      to:
+        dfn: TemporalMatching
+        port: 3DPoints
+    - from:
+        dfn: 3DPointComputation
+        port: 3DPoints
+      to:
+        dfn: PointTracking
+        port: 3DPoints
+    - from:
+        dfn: TemporalMatching
+        port: prevMatchedPoints
+      to:
+        dfn: 3DMotionEstimation
+        port: prev3DPoints
+    - from:
+        dfn: TemporalMatching
+        port: currMatchedPoints
+      to:
+        dfn: 3DMotionEstimation
+        port: curr3DPoints
+    - from:
+        dfn: 3DMotionEstimation
+        port: motion
+      to:
+        dfn: PointTracking
+        port: motion
+    - from:
+        dfn: PointTracking
+        port: matchedPrevPoints
+      to:
+        dfn: MotionEstimationLeastSquares
+        port: prev3DPoints
+    - from:
+        dfn: PointTracking
+        port: matchedCurrPoints
+      to:
+        dfn: MotionEstimationLeastSquares
+        port: curr3DPoints
