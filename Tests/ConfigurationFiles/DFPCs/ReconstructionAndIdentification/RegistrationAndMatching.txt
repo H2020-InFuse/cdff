@@ -1,0 +1,2 @@
+../../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcRegistrationFromStereo_DlrHcru.yaml
+../../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcFeaturesMatching3D_conf01.yaml

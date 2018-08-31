@@ -346,6 +346,20 @@ target_link_libraries(
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
+add_executable(
+    RegistrationAndMatchingGuiTest
+    DFPCs/ReconstructionAndIdentification/RegistrationAndMatching.cpp
+    DFPCs/ReconstructionAndIdentification/GuiTestReconstructionAndIdentification.cpp
+)
+set_target_properties(RegistrationAndMatchingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+    RegistrationAndMatchingGuiTest
+    registration_and_matching
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    boost_system yaml-cpp ${VTK_LIBRARIES}
+)
+
 #[======================================================================[
 
 add_executable(
