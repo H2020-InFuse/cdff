@@ -33,6 +33,7 @@ target_link_libraries(
   harris_detector_2d
   image_undistortion
   image_undistortion_rectification
+  cdff_dfn_edge_detection
   disparity_mapping
   hirschmuller_disparity_mapping
   scanline_optimization

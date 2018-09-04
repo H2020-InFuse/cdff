@@ -11,3 +11,4 @@ output_ports:
 implementations:
     - ImageUndistortion
     - ImageUndistortionRectification
+    - EdgeDetection
