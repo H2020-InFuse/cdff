@@ -32,6 +32,7 @@
 #include <StereoReconstruction/ScanlineOptimization.hpp>
 #include <Transform3DEstimation/CeresEstimation.hpp>
 #include <Transform3DEstimation/LeastSquaresMinimization.hpp>
+#include <DepthFiltering/Filter.hpp>
 
 #include <Errors/Assert.hpp>
 
@@ -101,6 +102,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	else if (dfnType == "Transform3DEstimation")
 	{
 		return CreateTransform3DEstimation(dfnImplementation);
+	}
+	else if (dfnType == "DepthFiltering")
+	{
+		return CreateDepthFiltering(dfnImplementation);
 	}
 
 	PRINT_TO_LOG("DFN: ", dfnType);
@@ -289,6 +294,12 @@ Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(std::st
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
+}
+
+
+DepthFilteringInterface* DFNsBuilder::CreateDepthFiltering(std::string dfnImplementation)
+{
+	return new DepthFiltering::Filter();
 }
 
 }
