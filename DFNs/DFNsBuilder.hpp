@@ -63,7 +63,7 @@ namespace DFN
 			static Registration3DInterface* CreateRegistration3D(std::string dfnImplementation);
 			static StereoReconstructionInterface* CreateStereoReconstruction(std::string dfnImplementation);
 			static Transform3DEstimationInterface* CreateTransform3DEstimation(std::string dfnImplementation);
-			static DepthFilteringInterface* DFNsBuilder::CreateDepthFiltering(std::string dfnImplementation);
+			static DepthFilteringInterface* CreateDepthFiltering(std::string dfnImplementation);
 
 	};
 }
