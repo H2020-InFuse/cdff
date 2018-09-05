@@ -18,9 +18,9 @@ namespace CDFF
 namespace DFN
 {
 /**
-* All the methods in this class execute the DFN for the computation of feature descriptors. A DFN instance has to be passed in the constructor of these class. Each method takes the following parameters:
+* All the methods in this class execute the DFN for the filtering of depth images. A DFN instance has to be passed in the constructor of these class. Each method takes the following parameters:
 * @param inputFrame: input image;
-* @param outputVector: output vector of keypoints.
+* @param outputVector: output filtered image.
 *
 * The main difference between the four methods are input and output types:
 * Methods (i) and (ii) have the constant pointer as input, Methods (iii)  and (iv) have a constant reference as input;
