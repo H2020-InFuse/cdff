@@ -98,6 +98,7 @@ namespace Reconstruction3D
 			{
 			float searchRadius;
 			float pointCloudMapResolution;
+			bool matchToReconstructedCloud;
 			};
 
 		Helpers::ParametersListHelper parametersHelper;

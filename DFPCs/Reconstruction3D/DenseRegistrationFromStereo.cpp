@@ -55,6 +55,7 @@ DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 	{
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "MatchToReconstructedCloud", parameters.matchToReconstructedCloud, DEFAULT_PARAMETERS.matchToReconstructedCloud);
 
 	configurationFilePath = "";
 	firstInput = true;
@@ -106,7 +107,11 @@ void DenseRegistrationFromStereo::run()
 
 	PointCloudConstPtr imageCloud = NULL;
 	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, imageCloud);
-	bundleHistory->AddPointCloud(*imageCloud);
+
+	if (!parameters.matchToReconstructedCloud)
+		{
+		bundleHistory->AddPointCloud(*imageCloud);
+		}
 
 	#ifdef TESTING
 	logFile << GetNumberOfPoints(*imageCloud) << " ";
@@ -157,6 +162,11 @@ void DenseRegistrationFromStereo::run()
 		Copy( pointCloudMap.GetLatestPose(), outPose);
 		PointCloudWrapper::PointCloudConstPtr outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(&outPose, parameters.searchRadius);
 		Copy(*outputPointCloud, outPointCloud); 
+
+		if (parameters.matchToReconstructedCloud)
+			{
+			bundleHistory->AddPointCloud(*outputPointCloud);
+			}
 
 		DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
@@ -233,7 +243,8 @@ void DenseRegistrationFromStereo::setup()
 const DenseRegistrationFromStereo::RegistrationFromStereoOptionsSet DenseRegistrationFromStereo::DEFAULT_PARAMETERS = 
 	{
 	.searchRadius = 20,
-	.pointCloudMapResolution = 1e-2
+	.pointCloudMapResolution = 1e-2,
+	.matchToReconstructedCloud = false
 	};
 
 /* --------------------------------------------------------------------------
