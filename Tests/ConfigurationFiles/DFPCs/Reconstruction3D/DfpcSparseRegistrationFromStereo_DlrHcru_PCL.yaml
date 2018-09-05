@@ -3,6 +3,7 @@
   - Name: GeneralParameters
     PointCloudMapResolution: 0.03
     SearchRadius: 80
+    MatchToReconstructedCloud: true
 - Name: reconstructor3D
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping

@@ -54,6 +54,7 @@ SparseRegistrationFromStereo::SparseRegistrationFromStereo()
 	{
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "MatchToReconstructedCloud", parameters.matchToReconstructedCloud, DEFAULT_PARAMETERS.matchToReconstructedCloud);
 	configurationFilePath = "";
 	firstInput = true;
 
@@ -112,8 +113,11 @@ void SparseRegistrationFromStereo::run()
 	featuresExtractor3d->Execute(imageCloud, keypointVector);
 	DEBUG_SHOW_3D_VISUAL_FEATURES(imageCloud, keypointVector);
 
-	ComputeFeatureCloud(keypointVector);
-	bundleHistory->AddPointCloud(*featureCloud);
+	if (!parameters.matchToReconstructedCloud)
+		{
+		ComputeFeatureCloud(keypointVector);
+		bundleHistory->AddPointCloud(*featureCloud);
+		}
 
 	#ifdef TESTING
 	logFile << GetNumberOfPoints(*imageCloud) << " ";
@@ -163,6 +167,14 @@ void SparseRegistrationFromStereo::run()
 	if (outSuccess)
 		{
 		Copy( pointCloudMap.GetLatestPose(), outPose);
+		if (parameters.matchToReconstructedCloud)
+			{
+			VisualPointFeatureVector3DConstPtr fullCloudKeypointVector = pointCloudMap.GetSceneFeaturesVector(&outPose, parameters.searchRadius);
+			ComputeFeatureCloud(fullCloudKeypointVector);
+			bundleHistory->AddPointCloud(*featureCloud);
+			DeleteIfNotNull(fullCloudKeypointVector);
+			}
+
 		PointCloudWrapper::PointCloudConstPtr outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(&outPose, parameters.searchRadius);
 		Copy(*outputPointCloud, outPointCloud); 
 
@@ -241,7 +253,8 @@ void SparseRegistrationFromStereo::setup()
 const SparseRegistrationFromStereo::RegistrationFromStereoOptionsSet SparseRegistrationFromStereo::DEFAULT_PARAMETERS = 
 	{
 	.searchRadius = 20,
-	.pointCloudMapResolution = 1e-2
+	.pointCloudMapResolution = 1e-2,
+	.matchToReconstructedCloud = false
 	};
 
 /* --------------------------------------------------------------------------
