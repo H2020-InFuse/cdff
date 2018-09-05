@@ -31,14 +31,6 @@
 #include <Visualizers/OpencvVisualizer.hpp>
 #include <Visualizers/PclVisualizer.hpp>
 
-#define DELETE_PREVIOUS(object) \
-	{ \
-	if (object != NULL) \
-		{ \
-		delete(object); \
-		} \
-	} \
-
 namespace CDFF
 {
 namespace DFPC
@@ -47,10 +39,10 @@ namespace Reconstruction3D
 {
 
 using namespace CDFF::DFN;
+using namespace VisualPointFeatureVector3DWrapper;
 using namespace FrameWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
-using namespace VisualPointFeatureVector3DWrapper;
 
 /* --------------------------------------------------------------------------
  *
@@ -58,96 +50,177 @@ using namespace VisualPointFeatureVector3DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-DenseRegistrationFromStereo::DenseRegistrationFromStereo()
+DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
+	EMPTY_FEATURE_VECTOR( NewVisualPointFeatureVector3D() )
 	{
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 
-	leftImage = NewFrame();
-	rightImage = NewFrame();
-	filteredLeftImage = NULL;
-	filteredRightImage = NULL;
-	imagesCloud = NewPointCloud();
-	cameraPoseInScene = NewPose3D();
-	previousCameraPoseInScene = NewPose3D();
-	emptyFeaturesVector = NewVisualPointFeatureVector3D();
+	configurationFilePath = "";
+	firstInput = true;
 
 	optionalLeftFilter = NULL;
 	optionalRightFilter = NULL;
-	reconstructor3D = NULL;
-	cloudRegistrator = NULL;
+	reconstructor3d = NULL;
+	registrator3d = NULL;
 
-	configurationFilePath = "";
-	firstInput = true;
+	bundleHistory = new BundleHistory(2);
+
+	#ifdef TESTING
+	logFile.open("/InFuse/myLog.txt");
+	logFile.close();
+	#endif
 	}
 
 DenseRegistrationFromStereo::~DenseRegistrationFromStereo()
 	{
-	if (optionalLeftFilter != NULL)
-		{
-		DELETE_PREVIOUS(filteredLeftImage);
-		}
-	if (optionalRightFilter != NULL)
-		{
-		DELETE_PREVIOUS(filteredRightImage);
-		}
-	delete(leftImage);
-	delete(rightImage);
-	delete(imagesCloud);
-	delete(cameraPoseInScene);
-	DELETE_PREVIOUS(previousCameraPoseInScene);
-	DELETE_PREVIOUS(emptyFeaturesVector);
+	DeleteIfNotNull(optionalLeftFilter);
+	DeleteIfNotNull(optionalRightFilter);
+	DeleteIfNotNull(reconstructor3d);
+	DeleteIfNotNull(registrator3d);
+
+	DeleteIfNotNull(bundleHistory);
+	delete( EMPTY_FEATURE_VECTOR );
 	}
 
 /**
-* The process method is split into three steps
+* The process method is split into three steps 
 * (i) computation of the point cloud from the stereo pair;
 * (ii) computation of the camera pose by 3d matching of the point cloud with the a partial scene of the original map ceneters at the camera previous pose;
 * (iii) the point cloud rover map is updated with the newly computed point cloud.
 *
 **/
-void DenseRegistrationFromStereo::run()
+void DenseRegistrationFromStereo::run() 
 	{
-	DEBUG_PRINT_TO_LOG("Dense Registration from stereo start", "");
+	#ifdef TESTING
+	logFile.open("/InFuse/myLog.txt", std::ios::app);
+	#endif
+	DEBUG_PRINT_TO_LOG("Registration from stereo start", "");
 
-	Copy(inLeftImage, *leftImage); 
-	Copy(inRightImage, *rightImage);
+	bundleHistory->AddImages(inLeftImage, inRightImage);
 
-	ComputePointCloud();
+	FrameConstPtr filteredLeftImage = NULL;
+	FrameConstPtr filteredRightImage = NULL;
+	optionalLeftFilter->Execute(inLeftImage, filteredLeftImage);
+	optionalRightFilter->Execute(inRightImage, filteredRightImage);
+
+	PointCloudConstPtr imageCloud = NULL;
+	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, imageCloud);
+	bundleHistory->AddPointCloud(*imageCloud);
+
+	#ifdef TESTING
+	logFile << GetNumberOfPoints(*imageCloud) << " ";
+	#endif
 
 	if (firstInput)
 		{
 		firstInput = false;
-
-		cameraPoseInScene = NewPose3D();
 		outSuccess = true;
+
+		Pose3D zeroPose;
+		SetPosition(zeroPose, 0, 0, 0);
+		SetOrientation(zeroPose, 0, 0, 0, 1);
+		pointCloudMap.AddPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, &zeroPose);
 		}
 	else
 		{
-		sceneCloud = pointCloudMap.GetScenePointCloudInOrigin(previousCameraPoseInScene, parameters.searchRadius);
-		outSuccess = RegisterPointCloudOnScene();
+		Pose3DConstPtr poseToPreviousPose = NULL;
+		registrator3d->Execute( imageCloud, bundleHistory->GetPointCloud(1), poseToPreviousPose, outSuccess);
+		if (outSuccess)
+			{
+			pointCloudMap.AttachPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, poseToPreviousPose);
+			}
+		#ifdef TESTING
+		logFile << outSuccess << " ";
+		logFile << GetXPosition(*poseToPreviousPose) << " ";
+		logFile << GetYPosition(*poseToPreviousPose) << " ";
+		logFile << GetZPosition(*poseToPreviousPose) << " ";
+		logFile << GetXOrientation(*poseToPreviousPose) << " ";
+		logFile << GetYOrientation(*poseToPreviousPose) << " ";
+		logFile << GetZOrientation(*poseToPreviousPose) << " ";
+		logFile << GetWOrientation(*poseToPreviousPose) << " ";
+		#endif
+		}
+
+	if (!outSuccess)
+		{
+		bundleHistory->RemoveEntry(0);
+		#ifdef TESTING
+		logFile << std::endl;
+		logFile.close();
+		#endif
+		return;
 		}
 
 	if (outSuccess)
 		{
-		pointCloudMap.AddPointCloud(imagesCloud, emptyFeaturesVector, cameraPoseInScene);
-		PointCloudWrapper::PointCloudConstPtr outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(cameraPoseInScene, parameters.searchRadius);
+		Copy( pointCloudMap.GetLatestPose(), outPose);
+		PointCloudWrapper::PointCloudConstPtr outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(&outPose, parameters.searchRadius);
 		Copy(*outputPointCloud, outPointCloud); 
+
+		DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
+		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
+
+		#ifdef TESTING
+		logFile << GetNumberOfPoints(outPointCloud) << " ";
+		logFile << GetXPosition(outPose) << " ";
+		logFile << GetYPosition(outPose) << " ";
+		logFile << GetZPosition(outPose) << " ";
+		logFile << GetXOrientation(outPose) << " ";
+		logFile << GetYOrientation(outPose) << " ";
+		logFile << GetZOrientation(outPose) << " ";
+		logFile << GetWOrientation(outPose) << " ";
+
+		if ( GetNumberOfPoints(outPointCloud) > 0)
+			{
+			float minMax[6] = { GetXCoordinate(outPointCloud, 0), GetXCoordinate(outPointCloud, 0), GetYCoordinate(outPointCloud, 0), 
+				GetYCoordinate(outPointCloud, 0), GetZCoordinate(outPointCloud, 0), GetZCoordinate(outPointCloud, 0)};
+			int numberOfPoints = GetNumberOfPoints(outPointCloud);
+			for (int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+				{
+				bool change[6];
+				change[0] = minMax[0] < GetXCoordinate(outPointCloud, pointIndex);
+				change[1] = minMax[1] > GetXCoordinate(outPointCloud, pointIndex);
+				change[2] = minMax[2] < GetYCoordinate(outPointCloud, pointIndex);
+				change[3] = minMax[3] > GetYCoordinate(outPointCloud, pointIndex);
+				change[4] = minMax[4] < GetZCoordinate(outPointCloud, pointIndex);
+				change[5] = minMax[5] > GetZCoordinate(outPointCloud, pointIndex);
+				minMax[0] = change[0] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[0];
+				minMax[1] = change[1] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[1];
+				minMax[2] = change[2] ? GetYCoordinate(outPointCloud, pointIndex) : minMax[2];
+				minMax[3] = change[3] ? GetYCoordinate(outPointCloud, pointIndex) : minMax[3];
+				minMax[4] = change[4] ? GetZCoordinate(outPointCloud, pointIndex) : minMax[4];
+				minMax[5] = change[5] ? GetZCoordinate(outPointCloud, pointIndex) : minMax[5];
+				}
+			logFile << (minMax[0] - minMax[1]) << " ";
+			logFile << (minMax[2] - minMax[3]) << " ";
+			logFile << (minMax[4] - minMax[5]) << " ";
+			}
+		else	
+			{
+			logFile << 0 << " ";
+			logFile << 0 << " ";
+			logFile << 0 << " ";
+			}
+		#endif
+
 		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
-		DELETE_PREVIOUS(outputPointCloud);
-
-		Copy(*cameraPoseInScene, outPose);
-
-		Copy(*cameraPoseInScene, *previousCameraPoseInScene);
-		DEBUG_PRINT_TO_LOG("Pose ", ToString(outPose) );
+		DeleteIfNotNull(outputPointCloud);
 		}
+
+	#ifdef TESTING
+	logFile << std::endl;
+	logFile.close();
+	#endif
 	}
 
 void DenseRegistrationFromStereo::setup()
 	{
 	configurator.configure(configurationFilePath);
-	AssignDfnsAlias();
 	ConfigureExtraParameters();
+	InstantiateDFNExecutors();
+
+	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
 	}
 
 /* --------------------------------------------------------------------------
@@ -157,7 +230,7 @@ void DenseRegistrationFromStereo::setup()
  * --------------------------------------------------------------------------
  */
 
-const DenseRegistrationFromStereo::DenseRegistrationFromStereoOptionsSet DenseRegistrationFromStereo::DEFAULT_PARAMETERS =
+const DenseRegistrationFromStereo::RegistrationFromStereoOptionsSet DenseRegistrationFromStereo::DEFAULT_PARAMETERS = 
 	{
 	.searchRadius = 20,
 	.pointCloudMapResolution = 1e-2
@@ -174,95 +247,14 @@ void DenseRegistrationFromStereo::ConfigureExtraParameters()
 	parametersHelper.ReadFile( configurator.GetExtraParametersConfigurationFilePath() );
 
 	ASSERT(parameters.pointCloudMapResolution > 0, "DenseRegistrationFromStereo Error, Point Cloud Map resolution is not positive");
-	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
 	}
 
-void DenseRegistrationFromStereo::AssignDfnsAlias()
+void DenseRegistrationFromStereo::InstantiateDFNExecutors()
 	{
-	optionalLeftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) );
-	optionalRightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) );
-	reconstructor3D = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") );
-	cloudRegistrator = static_cast<Registration3DInterface*>( configurator.GetDfn("cloudRegistrator") );
-
-	ASSERT(reconstructor3D != NULL, "DFPC Registration from stereo error: reconstructor3D DFN configured incorrectly");
-	ASSERT(cloudRegistrator != NULL, "DFPC Registration from stereo error: featuresMatcher3d DFN configured incorrectly");
-
-	if (optionalLeftFilter != NULL)
-		{
-		filteredLeftImage = NewFrame();
-		}
-	if (optionalRightFilter != NULL)
-		{
-		filteredRightImage = NewFrame();
-		}
-	}
-
-/**
-* The method filters the left and right images, and uses them for the computation of a point cloud.
-*
-**/
-void DenseRegistrationFromStereo::ComputePointCloud()
-	{
-	FilterLeftImage();
-	FilterRightImage();
-	ComputeStereoPointCloud();
-	}
-
-void DenseRegistrationFromStereo::FilterLeftImage()
-	{
-	if (optionalLeftFilter != NULL)
-		{
-		optionalLeftFilter->imageInput(*leftImage);
-		optionalLeftFilter->process();
-		Copy(optionalLeftFilter->imageOutput(), *filteredLeftImage);
-		DEBUG_PRINT_TO_LOG("Filtered Frame", "");
-		DEBUG_SHOW_IMAGE(filteredLeftImage);
-		}
-	else
-		{
-		filteredLeftImage = leftImage;
-		}
-	}
-
-void DenseRegistrationFromStereo::FilterRightImage()
-	{
-	if (optionalRightFilter != NULL)
-		{
-		optionalRightFilter->imageInput(*rightImage);
-		optionalRightFilter->process();
-		Copy(optionalRightFilter->imageOutput(), *filteredRightImage);
-		DEBUG_PRINT_TO_LOG("Filtered Right Frame", "");
-		DEBUG_SHOW_IMAGE(filteredRightImage);
-		}
-	else
-		{
-		filteredRightImage = rightImage;
-		}
-	}
-
-void DenseRegistrationFromStereo::ComputeStereoPointCloud()
-	{
-	reconstructor3D->leftInput(*filteredLeftImage);
-	reconstructor3D->rightInput(*filteredRightImage);
-	reconstructor3D->process();
-	Copy( reconstructor3D->pointcloudOutput(), *imagesCloud);
-	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*imagesCloud));
-	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(reconstructor3D->pointcloudOutput()));
-	DEBUG_SHOW_POINT_CLOUD(imagesCloud);
-	}
-
-bool DenseRegistrationFromStereo::RegisterPointCloudOnScene()
-	{
-	DEBUG_PRINT_TO_LOG("Starting Registration", "");
-	cloudRegistrator->sourceCloudInput(*imagesCloud);
-	cloudRegistrator->sinkCloudInput(*sceneCloud);
-	cloudRegistrator->useGuessInput(false);
-	cloudRegistrator->process();
-	Copy(cloudRegistrator->transformOutput(), *cameraPoseInScene);
-	bool registrationSuccess = cloudRegistrator->successOutput();
-	DEBUG_PRINT_TO_LOG("Registration 3D Success", registrationSuccess );
-	DEBUG_PRINT_TO_LOG("Transform", (registrationSuccess ? ToString(*cameraPoseInScene) : "") );
-	return registrationSuccess;
+	optionalLeftFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) ) );
+	optionalRightFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) ) );
+	reconstructor3d = new StereoReconstructionExecutor( static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") ) );
+	registrator3d = new Registration3DExecutor( static_cast<Registration3DInterface*>( configurator.GetDfn("registrator3d") ) );
 	}
 
 }
