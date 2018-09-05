@@ -1,7 +1,7 @@
 - Name: DFNsChain
   Parameters:
   - Name: GeneralParameters
-    PointCloudMapResolution: 0.01
+    PointCloudMapResolution: 0.03
     SearchRadius: 80
     MatchToReconstructedCloud: true
 - Name: reconstructor3D
@@ -52,16 +52,25 @@
     LimitX: 3.5
     LimitY: 3.5
     LimitZ: 3.5
-- Name: registrator3d
-  Type: Registration3D
-  Implementation: IcpCC
+- Name: featuresExtractor3d
+  Type: FeaturesExtraction3D
+  Implementation: HarrisDetector3D
   Parameters:
   - Name: GeneralParameters
-    ConvergenceType: ErrorReduction
-    MinimumErrorReduction: 1e-5
-    MaximumNumberOfIterations: 10
-    ScaleIsAdjustable: false
-    FarthestPointsAreFilteredOut: false
-    SamplingLimit: 50000
-    FinalOverlapRatio: 1.0
-    MaximumNumberOfThreads: 0
+    Radius: 0.01
+    SearchRadius: 0.01
+    NonMaxSuppression: true
+    DetectionThreshold: 0.001
+    EnableRefinement: false
+    NumberOfThreads: 0
+    HarrisMethod: Harris
+    OutputFormat: Positions
+- Name: registrator3d
+  Type: Registration3D
+  Implementation: Icp3D
+  Parameters:
+  - Name: GeneralParameters
+    MaxCorrespondenceDistance: 0.08
+    MaximumIterations: 200
+    TransformationEpsilon: 1e-8
+    EuclideanFitnessEpsilon: 1

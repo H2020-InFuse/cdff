@@ -34,17 +34,23 @@
  */
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
 
-#include <ImageFiltering/ImageFilteringInterface.hpp>
-#include <StereoReconstruction/StereoReconstructionInterface.hpp>
-#include <Registration3D/Registration3DInterface.hpp>
+#include <ImageFiltering/ImageFilteringExecutor.hpp>
+#include <StereoReconstruction/StereoReconstructionExecutor.hpp>
+#include <Registration3D/Registration3DExecutor.hpp>
 
 #include "PointCloudMap.hpp"
+#include "BundleHistory.hpp"
+
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
 #include <Frame.hpp>
 #include <PointCloud.hpp>
 #include <Pose.hpp>
+#include <VisualPointFeatureVector3D.hpp>
 
+#ifdef TESTING
+#include <fstream>
+#endif
 
 namespace CDFF
 {
@@ -86,40 +92,47 @@ namespace Reconstruction3D
 		PointCloudMap pointCloudMap;
 		bool firstInput;
 
-		struct DenseRegistrationFromStereoOptionsSet
+		struct RegistrationFromStereoOptionsSet
 			{
 			float searchRadius;
 			float pointCloudMapResolution;
+			bool matchToReconstructedCloud;
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
-		DenseRegistrationFromStereoOptionsSet parameters;
-		static const DenseRegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
+		RegistrationFromStereoOptionsSet parameters;
+		static const RegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
+		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;		
 
-		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
-		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
-		CDFF::DFN::StereoReconstructionInterface* reconstructor3D;
-		CDFF::DFN::Registration3DInterface* cloudRegistrator;
+		CDFF::DFN::ImageFilteringExecutor* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringExecutor* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionExecutor* reconstructor3d;
+		CDFF::DFN::Registration3DExecutor* registrator3d;
 
-		FrameWrapper::FramePtr leftImage;
-		FrameWrapper::FramePtr rightImage;
-		FrameWrapper::FramePtr filteredLeftImage;
-		FrameWrapper::FramePtr filteredRightImage;
-		PointCloudWrapper::PointCloudPtr imagesCloud;
-		PointCloudWrapper::PointCloudConstPtr sceneCloud;
-		PoseWrapper::Pose3DPtr cameraPoseInScene;
-		PoseWrapper::Pose3DPtr previousCameraPoseInScene;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr emptyFeaturesVector;
+		#ifdef TESTING
+		std::ofstream logFile;
+		#endif
+
+		//Helpers
+		BundleHistory* bundleHistory;
 
 		void ConfigureExtraParameters();
-		void AssignDfnsAlias();
+		void InstantiateDFNExecutors();
 
-		void ComputePointCloud();
+		/*
+		* Inline Methods
+		*
+		*/
 
-		void FilterLeftImage();
-		void FilterRightImage();
-		void ComputeStereoPointCloud();
-		bool RegisterPointCloudOnScene();
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
     };
 }
 }

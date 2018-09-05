@@ -54,6 +54,7 @@ RegistrationFromStereo::RegistrationFromStereo()
 	{
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "MatchToReconstructedCloud", parameters.matchToReconstructedCloud, DEFAULT_PARAMETERS.matchToReconstructedCloud);
 
 	configurationFilePath = "";
 	firstInput = true;
@@ -115,8 +116,12 @@ void RegistrationFromStereo::run()
 
 	VisualPointFeatureVector3DConstPtr featureVector = NULL;
 	optionalFeaturesDescriptor3d->Execute(imageCloud, keypointVector, featureVector);
-	bundleHistory->AddFeatures3d(*featureVector);
 	DEBUG_PRINT_TO_LOG("Described Features:", GetNumberOfPoints(*featureVector));
+
+	if (!parameters.matchToReconstructedCloud)
+		{
+		bundleHistory->AddFeatures3d(*featureVector);
+		}
 
 	#ifdef TESTING
 	logFile << GetNumberOfPoints(*imageCloud) << " ";
@@ -167,6 +172,12 @@ void RegistrationFromStereo::run()
 	if (outSuccess)
 		{
 		Copy( pointCloudMap.GetLatestPose(), outPose);
+		if (parameters.matchToReconstructedCloud)
+			{
+			VisualPointFeatureVector3DConstPtr fullCloudFeatureVector = pointCloudMap.GetSceneFeaturesVector(&outPose, parameters.searchRadius);
+			bundleHistory->AddFeatures3d(*fullCloudFeatureVector);
+			DeleteIfNotNull(fullCloudFeatureVector);
+			}
 		PointCloudWrapper::PointCloudConstPtr outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(&outPose, parameters.searchRadius);
 		Copy(*outputPointCloud, outPointCloud); 
 
@@ -245,7 +256,8 @@ void RegistrationFromStereo::setup()
 const RegistrationFromStereo::RegistrationFromStereoOptionsSet RegistrationFromStereo::DEFAULT_PARAMETERS = 
 	{
 	.searchRadius = 20,
-	.pointCloudMapResolution = 1e-2
+	.pointCloudMapResolution = 1e-2,
+	.matchToReconstructedCloud = false
 	};
 
 /* --------------------------------------------------------------------------
