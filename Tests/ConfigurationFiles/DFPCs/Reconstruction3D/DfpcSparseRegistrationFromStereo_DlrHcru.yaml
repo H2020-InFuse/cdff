@@ -57,7 +57,7 @@
   Parameters:
   - Name: GeneralParameters
     Radius: 0.01
-    SearchRadius: 0.1
+    SearchRadius: 0.01
     NonMaxSuppression: true
     DetectionThreshold: 0.001
     EnableRefinement: false
