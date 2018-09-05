@@ -64,7 +64,7 @@
     NumberOfThreads: 0
     HarrisMethod: Harris
     OutputFormat: Positions
-- Name: cloudRegistrator
+- Name: registrator3d
   Type: Registration3D
   Implementation: IcpCC
   Parameters:

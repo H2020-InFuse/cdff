@@ -9,6 +9,7 @@ target_link_libraries(
 add_library(
     dense_registration_from_stereo
     DenseRegistrationFromStereo.cpp
+    BundleHistory.cpp
     PointCloudMap.cpp
 )
 target_link_libraries(
@@ -19,6 +20,7 @@ target_link_libraries(
 add_library(
     sparse_registration_from_stereo
     SparseRegistrationFromStereo.cpp
+    BundleHistory.cpp
     PointCloudMap.cpp
 )
 target_link_libraries(
