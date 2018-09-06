@@ -16,13 +16,13 @@
   Implementation: ShotDescriptor3D
   Parameters:
   - Name: GeneralParameters
-    LocalReferenceFrameEstimationRadius: 0.01
-    SearchRadius: 0.01
+    LocalReferenceFrameEstimationRadius: 0.1
+    SearchRadius: 0.1
     OutputFormat: Positions
     EnableNormalsEstimation: true
     ForceNormalsEstimation: true
   - Name: NormalEstimationParameters
-    SearchRadius: 0.01
+    SearchRadius: 0.1
     NeighboursSetSize: 0
 - Name: featuresMatcher3d
   Type: FeaturesMatching3D

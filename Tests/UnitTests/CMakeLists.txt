@@ -52,9 +52,8 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
-#[=[DFPCs/DfpcConfigurator.cpp]=]
-#[=[DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp]=]
-#[=[DFPCs/Reconstruction3D/ObservedScene.cpp]=]
+    DFPCs/DfpcConfigurator.cpp
+    DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
 )
 
 # Libraries used by the aforementioned source files. They will be linked in the
@@ -68,8 +67,8 @@ set(UNITTEST_LIBRARIES Catch
     cdff_types
     ceres_adjustment
     converters_opencv
-#[=[dfpc_configurator]=]
-#[=[dfpc_implementation_features_matching_3d]=]
+    dfpc_configurator
+    dfpc_implementation_features_matching_3d
     disparity_mapping
     essential_matrix_decomposition
     flann_matcher
