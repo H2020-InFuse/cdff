@@ -98,14 +98,14 @@ IcpCC::ConvergenceType IcpCC::ConvergenceTypeHelper::Convert(const std::string& 
 
 const IcpCC::IcpOptionsSet IcpCC::DEFAULT_PARAMETERS =
 {
-	.convergenceType = MINIMUM_ERROR_REDUCTION,
-	.minimumErrorReduction = 1e-5,
-	.maximumNumberOfIterations = 20,
-	.scaleIsAdjustable = false,
-	.farthestPointsAreFilteredOut = false,
-	.samplingLimit = 50000,
-	.finalOverlapRatio = 1.0,
-	.maximumNumberOfThreads = 0
+	/*.convergenceType =*/ MINIMUM_ERROR_REDUCTION,
+	/*.minimumErrorReduction =*/ 1e-5,
+	/*.maximumNumberOfIterations =*/ 20,
+	/*.scaleIsAdjustable =*/ false,
+	/*.farthestPointsAreFilteredOut =*/ false,
+	/*.samplingLimit =*/ 50000,
+	/*.finalOverlapRatio =*/ 1.0,
+	/*.maximumNumberOfThreads =*/ 0
 };
 
 void IcpCC::ComputeTransform(ChunkedPointCloud* sourceCloud, ChunkedPointCloud* sinkCloud)

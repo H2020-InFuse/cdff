@@ -188,9 +188,9 @@ void ReconstructionFromStereo::setup()
 
 const ReconstructionFromStereo::ReconstructionFromStereoOptionsSet ReconstructionFromStereo::DEFAULT_PARAMETERS = 
 	{
-	.searchRadius = -1,
-	.pointCloudMapResolution = 1e-2,
-	.baseline = 1
+	/*.searchRadius =*/ -1,
+	/*.pointCloudMapResolution =*/ 1e-2,
+	/*.baseline =*/ 1
 	};
 
 /* --------------------------------------------------------------------------

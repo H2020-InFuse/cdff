@@ -66,12 +66,12 @@ void IterativePnpSolver::process()
 
 const IterativePnpSolver::IterativePnpOptionsSet IterativePnpSolver::DEFAULT_PARAMETERS =
 {
-	.cameraMatrix =
+	//.cameraMatrix =
 	{
-		.focalLengthX = 1,
-		.focalLengthY = 1,
-		.principalPointX = 0,
-		.principalPointY = 0
+		/*.focalLengthX =*/ 1,
+		/*.focalLengthY =*/ 1,
+		/*.principalPointX =*/ 0,
+		/*.principalPointY =*/ 0
 	}
 };
 
