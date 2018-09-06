@@ -69,4 +69,5 @@ target_link_libraries(
   pcl_segmentation
   pcl_sample_consensus
   pcl_stereo
+  convolution_filter
 )

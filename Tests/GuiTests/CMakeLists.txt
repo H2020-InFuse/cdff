@@ -33,6 +33,26 @@ target_link_libraries(
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
 
+
+
+add_executable(
+        DepthFilteringGuiTest
+        DFNs/DepthFiltering/DepthFiltering.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+)
+
+set_target_properties(DepthFilteringGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+        DepthFilteringGuiTest
+        convolution_filter
+        ${GRAPHICALTEST_CDFF_LIBRARIES}
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+)
+
+
+
+
 add_executable(
     FlannMatcherGuiTest
     DFNs/FeaturesMatching2D/FlannMatcher.cpp
