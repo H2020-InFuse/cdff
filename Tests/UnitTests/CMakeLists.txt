@@ -122,7 +122,7 @@ set(UNITTEST_LIBRARIES Catch
     triangulation
     estimation_from_stereo
     adjustment_from_stereo
-    filter
+    convolution_filter
 )
 
 # Make the Catch executable that runs the unit tests

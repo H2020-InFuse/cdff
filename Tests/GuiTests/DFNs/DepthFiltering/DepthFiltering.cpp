@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
-#include <DepthFiltering/Filter.hpp>
+#include <DepthFiltering/ConvolutionFilter.hpp>
 
 #include <FrameToMatConverter.hpp>
 #include <MatToFrameConverter.hpp>
@@ -48,7 +48,7 @@ public:
     ~DepthFilteringTestInterface();
 
 private:
-    CDFF::DFN::DepthFiltering::Filter *filter;
+    CDFF::DFN::DepthFiltering::ConvolutionFilter *filter;
     cv::Mat cvImage;
     FrameWrapper::FrameConstPtr inputImage;
     std::string outputWindowName;
@@ -60,7 +60,7 @@ private:
 DepthFilteringTestInterface::DepthFilteringTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
         : DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
 {
-    filter = new CDFF::DFN::DepthFiltering::Filter();
+    filter = new CDFF::DFN::DepthFiltering::ConvolutionFilter();
     SetDFN(filter);
 
     cv::Mat image = cv::imread("../../tests/Data/Images/depth_img.jpg", cv::IMREAD_GRAYSCALE);

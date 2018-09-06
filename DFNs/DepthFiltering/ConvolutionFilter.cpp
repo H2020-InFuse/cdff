@@ -7,7 +7,7 @@
  * @{
  */
 
-#include "Filter.hpp"
+#include "ConvolutionFilter.hpp"
 #include <Errors/Assert.hpp>
 #include <stdlib.h>
 #include <fstream>
@@ -20,27 +20,27 @@ namespace DepthFiltering
 {
 
 //=====================================================================================================================
-Filter::Filter()
+ConvolutionFilter::ConvolutionFilter()
 {
     parametersHelper.AddParameter<int>("GeneralParameters", "KernelSize", parameters.kernelSize, DEFAULT_PARAMETERS.kernelSize);
 	configurationFilePath = "";
 }
 
 //=====================================================================================================================
-const Filter::FilterOptionsSet Filter::DEFAULT_PARAMETERS =
+const ConvolutionFilter::ConvolutionFilterOptionsSet ConvolutionFilter::DEFAULT_PARAMETERS =
 {
-    .kernelSize = 5
+    /*.kernelSize =*/ 5
 };
 
 //=====================================================================================================================
-void Filter::configure()
+void ConvolutionFilter::configure()
 {
 	parametersHelper.ReadFile(configurationFilePath);
 	ValidateParameters();
 }
 
 //=====================================================================================================================
-void Filter::process()
+void ConvolutionFilter::process()
 {
 	// Read data from input port
 	cv::Mat inputImage = frameToMat.Convert(&inFrame);
@@ -56,7 +56,7 @@ void Filter::process()
 }
 
 //=====================================================================================================================
-cv::Mat Filter::ApplyFilter(cv::Mat inputImage)
+cv::Mat ConvolutionFilter::ApplyFilter(cv::Mat inputImage)
 {
 	cv::Mat outputImage;
 	cv::Mat kernel = cv::Mat::ones(parameters.kernelSize,parameters.kernelSize, CV_32F)/ (float)(parameters.kernelSize*parameters.kernelSize);
@@ -67,15 +67,15 @@ cv::Mat Filter::ApplyFilter(cv::Mat inputImage)
 
 
 //=====================================================================================================================
-void Filter::ValidateParameters()
+void ConvolutionFilter::ValidateParameters()
 {
-	ASSERT(parameters.kernelSize > 0, "Depth Filtering Configuration Error: kernel size should be strictly positive");
+	ASSERT(parameters.kernelSize > 0, "Depth ConvolutionFiltering Configuration Error: kernel size should be strictly positive");
 }
 
 //=====================================================================================================================
-void Filter::ValidateInputs(cv::Mat inputImage)
+void ConvolutionFilter::ValidateInputs(cv::Mat inputImage)
 {
-	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "Filter error: input image is empty");
+	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "ConvolutionFilter error: input image is empty");
 }
 
 

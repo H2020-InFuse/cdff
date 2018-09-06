@@ -13,8 +13,8 @@ namespace DFN
 
 //=====================================================================================================================
 DepthFilteringExecutor::DepthFilteringExecutor(DepthFilteringInterface* dfn)
+    : dfn (dfn)
 {
-    this->dfn = dfn;
     ASSERT(dfn != NULL, "DepthFilteringExecutor: null dfn in input");
 }
 

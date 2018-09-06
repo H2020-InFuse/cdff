@@ -45,7 +45,7 @@ add_executable(
 set_target_properties(DepthFilteringGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
         DepthFilteringGuiTest
-        filter
+        convolution_filter
         ${GRAPHICALTEST_CDFF_LIBRARIES}
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )

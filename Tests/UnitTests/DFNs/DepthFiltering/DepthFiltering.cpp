@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <DepthFiltering/Filter.hpp>
+#include <DepthFiltering/ConvolutionFilter.hpp>
 #include <MatToFrameConverter.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -45,7 +45,7 @@ TEST_CASE( "Call to process (Depth Filtering)", "[process]" )
 	FrameWrapper::FrameConstPtr inputFrame = matToFrame.Convert(inputImage);
 
 	// Instantiate DFN
-	CDFF::DFN::DepthFiltering::Filter* filter = new CDFF::DFN::DepthFiltering::Filter();
+	CDFF::DFN::DepthFiltering::ConvolutionFilter* filter = new CDFF::DFN::DepthFiltering::ConvolutionFilter();
 
 	// Send input data to DFN
 	filter->frameInput(*inputFrame);

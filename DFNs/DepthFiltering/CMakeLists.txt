@@ -5,11 +5,11 @@ add_library(
 )
 
 add_library(
-    filter
-    Filter.cpp
+    convolution_filter
+    ConvolutionFilter.cpp
 )
 
 target_link_libraries(
-    filter
+    convolution_filter
     depth_filtering cdff_types yaml-cpp cdff_helpers opencv_core converters_opencv
 )

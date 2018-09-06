@@ -30,25 +30,26 @@ namespace DepthFiltering
 	 * @param generalParameters.kernelSize
 	 */
 
-	class Filter : public DepthFilteringInterface
+	class ConvolutionFilter : public DepthFilteringInterface
 	{
 		public:
 
-			Filter();
+			ConvolutionFilter();
+            virtual ~ConvolutionFilter() = default;
 
 			virtual void configure();
 			virtual void process();
 
 		private:
 
-			struct FilterOptionsSet
+			struct ConvolutionFilterOptionsSet
 			{
 				int kernelSize;
 			};
 
 			Helpers::ParametersListHelper parametersHelper;
-			FilterOptionsSet parameters;
-            static const FilterOptionsSet DEFAULT_PARAMETERS;
+            ConvolutionFilterOptionsSet parameters;
+            static const ConvolutionFilterOptionsSet DEFAULT_PARAMETERS;
 
 
             Converters::FrameToMatConverter frameToMat;

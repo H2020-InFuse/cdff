@@ -32,7 +32,7 @@
 #include <StereoReconstruction/ScanlineOptimization.hpp>
 #include <Transform3DEstimation/CeresEstimation.hpp>
 #include <Transform3DEstimation/LeastSquaresMinimization.hpp>
-#include <DepthFiltering/Filter.hpp>
+#include <DepthFiltering/ConvolutionFilter.hpp>
 
 #include <Errors/Assert.hpp>
 
@@ -299,7 +299,7 @@ Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(std::st
 
 DepthFilteringInterface* DFNsBuilder::CreateDepthFiltering(std::string dfnImplementation)
 {
-	return new DepthFiltering::Filter();
+	return new DepthFiltering::ConvolutionFilter();
 }
 
 }
