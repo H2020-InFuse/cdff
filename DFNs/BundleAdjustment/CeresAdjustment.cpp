@@ -82,22 +82,22 @@ void CeresAdjustment::process()
 
 const CeresAdjustment::CeresAdjustmentOptionsSet CeresAdjustment::DEFAULT_PARAMETERS =
 {
-	.leftCameraMatrix =
+	//.leftCameraMatrix =
 	{
-		.focalLengthX = 1,
-		.focalLengthY = 1,
-		.principalPointX = 0,
-		.principalPointY = 0,
+		/*.focalLengthX =*/ 1,
+		/*.focalLengthY =*/ 1,
+		/*.principalPointX =*/ 0,
+		/*.principalPointY =*/ 0,
 	},
-	.rightCameraMatrix =
+	//.rightCameraMatrix =
 	{
-		.focalLengthX = 1,
-		.focalLengthY = 1,
-		.principalPointX = 0,
-		.principalPointY = 0,
+		/*.focalLengthX =*/ 1,
+		/*.focalLengthY =*/ 1,
+		/*.principalPointX =*/ 0,
+		/*.principalPointY =*/ 0,
 	},
-	.baseline = 1.0,
-	.squaredPixelErrorTolerance = 1e-4
+	/*.baseline =*/ 1.0,
+	/*.squaredPixelErrorTolerance =*/ 1e-4
 };
 
 CeresAdjustment::StereoImagePointCostFunctor::StereoImagePointCostFunctor(cv::Mat leftCameraMatrix, cv::Mat rightCameraMatrix, cv::Mat pointMeasuresMatrix, float baseline)

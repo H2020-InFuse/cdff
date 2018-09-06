@@ -71,21 +71,21 @@ void HarrisDetector2D::process()
 
 const HarrisDetector2D::HarrisOptionsSet HarrisDetector2D::DEFAULT_PARAMETERS =
 {
-	.generalParameters =
+	//.generalParameters =
 	{
-		.apertureSize = 3,
-		.blockSize = 3,
-		.parameterK = 0.5,
-		.detectionThreshold = 45,
-		.useGaussianBlur = false
+		/*.apertureSize =*/ 3,
+		/*.blockSize =*/ 3,
+		/*.parameterK =*/ 0.5,
+		/*.detectionThreshold =*/ 45,
+		/*.useGaussianBlur =*/ false
 	},
 
-	.gaussianBlurParameters =
+	//.gaussianBlurParameters =
 	{
-		.kernelWidth = 0,
-		.kernelHeight = 0,
-		.widthStandardDeviation = 0,
-		.heightStandardDeviation = 0
+		/*.kernelWidth =*/ 0,
+		/*.kernelHeight =*/ 0,
+		/*.widthStandardDeviation =*/ 0,
+		/*.heightStandardDeviation =*/ 0
 	}
 };
 

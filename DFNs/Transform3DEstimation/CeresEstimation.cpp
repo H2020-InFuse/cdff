@@ -157,8 +157,8 @@ ceres::CostFunction* CeresEstimation::Transform3DCostFunctor::Create(Point3D sou
 
 const CeresEstimation::CeresEstimationOptionsSet CeresEstimation::DEFAULT_PARAMETERS =
 {
-	.maximumAllowedError = 0.01,
-	.maximumAllowedDeterminantError = 0.05
+	/*.maximumAllowedError =*/ 0.01,
+	/*.maximumAllowedDeterminantError =*/ 0.05
 };
 
 int CeresEstimation::ComputeNumberOfCameras(int numberOfCorrespondenceMaps)

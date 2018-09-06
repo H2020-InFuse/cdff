@@ -103,10 +103,10 @@ void KalmanCorrector::process()
 
 const KalmanCorrector::KalmanCorrectorOptionsSet KalmanCorrector::DEFAULT_PARAMETERS =
 {
-	.kalmanParameters =
+	//.kalmanParameters =
 	{
-		.stdOrientation = 1.0,
-		.stdTranslation = 1.0,
+		/*.stdOrientation =*/ 1.0,
+		/*.stdTranslation =*/ 1.0,
 	}
 };
 

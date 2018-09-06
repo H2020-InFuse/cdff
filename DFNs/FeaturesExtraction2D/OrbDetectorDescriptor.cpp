@@ -69,15 +69,15 @@ void OrbDetectorDescriptor::process()
 
 const OrbDetectorDescriptor::OrbOptionsSet OrbDetectorDescriptor::DEFAULT_PARAMETERS =
 {
-	.edgeThreshold = 31,
-	.fastThreshold = 20,
-	.firstLevel = 0,
-	.maxFeaturesNumber = 500,
-	.levelsNumber = 8,
-	.patchSize = 31,
-	.scaleFactor = 1.2,
-	.scoreType = 0,
-	.sizeOfBrightnessTestSet = 2
+	/*.edgeThreshold =*/ 31,
+	/*.fastThreshold =*/ 20,
+	/*.firstLevel =*/ 0,
+	/*.maxFeaturesNumber =*/ 500,
+	/*.levelsNumber =*/ 8,
+	/*.patchSize =*/ 31,
+	/*.scaleFactor =*/ 1.2,
+	/*.scoreType =*/ 0,
+	/*.sizeOfBrightnessTestSet =*/ 2
 };
 
 cv::Mat OrbDetectorDescriptor::ComputeOrbFeatures(cv::Mat inputImage)

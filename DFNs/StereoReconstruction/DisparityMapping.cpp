@@ -134,64 +134,64 @@ const float DisparityMapping::EPSILON = 0.0001;
 
 const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PARAMETERS =
 {
-	.reconstructionSpace =
+	//.reconstructionSpace =
 	{
-		.limitX = 20,
-		.limitY = 20,
-		.limitZ = 40
+		/*.limitX =*/ 20,
+		/*.limitY =*/ 20,
+		/*.limitZ =*/ 40
 	},
-	.prefilter =
+	//.prefilter =
 	{
-		.size = 9,
-		.type = XSOBEL,
-		.maximum = 31
+		/*.size =*/ 9,
+		/*.type =*/ XSOBEL,
+		/*.maximum =*/ 31
 	},
-	.disparities =
+	//.disparities =
 	{
-		.minimum = 0,
-		.numberOfIntervals = 64,
-		.useMaximumDifference = false,
-		.maximumDifference = -1,
-		.speckleRange = 0,
-		.speckleWindow = 0
+		/*.minimum =*/ 0,
+		/*.numberOfIntervals =*/ 64,
+		/*.useMaximumDifference =*/ false,
+		/*.maximumDifference =*/ -1,
+		/*.speckleRange =*/ 0,
+		/*.speckleWindow =*/ 0
 	},
-	.firstRegionOfInterest =
+	//.firstRegionOfInterest =
 	{
-		.topLeftColumn = 0,
-		.topLeftRow = 0,
-		.numberOfColumns = 0,
-		.numberOfRows = 0
+		/*.topLeftColumn =*/ 0,
+		/*.topLeftRow =*/ 0,
+		/*.numberOfColumns =*/ 0,
+		/*.numberOfRows =*/ 0
 	},
-	.secondRegionOfInterest =
+	//.secondRegionOfInterest =
 	{
-		.topLeftColumn = 0,
-		.topLeftRow = 0,
-		.numberOfColumns = 0,
-		.numberOfRows = 0
+		/*.topLeftColumn =*/ 0,
+		/*.topLeftRow =*/ 0,
+		/*.numberOfColumns =*/ 0,
+		/*.numberOfRows =*/ 0
 	},
-	.blocksMatching =
+	//.blocksMatching =
 	{
-		.blockSize = 21,
-		.smallerBlockSize = 0,
-		.textureThreshold = 10,
-		.uniquenessRatio = 15
+		/*.blockSize =*/ 21,
+		/*.smallerBlockSize =*/ 0,
+		/*.textureThreshold =*/ 10,
+		/*.uniquenessRatio =*/ 15
 	},
-	.disparityToDepthMap =
+	//.disparityToDepthMap =
 	{
 		1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0, 0, 1,
 		0, 0, -1, 0
 	},
-	.pointCloudSamplingDensity = 1,
-	.voxelGridLeafSize = 0,
-	.useDisparityToDepthMap = false,
-	.stereoCameraParameters =
+	/*.pointCloudSamplingDensity =*/ 1,
+	/*.voxelGridLeafSize =*/ 0,
+	/*.useDisparityToDepthMap =*/ false,
+	//.stereoCameraParameters =
 	{
-		.leftFocalLength = 1,
-		.leftPrinciplePointX = 0,
-		.leftPrinciplePointY = 0,
-		.baseline = 1
+		/*.leftFocalLength =*/ 1,
+		/*.leftPrinciplePointX =*/ 0,
+		/*.leftPrinciplePointY =*/ 0,
+		/*.baseline =*/ 1
 	}
 };
 

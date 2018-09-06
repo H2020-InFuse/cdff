@@ -249,10 +249,10 @@ void EstimationFromStereo::setup()
 
 const EstimationFromStereo::EstimationFromStereoOptionsSet EstimationFromStereo::DEFAULT_PARAMETERS = 
 	{
-	.searchRadius = 20,
-	.pointCloudMapResolution = 1e-2,
-	.numberOfAdjustedStereoPairs = 4,
-	.baseline = 1
+	/*.searchRadius =*/ 20,
+	/*.pointCloudMapResolution =*/ 1e-2,
+	/*.numberOfAdjustedStereoPairs =*/ 4,
+	/*.baseline =*/ 1
 	};
 
 /* --------------------------------------------------------------------------

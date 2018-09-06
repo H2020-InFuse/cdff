@@ -255,9 +255,9 @@ void RegistrationFromStereo::setup()
 
 const RegistrationFromStereo::RegistrationFromStereoOptionsSet RegistrationFromStereo::DEFAULT_PARAMETERS = 
 	{
-	.searchRadius = 20,
-	.pointCloudMapResolution = 1e-2,
-	.matchToReconstructedCloud = false
+	/*.searchRadius =*/ 20,
+	/*.pointCloudMapResolution =*/ 1e-2,
+	/*.matchToReconstructedCloud =*/ false
 	};
 
 /* --------------------------------------------------------------------------

@@ -122,9 +122,9 @@ Matrix3dConstPtr FundamentalMatrixRansac::Convert(cv::Mat matrix)
 
 const FundamentalMatrixRansac::FundamentalMatrixRansacOptionsSet FundamentalMatrixRansac::DEFAULT_PARAMETERS =
 {
-	.outlierThreshold = 1.3,
-	.confidence = 0.99,
-	.maximumSymmetricEpipolarDistance = 1.3
+	/*.outlierThreshold =*/ 1.3,
+	/*.confidence =*/ 0.99,
+	/*.maximumSymmetricEpipolarDistance =*/ 1.3
 };
 
 cv::Mat FundamentalMatrixRansac::ComputeFundamentalMatrix(const std::vector<cv::Point2d>& firstImagePointsVector, const std::vector<cv::Point2d>& secondImagePointsVector)
