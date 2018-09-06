@@ -95,7 +95,7 @@ void ParameterHelper<UsageType, YamlType>::Read(const YAML::Node& configurationN
 	{
 	try
 		{
-		value = Convert( configurationNode[parameterName].as<YamlType>() );
+		value = Convert( configurationNode[parameterName].template as<YamlType>() );
 		}
 	catch (YAML::Exception exception)
 		{
