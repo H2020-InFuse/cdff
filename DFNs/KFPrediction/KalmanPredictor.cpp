@@ -98,11 +98,11 @@ void KalmanPredictor::process()
 
 const KalmanPredictor::KalmanPredictorOptionsSet KalmanPredictor::DEFAULT_PARAMETERS =
 {
-	.kalmanParameters =
+	//.kalmanParameters =
 	{
-		.stdOrientation =1000.0,
-		.stdTranslation=1000.0,
-		.initialCovariance= 10000
+		/*.stdOrientation =*/ 1000.0,
+		/*.stdTranslation =*/ 1000.0,
+		/*.initialCovariance =*/ 10000
 	}
 };
 

@@ -122,18 +122,18 @@ ShotDescriptor3D::OutputFormat ShotDescriptor3D::OutputFormatHelper::Convert(con
 
 const ShotDescriptor3D::ShotOptionsSet ShotDescriptor3D::DEFAULT_PARAMETERS
 {
-	.baseOptions =
+	//.baseOptions =
 	{
-		.localReferenceFrameEstimationRadius = 0.10,
-		.searchRadius = 0.01,
-		.outputFormat = POSITIONS_OUTPUT,
-		.enableNormalsEstimation = true,
-		.forceNormalsEstimation = true
+		/*.localReferenceFrameEstimationRadius =*/ 0.10,
+		/*.searchRadius =*/ 0.01,
+		/*.outputFormat =*/ POSITIONS_OUTPUT,
+		/*.enableNormalsEstimation =*/ true,
+		/*.forceNormalsEstimation =*/ true
 	},
-	.normalEstimationOptions =
+	//.normalEstimationOptions =
 	{
-		.searchRadius = 0.00,
-		.neighboursSetSize = 10
+		/*.searchRadius =*/ 0.00,
+		/*.neighboursSetSize =*/ 10
 	}
 };
 

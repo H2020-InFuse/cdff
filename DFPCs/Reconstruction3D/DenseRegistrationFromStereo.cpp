@@ -242,9 +242,9 @@ void DenseRegistrationFromStereo::setup()
 
 const DenseRegistrationFromStereo::RegistrationFromStereoOptionsSet DenseRegistrationFromStereo::DEFAULT_PARAMETERS = 
 	{
-	.searchRadius = 20,
-	.pointCloudMapResolution = 1e-2,
-	.matchToReconstructedCloud = false
+	/*.searchRadius =*/ 20,
+	/*.pointCloudMapResolution =*/ 1e-2,
+	/*.matchToReconstructedCloud =*/ false
 	};
 
 /* --------------------------------------------------------------------------

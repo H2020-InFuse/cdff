@@ -90,18 +90,18 @@ void EssentialMatrixDecomposition::process()
 
 const EssentialMatrixDecomposition::EssentialMatrixDecompositionOptionsSet EssentialMatrixDecomposition::DEFAULT_PARAMETERS =
 {
-	.numberOfTestPoints = 20,
-	.firstCameraMatrix =
+	/*.numberOfTestPoints =*/ 20,
+	//.firstCameraMatrix =
 	{
-		.focalLengthX = 1.0,
-		.focalLengthY = 1.0,
-		.principlePoint = cv::Point2d(0, 0)
+		/*.focalLengthX =*/ 1.0,
+		/*.focalLengthY =*/ 1.0,
+		/*.principlePoint =*/ cv::Point2d(0, 0)
 	},
-	.secondCameraMatrix =
+	//.secondCameraMatrix =
 	{
-		.focalLengthX = 1.0,
-		.focalLengthY = 1.0,
-		.principlePoint = cv::Point2d(0, 0)
+		/*.focalLengthX =*/ 1.0,
+		/*.focalLengthY =*/ 1.0,
+		/*.principlePoint =*/ cv::Point2d(0, 0)
 	}
 };
 

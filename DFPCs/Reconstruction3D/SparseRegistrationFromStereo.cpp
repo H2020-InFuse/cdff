@@ -252,9 +252,9 @@ void SparseRegistrationFromStereo::setup()
 
 const SparseRegistrationFromStereo::RegistrationFromStereoOptionsSet SparseRegistrationFromStereo::DEFAULT_PARAMETERS = 
 	{
-	.searchRadius = 20,
-	.pointCloudMapResolution = 1e-2,
-	.matchToReconstructedCloud = false
+	/*.searchRadius =*/ 20,
+	/*.pointCloudMapResolution =*/ 1e-2,
+	/*.matchToReconstructedCloud =*/ false
 	};
 
 /* --------------------------------------------------------------------------
