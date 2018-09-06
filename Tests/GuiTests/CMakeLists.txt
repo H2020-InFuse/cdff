@@ -243,7 +243,7 @@ set_target_properties(DenseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTP
 target_link_libraries(
     DenseRegistrationFromStereoGuiTest
     dense_registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
@@ -257,7 +257,7 @@ set_target_properties(SparseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUT
 target_link_libraries(
     SparseRegistrationFromStereoGuiTest
     sparse_registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
@@ -271,7 +271,7 @@ set_target_properties(AdjustmentFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRE
 target_link_libraries(
     AdjustmentFromStereoGuiTest
     adjustment_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
@@ -285,7 +285,7 @@ set_target_properties(ReconstructionFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_
 target_link_libraries(
     ReconstructionFromMotionGuiTest
     reconstruction_from_motion
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
@@ -299,7 +299,7 @@ set_target_properties(ReconstructionFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_
 target_link_libraries(
     ReconstructionFromStereoGuiTest
     reconstruction_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
@@ -313,7 +313,7 @@ set_target_properties(RegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DI
 target_link_libraries(
     RegistrationFromStereoGuiTest
     registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
@@ -327,7 +327,7 @@ set_target_properties(EstimationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRE
 target_link_libraries(
     EstimationFromStereoGuiTest
     estimation_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
@@ -341,12 +341,12 @@ set_target_properties(FeaturesMatching3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECT
 target_link_libraries(
     FeaturesMatching3DGuiTest
     dfpc_implementation_features_matching_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
-#[======================================================================[
+
 
 add_executable(
     StereoReconstruction
@@ -358,9 +358,9 @@ set_target_properties(StereoReconstruction PROPERTIES RUNTIME_OUTPUT_DIRECTORY .
 target_link_libraries(
     StereoReconstruction
     image_undistortion orb_detector_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} mock
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
 
@@ -374,10 +374,8 @@ set_target_properties(StereoReconstruction2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_link_libraries(
     StereoReconstruction2
     image_undistortion harris_detector_2d orb_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} mock
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
     boost_system yaml-cpp ${VTK_LIBRARIES}
 )
-
-]======================================================================]
