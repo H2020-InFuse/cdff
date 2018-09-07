@@ -19,6 +19,22 @@
 #include <stdlib.h>
 #include <fstream>
 
+namespace
+{
+    //=====================================================================================================================
+    std::string extractFileName(std::string filePath)
+    {
+        std::size_t dot_pos = filePath.rfind('.');
+        std::size_t separator_pos = filePath.rfind("/");
+
+        if(separator_pos != std::string::npos)
+        {
+            return filePath.substr(separator_pos + 1, dot_pos - (separator_pos+1));
+        }
+        return filePath;
+    }
+}
+
 namespace CDFF
 {
 namespace DFN
@@ -134,7 +150,9 @@ std::string HuInvariants::Match(cv::Mat inputImage)
     int index_maximum_similarity = std::distance(similarity.begin(), std::min_element(similarity.begin(), similarity.end()));
 
     m_matched_contour.push_back( input_image_contours[indexes_max_similarity_input_image_contour[index_maximum_similarity]] );
-    return template_files[index_maximum_similarity];
+
+    auto file_name = ::extractFileName(template_files[index_maximum_similarity]);
+    return file_name;
 }
 
 //=====================================================================================================================
