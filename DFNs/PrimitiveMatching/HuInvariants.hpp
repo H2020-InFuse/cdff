@@ -66,6 +66,10 @@ namespace PrimitiveMatching
 		void Configure(const YAML::Node& configurationNode);
 
         std::vector<std::vector<cv::Point> > extractContours(const cv::Mat img);
+        std::vector<std::string> getTemplateFiles();
+        std::vector<std::vector<cv::Point> > getTemplateContours(std::vector<std::string> template_files);
+        std::vector<std::vector<cv::Point> > extractAndFilterContours(const cv::Mat img);
+        std::string matchTemplatesAndImage(std::vector<std::vector<cv::Point> > input_image_contours, std::vector<std::vector<cv::Point> > template_contours, std::vector<std::string> template_files);
 
 
         std::vector< std::vector<cv::Point> > m_matched_contour;
