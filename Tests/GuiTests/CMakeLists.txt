@@ -95,6 +95,20 @@ target_link_libraries(
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
 
+add_executable(kmeans_gui_test
+        DFNs/DFNTestInterface.cpp
+        DFNs/ImageFiltering/KMeansClustering.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+)
+target_link_libraries(
+        kmeans_gui_test
+        cdff_dfn_kmeans
+        ${GRAPHICALTEST_CDFF_LIBRARIES}
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+)
+set_target_properties(kmeans_gui_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+
 add_executable(
     edge_detection_gui_test
     DFNs/ImageFiltering/EdgeDetection.cpp
