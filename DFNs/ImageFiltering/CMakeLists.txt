@@ -12,7 +12,7 @@ add_library(
 set_target_properties(image_undistortion PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})
 target_link_libraries(
     image_undistortion
-    image_filtering cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core converters_opencv
+    image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core converters_opencv
 )
 
 add_library(
@@ -22,5 +22,8 @@ add_library(
 set_target_properties(image_undistortion_rectification PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})
 target_link_libraries(
     image_undistortion_rectification
-    image_filtering cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core converters_opencv opencv_calib3d
+    image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core converters_opencv opencv_calib3d
 )
+
+add_library(cdff_dfn_background_subtraction BackgroundExtraction.cpp)
+target_link_libraries(cdff_dfn_background_subtraction image_filtering cdff_helpers)

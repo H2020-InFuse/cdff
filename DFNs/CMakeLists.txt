@@ -33,6 +33,7 @@ target_link_libraries(
   harris_detector_2d
   image_undistortion
   image_undistortion_rectification
+  cdff_dfn_background_extraction
   disparity_mapping
   hirschmuller_disparity_mapping
   scanline_optimization
@@ -50,6 +51,7 @@ target_link_libraries(
   transform_3d_estimation_ceres
   hu_invariants
   octree
+  background_subtraction
   converters_opencv
   pcl_common
   pcl_features
