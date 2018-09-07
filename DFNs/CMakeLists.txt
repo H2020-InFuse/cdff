@@ -47,6 +47,7 @@ target_link_libraries(
   svd_decomposition
   transform_3d_estimation_least_squares_minimization
   transform_3d_estimation_ceres
+  hu_invariants
   converters_opencv
   pcl_common
   pcl_features
