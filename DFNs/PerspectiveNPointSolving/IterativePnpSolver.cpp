@@ -47,6 +47,12 @@ void IterativePnpSolver::configure()
 
 void IterativePnpSolver::process()
 {
+	if (GetNumberOfPoints(inPoints) < 4)
+	{
+		outSuccess = false;
+		return;	
+	}
+
 	// Read data from input ports
 	cv::Mat points = Convert(&inPoints);
 	cv::Mat projections = visualPointFeatureVector2DToMat.Convert(&inProjections);
