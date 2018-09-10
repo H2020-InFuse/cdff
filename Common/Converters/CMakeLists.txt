@@ -23,6 +23,7 @@ add_library(
     MatToCorrespondenceMaps3DSequenceConverter.cpp
 )
 target_link_libraries(converters_opencv opencv_core cdff_types)
+set_target_properties(converters_opencv PROPERTIES COMPILE_FLAGS -fPIC)
 
 install(
     TARGETS converters_opencv

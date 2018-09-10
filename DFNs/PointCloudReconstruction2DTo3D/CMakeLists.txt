@@ -3,11 +3,13 @@ add_library(
     PointCloudReconstruction2DTo3DInterface.cpp
     PointCloudReconstruction2DTo3DExecutor.cpp
 )
+set_target_properties(point_cloud_reconstruction_2d_to_3d PROPERTIES COMPILE_FLAGS -fPIC)
 
 add_library(
     triangulation
     Triangulation.cpp
 )
+set_target_properties(triangulation PROPERTIES COMPILE_FLAGS -fPIC)
 target_link_libraries(
     triangulation
     point_cloud_reconstruction_2d_to_3d cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core converters_opencv

@@ -49,3 +49,4 @@ install(
 target_link_libraries(
     cdff_types cdff_logger
 )
+set_target_properties(cdff_types PROPERTIES COMPILE_FLAGS -fPIC)
