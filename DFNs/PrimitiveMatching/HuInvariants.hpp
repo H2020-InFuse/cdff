@@ -30,8 +30,10 @@ namespace PrimitiveMatching
 	/**
 	 * Match primitives using HU Invariants.
 	 *
-	 * @param
-	 * @param
+	 * @param minimumArea
+	 *        minimum area that the contours need to have to be considered for primitive matching
+	 * @param templatesFolder
+	 *        folder where the primitive templates are located
 	 */
 	class HuInvariants : public PrimitiveMatchingInterface
 	{

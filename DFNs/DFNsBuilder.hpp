@@ -27,6 +27,7 @@
 #include <Registration3D/Registration3DInterface.hpp>
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
 #include <Transform3DEstimation/Transform3DEstimationInterface.hpp>
+#include <PrimitiveMatching/PrimitiveMatchingInterface.hpp>
 
 #include <stdlib.h>
 #include <string>
@@ -59,6 +60,7 @@ namespace DFN
 			static ImageFilteringInterface* CreateImageFiltering(std::string dfnImplementation);
 			static PerspectiveNPointSolvingInterface* CreatePerspectiveNPointSolving(std::string dfnImplementation);
 			static PointCloudReconstruction2DTo3DInterface* CreatePointCloudReconstruction2DTo3D(std::string dfnImplementation);
+			static PrimitiveMatchingInterface* CreatePrimitiveMatching(std::string dfnImplementation);
 			static Registration3DInterface* CreateRegistration3D(std::string dfnImplementation);
 			static StereoReconstructionInterface* CreateStereoReconstruction(std::string dfnImplementation);
 			static Transform3DEstimationInterface* CreateTransform3DEstimation(std::string dfnImplementation);

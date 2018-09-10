@@ -105,9 +105,12 @@ void HuInvariantsTestInterface::SetupParameters()
 void HuInvariantsTestInterface::DisplayResult()
 {
 	asn1SccT_String matched_primitive = huInvariants->primitiveMatchedOutput();
-
-	std::string primitive(reinterpret_cast<char const*>(matched_primitive.arr), matched_primitive.nCount);
+    std::string primitive(reinterpret_cast<char const*>(matched_primitive.arr), matched_primitive.nCount);
     cv::Mat matched_image = cv::imread("../../tests/Data/Images/primitive_matching/templates/"+primitive+".jpg", cv::IMREAD_COLOR);
+
+    PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
+    PRINT_TO_LOG("Virtual memory used (kb): ", GetTotalVirtualMemoryUsedKB());
+    PRINT_TO_LOG("Primitive matched: ", primitive);
 
     const Frame& frame_with_contour = huInvariants->imageWithMatchedContourOutput();
     cv::Mat image_with_contour = FrameToMatConverter().Convert(&frame_with_contour);
