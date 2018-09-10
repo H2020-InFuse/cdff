@@ -1,0 +1,15 @@
+name: PointCloudAssembly
+doc: DFN that combines two point clouds together
+input_ports:
+    - name: firstPointCloud
+      type: asn1SccPointcloud
+      doc: first input point cloud
+    - name: secondPointCloud
+      type: asn1SccPointcloud
+      doc: second input point cloud
+output_ports:
+    - name: assembledCloud
+      type: asn1SccPointcloud
+      doc: point cloud obtained by the combination of the two inputs.
+implementations:
+    - NeighbourPointAverage
