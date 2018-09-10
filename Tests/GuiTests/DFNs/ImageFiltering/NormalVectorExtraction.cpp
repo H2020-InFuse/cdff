@@ -13,8 +13,10 @@
 #include <Types/C/Frame.h>
 #include <iostream>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace FrameWrapper;
+using namespace BaseTypesWrapper;
+using namespace Array3DWrapper;
 
 class NormalVectorExtractionTest: public DFNTestInterface
 {
@@ -44,15 +46,17 @@ NormalVectorExtractionTest::NormalVectorExtractionTest()
 
     FrameSharedPtr inFrame = NewSharedFrame();
     Initialize(*inFrame);
-    SetFrameSize(*inFrame, srcImage.cols, srcImage.rows);
-    SetDataDepth(*inFrame, sizeof(float) * 8);
-    SetPixelSize(*inFrame, sizeof(float) * 3);
-    SetRowSize(*inFrame, GetFrameWidth(*inFrame) * GetPixelSize(*inFrame));
-    SetFrameMode(*inFrame, FrameWrapper::MODE_UNDEFINED);
-    SetFrameStatus(*inFrame, FrameWrapper::STATUS_VALID);
+    inFrame->metadata.mode = FrameMode::asn1Sccmode_XYZ;
+    inFrame->metadata.status = FrameStatus::asn1Sccstatus_VALID;
+    inFrame->data.rows = static_cast<T_UInt16>(srcImage.rows);
+    inFrame->data.cols = static_cast<T_UInt16>(srcImage.cols);
+    inFrame->data.rowSize = static_cast<T_UInt32>(srcImage.step[0]);
+    inFrame->data.channels = 3;
+    inFrame->data.depth = Array3DDepth::asn1Sccdepth_32S;
 
-    std::copy(srcImage.data, srcImage.data + (srcImage.total() * srcImage.elemSize()), inFrame->image.arr);
-    inFrame->image.nCount = static_cast<int>(srcImage.total() * srcImage.elemSize());
+
+    std::copy(srcImage.data, srcImage.data + (srcImage.total() * srcImage.elemSize()), inFrame->data.data.arr);
+    inFrame->data.data.nCount = static_cast<int>(srcImage.total() * srcImage.elemSize());
     normal_extraction_impl->imageInput(*inFrame);
 }
 
@@ -61,9 +65,9 @@ void NormalVectorExtractionTest::DisplayResult()
     const FrameWrapper::Frame& normals_frame = normal_extraction_impl->imageOutput();
 
     cv::Size frame_size(
-        static_cast<int>(normals_frame.datasize.width),
-        static_cast<int>(normals_frame.datasize.height));
-    cv::Mat normals(frame_size, CV_32FC3, (void*) normals_frame.image.arr, normals_frame.row_size);
+        static_cast<int>(normals_frame.data.cols),
+        static_cast<int>(normals_frame.data.rows));
+    cv::Mat normals(frame_size, CV_32FC3, (void*) normals_frame.data.data.arr, normals_frame.data.rowSize);
 
     ASSERT(srcImage.size() == normals.size(),
         "Raw and segmented frames should have the same size");
@@ -71,7 +75,7 @@ void NormalVectorExtractionTest::DisplayResult()
     // Rescale the data for visualization because OpenCV expects the coordinates
     // to be in [0; 1] range but ours are in the [-1; 1] range.
     normals = normals / 2.f + .5f;
-    cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
+    cv::namedWindow(outputWindowName, cv::WINDOW_NORMAL);
     cv::imshow(outputWindowName, normals);
 }
 
