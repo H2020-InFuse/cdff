@@ -121,24 +121,3 @@ target_link_libraries(
 	image_undistortion_performance_test
 	cdff_helpers cdff_logger cdff_types image_undistortion performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
 )
-
-
-## DFPC performance tests
-add_library(
-    performance_dfpc_test_interface
-    DFPCs/PerformanceTestInterface.cpp
-)
-target_link_libraries(
-	performance_dfpc_test_interface
-	cdff_helpers cdff_logger cdff_types performance_test_base
-)
-
-add_executable(
-    reconstruction_from_stereo_performance_test
-    DFPCs/Reconstruction3D/ReconstructionFromStereo.cpp
-    DFPCs/Reconstruction3D/Reconstruction3D.cpp
-)
-target_link_libraries(
-	reconstruction_from_stereo_performance_test
-	reconstruction_from_stereo converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator performance_dfpc_test_interface
-)
