@@ -7,9 +7,7 @@
 #define FORCEMESHGENERATOR_FORCEMESHGENERATORINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Frame.h>
 #include <PointCloud.hpp>
-#include <pcl/io/ply_io.h>
 
 
 typedef struct {

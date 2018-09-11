@@ -11,7 +11,6 @@
 #define FORCEMESHGENERATOR_THRESHOLDFORCE_HPP
 
 #include "ForceMeshGeneratorInterface.hpp"
-#include <Frame.hpp>
 #include <PclPointCloudToPointCloudConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 

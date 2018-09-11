@@ -27,7 +27,6 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <DepthFiltering/ConvolutionFilter.hpp>
 #include <pcl/io/ply_io.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
@@ -95,7 +94,7 @@ namespace
     }
 
     //=====================================================================================================================
-    std::vector<std::pair<pcl::PointXYZ, double> > getInputData (pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+    std::vector<std::pair<pcl::PointXYZ, double> > getInputData (const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud)
     {
         Eigen::Vector3d position = ::getPosition();
         Eigen::Quaterniond quaternion = ::getQuaternion();

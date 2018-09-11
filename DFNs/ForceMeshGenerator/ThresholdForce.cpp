@@ -9,8 +9,6 @@
 
 #include "ThresholdForce.hpp"
 #include <Errors/Assert.hpp>
-#include <stdlib.h>
-#include <fstream>
 
 namespace CDFF
 {
@@ -85,7 +83,6 @@ void ThresholdForce::ValidateParameters()
 //=====================================================================================================================
 void ThresholdForce::ValidateInputs()
 {
-
 }
 
 
