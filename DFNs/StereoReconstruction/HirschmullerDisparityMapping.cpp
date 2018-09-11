@@ -168,8 +168,22 @@ cv::Mat HirschmullerDisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::M
 		);
 
 	cv::Mat greyLeftImage, greyRightImage;
-	cv::cvtColor(leftImage, greyLeftImage, CV_BGR2GRAY);
-	cv::cvtColor(rightImage, greyRightImage, CV_BGR2GRAY);
+    if(leftImage.channels() == 3)
+	{
+		cv::cvtColor(leftImage, greyLeftImage, CV_BGR2GRAY);
+	}
+	else  // grayscale
+	{
+		greyLeftImage = leftImage;
+	}
+    if(rightImage.channels() == 3)
+	{
+		cv::cvtColor(rightImage, greyRightImage, CV_BGR2GRAY);
+	}
+	else  // grayscale
+	{
+		greyRightImage = rightImage;
+	}
 
 	cv::Mat disparity;
 	stereo->compute(greyLeftImage, greyRightImage, disparity);
