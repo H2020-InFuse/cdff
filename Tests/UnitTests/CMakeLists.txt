@@ -48,6 +48,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
+    DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
     DFPCs/Reconstruction3D/BundleHistory.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
@@ -122,6 +123,7 @@ set(UNITTEST_LIBRARIES Catch
     estimation_from_stereo
     adjustment_from_stereo
     convolution_filter
+    threshold_force
 )
 
 # Make the Catch executable that runs the unit tests
