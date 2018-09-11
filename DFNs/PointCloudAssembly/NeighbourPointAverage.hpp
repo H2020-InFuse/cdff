@@ -64,16 +64,16 @@ namespace PointCloudAssembly
 			//closest neighbour of y in firstCloud.
 			std::vector< std::vector<int> > correspondenceMap;
 
-			// partitions of input clouds in two partial clouds, fusedcloud contains the points that appear in correspondenceMap, leftover cloud contains the 
-			// point that do not appear in correspondenceMap
-			pcl::PointCloud<pcl::PointXYZ>::Ptr firstFusedCloud, firstLeftoverCloud;
-			pcl::PointCloud<pcl::PointXYZ>::Ptr secondFusedCloud, secondLeftoverCloud;
-
 			// For each point P of index x of a point cloud, if x appears in correspondenceMap, then replacementMap[x] is the point that should replace P in the fused cloud.
 			std::map<int, pcl::PointXYZ > firstReplacementMap, secondReplacementMap;
 
+			//This method computes the correspondenceMap, only after the call to this method correspondenceMap will be valid.
 			void ComputeCorrespondenceMap();
+
+			//This method computes the replacement points, only after this method firstReplacementMap and secondReplacementMap are valid.
 			void ComputeReplacementPoints();
+
+			//This method assemble the final point cloud.
 			void AssemblePointCloud();
 			void AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const std::map<int, pcl::PointXYZ >& replacementMap);
 

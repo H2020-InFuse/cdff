@@ -70,6 +70,8 @@ void NeighbourPointAverage::ComputeCorrespondenceMap()
 	std::vector<int> indexList;
 	std::vector<float> squaredDistanceList;
 
+	//Computing the correspondenceMap: for every point of index y in secondCloud we look for the closest point of index x in firstCloud within radius MaxNeighbourDistance,
+	//if one such point is found y is put in the list associated to x in correspondenceMap
 	int numberOfSecondPoints = secondCloud->points.size();
 	for(int pointIndex = 0; pointIndex < numberOfSecondPoints; pointIndex++)
 		{
@@ -87,6 +89,8 @@ void NeighbourPointAverage::ComputeReplacementPoints()
 	firstReplacementMap.clear();
 	secondReplacementMap.clear();
 
+	//For each point of index x in first cloud, and for each point set of indeces y in second cloud, associate by the correspondenceMap,
+	//we compute a single replacement point, given by the average between x and the average of the all the ys.
 	int numberOfFirstPoints = firstCloud->points.size();
 	for(int pointIndex = 0; pointIndex < numberOfFirstPoints; pointIndex++)
 		{
@@ -124,7 +128,10 @@ void NeighbourPointAverage::AssemblePointCloud()
 
 void NeighbourPointAverage::AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const std::map<int, pcl::PointXYZ >& replacementMap)
 	{
+	//We compute replaced cloud as the point cloud containing all points in cloud that appear in replacement Map.
 	pcl::PointCloud<pcl::PointXYZ>::Ptr replacedCloud( new pcl::PointCloud<pcl::PointXYZ> );
+
+	//This will keep the correspondence between index in cloud and the matching point in replacedCloud.
 	std::vector<int> replacedCloudToCloudIndexList;
 
 	int numberOfPoints = cloud->points.size();
@@ -139,11 +146,14 @@ void NeighbourPointAverage::AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ
 			}
 		}
 
+	//This tree is meant for a neighbour search on replacedCloud
 	pcl::KdTreeFLANN<pcl::PointXYZ> searchTree;
 	searchTree.setInputCloud(replacedCloud);
 	std::vector<int> indexList;
 	std::vector<float> squaredDistanceList;
 
+	//Every point P in cloud that does not appear in replacedCloud, will be translated by an amount D equal to the distance between P''-P' where P' is the closest point of replacedCloud to P,
+	// and P'' is its replacement as defined in replacementMap
 	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 		{
 		std::map<int, pcl::PointXYZ>::const_iterator replacement = replacementMap.find(pointIndex);
