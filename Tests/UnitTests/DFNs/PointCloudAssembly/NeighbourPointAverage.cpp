@@ -13,6 +13,9 @@
 using namespace CDFF::DFN::PointCloudAssembly;
 using namespace PointCloudWrapper;
 
+
+namespace NeighbourPointAverageTest
+{
 void RequireExist(const PointCloud& cloud, float x, float y, float z)
 	{
 	const float EPSILON = 0.00001;
@@ -31,6 +34,9 @@ void RequireExist(const PointCloud& cloud, float x, float y, float z)
 		}
 	REQUIRE( found );
 	}
+}
+
+using namespace NeighbourPointAverageTest;
 
 TEST_CASE( "DFN processing step succeeds no incremental mode(NeighbourPointAverage)", "[process]" )
 {
