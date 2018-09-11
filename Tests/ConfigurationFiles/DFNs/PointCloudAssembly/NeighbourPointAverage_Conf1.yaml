@@ -1,2 +1,3 @@
 - Name: GeneralParameters
   MaxNeighbourDistance: 0.01
+  IncrementalMode: true

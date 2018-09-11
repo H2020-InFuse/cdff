@@ -31,8 +31,10 @@ namespace PointCloudAssembly
 NeighbourPointAverage::NeighbourPointAverage()
 {
 	parametersHelper.AddParameter<float>("GeneralParameters", "MaxNeighbourDistance", parameters.maxNeighbourDistance, DEFAULT_PARAMETERS.maxNeighbourDistance);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "IncrementalMode", parameters.incrementalMode, DEFAULT_PARAMETERS.incrementalMode);
 
 	configurationFilePath = "";
+	storedCloud = NULL;
 }
 
 NeighbourPointAverage::~NeighbourPointAverage()
@@ -43,27 +45,51 @@ void NeighbourPointAverage::configure()
 {
 	parametersHelper.ReadFile(configurationFilePath);
 	ValidateParameters();
+
+	if (parameters.incrementalMode && storedCloud == NULL)
+		{
+		storedCloud = boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> ));
+		}
 }
 
 void NeighbourPointAverage::process()
 {
-	firstCloud = pointCloudToPclPointCloud.Convert(&inFirstPointCloud);
-	secondCloud = pointCloudToPclPointCloud.Convert(&inSecondPointCloud);
+	if (!parameters.incrementalMode)
+		{
+		firstCloud = pointCloudToPclPointCloud.Convert(&inFirstPointCloud);
+		secondCloud = pointCloudToPclPointCloud.Convert(&inSecondPointCloud);
+		}
+	else
+		{
+		firstCloud = storedCloud;
+		secondCloud = pointCloudToPclPointCloud.Convert(&inFirstPointCloud);
+		}
 
 	ComputeCorrespondenceMap();
 	ComputeReplacementPoints();
 	AssemblePointCloud(); 
+
+	if (parameters.incrementalMode)
+		{
+		UpdateStoredCloud();
+		}
 }
 
 const NeighbourPointAverage::NeighbourPointAverageOptionsSet NeighbourPointAverage::DEFAULT_PARAMETERS
 {
-	/*.maxNeighbourDistance =*/ 0.01
+	/*.maxNeighbourDistance =*/ 0.01,
+	/*.incrementalMode =*/ false
 };
 
 void NeighbourPointAverage::ComputeCorrespondenceMap()
 	{
 	correspondenceMap.clear();
 	correspondenceMap.resize( firstCloud->points.size() );
+
+	if (firstCloud->points.size() == 0)
+		{
+		return;
+		}
 
 	pcl::KdTreeFLANN<pcl::PointXYZ> searchTree;
 	searchTree.setInputCloud(firstCloud);
@@ -116,6 +142,7 @@ void NeighbourPointAverage::ComputeReplacementPoints()
 
 void NeighbourPointAverage::AssemblePointCloud()
 	{
+	ClearPoints(outAssembledPointCloud);
 	for(std::map<int, pcl::PointXYZ>::iterator replacementIterator = firstReplacementMap.begin(); replacementIterator != firstReplacementMap.end(); replacementIterator++)
 		{
 		const pcl::PointXYZ& replacement = replacementIterator->second;
@@ -146,6 +173,17 @@ void NeighbourPointAverage::AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ
 			}
 		}
 
+	//If no points are replaced, than the clouds are not overlapping, we just put the whole input cloud into the fusion
+	if (replacedCloud->points.size() == 0)
+		{
+		for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+			{
+			pcl::PointXYZ point = cloud->points.at(pointIndex);
+			AddPoint(outAssembledPointCloud, point.x, point.y, point.z);				
+			}
+		return;
+		}
+
 	//This tree is meant for a neighbour search on replacedCloud
 	pcl::KdTreeFLANN<pcl::PointXYZ> searchTree;
 	searchTree.setInputCloud(replacedCloud);
@@ -153,7 +191,7 @@ void NeighbourPointAverage::AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ
 	std::vector<float> squaredDistanceList;
 
 	//Every point P in cloud that does not appear in replacedCloud, will be translated by an amount D equal to the distance between P''-P' where P' is the closest point of replacedCloud to P,
-	// and P'' is its replacement as defined in replacementMap
+	// and P'' is its replacement as defined in replacementMap if P' exists.
 	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 		{
 		std::map<int, pcl::PointXYZ>::const_iterator replacement = replacementMap.find(pointIndex);
@@ -164,11 +202,14 @@ void NeighbourPointAverage::AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ
 				{
 				int closestIndex = indexList.at(0);
 				int replacedPointIndex = replacedCloudToCloudIndexList.at(closestIndex);
-				pcl::PointXYZ point = cloud->points.at(pointIndex);
 				pcl::PointXYZ replacedPoint = cloud->points.at(replacedPointIndex);
-				const pcl::PointXYZ& replacementPoint = replacementMap.find(replacedPointIndex)->second;
+				std::map<int, pcl::PointXYZ>::const_iterator replacementElement = replacementMap.find(replacedPointIndex);
 
-				pcl::PointXYZ newPoint = DisplacePointBySameDistance(point, replacedPoint, replacementPoint);
+				// The replacementElement should be valid because replacedPointIndex is contained in replacedCloudToCloudIndexList which contains only index of replaced points;
+				ASSERT(replacementElement != replacementMap.end(), "NeighbourPointAverage error, replacementElement should be valid");
+				const pcl::PointXYZ& replacementPoint = replacementElement->second;
+
+				pcl::PointXYZ newPoint = DisplacePointBySameDistance(searchPoint, replacedPoint, replacementPoint);
 				AddPoint(outAssembledPointCloud, newPoint.x, newPoint.y, newPoint.z);				
 				}
 			}
@@ -211,6 +252,19 @@ pcl::PointXYZ NeighbourPointAverage::DisplacePointBySameDistance(const pcl::Poin
 	displacedPoint.y = pointToDisplace.y + (endDistanceReference.y - startDistanceReference.y);
 	displacedPoint.z = pointToDisplace.z + (endDistanceReference.z - startDistanceReference.z);
 	return displacedPoint;
+	}
+
+void NeighbourPointAverage::UpdateStoredCloud()
+	{
+	ASSERT(storedCloud != NULL, "NeighbourPointAverage error, UpdateStoredCloud called with null storedCloud");
+	int numberOfPoints = GetNumberOfPoints(outAssembledPointCloud);
+	storedCloud->points.resize( numberOfPoints );
+	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+		{
+		storedCloud->points.at(pointIndex).x = GetXCoordinate(outAssembledPointCloud, pointIndex);
+		storedCloud->points.at(pointIndex).y = GetYCoordinate(outAssembledPointCloud, pointIndex);
+		storedCloud->points.at(pointIndex).z = GetZCoordinate(outAssembledPointCloud, pointIndex);
+		}
 	}
 
 void NeighbourPointAverage::ValidateParameters()

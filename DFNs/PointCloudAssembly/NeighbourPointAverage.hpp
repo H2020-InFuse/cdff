@@ -35,6 +35,8 @@ namespace PointCloudAssembly
 	 * Fusion of two point clouds using the neighbour point average algorithm.
 	 *
 	 * @param maxNeighbourDistance, maximum distance for a point to be considered neighbour of another point
+	 * @param incrementalMode, when this is false the output is given by the fusion of the two input clouds, when this is true only the first cloud will be used and will be fused with
+	 * the an incrementally constructed stored cloud.
 	 */
 	class NeighbourPointAverage : public PointCloudAssemblyInterface
 	{
@@ -50,6 +52,7 @@ namespace PointCloudAssembly
 			struct NeighbourPointAverageOptionsSet
 			{
 				float maxNeighbourDistance;
+				bool incrementalMode;
 			};
 
 			Helpers::ParametersListHelper parametersHelper;
@@ -59,6 +62,7 @@ namespace PointCloudAssembly
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 			pcl::PointCloud<pcl::PointXYZ>::ConstPtr firstCloud;
 			pcl::PointCloud<pcl::PointXYZ>::ConstPtr secondCloud;
+			pcl::PointCloud<pcl::PointXYZ>::Ptr storedCloud;
 
 			//correspondenceMap: For each point of index x in firstCloud, if correspondenceMap.at(x) is the list of points y in secondCloud, such that x is the 
 			//closest neighbour of y in firstCloud.
@@ -80,6 +84,8 @@ namespace PointCloudAssembly
 			pcl::PointXYZ ComputeAveragePoint(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const std::vector<int>& indexList);
 			pcl::PointXYZ ComputeAveragePoint(const pcl::PointXYZ& firstPoint, const pcl::PointXYZ& secondPoint);
 			pcl::PointXYZ DisplacePointBySameDistance(const pcl::PointXYZ& pointToDisplace, const pcl::PointXYZ& startDistanceReference, const pcl::PointXYZ& endDistanceReference);
+
+			void UpdateStoredCloud();
 
 			void ValidateParameters();
 	};
