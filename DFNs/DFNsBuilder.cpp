@@ -33,6 +33,8 @@
 #include <Transform3DEstimation/CeresEstimation.hpp>
 #include <Transform3DEstimation/LeastSquaresMinimization.hpp>
 #include <DepthFiltering/ConvolutionFilter.hpp>
+#include <PointCloudAssembly/NeighbourPointAverage.hpp>
+#include <PointCloudTransform/CartesianSystemTransform.hpp>
 
 #include <Errors/Assert.hpp>
 
@@ -106,6 +108,14 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	else if (dfnType == "DepthFiltering")
 	{
 		return CreateDepthFiltering(dfnImplementation);
+	}
+	else if (dfnType == "PointCloudAssembly")
+	{
+		return CreatePointCloudAssembly(dfnImplementation);
+	}
+	else if (dfnType == "PointCloudTransform")
+	{
+		return CreatePointCloudTransform(dfnImplementation);
 	}
 
 	PRINT_TO_LOG("DFN: ", dfnType);
@@ -296,10 +306,29 @@ Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(std::st
 	return NULL;
 }
 
-
 DepthFilteringInterface* DFNsBuilder::CreateDepthFiltering(std::string dfnImplementation)
 {
 	return new DepthFiltering::ConvolutionFilter();
+}
+
+PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(std::string dfnImplementation)
+{
+	if (dfnImplementation == "NeighbourPointAverage")
+	{
+		return new PointCloudAssembly::NeighbourPointAverage;
+	}
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudAssembly implementation");
+	return NULL;
+}
+
+PointCloudTransformInterface* DFNsBuilder::CreatePointCloudTransform(std::string dfnImplementation)
+{
+	if (dfnImplementation == "CartesianSystemTransform")
+	{
+		return new PointCloudTransform::CartesianSystemTransform;
+	}
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudTransform implementation");
+	return NULL;
 }
 
 }

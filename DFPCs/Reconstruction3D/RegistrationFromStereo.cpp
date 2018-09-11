@@ -55,6 +55,7 @@ RegistrationFromStereo::RegistrationFromStereo()
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "MatchToReconstructedCloud", parameters.matchToReconstructedCloud, DEFAULT_PARAMETERS.matchToReconstructedCloud);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "UseAssemblerDfn", parameters.useAssemblerDfn, DEFAULT_PARAMETERS.useAssemblerDfn);
 
 	configurationFilePath = "";
 	firstInput = true;
@@ -65,6 +66,8 @@ RegistrationFromStereo::RegistrationFromStereo()
 	featuresExtractor3d = NULL;
 	optionalFeaturesDescriptor3d = NULL;
 	featuresMatcher3d = NULL;
+	cloudAssembler = NULL;
+	cloudTransformer = NULL;
 
 	bundleHistory = new BundleHistory(2);
 
@@ -82,6 +85,8 @@ RegistrationFromStereo::~RegistrationFromStereo()
 	DeleteIfNotNull(featuresExtractor3d);
 	DeleteIfNotNull(optionalFeaturesDescriptor3d);
 	DeleteIfNotNull(featuresMatcher3d);
+	DeleteIfNotNull(cloudAssembler);
+	DeleteIfNotNull(cloudTransformer);
 
 	DeleteIfNotNull(bundleHistory);
 	}
@@ -137,15 +142,27 @@ void RegistrationFromStereo::run()
 		Pose3D zeroPose;
 		SetPosition(zeroPose, 0, 0, 0);
 		SetOrientation(zeroPose, 0, 0, 0, 1);
-		pointCloudMap.AddPointCloud( imageCloud, featureVector, &zeroPose);
+		if (!parameters.useAssemblerDfn)
+			{
+			pointCloudMap.AddPointCloud( imageCloud, featureVector, &zeroPose);
+			}
+		else
+			{
+			Copy(zeroPose, outPose);
+			}
 		}
 	else
 		{
 		Pose3DConstPtr poseToPreviousPose = NULL;
 		featuresMatcher3d->Execute( featureVector, bundleHistory->GetFeatures3d(1), poseToPreviousPose, outSuccess);
-		if (outSuccess)
+		if (outSuccess && !parameters.useAssemblerDfn)
 			{
 			pointCloudMap.AttachPointCloud( imageCloud, featureVector, poseToPreviousPose);
+			}
+		else
+			{
+			Pose3D newPose = Sum(outPose, *poseToPreviousPose);
+			Copy(newPose, outPose);
 			}
 		#ifdef TESTING
 		logFile << outSuccess << " ";
@@ -171,18 +188,37 @@ void RegistrationFromStereo::run()
 
 	if (outSuccess)
 		{
-		Copy( pointCloudMap.GetLatestPose(), outPose);
-		if (parameters.matchToReconstructedCloud)
+		PointCloudWrapper::PointCloudConstPtr outputPointCloud = NULL;
+		if (parameters.useAssemblerDfn)
 			{
-			VisualPointFeatureVector3DConstPtr fullCloudFeatureVector = pointCloudMap.GetSceneFeaturesVector(&outPose, parameters.searchRadius);
-			bundleHistory->AddFeatures3d(*fullCloudFeatureVector);
-			DeleteIfNotNull(fullCloudFeatureVector);
+			cloudAssembler->Execute(*imageCloud, outPose, parameters.searchRadius, outputPointCloud);
+			if (parameters.matchToReconstructedCloud)
+				{
+				VisualPointFeatureVector3DConstPtr reconstructedKeypointVector = NULL;
+				featuresExtractor3d->Execute(outputPointCloud, reconstructedKeypointVector);
+
+				VisualPointFeatureVector3DConstPtr reconstructedFeatureVector = NULL;
+				optionalFeaturesDescriptor3d->Execute(outputPointCloud, reconstructedKeypointVector, reconstructedFeatureVector);
+				DEBUG_PRINT_TO_LOG("Described Reconstructed Features:", GetNumberOfPoints(*reconstructedFeatureVector));
+
+				bundleHistory->AddFeatures3d(*reconstructedFeatureVector);
+				}
 			}
-		PointCloudWrapper::PointCloudConstPtr outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(&outPose, parameters.searchRadius);
-		Copy(*outputPointCloud, outPointCloud); 
+		else
+			{
+			Copy( pointCloudMap.GetLatestPose(), outPose);
+			if (parameters.matchToReconstructedCloud)
+				{
+				VisualPointFeatureVector3DConstPtr fullCloudFeatureVector = pointCloudMap.GetSceneFeaturesVector(&outPose, parameters.searchRadius);
+				bundleHistory->AddFeatures3d(*fullCloudFeatureVector);
+				DeleteIfNotNull(fullCloudFeatureVector);
+				}
+			outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(&outPose, parameters.searchRadius);
+			}
+		Copy(*outputPointCloud, outPointCloud);
 
 		DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
-		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
+		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(outPointCloud));
 
 		#ifdef TESTING
 		logFile << GetNumberOfPoints(outPointCloud) << " ";
@@ -257,7 +293,8 @@ const RegistrationFromStereo::RegistrationFromStereoOptionsSet RegistrationFromS
 	{
 	/*.searchRadius =*/ 20,
 	/*.pointCloudMapResolution =*/ 1e-2,
-	/*.matchToReconstructedCloud =*/ false
+	/*.matchToReconstructedCloud =*/ false,
+	/*.useAssemblerDfn=*/ false
 	};
 
 /* --------------------------------------------------------------------------
@@ -281,6 +318,11 @@ void RegistrationFromStereo::InstantiateDFNExecutors()
 	featuresExtractor3d = new FeaturesExtraction3DExecutor( static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") ) );
 	optionalFeaturesDescriptor3d = new FeaturesDescription3DExecutor( static_cast<FeaturesDescription3DInterface*>( configurator.GetDfn("featuresDescriptor3d", true) ) );
 	featuresMatcher3d = new FeaturesMatching3DExecutor( static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") ) );
+	if (parameters.useAssemblerDfn)
+		{
+		cloudAssembler = new PointCloudAssemblyExecutor( static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") ) );
+		cloudTransformer = new PointCloudTransformExecutor( static_cast<PointCloudTransformInterface*>( configurator.GetDfn("cloudTransformer") ) );
+		}
 	}
 
 }
