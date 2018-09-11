@@ -71,7 +71,7 @@ TEST_CASE( "Success Call to Process (3D feature registration)", "[processSuccess
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclModelCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile("../tests/Data/PointClouds/bunny0.ply", *pclCloud);
-	const unsigned SELECTION_RATIO = 10;
+	const unsigned SELECTION_RATIO = 1000;
 	unsigned selectionCounter = 0;
 	for(unsigned pointIndex = 0; pointIndex < pclCloud->points.size(); pointIndex++)
 		{
@@ -99,9 +99,9 @@ TEST_CASE( "Success Call to Process (3D feature registration)", "[processSuccess
 		scenePoint.z = point.z + 0.2;
 		pclSceneCloud->points.push_back(scenePoint);
 		}	
-	for(float x = -1; x<1; x+=0.01)
+	for(float x = -1; x<1; x+=0.1)
 		{
-		for(float y = -1; y<1; y+=0.01)
+		for(float y = -1; y<1; y+=0.1)
 			{
 			pclSceneCloud->points.push_back( pcl::PointXYZ(x, y, -1) );
 			pclSceneCloud->points.push_back( pcl::PointXYZ(x, y, 1) );

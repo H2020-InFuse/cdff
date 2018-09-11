@@ -54,6 +54,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
+    DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
 )
 
 # Libraries used by the aforementioned source files. They will be linked in the
@@ -122,6 +123,7 @@ set(UNITTEST_LIBRARIES Catch
     estimation_from_stereo
     adjustment_from_stereo
     convolution_filter
+    neighbour_point_average
 )
 
 # Make the Catch executable that runs the unit tests
