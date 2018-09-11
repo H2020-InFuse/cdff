@@ -99,7 +99,7 @@ const HuInvariants::HuInvariantsOptionsSet HuInvariants::DEFAULT_PARAMETERS =
 };
 
 //=====================================================================================================================
-std::string HuInvariants::Match(cv::Mat inputImage)
+std::string HuInvariants::Match(const cv::Mat& inputImage)
 {
     //Get all .jpg files in template folder
     std::vector<std::string> template_files = getTemplateFiles();
@@ -137,10 +137,10 @@ std::vector<std::string> HuInvariants::getTemplateFiles()
 }
 
 //=====================================================================================================================
-std::vector<std::vector<cv::Point> > HuInvariants::getTemplateContours(std::vector<std::string> template_files)
+std::vector<std::vector<cv::Point> > HuInvariants::getTemplateContours(const std::vector<std::string>& template_files)
 {
     std::vector<std::vector<cv::Point> > template_contours;
-    for ( int index = 0; index< template_files.size(); index++ )
+    for ( int index = 0; index < template_files.size(); index++ )
     {
         cv::Mat img = cv::imread(template_files[index]);
         std::vector<std::vector<cv::Point> > contours = extractContours(img);
@@ -155,7 +155,7 @@ std::vector<std::vector<cv::Point> > HuInvariants::getTemplateContours(std::vect
 }
 
 //=====================================================================================================================
-std::vector<std::vector<cv::Point> > HuInvariants::extractContours(const cv::Mat img)
+std::vector<std::vector<cv::Point> > HuInvariants::extractContours(const cv::Mat& img)
 {
     cv::Mat grey, threshold;
     std::vector<std::vector<cv::Point> > contours;
@@ -169,7 +169,7 @@ std::vector<std::vector<cv::Point> > HuInvariants::extractContours(const cv::Mat
 }
 
 //=====================================================================================================================
-std::vector<std::vector<cv::Point> > HuInvariants::extractAndFilterContours(const cv::Mat img)
+std::vector<std::vector<cv::Point> > HuInvariants::extractAndFilterContours(const cv::Mat& img)
 {
     std::vector<std::vector<cv::Point> > input_image_contours = extractContours(img);
 
@@ -184,13 +184,13 @@ std::vector<std::vector<cv::Point> > HuInvariants::extractAndFilterContours(cons
 }
 
 //=====================================================================================================================
-std::string HuInvariants::matchTemplatesAndImage(std::vector<std::vector<cv::Point> > input_image_contours, std::vector<std::vector<cv::Point> > template_contours, std::vector<std::string> template_files)
+std::string HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<cv::Point> >& input_image_contours, const std::vector<std::vector<cv::Point> >& template_contours, const std::vector<std::string>& template_files)
 {
     std::vector<double> similarity;
     std::vector<int> indexes_max_similarity_input_image_contour;
-    for (std::vector<cv::Point> template_contour : template_contours) {
+    for (const std::vector<cv::Point>& template_contour : template_contours) {
         std::vector<double> template_similarity;
-        for (std::vector<cv::Point> input_image_contour : input_image_contours) {
+        for (const std::vector<cv::Point>& input_image_contour : input_image_contours) {
             template_similarity.push_back(cv::matchShapes(input_image_contour, template_contour, 1, 0.0));
         }
 
@@ -218,7 +218,7 @@ void HuInvariants::ValidateParameters()
 }
 
 //=====================================================================================================================
-void HuInvariants::ValidateInputs(cv::Mat inputImage)
+void HuInvariants::ValidateInputs(const cv::Mat& inputImage)
 {
 	ASSERT(inputImage.type() == CV_8UC3 || inputImage.type() == CV_8UC1, "Hu Invariants error: input image is not of type CV_8UC3 or CV_8UC1");
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "Hu Invariants error: input image is empty");
