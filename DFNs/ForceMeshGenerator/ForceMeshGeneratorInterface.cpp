@@ -18,17 +18,14 @@ ForceMeshGeneratorInterface::ForceMeshGeneratorInterface()
 //=====================================================================================================================
 void ForceMeshGeneratorInterface::roverPoseInput(const asn1SccPose& data)
 {
-    inPose = data;
+    inRoverPose = data;
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorInterface::positionAndForceInput(const asn1SccPosition & position, const asn1SccT_Double & force)
+void ForceMeshGeneratorInterface::positionAndForceInput(const asn1SccPointArray & positions, const asn1SccDoubleArray & forces)
 {
-    inPosition = position;
-    inForce = force;
-
-    pcl::PointXYZ point (position.arr[0], position.arr[1], position.arr[2]);
-    inPoints.push_back(std::make_pair(point, force));
+    inPositions = positions;
+    inForces = forces;
 }
 
 //=====================================================================================================================

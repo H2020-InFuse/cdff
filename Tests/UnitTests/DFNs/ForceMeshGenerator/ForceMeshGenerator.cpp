@@ -128,6 +128,7 @@ namespace
 
         return points;
     }
+
 }
 
 //=====================================================================================================================
@@ -144,20 +145,27 @@ TEST_CASE( "Force Mesh Generator" )
     // Instantiate DFN
     std::unique_ptr<CDFF::DFN::ForceMeshGenerator::ThresholdForce> generator (new CDFF::DFN::ForceMeshGenerator::ThresholdForce() );
 
-    // Send input data to DFN
-    asn1SccPose rover_pose = ::getRoverPose();
-    generator->roverPoseInput(rover_pose);
+    // Convert the input data
+    asn1SccPointArray positions;
+    asn1SccDoubleArray forces;
 
-    for ( auto point_and_force : points )
+    auto size = points.size();
+    positions.nCount = size;
+    forces.nCount = size;
+
+    for ( unsigned int index = 0; index < size; index ++ )
     {
-        asn1SccPosition position;
-        position.arr[0] = point_and_force.first.x;
-        position.arr[1] = point_and_force.first.y;
-        position.arr[2] = point_and_force.first.z;
-        asn1SccT_Double force = point_and_force.second;
-
-        generator->positionAndForceInput(position, force);
+        positions.arr[index].arr[0] = points[index].first.x;
+        positions.arr[index].arr[1] = points[index].first.y;
+        positions.arr[index].arr[2] = points[index].first.z;
+        forces.arr[index] = points[index].second;
     }
+
+    asn1SccPose rover_pose = ::getRoverPose();
+
+    // Send input data to DFN
+    generator->roverPoseInput(rover_pose);
+    generator->positionAndForceInput(positions, forces);
 
     // Run DFN
     generator->process();

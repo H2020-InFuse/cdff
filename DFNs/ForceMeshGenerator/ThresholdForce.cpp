@@ -55,16 +55,17 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr ThresholdForce::CreatePointCloud()
 {
 	pcl::PointCloud<pcl::PointXYZ>::Ptr new_cloud (new pcl::PointCloud<pcl::PointXYZ>());
 
-	Eigen::Vector3d position(inPose.pos.arr[0], inPose.pos.arr[1], inPose.pos.arr[2]);
-	Eigen::Quaterniond quaternion(inPose.orient.arr[0], inPose.orient.arr[1], inPose.orient.arr[2], inPose.orient.arr[3]);
+	Eigen::Vector3d position(inRoverPose.pos.arr[0], inRoverPose.pos.arr[1], inRoverPose.pos.arr[2]);
+	Eigen::Quaterniond quaternion(inRoverPose.orient.arr[0], inRoverPose.orient.arr[1], inRoverPose.orient.arr[2], inRoverPose.orient.arr[3]);
 	quaternion.normalize();
 	Eigen::Matrix3d rotation = quaternion.toRotationMatrix();
 
-	for( unsigned int index = 0; index < inPoints.size(); index ++ )
+	unsigned int size = inPositions.nCount;
+	for( unsigned int index = 0; index < size; index ++ )
 	{
-		if( inPoints[index].second > parameters.threshold )
+		if( inForces.arr[index] > parameters.threshold )
 		{
-			Eigen::Vector3d point_eigen(inPoints[index].first.x, inPoints[index].first.y, inPoints[index].first.z);
+			Eigen::Vector3d point_eigen(inPositions.arr[index].arr[0], inPositions.arr[index].arr[1], inPositions.arr[index].arr[2]);
 			point_eigen += position;
 			point_eigen = rotation * point_eigen;
 

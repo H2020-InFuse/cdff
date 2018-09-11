@@ -11,6 +11,18 @@
 #include <PointCloud.hpp>
 #include <pcl/io/ply_io.h>
 
+
+typedef struct {
+    int nCount;
+    asn1SccPoint arr[100000];
+} asn1SccPointArray;
+
+typedef struct {
+    int nCount;
+    asn1SccT_Double arr[100000];
+} asn1SccDoubleArray;
+
+
 namespace CDFF
 {
 namespace DFN
@@ -32,10 +44,10 @@ namespace DFN
 
             /**
             * Send value to input port
-            * @param position: end-effector position
-            * @param force: end-effector force measurements
+            * @param positions: end-effector positions
+            * @param forces: end-effector force measurements
             */
-            virtual void positionAndForceInput(const asn1SccPosition & position, const asn1SccT_Double & force);
+            virtual void positionAndForceInput(const asn1SccPointArray & positions, const asn1SccDoubleArray & forces);
 
             /**
              * Query value from output port
@@ -45,13 +57,10 @@ namespace DFN
 
         protected:
 
-            asn1SccPose inPose;
-            asn1SccPosition inPosition;
-            asn1SccT_Double inForce;
+            asn1SccPose inRoverPose;
+            asn1SccPointArray inPositions;
+            asn1SccDoubleArray inForces;
             asn1SccPointcloud outPointCloud;
-
-            std::vector<std::pair< pcl::PointXYZ, double > > inPoints;
-
     };
 }
 }
