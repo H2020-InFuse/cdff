@@ -28,6 +28,16 @@ void PointCloudAssemblyInterface::secondPointCloudInput(const asn1SccPointcloud&
     inSecondPointCloud = data;
 }
 
+void PointCloudAssemblyInterface::viewCenterInput(const asn1SccPose& data)
+{
+    inViewCenter = data;
+}
+
+void PointCloudAssemblyInterface::viewRadiusInput(const float& data)
+{
+    inViewRadius = data;
+}
+
 const asn1SccPointcloud& PointCloudAssemblyInterface::assembledCloudOutput() const
 {
     return outAssembledPointCloud;

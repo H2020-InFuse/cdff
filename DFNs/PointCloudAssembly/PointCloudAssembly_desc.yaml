@@ -7,9 +7,16 @@ input_ports:
     - name: secondPointCloud
       type: asn1SccPointcloud
       doc: second input point cloud
+    - name: viewCenter
+      type: asn1SccPose
+      doc: optional view center of the assembled point cloud. (0, 0, 0) is default.
+    - name: viewRadius
+      type: float
+      doc: optional view radius of the assembled point cloud. 100 is default.
 output_ports:
     - name: assembledCloud
       type: asn1SccPointcloud
       doc: point cloud obtained by the combination of the two inputs.
+	   Only points within viewRadius from the viewCenter are visible.
 implementations:
     - NeighbourPointAverage

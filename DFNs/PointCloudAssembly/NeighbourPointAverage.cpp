@@ -20,6 +20,7 @@
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
+using namespace PoseWrapper;
 
 namespace CDFF
 {
@@ -31,10 +32,15 @@ namespace PointCloudAssembly
 NeighbourPointAverage::NeighbourPointAverage()
 {
 	parametersHelper.AddParameter<float>("GeneralParameters", "MaxNeighbourDistance", parameters.maxNeighbourDistance, DEFAULT_PARAMETERS.maxNeighbourDistance);
-	parametersHelper.AddParameter<bool>("GeneralParameters", "IncrementalMode", parameters.incrementalMode, DEFAULT_PARAMETERS.incrementalMode);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "UseIncrementalMode", parameters.useIncrementalMode, DEFAULT_PARAMETERS.useIncrementalMode);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDistanceFilter", parameters.useDistanceFilter, DEFAULT_PARAMETERS.useDistanceFilter);
 
 	configurationFilePath = "";
 	storedCloud = NULL;
+	assembledCloud = boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> ));
+
+	SetPosition(inViewCenter, 0, 0, 0);
+	inViewRadius = 100;
 }
 
 NeighbourPointAverage::~NeighbourPointAverage()
@@ -46,7 +52,7 @@ void NeighbourPointAverage::configure()
 	parametersHelper.ReadFile(configurationFilePath);
 	ValidateParameters();
 
-	if (parameters.incrementalMode && storedCloud == NULL)
+	if (parameters.useIncrementalMode && storedCloud == NULL)
 		{
 		storedCloud = boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> ));
 		}
@@ -54,7 +60,7 @@ void NeighbourPointAverage::configure()
 
 void NeighbourPointAverage::process()
 {
-	if (!parameters.incrementalMode)
+	if (!parameters.useIncrementalMode)
 		{
 		firstCloud = pointCloudToPclPointCloud.Convert(&inFirstPointCloud);
 		secondCloud = pointCloudToPclPointCloud.Convert(&inSecondPointCloud);
@@ -68,17 +74,20 @@ void NeighbourPointAverage::process()
 	ComputeCorrespondenceMap();
 	ComputeReplacementPoints();
 	AssemblePointCloud(); 
+	PrepareOutAssembledPointCloud();
 
-	if (parameters.incrementalMode)
+	if (parameters.useIncrementalMode)
 		{
-		UpdateStoredCloud();
+		storedCloud->points.resize(0);
+		*storedCloud += *assembledCloud;
 		}
 }
 
 const NeighbourPointAverage::NeighbourPointAverageOptionsSet NeighbourPointAverage::DEFAULT_PARAMETERS
 {
 	/*.maxNeighbourDistance =*/ 0.01,
-	/*.incrementalMode =*/ false
+	/*.useIncrementalMode =*/ false,
+	/*.useDistanceFilter =*/ false
 };
 
 void NeighbourPointAverage::ComputeCorrespondenceMap()
@@ -142,11 +151,11 @@ void NeighbourPointAverage::ComputeReplacementPoints()
 
 void NeighbourPointAverage::AssemblePointCloud()
 	{
-	ClearPoints(outAssembledPointCloud);
+	assembledCloud->points.resize(0);
 	for(std::map<int, pcl::PointXYZ>::iterator replacementIterator = firstReplacementMap.begin(); replacementIterator != firstReplacementMap.end(); replacementIterator++)
 		{
 		const pcl::PointXYZ& replacement = replacementIterator->second;
-		AddPoint(outAssembledPointCloud, replacement.x, replacement.y, replacement.z);
+		assembledCloud->points.push_back( pcl::PointXYZ(replacement) );
 		}
 
 	AssembleLeftoverPoints(firstCloud, firstReplacementMap);
@@ -176,11 +185,7 @@ void NeighbourPointAverage::AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ
 	//If no points are replaced, than the clouds are not overlapping, we just put the whole input cloud into the fusion
 	if (replacedCloud->points.size() == 0)
 		{
-		for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
-			{
-			pcl::PointXYZ point = cloud->points.at(pointIndex);
-			AddPoint(outAssembledPointCloud, point.x, point.y, point.z);				
-			}
+		*assembledCloud += *cloud;
 		return;
 		}
 
@@ -210,7 +215,7 @@ void NeighbourPointAverage::AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ
 				const pcl::PointXYZ& replacementPoint = replacementElement->second;
 
 				pcl::PointXYZ newPoint = DisplacePointBySameDistance(searchPoint, replacedPoint, replacementPoint);
-				AddPoint(outAssembledPointCloud, newPoint.x, newPoint.y, newPoint.z);				
+				assembledCloud->points.push_back(newPoint);
 				}
 			}
 		}	
@@ -254,16 +259,28 @@ pcl::PointXYZ NeighbourPointAverage::DisplacePointBySameDistance(const pcl::Poin
 	return displacedPoint;
 	}
 
-void NeighbourPointAverage::UpdateStoredCloud()
+void NeighbourPointAverage::PrepareOutAssembledPointCloud()
 	{
-	ASSERT(storedCloud != NULL, "NeighbourPointAverage error, UpdateStoredCloud called with null storedCloud");
-	int numberOfPoints = GetNumberOfPoints(outAssembledPointCloud);
-	storedCloud->points.resize( numberOfPoints );
+	float squaredViewRadius = (inViewRadius*inViewRadius);
+	int numberOfPoints = assembledCloud->points.size();
+	ClearPoints(outAssembledPointCloud);
+
 	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 		{
-		storedCloud->points.at(pointIndex).x = GetXCoordinate(outAssembledPointCloud, pointIndex);
-		storedCloud->points.at(pointIndex).y = GetYCoordinate(outAssembledPointCloud, pointIndex);
-		storedCloud->points.at(pointIndex).z = GetZCoordinate(outAssembledPointCloud, pointIndex);
+		pcl::PointXYZ point = assembledCloud->points.at(pointIndex);
+		bool pointToAdd = (GetNumberOfPoints(outAssembledPointCloud) < PointCloudWrapper::MAX_CLOUD_SIZE);
+		if (pointToAdd && parameters.useDistanceFilter)
+			{
+			float distanceX = GetXPosition(inViewCenter) - point.x;
+			float distanceY = GetYPosition(inViewCenter) - point.y;
+			float distanceZ = GetZPosition(inViewCenter) - point.z;
+			float squaredDistance = distanceX*distanceX + distanceY*distanceY + distanceZ*distanceZ;
+			pointToAdd = squaredDistance < squaredViewRadius;
+			}
+		if (pointToAdd)
+			{
+			AddPoint(outAssembledPointCloud, point.x, point.y, point.z);
+			}
 		}
 	}
 

@@ -13,7 +13,7 @@
 #include "PointCloudAssemblyInterface.hpp"
 
 #include <PointCloud.hpp>
-#include <VisualPointFeatureVector3D.hpp>
+#include <Pose.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
@@ -52,7 +52,8 @@ namespace PointCloudAssembly
 			struct NeighbourPointAverageOptionsSet
 			{
 				float maxNeighbourDistance;
-				bool incrementalMode;
+				bool useIncrementalMode;
+				bool useDistanceFilter;
 			};
 
 			Helpers::ParametersListHelper parametersHelper;
@@ -63,6 +64,7 @@ namespace PointCloudAssembly
 			pcl::PointCloud<pcl::PointXYZ>::ConstPtr firstCloud;
 			pcl::PointCloud<pcl::PointXYZ>::ConstPtr secondCloud;
 			pcl::PointCloud<pcl::PointXYZ>::Ptr storedCloud;
+			pcl::PointCloud<pcl::PointXYZ>::Ptr assembledCloud;
 
 			//correspondenceMap: For each point of index x in firstCloud, if correspondenceMap.at(x) is the list of points y in secondCloud, such that x is the 
 			//closest neighbour of y in firstCloud.
@@ -85,7 +87,7 @@ namespace PointCloudAssembly
 			pcl::PointXYZ ComputeAveragePoint(const pcl::PointXYZ& firstPoint, const pcl::PointXYZ& secondPoint);
 			pcl::PointXYZ DisplacePointBySameDistance(const pcl::PointXYZ& pointToDisplace, const pcl::PointXYZ& startDistanceReference, const pcl::PointXYZ& endDistanceReference);
 
-			void UpdateStoredCloud();
+			void PrepareOutAssembledPointCloud();
 
 			void ValidateParameters();
 	};

@@ -8,6 +8,7 @@
 
 #include "DFNCommonInterface.hpp"
 #include <Pointcloud.h>
+#include <Pose.h>
 
 namespace CDFF
 {
@@ -36,8 +37,21 @@ namespace DFN
             virtual void secondPointCloudInput(const asn1SccPointcloud& data);
 
             /**
+             * Send value to input port "viewCenter"
+             * @param viewCenter: optional view center of the assembled point cloud. (0, 0, 0) is default.
+             */
+            virtual void viewCenterInput(const asn1SccPose& data);
+
+            /**
+             * Send value to input port "viewRadius"
+             * @param viewRadius: optional view radius of the assembled point cloud. 100 is default.
+             */
+            virtual void viewRadiusInput(const float& data);
+
+            /**
              * Query value from output port "assembledCloud"
              * @return assembledCloud: point cloud obtained by the combination of the two inputs.
+	     * Only points within viewRadius from the viewCenter are visible.
              */
             virtual const asn1SccPointcloud& assembledCloudOutput() const;
 
@@ -45,6 +59,8 @@ namespace DFN
 
             asn1SccPointcloud inFirstPointCloud;
             asn1SccPointcloud inSecondPointCloud;
+	    asn1SccPose inViewCenter;
+	    float inViewRadius;
             asn1SccPointcloud outAssembledPointCloud;
     };
 }
