@@ -28,6 +28,7 @@
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
 #include <Transform3DEstimation/Transform3DEstimationInterface.hpp>
 #include <DepthFiltering/DepthFilteringInterface.hpp>
+#include <ForceMeshGenerator/ForceMeshGeneratorInterface.hpp>
 
 #include <stdlib.h>
 #include <string>
@@ -64,6 +65,7 @@ namespace DFN
 			static StereoReconstructionInterface* CreateStereoReconstruction(std::string dfnImplementation);
 			static Transform3DEstimationInterface* CreateTransform3DEstimation(std::string dfnImplementation);
 			static DepthFilteringInterface* CreateDepthFiltering(std::string dfnImplementation);
+			static ForceMeshGeneratorInterface* CreateForceMeshGenerator(std::string dfnImplementation);
 
 	};
 }

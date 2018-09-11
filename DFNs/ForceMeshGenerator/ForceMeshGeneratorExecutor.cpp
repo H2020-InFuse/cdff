@@ -1,0 +1,39 @@
+/**
+ * @addtogroup DFNs
+ * @{
+ */
+
+#include "ForceMeshGeneratorExecutor.hpp"
+#include <Errors/Assert.hpp>
+
+namespace CDFF
+{
+namespace DFN
+{
+
+//=====================================================================================================================
+ForceMeshGeneratorExecutor::ForceMeshGeneratorExecutor(ForceMeshGeneratorInterface* dfn)
+    : dfn (dfn)
+{
+    ASSERT(dfn != NULL, "ForceMeshGeneratorExecutor: null dfn in input");
+}
+
+//=====================================================================================================================
+void ForceMeshGeneratorExecutor::Execute(const asn1SccPose& roverPose, const asn1SccPointArray & positions, const asn1SccDoubleArray & forces, PointCloudWrapper::PointCloudConstPtr outputPointCloud)
+{
+    Execute(roverPose, positions, forces, *outputPointCloud);
+}
+
+//=====================================================================================================================
+void ForceMeshGeneratorExecutor::Execute(const asn1SccPose& roverPose, const asn1SccPointArray & positions, const asn1SccDoubleArray & forces, PointCloudWrapper::PointCloud outputPointCloud)
+{
+    dfn->roverPoseInput(roverPose);
+    dfn->positionAndForceInput(positions, forces);
+    dfn->process();
+    outputPointCloud = dfn->pointCloudOutput();
+}
+
+}
+}
+
+/** @} */

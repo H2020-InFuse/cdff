@@ -33,6 +33,7 @@
 #include <Transform3DEstimation/CeresEstimation.hpp>
 #include <Transform3DEstimation/LeastSquaresMinimization.hpp>
 #include <DepthFiltering/ConvolutionFilter.hpp>
+#include <ForceMeshGenerator/ThresholdForce.hpp>
 
 #include <Errors/Assert.hpp>
 
@@ -106,6 +107,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	else if (dfnType == "DepthFiltering")
 	{
 		return CreateDepthFiltering(dfnImplementation);
+	}
+	else if (dfnType == "ForceMeshGenerator")
+	{
+		return CreateForceMeshGenerator(dfnImplementation);
 	}
 
 	PRINT_TO_LOG("DFN: ", dfnType);
@@ -296,10 +301,24 @@ Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(std::st
 	return NULL;
 }
 
-
 DepthFilteringInterface* DFNsBuilder::CreateDepthFiltering(std::string dfnImplementation)
 {
-	return new DepthFiltering::ConvolutionFilter();
+	if (dfnImplementation == "ConvolutionFilter")
+	{
+		return new DepthFiltering::ConvolutionFilter();
+	}
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	return NULL;
+}
+
+ForceMeshGeneratorInterface* DFNsBuilder::CreateForceMeshGenerator(std::string dfnImplementation)
+{
+	if (dfnImplementation == "ThresholdForce")
+	{
+		return new ForceMeshGenerator::ThresholdForce();
+	}
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	return NULL;
 }
 
 }
