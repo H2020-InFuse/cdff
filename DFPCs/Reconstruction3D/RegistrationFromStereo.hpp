@@ -119,6 +119,7 @@ namespace Reconstruction3D
 
 		#ifdef TESTING
 		std::ofstream logFile;
+		void WriteOutputToLogFile();
 		#endif
 
 		//Helpers
@@ -126,6 +127,10 @@ namespace Reconstruction3D
 
 		void ConfigureExtraParameters();
 		void InstantiateDFNExecutors();
+
+		void UpdatePose(PointCloudWrapper::PointCloudConstPtr inputCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr outputFeatures);
+		void UpdatePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr outputFeatures);
+		void ComputeVisualFeatures(PointCloudWrapper::PointCloudConstPtr inputCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& outputFeatures);
 
 		/*
 		* Inline Methods
