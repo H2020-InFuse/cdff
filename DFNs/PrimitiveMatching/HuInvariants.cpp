@@ -57,6 +57,10 @@ void HuInvariants::configure()
 {
 	parametersHelper.ReadFile(configurationFilePath);
 	ValidateParameters();
+
+    //Get all .jpg files in template folder and extract template contours
+    m_template_files = getTemplateFiles();
+    m_template_contours = getTemplateContours();
 }
 
 //=====================================================================================================================
@@ -101,17 +105,11 @@ const HuInvariants::HuInvariantsOptionsSet HuInvariants::DEFAULT_PARAMETERS =
 //=====================================================================================================================
 std::string HuInvariants::Match(const cv::Mat& inputImage)
 {
-    //Get all .jpg files in template folder
-    std::vector<std::string> template_files = getTemplateFiles();
-
-    //Extract template contours
-    std::vector<std::vector<cv::Point> > template_contours = getTemplateContours(template_files);
-
     //Extract new image contours
     std::vector<std::vector<cv::Point> > input_image_contours = extractAndFilterContours(inputImage);
 
     //Check similarity between template contours and new image contours using Hu Invariants
-    return matchTemplatesAndImage(input_image_contours, template_contours, template_files);
+    return matchTemplatesAndImage(input_image_contours);
 }
 
 //=====================================================================================================================
@@ -137,12 +135,12 @@ std::vector<std::string> HuInvariants::getTemplateFiles()
 }
 
 //=====================================================================================================================
-std::vector<std::vector<cv::Point> > HuInvariants::getTemplateContours(const std::vector<std::string>& template_files)
+std::vector<std::vector<cv::Point> > HuInvariants::getTemplateContours()
 {
     std::vector<std::vector<cv::Point> > template_contours;
-    for ( int index = 0; index < template_files.size(); index++ )
+    for ( const std::string & template_file : m_template_files )
     {
-        cv::Mat img = cv::imread(template_files[index]);
+        cv::Mat img = cv::imread(template_file);
         std::vector<std::vector<cv::Point> > contours = extractContours(img);
 
         std::sort(contours.begin(), contours.end(), [](std::vector<cv::Point> a, std::vector<cv::Point> b) {
@@ -184,13 +182,15 @@ std::vector<std::vector<cv::Point> > HuInvariants::extractAndFilterContours(cons
 }
 
 //=====================================================================================================================
-std::string HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<cv::Point> >& input_image_contours, const std::vector<std::vector<cv::Point> >& template_contours, const std::vector<std::string>& template_files)
+std::string HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<cv::Point> >& input_image_contours)
 {
     std::vector<double> similarity;
     std::vector<int> indexes_max_similarity_input_image_contour;
-    for (const std::vector<cv::Point>& template_contour : template_contours) {
+    for (const std::vector<cv::Point>& template_contour : m_template_contours)
+    {
         std::vector<double> template_similarity;
-        for (const std::vector<cv::Point>& input_image_contour : input_image_contours) {
+        for (const std::vector<cv::Point>& input_image_contour : input_image_contours)
+        {
             template_similarity.push_back(cv::matchShapes(input_image_contour, template_contour, 1, 0.0));
         }
 
@@ -204,10 +204,9 @@ std::string HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<c
     int index_maximum_similarity = std::distance(similarity.begin(),
                                                  std::min_element(similarity.begin(), similarity.end()));
 
-    m_matched_contour.push_back(
-            input_image_contours[indexes_max_similarity_input_image_contour[index_maximum_similarity]]);
+    m_matched_contour.push_back( input_image_contours[indexes_max_similarity_input_image_contour[index_maximum_similarity]] );
 
-    auto file_name = ::extractFileName(template_files[index_maximum_similarity]);
+    auto file_name = ::extractFileName(m_template_files[index_maximum_similarity]);
     return file_name;
 }
 
