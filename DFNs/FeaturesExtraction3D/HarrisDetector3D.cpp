@@ -57,6 +57,7 @@ void HarrisDetector3D::process()
 	// Handle empty pointcloud
 	if (GetNumberOfPoints(inPointcloud) == 0)
 	{
+		ClearPoints(outFeatures);
 		return;
 	}
 
