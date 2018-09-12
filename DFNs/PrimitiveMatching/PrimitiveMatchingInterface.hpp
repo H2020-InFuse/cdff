@@ -8,6 +8,8 @@
 
 #include "DFNCommonInterface.hpp"
 #include <Frame.h>
+#include <BaseTypes.hpp>
+
 
 namespace CDFF
 {
@@ -30,10 +32,16 @@ namespace DFN
             virtual void frameInput(const asn1SccFrame& data);
 
             /**
+            * Send value to input port "primitives"
+            * @return string array: array of strings with the primitives to be matched
+            */
+            virtual void primitiveArrayInput(const BaseTypesWrapper::asn1SccT_StringArray& data);
+
+             /**
              * Query value from output port "primitives"
-             * @return string: string with the name of the matched primitive
+             * @return string array: array of strings with the input primitives ordered by matching probabilities
              */
-            virtual asn1SccT_String primitiveMatchedOutput() const;
+            virtual BaseTypesWrapper::asn1SccT_StringArray primitivesMatchedOutput() const;
 
             /**
             * Query value from output port "image"
@@ -44,8 +52,9 @@ namespace DFN
     protected:
 
             asn1SccFrame inImage;
+            BaseTypesWrapper::asn1SccT_StringArray inPrimitiveArray;
             asn1SccFrame outImageWithMatchedContour;
-            asn1SccT_String outPrimitiveMatched;
+            BaseTypesWrapper::asn1SccT_StringArray outPrimitiveArrayMatched;
 
     };
 }
