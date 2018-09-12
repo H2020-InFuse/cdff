@@ -70,4 +70,6 @@ target_link_libraries(
   pcl_sample_consensus
   pcl_stereo
   convolution_filter
+  neighbour_point_average
+  cartesian_system_transform
 )
