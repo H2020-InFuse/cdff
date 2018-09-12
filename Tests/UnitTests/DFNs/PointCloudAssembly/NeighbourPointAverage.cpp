@@ -202,6 +202,50 @@ TEST_CASE( "DFN processing step succeeds with distance filter (NeighbourPointAve
 	delete secondCloud;
 }
 
+TEST_CASE( "DFN processing step succeeds empty (NeighbourPointAverage)", "[process]" )
+{
+	// Prepare simpler input data
+	PointCloudPtr firstCloud = NewPointCloud();
+	PointCloudPtr secondCloud = NewPointCloud();
+
+	PoseWrapper::Pose3D viewCenter;
+	PoseWrapper::SetPosition(viewCenter, 1, 1, 1);
+	float viewRadius1 = 1.7322;
+	float viewRadius2 = 1.7299;
+
+	// Instantiate DFN
+	NeighbourPointAverage* average = new NeighbourPointAverage;
+
+	// Setup DFN, this sets incremental mode
+	average->setConfigurationFile("../tests/ConfigurationFiles/DFNs/PointCloudAssembly/NeighbourPointAverage_Conf1.yaml");
+	average->configure();
+
+	// Adding First Input
+	average->firstPointCloudInput(*firstCloud);
+	average->viewCenterInput(viewCenter);
+	average->viewRadiusInput(viewRadius1);
+	average->process();
+	const PointCloud& output = average->assembledCloudOutput();
+
+	//Testing first output
+	REQUIRE( GetNumberOfPoints(output) == 0);
+
+	// Adding Second Input
+	average->firstPointCloudInput(*secondCloud);
+	average->viewCenterInput(viewCenter);
+	average->viewRadiusInput(viewRadius2);
+	average->process();
+	const PointCloud& output2 = average->assembledCloudOutput();
+
+	// Testing second output
+	REQUIRE( GetNumberOfPoints(output2) == 0);
+
+	// Cleanup
+	delete average;
+	delete firstCloud;
+	delete secondCloud;
+}
+
 TEST_CASE( "DFN configuration succeeds (NeighbourPointAverage)", "[configure]" )
 {
 	// Instantiate DFN

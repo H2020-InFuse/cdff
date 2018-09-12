@@ -269,8 +269,8 @@ void RegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud, VisualPoi
 			pointCloudMap.AttachPointCloud( imageCloud, featureVector, poseToPreviousPose);
 			Copy( pointCloudMap.GetLatestPose(), outPose);
 			}
-		else
-			{
+		else if (outSuccess)
+			{	
 			Pose3D newPose = Sum(outPose, *poseToPreviousPose);
 			Copy(newPose, outPose);
 			}
@@ -303,7 +303,6 @@ void RegistrationFromStereo::UpdatePointCloud(PointCloudConstPtr imageCloud, Vis
 		}
 	else
 		{
-		Copy( pointCloudMap.GetLatestPose(), outPose);
 		if (parameters.matchToReconstructedCloud)
 			{
 			VisualPointFeatureVector3DConstPtr fullCloudFeatureVector = pointCloudMap.GetSceneFeaturesVector(&outPose, parameters.searchRadius);
