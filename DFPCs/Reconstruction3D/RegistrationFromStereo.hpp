@@ -39,6 +39,8 @@
 #include <FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
 #include <FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
+#include <PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
+#include <PointCloudTransform/PointCloudTransformExecutor.hpp>
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
@@ -99,6 +101,7 @@ namespace Reconstruction3D
 			float searchRadius;
 			float pointCloudMapResolution;
 			bool matchToReconstructedCloud;
+			bool useAssemblerDfn;
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
@@ -111,9 +114,12 @@ namespace Reconstruction3D
 		CDFF::DFN::FeaturesExtraction3DExecutor* featuresExtractor3d;
 		CDFF::DFN::FeaturesDescription3DExecutor* optionalFeaturesDescriptor3d;
 		CDFF::DFN::FeaturesMatching3DExecutor* featuresMatcher3d;
+		CDFF::DFN::PointCloudAssemblyExecutor* cloudAssembler;
+		CDFF::DFN::PointCloudTransformExecutor* cloudTransformer;
 
 		#ifdef TESTING
 		std::ofstream logFile;
+		void WriteOutputToLogFile();
 		#endif
 
 		//Helpers
@@ -121,6 +127,10 @@ namespace Reconstruction3D
 
 		void ConfigureExtraParameters();
 		void InstantiateDFNExecutors();
+
+		void UpdatePose(PointCloudWrapper::PointCloudConstPtr inputCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr outputFeatures);
+		void UpdatePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr outputFeatures);
+		void ComputeVisualFeatures(PointCloudWrapper::PointCloudConstPtr inputCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& outputFeatures);
 
 		/*
 		* Inline Methods

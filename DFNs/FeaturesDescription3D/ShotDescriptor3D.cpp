@@ -79,8 +79,9 @@ void ShotDescriptor3D::configure()
 void ShotDescriptor3D::process()
 {
 	// Handle empty keypoint vector
-	if (GetNumberOfPoints(inFeatures) == 0)
+	if (GetNumberOfPoints(inFeatures) == 0 || GetNumberOfPoints(inPointcloud) == 0)
 	{
+		ClearPoints(outFeatures);
 		return;
 	}
 

@@ -58,11 +58,11 @@ target_link_libraries(
 )
 
 add_executable(
-	images_scapper
+	images_scrapper
 	SyntheticGenerators/ImagesScrapper.cpp
 )
 target_link_libraries(
-	images_scapper
+	images_scrapper
 	cdff_logger
 )
 
