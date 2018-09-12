@@ -47,6 +47,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/Registration3D/IcpCC.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    DFNs/PrimitiveMatching/HuInvariants.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
     DFPCs/Reconstruction3D/BundleHistory.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
@@ -123,6 +124,7 @@ set(UNITTEST_LIBRARIES Catch
     triangulation
     estimation_from_stereo
     adjustment_from_stereo
+    hu_invariants
     convolution_filter
     neighbour_point_average
     cartesian_system_transform

@@ -25,6 +25,7 @@
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
+#include <PrimitiveMatching/HuInvariants.hpp>
 #include <Registration3D/Icp3D.hpp>
 #include <Registration3D/IcpCC.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
@@ -104,6 +105,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	else if (dfnType == "Transform3DEstimation")
 	{
 		return CreateTransform3DEstimation(dfnImplementation);
+	}
+	else if ( dfnType == "PrimitiveMatching" )
+	{
+		return CreatePrimitiveMatching(dfnImplementation);
 	}
 	else if (dfnType == "DepthFiltering")
 	{
@@ -255,6 +260,16 @@ PointCloudReconstruction2DTo3DInterface* DFNsBuilder::CreatePointCloudReconstruc
 	if (dfnImplementation == "Triangulation")
 	{
 		return new PointCloudReconstruction2DTo3D::Triangulation;
+	}
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	return NULL;
+}
+
+PrimitiveMatchingInterface* DFNsBuilder::CreatePrimitiveMatching(std::string dfnImplementation)
+{
+	if (dfnImplementation == "HuInvariants")
+	{
+		return new PrimitiveMatching::HuInvariants;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
