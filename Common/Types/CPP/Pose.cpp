@@ -144,6 +144,38 @@ T_Double GetWRotation(const Pose3D& pose)
 	return GetWOrientation(pose);
 }
 
+Pose3D Sum(const Pose3D& pose1, const Pose3D& pose2)
+	{
+	float x1 = GetXPosition(pose1);
+	float y1 = GetYPosition(pose1);
+	float z1 = GetZPosition(pose1);
+	float qx1 = GetXOrientation(pose1);
+	float qy1 = GetYOrientation(pose1);
+	float qz1 = GetZOrientation(pose1);
+	float qw1 = GetWOrientation(pose1);
+
+	float x2 = GetXPosition(pose2);
+	float y2 = GetYPosition(pose2);
+	float z2 = GetZPosition(pose2);
+	float qx2 = GetXOrientation(pose2);
+	float qy2 = GetYOrientation(pose2);
+	float qz2 = GetZOrientation(pose2);
+	float qw2 = GetWOrientation(pose2);
+
+	float x = x1 + x2;
+	float y = y1 + y2;
+	float z = z1 + z2;
+	float qx = (qw2 * qx1 + qx2 * qw1 - qy2 * qz1 + qz2 * qy1);
+	float qy = (qw2 * qy1 + qx2 * qz1 + qy2 * qw1 - qz2 * qx1);
+	float qz = (qw2 * qz1 - qx2 * qy1 + qy2 * qx1 + qz2 * qw1);
+	float qw = (qw2 * qw1 - qx2 * qx1 - qy2 * qy1 - qz2 * qz1);
+
+	Pose3D sum;
+	SetPosition(sum, x, y, z);
+	SetOrientation(sum, qx, qy, qz, qw);
+	return sum;
+	}
+
 BitStream ConvertToBitStream(const Pose3D& pose)
 	CONVERT_TO_BIT_STREAM(pose, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose_Encode)
 
