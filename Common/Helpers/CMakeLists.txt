@@ -11,4 +11,4 @@ install(
     TARGETS cdff_helpers
     DESTINATION lib
 )
-set_target_properties(cdff_helpers PROPERTIES COMPILE_FLAGS -fPIC)
+set_target_properties(cdff_helpers PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})

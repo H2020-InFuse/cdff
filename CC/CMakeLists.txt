@@ -34,4 +34,4 @@ add_library(
     TrueKdTree.cpp
     WeibullDistribution.cpp
 )
-set_target_properties(cc_core_lib PROPERTIES COMPILE_FLAGS -fPIC)
+set_target_properties(cc_core_lib PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})
