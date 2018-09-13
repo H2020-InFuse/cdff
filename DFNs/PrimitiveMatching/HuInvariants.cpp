@@ -67,8 +67,6 @@ void HuInvariants::configure()
 //=====================================================================================================================
 void HuInvariants::process()
 {
-    m_matching_info.clear();
-
 	// Read data from input port
 	cv::Mat inputImage = frameToMat.Convert(&inImage);
 
@@ -124,7 +122,8 @@ const HuInvariants::HuInvariantsOptionsSet HuInvariants::DEFAULT_PARAMETERS =
 std::vector< std::string > HuInvariants::Match(const cv::Mat& inputImage)
 {
     //Extract new image contours
-    std::vector<std::vector<cv::Point> > input_image_contours = extractAndFilterContours(inputImage);
+    std::vector<std::vector<cv::Point> > input_image_contours = extractContours(inputImage);
+    filterContours(input_image_contours);
 
     //Check similarity between template contours and new image contours using Hu Invariants
     matchTemplatesAndImage(input_image_contours);
@@ -193,10 +192,8 @@ std::vector<std::vector<cv::Point> > HuInvariants::extractContours(const cv::Mat
 }
 
 //=====================================================================================================================
-std::vector<std::vector<cv::Point> > HuInvariants::extractAndFilterContours(const cv::Mat& img)
+void HuInvariants::filterContours(std::vector<std::vector<cv::Point> > & input_image_contours)
 {
-    std::vector<std::vector<cv::Point> > input_image_contours = extractContours(img);
-
     int min_area = parameters.minimumArea;
     if (input_image_contours.size() > 1) {
         input_image_contours.erase(std::remove_if(input_image_contours.begin(), input_image_contours.end(),
@@ -204,7 +201,6 @@ std::vector<std::vector<cv::Point> > HuInvariants::extractAndFilterContours(cons
                                                       return cv::contourArea(contour) <= min_area;
                                                   }), input_image_contours.end());
     }
-    return input_image_contours;
 }
 
 
@@ -215,6 +211,8 @@ void HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<cv::Poin
 
     if( templates.empty() == false )
     {
+        m_matching_info.clear();
+
         std::map<std::string, std::vector<cv::Point>>::iterator it;
         for ( it = templates.begin(); it != templates.end(); it++ )
         {

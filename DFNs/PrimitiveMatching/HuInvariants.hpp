@@ -82,7 +82,7 @@ namespace PrimitiveMatching
         std::vector<std::vector<cv::Point> > extractContours(const cv::Mat& img);
         std::vector<std::string> getTemplateFiles();
         std::vector<std::vector<cv::Point> > getTemplateContours();
-        std::vector<std::vector<cv::Point> > extractAndFilterContours(const cv::Mat& img);
+        void filterContours(std::vector<std::vector<cv::Point> > & input_image_contours);
         void matchTemplatesAndImage(const std::vector<std::vector<cv::Point> >& input_image_contours);
         std::map<std::string, std::vector<cv::Point> > getTemplatesToMatch();
         cv::Mat drawContoursAndInformationOnOutputImage(const cv::Mat& inputImage);
