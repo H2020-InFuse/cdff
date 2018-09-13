@@ -3,7 +3,7 @@ add_library(
     PerspectiveNPointSolvingInterface.cpp
     PerspectiveNPointSolvingExecutor.cpp
 )
-set_target_properties(perspective_n_point_solving PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS}C)
+set_target_properties(perspective_n_point_solving PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})
 
 add_library(
     iterative_pnp_solver
