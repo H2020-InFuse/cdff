@@ -34,6 +34,29 @@ namespace
         }
         return filePath;
     }
+
+    //=====================================================================================================================
+    std::vector<std::string> getTemplateFiles(const std::string & path)
+    {
+        std::vector<std::string> template_files;
+        DIR *dir;
+        struct dirent *ent;
+        if ((dir = opendir (path.c_str())) != NULL)
+        {
+            while ((ent = readdir (dir)) != NULL)
+            {
+                std::string file = ent->d_name;
+                if( file.find(".jpg") != std::string::npos )
+                {
+                    template_files.push_back(path+file);
+                }
+            }
+            closedir (dir);
+        }
+
+        return template_files;
+    }
+
 }
 
 namespace CDFF
@@ -60,7 +83,7 @@ void HuInvariants::configure()
 	ValidateParameters();
 
     //Get all .jpg files in template folder and extract template contours
-    m_template_files = getTemplateFiles();
+    m_template_files = ::getTemplateFiles(parameters.templatesFolder);
     m_template_contours = getTemplateContours();
 }
 
@@ -135,28 +158,6 @@ std::vector< std::string > HuInvariants::Match(const cv::Mat& inputImage)
     }
 
     return primitives_ordered_by_matching_probability;
-}
-
-//=====================================================================================================================
-std::vector<std::string> HuInvariants::getTemplateFiles()
-{
-    std::vector<std::string> template_files;
-    DIR *dir;
-    struct dirent *ent;
-    if ((dir = opendir (parameters.templatesFolder.c_str())) != NULL)
-    {
-        while ((ent = readdir (dir)) != NULL)
-        {
-            std::string file = ent->d_name;
-            if( file.find(".jpg") != std::string::npos )
-            {
-                template_files.push_back(parameters.templatesFolder+file);
-            }
-        }
-        closedir (dir);
-    }
-
-    return template_files;
 }
 
 //=====================================================================================================================
