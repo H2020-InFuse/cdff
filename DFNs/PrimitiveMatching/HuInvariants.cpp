@@ -34,6 +34,29 @@ namespace
         }
         return filePath;
     }
+
+    //=====================================================================================================================
+    std::vector<std::string> getTemplateFiles(const std::string & path)
+    {
+        std::vector<std::string> template_files;
+        DIR *dir;
+        struct dirent *ent;
+        if ((dir = opendir (path.c_str())) != NULL)
+        {
+            while ((ent = readdir (dir)) != NULL)
+            {
+                std::string file = ent->d_name;
+                if( file.find(".jpg") != std::string::npos )
+                {
+                    template_files.push_back(path+file);
+                }
+            }
+            closedir (dir);
+        }
+
+        return template_files;
+    }
+
 }
 
 namespace CDFF
@@ -48,6 +71,7 @@ HuInvariants::HuInvariants()
 {
     parametersHelper.AddParameter<int>("GeneralParameters", "MinimumArea", parameters.minimumArea, DEFAULT_PARAMETERS.minimumArea);
     parametersHelper.AddParameter<std::string>("GeneralParameters", "TemplatesFolder", parameters.templatesFolder, DEFAULT_PARAMETERS.templatesFolder);
+    parametersHelper.AddParameter<double>("GeneralParameters", "MaximumSimilarityRatio", parameters.maximumSimilarityRatio, DEFAULT_PARAMETERS.maximumSimilarityRatio);
 
 	configurationFilePath = "";
 }
@@ -59,34 +83,25 @@ void HuInvariants::configure()
 	ValidateParameters();
 
     //Get all .jpg files in template folder and extract template contours
-    m_template_files = getTemplateFiles();
+    m_template_files = ::getTemplateFiles(parameters.templatesFolder);
     m_template_contours = getTemplateContours();
 }
 
 //=====================================================================================================================
 void HuInvariants::process()
 {
-    m_matched_contour.clear();
-
 	// Read data from input port
 	cv::Mat inputImage = frameToMat.Convert(&inImage);
 
 	// Process data
 	ValidateInputs(inputImage);
-	std::string matched_primitive = Match(inputImage);
 
 	// Write data to output port
-    outPrimitiveMatched.nCount = matched_primitive.size();
-    memcpy(outPrimitiveMatched.arr, matched_primitive.data(), matched_primitive.length());
+    outPrimitiveArrayMatched = Converters::StdVectorOfStringsToStringArrayConverter().Convert( Match(inputImage) );
+
 
     // Create input image and draw the matched contour on it
-    cv::Mat image_with_contour;
-    inputImage.copyTo(image_with_contour);
-
-    if( m_matched_contour.empty() == false )
-    {
-        cv::drawContours(image_with_contour, m_matched_contour, 0, cv::Scalar(0, 255, 0), 3);
-    }
+    cv::Mat image_with_contour = drawContoursAndInformationOnOutputImage(inputImage);
 
     // Write data to output port
     FrameWrapper::FrameConstPtr tmp = matToFrame.Convert(image_with_contour);
@@ -96,42 +111,53 @@ void HuInvariants::process()
 }
 
 //=====================================================================================================================
-const HuInvariants::HuInvariantsOptionsSet HuInvariants::DEFAULT_PARAMETERS =
+cv::Mat HuInvariants::drawContoursAndInformationOnOutputImage(const cv::Mat& inputImage)
 {
-	/*minimumArea =*/ 0,
-	/*templatesFolder =*/ "../../tests/Data/Images/primitive_matching/templates/"
-};
+    cv::Mat image_with_contour;
+    inputImage.copyTo(image_with_contour);
 
-//=====================================================================================================================
-std::string HuInvariants::Match(const cv::Mat& inputImage)
-{
-    //Extract new image contours
-    std::vector<std::vector<cv::Point> > input_image_contours = extractAndFilterContours(inputImage);
-
-    //Check similarity between template contours and new image contours using Hu Invariants
-    return matchTemplatesAndImage(input_image_contours);
+    // Draw the contours and matched primitive on the original image
+    for (auto info : m_matching_info)
+    {
+        if (info.matched_contour.empty() == false)
+        {
+            std::vector<std::vector<cv::Point> > contours;
+            contours.push_back(info.matched_contour);
+            auto box = cv::boundingRect(info.matched_contour);
+            cv::Point text_position(box.x, box.y + (box.height / 2));
+            cv::drawContours(image_with_contour, contours, 0, cv::Scalar(0, 255, 0), 3);
+            cv::putText(image_with_contour, info.primitive, text_position, 3, cv::FONT_HERSHEY_PLAIN, cv::Scalar(255, 0, 0));
+        }
+    }
+    return image_with_contour;
 }
 
 //=====================================================================================================================
-std::vector<std::string> HuInvariants::getTemplateFiles()
+const HuInvariants::HuInvariantsOptionsSet HuInvariants::DEFAULT_PARAMETERS =
 {
-    std::vector<std::string> template_files;
-    DIR *dir;
-    struct dirent *ent;
-    if ((dir = opendir (parameters.templatesFolder.c_str())) != NULL)
+	/*minimumArea =*/ 0,
+	/*templatesFolder =*/ "../../tests/Data/Images/primitive_matching/templates/",
+    /*maximumSimilarityRatio =*/ 0.2
+
+};
+
+//=====================================================================================================================
+std::vector< std::string > HuInvariants::Match(const cv::Mat& inputImage)
+{
+    //Extract new image contours
+    std::vector<std::vector<cv::Point> > input_image_contours = extractContours(inputImage);
+    filterContours(input_image_contours);
+
+    //Check similarity between template contours and new image contours using Hu Invariants
+    matchTemplatesAndImage(input_image_contours);
+
+    std::vector<std::string> primitives_ordered_by_matching_probability;
+    for( auto info: m_matching_info )
     {
-        while ((ent = readdir (dir)) != NULL)
-        {
-            std::string file = ent->d_name;
-            if( file.find(".jpg") != std::string::npos )
-            {
-                template_files.push_back(parameters.templatesFolder+file);
-            }
-        }
-        closedir (dir);
+        primitives_ordered_by_matching_probability.push_back(info.primitive);
     }
 
-    return template_files;
+    return primitives_ordered_by_matching_probability;
 }
 
 //=====================================================================================================================
@@ -167,10 +193,8 @@ std::vector<std::vector<cv::Point> > HuInvariants::extractContours(const cv::Mat
 }
 
 //=====================================================================================================================
-std::vector<std::vector<cv::Point> > HuInvariants::extractAndFilterContours(const cv::Mat& img)
+void HuInvariants::filterContours(std::vector<std::vector<cv::Point> > & input_image_contours)
 {
-    std::vector<std::vector<cv::Point> > input_image_contours = extractContours(img);
-
     int min_area = parameters.minimumArea;
     if (input_image_contours.size() > 1) {
         input_image_contours.erase(std::remove_if(input_image_contours.begin(), input_image_contours.end(),
@@ -178,36 +202,82 @@ std::vector<std::vector<cv::Point> > HuInvariants::extractAndFilterContours(cons
                                                       return cv::contourArea(contour) <= min_area;
                                                   }), input_image_contours.end());
     }
-    return input_image_contours;
+}
+
+
+//=====================================================================================================================
+void HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<cv::Point> >& input_image_contours)
+{
+    std::map<std::string, std::vector<cv::Point> > templates = getTemplatesToMatch();
+
+    if( templates.empty() == false )
+    {
+        m_matching_info.clear();
+
+        std::map<std::string, std::vector<cv::Point>>::iterator it;
+        for ( it = templates.begin(); it != templates.end(); it++ )
+        {
+            auto template_contour = it->second;
+            auto template_name = it->first;
+
+            for (const std::vector<cv::Point> &input_image_contour : input_image_contours)
+            {
+                auto similarity_ratio = cv::matchShapes(input_image_contour, template_contour, 1, 0.0);
+                if( similarity_ratio < parameters.maximumSimilarityRatio )
+                {
+                    PrimitiveMatchingInfo info;
+                    info.similarity_ratio = similarity_ratio;
+                    info.matched_contour = input_image_contour;
+                    info.primitive = ::extractFileName(template_name);
+
+                    m_matching_info.push_back(info);
+                }
+            }
+        }
+
+        // Sort elements from min to max similarity
+        std::sort( m_matching_info.begin(), m_matching_info.end(), [](PrimitiveMatchingInfo a, PrimitiveMatchingInfo b){
+           return a.similarity_ratio < b.similarity_ratio;
+        });
+
+        // Leave only the match per primitive that has the highest similarity ratio
+        std::vector<std::string> primitives;
+        auto matching_info_it = m_matching_info.begin();
+        while( matching_info_it != m_matching_info.end() )
+        {
+            if(std::find(std::begin(primitives), std::end(primitives), matching_info_it->primitive) != primitives.end())
+            {
+                m_matching_info.erase(matching_info_it);
+            }
+            else
+            {
+                primitives.push_back(matching_info_it->primitive);
+                matching_info_it++;
+            }
+        }
+    }
 }
 
 //=====================================================================================================================
-std::string HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<cv::Point> >& input_image_contours)
+std::map<std::string, std::vector<cv::Point> > HuInvariants::getTemplatesToMatch()
 {
-    std::vector<double> similarity;
-    std::vector<int> indexes_max_similarity_input_image_contour;
-    for (const std::vector<cv::Point>& template_contour : m_template_contours)
-    {
-        std::vector<double> template_similarity;
-        for (const std::vector<cv::Point>& input_image_contour : input_image_contours)
-        {
-            template_similarity.push_back(cv::matchShapes(input_image_contour, template_contour, 1, 0.0));
-        }
+    std::map<std::string, std::vector<cv::Point> > template_contours_to_match;
+    std::vector<std::string> primitive_names = Converters::StringArrayToStdVectorOfStringsConverter().Convert(inPrimitiveArray);
 
-        int index_max_element = std::distance(template_similarity.begin(),
-                                              std::min_element(template_similarity.begin(),
-                                                               template_similarity.end()));
-        similarity.push_back(template_similarity[index_max_element]);
-        indexes_max_similarity_input_image_contour.push_back(index_max_element);
+    int size = m_template_files.size();
+    for( unsigned int index = 0; index < size; index ++ )
+    {
+        for( auto primitive : primitive_names )
+        {
+            if( ::extractFileName(m_template_files[index]) == primitive )
+            {
+                template_contours_to_match.insert(std::make_pair(m_template_files[index], m_template_contours[index]));
+                break;
+            }
+        }
     }
 
-    int index_maximum_similarity = std::distance(similarity.begin(),
-                                                 std::min_element(similarity.begin(), similarity.end()));
-
-    m_matched_contour.push_back( input_image_contours[indexes_max_similarity_input_image_contour[index_maximum_similarity]] );
-
-    auto file_name = ::extractFileName(m_template_files[index_maximum_similarity]);
-    return file_name;
+    return template_contours_to_match;
 }
 
 //=====================================================================================================================

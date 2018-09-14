@@ -16,6 +16,8 @@
 #include <FrameToMatConverter.hpp>
 #include <MatToFrameConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
+#include <StringArrayToStdVectorOfStringsConverter.hpp>
+#include <StdVectorOfStringsToStringArrayConverter.hpp>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -27,7 +29,16 @@ namespace DFN
 {
 namespace PrimitiveMatching
 {
-	/**
+
+    typedef struct
+    {
+        std::string primitive;
+        double similarity_ratio;
+        std::vector<cv::Point> matched_contour;
+    } PrimitiveMatchingInfo;
+
+
+    /**
 	 * Match primitives using HU Invariants.
 	 *
 	 * @param minimumArea
@@ -51,7 +62,8 @@ namespace PrimitiveMatching
 		{
 			int minimumArea;
 			std::string templatesFolder;
-		};
+            double maximumSimilarityRatio;
+        };
 
 		Helpers::ParametersListHelper parametersHelper;
 		HuInvariantsOptionsSet parameters;
@@ -60,21 +72,20 @@ namespace PrimitiveMatching
 		Converters::FrameToMatConverter frameToMat;
         Converters::MatToFrameConverter matToFrame;
 
-        std::string Match(const cv::Mat& inputImage);
+        std::vector< std::string > Match(const cv::Mat& inputImage);
 
 		void ValidateParameters();
 		void ValidateInputs(const cv::Mat& inputImage);
 
-		void Configure(const YAML::Node& configurationNode);
-
         std::vector<std::vector<cv::Point> > extractContours(const cv::Mat& img);
-        std::vector<std::string> getTemplateFiles();
         std::vector<std::vector<cv::Point> > getTemplateContours();
-        std::vector<std::vector<cv::Point> > extractAndFilterContours(const cv::Mat& img);
-        std::string matchTemplatesAndImage(const std::vector<std::vector<cv::Point> >& input_image_contours);
+        void filterContours(std::vector<std::vector<cv::Point> > & input_image_contours);
+        void matchTemplatesAndImage(const std::vector<std::vector<cv::Point> >& input_image_contours);
+        std::map<std::string, std::vector<cv::Point> > getTemplatesToMatch();
+        cv::Mat drawContoursAndInformationOnOutputImage(const cv::Mat& inputImage);
 
 
-        std::vector< std::vector<cv::Point> > m_matched_contour;
+        std::vector<PrimitiveMatchingInfo> m_matching_info;
 		std::vector<std::string> m_template_files;
 		std::vector<std::vector<cv::Point> > m_template_contours;
     };

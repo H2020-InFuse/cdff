@@ -27,9 +27,15 @@ void PrimitiveMatchingInterface::frameInput(const asn1SccFrame& data)
 }
 
 //=====================================================================================================================
-asn1SccT_String PrimitiveMatchingInterface::primitiveMatchedOutput() const
+void PrimitiveMatchingInterface::primitiveArrayInput(const BaseTypesWrapper::asn1SccT_StringArray& data)
 {
-    return outPrimitiveMatched;
+    inPrimitiveArray = data;
+}
+
+//=====================================================================================================================
+BaseTypesWrapper::asn1SccT_StringArray PrimitiveMatchingInterface::primitivesMatchedOutput() const
+{
+    return outPrimitiveArrayMatched;
 }
 
 //=====================================================================================================================

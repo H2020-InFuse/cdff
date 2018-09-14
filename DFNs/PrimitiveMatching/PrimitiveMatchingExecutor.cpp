@@ -7,6 +7,7 @@
 #include <Errors/Assert.hpp>
 
 using namespace FrameWrapper;
+using namespace BaseTypesWrapper;
 
 namespace CDFF
 {
@@ -26,17 +27,19 @@ PrimitiveMatchingExecutor::~PrimitiveMatchingExecutor()
 }
 
 //=====================================================================================================================
-void PrimitiveMatchingExecutor::Execute(FrameConstPtr inputFrame, asn1SccT_String outputPrimitive)
+void PrimitiveMatchingExecutor::Execute(FrameConstPtr inputFrame, const asn1SccT_StringArray& inputPrimitiveArray, asn1SccT_StringArray outputPrimitiveArray)
 {
-	Execute(inputFrame, outputPrimitive);
+	Execute(inputFrame, inputPrimitiveArray, outputPrimitiveArray);
 }
 
 //=====================================================================================================================
-void PrimitiveMatchingExecutor::Execute(const Frame& inputFrame, asn1SccT_String outputPrimitive)
+void PrimitiveMatchingExecutor::Execute(const Frame& inputFrame, const asn1SccT_StringArray& inputPrimitiveArray, asn1SccT_StringArray outputPrimitiveArray) //TODO
 {
 	dfn->frameInput(inputFrame);
+	dfn->primitiveArrayInput(inputPrimitiveArray);
 	dfn->process();
-	BaseTypesWrapper::CopyString( dfn->primitiveMatchedOutput(), outputPrimitive);
+
+	outputPrimitiveArray = dfn->primitivesMatchedOutput();
 }
 
 }
