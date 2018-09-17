@@ -1,0 +1,12 @@
+name: Voxelization
+doc: DFN that voxelizes a 2D depth map
+input_ports:
+    - name: inputFrame
+      type: asn1SccFrame
+      doc: 2D depth image
+output_ports:
+    - name: ouputOctree
+      type: asn1SccT_Octree
+      doc: octree
+implementations:
+    - Octree

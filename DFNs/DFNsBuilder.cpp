@@ -36,6 +36,7 @@
 #include <DepthFiltering/ConvolutionFilter.hpp>
 #include <PointCloudAssembly/NeighbourPointAverage.hpp>
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
+#include <Voxelization/Octree.hpp>
 
 #include <Errors/Assert.hpp>
 
@@ -122,8 +123,12 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	{
 		return CreatePointCloudTransform(dfnImplementation);
 	}
+    else if (dfnType == "Voxelization")
+    {
+        return CreateVoxelization(dfnImplementation);
+    }
 
-	PRINT_TO_LOG("DFN: ", dfnType);
+    PRINT_TO_LOG("DFN: ", dfnType);
 	PRINT_TO_LOG("DFN implementation: ", dfnImplementation);
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN");
 	return NULL;
@@ -346,6 +351,15 @@ PointCloudTransformInterface* DFNsBuilder::CreatePointCloudTransform(std::string
 	return NULL;
 }
 
+VoxelizationInterface* DFNsBuilder::CreateVoxelization(std::string dfnImplementation)
+{
+	if (dfnImplementation == "Octree")
+	{
+		return new Voxelization::Octree;
+	}
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudTransform implementation");
+	return NULL;
+}
 }
 }
 
