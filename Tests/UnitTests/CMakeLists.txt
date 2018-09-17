@@ -49,6 +49,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
     DFNs/PrimitiveMatching/HuInvariants.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
+    DFNs/Voxelization/Octree.cpp
     DFPCs/Reconstruction3D/BundleHistory.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
