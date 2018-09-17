@@ -185,8 +185,10 @@ function build_all_function {
  #InstallersToRUN+=("poco_vendor")
  #InstallersToRUN+=("class_loader")
  #InstallersToRUN+=("base_cmake")
- InstallersToRUN+=("tools_plugin_manager")
+ #InstallersToRUN+=("tools_plugin_manager")
  #InstallersToRUN+=("base_logging")
+ #InstallersToRUN+=("sisl")
+ #InstallersToRUN+=("base_types")
   #for i in "${!infuse_dependencies_map[@]}"
   #do
   #  InstallersToRUN+=($i)
