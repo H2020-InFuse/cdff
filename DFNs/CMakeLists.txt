@@ -19,6 +19,7 @@ add_library(
     dfns_builder
     DFNsBuilder.cpp
 )
+set_target_properties(dfns_builder PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})
 target_link_libraries(
   dfns_builder
   cdff_helpers
