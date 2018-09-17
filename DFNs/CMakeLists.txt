@@ -48,6 +48,7 @@ target_link_libraries(
   transform_3d_estimation_least_squares_minimization
   transform_3d_estimation_ceres
   hu_invariants
+  octree
   converters_opencv
   pcl_common
   pcl_features
