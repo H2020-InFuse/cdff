@@ -47,11 +47,11 @@ if [[ -f "${ASN1_COMPILER}" ]]; then
 else
   echo "ASN1SCC compiler not found in current directory"
   echo "Downloading ASN1SCC compiler"
-  wget --quiet https://download.tuxfamily.org/taste/ASN1SCC/ASN1SCC-latest.tgz
+  wget --quiet https://github.com/ttsiodras/asn1scc/releases/download/3.3.22/asn1scc-bin-3.3.22.tar.bz2
   echo "Downloading ASN1SCC compiler: done"
   echo "Extracting ASN1SCC compiler in current directory"
-  tar xf ASN1SCC-latest.tgz
-  rm -f ASN1SCC-latest.tgz
+  tar xjf asn1scc-bin-3.3.22.tar.bz2
+  rm -f asn1scc-bin-3.3.22.tar.bz2
   echo "Extracting ASN1SCC compiler in current directory: done"
 fi
 
