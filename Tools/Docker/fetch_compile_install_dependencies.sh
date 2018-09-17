@@ -171,15 +171,22 @@ function clean_function {
 }
 
 function build_all_function {
- InstallersToRUN+=("boost")
- InstallersToRUN+=("eigen")
- InstallersToRUN+=("ceres")
- InstallersToRUN+=("flann")
- InstallersToRUN+=("qhull")
- InstallersToRUN+=("yaml-cpp")
- InstallersToRUN+=("opencv")
- InstallersToRUN+=("vtk")
- InstallersToRUN+=("pcl")
+ #InstallersToRUN+=("boost")
+ #InstallersToRUN+=("eigen")
+ #InstallersToRUN+=("ceres")
+ #InstallersToRUN+=("flann")
+ #InstallersToRUN+=("qhull")
+ #InstallersToRUN+=("yaml-cpp")
+ #InstallersToRUN+=("opencv")
+ #InstallersToRUN+=("vtk")
+ #InstallersToRUN+=("pcl")
+ #InstallersToRUN+=("console_bridge")
+ #InstallersToRUN+=("poco")
+ #InstallersToRUN+=("poco_vendor")
+ #InstallersToRUN+=("class_loader")
+ #InstallersToRUN+=("base_cmake")
+ InstallersToRUN+=("tools_plugin_manager")
+ #InstallersToRUN+=("base_logging")
   #for i in "${!infuse_dependencies_map[@]}"
   #do
   #  InstallersToRUN+=($i)
@@ -193,7 +200,7 @@ function on_exit {
   for i in "${InstallersToRUN[@]}"; do
     if [[ -d  "${SOURCE_DIR}/$i" ]] ; then
           echo "Removing left over source folder: ${SOURCE_DIR}/$i"
-      rm -rf "${SOURCE_DIR}/$i"
+      #rm -rf "${SOURCE_DIR}/$i"
     fi
   done
 }
