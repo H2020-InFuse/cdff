@@ -19,6 +19,7 @@ add_library(
     dfns_builder
     DFNsBuilder.cpp
 )
+set_target_properties(dfns_builder PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})
 target_link_libraries(
   dfns_builder
   cdff_helpers
@@ -47,6 +48,7 @@ target_link_libraries(
   svd_decomposition
   transform_3d_estimation_least_squares_minimization
   transform_3d_estimation_ceres
+  hu_invariants
   converters_opencv
   pcl_common
   pcl_features
@@ -71,4 +73,6 @@ target_link_libraries(
   pcl_stereo
   convolution_filter
   threshold_force
+  neighbour_point_average
+  cartesian_system_transform
 )

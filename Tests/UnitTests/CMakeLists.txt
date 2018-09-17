@@ -47,6 +47,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/Registration3D/IcpCC.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    DFNs/PrimitiveMatching/HuInvariants.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
     DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
     DFPCs/Reconstruction3D/BundleHistory.cpp
@@ -55,6 +56,8 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
+    DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
+    DFNs/PointCloudTransform/CartesianSystemTransform.cpp
 )
 
 # Libraries used by the aforementioned source files. They will be linked in the
@@ -122,8 +125,11 @@ set(UNITTEST_LIBRARIES Catch
     triangulation
     estimation_from_stereo
     adjustment_from_stereo
+    hu_invariants
     convolution_filter
     threshold_force
+    neighbour_point_average
+    cartesian_system_transform
 )
 
 # Make the Catch executable that runs the unit tests

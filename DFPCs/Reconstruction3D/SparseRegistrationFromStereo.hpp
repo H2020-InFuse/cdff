@@ -39,6 +39,8 @@
 #include <StereoReconstruction/StereoReconstructionExecutor.hpp>
 #include <FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
 #include <Registration3D/Registration3DExecutor.hpp>
+#include <PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
+#include <PointCloudTransform/PointCloudTransformExecutor.hpp>
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
@@ -99,6 +101,7 @@ namespace Reconstruction3D
 			float searchRadius;
 			float pointCloudMapResolution;
 			bool matchToReconstructedCloud;
+			bool useAssemblerDfn;
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
@@ -110,9 +113,12 @@ namespace Reconstruction3D
 		CDFF::DFN::StereoReconstructionExecutor* reconstructor3d;
 		CDFF::DFN::FeaturesExtraction3DExecutor* featuresExtractor3d;
 		CDFF::DFN::Registration3DExecutor* registrator3d;
+		CDFF::DFN::PointCloudAssemblyExecutor* cloudAssembler;
+		CDFF::DFN::PointCloudTransformExecutor* cloudTransformer;
 
 		#ifdef TESTING
 		std::ofstream logFile;
+		void WriteOutputToLogFile();
 		#endif
 
 		//Helpers
@@ -122,6 +128,9 @@ namespace Reconstruction3D
 		void ConfigureExtraParameters();
 		void InstantiateDFNExecutors();
 		void ComputeFeatureCloud(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr vector);
+
+		void UpdatePose(PointCloudWrapper::PointCloudConstPtr inputCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr keypointVector);
+		void UpdatePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud);
 
 		/*
 		* Inline Methods

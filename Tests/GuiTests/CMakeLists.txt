@@ -252,6 +252,21 @@ target_link_libraries(
     ${VTK_LIBRARIES}
 )
 
+add_executable(
+        HuInvariantsGuiTest
+        DFNs/PrimitiveMatching/HuInvariants.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(HuInvariantsGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_link_libraries(
+        HuInvariantsGuiTest
+        hu_invariants
+        ${GRAPHICALTEST_CDFF_LIBRARIES}
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+)
+
+
 ## Graphical tests for the DFPCs -----------------------------------------------
 
 add_executable(

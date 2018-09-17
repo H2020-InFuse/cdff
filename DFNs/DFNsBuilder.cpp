@@ -25,6 +25,7 @@
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
+#include <PrimitiveMatching/HuInvariants.hpp>
 #include <Registration3D/Icp3D.hpp>
 #include <Registration3D/IcpCC.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
@@ -34,6 +35,8 @@
 #include <Transform3DEstimation/LeastSquaresMinimization.hpp>
 #include <DepthFiltering/ConvolutionFilter.hpp>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
+#include <PointCloudAssembly/NeighbourPointAverage.hpp>
+#include <PointCloudTransform/CartesianSystemTransform.hpp>
 
 #include <Errors/Assert.hpp>
 
@@ -104,6 +107,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	{
 		return CreateTransform3DEstimation(dfnImplementation);
 	}
+	else if ( dfnType == "PrimitiveMatching" )
+	{
+		return CreatePrimitiveMatching(dfnImplementation);
+	}
 	else if (dfnType == "DepthFiltering")
 	{
 		return CreateDepthFiltering(dfnImplementation);
@@ -111,6 +118,14 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	else if (dfnType == "ForceMeshGenerator")
 	{
 		return CreateForceMeshGenerator(dfnImplementation);
+	}
+	else if (dfnType == "PointCloudAssembly")
+	{
+		return CreatePointCloudAssembly(dfnImplementation);
+	}
+	else if (dfnType == "PointCloudTransform")
+	{
+		return CreatePointCloudTransform(dfnImplementation);
 	}
 
 	PRINT_TO_LOG("DFN: ", dfnType);
@@ -255,6 +270,16 @@ PointCloudReconstruction2DTo3DInterface* DFNsBuilder::CreatePointCloudReconstruc
 	return NULL;
 }
 
+PrimitiveMatchingInterface* DFNsBuilder::CreatePrimitiveMatching(std::string dfnImplementation)
+{
+	if (dfnImplementation == "HuInvariants")
+	{
+		return new PrimitiveMatching::HuInvariants;
+	}
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	return NULL;
+}
+
 Registration3DInterface* DFNsBuilder::CreateRegistration3D(std::string dfnImplementation)
 {
 	if (dfnImplementation == "Icp3D")
@@ -318,6 +343,26 @@ ForceMeshGeneratorInterface* DFNsBuilder::CreateForceMeshGenerator(std::string d
 		return new ForceMeshGenerator::ThresholdForce();
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	return NULL;
+}
+
+PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(std::string dfnImplementation)
+{
+	if (dfnImplementation == "NeighbourPointAverage")
+	{
+		return new PointCloudAssembly::NeighbourPointAverage;
+	}
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudAssembly implementation");
+	return NULL;
+}
+
+PointCloudTransformInterface* DFNsBuilder::CreatePointCloudTransform(std::string dfnImplementation)
+{
+	if (dfnImplementation == "CartesianSystemTransform")
+	{
+		return new PointCloudTransform::CartesianSystemTransform;
+	}
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudTransform implementation");
 	return NULL;
 }
 

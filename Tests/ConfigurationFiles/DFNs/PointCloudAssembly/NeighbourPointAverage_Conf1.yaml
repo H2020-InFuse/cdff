@@ -1,0 +1,4 @@
+- Name: GeneralParameters
+  MaxNeighbourDistance: 0.01
+  UseIncrementalMode: true
+  UseDistanceFilter: true
