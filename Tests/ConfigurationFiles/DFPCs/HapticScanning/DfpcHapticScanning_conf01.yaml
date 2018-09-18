@@ -1,0 +1,6 @@
+- Name: forceMeshGenerator
+  Type: ForceMeshGenerator
+  Implementation: ThresholdForce
+  Parameters:
+  - Name: GeneralParameters
+    Threshold: 0.5
