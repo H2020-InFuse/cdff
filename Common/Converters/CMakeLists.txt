@@ -23,6 +23,8 @@ add_library(
     MatToCorrespondenceMaps3DSequenceConverter.cpp
     StringArrayToStdVectorOfStringsConverter.cpp
     StdVectorOfStringsToStringArrayConverter.cpp
+    PclOctreeToOctreeConverter.cpp
+    OctreeToPclOctreeConverter.cpp
 )
 target_link_libraries(converters_opencv opencv_core cdff_types)
 set_target_properties(converters_opencv PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})

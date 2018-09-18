@@ -32,6 +32,7 @@
 #include <ForceMeshGenerator/ForceMeshGeneratorInterface.hpp>
 #include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
 #include <PointCloudTransform/PointCloudTransformInterface.hpp>
+#include <Voxelization/VoxelizationInterface.hpp>
 
 #include <stdlib.h>
 #include <string>
@@ -72,7 +73,7 @@ namespace DFN
 			static ForceMeshGeneratorInterface* CreateForceMeshGenerator(std::string dfnImplementation);
 			static PointCloudAssemblyInterface* CreatePointCloudAssembly(std::string dfnImplementation);
 			static PointCloudTransformInterface* CreatePointCloudTransform(std::string dfnImplementation);
-
+			static VoxelizationInterface* CreateVoxelization(std::string dfnImplementation);
 	};
 }
 }
