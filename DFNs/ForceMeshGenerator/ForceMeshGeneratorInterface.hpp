@@ -8,18 +8,9 @@
 
 #include "DFNCommonInterface.hpp"
 #include <PointCloud.hpp>
+#include <BaseTypes.hpp>
 
-
-typedef struct {
-    int nCount;
-    asn1SccPoint arr[100000];
-} asn1SccPointArray;
-
-typedef struct {
-    int nCount;
-    asn1SccT_Double arr[100000];
-} asn1SccDoubleArray;
-
+using namespace BaseTypesWrapper;
 
 namespace CDFF
 {

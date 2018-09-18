@@ -10,6 +10,8 @@
 #include "ForceMeshGeneratorInterface.hpp"
 #include <PointCloud.hpp>
 
+using namespace BaseTypesWrapper;
+
 namespace CDFF
 {
 namespace DFN
@@ -27,8 +29,8 @@ namespace DFN
 
             ForceMeshGeneratorExecutor(ForceMeshGeneratorInterface* dfn);
 
-            void Execute(const asn1SccPose& roverPose, const asn1SccPointArray & positions, const asn1SccDoubleArray & forces, PointCloudWrapper::PointCloudConstPtr outputPointCloud);
-            void Execute(const asn1SccPose& roverPose, const asn1SccPointArray & positions, const asn1SccDoubleArray & forces, PointCloudWrapper::PointCloud outputPointCloud);
+            void Execute(const asn1SccPose& roverPose, const asn1SccPointArray & positions, const asn1SccDoubleArray & forces, PointCloudWrapper::PointCloudPtr outputPointCloud);
+            void Execute(const asn1SccPose& roverPose, const asn1SccPointArray & positions, const asn1SccDoubleArray & forces, PointCloudWrapper::PointCloud & outputPointCloud);
 
         private:
 
