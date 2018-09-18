@@ -1,0 +1,78 @@
+name: LIDARPoseGraphSlam
+doc: This processing compound simultaneously builds an environment model composed of a series of LIDAR point clouds and provides pose estimates for the rover.
+dfns:
+    - name: LocalMatcher
+      type: PCMatcher
+    - name: LoopDetector
+      type: PCMatcher
+    - name: AddKeyFrame
+      type: MapBuilder
+    - name: AddLoopEdge
+      type: MapBuilder
+    - name: OptimizeGraph
+      type: MapOptimizer
+
+input_ports:
+    - name: lidarPointCloud
+      type: asn1SccPointcloud
+      doc: "Point cloud from LIDAR"
+      connections:
+        - dfn: LocalMatcher
+          port: newPC
+        - dfn: LoopDetector
+          port: readingPC
+    - name: odometryPose
+      type: asn1SccTransformWithCovariance
+      doc: "Estimated pose from other sources"
+      connections:
+        - dfn: LocalMatcher
+          port: odoPose
+
+output_ports:
+    - name: poseEstimate
+      type: asn1SccTransformWithCovariance
+      doc: "Pose estimated from the LIDAR pose graph SLAM DFPC"
+      connections:
+        - dfn: OptimizeGraph
+          port: optimizedPose
+
+    # TODO: Clarify which type should the poseGraph output be
+    #- name: poseGraph 
+
+internal_connections:
+    - from:
+        dfn: LocalMatcher
+        port: overlap
+      to:
+        dfn: AddKeyFrame
+        port: overlap
+    - from:
+        dfn: LocalMatcher
+        port: transformation
+      to:
+        dfn: AddKeyframe
+        port: transformation
+    - from:
+        dfn: MapBuilder
+        port: estimatedPose
+      to:
+        dfn: LoopDetector
+        port: guessPose
+    - from:
+        dfn: LoopDetector
+        port: overlap
+      to:
+        dfn: AddLoopEdge
+        port: overlap
+    - from:
+        dfn: LoopDetector
+        port: transformation
+      to:
+        dfn: AddLoopEdge
+        port: transformation
+    - from:
+        dfn: AddLoopEdge
+        port: updatedGraph
+      to:
+        dfn: OptimizeGraph
+        port: updatedGraph

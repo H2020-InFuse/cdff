@@ -22,8 +22,8 @@
  * @{
  */
 
-#ifndef MULTIPLECORRESPONDENCESRECORDER_HPP
-#define MULTIPLECORRESPONDENCESRECORDER_HPP
+#ifndef MULTIPLECORRESPONDENCES2DRECORDER_HPP
+#define MULTIPLECORRESPONDENCES2DRECORDER_HPP
 
 /* --------------------------------------------------------------------------
  *

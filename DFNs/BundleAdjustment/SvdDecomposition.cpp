@@ -84,21 +84,21 @@ void SvdDecomposition::process()
 
 const SvdDecomposition::SvdDecompositionOptionsSet SvdDecomposition::DEFAULT_PARAMETERS =
 {
-	.leftCameraMatrix =
+	//.leftCameraMatrix =
 	{
-		.focalLengthX = 1,
-		.focalLengthY = 1,
-		.principalPointX = 0,
-		.principalPointY = 0,
+		/*.focalLengthX =*/ 1,
+		/*.focalLengthY =*/ 1,
+		/*.principalPointX =*/ 0,
+		/*.principalPointY =*/ 0,
 	},
-	.rightCameraMatrix =
+	//.rightCameraMatrix =
 	{
-		.focalLengthX = 1,
-		.focalLengthY = 1,
-		.principalPointX = 0,
-		.principalPointY = 0,
+		/*.focalLengthX =*/ 1,
+		/*.focalLengthY =*/ 1,
+		/*.principalPointX =*/ 0,
+		/*.principalPointY =*/ 0,
 	},
-	.baseline = 1.0
+	/*.baseline =*/ 1.0
 };
 
 void SvdDecomposition::DecomposeMeasurementMatrix(cv::Mat measurementMatrix, cv::Mat& compatibleRotationMatrix, cv::Mat& compatiblePositionMatrix)

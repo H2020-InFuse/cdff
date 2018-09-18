@@ -175,37 +175,37 @@ ImageUndistortionRectification::BorderMode ImageUndistortionRectification::Borde
 
 const ImageUndistortionRectification::ImageUndistortionRectificationOptionsSet ImageUndistortionRectification::DEFAULT_PARAMETERS =
 {
-	.interpolationMethod = LINEAR,
-	.borderMode = CONSTANT,
-	.constantBorderValue = 0,
-	.transformMapsFilePath = "../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsRight.yaml",
-	.cameraConfigurationMode = EXTERNAL_RECTIFICATION_TRANSFORM,
-	.cameraMatrix =
+	/*.interpolationMethod =*/ LINEAR,
+	/*.borderMode =*/ CONSTANT,
+	/*.constantBorderValue =*/ 0,
+	/*.transformMapsFilePath =*/ "../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsRight.yaml",
+	/*.cameraConfigurationMode =*/ EXTERNAL_RECTIFICATION_TRANSFORM,
+	//.cameraMatrix =
 	{
-		.focalLengthX = 1,
-		.focalLengthY = 1,
-		.principlePointX = 0,
-		.principlePointY = 0
+		/*.focalLengthX =*/ 1,
+		/*.focalLengthY =*/ 1,
+		/*.principlePointX =*/ 0,
+		/*.principlePointY =*/ 0
 	},
-	.distortionParametersSet =
+	//.distortionParametersSet =
 	{
-		.k1 = 0,
-		.k2 = 0,
-		.k3 = 0,
-		.k4 = 0,
-		.k5 = 0,
-		.k6 = 0,
-		.p1 = 0,
-		.p2 = 0,
-		.useK3 = false,
-		.useK4ToK6 = false
+		/*.k1 =*/ 0,
+		/*.k2 =*/ 0,
+		/*.k3 =*/ 0,
+		/*.k4 =*/ 0,
+		/*.k5 =*/ 0,
+		/*.k6 =*/ 0,
+		/*.p1 =*/ 0,
+		/*.p2 =*/ 0,
+		/*.useK3 =*/ false,
+		/*.useK4ToK6 =*/ false
 	},
-	.imageSize =
+	//.imageSize =
 	{
-		.width = 800,
-		.height = 600
+		/*.width =*/ 800,
+		/*.height =*/ 600
 	},
-	.rectificationMatrix =
+	//.rectificationMatrix =
 	{
 		1, 0, 0,
 		0, 1, 0,

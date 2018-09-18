@@ -189,53 +189,53 @@ FlannMatcher::MatcherMethod FlannMatcher::MatcherMethodHelper::Convert(const std
 
 const FlannMatcher::FlannMatcherOptionsSet FlannMatcher::DEFAULT_PARAMETERS =
 {
-	.generalOptionsSet =
+	//.generalOptionsSet =
 	{
-		.distanceThreshold = 0.02,
-		.numberOfChecks = 32,
-		.epsilon = 0,
-		.sortedSearch = false,
-		.matcherMethod = KD_TREE_SEARCH,
-		.acceptanceRatio = 0.75
+		/*.distanceThreshold =*/ 0.02,
+		/*.numberOfChecks =*/ 32,
+		/*.epsilon =*/ 0,
+		/*.sortedSearch =*/ false,
+		/*.matcherMethod =*/ KD_TREE_SEARCH,
+		/*.acceptanceRatio =*/ 0.75
 	},
-	.kdTreeSearchOptionsSet =
+	//.kdTreeSearchOptionsSet =
 	{
-		.numberOfTrees = 4
+		/*.numberOfTrees =*/ 4
 	},
-	.kMeansClusteringOptionsSet =
+	//.kMeansClusteringOptionsSet =
 	{
-		.branching = 32,
-		.iterations = 11,
-		.centersInitialization = cvflann::FLANN_CENTERS_RANDOM,
-		.convertibleBoundIndex = 0.2
+		/*.branching =*/ 32,
+		/*.iterations =*/ 11,
+		/*.centersInitialization =*/ cvflann::FLANN_CENTERS_RANDOM,
+		/*.convertibleBoundIndex =*/ 0.2
 	},
-	.autotunedOptionsSet =
+	//.autotunedOptionsSet =
 	{
-		.targetPrecision = 0.8,
-		.buildWeight = 0.01,
-		.memoryWeight = 0,
-		.sampleFraction = 0.1
+		/*.targetPrecision = */0.8,
+		/*.buildWeight =*/ 0.01,
+		/*.memoryWeight =*/ 0,
+		/*.sampleFraction =*/ 0.1
 	},
-	.hierarchicalClusteringOptionsSet =
+	//.hierarchicalClusteringOptionsSet =
 	{
-		.branching = 32,
-		.centersInitialization = cvflann::FLANN_CENTERS_RANDOM,
-		.numberOfTrees = 4,
-		.leafSize = 100
+		/*.branching =*/ 32,
+		/*.centersInitialization =*/ cvflann::FLANN_CENTERS_RANDOM,
+		/*.numberOfTrees =*/ 4,
+		/*.leafSize =*/ 100
 	},
-	.localitySensitiveHashingOptionsSet =
+	//.localitySensitiveHashingOptionsSet =
 	{
-		.tableNumber = 1,
-		.keySize = 4,
-		.multiProbeLevel = 2
+		/*.tableNumber =*/ 1,
+		/*.keySize =*/ 4,
+		/*.multiProbeLevel =*/ 2
 	},
-	.compositeSearchOptionsSet =
+	//.compositeSearchOptionsSet =
 	{
-		.branching = 32,
-		.iterations = 11,
-		.centersInitialization = cvflann::FLANN_CENTERS_RANDOM,
-		.convertibleBoundIndex = 0.2,
-		.numberOfTrees = 4
+		/*.branching =*/ 32,
+		/*.iterations =*/ 11,
+		/*.centersInitialization =*/ cvflann::FLANN_CENTERS_RANDOM,
+		/*.convertibleBoundIndex =*/ 0.2,
+		/*.numberOfTrees =*/ 4
 	}
 };
 

@@ -98,12 +98,12 @@ void Ransac3D::process()
 
 const Ransac3D::RansacOptionsSet Ransac3D::DEFAULT_PARAMETERS =
 {
-	.similarityThreshold = 0.9,
-	.inlierFraction = 0.25,
-	.correspondenceRandomness = 5,
-	.numberOfSamples = 3,
-	.maximumIterations = 50000,
-	.maxCorrespondenceDistance = 0.00125
+	/*.similarityThreshold =*/ 0.9,
+	/*.inlierFraction =*/ 0.25,
+	/*.correspondenceRandomness =*/ 5,
+	/*.numberOfSamples =*/ 3,
+	/*.maximumIterations =*/ 50000,
+	/*.maxCorrespondenceDistance =*/ 0.00125
 };
 
 /**

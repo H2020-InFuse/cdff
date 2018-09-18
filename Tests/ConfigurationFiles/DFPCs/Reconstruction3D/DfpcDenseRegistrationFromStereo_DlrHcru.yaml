@@ -3,6 +3,7 @@
   - Name: GeneralParameters
     PointCloudMapResolution: 0.01
     SearchRadius: 80
+    MatchToReconstructedCloud: true
 - Name: reconstructor3D
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
@@ -51,7 +52,7 @@
     LimitX: 3.5
     LimitY: 3.5
     LimitZ: 3.5
-- Name: cloudRegistrator
+- Name: registrator3d
   Type: Registration3D
   Implementation: IcpCC
   Parameters:

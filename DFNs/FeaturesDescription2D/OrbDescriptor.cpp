@@ -70,15 +70,15 @@ void OrbDescriptor::process()
 
 const OrbDescriptor::OrbOptionsSet OrbDescriptor::DEFAULT_PARAMETERS =
 {
-	.edgeThreshold = 31,
-	.fastThreshold = 20,
-	.firstLevel = 0,
-	.maxFeaturesNumber = 500,
-	.levelsNumber = 8,
-	.patchSize = 31,
-	.scaleFactor = 1.2,
-	.scoreType = 0,
-	.sizeOfBrightnessTestSet = 2
+	/*.edgeThreshold =*/ 31,
+	/*.fastThreshold =*/ 20,
+	/*.firstLevel =*/ 0,
+	/*.maxFeaturesNumber =*/ 500,
+	/*.levelsNumber =*/ 8,
+	/*.patchSize =*/ 31,
+	/*.scaleFactor =*/ 1.2,
+	/*.scoreType =*/ 0,
+	/*.sizeOfBrightnessTestSet =*/ 2
 };
 
 cv::Mat OrbDescriptor::ComputeOrbFeatures(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector)

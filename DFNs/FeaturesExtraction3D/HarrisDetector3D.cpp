@@ -57,6 +57,7 @@ void HarrisDetector3D::process()
 	// Handle empty pointcloud
 	if (GetNumberOfPoints(inPointcloud) == 0)
 	{
+		ClearPoints(outFeatures);
 		return;
 	}
 
@@ -126,14 +127,14 @@ HarrisDetector3D::HarrisMethod HarrisDetector3D::HarrisMethodHelper::Convert(con
 
 const HarrisDetector3D::HarryOptionsSet HarrisDetector3D::DEFAULT_PARAMETERS
 {
-	.nonMaxSuppression = true,
-	.radius = 0.01,
-	.searchRadius = 0.01,
-	.detectionThreshold = 0,
-	.enableRefinement = false,
-	.numberOfThreads = 0,
-	.method = pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS,
-	.outputFormat = POSITIONS_OUTPUT,
+	/*.nonMaxSuppression =*/ true,
+	/*.radius =*/ 0.01,
+	/*.searchRadius =*/ 0.01,
+	/*.detectionThreshold =*/ 0,
+	/*.enableRefinement =*/ false,
+	/*.numberOfThreads =*/ 0,
+	/*.method =*/ pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS,
+	/*.outputFormat =*/ POSITIONS_OUTPUT,
 };
 
 pcl::PointIndicesConstPtr HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)

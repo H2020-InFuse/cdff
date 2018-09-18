@@ -89,35 +89,35 @@ const float ScanlineOptimization::EPSILON = 0.0001;
 
 const ScanlineOptimization::ScanlineOptimizationOptionsSet ScanlineOptimization::DEFAULT_PARAMETERS =
 {
-	.costAggregationRadius = 5,
-	.spatialBandwidth = 25,
-	.colorBandwidth = 15,
-	.strongSmoothnessPenalty = 1,
-	.weakSmoothnessPenalty = 1,
-	.pointCloudSamplingDensity = 1,
-	.voxelGridLeafSize = 0,
-	.matchingOptionsSet =
+	/*.costAggregationRadius =*/ 5,
+	/*.spatialBandwidth =*/ 25,
+	/*.colorBandwidth =*/ 15,
+	/*.strongSmoothnessPenalty =*/ 1,
+	/*.weakSmoothnessPenalty =*/ 1,
+	/*.pointCloudSamplingDensity =*/ 1,
+	/*.voxelGridLeafSize =*/ 0,
+	//.matchingOptionsSet =
 	{
-		.numberOfDisparities = 60,
-		.horizontalOffset = 0,
-		.ratioFilter = 5,
-		.peakFilter = 0,
-		.usePreprocessing = false,
-		.useLeftRightConsistencyCheck = false,
-		.leftRightConsistencyThreshold = 1
+		/*.numberOfDisparities =*/ 60,
+		/*.horizontalOffset =*/ 0,
+		/*.ratioFilter =*/ 5,
+		/*.peakFilter =*/ 0,
+		/*.usePreprocessing =*/ false,
+		/*.useLeftRightConsistencyCheck =*/ false,
+		/*.leftRightConsistencyThreshold =*/ 1
 	},
-	.cameraParameters =
+	//.cameraParameters =
 	{
-		.leftPrinciplePointX = 0,
-		.leftPrinciplePointY = 0,
-		.leftFocalLength = 1,
-		.baseline = 1
+		/*.leftPrinciplePointX =*/ 0,
+		/*.leftPrinciplePointY =*/ 0,
+		/*.leftFocalLength =*/ 1,
+		/*.baseline =*/ 1
 	},
-	.reconstructionSpace =
+	//.reconstructionSpace =
 	{
-		.limitX = 20,
-		.limitY = 20,
-		.limitZ = 40
+		/*.limitX =*/ 20,
+		/*.limitY =*/ 20,
+		/*.limitZ =*/ 40
 	}
 };
 

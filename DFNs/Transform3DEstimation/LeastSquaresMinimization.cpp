@@ -172,7 +172,7 @@ void LeastSquaresMinimization::AddTransformOutput(cv::Mat transformMatrix)
 
 const LeastSquaresMinimization::LeastSquaresMinimizationOptionsSet LeastSquaresMinimization::DEFAULT_PARAMETERS =
 {
-	.maximumAllowedError = 0.001
+	/*.maximumAllowedError =*/ 0.001
 };
 
 void LeastSquaresMinimization::ValidateParameters()

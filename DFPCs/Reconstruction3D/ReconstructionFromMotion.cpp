@@ -183,17 +183,17 @@ void ReconstructionFromMotion::setup()
 
 const ReconstructionFromMotion::ReconstructionFromMotionOptionsSet ReconstructionFromMotion::DEFAULT_PARAMETERS = 
 	{
-	.searchRadius = -1,
-	.pointCloudMapResolution = 1e-2,
-	.rightToLeftCameraPose = 
+	/*.searchRadius =*/ -1,
+	/*.pointCloudMapResolution =*/ 1e-2,
+	//.rightToLeftCameraPose = 
 		{
-		.positionX = 0.122,
-		.positionY = 0,
-		.positionZ = 0,
-		.orientationX = 0,
-		.orientationY = 0,
-		.orientationZ = 0,
-		.orientationW = 1
+		/*.positionX =*/ 0.122,
+		/*.positionY =*/ 0,
+		/*.positionZ =*/ 0,
+		/*.orientationX =*/ 0,
+		/*.orientationY =*/ 0,
+		/*.orientationZ =*/ 0,
+		/*.orientationW =*/ 1
 		}
 	};
 

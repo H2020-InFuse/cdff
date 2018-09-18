@@ -74,25 +74,25 @@ void ImageUndistortion::process()
 
 const ImageUndistortion::ImageUndistortionOptionsSet ImageUndistortion::DEFAULT_PARAMETERS =
 {
-	.cameraMatrix =
+	//.cameraMatrix =
 	{
-		.focalLengthX = 1,
-		.focalLengthY = 1,
-		.principlePointX = 0,
-		.principlePointY = 0,
+		/*.focalLengthX =*/ 1,
+		/*.focalLengthY =*/ 1,
+		/*.principlePointX =*/ 0,
+		/*.principlePointY =*/ 0,
 	},
-	.distortionParametersSet =
+	//.distortionParametersSet =
 	{
-		.k1 = 0,
-		.k2 = 0,
-		.k3 = 0,
-		.k4 = 0,
-		.k5 = 0,
-		.k6 = 0,
-		.p1 = 0,
-		.p2 = 0,
-		.useK3 = false,
-		.useK4ToK6 = false
+		/*.k1 =*/ 0,
+		/*.k2 =*/ 0,
+		/*.k3 =*/ 0,
+		/*.k4 =*/ 0,
+		/*.k5 =*/ 0,
+		/*.k6 =*/ 0,
+		/*.p1 =*/ 0,
+		/*.p2 =*/ 0,
+		/*.useK3 =*/ false,
+		/*.useK4ToK6 =*/ false
 	}
 };
 

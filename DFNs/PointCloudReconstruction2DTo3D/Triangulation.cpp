@@ -83,20 +83,20 @@ void Triangulation::process()
 
 const Triangulation::TriangulationOptionsSet Triangulation::DEFAULT_PARAMETERS =
 {
-	.firstCameraMatrix =
+	//.firstCameraMatrix =
 	{
-		.focalLengthX = 1.0,
-		.focalLengthY = 1.0,
-		.principalPoint = cv::Point2d(0, 0)
+		/*.focalLengthX =*/ 1.0,
+		/*.focalLengthY =*/ 1.0,
+		/*.principalPoint =*/ cv::Point2d(0, 0)
 	},
-	.secondCameraMatrix =
+	//.secondCameraMatrix =
 	{
-		.focalLengthX = 1.0,
-		.focalLengthY = 1.0,
-		.principalPoint = cv::Point2d(0, 0)
+		/*.focalLengthX =*/ 1.0,
+		/*.focalLengthY =*/ 1.0,
+		/*.principalPoint =*/ cv::Point2d(0, 0)
 	},
-	.outputInvalidPoints = false,
-	.maximumReprojectionError = 1
+	/*.outputInvalidPoints =*/ false,
+	/*.maximumReprojectionError =*/ 1
 };
 
 cv::Mat Triangulation::ConvertToMat(CameraMatrix cameraMatrix)
