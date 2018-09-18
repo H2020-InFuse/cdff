@@ -29,6 +29,7 @@
 #include <Transform3DEstimation/Transform3DEstimationInterface.hpp>
 #include <PrimitiveMatching/PrimitiveMatchingInterface.hpp>
 #include <DepthFiltering/DepthFilteringInterface.hpp>
+#include <ForceMeshGenerator/ForceMeshGeneratorInterface.hpp>
 #include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
 #include <PointCloudTransform/PointCloudTransformInterface.hpp>
 #include <Voxelization/VoxelizationInterface.hpp>
@@ -69,6 +70,7 @@ namespace DFN
 			static StereoReconstructionInterface* CreateStereoReconstruction(std::string dfnImplementation);
 			static Transform3DEstimationInterface* CreateTransform3DEstimation(std::string dfnImplementation);
 			static DepthFilteringInterface* CreateDepthFiltering(std::string dfnImplementation);
+			static ForceMeshGeneratorInterface* CreateForceMeshGenerator(std::string dfnImplementation);
 			static PointCloudAssemblyInterface* CreatePointCloudAssembly(std::string dfnImplementation);
 			static PointCloudTransformInterface* CreatePointCloudTransform(std::string dfnImplementation);
 			static VoxelizationInterface* CreateVoxelization(std::string dfnImplementation);

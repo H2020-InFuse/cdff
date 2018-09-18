@@ -49,6 +49,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
     DFNs/PrimitiveMatching/HuInvariants.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
+    DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
     DFNs/Voxelization/Octree.cpp
     DFPCs/Reconstruction3D/BundleHistory.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
@@ -127,6 +128,7 @@ set(UNITTEST_LIBRARIES Catch
     adjustment_from_stereo
     hu_invariants
     convolution_filter
+    threshold_force
     neighbour_point_average
     cartesian_system_transform
 )
