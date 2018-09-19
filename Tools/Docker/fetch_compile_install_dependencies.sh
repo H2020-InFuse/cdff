@@ -189,6 +189,9 @@ function build_all_function {
  #InstallersToRUN+=("base_logging")
  #InstallersToRUN+=("sisl")
  #InstallersToRUN+=("base_types")
+ #InstallersToRUN+=("base_numeric")
+ InstallersToRUN+=("base_boost_serialization")
+ #InstallersToRUN+=("envire-envire_core")
   #for i in "${!infuse_dependencies_map[@]}"
   #do
   #  InstallersToRUN+=($i)
