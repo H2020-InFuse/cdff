@@ -11,7 +11,7 @@
 #include <ImageFiltering/EdgeDetection.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
 
-using namespace CDFF::DFN;
+using namespace CDFF::DFN::ImageFiltering;
 using namespace FrameWrapper;
 
 class EdgeDetectionTest: public DFNTestInterface

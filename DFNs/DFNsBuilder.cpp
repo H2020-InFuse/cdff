@@ -23,6 +23,7 @@
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
+#include <ImageFiltering/EdgeDetection.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <PrimitiveMatching/HuInvariants.hpp>
@@ -251,6 +252,10 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(std::string dfnImplem
 	{
 		return new ImageFiltering::ImageUndistortionRectification;
 	}
+    else if (dfnImplementation == "EdgeDetection")
+    {
+        return new ImageFiltering::EdgeDetection;
+    }
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
 	return NULL;
 }
