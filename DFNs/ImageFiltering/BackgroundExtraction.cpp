@@ -49,8 +49,8 @@ namespace CDFF {
 
         const BackgroundExtraction::Parameters BackgroundExtraction::DefaultParameters = {};
 
-        cv::Point2i getPointFromNeighbourhoodOf(
-                const cv::Point2i &pt, const cv::Size &size, const uint8_t half_window) {
+
+        cv::Point2i getPointFromNeighbourhoodOf(const cv::Point2i &pt, const cv::Size &size) {
             std::random_device rand;
             std::default_random_engine random_engine(rand());
             std::uniform_int_distribution<uint8_t> rand_in_neighbourhood(0, 255);
@@ -60,12 +60,16 @@ namespace CDFF {
                 neighbour.x += rand_in_neighbourhood(random_engine) % 2;
             } else if (neighbour.x == size.width) {
                 neighbour.x -= rand_in_neighbourhood(random_engine) % 2;
+            } else {
+                neighbour.x += rand_in_neighbourhood(random_engine) % 3 - 1;
             }
 
             if (pt.y == 0) {
                 neighbour.y += rand_in_neighbourhood(random_engine) % 2;
             } else if (neighbour.y == size.height) {
                 neighbour.y -= rand_in_neighbourhood(random_engine) % 2;
+            } else {
+                neighbour.y += rand_in_neighbourhood(random_engine) % 3 - 1;
             }
 
             return neighbour;

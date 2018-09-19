@@ -15,7 +15,8 @@
 namespace CDFF {
     namespace DFN {
 
-        cv::Point2i getPointFromNeighbourhoodOf(const cv::Point2i &pt, const cv::Size &size, const uint8_t half_window);
+
+        cv::Point2i getPointFromNeighbourhoodOf(const cv::Point2i &pt, const cv::Size &size);
 
     /**
      * Segment and image to identify the foreground and the background.
