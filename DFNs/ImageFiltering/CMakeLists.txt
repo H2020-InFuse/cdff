@@ -24,3 +24,7 @@ target_link_libraries(
     image_undistortion_rectification
     image_filtering cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core converters_opencv opencv_calib3d
 )
+
+add_library(cdff_dfn_edge_detection EdgeDetection.cpp)
+target_link_libraries(cdff_dfn_edge_detection
+    image_filtering cdff_helpers cdff_types opencv_core yaml-cpp)
