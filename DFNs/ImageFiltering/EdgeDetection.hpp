@@ -14,7 +14,7 @@ namespace CDFF
 {
     namespace DFN {
         /**
-         * Detect edges in an image using the Canny edge detector.
+         * This DFN will detect edges in an image using the Canny edge detector.
          *
          * The method can be broken up into a series of discrete steps:
          *
@@ -30,26 +30,21 @@ namespace CDFF
          *    noise aren't.
          *
          * The critical part of the method is the choice of the low and high
-         * thresholds. They are content-dependenta and best tuned manually for each
+         * thresholds. They are content-dependent and best tuned manually for each
          * different scene.
-         *
-         * @param NoiseReductionKernelSize
-         *        The size of the gaussian blur kernel used to denoise the input.
-         *        Should be an odd number. Usually between 3 and 7.
-         *
-         * @param CannyLowThreshold
-         *        The low threshold used to classify the edge pixels into weak and
-         *        strong sets.
-         *
-         * @param CannyHighThreshold
-         *        The high threshold used to classify the edge pixels into weak and
-         *        strong sets.
          */
         class EdgeDetection : public ImageFilteringInterface {
+
+            /// Set of parameters for the EdgeDetection DFN
             struct Parameters {
+                /// The size of the gaussian blur kernel used to denoise the input.
+                /// Should be an odd number. Usually between 3 and 7.
                 int NoiseReductionKernelSize = 5;
 
+                /// The low threshold used to classify the edge pixels into weak and strong sets.
                 double CannyLowThreshold = 80.;
+
+                ///  The high threshold used to classify the edge pixels into weak and strong sets.
                 double CannyHighThreshold = 100.;
             };
 
