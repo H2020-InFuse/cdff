@@ -55,6 +55,12 @@ namespace CDFF {
             std::default_random_engine random_engine(rand());
             std::uniform_int_distribution<uint8_t> rand_in_neighbourhood(0, 255);
 
+            // We need to account for the following corner cases:
+            // - the point is on the left/right edge of the image -> select a point on the right/left semi-plane
+            // - the point is on the top/bottom edge of the image -> select a point on the bottom/top semi-plane
+            //
+            // Corners do not require any further special casing.
+
             cv::Point neighbour = pt;
             if (pt.x == 0) {
                 neighbour.x += rand_in_neighbourhood(random_engine) % 2;
@@ -132,6 +138,8 @@ namespace CDFF {
         void BackgroundExtraction::validateInputs() const {
             Validators::Frame::NotEmpty(inImage);
             Validators::Frame::HasFormatIn(inImage, {FrameWrapper::FrameMode::asn1Sccmode_GRAY});
+            Validators::Frame::HasStatus(inImage, FrameWrapper::STATUS_VALID);
+            Validators::Frame::HasDepthOf(inImage, Array3DWrapper::Array3DDepth::asn1Sccdepth_8U);
         }
 
 
@@ -141,9 +149,9 @@ namespace CDFF {
                    "BackgroundSubtraction: Called BackgroundExtraction::initialise twice");
             background_model = cv::Mat({frame.rows, frame.cols, parameters.samplesPerPixel}, CV_8UC1);
 
-            // The intialization of the background model considers that small regions of the frame are similar and that the
+            // The intialisation of the background model considers that small regions of the frame are similar and that the
             // value of each pixel of the region is a realisation of the same random variable. This allows us to simply sample
-            // the neighbourhood of each [pixel to build its background model instead of having to wait for many images.
+            // the neighbourhood of each pixel to build its background model instead of having to wait for many images.
             // To avoid overfitting to a small region we must have at least as many points in the regions as we have pixels
             // samples in the background model.
             const auto window_size = static_cast<uint8_t>(sqrt(parameters.samplesPerPixel) + 1);
@@ -162,7 +170,7 @@ namespace CDFF {
             for (int32_t row = 0; row < frame.rows; ++row) {
                 for (int32_t col = 0; col < frame.cols; ++col) {
                     for (uint32_t cnt = 0; cnt < parameters.samplesPerPixel; ++cnt) {
-                        const auto neighbour = getPointFromNeighbourhoodOf({col, row}, imsize, half_window);
+                        const auto neighbour = getPointFromNeighbourhoodOf({col, row}, imsize);
                         background_model.at<uint8_t>(row, col, cnt) = frame.at<uint8_t>(neighbour);
                     }
                 }
@@ -179,12 +187,22 @@ namespace CDFF {
 
             const cv::Size imsize = frame.size();
 
-            // Iterate over indexes not row/col
+            // In the canonical implementation the calssification and update steps are separate.
+            // First you classify then you update. Here, to avoid iterating over the entire image
+            // twice we do them both at the same time.
+            // In practice this is not a problem, the temporal subsampling is performed after the
+            // classification and the spatial samplig which may provide current information to
+            // pixels that have not been classified yet is infrequent enough to not affect the
+            // results of the classification.
+
             for (int32_t row = 0; row < frame.rows; ++row) {
                 for (int32_t col = 0; col < frame.cols; ++col) {
                     uint8_t matches = 0;
                     const auto frame_px = frame.at<uint8_t>(row, col);
+
                     for (uint8_t comparisons = 0; comparisons < parameters.samplesPerPixel; ++comparisons) {
+
+                        // Compute the number of matches for each pixel
                         const auto sample = background_model.at<uint8_t>(row, col, comparisons);
                         const auto distance = std::abs(frame_px - sample);
 
@@ -194,15 +212,16 @@ namespace CDFF {
                             if (matches >= parameters.requiredMatches) {
                                 segmentation.at<uint8_t>(row, col) = parameters.backgroundLabel;
 
+                                // Temporal subsampling
                                 if (rand_subsample(random_engine) == 1) {
                                     const int32_t sample_to_discard = rand_sample(random_engine);
                                     background_model.at<uint8_t>(row, col, sample_to_discard) = frame.at<uint8_t>(row,
                                                                                                                   col);
                                 }
 
-                                // Randomly diffuse a sample into its 8-connected neighborhood
+                                // Spatial subsampling
                                 if (rand_subsample(random_engine) == 1) {
-                                    const auto dst = getPointFromNeighbourhoodOf({col, row}, imsize, 1);
+                                    const auto dst = getPointFromNeighbourhoodOf({col, row}, imsize);
                                     const int32_t sample_to_discard = rand_sample(random_engine);
                                     background_model.at<uint8_t>(dst.y, dst.x, sample_to_discard) = frame.at<uint8_t>(
                                             row, col);
@@ -217,6 +236,7 @@ namespace CDFF {
 
 
             // Post Processing Step - Denoising
+            // Could be replaced or enhanced with an open/close cycle
             cv::Mat mask;
             cv::GaussianBlur(segmentation, mask, cv::Size(9, 9), 7, 7);
             cv::threshold(mask, mask, /* thresh = */ 30, /* maxval = */ 255, cv::THRESH_BINARY);
