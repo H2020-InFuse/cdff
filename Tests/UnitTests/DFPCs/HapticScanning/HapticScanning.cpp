@@ -69,25 +69,27 @@ TEST_CASE( "Success Call to Process (HapticScanning)", "[processSuccess]" )
     std::vector<std::pair<pcl::PointXYZ, double> > points = ForceMeshHelperFunctions::getInputData(cloud);
 
     // Convert the input data
-    asn1SccPointArray positions;
-    asn1SccDoubleArray forces;
+    asn1SccPointsSequence * positions = new asn1SccPointsSequence;
+    asn1SccPointsSequence_Initialize(positions);
+    asn1SccDoublesSequence * forces = new asn1SccDoublesSequence;
+    asn1SccDoublesSequence_Initialize(forces);
 
     auto size = points.size();
-    positions.nCount = size;
-    forces.nCount = size;
+    positions->nCount = size;
+    forces->nCount = size;
 
     for ( unsigned int index = 0; index < size; index ++ )
     {
-        positions.arr[index].arr[0] = points[index].first.x;
-        positions.arr[index].arr[1] = points[index].first.y;
-        positions.arr[index].arr[2] = points[index].first.z;
-        forces.arr[index] = points[index].second;
+        positions->arr[index].arr[0] = points[index].first.x;
+        positions->arr[index].arr[1] = points[index].first.y;
+        positions->arr[index].arr[2] = points[index].first.z;
+        forces->arr[index] = points[index].second;
     }
 
     asn1SccPose rover_pose = ForceMeshHelperFunctions::getRoverPose();
 
     haptic_scanning->roverPoseInput(rover_pose);
-    haptic_scanning->positionAndForceInput(positions, forces);
+    haptic_scanning->positionAndForceInput(*positions, *forces);
 
     haptic_scanning->run();
 

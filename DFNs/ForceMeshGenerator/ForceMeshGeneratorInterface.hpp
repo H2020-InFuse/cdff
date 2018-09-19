@@ -8,9 +8,7 @@
 
 #include "DFNCommonInterface.hpp"
 #include <PointCloud.hpp>
-#include <BaseTypes.hpp>
-
-using namespace BaseTypesWrapper;
+#include <Sequences.h>
 
 namespace CDFF
 {
@@ -36,7 +34,7 @@ namespace DFN
             * @param positions: end-effector positions
             * @param forces: end-effector force measurements
             */
-            virtual void positionAndForceInput(const asn1SccPointArray & positions, const asn1SccDoubleArray & forces);
+            virtual void positionAndForceInput(const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces);
 
             /**
              * Query value from output port
@@ -47,8 +45,8 @@ namespace DFN
         protected:
 
             asn1SccPose inRoverPose;
-            asn1SccPointArray inPositions;
-            asn1SccDoubleArray inForces;
+            asn1SccPointsSequence inPositions;
+            asn1SccDoublesSequence inForces;
             asn1SccPointcloud outPointCloud;
     };
 }

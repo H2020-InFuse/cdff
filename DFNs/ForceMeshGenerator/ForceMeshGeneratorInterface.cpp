@@ -22,7 +22,7 @@ void ForceMeshGeneratorInterface::roverPoseInput(const asn1SccPose& data)
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorInterface::positionAndForceInput(const asn1SccPointArray & positions, const asn1SccDoubleArray & forces)
+void ForceMeshGeneratorInterface::positionAndForceInput(const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces)
 {
     inPositions = positions;
     inForces = forces;
