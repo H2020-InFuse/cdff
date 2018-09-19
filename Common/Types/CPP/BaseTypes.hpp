@@ -43,18 +43,6 @@ typedef struct {
 
 typedef asn1SccT_StringArray T_StringArray;
 
-
-typedef struct {
-	int nCount;
-	asn1SccPoint arr[100000];
-} asn1SccPointArray;
-
-typedef struct {
-	int nCount;
-	asn1SccT_Double arr[100000];
-} asn1SccDoubleArray;
-
-
 // Constants
 
 const int MAX_STRING_SIZE = maxSize_T_String;

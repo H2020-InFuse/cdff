@@ -24,16 +24,19 @@ BEGIN
 
 IMPORTS
 T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes 
-T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String FROM TASTE-ExtendedTypes
+T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String  FROM TASTE-ExtendedTypes
 Frame FROM Frame-Types
 Pose FROM Pose-Types
 CorrespondenceMap2D FROM CorrespondenceMap2DNS
-CorrespondenceMap3D FROM CorrespondenceMap3DNS;
+CorrespondenceMap3D FROM CorrespondenceMap3DNS
+Point FROM Point-Types;
 
 -- Max. name size
 maxFramesSequenceLength T-UInt32 ::= 10
 maxPosesSequenceLength T-UInt32 ::= 10
 maxCorrespondenceMapsSequenceLength T-UInt32 ::= 56
+maxPointsSequenceLength T-UInt32 ::= 327680
+maxDoubleSequenceLength T-UInt32 ::= 327680
 
 FramesSequence ::= SEQUENCE (SIZE(0..maxFramesSequenceLength)) OF Frame
 
@@ -42,5 +45,9 @@ PosesSequence ::= SEQUENCE (SIZE(0..maxPosesSequenceLength)) OF Pose
 CorrespondenceMaps2DSequence ::= SEQUENCE(SIZE(0..maxCorrespondenceMapsSequenceLength)) OF CorrespondenceMap2D
 
 CorrespondenceMaps3DSequence ::= SEQUENCE(SIZE(0..maxCorrespondenceMapsSequenceLength)) OF CorrespondenceMap3D
+
+PointsSequence ::= SEQUENCE (SIZE(0..maxPointsSequenceLength)) OF Point
+
+DoublesSequence ::= SEQUENCE (SIZE(0..maxDoubleSequenceLength)) OF T-Double
 
 END
