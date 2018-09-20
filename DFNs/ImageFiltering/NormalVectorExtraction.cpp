@@ -40,8 +40,8 @@ namespace Validators {
 namespace CDFF {
     namespace DFN{
 
-        /* To compute the normals of the image we extract the 8-connected
-         * neighbourhood of the pixel. The points are labelled as:
+        /** To compute the normals of the image we extract the 8-connected
+         *  neighbourhood of the pixel. The points are labelled as:
          *
          *       +------+------+------+   tl = top left         bl = bottom left
          *       |  tl  |  tc  |  tr  |   tc = top center       bc = bottom center
@@ -51,8 +51,8 @@ namespace CDFF {
          *       |  bl  |  bc  |  br  |   cc = center center
          *       +------+------+------+   cr = center left
          *
-         * These points are then used to compute the normals of the triangles
-         * surrounding the center point.
+         *  These points are then used to compute the normals of the triangles
+         *  surrounding the center point.
          *
          *                 (tc)
          *  (tl) +----------+----------+ (tr)   The vector normal to the surface of
@@ -72,16 +72,18 @@ namespace CDFF {
             const auto *inPixels = reinterpret_cast<Vec3f *>(inImage.data.data.arr);
 
             FrameWrapper::FrameSharedPtr normals = FrameWrapper::NewSharedFrame();
-            // inImage and normals image should have the same format
             FrameWrapper::Copy(inImage, *normals);
             FrameWrapper::ClearData(*normals, /* overwrite = */ true);
+
+            // Reinterpret the image data as a vector of Vec3f. This will make it easier to perform
+            // all the computations without spending too much time reconstructing vectors and
+            // computing offsets.
             auto *normalPixels = reinterpret_cast<Vec3f *>(normals->data.data.arr);
 
             const size_t width = inImage.data.cols;
             for (size_t row = 1; row < inImage.data.rows - 1; ++row) {
                 for (size_t col = 1; col < inImage.data.cols - 1; ++col) {
-                    ASSERT(inPixels[1] != inPixels[11], "");
-
+                    // Extract all of the pixels in the 8-connected neighbourhood of the center pixel (cc)
                     Vec3f tl = inPixels[(row - 1) * width + (col - 1)];
                     Vec3f tc = inPixels[(row - 1) * width + (col)];
                     Vec3f tr = inPixels[(row - 1) * width + (col + 1)];
@@ -92,6 +94,8 @@ namespace CDFF {
                     Vec3f bc = inPixels[(row + 1) * width + (col)];
                     Vec3f br = inPixels[(row + 1) * width + (col + 1)];
 
+                    // Compute the normals to the vectors linking the center pixel to each one of
+                    // the neighbours and normalize them
                     Vec3f tl_n = normalize(cross(tc - cc, tl - cc));
                     Vec3f tr_n = normalize(cross(tr - cc, tc - cc));
                     Vec3f rt_n = normalize(cross(cr - cc, tr - cc));
