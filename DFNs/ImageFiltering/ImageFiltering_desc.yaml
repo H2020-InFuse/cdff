@@ -12,3 +12,4 @@ implementations:
     - ImageUndistortion
     - ImageUndistortionRectification
     - BackgroundSubtraction
+    - EdgeDetection

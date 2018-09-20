@@ -27,3 +27,11 @@ target_link_libraries(
 
 add_library(cdff_dfn_background_subtraction BackgroundExtraction.cpp)
 target_link_libraries(cdff_dfn_background_subtraction image_filtering cdff_helpers)
+
+add_library(cdff_dfn_normal_vector_extraction NormalVectorExtraction.cpp)
+target_link_libraries(cdff_dfn_normal_vector_extraction
+    image_filtering cdff_helpers cdff_types yaml-cpp)
+
+add_library(cdff_dfn_edge_detection EdgeDetection.cpp)
+target_link_libraries(cdff_dfn_edge_detection
+    image_filtering cdff_helpers cdff_types opencv_core yaml-cpp)
