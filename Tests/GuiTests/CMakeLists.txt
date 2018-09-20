@@ -110,6 +110,20 @@ target_link_libraries(
 set_target_properties(edge_detection_gui_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 
 add_executable(
+    normal_vector_extraction_gui_test
+    DFNs/DFNTestInterface.cpp
+    DFNs/ImageFiltering/NormalVectorExtraction.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+target_link_libraries(
+    normal_vector_extraction_gui_test
+    cdff_dfn_normal_vector_extraction
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+)
+set_target_properties(normal_vector_extraction_gui_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+
+add_executable(
     HarrisDetector3DGuiTest
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     DFNs/DFNTestInterface.cpp
