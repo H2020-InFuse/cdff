@@ -12,8 +12,12 @@
 
 namespace CDFF
 {
-    namespace DFN {
-        /**
+    namespace DFN
+    {
+        namespace ImageFiltering
+        {
+
+            /**
          * This DFN will detect edges in an image using the Canny edge detector.
          *
          * The method can be broken up into a series of discrete steps:
@@ -33,40 +37,40 @@ namespace CDFF
          * thresholds. They are content-dependent and best tuned manually for each
          * different scene.
          */
-        class EdgeDetection : public ImageFilteringInterface {
+            class EdgeDetection : public ImageFilteringInterface {
 
-            /// Set of parameters for the EdgeDetection DFN
-            struct Parameters {
-                /// The size of the gaussian blur kernel used to denoise the input.
-                /// Should be an odd number. Usually between 3 and 7.
-                int NoiseReductionKernelSize = 5;
+                /// Set of parameters for the EdgeDetection DFN
+                struct Parameters {
+                    /// The size of the gaussian blur kernel used to denoise the input.
+                    /// Should be an odd number. Usually between 3 and 7.
+                    int NoiseReductionKernelSize = 5;
 
-                /// The low threshold used to classify the edge pixels into weak and strong sets.
-                double CannyLowThreshold = 80.;
+                    /// The low threshold used to classify the edge pixels into weak and strong sets.
+                    double CannyLowThreshold = 80.;
 
-                ///  The high threshold used to classify the edge pixels into weak and strong sets.
-                double CannyHighThreshold = 100.;
+                    ///  The high threshold used to classify the edge pixels into weak and strong sets.
+                    double CannyHighThreshold = 100.;
+                };
+
+            public:
+                static const Parameters DefaultParameters;
+
+                EdgeDetection();
+
+                void configure() override;
+
+                void process() override;
+
+            private:
+
+                void ValidateParameters();
+
+                void ValidateInputs(const FrameWrapper::Frame &frame);
+
+                Parameters parameters;
+                Helpers::ParametersListHelper parametersHelper;
             };
-
-        public:
-            static const Parameters DefaultParameters;
-
-            EdgeDetection();
-
-            void configure() override;
-
-            void process() override;
-
-        private:
-
-            void ValidateParameters();
-
-            void ValidateInputs(const FrameWrapper::Frame &frame);
-
-            Parameters parameters;
-            Helpers::ParametersListHelper parametersHelper;
-        };
-
+        }
     }
 }
 #endif //CDFF_EDGEDETECTION_H

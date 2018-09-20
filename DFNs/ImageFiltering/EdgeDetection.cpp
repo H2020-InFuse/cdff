@@ -48,58 +48,61 @@ namespace Validators {
 
 namespace CDFF
 {
-    namespace DFN {
-        const EdgeDetection::Parameters EdgeDetection::DefaultParameters = {};
+    namespace DFN
+    {
+        namespace ImageFiltering {
 
-        EdgeDetection::EdgeDetection() {
-            parametersHelper.AddParameter(
-                    "EdgeDetection", "NoiseReductionKernelSize",
-                    parameters.NoiseReductionKernelSize, DefaultParameters.NoiseReductionKernelSize);
-            parametersHelper.AddParameter(
-                    "EdgeDetection", "CannyLowThreshold",
-                    parameters.CannyLowThreshold, DefaultParameters.CannyLowThreshold);
-            parametersHelper.AddParameter(
-                    "EdgeDetection", "CannyHighThreshold",
-                    parameters.CannyHighThreshold, DefaultParameters.CannyHighThreshold);
-        }
+            const EdgeDetection::Parameters EdgeDetection::DefaultParameters = {};
 
-        void EdgeDetection::configure() {
-            parametersHelper.ReadFile(configurationFilePath);
-            ValidateParameters();
-        }
-
-        void EdgeDetection::process() {
-            ValidateInputs(inImage);
-            cv::Mat inputImage = Converters::FrameToMatConverter().Convert(&inImage);
-
-            if (inImage.metadata.mode == FrameWrapper::FrameMode::asn1Sccmode_RGB) {
-                cv::cvtColor(inputImage, inputImage, cv::COLOR_RGB2GRAY);
+            EdgeDetection::EdgeDetection() {
+                parametersHelper.AddParameter(
+                        "EdgeDetection", "NoiseReductionKernelSize",
+                        parameters.NoiseReductionKernelSize, DefaultParameters.NoiseReductionKernelSize);
+                parametersHelper.AddParameter(
+                        "EdgeDetection", "CannyLowThreshold",
+                        parameters.CannyLowThreshold, DefaultParameters.CannyLowThreshold);
+                parametersHelper.AddParameter(
+                        "EdgeDetection", "CannyHighThreshold",
+                        parameters.CannyHighThreshold, DefaultParameters.CannyHighThreshold);
             }
 
-            int denoise_range = parameters.NoiseReductionKernelSize;
-            cv::blur(inputImage, inputImage, cv::Size(denoise_range, denoise_range));
-            cv::Canny(inputImage, inputImage, parameters.CannyLowThreshold, parameters.CannyHighThreshold);
+            void EdgeDetection::configure() {
+                parametersHelper.ReadFile(configurationFilePath);
+                ValidateParameters();
+            }
 
-            FrameWrapper::FrameConstPtr outputImage =
-                    Converters::MatToFrameConverter().Convert(inputImage);
-            FrameWrapper::Copy(*outputImage, outImage);
-            delete outputImage;
+            void EdgeDetection::process() {
+                ValidateInputs(inImage);
+                cv::Mat inputImage = Converters::FrameToMatConverter().Convert(&inImage);
+
+                if (inImage.metadata.mode == FrameWrapper::FrameMode::asn1Sccmode_RGB) {
+                    cv::cvtColor(inputImage, inputImage, cv::COLOR_RGB2GRAY);
+                }
+
+                int denoise_range = parameters.NoiseReductionKernelSize;
+                cv::blur(inputImage, inputImage, cv::Size(denoise_range, denoise_range));
+                cv::Canny(inputImage, inputImage, parameters.CannyLowThreshold, parameters.CannyHighThreshold);
+
+                FrameWrapper::FrameConstPtr outputImage =
+                        Converters::MatToFrameConverter().Convert(inputImage);
+                FrameWrapper::Copy(*outputImage, outImage);
+                delete outputImage;
+            }
+
+
+            void EdgeDetection::ValidateParameters() {
+                Validators::Number::IsOdd(parameters.NoiseReductionKernelSize);
+                Validators::Number::GreaterThan(parameters.NoiseReductionKernelSize, 1);
+                Validators::Number::GreaterThan(parameters.CannyHighThreshold, parameters.CannyLowThreshold);
+            }
+
+            void EdgeDetection::ValidateInputs(FrameWrapper::Frame const &frame) {
+                Validators::Frame::NotEmpty(frame);
+                Validators::Frame::HasFormatIn(frame, {
+                        FrameWrapper::FrameMode::asn1Sccmode_GRAY,
+                        FrameWrapper::FrameMode::asn1Sccmode_RGB
+                });
+            }
         }
-
-
-        void EdgeDetection::ValidateParameters() {
-            Validators::Number::IsOdd(parameters.NoiseReductionKernelSize);
-            Validators::Number::GreaterThan(parameters.NoiseReductionKernelSize, 1);
-            Validators::Number::GreaterThan(parameters.CannyHighThreshold, parameters.CannyLowThreshold);
-        }
-
-        void EdgeDetection::ValidateInputs(FrameWrapper::Frame const &frame) {
-            Validators::Frame::NotEmpty(frame);
-            Validators::Frame::HasFormatIn(frame, {
-                    FrameWrapper::FrameMode::asn1Sccmode_GRAY,
-                    FrameWrapper::FrameMode::asn1Sccmode_RGB
-            });
-        }
-
     }
 }
