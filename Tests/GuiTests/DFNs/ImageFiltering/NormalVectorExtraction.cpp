@@ -13,7 +13,7 @@
 #include <Types/C/Frame.h>
 #include <iostream>
 
-using namespace CDFF::DFN;
+using namespace CDFF::DFN::ImageFiltering;
 using namespace FrameWrapper;
 using namespace BaseTypesWrapper;
 using namespace Array3DWrapper;
