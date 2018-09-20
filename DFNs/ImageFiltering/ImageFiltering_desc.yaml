@@ -13,3 +13,4 @@ implementations:
     - ImageUndistortionRectification
     - BackgroundSubtraction
     - EdgeDetection
+    - NormalVectorExtraction
