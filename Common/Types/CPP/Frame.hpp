@@ -165,7 +165,7 @@ BaseTypesWrapper::T_UInt64 GetFrameReceivedTime(const Frame& frame);
 void SetFrameStatus(Frame& frame, FrameStatus frameStatus);
 FrameStatus GetFrameStatus(const Frame& frame);
 
-void ClearData(Frame& frame);
+void ClearData(Frame& frame, bool overwrite = false);
 byte GetDataByte(const Frame& frame, int index);
 int GetNumberOfDataBytes(const Frame& frame);
 

@@ -19,6 +19,7 @@ add_library(
     dfns_builder
     DFNsBuilder.cpp
 )
+set_target_properties(dfns_builder PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})
 target_link_libraries(
   dfns_builder
   cdff_helpers
@@ -32,6 +33,8 @@ target_link_libraries(
   harris_detector_2d
   image_undistortion
   image_undistortion_rectification
+  cdff_dfn_background_subtraction
+  cdff_dfn_edge_detection
   disparity_mapping
   hirschmuller_disparity_mapping
   scanline_optimization
@@ -47,6 +50,8 @@ target_link_libraries(
   svd_decomposition
   transform_3d_estimation_least_squares_minimization
   transform_3d_estimation_ceres
+  hu_invariants
+  octree
   converters_opencv
   pcl_common
   pcl_features
@@ -69,4 +74,8 @@ target_link_libraries(
   pcl_segmentation
   pcl_sample_consensus
   pcl_stereo
+  convolution_filter
+  threshold_force
+  neighbour_point_average
+  cartesian_system_transform
 )

@@ -3,6 +3,7 @@
   - Name: GeneralParameters
     PointCloudMapResolution: 0.01
     SearchRadius: 80
+    MatchToReconstructedCloud: true
 - Name: reconstructor3D
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
@@ -69,20 +70,22 @@
   Implementation: ShotDescriptor3D
   Parameters:
   - Name: GeneralParameters
-    LocalReferenceFrameEstimationRadius: 0.01
-    SearchRadius: 0.01
+    LocalReferenceFrameEstimationRadius: 0.1
+    SearchRadius: 0.1
     OutputFormat: Positions
     EnableNormalsEstimation: true
     ForceNormalsEstimation: true
   - Name: NormalEstimationParameters
-    SearchRadius: 0.01
+    SearchRadius: 0.1
     NeighboursSetSize: 0
 - Name: featuresMatcher3d
   Type: FeaturesMatching3D
-  Implementation: Icp3D
+  Implementation: Ransac3D
   Parameters:
   - Name: GeneralParameters
-    MaxCorrespondenceDistance: 0.08
-    MaximumIterations: 200
-    TransformationEpsilon: 1e-8
-    EuclideanFitnessEpsilon: 1
+    SimilarityThreshold: 0.50
+    InlierFraction: 0.50
+    CorrespondenceRandomness: 25
+    NumberOfSamples: 3
+    MaximumIterations: 95000
+    MaxCorrespondenceDistance: 0.10

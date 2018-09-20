@@ -31,7 +31,8 @@ build:
       - cd build
       - cmake -DCMAKE_INSTALL_PREFIX=./ ..
       - CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)
-      - make --jobs=${CPUS} --output-sync=target
+      - JOBS=`expr $CPUS / 2`
+      - make --jobs=${JOBS} --output-sync=target
   artifacts:
     paths:
       - build/

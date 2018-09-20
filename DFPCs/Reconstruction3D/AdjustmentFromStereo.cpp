@@ -267,11 +267,11 @@ void AdjustmentFromStereo::setup()
 
 const AdjustmentFromStereo::AdjustmentFromStereoOptionsSet AdjustmentFromStereo::DEFAULT_PARAMETERS = 
 	{
-	.searchRadius = 20,
-	.pointCloudMapResolution = 1e-2,
-	.numberOfAdjustedStereoPairs = 4,
-	.useBundleInitialEstimation = true,
-	.baseline = 1
+	/*.searchRadius =*/ 20,
+	/*.pointCloudMapResolution =*/ 1e-2,
+	/*.numberOfAdjustedStereoPairs =*/ 4,
+	/*.useBundleInitialEstimation =*/ true,
+	/*.baseline =*/ 1
 	};
 
 /* --------------------------------------------------------------------------

@@ -90,7 +90,6 @@ class DFNsIntegrationTestInterface
 		void CleanProcessingTime();
 		std::string GetDfnFilePath(unsigned dfnIndex);
 		void ConfigureDFNs();
-		static void ProcessCallback(void* referenceToClass);
 		void ProcessCallback();
 
 		virtual void ResetProcess() = 0;

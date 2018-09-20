@@ -86,10 +86,10 @@ void Icp3D::process()
 
 const Icp3D::IcpOptionsSet Icp3D::DEFAULT_PARAMETERS =
 {
-	.maxCorrespondenceDistance = 0.05,
-	.maximumIterations = 50,
-	.transformationEpsilon = 1e-8,
-	.euclideanFitnessEpsilon = 1.0
+	/*.maxCorrespondenceDistance =*/ 0.05,
+	/*.maximumIterations =*/ 50,
+	/*.transformationEpsilon =*/ 1e-8,
+	/*.euclideanFitnessEpsilon =*/ 1.0
 };
 
 /**
