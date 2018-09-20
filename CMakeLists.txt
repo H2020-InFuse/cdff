@@ -48,7 +48,7 @@ enable_testing()
 # Flags passed to the compiler
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -march=native ${STATIC_LIB_COMPILE_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -march=native")
 
 ## Print basic information -----------------------------------------------------
 
