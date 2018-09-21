@@ -3,13 +3,11 @@ add_library(
     DepthFilteringInterface.cpp
     DepthFilteringExecutor.cpp
 )
-set_target_properties(depth_filtering PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})
 
 add_library(
     convolution_filter
     ConvolutionFilter.cpp
 )
-set_target_properties(convolution_filter PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})
 
 target_link_libraries(
     convolution_filter

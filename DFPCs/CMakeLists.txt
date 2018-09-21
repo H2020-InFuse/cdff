@@ -2,7 +2,6 @@ add_library(
     dfpc_configurator
     DfpcConfigurator.cpp
 )
-set_target_properties(dfpc_configurator PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})
 target_link_libraries(
 	dfpc_configurator
 	cdff_helpers cdff_logger cdff_types dfns_builder

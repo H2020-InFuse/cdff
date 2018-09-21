@@ -4,7 +4,6 @@ add_library(
     LoggerFactory.cpp
     StandardOutputLogger.cpp
 )
-set_target_properties(cdff_logger PROPERTIES COMPILE_FLAGS ${STATIC_LIB_COMPILE_FLAGS})
 install(
     TARGETS cdff_logger
     DESTINATION lib
