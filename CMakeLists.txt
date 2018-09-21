@@ -27,9 +27,6 @@ set(USE_BUNDLED_DEPENDENCIES OFF CACHE BOOL
 set(BUNDLED_DEPENDENCIES_PREFIX External/install CACHE PATH
   "Location of the libraries in the source tree")
 
-set(STATIC_LIB_COMPILE_FLAGS -fPIC CACHE STRING
-  "Compile flags for static libraries")
-
 # Define preprocessor definition TESTING
 # Use it in #ifdef and #ifndef preprocessor conditionnals in your source code
 #
@@ -48,7 +45,8 @@ enable_testing()
 # Flags passed to the compiler
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -march=native ${STATIC_LIB_COMPILE_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -march=native")
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 ## Print basic information -----------------------------------------------------
 
