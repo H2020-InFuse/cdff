@@ -91,7 +91,7 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
   ./bootstrap.sh \
     --with-libraries=date_time,filesystem,iostreams,system,thread,chrono,serialization,timer \
     --prefix="${INSTALL_DIR}"
-  ./b2 --with-test --build-dir=build -q -j ${CPUS} link=shared install
+  ./b2 --build-dir=build -q -j ${CPUS} link=shared install
 
   # Patch: support for Boost 1.66.0 in the CMake find module FindBoost.cmake is
   # only available from the module shipped with CMake 3.11: download that module
