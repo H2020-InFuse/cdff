@@ -89,7 +89,8 @@ TEST_CASE( "Success Call to Process (HapticScanning)", "[processSuccess]" )
     asn1SccPose rover_pose = ForceMeshHelperFunctions::getRoverPose();
 
     haptic_scanning->roverPoseInput(rover_pose);
-    haptic_scanning->positionAndForceInput(*positions, *forces);
+    haptic_scanning->positionInput(*positions);
+    haptic_scanning->forceInput(*forces);
 
     haptic_scanning->run();
 

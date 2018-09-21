@@ -26,10 +26,16 @@ void HapticScanningInterface::roverPoseInput(const asn1SccPose& data)
     inRoverPose = data;
 }
 
+
 //=====================================================================================================================
-void HapticScanningInterface::positionAndForceInput(const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces)
+void HapticScanningInterface::positionInput(const asn1SccPointSequence & positions)
 {
     inPositions = positions;
+}
+
+//=====================================================================================================================
+void HapticScanningInterface::forceInput(const asn1SccDoubleSequence & forces)
+{
     inForces = forces;
 }
 

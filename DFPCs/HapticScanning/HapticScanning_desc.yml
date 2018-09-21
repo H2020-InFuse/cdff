@@ -3,7 +3,7 @@ doc: Reconstruction of the environment using a force sensor as input
 dfns:
     - name: ForceMeshGenerator
 input_ports:
-  - name: inputRoverPose
+  - name: inputPose
     type: asn1SccPose
     doc: Pose information
   - name: inputPositions
