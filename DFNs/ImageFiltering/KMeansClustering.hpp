@@ -37,17 +37,17 @@ namespace CDFF {
 
             void ValidateInputs(const FrameWrapper::Frame &frame);
 
-            cv::Mat ClusterPixels(const cv::Mat &inputImage, const std::vector<cv::Vec3f> &kmeans_centers);
+            cv::Mat ClusterPixels(const cv::Mat &inputImage, const std::vector<float> &kmeans_centroids);
 
-            std::vector<cv::Vec3f> UpdateClusters(const cv::Mat &inputImage, cv::Mat &clusters);
+            std::vector<float> UpdateClusters(const cv::Mat &inputImage, cv::Mat &clusters);
 
-            std::vector<cv::Vec3f> GenerateRandomCenters(const cv::Mat &srcImage, const size_t num_points = 1) const;
+            std::vector<float> PickCentroids(const cv::Mat &srcImage, size_t num_points = 1) const;
 
             Parameters _parameters;
             Helpers::ParametersListHelper _parametersHelper;
 
             /* State Variables */
-            std::vector<cv::Vec3f> _kmeans_centers;
+            std::vector<cv::Vec3f> _kmeans_centroids;
         };
 
     }

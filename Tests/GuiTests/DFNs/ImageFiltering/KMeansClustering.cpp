@@ -5,7 +5,7 @@
 #include <Converters/MatToFrameConverter.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 
-#include <ImageFiltering/KMeansClustering.h>
+#include <ImageFiltering/KMeansClustering.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
 
 #include <opencv2/core.hpp>
@@ -69,8 +69,8 @@ void KMeansClusteringTest::SetupParameters()
             KMeansClustering::DefaultParameters.num_centers, 48);
     AddParameter("KMeansClustering", "max_iterations",
                  KMeansClustering::DefaultParameters.max_iterations, 100);
-//    AddParameter("KMeansClustering", "tolerance",
-//            KMeansClustering::DefaultParameters.tolerance, 10, .1);
+    AddParameter("KMeansClustering", "tolerance",
+            KMeansClustering::DefaultParameters.tolerance, 10, .1);
 }
 
 void KMeansClusteringTest::DisplayResult()
