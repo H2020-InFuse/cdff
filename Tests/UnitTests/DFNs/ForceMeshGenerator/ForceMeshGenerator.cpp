@@ -76,7 +76,8 @@ TEST_CASE( "Force Mesh Generator" )
 
     // Send input data to DFN
     generator->roverPoseInput(rover_pose);
-    generator->positionAndForceInput(*positions, *forces);
+    generator->positionInput(*positions);
+    generator->forceInput(*forces);
 
     // Run DFN
     generator->process();
