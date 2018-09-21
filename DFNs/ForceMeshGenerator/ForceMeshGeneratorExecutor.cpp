@@ -19,13 +19,13 @@ ForceMeshGeneratorExecutor::ForceMeshGeneratorExecutor(ForceMeshGeneratorInterfa
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorExecutor::Execute(const asn1SccPose &roverPose, const asn1SccPointsSequence &positions, const asn1SccDoublesSequence &forces, PointCloudWrapper::PointCloudPtr outputPointCloud)
+void ForceMeshGeneratorExecutor::Execute(const asn1SccPose &roverPose, const asn1SccPointSequence &positions, const asn1SccDoubleSequence &forces, PointCloudWrapper::PointCloudPtr outputPointCloud)
 {
     Execute(roverPose, positions, forces, *outputPointCloud);
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorExecutor::Execute(const asn1SccPose& roverPose, const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces, PointCloudWrapper::PointCloud & outputPointCloud)
+void ForceMeshGeneratorExecutor::Execute(const asn1SccPose& roverPose, const asn1SccPointSequence & positions, const asn1SccDoubleSequence & forces, PointCloudWrapper::PointCloud & outputPointCloud)
 {
     dfn->roverPoseInput(roverPose);
     dfn->positionInput(positions);

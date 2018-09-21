@@ -34,13 +34,13 @@ namespace DFN
             * Send value to input port inputPositions
             * @param positions: end-effector positions
             */
-            virtual void positionInput(const asn1SccPointsSequence & positions);
+            virtual void positionInput(const asn1SccPointSequence & positions);
 
             /**
             * Send value to input port inputForces
             * @param forces: end-effector force measurements
             */
-            virtual void forceInput(const asn1SccDoublesSequence & forces);
+            virtual void forceInput(const asn1SccDoubleSequence & forces);
 
             /**
              * Query value from output port outputPointCloud
@@ -51,8 +51,8 @@ namespace DFN
         protected:
 
             asn1SccPose inRoverPose;
-            asn1SccPointsSequence inPositions;
-            asn1SccDoublesSequence inForces;
+            asn1SccPointSequence inPositions;
+            asn1SccDoubleSequence inForces;
             asn1SccPointcloud outPointCloud;
     };
 }

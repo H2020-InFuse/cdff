@@ -28,8 +28,8 @@ namespace DFN
 
             ForceMeshGeneratorExecutor(ForceMeshGeneratorInterface* dfn);
 
-            void Execute(const asn1SccPose& roverPose, const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces, PointCloudWrapper::PointCloudPtr outputPointCloud);
-            void Execute(const asn1SccPose& roverPose, const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces, PointCloudWrapper::PointCloud & outputPointCloud);
+            void Execute(const asn1SccPose& roverPose, const asn1SccPointSequence & positions, const asn1SccDoubleSequence & forces, PointCloudWrapper::PointCloudPtr outputPointCloud);
+            void Execute(const asn1SccPose& roverPose, const asn1SccPointSequence & positions, const asn1SccDoubleSequence & forces, PointCloudWrapper::PointCloud & outputPointCloud);
 
         private:
 

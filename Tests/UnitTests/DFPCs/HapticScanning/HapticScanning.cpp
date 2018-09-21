@@ -69,10 +69,10 @@ TEST_CASE( "Success Call to Process (HapticScanning)", "[processSuccess]" )
     std::vector<std::pair<pcl::PointXYZ, double> > points = ForceMeshHelperFunctions::getInputData(cloud);
 
     // Convert the input data
-    asn1SccPointsSequence * positions = new asn1SccPointsSequence;
-    asn1SccPointsSequence_Initialize(positions);
-    asn1SccDoublesSequence * forces = new asn1SccDoublesSequence;
-    asn1SccDoublesSequence_Initialize(forces);
+    asn1SccPointSequence * positions = new asn1SccPointSequence;
+    asn1SccPointSequence_Initialize(positions);
+    asn1SccDoubleSequence * forces = new asn1SccDoubleSequence;
+    asn1SccDoubleSequence_Initialize(forces);
 
     auto size = points.size();
     positions->nCount = size;
