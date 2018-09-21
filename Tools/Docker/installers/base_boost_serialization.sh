@@ -5,8 +5,6 @@ if [[ ! -n $(find $PKG_DIR -name 'base_boost_serialization*') ]]; then
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
 	    -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
-	    -D WITH_FFMPEG=OFF -D BUILD_DOCS=OFF -D BUILD_EXAMPLES=OFF \
-	    -D BUILD_TESTS=OFF -D ENABLE_CXX11=ON -D ENABLE_FAST_MATH=ON \
 	    -D CMAKE_CXX_FLAGS:STRING=-std=c++11 \
 	    $SOURCE_DIR/base_boost_serialization
 

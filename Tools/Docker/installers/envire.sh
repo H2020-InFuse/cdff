@@ -5,8 +5,6 @@ if [[ ! -n $(find $PKG_DIR -name 'envire_envire_core*') ]]; then
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
 	    -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
-	    -D WITH_FFMPEG=OFF -D BUILD_DOCS=OFF -D BUILD_EXAMPLES=OFF \
-	    -D BUILD_TESTS=OFF -D ENABLE_CXX11=ON -D ENABLE_FAST_MATH=ON \
 	    $SOURCE_DIR/envire_envire_core
 
 	make --jobs=${CPUS}
