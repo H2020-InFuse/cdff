@@ -92,7 +92,7 @@ HuInvariantsTestInterface::HuInvariantsTestInterface(std::string dfnName, int bu
 	huInvariants->frameInput(*inputImage);
 
 	std::vector<std::string> string_array{"rectangle", "circle"};
-    BaseTypesWrapper::asn1SccT_StringArray primitive_array = StdVectorOfStringsToStringArrayConverter().Convert(string_array);
+	asn1SccStringSequence primitive_array = StdVectorOfStringsToStringArrayConverter().Convert(string_array);
 
 	huInvariants->primitiveArrayInput(primitive_array);
 	outputWindowName = "Hu Invariants Result";
