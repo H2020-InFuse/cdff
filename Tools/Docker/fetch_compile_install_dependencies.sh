@@ -3,6 +3,7 @@
 #This file fetches the dependencies in /Externals, builds and installs them.
 # Version 1.3
 
+
 #exit immediately if a simple command exits with a nonzero exit value.
 set -e
 
@@ -191,12 +192,14 @@ function build_all_function {
 ###### MAIN PROGRAM
 
 source ./installers/infuse_set_pkg_config_path.sh
+
+
 # Attempt to cleanup leftover source folders if we exited early due to errors.
 function on_exit {
   for i in "${InstallersToRUN[@]}"; do
     if [[ -d  "${SOURCE_DIR}/$i" ]] ; then
           echo "Removing left over source folder: ${SOURCE_DIR}/$i"
-      #rm -rf "${SOURCE_DIR}/$i"
+      rm -rf "${SOURCE_DIR}/$i"
     fi
   done
 }
