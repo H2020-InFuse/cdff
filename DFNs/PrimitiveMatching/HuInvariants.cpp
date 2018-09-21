@@ -97,7 +97,7 @@ void HuInvariants::process()
 	ValidateInputs(inputImage);
 
 	// Write data to output port
-    outPrimitiveArrayMatched = Converters::StdVectorOfStringsToStringArrayConverter().Convert( Match(inputImage) );
+    outPrimitiveSequenceMatched = Converters::StdVectorOfStringsToStringSequenceConverter().Convert( Match(inputImage) );
 
 
     // Create input image and draw the matched contour on it
@@ -262,7 +262,7 @@ void HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<cv::Poin
 std::map<std::string, std::vector<cv::Point> > HuInvariants::getTemplatesToMatch()
 {
     std::map<std::string, std::vector<cv::Point> > template_contours_to_match;
-    std::vector<std::string> primitive_names = Converters::StringArrayToStdVectorOfStringsConverter().Convert(inPrimitiveArray);
+    std::vector<std::string> primitive_names = Converters::StringSequenceToStdVectorOfStringsConverter().Convert(inPrimitiveSequence);
 
     int size = m_template_files.size();
     for( unsigned int index = 0; index < size; index ++ )

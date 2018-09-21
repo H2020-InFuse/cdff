@@ -1,17 +1,17 @@
 name: PrimitiveMatching
 doc: DFN that finds primitives in a 2D image
 input_ports:
-    - name: image
+    - name: inputImage
       type: asn1SccFrame
       doc: 2D image captured by a camera
-    - name: string array
+    - name: inputPrimitives
       type: asn1SccT_StringArray
       doc: string array with the names of the primitives to be searched for in the input image
 output_ports:
-    - name: image
+    - name: outputImage
       type: asn1SccFrame
       doc: same image, with the contour that was matched to a primitive
-    - name: string array
+    - name: outputPrimitives
       type: asn1SccT_StringArray
       doc: string array with the names of the primitives ordered by matching probability
 implementations:

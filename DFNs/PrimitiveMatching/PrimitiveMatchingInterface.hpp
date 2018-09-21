@@ -8,7 +8,7 @@
 
 #include "DFNCommonInterface.hpp"
 #include <Frame.h>
-#include <BaseTypes.hpp>
+#include <Sequences.h>
 
 
 namespace CDFF
@@ -26,25 +26,25 @@ namespace DFN
             virtual ~PrimitiveMatchingInterface();
 
             /**
-             * Send value to input port "image"
+             * Send value to input port "inputImage"
              * @param image: 2D image captured by a camera with the ROI already segmented
              */
             virtual void frameInput(const asn1SccFrame& data);
 
             /**
-            * Send value to input port "primitives"
+            * Send value to input port "inputPrimitives"
             * @return string array: array of strings with the primitives to be matched
             */
-            virtual void primitiveArrayInput(const BaseTypesWrapper::asn1SccT_StringArray& data);
+            virtual void primitiveSequenceInput(const asn1SccStringSequence & data);
 
              /**
-             * Query value from output port "primitives"
+             * Query value from output port "outputPrimitives"
              * @return string array: array of strings with the input primitives ordered by matching probabilities
              */
-            virtual BaseTypesWrapper::asn1SccT_StringArray primitivesMatchedOutput() const;
+            virtual const asn1SccStringSequence & primitivesMatchedOutput() const;
 
             /**
-            * Query value from output port "image"
+            * Query value from output port "outputImage"
             * @return image: input image with the matched contour
             */
             virtual const asn1SccFrame& imageWithMatchedContourOutput() const;
@@ -52,9 +52,9 @@ namespace DFN
     protected:
 
             asn1SccFrame inImage;
-            BaseTypesWrapper::asn1SccT_StringArray inPrimitiveArray;
+            asn1SccStringSequence inPrimitiveSequence;
             asn1SccFrame outImageWithMatchedContour;
-            BaseTypesWrapper::asn1SccT_StringArray outPrimitiveArrayMatched;
+            asn1SccStringSequence outPrimitiveSequenceMatched;
 
     };
 }
