@@ -99,17 +99,7 @@ function find_installers {
  IFS=$PreviousIFS
 }
 
-function set_environnement {
-  envfile=$DIR/installers/infuse_environnement.env
-  if [ ! -f "$envfile" ]; then
-    echo "$envfile missing, cannot set INFUSE ENV."
-    exit
-  fi
-  source $envfile
-}
-
 function run_installers {
-#  set_environnement
 
   mkdir -p $BUILD_DIR
   mkdir -p $INSTALL_DIR
@@ -200,6 +190,7 @@ function build_all_function {
 
 ###### MAIN PROGRAM
 
+source ./installers/infuse_set_pkg_config_path.sh
 # Attempt to cleanup leftover source folders if we exited early due to errors.
 function on_exit {
   for i in "${InstallersToRUN[@]}"; do
