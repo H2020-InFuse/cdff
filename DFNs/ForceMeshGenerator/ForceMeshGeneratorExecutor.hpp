@@ -9,6 +9,7 @@
 #include "DFNCommonInterface.hpp"
 #include "ForceMeshGeneratorInterface.hpp"
 #include <PointCloud.hpp>
+#include <Sequences.h>
 
 namespace CDFF
 {
@@ -27,8 +28,8 @@ namespace DFN
 
             ForceMeshGeneratorExecutor(ForceMeshGeneratorInterface* dfn);
 
-            void Execute(const asn1SccPose& roverPose, const asn1SccPointArray & positions, const asn1SccDoubleArray & forces, PointCloudWrapper::PointCloudConstPtr outputPointCloud);
-            void Execute(const asn1SccPose& roverPose, const asn1SccPointArray & positions, const asn1SccDoubleArray & forces, PointCloudWrapper::PointCloud outputPointCloud);
+            void Execute(const asn1SccPose& roverPose, const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces, PointCloudWrapper::PointCloudPtr outputPointCloud);
+            void Execute(const asn1SccPose& roverPose, const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces, PointCloudWrapper::PointCloud & outputPointCloud);
 
         private:
 

@@ -1,27 +1,30 @@
 /**
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * @{
  */
 
-#ifndef FORCEMESHGENERATOR_FORCEMESHGENERATORINTERFACE_HPP
-#define FORCEMESHGENERATOR_FORCEMESHGENERATORINTERFACE_HPP
+#ifndef HAPTICSCANNING_INTERFACE_HPP
+#define HAPTICSCANNING_INTERFACE_HPP
 
-#include "DFNCommonInterface.hpp"
+#include "DFPCCommonInterface.hpp"
+#include <TransformWithCovariance.h>
+#include <Frame.h>
 #include <PointCloud.hpp>
 #include <Sequences.h>
 
 namespace CDFF
 {
-namespace DFN
+namespace DFPC
 {
     /**
-     * DFN that creates a point cloud using the feedback from a force sensor
+     * Reconstruction of the environment using a force sensor as input
      */
-    class ForceMeshGeneratorInterface : public DFNCommonInterface
+    class HapticScanningInterface : public DFPCCommonInterface
     {
         public:
 
-            ForceMeshGeneratorInterface();
+            HapticScanningInterface();
+            virtual ~HapticScanningInterface();
 
             /**
              * Send value to input port
@@ -50,8 +53,10 @@ namespace DFN
             asn1SccPointcloud outPointCloud;
     };
 }
+
 }
 
-#endif // FORCEMESHGENERATOR_FORCEMESHGENERATORINTERFACE_HPP
+
+#endif //  HAPTICSCANNING_INTERFACE_HPP
 
 /** @} */

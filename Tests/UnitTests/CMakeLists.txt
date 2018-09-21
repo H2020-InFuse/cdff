@@ -50,12 +50,14 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/PrimitiveMatching/HuInvariants.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
     DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
+    DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
     DFNs/Voxelization/Octree.cpp
     DFPCs/Reconstruction3D/BundleHistory.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
     DFPCs/DfpcConfigurator.cpp
+    DFPCs/HapticScanning/HapticScanning.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
     DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
     DFNs/PointCloudTransform/CartesianSystemTransform.cpp
@@ -131,6 +133,7 @@ set(UNITTEST_LIBRARIES Catch
     threshold_force
     neighbour_point_average
     cartesian_system_transform
+    dfpc_haptic_scanning
 )
 
 # Make the Catch executable that runs the unit tests

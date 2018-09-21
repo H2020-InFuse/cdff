@@ -1,40 +1,47 @@
 /**
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * @{
  */
 
-#include "ForceMeshGeneratorInterface.hpp"
+#include "HapticScanningInterface.hpp"
 
 namespace CDFF
 {
-namespace DFN
+namespace DFPC
 {
 
 //=====================================================================================================================
-ForceMeshGeneratorInterface::ForceMeshGeneratorInterface()
+HapticScanningInterface::HapticScanningInterface()
 {
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorInterface::roverPoseInput(const asn1SccPose& data)
+HapticScanningInterface::~HapticScanningInterface()
+{
+}
+
+//=====================================================================================================================
+void HapticScanningInterface::roverPoseInput(const asn1SccPose& data)
 {
     inRoverPose = data;
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorInterface::positionAndForceInput(const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces)
+void HapticScanningInterface::positionAndForceInput(const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces)
 {
     inPositions = positions;
     inForces = forces;
 }
 
 //=====================================================================================================================
-const asn1SccPointcloud& ForceMeshGeneratorInterface::pointCloudOutput() const
+const asn1SccPointcloud& HapticScanningInterface::pointCloudOutput() const
 {
     return outPointCloud;
 }
 
+
 }
+
 }
 
 /** @} */

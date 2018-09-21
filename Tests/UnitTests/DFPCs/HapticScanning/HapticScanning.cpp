@@ -6,17 +6,17 @@
 */
 
 /*!
- * @file ForceMeshGenerator.cpp
- * @date 10/09/2018
+ * @file HapticScanning.cpp
+ * @date 18/09/2018
  * @author Irene Sanz
  */
 
 /*!
  * @addtogroup DFNsTest
- *
- * Unit Test for the DFN Force Mesh Generator.
- *
- *
+ * 
+ * Unit Test for the DFPCs HapticScanning.
+ * 
+ * 
  * @{
  */
 
@@ -27,12 +27,18 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
+#include <HapticScanning/HapticScanning.hpp>
+#include <Errors/Assert.hpp>
+
 #include <pcl/io/ply_io.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
 #include <PointCloudToPclPointCloudConverter.hpp>
-#include "ForceMeshHelperFunctions.hpp"
-#include <Sequences.h>
+
+#include "../../DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.hpp"
+
+using namespace CDFF::DFPC;
+
 
 /* --------------------------------------------------------------------------
  *
@@ -41,8 +47,19 @@
  * --------------------------------------------------------------------------
  */
 
-TEST_CASE( "Force Mesh Generator" )
+TEST_CASE( "Success Call to Configure (HapticScanning)", "[configureSuccess]" )
 {
+    std::unique_ptr<HapticScanning> haptic_scanning( new HapticScanning() );
+    haptic_scanning->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/HapticScanning/DfpcHapticScanning_conf01.yaml");
+    haptic_scanning->setup();
+}
+
+TEST_CASE( "Success Call to Process (HapticScanning)", "[processSuccess]" )
+{
+    std::unique_ptr<HapticScanning> haptic_scanning( new HapticScanning() );
+    haptic_scanning->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/HapticScanning/DfpcHapticScanning_conf01.yaml");
+    haptic_scanning->setup();
+
     // Read input cloud
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
     pcl::PLYReader Reader;
@@ -50,9 +67,6 @@ TEST_CASE( "Force Mesh Generator" )
 
     // Create input data using the input cloud
     std::vector<std::pair<pcl::PointXYZ, double> > points = ForceMeshHelperFunctions::getInputData(cloud);
-
-    // Instantiate DFN
-    std::unique_ptr<CDFF::DFN::ForceMeshGenerator::ThresholdForce> generator (new CDFF::DFN::ForceMeshGenerator::ThresholdForce() );
 
     // Convert the input data
     asn1SccPointsSequence * positions = new asn1SccPointsSequence;
@@ -74,23 +88,18 @@ TEST_CASE( "Force Mesh Generator" )
 
     asn1SccPose rover_pose = ForceMeshHelperFunctions::getRoverPose();
 
-    // Send input data to DFN
-    generator->roverPoseInput(rover_pose);
-    generator->positionAndForceInput(*positions, *forces);
+    haptic_scanning->roverPoseInput(rover_pose);
+    haptic_scanning->positionAndForceInput(*positions, *forces);
 
-    // Run DFN
-    generator->process();
+    haptic_scanning->run();
 
-    // Query output data from DFN
-    const asn1SccPointcloud& output = generator->pointCloudOutput();
+    const asn1SccPointcloud& output = haptic_scanning->pointCloudOutput();
+    pcl::PointCloud<pcl::PointXYZ>::ConstPtr output_cloud = Converters::PointCloudToPclPointCloudConverter().Convert(&output);
 
-    auto output_cloud = Converters::PointCloudToPclPointCloudConverter().Convert(&output);
     for( const pcl::PointXYZ & out_point : output_cloud->points )
     {
         CHECK( ForceMeshHelperFunctions::checkPointCloudContainsPoint( out_point, cloud ) );
     }
-
-    delete positions, forces;
 }
 
 /** @} */
