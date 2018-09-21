@@ -22,22 +22,28 @@ namespace DFN
         public:
 
             ForceMeshGeneratorInterface();
+            ~ForceMeshGeneratorInterface() = default;
 
             /**
-             * Send value to input port
+             * Send value to input port inputPose
              * @param pose: estimated rover pose relative to target
              */
-            virtual void roverPoseInput(const asn1SccPose& data);
+            virtual void roverPoseInput(const asn1SccPose& pose);
 
             /**
-            * Send value to input port
+            * Send value to input port inputPositions
             * @param positions: end-effector positions
+            */
+            virtual void positionInput(const asn1SccPointsSequence & positions);
+
+            /**
+            * Send value to input port inputForces
             * @param forces: end-effector force measurements
             */
-            virtual void positionAndForceInput(const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces);
+            virtual void forceInput(const asn1SccDoublesSequence & forces);
 
             /**
-             * Query value from output port
+             * Query value from output port outputPointCloud
              * @return point cloud
              */
             virtual const asn1SccPointcloud& pointCloudOutput() const;
