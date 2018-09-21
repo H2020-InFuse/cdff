@@ -35,8 +35,8 @@
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
-#include <StringArrayToStdVectorOfStringsConverter.hpp>
-#include <StdVectorOfStringsToStringArrayConverter.hpp>
+#include <StringSequenceToStdVectorOfStringsConverter.hpp>
+#include <StdVectorOfStringsToStringSequenceConverter.hpp>
 
 
 using namespace CDFF::DFN::PrimitiveMatching;
@@ -92,9 +92,9 @@ HuInvariantsTestInterface::HuInvariantsTestInterface(std::string dfnName, int bu
 	huInvariants->frameInput(*inputImage);
 
 	std::vector<std::string> string_array{"rectangle", "circle"};
-	asn1SccStringSequence primitive_array = StdVectorOfStringsToStringArrayConverter().Convert(string_array);
+	asn1SccStringSequence primitive_array = StdVectorOfStringsToStringSequenceConverter().Convert(string_array);
 
-	huInvariants->primitiveArrayInput(primitive_array);
+	huInvariants->primitiveSequenceInput(primitive_array);
 	outputWindowName = "Hu Invariants Result";
 }
 
@@ -112,7 +112,7 @@ void HuInvariantsTestInterface::SetupParameters()
 
 void HuInvariantsTestInterface::DisplayResult()
 {
-    std::vector<std::string> ordered_primitives = Converters::StringArrayToStdVectorOfStringsConverter().Convert(huInvariants->primitivesMatchedOutput());
+    std::vector<std::string> ordered_primitives = Converters::StringSequenceToStdVectorOfStringsConverter().Convert(huInvariants->primitivesMatchedOutput());
 
     PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
     PRINT_TO_LOG("Virtual memory used (kb): ", GetTotalVirtualMemoryUsedKB());
