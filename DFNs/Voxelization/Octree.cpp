@@ -69,7 +69,7 @@ void Octree::process()
     octree.addPointsFromInputCloud();
 
     // Write data to output port
-    outOctree = Converters::PclOctreeToOctreeConverter().Convert(octree);
+    outOctree = *Converters::PclOctreeToOctreeConverter().Convert(octree);
 }
 
 //=====================================================================================================================
