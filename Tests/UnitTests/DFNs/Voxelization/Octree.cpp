@@ -60,7 +60,7 @@ TEST_CASE( "Call to process (Octree)", "[process]" )
     octree->process();
 
     // Query output data from DFN
-    const asn1SccT_Octree output = octree->octreeOutput();
+    const asn1SccOctree & output = octree->octreeOutput();
     pcl::octree::OctreePointCloudSearch<pcl::PointXYZ> output_octree = Converters::OctreeToPclOctreeConverter().Convert(output);
 
     // Check the output

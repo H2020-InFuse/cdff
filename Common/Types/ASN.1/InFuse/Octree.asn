@@ -1,0 +1,18 @@
+Octree-InFuse-Types DEFINITIONS ::=
+BEGIN
+IMPORTS
+Pointcloud FROM Pointcloud-Types
+T-Double FROM TASTE-ExtendedTypes
+T-UInt32 FROM TASTE-BasicTypes;
+
+-- Message version
+octree-Infuse-Version T-UInt32 ::= 1
+
+--- Definition of PointCloud_InFuse starts
+Octree ::= SEQUENCE
+{
+    resolution                     T-Double,
+    pointCloud                     Pointcloud
+}
+
+END

@@ -8,13 +8,7 @@
 
 #include "DFNCommonInterface.hpp"
 #include <Frame.h>
-#include <PointCloud.hpp>
-
-
-typedef struct{
-    double resolution;
-    PointCloudWrapper::PointCloudConstPtr point_cloud;
-} asn1SccT_Octree;
+#include <Octree.h>
 
 
 namespace CDFF
@@ -29,23 +23,24 @@ namespace DFN
         public:
 
             VoxelizationInterface();
+            ~VoxelizationInterface() = default;
 
             /**
-             * Send value to input port
+             * Send value to input port inputFrame
              * @param frame: 2D depth image
              */
             virtual void frameInput(const asn1SccFrame& data);
 
             /**
-             * Query value from output port
+             * Query value from output port ouputOctree
              * @return octree
              */
-            virtual const asn1SccT_Octree& octreeOutput() const;
+            virtual const asn1SccOctree& octreeOutput() const;
 
         protected:
 
             asn1SccFrame inFrame;
-            asn1SccT_Octree outOctree;
+            asn1SccOctree outOctree;
     };
 }
 }

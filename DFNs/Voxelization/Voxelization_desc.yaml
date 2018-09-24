@@ -6,7 +6,7 @@ input_ports:
       doc: 2D depth image
 output_ports:
     - name: ouputOctree
-      type: asn1SccT_Octree
+      type: asn1SccOctree
       doc: octree
 implementations:
     - Octree

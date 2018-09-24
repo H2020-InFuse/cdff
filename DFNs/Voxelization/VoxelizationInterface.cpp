@@ -22,7 +22,7 @@ void VoxelizationInterface::frameInput(const asn1SccFrame& data)
 }
 
 //=====================================================================================================================
-const asn1SccT_Octree& VoxelizationInterface::octreeOutput() const
+const asn1SccOctree& VoxelizationInterface::octreeOutput() const
 {
     return outOctree;
 }
