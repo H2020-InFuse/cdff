@@ -34,7 +34,7 @@ namespace DFPC
                 DEBUG
             };
 
-            DFPCCommonInterface() {}
+            DFPCCommonInterface() : logLevel(LogLevel::OFF) {}
             virtual ~DFPCCommonInterface() {}
             virtual void run() = 0;
             virtual void setup() = 0;
@@ -45,7 +45,7 @@ namespace DFPC
                 logLevel = data;
             }
 
-            virtual void setConfigurationFile(std::string configurationFilePath)
+            virtual void setConfigurationFile(const std::string& configurationFilePath)
             {
                 this->configurationFilePath = configurationFilePath;
             }
