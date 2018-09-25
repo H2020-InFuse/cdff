@@ -1,0 +1,172 @@
+############################
+# CONTENTS (row-wise):
+# - N. of alternative Cartesian frames (e.g. grasping points), that can be selected as reference for pose estimation
+# - Alternative Cartesian frames (12 elements row-wise, the last row is [0,0,0,1])
+# - Number of body components
+# - For each component:
+#   - Type ("L" = poly-line, "P" = polyhedron, "C" = cylinder)
+#   - (if polyhedron) Flatness (1 = it contains at least one flat polygons)
+#   - (if polyhedron) Crease edge angle (-1 for sampling only silhouette edges)
+#   - (if polyline) Indices of polyhedron and polygon the line belongs to (-1,-1 if free-floating)
+#   - Filename (containing shape description)
+############################
+# ALTERNATIVE LOCAL FRAMES
+4
+# GRASPING POINT (RING HANDLE - GRAY)
+-1 0 0 -3 0 0.5 0.8660254 -450.3332 0 0.8660254 -0.5 260
+# GRASPING POINT (RING HANDLE - BLACK)
+-1 0 0 -3 0 1 0 0 0 0 -1 520
+# GRASPING POINT (RING HANDLE - 2nd GRAY)
+-1 0 0 -3 0 0.5 -0.8660254 450.3332 0 -0.8660254 -0.5 260
+# 
+-1 0 0 -320 0 -1 0 0 0 0 1 20
+############################
+# N. of bodies
+19
+############################
+# Main body: polyhedron, nonflat, crease edges (~30 degrees)
+P
+0
+29
+ClientModel/body1_only_hexagon.txt
+############################
+# Big ring: polyhedron, nonflat, only silhouette edges
+P
+0
+-1
+ClientModel/Ring.txt
+############################
+# Big cylinder: nonflat, crease edges (90 degrees)
+P
+0
+89
+ClientModel/Big_cylinder.txt
+############################
+############################
+# Handle 1
+############################
+############################
+#
+############################
+# Cylinder 1: nonflat, only silhouette
+P
+0
+-1
+ClientModel/Handle1_cyl1.txt
+############################
+# Cylinder 2: nonflat, only silhouette
+P
+0
+-1
+ClientModel/Handle1_cyl2.txt
+############################
+# Bar: nonflat, crease edges (90 deg)
+P
+0
+89
+ClientModel/Handle1_bar.txt
+#
+############################
+############################
+# Handle 2
+############################
+############################
+#
+############################
+# Cylinder 1: nonflat, only silhouette
+P
+0
+-1
+ClientModel/Handle2_cyl1.txt
+############################
+# Cylinder 2: nonflat, only silhouette
+P
+0
+-1
+ClientModel/Handle2_cyl2.txt
+############################
+# Bar: nonflat, crease edges (90 deg)
+P
+0
+89
+ClientModel/Handle2_bar.txt
+#
+############################
+############################
+# Handle 3
+############################
+############################
+#
+############################
+# Cylinder 1: nonflat, only silhouette
+P
+0
+-1
+ClientModel/Handle3_cyl1.txt
+############################
+# Cylinder 2: nonflat, only silhouette
+P
+0
+-1
+ClientModel/Handle3_cyl2.txt
+############################
+# Bar: nonflat, crease edges (90 deg)
+P
+0
+89
+ClientModel/Handle3_bar.txt
+############################
+############################
+# Ring handle: closed, crease edges
+############################
+############################
+P
+0
+89
+ClientModel/Ring_handle_30deg.txt
+#ClientModel/Ring_handle_90deg.txt
+#
+############################
+############################
+# Line patterns (lateral)
+############################
+############################
+#
+############################
+# Line pattern on face 1: polyline
+# adjacency: body 1, polygon 4
+L
+1 4
+ClientModel/side1_pattern_lines.txt
+############################
+# Line pattern on face 2: polyline
+# adjacency: body 1, polygon 4
+L
+1 5
+ClientModel/side2_pattern_lines.txt
+############################
+# Line pattern on face 3: polyline (with missing lines)
+# adjacency: body 1, polygon 6
+L
+1 6
+ClientModel/side3_pattern_lines_holes.txt
+############################
+# Line pattern on face 4: polyline
+# adjacency: body 1, polygon 7
+L
+1 7
+ClientModel/side4_pattern_lines.txt
+############################
+# Line pattern on face 5: polyline
+# adjacency: body 1, polygon 8
+L
+1 8
+ClientModel/side5_pattern_lines.txt
+############################
+# Line pattern on face 6: polyline (with missing lines)
+# adjacency: body 1, polygon 3
+L
+1 3
+ClientModel/side6_pattern_lines_holes.txt
+##############################################################
+

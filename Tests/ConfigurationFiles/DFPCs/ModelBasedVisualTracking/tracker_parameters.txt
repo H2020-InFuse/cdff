@@ -1,0 +1,37 @@
+############################
+# !!! Do not write more than 200 characters per line in this file !!!
+############################
+# - Max. number of sample points (integer)
+30000
+# - Threshold for declaring a polygon "non-singular" (min. distance between its plane and the camera center, [mm])
+1
+# - For the Z-Buffer VLD: subsampling factor while collecting visible pixels (1 = take them all)
+2
+# - Min. length of a valid 3D segment (collected during VLD) [mm]
+1
+# - Search distance (integer)
+8
+# - Canny thresholds (integer)
+40 60
+# - Angular threshold for matching detected edges (Sobel filter) along the normals = maximum deviation
+20.0
+# - Max. LSE iterations (integer)
+20
+# - Minimum *incremental* update parameters (rot [deg], trasl [mm]), to declare convergence
+0.1 0.1
+# - Maximum update parameters (rot [deg], trasl [mm]) w.r.t. the initial prediction, to declare divergence
+20.0 100.0
+# - Thresholds on the percentage of inlier matches (else, track loss), during and after GN optimization (resp. lower and higher)
+0.3 0.7
+# Threshold on the average final re-projection error in PIXELS (mis-matching pixels are counted with the maximum residual), -1: unspecified
+20
+# - Minimum parameters w.r.t. the last VLD (rot [deg], trasl [mm]), to call for a new VLD
+1.0 10.0
+# - Kalman Filter process noise (std of random acceleration), rotational [deg] and translational [mm]
+1000 1000
+# - Kalman Filter, measurement noise (std of estimated pose), rotational [deg] and translational [mm]
+1 1
+# - Kalman Filter initial covariance (a large value, for all 12 roto-translation and velocity components)
+10000
+
+
