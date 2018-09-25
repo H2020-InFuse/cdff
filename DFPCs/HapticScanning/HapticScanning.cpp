@@ -28,7 +28,7 @@ void HapticScanning::setup()
 
 void HapticScanning::run()
 {
-    m_force_mesh_generator->Execute(inRoverPose, inPositions, inForces, outPointCloud);
+    m_force_mesh_generator->Execute(inArmBasePose, inArmEndEffectorPose, inArmEndEffectorWrench, *outPointCloud);
 }
 
 void HapticScanning::InstantiateDFNExecutors()

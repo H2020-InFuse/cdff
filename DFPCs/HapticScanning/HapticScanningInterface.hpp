@@ -7,10 +7,12 @@
 #define HAPTICSCANNING_INTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
-#include <TransformWithCovariance.h>
-#include <Frame.h>
-#include <PointCloud.hpp>
-#include <Sequences.h>
+
+#include "Types/C/TransformWithCovariance.h"
+#include "Types/C/Frame.h"
+#include "Types/CPP/PointCloud.hpp"
+#include "Types/C/Sequences.h"
+#include "Types/C/Wrench.h"
 
 namespace CDFF
 {
@@ -24,25 +26,25 @@ namespace DFPC
         public:
 
             HapticScanningInterface();
-            virtual ~HapticScanningInterface();
+            ~HapticScanningInterface() override = default;
 
             /**
              * Send value to input port inputPose
              * @param pose: estimated rover pose relative to target
              */
-            virtual void roverPoseInput(const asn1SccPose& pose);
+            virtual void armBasePoseInput(const asn1SccPose& pose);
 
             /**
             * Send value to input port inputPositions
-            * @param positions: end-effector positions
+            * @param pose: end-effector positions
             */
-            virtual void positionInput(const asn1SccPointSequence & positions);
+            virtual void armEndEffectorPoseInput(const asn1SccPose &pose);
 
             /**
             * Send value to input port inputForces
-            * @param forces: end-effector force measurements
+            * @param wrench: end-effector force measurements
             */
-            virtual void forceInput(const asn1SccDoubleSequence & forces);
+            virtual void armEndEffectorWrenchInput(const asn1SccWrench &wrench);
 
             /**
              * Query value from output port outputPointCloud
@@ -53,10 +55,11 @@ namespace DFPC
 
         protected:
 
-            asn1SccPose inRoverPose;
-            asn1SccPointSequence inPositions;
-            asn1SccDoubleSequence inForces;
-            asn1SccPointcloud outPointCloud;
+            asn1SccPose inArmBasePose;
+            asn1SccPose inArmEndEffectorPose;
+            asn1SccWrench inArmEndEffectorWrench;
+
+            std::unique_ptr<asn1SccPointcloud> outPointCloud;
     };
 }
 

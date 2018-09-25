@@ -8,7 +8,12 @@
  */
 
 #include "ThresholdForce.hpp"
-#include <Errors/Assert.hpp>
+
+#include <Eigen/Dense>
+
+#include "Errors/Assert.hpp"
+#include "Types/CPP/PointCloud.hpp"
+#include "Validators/Number.hpp"
 
 namespace CDFF
 {
@@ -22,6 +27,9 @@ ThresholdForce::ThresholdForce()
 {
     parametersHelper.AddParameter<double>("GeneralParameters", "Threshold", parameters.threshold, DEFAULT_PARAMETERS.threshold);
 	configurationFilePath = "";
+
+	outPointCloud.reset(new asn1SccPointcloud);
+	PointCloudWrapper::Initialize(*outPointCloud);
 }
 
 //=====================================================================================================================
@@ -40,49 +48,40 @@ void ThresholdForce::configure()
 //=====================================================================================================================
 void ThresholdForce::process()
 {
-	// Process data
-	pcl::PointCloud<pcl::PointXYZ>::ConstPtr outPCLPointCloud = CreatePointCloud();
+	Eigen::Affine3d base_to_ee_tf =
+		Eigen::Translation3d(
+				inArmBasePose.pos.arr[0],
+				inArmBasePose.pos.arr[1],
+				inArmBasePose.pos.arr[2])
+		* Eigen::Quaterniond(
+				inArmBasePose.orient.arr[0],
+				inArmBasePose.orient.arr[1],
+				inArmBasePose.orient.arr[2],
+				inArmBasePose.orient.arr[3]);
 
-	// Write data to output port
-	PointCloudWrapper::PointCloudConstPtr tmp = pclPointCloudToPointCloud.Convert(outPCLPointCloud);
-    PointCloudWrapper::Copy(*tmp, outPointCloud);
-}
+	Eigen::Vector3d contact_force(
+		inArmEndEffectorWrench.force.arr[0],
+		inArmEndEffectorWrench.force.arr[1],
+		inArmEndEffectorWrench.force.arr[2]
+		);
 
-//=====================================================================================================================
-pcl::PointCloud<pcl::PointXYZ>::Ptr ThresholdForce::CreatePointCloud()
-{
-	pcl::PointCloud<pcl::PointXYZ>::Ptr new_cloud (new pcl::PointCloud<pcl::PointXYZ>());
-
-	Eigen::Vector3d position(inRoverPose.pos.arr[0], inRoverPose.pos.arr[1], inRoverPose.pos.arr[2]);
-	Eigen::Quaterniond quaternion(inRoverPose.orient.arr[0], inRoverPose.orient.arr[1], inRoverPose.orient.arr[2], inRoverPose.orient.arr[3]);
-	quaternion.normalize();
-	Eigen::Matrix3d rotation = quaternion.toRotationMatrix();
-
-	unsigned int size = inPositions.nCount;
-	for( unsigned int index = 0; index < size; index ++ )
+	if( contact_force.norm() > parameters.threshold )
 	{
-		if( inForces.arr[index] > parameters.threshold )
-		{
-			Eigen::Vector3d point_eigen(inPositions.arr[index].arr[0], inPositions.arr[index].arr[1], inPositions.arr[index].arr[2]);
-			point_eigen += position;
-			point_eigen = rotation * point_eigen;
+		Eigen::Vector3d ee_position =
+			base_to_ee_tf.inverse() * Eigen::Vector3d(
+				inArmEndEffectorPose.pos.arr[0],
+				inArmEndEffectorPose.pos.arr[1],
+				inArmEndEffectorPose.pos.arr[2]
+			);
 
-			pcl::PointXYZ point (point_eigen[0], point_eigen[1], point_eigen[2]) ;
-			new_cloud->points.push_back(point);
-		}
+		PointCloudWrapper::AddPoint(*outPointCloud, ee_position.x(), ee_position.y(), ee_position.z());
 	}
-
-	return new_cloud;
 }
 
 //=====================================================================================================================
 void ThresholdForce::ValidateParameters()
 {
-}
-
-//=====================================================================================================================
-void ThresholdForce::ValidateInputs()
-{
+    Validators::Number::IsPositive(parameters.threshold);
 }
 
 

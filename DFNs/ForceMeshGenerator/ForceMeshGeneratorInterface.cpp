@@ -3,6 +3,7 @@
  * @{
  */
 
+#include <Types/C/Wrench.h>
 #include "ForceMeshGeneratorInterface.hpp"
 
 namespace CDFF
@@ -16,27 +17,27 @@ ForceMeshGeneratorInterface::ForceMeshGeneratorInterface()
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorInterface::roverPoseInput(const asn1SccPose& pose)
+void ForceMeshGeneratorInterface::armBasePoseInput(const asn1SccPose &pose)
 {
-    inRoverPose = pose;
+    inArmBasePose = pose;
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorInterface::positionInput(const asn1SccPointSequence & positions)
+void ForceMeshGeneratorInterface::armEndEffectorPoseInput(const asn1SccPose &pose)
 {
-    inPositions = positions;
+    inArmEndEffectorPose = pose;
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorInterface::forceInput(const asn1SccDoubleSequence & forces)
+void ForceMeshGeneratorInterface::armEndEffectorWrenchInput(const asn1SccWrench wrench)
 {
-    inForces = forces;
+    inArmEndEffectorWrench = wrench;
 }
 
 //=====================================================================================================================
 const asn1SccPointcloud& ForceMeshGeneratorInterface::pointCloudOutput() const
 {
-    return outPointCloud;
+    return *outPointCloud;
 }
 
 }

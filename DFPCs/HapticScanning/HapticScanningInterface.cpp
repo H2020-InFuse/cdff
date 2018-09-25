@@ -12,37 +12,34 @@ namespace DFPC
 
 //=====================================================================================================================
 HapticScanningInterface::HapticScanningInterface()
+    : outPointCloud(new asn1SccPointcloud)
 {
+    PointCloudWrapper::Initialize(*outPointCloud);
 }
 
 //=====================================================================================================================
-HapticScanningInterface::~HapticScanningInterface()
+void HapticScanningInterface::armBasePoseInput(const asn1SccPose& data)
 {
-}
-
-//=====================================================================================================================
-void HapticScanningInterface::roverPoseInput(const asn1SccPose& data)
-{
-    inRoverPose = data;
+    inArmBasePose = data;
 }
 
 
 //=====================================================================================================================
-void HapticScanningInterface::positionInput(const asn1SccPointSequence & positions)
+void HapticScanningInterface::armEndEffectorPoseInput(const asn1SccPose &pose)
 {
-    inPositions = positions;
+    inArmEndEffectorPose = pose;
 }
 
 //=====================================================================================================================
-void HapticScanningInterface::forceInput(const asn1SccDoubleSequence & forces)
+void HapticScanningInterface::armEndEffectorWrenchInput(const asn1SccWrench &wrench)
 {
-    inForces = forces;
+    inArmEndEffectorWrench = wrench;
 }
 
 //=====================================================================================================================
 const asn1SccPointcloud& HapticScanningInterface::pointCloudOutput() const
 {
-    return outPointCloud;
+    return *outPointCloud;
 }
 
 

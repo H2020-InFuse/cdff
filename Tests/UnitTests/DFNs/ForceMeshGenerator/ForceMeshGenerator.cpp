@@ -26,13 +26,19 @@
  *
  * --------------------------------------------------------------------------
  */
+
 #include <catch.hpp>
+#include <boost/cast.hpp>
+
 #include <pcl/io/ply_io.h>
 #include <pcl/kdtree/kdtree_flann.h>
+
 #include <ForceMeshGenerator/ThresholdForce.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Types/C/Sequences.h>
+
 #include "ForceMeshHelperFunctions.hpp"
-#include <Sequences.h>
+
 
 /* --------------------------------------------------------------------------
  *
@@ -40,6 +46,8 @@
  *
  * --------------------------------------------------------------------------
  */
+
+ using namespace CDFF::DFN;
 
 TEST_CASE( "Force Mesh Generator" )
 {
@@ -52,35 +60,40 @@ TEST_CASE( "Force Mesh Generator" )
     std::vector<std::pair<pcl::PointXYZ, double> > points = ForceMeshHelperFunctions::getInputData(cloud);
 
     // Instantiate DFN
-    std::unique_ptr<CDFF::DFN::ForceMeshGenerator::ThresholdForce> generator (new CDFF::DFN::ForceMeshGenerator::ThresholdForce() );
+    std::unique_ptr<ForceMeshGenerator::ThresholdForce> generator (new ForceMeshGenerator::ThresholdForce() );
 
     // Convert the input data
-    asn1SccPointSequence * positions = new asn1SccPointSequence;
-    asn1SccPointSequence_Initialize(positions);
-    asn1SccDoubleSequence * forces = new asn1SccDoubleSequence;
-    asn1SccDoubleSequence_Initialize(forces);
+    std::vector<asn1SccPose> arm_ee_poses(points.size());
+    std::vector<asn1SccWrench> arm_ee_wrenches(points.size());
 
-    auto size = points.size();
-    positions->nCount = size;
-    forces->nCount = size;
-
-    for ( unsigned int index = 0; index < size; index ++ )
+    for ( size_t index = 0; index < points.size(); ++index )
     {
-        positions->arr[index].arr[0] = points[index].first.x;
-        positions->arr[index].arr[1] = points[index].first.y;
-        positions->arr[index].arr[2] = points[index].first.z;
-        forces->arr[index] = points[index].second;
+        asn1SccPose arm_ee_pose;
+        asn1SccPose_Initialize(&arm_ee_pose);
+        arm_ee_pose.pos.arr[0] = points[index].first.x;
+        arm_ee_pose.pos.arr[1] = points[index].first.y;
+        arm_ee_pose.pos.arr[2] = points[index].first.z;
+
+        asn1SccWrench arm_ee_wrench;
+        asn1SccWrench_Initialize(&arm_ee_wrench);
+        arm_ee_wrench.force.arr[0] = points[index].second;
+
+        arm_ee_poses.push_back(arm_ee_pose);
+        arm_ee_wrenches.push_back(arm_ee_wrench);
     }
 
     asn1SccPose rover_pose = ForceMeshHelperFunctions::getRoverPose();
 
-    // Send input data to DFN
-    generator->roverPoseInput(rover_pose);
-    generator->positionInput(*positions);
-    generator->forceInput(*forces);
+    // Process all the input data
+    generator->armBasePoseInput(rover_pose);
 
-    // Run DFN
-    generator->process();
+    for (auto i = 0; i < points.size(); ++i) {
+        generator->armEndEffectorPoseInput(arm_ee_poses[i]);
+        generator->armEndEffectorWrenchInput(arm_ee_wrenches[i]);
+
+        // Run DFN
+        generator->process();
+    }
 
     // Query output data from DFN
     const asn1SccPointcloud& output = generator->pointCloudOutput();
@@ -90,8 +103,6 @@ TEST_CASE( "Force Mesh Generator" )
     {
         CHECK( ForceMeshHelperFunctions::checkPointCloudContainsPoint( out_point, cloud ) );
     }
-
-    delete positions, forces;
 }
 
 /** @} */
