@@ -312,6 +312,19 @@ link_directories(
   "${_DEPENDENCIES_PREFIX}/lib"
 )
 
+#  DLR tracker library
+#
+set(DLR_TRACKER_PREFIX DFPCs/ModelBasedVisualTracking/DLR_tracker) 
+
+include_directories(
+  "${DLR_TRACKER_PREFIX}/includes"
+)
+
+link_directories(
+  "${DLR_TRACKER_PREFIX}/lib"
+)
+
+
 ## CDFF ------------------------------------------------------------------------
 
 # Take into account the headers provided in the following directories
