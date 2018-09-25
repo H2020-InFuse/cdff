@@ -183,7 +183,7 @@ void EdgeModelContourMatching::run()
 void EdgeModelContourMatching::setup()
 	{
 	
-	bool EPOS = true; //Temporary- please remove 
+	bool EPOS = false; //Temporary- please remove 
 	double setup_global_array[_MAX_PARSE_ARRAY];
 	int setup_global_array_counter;
 
