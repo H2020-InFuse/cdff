@@ -12,7 +12,7 @@
 # - Search distance (integer)
 8
 # - Canny thresholds (integer)
-40 60
+60 100
 # - Angular threshold for matching detected edges (Sobel filter) along the normals = maximum deviation
 20.0
 # - Max. LSE iterations (integer)

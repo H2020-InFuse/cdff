@@ -192,7 +192,7 @@ void EdgeModelContourMatching::setup()
         const char* pathTOSpecifications = file_path_string.c_str();
 	std::cout<< " Path to config"<<file_path_string<<std::endl;
 	
-	if(EPOS)
+/*	if(EPOS)
 	{
 		if(parser.parseAllFiles(pathTOSpecifications, "camera_parameters_forrost_epos.txt", "tracker_parameters.txt", "theModel_client_Astriumv4.txt", setup_global_array_counter, 				setup_global_array)!=0)
 			exit(-1);
@@ -200,9 +200,9 @@ void EdgeModelContourMatching::setup()
 		exit(-1);
 		
 		DLRTracker.getObjectModel().changeLocalFrame(3); //EPOS
-	} 
-	else
-	{
+	} */
+	//else
+	//{
 
 	 if(parser.parseAllFiles(pathTOSpecifications, "camera_parameters.txt", "tracker_parameters.txt", "theModel_client.txt", setup_global_array_counter, 				setup_global_array)!=0)
 	  exit(-1);
@@ -227,7 +227,7 @@ void EdgeModelContourMatching::setup()
 
 	 DLRTracker.getObjectModel().changeLocalFrame(1);
 
-	}	
+	//}	
 	
     	allocateImageMemory();
 	

@@ -85,7 +85,7 @@ void EdgeTrackerExecutor::SetOutputFilePath(std::string outputPoseFilePath)
 void EdgeTrackerExecutor::initPose(double* T_guess0)
 	{
 	
-        bool EPOS = true;
+      /*  bool EPOS = false;
 	//EPOS
 	if(EPOS)
 	{
@@ -95,12 +95,12 @@ void EdgeTrackerExecutor::initPose(double* T_guess0)
  				-0.158129, -0.896875, -0.413049, 52.7197, 
 				 0.000000, 0.000000, 0.000000, 1.000000};
 		//T5_00
-/*	 double T_guess0[16]= {0.707102, -0.459395, 0.537552, -7272.01,
+	 double T_guess0[16]= {0.707102, -0.459395, 0.537552, -7272.01,
 				 -0.707111, -0.459356, 0.537574, 91.05, 
 				-3.06058e-05, -0.760229, -0.649655, 54.5402, 
  	 	 	 	0.000000, 0.000000, 0.000000, 1.000000};
 
-*/
+
 	 double TAdapt[16]= {1.0, 0.0, 0.0, 0.0,
 			     0.0 ,1.0, 0.0, 0.0,
 			     0.0, 0.0, 1.0, 0.0,
@@ -110,6 +110,7 @@ void EdgeTrackerExecutor::initPose(double* T_guess0)
 	 }
 	 else
 	 {
+*/
 	  double T_guess00[16]= {0.755756, -0.272366, 0.595525, 213.044047,
 			 	-0.008548, 0.905221, 0.424855, -202.064589,
 			 	-0.654798, -0.326178, 0.681798, 519.789040,
@@ -120,7 +121,7 @@ void EdgeTrackerExecutor::initPose(double* T_guess0)
 			   -0.034899, 0.034878, 0.998782, 0.348889,
 			    0.000000, 0.000000, 0.000000, 1.000000};
 	   matrixProduct444(T_guess00, TAdapt, T_guess0);
-	   }
+	//   }
 	
 
 	}

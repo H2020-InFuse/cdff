@@ -52,7 +52,7 @@ The program has two usages depending on avaialbility of ground truth poses: \n \
     (1b) 2nd parameter is the directory which connsists of the images list file; \n \
     (1c) 3rd parameter is the image list file name (the file contains three blank lines, and then a triple for each line of the form: time pathToLeftImage \n 		pathToRightImage; \n \
     (1d) 4th parameter is the output pose file path; \n \n \
-Example: ./validation_DLR_model_tracker ../../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking/EPOS ../../tests/Data/Images/Sequences ImagesList.txt ../../tests/Data/Images/Sequences  PosesList.txt ../../tests/Data/Images/Sequences/pose.txt \n \n \n \
+Example: ./validation_DLR_model_tracker ../../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking ../../tests/Data/Images/Sequences ImagesList.txt ../../tests/Data/Images/Sequences/pose.txt \n \n \n \
 (2) With groundtruth. In this case the parameters are defined as: \n \
     (1a) 1st parameter is the configuration file path of the dfpc implementation; \n \
     (1b) 2nd parameter is the directory which connsists of the images list file; \n \

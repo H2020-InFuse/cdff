@@ -11,15 +11,13 @@
 #   - Filename (containing shape description)
 ############################
 # ALTERNATIVE LOCAL FRAMES
-4
+3
 # GRASPING POINT (RING HANDLE - GRAY)
 -1 0 0 -3 0 0.5 0.8660254 -450.3332 0 0.8660254 -0.5 260
 # GRASPING POINT (RING HANDLE - BLACK)
 -1 0 0 -3 0 1 0 0 0 0 -1 520
 # GRASPING POINT (RING HANDLE - 2nd GRAY)
 -1 0 0 -3 0 0.5 -0.8660254 450.3332 0 -0.8660254 -0.5 260
-# 
--1 0 0 -320 0 -1 0 0 0 0 1 20
 ############################
 # N. of bodies
 19
