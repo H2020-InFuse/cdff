@@ -27,8 +27,8 @@ namespace DFN
             PrimitiveMatchingExecutor(PrimitiveMatchingInterface* dfn);
             ~PrimitiveMatchingExecutor();
 
-	    void Execute(FrameWrapper::FrameConstPtr inputFrame, const BaseTypesWrapper::asn1SccT_StringArray& inputPrimitiveArray, BaseTypesWrapper::asn1SccT_StringArray outputPrimitiveArray);
-	    void Execute(const FrameWrapper::Frame& inputFrame, const BaseTypesWrapper::asn1SccT_StringArray& inputPrimitiveArray, BaseTypesWrapper::asn1SccT_StringArray outputPrimitiveArray);
+	    void Execute(FrameWrapper::FrameConstPtr inputFrame, const BaseTypesWrapper::asn1SccT_StringArray& inputPrimitiveArray, BaseTypesWrapper::asn1SccT_StringArray& outputPrimitiveArray);
+	    void Execute(const FrameWrapper::Frame& inputFrame, const BaseTypesWrapper::asn1SccT_StringArray& inputPrimitiveArray, BaseTypesWrapper::asn1SccT_StringArray& outputPrimitiveArray);
 
         private:
 
