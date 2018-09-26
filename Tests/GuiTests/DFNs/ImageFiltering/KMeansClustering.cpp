@@ -11,7 +11,7 @@
 #include <opencv2/core.hpp>
 #include <iostream>
 
-using namespace CDFF::DFN;
+using namespace CDFF::DFN::ImageFiltering;
 using namespace FrameWrapper;
 using namespace Array3DWrapper;
 using namespace BaseTypesWrapper;
