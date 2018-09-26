@@ -182,54 +182,25 @@ void EdgeModelContourMatching::run()
 
 void EdgeModelContourMatching::setup()
 	{
-	
-	bool EPOS = false; //Temporary- please remove 
+		
 	double setup_global_array[_MAX_PARSE_ARRAY];
 	int setup_global_array_counter;
 
 	std::string file_path_string = configurator.configurePath(configurationFilePath);
 
         const char* pathTOSpecifications = file_path_string.c_str();
-	std::cout<< " Path to config"<<file_path_string<<std::endl;
+
+	std::cout<< " Path to config file: "<<file_path_string<<std::endl;
 	
-/*	if(EPOS)
-	{
-		if(parser.parseAllFiles(pathTOSpecifications, "camera_parameters_forrost_epos.txt", "tracker_parameters.txt", "theModel_client_Astriumv4.txt", setup_global_array_counter, 				setup_global_array)!=0)
-			exit(-1);
-		if( DLRTracker.setupFromGlobalArray(setup_global_array_counter, setup_global_array)!=0)
-		exit(-1);
-		
-		DLRTracker.getObjectModel().changeLocalFrame(3); //EPOS
-	} */
-	//else
-	//{
 
 	 if(parser.parseAllFiles(pathTOSpecifications, "camera_parameters.txt", "tracker_parameters.txt", "theModel_client.txt", setup_global_array_counter, 				setup_global_array)!=0)
 	  exit(-1);
 	
 	 if( DLRTracker.setupFromGlobalArray(setup_global_array_counter, setup_global_array)!=0)
 	  exit(-1);
-
-	 for(int bb = 3; bb <= 8; bb++) 
-	  DLRTracker.getObjectModel().setActiveBody(bb, 0);
-
-	 DLRTracker.getObjectModel().setActiveBody(12, 1); 
-
-	 for(int bb = 13; bb < 19; bb++)
-	  DLRTracker.getObjectModel().setActiveBody(bb, 0);
-
-	 DLRTracker.getObjectModel().setActiveBody(13, 1);
-	 DLRTracker.getObjectModel().setActiveBody(14, 1);
-	 DLRTracker.getObjectModel().setActiveBody(15, 1);
-	 DLRTracker.getObjectModel().setActiveBody(16, 1);
-	 DLRTracker.getObjectModel().setActiveBody(17, 1);
-	 DLRTracker.getObjectModel().setActiveBody(18, 0);
-
-	 DLRTracker.getObjectModel().changeLocalFrame(1);
-
-	//}	
 	
-    	allocateImageMemory();
+	 DLRTracker.getObjectModel().changeLocalFrame(0);
+      	 allocateImageMemory();
 	
 	dumpMemoryAlloc();
 	 

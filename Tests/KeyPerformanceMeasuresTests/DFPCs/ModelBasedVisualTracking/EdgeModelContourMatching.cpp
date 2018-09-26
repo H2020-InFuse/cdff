@@ -95,7 +95,7 @@ int maindfpcTest(int argc, char* argv[], ModelBasedVisualTrackingInterface* dfpc
 
 	
 	EdgeTrackerExecutor* myexecutor = new EdgeTrackerExecutor;
-	myexecutor->dt_images = 1; //sampling time
+	myexecutor->dt_images = 0.33; //sampling time
 	//memcpy(myexecutor->T_guess0, poseFromDetector, 16*sizeof(double));
 	myexecutor->SetDfpc(configurationFilePath, dfpc);
 

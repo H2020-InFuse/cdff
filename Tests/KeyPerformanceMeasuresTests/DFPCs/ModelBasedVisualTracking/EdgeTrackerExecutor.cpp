@@ -84,46 +84,18 @@ void EdgeTrackerExecutor::SetOutputFilePath(std::string outputPoseFilePath)
 
 void EdgeTrackerExecutor::initPose(double* T_guess0)
 	{
-	
-      /*  bool EPOS = false;
-	//EPOS
-	if(EPOS)
-	{
-	//T4_45
-	  double T_guess00[16]= {0.984813, -0.173617, -3.39288e-05, -6482.22,
-				-0.0716821, -0.406782, 0.910709, 140.687,
- 				-0.158129, -0.896875, -0.413049, 52.7197, 
-				 0.000000, 0.000000, 0.000000, 1.000000};
-		//T5_00
-	 double T_guess0[16]= {0.707102, -0.459395, 0.537552, -7272.01,
-				 -0.707111, -0.459356, 0.537574, 91.05, 
-				-3.06058e-05, -0.760229, -0.649655, 54.5402, 
- 	 	 	 	0.000000, 0.000000, 0.000000, 1.000000};
-
-
-	 double TAdapt[16]= {1.0, 0.0, 0.0, 0.0,
-			     0.0 ,1.0, 0.0, 0.0,
-			     0.0, 0.0, 1.0, 0.0,
-			     0.0, 0.0, 0.0, 1.0};
-	  
-	  matrixProduct444(T_guess00, TAdapt, T_guess0);
-	 }
-	 else
-	 {
-*/
-	  double T_guess00[16]= {0.755756, -0.272366, 0.595525, 213.044047,
-			 	-0.008548, 0.905221, 0.424855, -202.064589,
-			 	-0.654798, -0.326178, 0.681798, 519.789040,
+	 // e.g initial pose for InFuse sequence 20180913_163111
+	double T_guess00[16]= {0.014369, -0.997374, 0.070982, 1207.778952,
+				 0.433550, 0.070184, 0.898392, 296.516388,
+				 -0.901015, 0.017865, 0.433420, 1202.125120,
 	      	 	 	0.000000, 0.000000, 0.000000, 1.000000};
 	 
-	   double TAdapt[16]= {0.998782, 0.036096, 0.033639, 4.999887,
-			   -0.034878 ,0.998739, -0.036096, 9.473143,
-			   -0.034899, 0.034878, 0.998782, 0.348889,
-			    0.000000, 0.000000, 0.000000, 1.000000};
-	   matrixProduct444(T_guess00, TAdapt, T_guess0);
-	//   }
+	 double TAdapt[16]= {1.0, 0.0, 0.0, 0.0,
+			    0.0 ,1.0, 0.0, 0.0,
+			    0.0, 0.0, 1.0, 0.0,
+			    0.0, 0.0, 0.0, 1.0};
+	 matrixProduct444(T_guess00, TAdapt, T_guess0);
 	
-
 	}
 
 void EdgeTrackerExecutor::initVelocity(double* velocity0)
@@ -239,18 +211,18 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	    
 	   // dfpc->doInitInput(true);	
 	 }		
-	else
-	{
-	 if(imageIndex>0) 
+	 else
 	 {
-	  //memcpy(T_guess0,T_est,16*sizeof(double));
-	  //memcpy(vel0,vel_est,6*sizeof(double));
-	  dfpc->initInput(dfpc->stateOutput()); 
-	  //time0 = time_images;
-	  dfpc->initTimeInput(imageAcquisitionTime); 
+	  if(imageIndex>0) 
+	  {
+	   //memcpy(T_guess0,T_est,16*sizeof(double));
+	   //memcpy(vel0,vel_est,6*sizeof(double));
+	   dfpc->initInput(dfpc->stateOutput()); 
+	   //time0 = time_images;
+	   dfpc->initTimeInput(imageAcquisitionTime); 
+	   }
+          std::cout << "########## TRACKING: SUCCESS " << std::endl;
 	 }
-         std::cout << "########## TRACKING: SUCCESS " << std::endl;
-	}
 
 	//----output--
 	outputPose = dfpc->stateOutput();
