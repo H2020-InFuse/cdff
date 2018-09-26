@@ -1,4 +1,13 @@
 add_executable(
+    validation_DLR_model_tracker
+    ModelBasedVisualTracking/EdgeModelContourMatching.cpp
+    ModelBasedVisualTracking/EdgeTrackerExecutor.cpp
+)
+target_link_libraries(
+	validation_DLR_model_tracker
+	dfpc_implementation_edge_model_contour_matching converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator
+)
+add_executable(
     quality_registration_from_stereo
     Reconstruction3D/RegistrationFromStereo.cpp
     Reconstruction3D/ReconstructionExecutor.cpp
@@ -67,4 +76,5 @@ target_link_libraries(
 	quality_reconstruction_from_motion
 	reconstruction_from_motion converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator
 )
+
 
