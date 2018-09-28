@@ -1,7 +1,7 @@
 function install4infuse_base_types {
 
 if [[ ! -n $(find $PKG_DIR -name 'base_types*') ]]; then
-	fetchgit_function base_types master https://github.com/rock-core/base-types.git
+	fetchgit_function base_types master https://github.com/rock-core/base-types.git 70b7b2d78cdcae591866469f2a935d5e3779d302
 
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
