@@ -6,7 +6,6 @@ if [[ ! -n $(find $PKG_DIR -name 'base_types*') ]]; then
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
 	    -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
-	    -D WITH_IPP=OFF -D CMAKE_CXX_FLAGS:STRING=-fPIC -D BUILD_SHARED_LIBS=ON \
 	    -D BINDINGS_RUBY=OFF \
 	    $SOURCE_DIR/base_types
 
