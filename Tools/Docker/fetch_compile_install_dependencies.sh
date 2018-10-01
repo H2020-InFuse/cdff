@@ -42,6 +42,7 @@ Configuration:
 			    can be used multiple times (-s LIB1 -s LIB2)
                             [LIB: cmake boost eigen flann qhull tinyxml2
 			    yamlccp vtk opencv pcl]
+  -f                        Full dependencies installation (required for Central DPM)
 
 Installation directories:
   -b DIR            	    Build all libraries in DIR
@@ -178,18 +179,20 @@ function build_all_function {
  InstallersToRUN+=("opencv")
  InstallersToRUN+=("vtk")
  InstallersToRUN+=("pcl")
- InstallersToRUN+=("console_bridge")
- InstallersToRUN+=("poco")
- InstallersToRUN+=("poco_vendor")
- InstallersToRUN+=("class_loader")
- InstallersToRUN+=("base_cmake")
- InstallersToRUN+=("tools_plugin_manager")
- InstallersToRUN+=("base_logging")
- InstallersToRUN+=("sisl")
- InstallersToRUN+=("base_types")
- InstallersToRUN+=("base_numeric")
- InstallersToRUN+=("base_boost_serialization")
- InstallersToRUN+=("envire_envire_core")
+ if [[ "$FULL_DEPS" = true ]]; then
+  InstallersToRUN+=("console_bridge")
+  InstallersToRUN+=("poco")
+  InstallersToRUN+=("poco_vendor")
+  InstallersToRUN+=("class_loader")
+  InstallersToRUN+=("base_cmake")
+  InstallersToRUN+=("tools_plugin_manager")
+  InstallersToRUN+=("base_logging")
+  InstallersToRUN+=("sisl")
+  InstallersToRUN+=("base_types")
+  InstallersToRUN+=("base_numeric")
+  InstallersToRUN+=("base_boost_serialization")
+  InstallersToRUN+=("envire_envire_core")
+ fi
   #for i in "${!infuse_dependencies_map[@]}"
   #do
   #  InstallersToRUN+=($i)
@@ -217,7 +220,7 @@ find_installers
 # A POSIX variable
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 # get options
-while getopts ":b:i:p:s:c" opt; do
+while getopts ":b:i:p:s:c:f" opt; do
     case "$opt" in
     h|\?)
         show_help
@@ -239,14 +242,19 @@ while getopts ":b:i:p:s:c" opt; do
     s)
   InstallersToRUN+=($OPTARG)
   	    ;;
+    f)
+      FULL_DEPS=true
+      echo "Full Installation: The full set of dependencies will be installed"
+      ;;
     :)
       echo "Option -$OPTARG requires an argument." >&2
       exit 1
       ;;
+
     esac
 done
 
-if [ $OPTIND -eq 1 ]; then
+if [[ ( $OPTIND -eq 1 ) || ( ($OPTIND -eq 2 ) && ( "$FULL_DEPS" = true ) ) ]]  ; then
   # Check if `checkinstall` is installed. If it is installed we need superuser
   # privileges to complete the build & install for each package even if we're
   # not installing the packages globally.
