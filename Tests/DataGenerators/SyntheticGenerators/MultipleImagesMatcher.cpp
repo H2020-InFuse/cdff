@@ -62,12 +62,12 @@ namespace DataGenerators
  * --------------------------------------------------------------------------
  */
 MultipleImagesMatcher::MultipleImagesMatcher(std::vector<std::string> inputImageFilePathList, std::string outputCorrespondencesFilePath) :
-	inputImageFilePathList(inputImageFilePathList), 
 	imageZoomingList( inputImageFilePathList.size() ),
 	originalImageList( inputImageFilePathList.size() ),
 	selectionList( inputImageFilePathList.size() ),
-	correspondenceVectorList( POSSIBLE_UNORDERED_PAIRS(inputImageFilePathList) )
-	{
+	correspondenceVectorList( POSSIBLE_UNORDERED_PAIRS(inputImageFilePathList) ),
+	inputImageFilePathList(inputImageFilePathList)
+{
 	this->outputCorrespondencesFilePath = outputCorrespondencesFilePath;
 	
 	for(int imageIndex = 0; imageIndex < inputImageFilePathList.size(); imageIndex++)

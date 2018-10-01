@@ -47,7 +47,7 @@ Transform3DToMatConverter::~Transform3DToMatConverter()
 
 	}
 
-cv::Mat Transform3DToMatConverter::Convert(const PoseWrapper::Transform3DConstPtr transform)
+const cv::Mat Transform3DToMatConverter::Convert(const PoseWrapper::Transform3DConstPtr& transform)
 	MOCK_METHOD(Converters::Transform3DToMatConverter, Convert, cv::Mat, (transform) )
 	
 }
