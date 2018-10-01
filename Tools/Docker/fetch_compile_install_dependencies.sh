@@ -179,6 +179,7 @@ function build_all_function {
  InstallersToRUN+=("opencv")
  InstallersToRUN+=("vtk")
  InstallersToRUN+=("pcl")
+ if [[ "$ENVIRE_FULL" = true ]]; then
   InstallersToRUN+=("console_bridge")
   InstallersToRUN+=("poco")
   InstallersToRUN+=("poco_vendor")
@@ -190,7 +191,6 @@ function build_all_function {
   InstallersToRUN+=("base_types")
   InstallersToRUN+=("base_numeric")
   InstallersToRUN+=("base_boost_serialization")
- if [[ "$ENVIRE_FULL" = true ]]; then
   InstallersToRUN+=("envire_envire_core")
  fi
   #for i in "${!infuse_dependencies_map[@]}"
