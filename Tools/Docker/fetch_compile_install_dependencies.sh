@@ -179,7 +179,6 @@ function build_all_function {
  InstallersToRUN+=("opencv")
  InstallersToRUN+=("vtk")
  InstallersToRUN+=("pcl")
- if [[ "$FULL_DEPS" = true ]]; then
   InstallersToRUN+=("console_bridge")
   InstallersToRUN+=("poco")
   InstallersToRUN+=("poco_vendor")
@@ -191,6 +190,7 @@ function build_all_function {
   InstallersToRUN+=("base_types")
   InstallersToRUN+=("base_numeric")
   InstallersToRUN+=("base_boost_serialization")
+ if [[ "$ENVIRE_FULL" = true ]]; then
   InstallersToRUN+=("envire_envire_core")
  fi
   #for i in "${!infuse_dependencies_map[@]}"
@@ -220,7 +220,7 @@ find_installers
 # A POSIX variable
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 # get options
-while getopts ":b:i:p:s:c:f" opt; do
+while getopts ":b:i:p:s:c:e" opt; do
     case "$opt" in
     h|\?)
         show_help
@@ -242,9 +242,9 @@ while getopts ":b:i:p:s:c:f" opt; do
     s)
   InstallersToRUN+=($OPTARG)
   	    ;;
-    f)
-      FULL_DEPS=true
-      echo "Full Installation: The full set of dependencies will be installed"
+    e)
+      ENVIRE_FULL=true
+      echo "Envire will be installed in full version, along with all its dependencies."
       ;;
     :)
       echo "Option -$OPTARG requires an argument." >&2
@@ -254,7 +254,7 @@ while getopts ":b:i:p:s:c:f" opt; do
     esac
 done
 
-if [[ ( $OPTIND -eq 1 ) || ( ($OPTIND -eq 2 ) && ( "$FULL_DEPS" = true ) ) ]]  ; then
+if [[ ( $OPTIND -eq 1 ) || ( ($OPTIND -eq 2 ) && ( "$ENVIRE_FULL" = true ) ) ]]  ; then
   # Check if `checkinstall` is installed. If it is installed we need superuser
   # privileges to complete the build & install for each package even if we're
   # not installing the packages globally.
