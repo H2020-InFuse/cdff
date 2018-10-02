@@ -32,10 +32,10 @@ namespace DFN
 
             VoxelizationExecutor(VoxelizationInterface* dfn);
 
-            void Execute(FrameWrapper::FrameConstPtr inputFrame, asn1SccT_Octree & outputOctree);
-            void Execute(FrameWrapper::FrameConstPtr inputFrame, const asn1SccT_Octree * outputOctree);
-            void Execute(const FrameWrapper::Frame& inputFrame, const asn1SccT_Octree * outputOctree);
-            void Execute(const FrameWrapper::Frame& inputFrame, asn1SccT_Octree& outputOctree);
+            void Execute(FrameWrapper::FrameConstPtr inputFrame, asn1SccOctree & outputOctree);
+            void Execute(FrameWrapper::FrameConstPtr inputFrame, const asn1SccOctree * outputOctree);
+            void Execute(const FrameWrapper::Frame& inputFrame, const asn1SccOctree * outputOctree);
+            void Execute(const FrameWrapper::Frame& inputFrame, asn1SccOctree& outputOctree);
 
         private:
 

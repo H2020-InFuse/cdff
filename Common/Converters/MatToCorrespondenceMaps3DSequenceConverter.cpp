@@ -49,7 +49,6 @@ CorrespondenceMaps3DSequenceConstPtr MatToCorrespondenceMaps3DSequenceConverter:
 	ASSERT( measurementMatrix.rows % 2 == 0, "MatToCorrespondenceMaps3DSequenceConverter error, measumentMatrix row number should be even");
 
 	int numberOfClouds = measurementMatrix.rows / 2;
-	int numberOfPoints = measurementMatrix.cols;
 	ASSERT(numberOfClouds <= MAXIMUM_NUMBER_OF_CLOUDS, "MatToCorrespondenceMaps3DSequenceConverter error, number of clouds is too large");
 
 	for(int sourceCloudIndex = 0; sourceCloudIndex < numberOfClouds; sourceCloudIndex++)

@@ -193,8 +193,14 @@ void AdjustmentFromStereo::run()
 
 		if (GetNumberOfPoints(outPointCloud) > 0)
 			{
-			float minMax[6] = { GetXCoordinate(outPointCloud, 0), GetXCoordinate(outPointCloud, 0), GetYCoordinate(outPointCloud, 0), 
-				GetYCoordinate(outPointCloud, 0), GetZCoordinate(outPointCloud, 0), GetZCoordinate(outPointCloud, 0)};
+			double minMax[6] = {
+			        GetXCoordinate(outPointCloud, 0),
+			        GetXCoordinate(outPointCloud, 0),
+			        GetYCoordinate(outPointCloud, 0),
+                    GetYCoordinate(outPointCloud, 0),
+                    GetZCoordinate(outPointCloud, 0),
+                    GetZCoordinate(outPointCloud, 0)
+			};
 			int numberOfPoints = GetNumberOfPoints(outPointCloud);
 			for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 				{

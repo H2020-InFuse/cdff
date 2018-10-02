@@ -9,7 +9,7 @@
 #include <Converters/MatToFrameConverter.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 
-#include "Validators.hpp"
+#include "Validators/Frame.hpp"
 #include "BackgroundExtraction.hpp"
 
 using namespace FrameWrapper;

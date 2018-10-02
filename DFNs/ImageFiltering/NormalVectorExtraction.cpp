@@ -5,9 +5,10 @@
 #include "NormalVectorExtraction.hpp"
 
 #include <opencv2/core.hpp>
+
 #include <Errors/Assert.hpp>
 #include <Types/C/Frame.h>
-#include "Validators.hpp"
+#include "Validators/Frame.hpp"
 
 namespace CDFF {
     namespace DFN{

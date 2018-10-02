@@ -5,11 +5,12 @@
 #ifndef CDFF_NORMALVECTOREXTRACTION_H
 #define CDFF_NORMALVECTOREXTRACTION_H
 
+#include "ImageFilteringInterface.hpp"
+
 #include <cmath>
 #include <iostream>
 
-#include <Types/CPP/Frame.hpp>
-#include "ImageFilteringInterface.hpp"
+#include "Types/CPP/Frame.hpp"
 
 namespace CDFF {
     namespace DFN {
