@@ -10,7 +10,6 @@
 #include <Frame.h>
 #include <Sequences.h>
 
-
 namespace CDFF
 {
 namespace DFN
@@ -26,36 +25,37 @@ namespace DFN
             virtual ~PrimitiveMatchingInterface();
 
             /**
-             * Send value to input port "inputImage"
-             * @param image: 2D image captured by a camera with the ROI already segmented
+             * Send value to input port "image"
+             * @param image
+             *     2D image captured by a camera
              */
-            virtual void frameInput(const asn1SccFrame& data);
+            virtual void imageInput(const asn1SccFrame& data);
+            /**
+             * Send value to input port "primitives"
+             * @param primitives
+             *     string array with the names of the primitives to be searched for in the input image
+             */
+            virtual void primitivesInput(const asn1SccStringSequence& data);
 
             /**
-            * Send value to input port "inputPrimitives"
-            * @return string array: array of strings with the primitives to be matched
-            */
-            virtual void primitiveSequenceInput(const asn1SccStringSequence & data);
-
-             /**
-             * Query value from output port "outputPrimitives"
-             * @return string array: array of strings with the input primitives ordered by matching probabilities
+             * Query value from output port "image"
+             * @return image
+             *     same image, with the contour that was matched to a primitive
              */
-            virtual const asn1SccStringSequence & primitivesMatchedOutput() const;
-
+            virtual const asn1SccFrame& imageOutput() const;
             /**
-            * Query value from output port "outputImage"
-            * @return image: input image with the matched contour
-            */
-            virtual const asn1SccFrame& imageWithMatchedContourOutput() const;
+             * Query value from output port "primitives"
+             * @return primitives
+             *     string array with the names of the primitives ordered by matching probability
+             */
+            virtual const asn1SccStringSequence& primitivesOutput() const;
 
-    protected:
+        protected:
 
             asn1SccFrame inImage;
-            asn1SccStringSequence inPrimitiveSequence;
-            asn1SccFrame outImageWithMatchedContour;
-            asn1SccStringSequence outPrimitiveSequenceMatched;
-
+            asn1SccStringSequence inPrimitives;
+            asn1SccFrame outImage;
+            asn1SccStringSequence outPrimitives;
     };
 }
 }

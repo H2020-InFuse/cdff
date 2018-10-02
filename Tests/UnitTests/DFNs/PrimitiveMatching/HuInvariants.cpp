@@ -71,15 +71,15 @@ TEST_CASE( "HuInvariants - check rotated star is correctly matched" )
 
     std::vector<std::string> string_array{"star", "circle"};
     asn1SccStringSequence primitive_array = StdVectorOfStringsToStringSequenceConverter().Convert(string_array);
-    hu_invariants->primitiveSequenceInput(primitive_array);
+    hu_invariants->primitivesInput(primitive_array);
 
     // Send input data to DFN
-    hu_invariants->frameInput(*input_image);
+    hu_invariants->imageInput(*input_image);
 
     // Run DFN
     hu_invariants->process();
 
-    std::vector<std::string> ordered_primitives = Converters::StringSequenceToStdVectorOfStringsConverter().Convert(hu_invariants->primitivesMatchedOutput());
+    std::vector<std::string> ordered_primitives = Converters::StringSequenceToStdVectorOfStringsConverter().Convert(hu_invariants->primitivesOutput());
     CHECK( ordered_primitives[0] == "star");
 }
 
@@ -100,16 +100,16 @@ TEST_CASE( "HuInvariants - check parallelogram is correctly matched" )
     FrameConstPtr input_image = converter.Convert(cv_image);
 
     // Send input data to DFN
-    hu_invariants->frameInput(*input_image);
+    hu_invariants->imageInput(*input_image);
 
     std::vector<std::string> string_array{"rectangle", "circle"};
     asn1SccStringSequence primitive_array = StdVectorOfStringsToStringSequenceConverter().Convert(string_array);
-    hu_invariants->primitiveSequenceInput(primitive_array);
+    hu_invariants->primitivesInput(primitive_array);
 
     // Run DFN
     hu_invariants->process();
 
-    std::vector<std::string> ordered_primitives = Converters::StringSequenceToStdVectorOfStringsConverter().Convert(hu_invariants->primitivesMatchedOutput());
+    std::vector<std::string> ordered_primitives = Converters::StringSequenceToStdVectorOfStringsConverter().Convert(hu_invariants->primitivesOutput());
     CHECK( ordered_primitives[0] == "rectangle");
 }
 
@@ -130,16 +130,16 @@ TEST_CASE( "HuInvariants - check star is correctly matched" )
     FrameConstPtr input_image = converter.Convert(cv_image);
 
     // Send input data to DFN
-    hu_invariants->frameInput(*input_image);
+    hu_invariants->imageInput(*input_image);
 
     std::vector<std::string> string_array{"star", "circle"};
     asn1SccStringSequence primitive_array = StdVectorOfStringsToStringSequenceConverter().Convert(string_array);
-    hu_invariants->primitiveSequenceInput(primitive_array);
+    hu_invariants->primitivesInput(primitive_array);
 
     // Run DFN
     hu_invariants->process();
 
-    std::vector<std::string> ordered_primitives = Converters::StringSequenceToStdVectorOfStringsConverter().Convert(hu_invariants->primitivesMatchedOutput());
+    std::vector<std::string> ordered_primitives = Converters::StringSequenceToStdVectorOfStringsConverter().Convert(hu_invariants->primitivesOutput());
     CHECK( ordered_primitives[0] == "star");
 }
 

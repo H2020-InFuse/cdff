@@ -35,11 +35,11 @@ void PrimitiveMatchingExecutor::Execute(FrameConstPtr inputFrame, const asn1SccS
 //=====================================================================================================================
 void PrimitiveMatchingExecutor::Execute(const Frame& inputFrame, const asn1SccStringSequence& inputPrimitiveSequence, asn1SccStringSequence outputPrimitiveSequence)
 {
-	dfn->frameInput(inputFrame);
-	dfn->primitiveSequenceInput(inputPrimitiveSequence);
+	dfn->imageInput(inputFrame);
+	dfn->primitivesInput(inputPrimitiveSequence);
 	dfn->process();
 
-	outputPrimitiveSequence = dfn->primitivesMatchedOutput();
+	outputPrimitiveSequence = dfn->primitivesOutput();
 }
 
 }

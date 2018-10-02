@@ -10,38 +10,32 @@ namespace CDFF
 namespace DFN
 {
 
-//=====================================================================================================================
 PrimitiveMatchingInterface::PrimitiveMatchingInterface()
 {
 }
 
-//=====================================================================================================================
 PrimitiveMatchingInterface::~PrimitiveMatchingInterface()
 {
 }
 
-//=====================================================================================================================
-void PrimitiveMatchingInterface::frameInput(const asn1SccFrame& data)
+void PrimitiveMatchingInterface::imageInput(const asn1SccFrame& data)
 {
     inImage = data;
 }
 
-//=====================================================================================================================
-void PrimitiveMatchingInterface::primitiveSequenceInput(const asn1SccStringSequence& data)
+void PrimitiveMatchingInterface::primitivesInput(const asn1SccStringSequence& data)
 {
-    inPrimitiveSequence = data;
+    inPrimitives = data;
 }
 
-//=====================================================================================================================
-const asn1SccStringSequence & PrimitiveMatchingInterface::primitivesMatchedOutput() const
+const asn1SccFrame& PrimitiveMatchingInterface::imageOutput() const
 {
-    return outPrimitiveSequenceMatched;
+    return outImage;
 }
 
-//=====================================================================================================================
-const asn1SccFrame& PrimitiveMatchingInterface::imageWithMatchedContourOutput() const
+const asn1SccStringSequence& PrimitiveMatchingInterface::primitivesOutput() const
 {
-    return outImageWithMatchedContour;
+    return outPrimitives;
 }
 
 }
