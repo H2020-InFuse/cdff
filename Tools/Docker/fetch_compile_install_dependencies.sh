@@ -42,7 +42,7 @@ Configuration:
 			    can be used multiple times (-s LIB1 -s LIB2)
                             [LIB: cmake boost eigen flann qhull tinyxml2
 			    yamlccp vtk opencv pcl]
-  -f                        Full dependencies installation (required for Central DPM)
+  -e                        Full dependencies installation (required for Central DPM)
 
 Installation directories:
   -b DIR            	    Build all libraries in DIR
