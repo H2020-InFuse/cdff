@@ -188,14 +188,13 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 
 	     		
 	if(imageIndex==0)
-	{
+	  dfpc->doInitInput(true);
 	//useInitialGuess = true;
-	dfpc->doInitInput(true);
-	}
+	
 	
 	if(imageIndex>0)
+	  dfpc->doInitInput(false);
 	 //useInitialGuess = false;
-	 dfpc->doInitInput(false);
 		
 	clock_t startTime = clock();
 
@@ -207,9 +206,8 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	outputSuccess = dfpc->successOutput();
 	if(!outputSuccess)
 	 {
-	    std::cout << "########## TRACKING: TARGET LOST " << outputSuccess << std::endl;
-	    
-	   // dfpc->doInitInput(true);	
+	    std::cout << "########## TRACKING-FRAME "<<imageIndex<<": TARGET LOST " << outputSuccess << std::endl;
+	    // dfpc->doInitInput(true);	
 	 }		
 	 else
 	 {
@@ -221,20 +219,25 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	   //time0 = time_images;
 	   dfpc->initTimeInput(imageAcquisitionTime); 
 	   }
-          std::cout << "########## TRACKING: SUCCESS " << std::endl;
+          std::cout << "########## TRACKING-FRAME "<<imageIndex<<": SUCCESS " << std::endl;
 	 }
 
 	//----output--
 	outputPose = dfpc->stateOutput();
+
 	if(!outputSuccess)
-		setState(outputPose, 0.0);
+	   setState(outputPose, 0.0);
+
 	//Log poses to file
 	writer.open(outputPoseFilePath.c_str(), std::ios::out | std::ios::app);
+
 	if(logGroundTruthError)
 	  SaveOutputPose(writer, T_true);
 	else
 	 SaveOutputPose(writer);
+
 	writer.close();
+
 	successCounter = (outputSuccess ? successCounter+1 : successCounter);
 	std::cout<<"Processing time (ms): "<<processingTime<<std::endl;
        }
@@ -253,7 +256,7 @@ void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* T_guess0
 	ConvertAsnStateToState(outputPose, rotTrasl,velocity);
 	 
     	// Log to print output
-	std::cout<<" output states: [ rx  ry  rz  tx  ty  tz  wx  wy  wz  vx  vy  vz] \n";
+	std::cout<<" Output states: [ rx  ry  rz  tx  ty  tz  wx  wy  wz  vx  vy  vz] \n";
 	 for (int i = 0;i<6;i++)
 	   std::cout<<rotTrasl[i]<<" ";
 	 for (int i = 0;i<6;i++)

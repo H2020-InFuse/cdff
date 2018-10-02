@@ -15,8 +15,8 @@
 # Docking port
 -1 0 0 -320 0 -1 0 0 0 0 1 20
 ############################
-# N. of bodies was 19
-13
+# N. of bodies
+10
 ############################
 # Main body: polyhedron, nonflat, crease edges (~30 degrees)
 P
@@ -35,37 +35,6 @@ P
 0
 89
 ClientModel/Big_cylinder.txt
-############################
-############################
-# Handle 1
-############################
-############################
-#
-############################
-# Cylinder 1: nonflat, only silhouette
-P
-0
--1
-ClientModel/Handle1_cyl1.txt
-############################
-# Cylinder 2: nonflat, only silhouette
-P
-0
--1
-ClientModel/Handle1_cyl2.txt
-############################
-# Bar: nonflat, crease edges (90 deg)
-P
-0
-89
-ClientModel/Handle1_bar.txt
-#
-############################
-############################
-# Handle 2
-############################
-############################
-#
 ############################
 # Cylinder 1: nonflat, only silhouette
 P

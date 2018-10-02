@@ -171,7 +171,7 @@ void EdgeModelContourMatching::run()
 		 
 
 	char c;
-	c = waitKey(100);
+	c = waitKey(10);
 	if(c==27)
 	 exit(EXIT_SUCCESS);
 #endif
