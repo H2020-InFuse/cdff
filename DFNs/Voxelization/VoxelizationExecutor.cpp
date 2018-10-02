@@ -35,7 +35,7 @@ void VoxelizationExecutor::Execute(FrameWrapper::FrameConstPtr inputFrame, const
 void VoxelizationExecutor::Execute(const FrameWrapper::Frame& inputFrame, const asn1SccOctree * outputOctree)
 {
     ASSERT( outputOctree == NULL, "VoxelizationExecutor, Calling instance creation executor with a non-NULL pointer");
-    dfn->frameInput(inputFrame);
+    dfn->depthInput(inputFrame);
     dfn->process();
     outputOctree = & ( dfn->octreeOutput() );
 }
@@ -43,7 +43,7 @@ void VoxelizationExecutor::Execute(const FrameWrapper::Frame& inputFrame, const 
 //=====================================================================================================================
 void VoxelizationExecutor::Execute(const FrameWrapper::Frame& inputFrame, asn1SccOctree& outputOctree)
 {
-    dfn->frameInput(inputFrame);
+    dfn->depthInput(inputFrame);
     dfn->process();
     outputOctree = dfn->octreeOutput();
 }

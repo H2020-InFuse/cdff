@@ -7,9 +7,8 @@
 #define VOXELIZATION_VOXELIZATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Frame.h>
 #include <Octree.h>
-
+#include <Frame.h>
 
 namespace CDFF
 {
@@ -23,23 +22,25 @@ namespace DFN
         public:
 
             VoxelizationInterface();
-            ~VoxelizationInterface() = default;
+            virtual ~VoxelizationInterface();
 
             /**
-             * Send value to input port inputFrame
-             * @param frame: 2D depth image
+             * Send value to input port "depth"
+             * @param depth
+             *     depth map
              */
-            virtual void frameInput(const asn1SccFrame& data);
+            virtual void depthInput(const asn1SccFrame& data);
 
             /**
-             * Query value from output port ouputOctree
+             * Query value from output port "octree"
              * @return octree
+             *     octree created from the input depth map
              */
             virtual const asn1SccOctree& octreeOutput() const;
 
         protected:
 
-            asn1SccFrame inFrame;
+            asn1SccFrame inDepth;
             asn1SccOctree outOctree;
     };
 }

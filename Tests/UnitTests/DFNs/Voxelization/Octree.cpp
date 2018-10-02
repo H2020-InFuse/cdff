@@ -54,7 +54,7 @@ TEST_CASE( "Call to process (Octree)", "[process]" )
     std::unique_ptr<CDFF::DFN::Voxelization::Octree> octree(new CDFF::DFN::Voxelization::Octree());
 
     // Send input data to DFN
-    octree->frameInput(*inputFrame);
+    octree->depthInput(*inputFrame);
 
     // Run DFN
     octree->process();

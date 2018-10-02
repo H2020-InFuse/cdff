@@ -6,7 +6,7 @@ T-Double FROM TASTE-ExtendedTypes
 T-UInt32 FROM TASTE-BasicTypes;
 
 -- Message version
-octree-Infuse-Version T-UInt32 ::= 1
+octree-InFuse-Version T-UInt32 ::= 1
 
 --- Definition of PointCloud_InFuse starts
 Octree ::= SEQUENCE
