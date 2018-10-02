@@ -45,7 +45,7 @@ FrameConstPtr MatToFrameConverter::Convert(const cv::Mat& image)
 	{
 	FramePtr frame = new Frame();
 	FrameWrapper::Initialize(*frame);
-	frame->metadata.status = FrameStatus::asn1Sccstatus_VALID;
+	frame->metadata.status = STATUS_VALID;
 
 
 	if (image.rows == 0 && image.cols == 0)

@@ -128,9 +128,9 @@ void Initialize(Frame& frame)
 {
 Array3DWrapper::Initialize(frame.data);
 
-frame.metadata.pixelModel = FramePixelMode::asn1Sccpix_UNDEF;
-frame.metadata.mode = FrameMode::asn1Sccmode_UNDEF;
-frame.metadata.status = FrameStatus::asn1Sccstatus_EMPTY;
+frame.metadata.pixelModel = FramePixelModel::asn1Sccpix_UNDEF;
+frame.metadata.mode = MODE_UNDEFINED;
+frame.metadata.status = STATUS_EMPTY;
 
 frame.metadata.pixelCoeffs.nCount = 0;
 frame.metadata.errValues.nCount = 0;

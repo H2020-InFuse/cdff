@@ -76,7 +76,7 @@ typedef asn1SccFrame_metadata_t_errValues FrameMetadataError;
 typedef asn1SccFrame_attrib_t FrameAttribute;
 typedef asn1SccFrame_metadata_t_attributes FrameMetadataAttributeList;
 typedef asn1SccFrame_extrinsic_t FrameExtrinsic;
-typedef asn1SccFrame_pixelModel_t FramePixelMode;
+typedef asn1SccFrame_pixelModel_t FramePixelModel;
 typedef asn1SccFrame_mode_t FrameMode;
 typedef asn1SccFrame_status_t FrameStatus;
 typedef asn1SccFrame_metadata_t FrameMetadata;
