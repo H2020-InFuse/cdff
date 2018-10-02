@@ -88,8 +88,9 @@ std::string StandardOutputLogger::MessageTypeToColorCode(MessageType messageType
 			{
 			return GREEN_COLOR_CODE;
 			}
+		default:
+			return "";
 		}
-	return "";
 	}
 
 /** @} */

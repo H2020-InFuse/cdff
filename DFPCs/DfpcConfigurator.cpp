@@ -155,7 +155,7 @@ std::string DfpcConfigurator::ComputeConfigurationFolderPath(std::string configu
 	{
  	static const char slash = '/';
 
-   	unsigned lastSlashIndex = configurationFilePath.rfind(slash, configurationFilePath.length());
+   	size_t lastSlashIndex = configurationFilePath.rfind(slash, configurationFilePath.length());
    	if (lastSlashIndex != std::string::npos) 
 		{
       		return configurationFilePath.substr(0, lastSlashIndex);
