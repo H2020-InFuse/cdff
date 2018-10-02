@@ -201,7 +201,7 @@ function build_all_function {
 
 ###### MAIN PROGRAM
 
-source ./installers/infuse_set_pkg_config_path.sh
+source "${DIR}/installers/infuse_set_pkg_config_path.sh"
 
 
 # Attempt to cleanup leftover source folders if we exited early due to errors.
