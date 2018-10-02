@@ -37,6 +37,7 @@ maxPosesSequenceLength T-UInt32 ::= 10
 maxCorrespondenceMapsSequenceLength T-UInt32 ::= 56
 maxPointsSequenceLength T-UInt32 ::= 327680
 maxDoubleSequenceLength T-UInt32 ::= 327680
+maxStringSequenceLength T-UInt32 ::= 100
 
 FramesSequence ::= SEQUENCE (SIZE(0..maxFramesSequenceLength)) OF Frame
 
@@ -49,5 +50,7 @@ CorrespondenceMaps3DSequence ::= SEQUENCE(SIZE(0..maxCorrespondenceMapsSequenceL
 PointsSequence ::= SEQUENCE (SIZE(0..maxPointsSequenceLength)) OF Point
 
 DoublesSequence ::= SEQUENCE (SIZE(0..maxDoubleSequenceLength)) OF T-Double
+
+StringSequence ::= SEQUENCE (SIZE(0..maxStringSequenceLength)) OF T-String
 
 END

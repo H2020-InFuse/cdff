@@ -36,13 +36,6 @@ typedef asn1SccT_String T_String;
 typedef asn1SccT_Float T_Float;
 typedef asn1SccT_Double T_Double;
 
-typedef struct {
-	int nCount;
-	asn1SccT_String arr[10];
-} asn1SccT_StringArray;
-
-typedef asn1SccT_StringArray T_StringArray;
-
 // Constants
 
 const int MAX_STRING_SIZE = maxSize_T_String;

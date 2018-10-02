@@ -21,8 +21,8 @@ add_library(
     MatToCorrespondenceMaps2DSequenceConverter.cpp
     CorrespondenceMaps3DSequenceToMatConverter.cpp
     MatToCorrespondenceMaps3DSequenceConverter.cpp
-    StringArrayToStdVectorOfStringsConverter.cpp
-    StdVectorOfStringsToStringArrayConverter.cpp
+    StringSequenceToStdVectorOfStringsConverter.cpp
+    StdVectorOfStringsToStringSequenceConverter.cpp
     PclOctreeToOctreeConverter.cpp
     OctreeToPclOctreeConverter.cpp
 )
