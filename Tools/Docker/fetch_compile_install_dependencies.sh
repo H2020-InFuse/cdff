@@ -42,7 +42,7 @@ Configuration:
 			    can be used multiple times (-s LIB1 -s LIB2)
                             [LIB: cmake boost eigen flann qhull tinyxml2
 			    yamlccp vtk opencv pcl]
-  -f                        Full dependencies installation (required for Central DPM)
+  -e                        Full dependencies installation (required for Central DPM)
 
 Installation directories:
   -b DIR            	    Build all libraries in DIR
@@ -201,7 +201,7 @@ function build_all_function {
 
 ###### MAIN PROGRAM
 
-source ./installers/infuse_set_pkg_config_path.sh
+source "${DIR}/installers/infuse_set_pkg_config_path.sh"
 
 
 # Attempt to cleanup leftover source folders if we exited early due to errors.
