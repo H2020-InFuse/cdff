@@ -55,7 +55,7 @@ RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -
 COPY installers/pcl.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s pcl
 
-## For Envire
+## For EnviRe
 
 COPY installers/console_bridge.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s console_bridge
