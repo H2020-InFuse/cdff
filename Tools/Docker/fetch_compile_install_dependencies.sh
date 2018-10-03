@@ -148,14 +148,20 @@ function fetchsource_function {
 
 function fetchgit_function {
 	echo "Checking out $1"
-  if [ -z "$4" ]
-  then
-	  git -C $SOURCE_DIR clone --depth 1 --single-branch --recursive -b $2 $3 $1
-  else
-    echo "Checking out commit $4."
-	  git -C $SOURCE_DIR clone --recursive -b $2 $3 $1
-    git -C $SOURCE_DIR/$1 checkout -f $4
-  fi	
+  # Comment in the lines with the + to allow installation without checkout for debugging
+  #+# if [ ! -d "$SOURCE_DIR/$1" ];
+  #+# then
+    if [ -z "$4" ]
+    then
+	   git -C $SOURCE_DIR clone --depth 1 --single-branch --recursive -b $2 $3 $1
+    else
+      echo "Checking out commit $4."
+      git -C $SOURCE_DIR clone --recursive -b $2 $3 $1
+      git -C $SOURCE_DIR/$1 checkout -f $4
+    fi	
+  #+#else
+  #+#  echo "Source $SOURCE_DIR already exists we will work with that one."
+  #+#fi
 	mkdir -p $BUILD_DIR/$1
 	cd $BUILD_DIR/$1
   echo "Done. $1 Checked out."
