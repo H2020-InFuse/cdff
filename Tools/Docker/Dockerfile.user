@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install --yes --quiet apt-utils && \
       curl \
       git \
       mono-runtime libmono-system-core4.0-cil libmono-system-numerics4.0-cil \
+      pkg-config \
       unzip \
       wget
 
