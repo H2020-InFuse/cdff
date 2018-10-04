@@ -186,18 +186,20 @@ function build_all_function {
  InstallersToRUN+=("vtk")
  InstallersToRUN+=("pcl")
  if [[ "$ENVIRE_FULL" = true ]]; then
+  InstallersToRUN+=("base_cmake")
+  InstallersToRUN+=("base_logging")
+  InstallersToRUN+=("sisl")
+  InstallersToRUN+=("base_types")  
+  InstallersToRUN+=("base_numeric")
+  InstallersToRUN+=("base_boost_serialization")
   InstallersToRUN+=("console_bridge")
   InstallersToRUN+=("poco")
   InstallersToRUN+=("poco_vendor")
   InstallersToRUN+=("class_loader")
-  InstallersToRUN+=("base_cmake")
   InstallersToRUN+=("tools_plugin_manager")
-  InstallersToRUN+=("base_logging")
-  InstallersToRUN+=("sisl")
-  InstallersToRUN+=("base_types")
-  InstallersToRUN+=("base_numeric")
-  InstallersToRUN+=("base_boost_serialization")
   InstallersToRUN+=("envire_envire_core")
+ #else
+ # InstallersToRUN+=("envire-min")
  fi
   #for i in "${!infuse_dependencies_map[@]}"
   #do
