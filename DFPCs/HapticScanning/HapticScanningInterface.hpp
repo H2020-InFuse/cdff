@@ -50,7 +50,7 @@ namespace DFPC
              * Query value from output port outputPointCloud
              * @return point cloud
              */
-            virtual const asn1SccPointcloud pointCloudOutput() const;
+            virtual const asn1SccPointcloud & pointCloudOutput() const;
 
 
         protected:

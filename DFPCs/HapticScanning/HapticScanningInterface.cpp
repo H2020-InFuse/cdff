@@ -37,7 +37,7 @@ void HapticScanningInterface::armEndEffectorWrenchInput(const asn1SccWrench &wre
 }
 
 //=====================================================================================================================
-const asn1SccPointcloud HapticScanningInterface::pointCloudOutput() const
+const asn1SccPointcloud &HapticScanningInterface::pointCloudOutput() const
 {
     return outPointCloud;
 }
