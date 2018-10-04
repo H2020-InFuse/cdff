@@ -60,14 +60,14 @@ RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -
 COPY installers/base_cmake.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_cmake
 
-COPY installers/base_types.sh /tmp/CDFF/Tools/Docker/installers/
-RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_types
-
 COPY installers/base_logging.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_logging
 
 COPY installers/sisl.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s sisl
+
+COPY installers/base_types.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_types
 
 COPY installers/base_numeric.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_numeric
