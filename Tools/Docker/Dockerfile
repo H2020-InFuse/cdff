@@ -40,7 +40,7 @@ RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -
 
 ## Download, build, and install EnviRe and its dependencies
 
-RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_cmake -s base_types -s base_logging -s sisl -s base_numeric -s base_boost_serialization -s console_bridge -s poco -s poco_vendor -s class_loader -s tools_plugin_manager -s envire_envire_core
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_cmake -s base_logging -s sisl -s base_types -s base_numeric -s base_boost_serialization -s console_bridge -s poco -s poco_vendor -s class_loader -s tools_plugin_manager -s envire_envire_core
 
 ## Image information
 
