@@ -20,6 +20,8 @@ namespace ForceMeshHelperFunctions
 
     Eigen::Quaterniond getQuaternion();
 
+    asn1SccPose getEndEffectorPose();
+
     asn1SccPose getRoverPose();
 
     std::vector<std::pair<pcl::PointXYZ, double> > getInputData (const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud);

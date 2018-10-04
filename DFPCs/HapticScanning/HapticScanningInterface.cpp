@@ -4,6 +4,7 @@
  */
 
 #include "HapticScanningInterface.hpp"
+//#include <PointCloud.hpp>
 
 namespace CDFF
 {
@@ -12,9 +13,8 @@ namespace DFPC
 
 //=====================================================================================================================
 HapticScanningInterface::HapticScanningInterface()
-    : outPointCloud(new asn1SccPointcloud)
 {
-    PointCloudWrapper::Initialize(*outPointCloud);
+    asn1SccPointcloud_Initialize(&outPointCloud);
 }
 
 //=====================================================================================================================
@@ -37,9 +37,9 @@ void HapticScanningInterface::armEndEffectorWrenchInput(const asn1SccWrench &wre
 }
 
 //=====================================================================================================================
-const asn1SccPointcloud& HapticScanningInterface::pointCloudOutput() const
+const asn1SccPointcloud HapticScanningInterface::pointCloudOutput() const
 {
-    return *outPointCloud;
+    return outPointCloud;
 }
 
 

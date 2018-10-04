@@ -21,10 +21,10 @@ namespace DFPC
     {
         public:
             HapticScanning();
-            ~HapticScanning() override;
+            virtual ~HapticScanning();
 
-            void setup() override;
-            void run() override;
+            virtual void setup();
+            virtual void run();
 
         private:
             DfpcConfigurator configurator;

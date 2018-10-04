@@ -26,7 +26,7 @@ void ForceMeshGeneratorExecutor::Execute(
     PointCloudWrapper::PointCloudPtr outputPointCloud
     )
 {
-    Execute(armBasePose, armEndEffectorPose, armEndEffectorWrench, *outputPointCloud);
+    Execute(armBasePose, armEndEffectorPose, armEndEffectorWrench, outputPointCloud);
 }
 
 //=====================================================================================================================

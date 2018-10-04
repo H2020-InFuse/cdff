@@ -39,7 +39,6 @@
 
 #include "ForceMeshHelperFunctions.hpp"
 
-
 /* --------------------------------------------------------------------------
  *
  * Test Cases
@@ -63,10 +62,10 @@ TEST_CASE( "Force Mesh Generator" )
     std::unique_ptr<ForceMeshGenerator::ThresholdForce> generator (new ForceMeshGenerator::ThresholdForce() );
 
     // Convert the input data
-    std::vector<asn1SccPose> arm_ee_poses(points.size());
-    std::vector<asn1SccWrench> arm_ee_wrenches(points.size());
+    std::vector<asn1SccPose> arm_ee_poses;
+    std::vector<asn1SccWrench> arm_ee_wrenches;
 
-    for ( size_t index = 0; index < points.size(); ++index )
+    for ( size_t index = 0; index < points.size(); index++ )
     {
         asn1SccPose arm_ee_pose;
         asn1SccPose_Initialize(&arm_ee_pose);
@@ -82,7 +81,7 @@ TEST_CASE( "Force Mesh Generator" )
         arm_ee_wrenches.push_back(arm_ee_wrench);
     }
 
-    asn1SccPose rover_pose = ForceMeshHelperFunctions::getRoverPose();
+    asn1SccPose rover_pose = ForceMeshHelperFunctions::getEndEffectorPose();
 
     // Process all the input data
     generator->armBasePoseInput(rover_pose);
@@ -96,13 +95,14 @@ TEST_CASE( "Force Mesh Generator" )
     }
 
     // Query output data from DFN
-    const asn1SccPointcloud& output = generator->pointCloudOutput();
+    const asn1SccPointcloud & output = generator->pointCloudOutput();
 
     auto output_cloud = Converters::PointCloudToPclPointCloudConverter().Convert(&output);
+
+
     for( const pcl::PointXYZ & out_point : output_cloud->points )
     {
         CHECK( ForceMeshHelperFunctions::checkPointCloudContainsPoint( out_point, cloud ) );
     }
 }
-
 /** @} */

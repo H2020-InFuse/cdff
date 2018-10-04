@@ -35,9 +35,9 @@ void ForceMeshGeneratorInterface::armEndEffectorWrenchInput(const asn1SccWrench 
 }
 
 //=====================================================================================================================
-const asn1SccPointcloud& ForceMeshGeneratorInterface::pointCloudOutput() const
+const asn1SccPointcloud & ForceMeshGeneratorInterface::pointCloudOutput() const
 {
-    return *outPointCloud;
+    return outPointCloud;
 }
 
 }

@@ -10,7 +10,7 @@
 
 #include "Types/C/TransformWithCovariance.h"
 #include "Types/C/Frame.h"
-#include "Types/CPP/PointCloud.hpp"
+#include "Types/C/Pointcloud.h"
 #include "Types/C/Sequences.h"
 #include "Types/C/Wrench.h"
 
@@ -50,7 +50,7 @@ namespace DFPC
              * Query value from output port outputPointCloud
              * @return point cloud
              */
-            virtual const asn1SccPointcloud& pointCloudOutput() const;
+            virtual const asn1SccPointcloud pointCloudOutput() const;
 
 
         protected:
@@ -59,7 +59,7 @@ namespace DFPC
             asn1SccPose inArmEndEffectorPose;
             asn1SccWrench inArmEndEffectorWrench;
 
-            std::unique_ptr<asn1SccPointcloud> outPointCloud;
+            asn1SccPointcloud outPointCloud;
     };
 }
 

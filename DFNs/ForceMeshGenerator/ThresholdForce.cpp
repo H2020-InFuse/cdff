@@ -27,9 +27,6 @@ ThresholdForce::ThresholdForce()
 {
     parametersHelper.AddParameter<double>("GeneralParameters", "Threshold", parameters.threshold, DEFAULT_PARAMETERS.threshold);
 	configurationFilePath = "";
-
-	outPointCloud.reset(new asn1SccPointcloud);
-	PointCloudWrapper::Initialize(*outPointCloud);
 }
 
 //=====================================================================================================================
@@ -48,17 +45,6 @@ void ThresholdForce::configure()
 //=====================================================================================================================
 void ThresholdForce::process()
 {
-	Eigen::Affine3d base_to_ee_tf =
-		Eigen::Translation3d(
-				inArmBasePose.pos.arr[0],
-				inArmBasePose.pos.arr[1],
-				inArmBasePose.pos.arr[2])
-		* Eigen::Quaterniond(
-				inArmBasePose.orient.arr[0],
-				inArmBasePose.orient.arr[1],
-				inArmBasePose.orient.arr[2],
-				inArmBasePose.orient.arr[3]);
-
 	Eigen::Vector3d contact_force(
 		inArmEndEffectorWrench.force.arr[0],
 		inArmEndEffectorWrench.force.arr[1],
@@ -67,14 +53,16 @@ void ThresholdForce::process()
 
 	if( contact_force.norm() > parameters.threshold )
 	{
-		Eigen::Vector3d ee_position =
-			base_to_ee_tf.inverse() * Eigen::Vector3d(
-				inArmEndEffectorPose.pos.arr[0],
-				inArmEndEffectorPose.pos.arr[1],
-				inArmEndEffectorPose.pos.arr[2]
-			);
+		Eigen::Vector3d effector_position(inArmEndEffectorPose.pos.arr[0], inArmEndEffectorPose.pos.arr[1], inArmEndEffectorPose.pos.arr[2]);
+		Eigen::Quaterniond quaternion2(inArmBasePose.orient.arr[0], inArmBasePose.orient.arr[1], inArmBasePose.orient.arr[2], inArmBasePose.orient.arr[3]);
+		quaternion2.normalize();
+		Eigen::Matrix3d rotation = quaternion2.toRotationMatrix();
+		Eigen::Vector3d position(inArmBasePose.pos.arr[0], inArmBasePose.pos.arr[1], inArmBasePose.pos.arr[2]);
+		
+		effector_position += position;
+		effector_position = rotation * effector_position;
 
-		PointCloudWrapper::AddPoint(*outPointCloud, ee_position.x(), ee_position.y(), ee_position.z());
+		PointCloudWrapper::AddPoint(outPointCloud, effector_position.x(), effector_position.y(), effector_position.z());
 	}
 }
 
