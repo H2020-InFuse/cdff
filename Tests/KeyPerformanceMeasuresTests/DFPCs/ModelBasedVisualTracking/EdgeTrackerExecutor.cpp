@@ -335,9 +335,9 @@ void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* T_guess0
 void EdgeTrackerExecutor::LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame )
 	{
 	cv::Mat src_image = cv::imread(filePath, 0);
-	cv::Mat image;
-	filterMedian(src_image, image, 5);
 	assert(src_image.cols > 0 && src_image.rows >0 && "Error: Loaded input image is empty");
+	cv::Mat image(src_image.rows, src_image.cols,CV_8UC1);
+	filterMedian(src_image, image, 5);
 	DELETE_IF_NOT_NULL(frame);
 	frame= frameConverter.Convert(image);
 

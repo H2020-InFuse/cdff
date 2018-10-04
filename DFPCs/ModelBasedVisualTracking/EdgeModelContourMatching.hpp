@@ -83,6 +83,7 @@ namespace DFPC
 		int numberOfCameras;
 		unsigned char* imgs[];
 		unsigned char* img_color;
+	        cv::Mat img_color_cv;
 		int xrmax;
 		int yrmax;
 

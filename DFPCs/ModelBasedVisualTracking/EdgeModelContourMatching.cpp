@@ -98,32 +98,20 @@ void EdgeModelContourMatching::run()
 	ASSERT(numberOfCameras<3,"undefined camera: maximum 2 cameras ");
 		
 	for(int c=0; c<numberOfCameras; c++)
-	 {	if(numberOfCameras == 1)
-		{
-		   cv::Mat inputLeftImage = frameToMat.Convert(inImageLeft); 
-		   ASSERT(inputLeftImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
-		   memcpy(imgs[c], inputLeftImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)); 
-			
-		   break;
-		}
-		if(numberOfCameras ==2)
-		{
-		  if(c == 0)
-		   {
-	            cv::Mat inputLeftImage = frameToMat.Convert(inImageLeft); 
-		    ASSERT(inputLeftImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
-		    memcpy(imgs[c], inputLeftImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)); 
-                    }
-		   if(c == 1)
-	 	   { 
-		    cv::Mat inputRightImage = frameToMat.Convert(inImageRight);
-		    ASSERT(inputRightImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
-		    memcpy(imgs[c], inputRightImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)); 
-		    }
-		 }
-		
-		
-	      }
+	 {	
+	   if(c == 0)
+	   {
+            cv::Mat inputLeftImage = frameToMat.Convert(inImageLeft); 
+	    ASSERT(inputLeftImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
+	    memcpy(imgs[c], inputLeftImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
+	   }
+	   if(numberOfCameras > 1 && c == 1)
+	   {
+	    cv::Mat inputRightImage = frameToMat.Convert(inImageRight);
+	    ASSERT(inputRightImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
+	    memcpy(imgs[c], inputRightImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
+	    }
+          }
 	
 	double time_images;
 	//asn1Sccseconds in sec   
@@ -160,13 +148,14 @@ void EdgeModelContourMatching::run()
 	std::string wname;
 	int xres = DLRTracker.getXres(0); 
 	int yres = DLRTracker.getYres(0);
+	cv::Mat img_color_cv(xres,yres,CV_8UC3);
 
-	for(int c=0; c<numberOfCameras; c++)
+	for(int c = 0; c < numberOfCameras; c++)
 	{	
-	 DLRTracker.drawResult(T_est, img_color, c, true, 100);
+	 DLRTracker.drawResult(T_est, img_color_cv.data, c, true, 100);
 	 sprintf((char*)wname.c_str(),"result%d",c);
 	 createWindow(wname,1);
-	 showImage(wname,img_color,xres,yres,3);
+	 showImage(wname,img_color_cv.data,xres,yres,3);
 	}
 		 
 
