@@ -57,28 +57,39 @@ RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -
 
 ## For EnviRe
 
-COPY installers/console_bridge.sh /tmp/CDFF/Tools/Docker/installers/
-RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s console_bridge
-COPY installers/poco.sh /tmp/CDFF/Tools/Docker/installers/
-RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s poco
-COPY installers/poco_vendor.sh /tmp/CDFF/Tools/Docker/installers/
-RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s poco_vendor
-COPY installers/class_loader.sh /tmp/CDFF/Tools/Docker/installers/
-RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s class_loader
 COPY installers/base_cmake.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_cmake
-COPY installers/tools_plugin_manager.sh /tmp/CDFF/Tools/Docker/installers/
-RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s tools_plugin_manager
-COPY installers/base_logging.sh /tmp/CDFF/Tools/Docker/installers/
-RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_logging
-COPY installers/sisl.sh /tmp/CDFF/Tools/Docker/installers/
-RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s sisl
+
 COPY installers/base_types.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_types
+
+COPY installers/base_logging.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_logging
+
+COPY installers/sisl.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s sisl
+
 COPY installers/base_numeric.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_numeric
+
 COPY installers/base_boost_serialization.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_boost_serialization
+
+COPY installers/console_bridge.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s console_bridge
+
+COPY installers/poco.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s poco
+
+COPY installers/poco_vendor.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s poco_vendor
+
+COPY installers/class_loader.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s class_loader
+
+COPY installers/tools_plugin_manager.sh /tmp/CDFF/Tools/Docker/installers/
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s tools_plugin_manager
+
 COPY installers/envire_envire_core.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s envire_envire_core
 
