@@ -42,21 +42,41 @@ namespace ForceMeshHelperFunctions
     }
 
     //=====================================================================================================================
+    asn1SccPose getEndEffectorPose()
+    {
+        asn1SccPose effector_pose;
+        Eigen::Vector3d position = getPosition();
+        Eigen::Quaterniond quaternion = getQuaternion();
+
+        effector_pose.pos.arr[0] = position[0];
+        effector_pose.pos.arr[1] = position[1];
+        effector_pose.pos.arr[2] = position[2];
+
+        asn1SccOrientation orient;
+        effector_pose.orient.arr[0] = quaternion.w();
+        effector_pose.orient.arr[1] = quaternion.x();
+        effector_pose.orient.arr[2] = quaternion.y();
+        effector_pose.orient.arr[3] = quaternion.z();
+
+        return effector_pose;
+    }
+
+    //=====================================================================================================================
     asn1SccPose getRoverPose()
     {
         asn1SccPose rover_pose;
         Eigen::Vector3d position = getPosition();
         Eigen::Quaterniond quaternion = getQuaternion();
 
-        rover_pose.pos.arr[0] = position[0];
-        rover_pose.pos.arr[1] = position[1];
-        rover_pose.pos.arr[2] = position[2];
+        rover_pose.pos.arr[0] = 0;
+        rover_pose.pos.arr[1] = 0;
+        rover_pose.pos.arr[2] = 0;
 
         asn1SccOrientation orient;
-        rover_pose.orient.arr[0] = quaternion.w();
-        rover_pose.orient.arr[1] = quaternion.x();
-        rover_pose.orient.arr[2] = quaternion.y();
-        rover_pose.orient.arr[3] = quaternion.z();
+        rover_pose.orient.arr[0] = 1;
+        rover_pose.orient.arr[1] = 0;
+        rover_pose.orient.arr[2] = 0;
+        rover_pose.orient.arr[3] = 0;
 
         return rover_pose;
     }

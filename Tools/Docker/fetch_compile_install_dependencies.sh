@@ -147,24 +147,24 @@ function fetchsource_function {
 }
 
 function fetchgit_function {
-	echo "Checking out $1"
-  # Comment in the lines with the + to allow installation without checkout for debugging
-  #+# if [ ! -d "$SOURCE_DIR/$1" ];
-  #+# then
-    if [ -z "$4" ]
-    then
-	   git -C $SOURCE_DIR clone --depth 1 --single-branch --recursive -b $2 $3 $1
+  echo "Cloning ${1}'s code repository"
+  # Uncomment the lines prefixed with #+# to install from local sources already
+  # available in ${SOURCE_DIR}/${1} instead of first cloning sources in there;
+  # this can be useful, for instance, for debugging purposes
+  #+# if [ ! -d "${SOURCE_DIR}/${1}" ]; then
+    if [ -z ${4} ]; then
+      git -C "${SOURCE_DIR}" clone --recursive --depth 1 --single-branch --branch "${2}" "${3}" "${1}"
     else
-      echo "Checking out commit $4."
-      git -C $SOURCE_DIR clone --recursive -b $2 $3 $1
-      git -C $SOURCE_DIR/$1 checkout -f $4
+      echo "Checking out commit ${4}."
+      git -C "${SOURCE_DIR}" clone --recursive --branch "${2}" "${3}" "${1}"
+      git -C "${SOURCE_DIR}/${1}" checkout -f ${4}
     fi	
-  #+#else
-  #+#  echo "Source $SOURCE_DIR already exists we will work with that one."
-  #+#fi
-	mkdir -p $BUILD_DIR/$1
-	cd $BUILD_DIR/$1
-  echo "Done. $1 Checked out."
+  #+# else
+  #+#   echo "Directory ${SOURCE_DIR}/${1} already exists, we will work with that one."
+  #+# fi
+  mkdir -p "${BUILD_DIR}/${1}"
+  cd "${BUILD_DIR}/${1}"
+  echo "Cloning ${1}'s code repository: done."
 }
 
 function clean_function {

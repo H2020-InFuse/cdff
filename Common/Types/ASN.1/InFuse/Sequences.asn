@@ -47,9 +47,9 @@ CorrespondenceMaps2DSequence ::= SEQUENCE(SIZE(0..maxCorrespondenceMapsSequenceL
 
 CorrespondenceMaps3DSequence ::= SEQUENCE(SIZE(0..maxCorrespondenceMapsSequenceLength)) OF CorrespondenceMap3D
 
-PointsSequence ::= SEQUENCE (SIZE(0..maxPointsSequenceLength)) OF Point
+PointSequence ::= SEQUENCE (SIZE(0..maxPointsSequenceLength)) OF Point
 
-DoublesSequence ::= SEQUENCE (SIZE(0..maxDoubleSequenceLength)) OF T-Double
+DoubleSequence ::= SEQUENCE (SIZE(0..maxDoubleSequenceLength)) OF T-Double
 
 StringSequence ::= SEQUENCE (SIZE(0..maxStringSequenceLength)) OF T-String
 
