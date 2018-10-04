@@ -1,18 +1,18 @@
 name: Force Mesh Generator
 doc: DFN that creates a point cloud using the feedback from a force sensor
 input_ports:
-    - name: inputRoverPose
+    - name: armBasePose
       type: asn1SccPose
-      doc: Pose information
-    - name: inputPositions
-      type: asn1SccPointArray
-      doc: Array of 3D points
-    - name: inputForces
-      type: asn1SccDoubleArray
-      doc: Array of doubles with the force sensor input
+      doc: The current pose of the arm base.
+    - name: armEndEffectorPose
+      type: asn1SccPointsSequence
+      doc: The pose of the end-effector of the arm relative to the base.
+    - name: armEndEffectorWrench
+      type: asn1SccDoublesSequence
+      doc: Wrench measured on the end-effector of the arm.
 output_ports:
     - name: outputPointCloud
       type: asn1SccPointcloud
-      doc: Reconstructed point cloud from the force sensor inputs
+      doc: Reconstructed point cloud from the force sensor inputs in the same coordinate space as the arm base.
 implementations:
     - ThresholdForce

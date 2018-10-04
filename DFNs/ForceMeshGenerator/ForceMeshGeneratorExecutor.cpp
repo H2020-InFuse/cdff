@@ -19,17 +19,29 @@ ForceMeshGeneratorExecutor::ForceMeshGeneratorExecutor(ForceMeshGeneratorInterfa
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorExecutor::Execute(const asn1SccPose &roverPose, const asn1SccPointsSequence &positions, const asn1SccDoublesSequence &forces, PointCloudWrapper::PointCloudPtr outputPointCloud)
+void ForceMeshGeneratorExecutor::Execute(
+    const asn1SccPose &armBasePose,
+    const asn1SccPose &armEndEffectorPose,
+    const asn1SccWrench &armEndEffectorWrench,
+    PointCloudWrapper::PointCloudPtr outputPointCloud
+    )
 {
-    Execute(roverPose, positions, forces, *outputPointCloud);
+    Execute(armBasePose, armEndEffectorPose, armEndEffectorWrench, outputPointCloud);
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorExecutor::Execute(const asn1SccPose& roverPose, const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces, PointCloudWrapper::PointCloud & outputPointCloud)
+void ForceMeshGeneratorExecutor::Execute(
+    const asn1SccPose &armBasePose,
+    const asn1SccPose &armEndEffectorPose,
+    const asn1SccWrench &armEndEffectorWrench,
+    PointCloudWrapper::PointCloud & outputPointCloud
+    )
 {
-    dfn->roverPoseInput(roverPose);
-    dfn->positionAndForceInput(positions, forces);
+    dfn->armBasePoseInput(armBasePose);
+    dfn->armEndEffectorPoseInput(armEndEffectorPose);
+    dfn->armEndEffectorWrenchInput(armEndEffectorWrench);
     dfn->process();
+
     const asn1SccPointcloud& output = dfn->pointCloudOutput();
     PointCloudWrapper::Copy(output, outputPointCloud);
 }
