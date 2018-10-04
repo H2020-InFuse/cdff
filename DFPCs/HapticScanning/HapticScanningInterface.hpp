@@ -26,7 +26,7 @@ namespace DFPC
         public:
 
             HapticScanningInterface();
-            ~HapticScanningInterface() override = default;
+            virtual ~HapticScanningInterface();
 
             /**
              * Send value to input port inputPose

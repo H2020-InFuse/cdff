@@ -18,6 +18,11 @@ HapticScanningInterface::HapticScanningInterface()
 }
 
 //=====================================================================================================================
+HapticScanningInterface::~HapticScanningInterface()
+{
+}
+
+//=====================================================================================================================
 void HapticScanningInterface::armBasePoseInput(const asn1SccPose& data)
 {
     inArmBasePose = data;
