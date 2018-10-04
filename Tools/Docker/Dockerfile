@@ -57,6 +57,7 @@ RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -
 
 ## For EnviRe
 
+RUN apt-get update && apt-get install --yes --quiet pkg-config
 COPY installers/base_cmake.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s base_cmake
 
@@ -87,6 +88,7 @@ RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -
 COPY installers/class_loader.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s class_loader
 
+RUN apt-get update && apt-get install --yes --quiet libtinyxml-dev libgoogle-glog-dev
 COPY installers/tools_plugin_manager.sh /tmp/CDFF/Tools/Docker/installers/
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s tools_plugin_manager
 
