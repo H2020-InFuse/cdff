@@ -21,3 +21,7 @@ if [[ ":$PKG_CONFIG_PATH:" != *":$AddToPkg:"* ]];then
   #add to system 
 
 fi
+
+export LD_LIBRARY_PATH=$INSTALL_DIR_AUX/lib
+export Rock_DIR=$INSTALL_DIR_AUX/share/rock
+export console_bridge_DIR=$INSTALL_DIR_AUX/share/console_bridge
