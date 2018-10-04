@@ -69,33 +69,42 @@ TEST_CASE( "Success Call to Process (HapticScanning)", "[processSuccess]" )
     std::vector<std::pair<pcl::PointXYZ, double> > points = ForceMeshHelperFunctions::getInputData(cloud);
 
     // Convert the input data
-    asn1SccPointsSequence * positions = new asn1SccPointsSequence;
-    asn1SccPointsSequence_Initialize(positions);
-    asn1SccDoublesSequence * forces = new asn1SccDoublesSequence;
-    asn1SccDoublesSequence_Initialize(forces);
+    std::vector<asn1SccPose> arm_ee_poses(points.size());
+    std::vector<asn1SccWrench> arm_ee_wrenches(points.size());
 
-    auto size = points.size();
-    positions->nCount = size;
-    forces->nCount = size;
-
-    for ( unsigned int index = 0; index < size; index ++ )
+    for ( size_t index = 0; index < points.size(); ++index )
     {
-        positions->arr[index].arr[0] = points[index].first.x;
-        positions->arr[index].arr[1] = points[index].first.y;
-        positions->arr[index].arr[2] = points[index].first.z;
-        forces->arr[index] = points[index].second;
+        asn1SccPose arm_ee_pose;
+        asn1SccPose_Initialize(&arm_ee_pose);
+        arm_ee_pose.pos.arr[0] = points[index].first.x;
+        arm_ee_pose.pos.arr[1] = points[index].first.y;
+        arm_ee_pose.pos.arr[2] = points[index].first.z;
+
+        asn1SccWrench arm_ee_wrench;
+        asn1SccWrench_Initialize(&arm_ee_wrench);
+        arm_ee_wrench.force.arr[0] = points[index].second;
+
+        arm_ee_poses.push_back(arm_ee_pose);
+        arm_ee_wrenches.push_back(arm_ee_wrench);
     }
 
     asn1SccPose rover_pose = ForceMeshHelperFunctions::getRoverPose();
 
-    haptic_scanning->roverPoseInput(rover_pose);
-    haptic_scanning->positionAndForceInput(*positions, *forces);
+    // Process all the input data
+    haptic_scanning->armBasePoseInput(rover_pose);
 
-    haptic_scanning->run();
+    for (auto i = 0; i < points.size(); ++i) {
+        haptic_scanning->armEndEffectorPoseInput(arm_ee_poses[i]);
+        haptic_scanning->armEndEffectorWrenchInput(arm_ee_wrenches[i]);
 
+        // Run DFN
+        haptic_scanning->run();
+    }
+
+    // Query output data from DFN
     const asn1SccPointcloud& output = haptic_scanning->pointCloudOutput();
-    pcl::PointCloud<pcl::PointXYZ>::ConstPtr output_cloud = Converters::PointCloudToPclPointCloudConverter().Convert(&output);
 
+    auto output_cloud = Converters::PointCloudToPclPointCloudConverter().Convert(&output);
     for( const pcl::PointXYZ & out_point : output_cloud->points )
     {
         CHECK( ForceMeshHelperFunctions::checkPointCloudContainsPoint( out_point, cloud ) );
