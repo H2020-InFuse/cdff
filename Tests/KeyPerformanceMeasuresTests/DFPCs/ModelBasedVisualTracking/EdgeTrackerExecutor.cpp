@@ -82,7 +82,7 @@ void EdgeTrackerExecutor::SetOutputFilePath(std::string outputPoseFilePath)
 	outputPoseWasLoaded = true;
 	}
 
-void EdgeTrackerExecutor::initPose(double* T_guess0)
+void EdgeTrackerExecutor::initPose(double* guessT0)
 	{
 	 // e.g initial pose for InFuse sequence 20180913_163111
 	double T_guess00[16]= {0.014369, -0.997374, 0.070982, 1207.778952,
@@ -94,7 +94,7 @@ void EdgeTrackerExecutor::initPose(double* T_guess0)
 			    0.0 ,1.0, 0.0, 0.0,
 			    0.0, 0.0, 1.0, 0.0,
 			    0.0, 0.0, 0.0, 1.0};
-	 matrixProduct444(T_guess00, TAdapt, T_guess0);
+	 matrixProduct444(T_guess00, TAdapt, guessT0);
 	
 	}
 
@@ -123,15 +123,15 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	
 	double vel0[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         double rotTrasl[6];
-	double T_guess0[16];
-	//matrixIdentity(T_guess0,4);
-	initPose(T_guess0);
+	double guessT0[16];
+	//matrixIdentity(guessT0,4);
+	initPose(guessT0);
 
-	printMatrix(" ## init T_guess0: ",T_guess0,4,4);
+	printMatrix(" ## init guessT0: ",guessT0,4,4);
 		
-        double distanceInitial = fabs(T_guess0[3])+fabs(T_guess0[7])+fabs(T_guess0[11]);
+        double distanceInitial = fabs(guessT0[3])+fabs(guessT0[7])+fabs(guessT0[11]);
 	ASSERT(distanceInitial > 500, "Initial position is greater than 500 mm ");
-	AngleAxisFromT(T_guess0, rotTrasl); //deg 
+	AngleAxisFromT(guessT0, rotTrasl); //deg 
 
 	asn1SccRigidBodyState initState;
 	
@@ -182,7 +182,7 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 
 
 	////// Input: image time (image timestamp) ////////
-	time_images = (double) imageIndex*dt_images;
+	time_images = (double) imageIndex*dtImages;
 	imageAcquisitionTime.microseconds = time_images*1000000;
 	dfpc->imageTimeInput(imageAcquisitionTime);
 
@@ -213,7 +213,7 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	 {
 	  if(imageIndex>0) 
 	  {
-	   //memcpy(T_guess0,T_est,16*sizeof(double));
+	   //memcpy(guessT0,T_est,16*sizeof(double));
 	   //memcpy(vel0,vel_est,6*sizeof(double));
 	   dfpc->initInput(dfpc->stateOutput()); 
 	   //time0 = time_images;
@@ -246,7 +246,7 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	
     }
 
-void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* T_guess0)
+void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* guessT0)
 	{
 			
 	double rotTrasl[6];
@@ -269,7 +269,7 @@ void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* T_guess0
      	{
 	double R_true[9];
 	double t_true[3];
-	rotTranslFromT(T_guess0,  R_true, t_true);
+	rotTranslFromT(guessT0,  R_true, t_true);
 	double R_est[9];
 	double t_est[3];
 	double r_est[3];
@@ -343,7 +343,7 @@ void EdgeTrackerExecutor::LoadInputImage(std::string filePath, FrameWrapper::Fra
 
 	}
 
-void EdgeTrackerExecutor::LoadInputPose(std::string filePath, double* T_gt)
+void EdgeTrackerExecutor::LoadInputPose(std::string filePath, double* groundTruthT)
 	{
 	std::ifstream pose;
 	pose.open((char*)filePath.c_str(),std::ios::in);
@@ -351,13 +351,13 @@ void EdgeTrackerExecutor::LoadInputPose(std::string filePath, double* T_gt)
 	for(int i=0;i<12;i++)
 	{
 	 pose>>val;
-	 T_gt[i]= val;
+	 groundTruthT[i]= val;
 	}
 
-	T_gt[12]= 0;
-	T_gt[13]= 0;
-	T_gt[14]= 0;
-	T_gt[15]= 1;
+	groundTruthT[12]= 0;
+	groundTruthT[13]= 0;
+	groundTruthT[14]= 0;
+	groundTruthT[15]= 1;
 
 	pose.close();
 
@@ -430,10 +430,10 @@ void EdgeTrackerExecutor::ConfigureDfpc()
 	dfpc->setup();
 	}
 
-void EdgeTrackerExecutor::filterMedian(cv::Mat& image, cv::Mat& filteredImage, int aperture_size)
+void EdgeTrackerExecutor::filterMedian(cv::Mat& image, cv::Mat& filteredImage, int apertureSize)
 	{
 	 
-	 cv::medianBlur(image, filteredImage, aperture_size);
+	 cv::medianBlur(image, filteredImage, apertureSize);
 	
 	}
 

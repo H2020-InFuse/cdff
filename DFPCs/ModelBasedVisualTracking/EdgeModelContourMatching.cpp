@@ -47,13 +47,13 @@ namespace DFPC
 EdgeModelContourMatching::EdgeModelContourMatching()
 	{
 
-	img_color = NULL;
+	imageOutputColor = NULL;
 
 	#ifdef _DO_BIG_ALLOCATION
 		           //Uchar,   UcharPtr, Double,  Float,   Int, IntPtr,  Short)	
 		doBigMalloc(102400000, 1200000, 12000000, 200000, 5600000, 1400000, 3200000); 
 	#endif
-	matrixIdentity(T_egomotion, 4);
+	matrixIdentity(egomotion, 4);
 	
 	configurationFilePath = "";
 	}
@@ -75,17 +75,17 @@ EdgeModelContourMatching::~EdgeModelContourMatching()
 void EdgeModelContourMatching::allocateImageMemory()
 	{
 	 numberOfCameras = DLRTracker.getNcams();
-	 xrmax = 0;
-	 yrmax = 0;
+	 xResolutionMax = 0;
+	 yResolutionMax = 0;
     
 	 for(int c=0; c< numberOfCameras; c++)
 	 {
-	  imgs[c] = myMallocUchar(DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char));
-	  xrmax = MAX(DLRTracker.getXres(c),xrmax);
-	  yrmax = MAX(DLRTracker.getYres(c),yrmax);
+	  images[c] = myMallocUchar(DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char));
+	  xResolutionMax = MAX(DLRTracker.getXres(c),xResolutionMax);
+	  yResolutionMax = MAX(DLRTracker.getYres(c),yResolutionMax);
 	 }
 
-	 img_color = myMallocUchar(3*xrmax*yrmax*sizeof(unsigned char));
+	 imageOutputColor = myMallocUchar(3*xResolutionMax*yResolutionMax*sizeof(unsigned char));
 	
 	
 	}
@@ -103,22 +103,22 @@ void EdgeModelContourMatching::run()
 	   {
             cv::Mat inputLeftImage = frameToMat.Convert(inImageLeft); 
 	    ASSERT(inputLeftImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
-	    memcpy(imgs[c], inputLeftImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
+	    memcpy(images[c], inputLeftImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
 	   }
 	   if(numberOfCameras > 1 && c == 1)
 	   {
 	    cv::Mat inputRightImage = frameToMat.Convert(inImageRight);
 	    ASSERT(inputRightImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
-	    memcpy(imgs[c], inputRightImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
+	    memcpy(images[c], inputRightImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
 	    }
           }
 	
-	double time_images;
+	double timeImages;
 	//asn1Sccseconds in sec   
-	 time_images = inImageTime.microseconds*0.000001;	 
+	 timeImages = inImageTime.microseconds*0.000001;	 
 
-	double T_guess0[16];
-	double vel0[6];
+	double guessT0[16];
+	double velocity0[6];
 	double rotTrasl[6];
 	double time0;
 	//in sec 
@@ -127,20 +127,20 @@ void EdgeModelContourMatching::run()
 	bool useInitialGuess;
 	useInitialGuess = inDoInit;
 
-	ConvertAsnStateToState(inInit, rotTrasl, vel0);
+	ConvertAsnStateToState(inInit, rotTrasl, velocity0);
 
-	 TfromAngleAxis(rotTrasl, T_guess0);
+	 TfromAngleAxis(rotTrasl, guessT0);
 		
- 	double T_est[16];
-	double vel_est[6];
-	double ErrCov[6*6];
+ 	double estimatedT[16];
+	double estimatedVelocity[6];
+	double ErrorCovariance[6*6];
 	//outputs for ASN:  outSuccess,outState
-        outSuccess = edgeMatching(imgs, time_images, T_egomotion, T_guess0, vel0, time0, useInitialGuess, T_est, vel_est, ErrCov);
+        outSuccess = edgeMatching(images, timeImages, egomotion, guessT0, velocity0, time0, useInitialGuess, estimatedT, estimatedVelocity, ErrorCovariance);
 
-	//output: state estiamtes- T_est, vel_est
-	AngleAxisFromT(T_est, rotTrasl);
+	//output: state estiamtes- estimatedT, estimatedVelocity
+	AngleAxisFromT(estimatedT, rotTrasl);
 
-	outState = ConvertStateToAsnState(rotTrasl, vel_est);
+	outState = ConvertStateToAsnState(rotTrasl, estimatedVelocity);
 
 	
 #ifdef _USE_OPENCV_DISPLAY
@@ -148,14 +148,15 @@ void EdgeModelContourMatching::run()
 	std::string wname;
 	int xres = DLRTracker.getXres(0); 
 	int yres = DLRTracker.getYres(0);
-	cv::Mat img_color_cv(xres,yres,CV_8UC3);
+	cv::Mat imageOutputColorCV(xres,yres,CV_8UC3);
+	memcpy(imageOutputColor, imageOutputColorCV.data,xres*yres);
 
 	for(int c = 0; c < numberOfCameras; c++)
 	{	
-	 DLRTracker.drawResult(T_est, img_color_cv.data, c, true, 100);
+	 DLRTracker.drawResult(estimatedT, imageOutputColor, c, true, 100);
 	 sprintf((char*)wname.c_str(),"result%d",c);
 	 createWindow(wname,1);
-	 showImage(wname,img_color_cv.data,xres,yres,3);
+	 showImage(wname,imageOutputColor,xres,yres,3);
 	}
 		 
 
@@ -195,7 +196,7 @@ void EdgeModelContourMatching::setup()
 	 
 	}
 	
-bool EdgeModelContourMatching::edgeMatching(unsigned char** imgs, double time_images, double* T_egomotion, double* T_guess0, double* vel0, double time0, bool useInitialGuess, double* T_est, double* vel_est, double* ErrCov)
+bool EdgeModelContourMatching::edgeMatching(unsigned char** images, double timeImages, double* egomotion, double* guessT0, double* velocity0, double time0, bool useInitialGuess, double* estimatedT, double* estimatedVelocity, double* ErrorCovariance)
 	{
 	bool success;
 	double degreesOfFreedom[6] = {1,1,1,1,1,1};
@@ -203,7 +204,7 @@ bool EdgeModelContourMatching::edgeMatching(unsigned char** imgs, double time_im
 	bool debug_show=false;
 	bool diagnostics=false;
 
-	status = DLRTracker.poseEstimation(imgs, time_images, T_egomotion, T_guess0, vel0, time0, T_est, vel_est, ErrCov, degreesOfFreedom, useInitialGuess, timing, debug_show, diagnostics);
+	status = DLRTracker.poseEstimation(images, timeImages, egomotion, guessT0, velocity0, time0, estimatedT, estimatedVelocity, ErrorCovariance, degreesOfFreedom, useInitialGuess, timing, debug_show, diagnostics);
 
 	if(status==0)
 	 	success = true;

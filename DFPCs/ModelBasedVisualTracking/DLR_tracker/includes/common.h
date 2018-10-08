@@ -14,15 +14,8 @@
 
 
 #define _USE_OPENCV_DISPLAY
-
-//#define _USE_VALGRIND
-
 #define _USE_STD
-
 #define _DO_BIG_ALLOCATION
-
-//#define DO_CONTOURTRACKER_LM
-
 #ifdef _USE_STD
 #include <stdio.h>
 #include <iostream>
@@ -32,12 +25,7 @@
 
 #include <string.h>
 #include <cstring>
-
 #include <math.h>
-
-#ifdef _USE_VALGRIND
-#undef _USE_OPENCV_DISPLAY
-#endif
 
 #ifndef DBL_EPSILON
 #define DBL_EPSILON 2.2204460492503131e-16
@@ -76,8 +64,8 @@
 
 #define SQR(x) ((x)*(x))
 #define SWAP(a,b,temp) temp=(a);(a)=(b);(b)=temp;
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
-#define MIN(a,b) ((a) < (b) ? (a) : (b))
+//#define MAX(a,b) ((a) > (b) ? (a) : (b))
+//#define MIN(a,b) ((a) < (b) ? (a) : (b))
 #define ABS(x) ((x)<0 ? -(x) : (x))
 #define SGN(a)	(((a)<0) ? -1 : 1)
 

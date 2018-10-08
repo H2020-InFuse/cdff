@@ -79,20 +79,20 @@ namespace DFPC
 		GenericObjectTracker DLRTracker;
 		int status;
 		bool diagnostics;
-		double T_egomotion[16];
+		double egomotion[16];
 		int numberOfCameras;
-		unsigned char* imgs[];
-		unsigned char* img_color;
-	        cv::Mat img_color_cv;
-		int xrmax;
-		int yrmax;
+		unsigned char* images[];
+		unsigned char* imageOutputColor;
+	        cv::Mat imageOutputColorCV;
+		int xResolutionMax;
+		int yResolutionMax;
 
 		DfpcConfigurator configurator;
 		Converters::FrameToMatConverter frameToMat;
 		void ConvertAsnStateToState(asn1SccRigidBodyState& poseState, double* pose, double* velocity);
 		asn1SccRigidBodyState ConvertStateToAsnState(double* pose, double* velocity);
 		void allocateImageMemory();
-		bool edgeMatching(unsigned char** imgs, double time_images, double* T_egomotion, double* T_guess0, double* vel0, double time0,bool useInitialGuess, double* T_est, double* vel_est, double* ErrCov);
+		bool edgeMatching(unsigned char** images, double timeImages, double* egomotion, double* guessT0, double* velocity0, double time0,bool useInitialGuess, double* estimatedT, double* estimatedVelocity, double* ErrorCovariance);
 			
 
     };

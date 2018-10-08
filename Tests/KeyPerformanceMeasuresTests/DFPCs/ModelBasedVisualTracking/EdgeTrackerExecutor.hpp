@@ -30,7 +30,6 @@
  * --------------------------------------------------------------------------
  */
 #include <ModelBasedVisualTracking/ModelBasedVisualTrackingInterface.hpp>
-//#include <ModelBasedVisualTracking/EdgeModelContourMatching.hpp>
 #include <Errors/Assert.hpp>
 
 #include <Frame.hpp>
@@ -67,15 +66,15 @@ class EdgeTrackerExecutor
 	public:
 		EdgeTrackerExecutor();
 		~EdgeTrackerExecutor();
-		double dt_images;
+		double dtImages;
 		bool logGroundTruthError;
 		void SetDfpc(std::string configurationFilePath, CDFF::DFPC::ModelBasedVisualTrackingInterface* dfpc);
 		void SetInputFilesPaths(std::string inputImagesFolder, std::string inputImagesListFileName,std::string inputPosesFolder = std::string(), std::string 				inputPosesListFileName = std::string());
 		void SetOutputFilePath(std::string outputPoseFilePath);
-		void initPose(double* T_guess0);
+		void initPose(double* guessT0);
 		void initVelocity(double* velocity0);
 		void ExecuteDfpc();
-		void SaveOutputPose(std::ofstream& writer, double* T_guess0 = NULL);
+		void SaveOutputPose(std::ofstream& writer, double* guessT0 = NULL);
 
 		
 		
@@ -118,12 +117,12 @@ class EdgeTrackerExecutor
 		bool dfpcExecuted;
 		bool dfpcWasLoaded;
 		void LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame);
-		void LoadInputPose(std::string filePath, double* T_gt);
+		void LoadInputPose(std::string filePath, double* groundTruthT);
 		void LoadInputImagesList();
 		void LoadInputPosesList();
 		void LoadOutputPose();
 		void ConfigureDfpc();
-		void filterMedian(cv::Mat& image, cv::Mat& filteredImage, int aperture_size);
+		void filterMedian(cv::Mat& image, cv::Mat& filteredImage, int apertureSize);
 		bool isFileExist(const std::string& name);
 		void ConvertAsnStateToState(asn1SccRigidBodyState& poseState, double* pose, double* velocity = NULL);
 		asn1SccRigidBodyState ConvertStateToAsnState(double* pose, double* velocity = NULL);

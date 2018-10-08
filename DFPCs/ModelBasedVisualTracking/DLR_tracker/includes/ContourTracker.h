@@ -23,7 +23,7 @@ class ContourTracker
 		int edgeDetect(unsigned char ** imgs, int canny_lowthresh, int canny_hithresh);
 		
 		int poseUpdateLoop(Multibody& theModel,
-							  unsigned char ** imgs,
+					      unsigned char ** imgs,
 				              double * T,
 				              double * ErrCovariance,
 				              double ** T_cw,
@@ -33,9 +33,9 @@ class ContourTracker
 				              double min_trasl_upd,
 				              double max_rot_upd,
 				              double max_trasl_upd,
-							  double front_polygon_thresh,
-							  int pixel_subsampling,
-							  double min_segment_length,
+					      double front_polygon_thresh,
+					      int pixel_subsampling,
+					      double min_segment_length,
 				              double search_dist,
 				              double alpha_thresh,
 				              double loss_inlier_lowthresh,
@@ -100,12 +100,7 @@ class ContourTracker
 
 		int matchAlongNormals(const Multibody& theModel, int cam_idx, double search_dist, double alpha_thresh, bool debug_show, bool diagnostics);
    
-		void correlateEdges(Multibody& theModel,
-							 unsigned char ** imgs_old,
-							 unsigned char ** imgs_new,
-							 double * T_wo,
-							 double ** K_cw,
-							 double ** T_cw);
+		void correlateEdges(Multibody& theModel, unsigned char ** imgs_old, unsigned char ** imgs_new, double * T_wo, double ** K_cw, double ** T_cw);
 		
 		int computePoseUpdate_squareLSE(double * poseUpdate, const double * filterSingVal, bool computeErrCov, double * ErrCov);
 		int computePoseUpdate_rectangularLSE(double * poseUpdate, const double * filterSingVal, bool computeErrCov, double * ErrCov);

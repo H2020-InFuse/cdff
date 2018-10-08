@@ -42,10 +42,9 @@ using namespace DFPC;
  *
  * Test Cases
  *
- * --
+ * --------------------------------------------------------------------------
 */
-const std::string USAGE =
-" \n \
+const std::string USAGE = " \n \
 The program has two usages depending on avaialbility of ground truth poses: \n \
 (1) Without GroundTruth- initial pose should be provided from other DFPC: \n \n \
     (1a) 1st parameter is the configuration file path of the dfpc implementation; \n \
@@ -60,7 +59,7 @@ Example: ./validation_DLR_model_tracker ../../tests/ConfigurationFiles/DFPCs/Mod
     (1d) 4rd parameter is the ground truth file path \n \
     (1e) 5th parameter is the ground truth pose list file name (the file contains three blank lines, and then for each line of the form: timeFloat pathToPose ; \n \
     (1f) 6th parameter  is the output pose file path; \n \n \
-Example: ./validation_DLR_model_tracker ../../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking/EPOS ../../tests/Data/Images/Sequences ImagesList.txt ../../tests/Data/\n \ Images/Sequences  PosesList.txt ../../tests/Data/Images/Sequences/pose.txt \n";
+Example: ./validation_DLR_model_tracker ../../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking/EPOS ../../tests/Data/Images/Sequences ImagesList.txt ../../tests/Data/\n  Images/Sequences  PosesList.txt ../../tests/Data/Images/Sequences/pose.txt \n";
 
 
 
@@ -74,8 +73,7 @@ int maindfpcTest(int argc, char* argv[], ModelBasedVisualTrackingInterface* dfpc
 	std::string inputPosesFolder;
 	std::string inputPosesListFileName;
 	ASSERT(argc == 5 || argc == 7, USAGE);
-	//assert(argc==5 || argc ==7 && " Number of arguements must be 5 or 7");
-     	if(argc==5)
+	if(argc==5)
 	{
 	configurationFilePath = argv[1];
 	inputImagesFolder = argv[2];
@@ -95,8 +93,7 @@ int maindfpcTest(int argc, char* argv[], ModelBasedVisualTrackingInterface* dfpc
 
 	
 	EdgeTrackerExecutor* myexecutor = new EdgeTrackerExecutor;
-	myexecutor->dt_images = 0.33; //sampling time
-	//memcpy(myexecutor->T_guess0, poseFromDetector, 16*sizeof(double));
+	myexecutor->dtImages = 0.33; //sampling time
 	myexecutor->SetDfpc(configurationFilePath, dfpc);
 
 	if(argc==7)
