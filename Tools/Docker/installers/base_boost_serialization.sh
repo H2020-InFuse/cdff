@@ -4,6 +4,7 @@ if [[ ! -n $(find $PKG_DIR -name 'base_boost_serialization*') ]]; then
 
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
+	    -D CMAKE_MODULE_PATH="${INSTALL_DIR}/share/cmake-3.11.4/Modules"
 	    -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
 	    -D CMAKE_CXX_FLAGS:STRING=-std=c++11 \
 	    $SOURCE_DIR/base_boost_serialization
