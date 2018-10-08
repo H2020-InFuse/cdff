@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install --yes --quiet apt-utils && \
 
 SHELL ["/bin/bash", "-c"]
 
-COPY installers/infuse_environnement.env /tmp/CDFF/Tools/Docker/installers/
+COPY installers/infuse_set_pkg_config_path.sh /tmp/CDFF/Tools/Docker/installers/
 COPY fetch_compile_install_dependencies.sh /tmp/CDFF/Tools/Docker/
 
 RUN apt-get update && apt-get install --yes --quiet liblzma-dev libbz2-dev zlib1g-dev

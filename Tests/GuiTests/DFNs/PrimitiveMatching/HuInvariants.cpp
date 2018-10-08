@@ -35,8 +35,8 @@
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
-#include <StringArrayToStdVectorOfStringsConverter.hpp>
-#include <StdVectorOfStringsToStringArrayConverter.hpp>
+#include <StringSequenceToStdVectorOfStringsConverter.hpp>
+#include <StdVectorOfStringsToStringSequenceConverter.hpp>
 
 
 using namespace CDFF::DFN::PrimitiveMatching;
@@ -89,12 +89,12 @@ HuInvariantsTestInterface::HuInvariantsTestInterface(std::string dfnName, int bu
     cv::erode(cvImage, cvImage, element);
 
 	inputImage = converter.Convert(cvImage);
-	huInvariants->frameInput(*inputImage);
+	huInvariants->imageInput(*inputImage);
 
 	std::vector<std::string> string_array{"rectangle", "circle"};
-    BaseTypesWrapper::asn1SccT_StringArray primitive_array = StdVectorOfStringsToStringArrayConverter().Convert(string_array);
+	asn1SccStringSequence primitive_array = StdVectorOfStringsToStringSequenceConverter().Convert(string_array);
 
-	huInvariants->primitiveArrayInput(primitive_array);
+	huInvariants->primitivesInput(primitive_array);
 	outputWindowName = "Hu Invariants Result";
 }
 
@@ -112,14 +112,14 @@ void HuInvariantsTestInterface::SetupParameters()
 
 void HuInvariantsTestInterface::DisplayResult()
 {
-    std::vector<std::string> ordered_primitives = Converters::StringArrayToStdVectorOfStringsConverter().Convert(huInvariants->primitivesMatchedOutput());
+    std::vector<std::string> ordered_primitives = Converters::StringSequenceToStdVectorOfStringsConverter().Convert(huInvariants->primitivesOutput());
 
     PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
     PRINT_TO_LOG("Virtual memory used (kb): ", GetTotalVirtualMemoryUsedKB());
     PRINT_TO_LOG("Primitive matched with best similarity ratio: ", ordered_primitives[0]);
 
 
-    const Frame& frame_with_contour = huInvariants->imageWithMatchedContourOutput();
+    const Frame& frame_with_contour = huInvariants->imageOutput();
     cv::Mat image_with_contour = FrameToMatConverter().Convert(&frame_with_contour);
 
     cv::namedWindow("ORIGINAL IMAGE", CV_WINDOW_NORMAL);

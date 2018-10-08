@@ -19,31 +19,31 @@ VoxelizationExecutor::VoxelizationExecutor(VoxelizationInterface* dfn)
 }
 
 //=====================================================================================================================
-void VoxelizationExecutor::Execute(FrameWrapper::FrameConstPtr inputFrame, asn1SccT_Octree & outputOctree)
+void VoxelizationExecutor::Execute(FrameWrapper::FrameConstPtr inputFrame, asn1SccOctree & outputOctree)
 {
     Execute(*inputFrame, outputOctree);
 }
 
 //=====================================================================================================================
-void VoxelizationExecutor::Execute(FrameWrapper::FrameConstPtr inputFrame, const asn1SccT_Octree * outputOctree)
+void VoxelizationExecutor::Execute(FrameWrapper::FrameConstPtr inputFrame, const asn1SccOctree * outputOctree)
 {
     ASSERT(outputOctree != NULL, "VoxelizationExecutor, Calling NO instance creation Executor with a NULL pointer");
     Execute(*inputFrame, outputOctree);
 }
 
 //=====================================================================================================================
-void VoxelizationExecutor::Execute(const FrameWrapper::Frame& inputFrame, const asn1SccT_Octree * outputOctree)
+void VoxelizationExecutor::Execute(const FrameWrapper::Frame& inputFrame, const asn1SccOctree * outputOctree)
 {
     ASSERT( outputOctree == NULL, "VoxelizationExecutor, Calling instance creation executor with a non-NULL pointer");
-    dfn->frameInput(inputFrame);
+    dfn->depthInput(inputFrame);
     dfn->process();
     outputOctree = & ( dfn->octreeOutput() );
 }
 
 //=====================================================================================================================
-void VoxelizationExecutor::Execute(const FrameWrapper::Frame& inputFrame, asn1SccT_Octree& outputOctree)
+void VoxelizationExecutor::Execute(const FrameWrapper::Frame& inputFrame, asn1SccOctree& outputOctree)
 {
-    dfn->frameInput(inputFrame);
+    dfn->depthInput(inputFrame);
     dfn->process();
     outputOctree = dfn->octreeOutput();
 }

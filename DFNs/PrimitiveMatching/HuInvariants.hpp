@@ -16,8 +16,8 @@
 #include <FrameToMatConverter.hpp>
 #include <MatToFrameConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
-#include <StringArrayToStdVectorOfStringsConverter.hpp>
-#include <StdVectorOfStringsToStringArrayConverter.hpp>
+#include <StringSequenceToStdVectorOfStringsConverter.hpp>
+#include <StdVectorOfStringsToStringSequenceConverter.hpp>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>

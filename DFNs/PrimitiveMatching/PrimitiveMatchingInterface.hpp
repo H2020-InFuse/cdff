@@ -8,8 +8,7 @@
 
 #include "DFNCommonInterface.hpp"
 #include <Frame.h>
-#include <BaseTypes.hpp>
-
+#include <Sequences.h>
 
 namespace CDFF
 {
@@ -27,35 +26,36 @@ namespace DFN
 
             /**
              * Send value to input port "image"
-             * @param image: 2D image captured by a camera with the ROI already segmented
+             * @param image
+             *     2D image captured by a camera
              */
-            virtual void frameInput(const asn1SccFrame& data);
+            virtual void imageInput(const asn1SccFrame& data);
+            /**
+             * Send value to input port "primitives"
+             * @param primitives
+             *     string array with the names of the primitives to be searched for in the input image
+             */
+            virtual void primitivesInput(const asn1SccStringSequence& data);
 
             /**
-            * Send value to input port "primitives"
-            * @return string array: array of strings with the primitives to be matched
-            */
-            virtual void primitiveArrayInput(const BaseTypesWrapper::asn1SccT_StringArray& data);
-
-             /**
+             * Query value from output port "image"
+             * @return image
+             *     same image, with the contour that was matched to a primitive
+             */
+            virtual const asn1SccFrame& imageOutput() const;
+            /**
              * Query value from output port "primitives"
-             * @return string array: array of strings with the input primitives ordered by matching probabilities
+             * @return primitives
+             *     string array with the names of the primitives ordered by matching probability
              */
-            virtual BaseTypesWrapper::asn1SccT_StringArray primitivesMatchedOutput() const;
+            virtual const asn1SccStringSequence& primitivesOutput() const;
 
-            /**
-            * Query value from output port "image"
-            * @return image: input image with the matched contour
-            */
-            virtual const asn1SccFrame& imageWithMatchedContourOutput() const;
-
-    protected:
+        protected:
 
             asn1SccFrame inImage;
-            BaseTypesWrapper::asn1SccT_StringArray inPrimitiveArray;
-            asn1SccFrame outImageWithMatchedContour;
-            BaseTypesWrapper::asn1SccT_StringArray outPrimitiveArrayMatched;
-
+            asn1SccStringSequence inPrimitives;
+            asn1SccFrame outImage;
+            asn1SccStringSequence outPrimitives;
     };
 }
 }

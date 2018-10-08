@@ -1,4 +1,4 @@
-#Infuse specifics
+# CDFF-specific exclude patterns
 build/
 Common/Types/C/
 Documentation/html/

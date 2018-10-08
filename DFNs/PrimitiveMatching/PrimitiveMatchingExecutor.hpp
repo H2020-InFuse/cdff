@@ -9,6 +9,7 @@
 #include "DFNCommonInterface.hpp"
 #include "PrimitiveMatchingInterface.hpp"
 #include <Frame.hpp>
+#include <Sequences.h>
 
 namespace CDFF
 {
@@ -27,12 +28,12 @@ namespace DFN
             PrimitiveMatchingExecutor(PrimitiveMatchingInterface* dfn);
             ~PrimitiveMatchingExecutor();
 
-	    void Execute(FrameWrapper::FrameConstPtr inputFrame, const BaseTypesWrapper::asn1SccT_StringArray& inputPrimitiveArray, BaseTypesWrapper::asn1SccT_StringArray& outputPrimitiveArray);
-	    void Execute(const FrameWrapper::Frame& inputFrame, const BaseTypesWrapper::asn1SccT_StringArray& inputPrimitiveArray, BaseTypesWrapper::asn1SccT_StringArray& outputPrimitiveArray);
+            void Execute(FrameWrapper::FrameConstPtr inputFrame, const asn1SccStringSequence& inputPrimitiveArray, asn1SccStringSequence outputPrimitiveArray);
+            void Execute(const FrameWrapper::Frame& inputFrame, const asn1SccStringSequence& inputPrimitiveArray, asn1SccStringSequence outputPrimitiveArray);
 
-        private:
+            private:
 
-            PrimitiveMatchingInterface* dfn;
+                PrimitiveMatchingInterface* dfn;
     };
 }
 }

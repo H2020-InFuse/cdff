@@ -10,19 +10,20 @@ namespace CDFF
 namespace DFN
 {
 
-//=====================================================================================================================
 VoxelizationInterface::VoxelizationInterface()
 {
 }
 
-//=====================================================================================================================
-void VoxelizationInterface::frameInput(const asn1SccFrame& data)
+VoxelizationInterface::~VoxelizationInterface()
 {
-    inFrame = data;
 }
 
-//=====================================================================================================================
-const asn1SccT_Octree& VoxelizationInterface::octreeOutput() const
+void VoxelizationInterface::depthInput(const asn1SccFrame& data)
+{
+    inDepth = data;
+}
+
+const asn1SccOctree& VoxelizationInterface::octreeOutput() const
 {
     return outOctree;
 }
