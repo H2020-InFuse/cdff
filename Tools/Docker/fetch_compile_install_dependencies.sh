@@ -185,6 +185,7 @@ function build_all_function {
  InstallersToRUN+=("opencv")
  InstallersToRUN+=("vtk")
  InstallersToRUN+=("pcl")
+ InstallersToRUN+=("edres-wrapper")
  if [[ "$ENVIRE_FULL" = true ]]; then
   InstallersToRUN+=("base_cmake")
   InstallersToRUN+=("base_logging")
