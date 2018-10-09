@@ -4,7 +4,7 @@ if [[ ! -n $(find $PKG_DIR -name 'envire_envire_core*') ]]; then
 
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
-	    -D CMAKE_MODULE_PATH="${INSTALL_DIR}/share/cmake-3.11.4/Modules"
+	    -D CMAKE_MODULE_PATH="${INSTALL_DIR}/share/cmake-3.11.4/Modules" \
 	    -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
 	    -D AVOID_QT=True\
 	    $SOURCE_DIR/envire_envire_core
