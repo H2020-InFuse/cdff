@@ -1,12 +1,12 @@
 function install4infuse_envire_envire_core {
 if [[ ! -n $(find $PKG_DIR -name 'envire_envire_core*') ]]; then
-	fetchgit_function envire_envire_core qt4_optional https://github.com/H2020-InFuse/envire-envire_core.git 1fa7d253e2624dce2e058b5b0c0f95e07c6c9fa4
+	fetchgit_function envire_envire_core master https://github.com/envire/envire-envire_core.git 24c1b03355e962cf3ec29ee9adb03942e2284a02
 
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
 	    -D CMAKE_MODULE_PATH="${INSTALL_DIR}/share/cmake-3.11.4/Modules" \
 	    -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
-	    -D AVOID_QT=True\
+	    -D ROCK_VIZ_ENABLED=OFF\
 	    $SOURCE_DIR/envire_envire_core
 
 
