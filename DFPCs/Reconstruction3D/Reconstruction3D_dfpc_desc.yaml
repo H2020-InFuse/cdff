@@ -47,4 +47,10 @@ output_ports:
       port: success
     - dfn: FundamentalMatrixComputation
       port: success
-
+implementations:
+  - name: AdjustmentFromStereo
+  - name: DenseRegistrationFromStereo
+  - name: EstimationFromStereo
+  - name: ReconstructionFromStereo
+  - name: RegistrationFromStereo
+  - name: SparseRegistrationFromStereo
