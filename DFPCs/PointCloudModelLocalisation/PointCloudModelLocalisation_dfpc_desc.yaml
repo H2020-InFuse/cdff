@@ -1,41 +1,42 @@
 name: PointCloudModelLocalisation
-doc: Interface of all DFPCs that find a 3D model in a 3D scene
+doc: "DFPC that finds the position of a given model pointcloud
+     in a given scene pointcloud"
 dfns:
-    - name: FeaturesExtraction3D
-    - name: FeaturesDescription3D
-    - name: FeaturesMatching3D
+  - name: FeaturesExtraction3D
+  - name: FeaturesDescription3D
+  - name: FeaturesMatching3D
 input_ports:
-    - name: scene
-      type: asn1SccPointcloud
-      doc: "a point cloud representing the environment"
-      connections:
-        - dfn: FeaturesExtraction3D
-          port: pointCloud
-    - name: model
-      type: asn1SccPointcloud
-      doc: "the 3d point cloud of the model"
-      connections:
-        - dfn: FeaturesExtraction3D
-          port: pointCloud
-    - name: computeModelFeatures
-      type: bool
-      doc: "this determines whether the model features will be computed.
-            It has to be true the first time a new model is provided.
-            For optimal performance it should be false on all subsequent calls."
-      connections:
-        - dfn: NoDfn
-          port: noPort
+  - name: scene
+    type: asn1SccPointcloud
+    doc: "3D scene pointcloud, representing the environment"
+    connections:
+    - dfn: FeaturesExtraction3D
+      port: pointCloud
+  - name: model
+    type: asn1SccPointcloud
+    doc: "3D model pointcloud, representing the localization target"
+    connections:
+    - dfn: FeaturesExtraction3D
+      port: pointCloud
+  - name: computeModelFeatures
+    type: bool
+    doc: "Whether model features will be computed. Must be true the first time
+         a model is provided. For optimal performance it should be false on all
+         subsequent calls."
+    connections:
+    - dfn: NoDfn
+      port: noPort
 output_ports:
-    - name: pose
-      type: asn1SccPose
-      doc: "This is the pose of the model in the scene"
-      connections:
-        dfn: FeaturesMatching3D
-        port: pose
-    - name: success
-      type: bool
-      doc: "this determines whether the dfpc could localise the model"
-      connections:
-        dfn: FeaturesMatching3D
-        port: success
+  - name: pose
+    type: asn1SccPose
+    doc: "Pose of the model in the scene"
+    connections:
+    - dfn: FeaturesMatching3D
+      port: pose
+  - name: success
+    type: bool
+    doc: "Whether the DFPC could localize the model"
+    connections:
+    - dfn: FeaturesMatching3D
+      port: success
 
