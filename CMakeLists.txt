@@ -300,6 +300,15 @@ include_directories(
   SYSTEM "${_DEPENDENCIES_PREFIX}/include/pcl-1.8"
 )
 
+## Look for Envire ---------------------------------------------------
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(ENVIRE_CORE REQUIRED envire_core)
+
+include_directories(
+  SYSTEM "${_DEPENDENCIES_PREFIX}/include/envire_core"
+)
+
 ## Dependencies: compiled libraries --------------------------------------------
 
 # TODO: this whole section shouldn't be necessary because all targets have an
@@ -330,6 +339,7 @@ include_directories(
   Common/Types/C
   Common/Types/CPP
   Common/Converters
+  CentralDPM
   DFNs
   DFPCs
   Tests
@@ -340,6 +350,7 @@ include_directories(
 # Process all subdirectories containing a CMakeLists file
 
 add_subdirectory(Common)
+add_subdirectory(CentralDPM)
 add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
 add_subdirectory(Tests)

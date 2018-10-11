@@ -1,0 +1,3 @@
+add_executable(initialTest initialTest.cpp)
+
+target_link_libraries(initialTest ${ENVIRE_CORE_LIBRARIES})
