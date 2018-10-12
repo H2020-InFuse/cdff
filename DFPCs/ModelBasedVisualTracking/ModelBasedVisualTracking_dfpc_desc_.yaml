@@ -14,16 +14,16 @@ input_ports:
    doc: " the initial velocity and pose  "
   - name: initTime
      type: asn1SccTime
-     doc: "  " 	
+     doc: " initialization time " 	
   - name: doInit
      type: bool
      doc: " determines whether the tracker dfpc need initialization"		
 output_ports:
     - name: state
       type: RigidBodyState
-      doc: " the rigid body state pose, velocity of the target "
+      doc: " the rigid body state, pose and local velocity of the target "
     - name: success
       type: bool
-      doc: " determines whether the dfpc could localise the target model"
+      doc: " determines whether the dfpc could track the target model"
     
 

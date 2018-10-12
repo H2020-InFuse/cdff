@@ -46,7 +46,7 @@ using namespace DFPC;
 */
 const std::string USAGE = " \n \
 The program has two usages depending on avaialbility of ground truth poses: \n \
-(1) Without GroundTruth- initial pose should be provided from other DFPC: \n \n \
+(1) Without GroundTruth- initial pose should be provided from either initPose method or in the form of (2) to simulate an external DFPC: \n \n \
     (1a) 1st parameter is the configuration file path of the dfpc implementation; \n \
     (1b) 2nd parameter is the directory which connsists of the images list file; \n \
     (1c) 3rd parameter is the image list file name (the file contains three blank lines, and then a triple for each line of the form: time pathToLeftImage \n 		pathToRightImage; \n \

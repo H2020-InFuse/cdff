@@ -93,7 +93,6 @@ void EdgeModelContourMatching::allocateImageMemory()
 
 void EdgeModelContourMatching::run() 
 	{
-
 		
 	ASSERT(numberOfCameras<3,"undefined camera: maximum 2 cameras ");
 		
@@ -103,14 +102,14 @@ void EdgeModelContourMatching::run()
 	   {
             cv::Mat inputLeftImage = frameToMat.Convert(inImageLeft); 
 	    ASSERT(inputLeftImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
-	    memcpy(images[c], inputLeftImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
+	    memcpy(images[c], inputLeftImage.data, DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
 	   }
 	   if(numberOfCameras > 1 && c == 1)
 	   {
 	    cv::Mat inputRightImage = frameToMat.Convert(inImageRight);
 	    ASSERT(inputRightImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
 	    memcpy(images[c], inputRightImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
-	    }
+	   }
           }
 	
 	double timeImages;
@@ -132,13 +131,14 @@ void EdgeModelContourMatching::run()
 	 TfromAngleAxis(rotTrasl, guessT0);
 		
  	double estimatedT[16];
+	double estimatedLastT[16];
 	double estimatedVelocity[6];
 	double ErrorCovariance[6*6];
 	//outputs for ASN:  outSuccess,outState
         outSuccess = edgeMatching(images, timeImages, egomotion, guessT0, velocity0, time0, useInitialGuess, estimatedT, estimatedVelocity, ErrorCovariance);
-
-	//output: state estiamtes- estimatedT, estimatedVelocity
-	AngleAxisFromT(estimatedT, rotTrasl);
+	//output: state estimates- estimatedT, estimatedVelocity
+	if(outSuccess)
+	  AngleAxisFromT(estimatedT, rotTrasl);
 
 	outState = ConvertStateToAsnState(rotTrasl, estimatedVelocity);
 
@@ -158,8 +158,7 @@ void EdgeModelContourMatching::run()
 	 createWindow(wname,1);
 	 showImage(wname,imageOutputColor,xres,yres,3);
 	}
-		 
-
+	
 	char c;
 	c = waitKey(10);
 	if(c==27)
@@ -180,7 +179,7 @@ void EdgeModelContourMatching::setup()
 
         const char* pathTOSpecifications = file_path_string.c_str();
 
-	std::cout<< " Path to config file: "<<file_path_string<<std::endl;
+	std::cout<< " Path to configuration file: "<<file_path_string<<std::endl;
 	
 
 	 if(parser.parseAllFiles(pathTOSpecifications, "camera_parameters.txt", "tracker_parameters.txt", "theModel_client.txt", setup_global_array_counter, 				setup_global_array)!=0)

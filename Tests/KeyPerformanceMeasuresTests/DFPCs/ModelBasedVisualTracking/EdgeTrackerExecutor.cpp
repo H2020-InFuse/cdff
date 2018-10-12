@@ -84,17 +84,17 @@ void EdgeTrackerExecutor::SetOutputFilePath(std::string outputPoseFilePath)
 
 void EdgeTrackerExecutor::initPose(double* guessT0)
 	{
-	 // e.g initial pose for InFuse sequence 20180913_163111
-	double T_guess00[16]= {0.014369, -0.997374, 0.070982, 1207.778952,
+	 // Add initial transf. matrix for your sequence if you dont use from file, e.g initial pose for InFuse sequence 20180913_163111
+	double guessT00[16]= {0.014369, -0.997374, 0.070982, 1207.778952,
 				 0.433550, 0.070184, 0.898392, 296.516388,
 				 -0.901015, 0.017865, 0.433420, 1202.125120,
 	      	 	 	0.000000, 0.000000, 0.000000, 1.000000};
 	 
-	 double TAdapt[16]= {1.0, 0.0, 0.0, 0.0,
+	 double AdaptT[16]= {1.0, 0.0, 0.0, 0.0,
 			    0.0 ,1.0, 0.0, 0.0,
 			    0.0, 0.0, 1.0, 0.0,
 			    0.0, 0.0, 0.0, 1.0};
-	 matrixProduct444(T_guess00, TAdapt, guessT0);
+	 matrixProduct444(guessT00, AdaptT, guessT0);
 	
 	}
 
@@ -111,7 +111,7 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	ASSERT(inputImagesWereLoaded && dfpcWasLoaded, "Cannot execute DFPC, the input images or the DFPC itself are not loaded");
 	ASSERT(leftImageFileNamesList.size() == rightImageFileNamesList.size(), "Left images list and right images list do not have same dimensions");
 		
-	double time_images;
+	double timeImages;
 	asn1SccTime imageAcquisitionTime;
 	//Input: initial time- usually set to 0;
 	double initTime = 0;
@@ -122,21 +122,21 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	//Input: Initial pose 
 	
 	double vel0[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-        double rotTrasl[6];
+        double orientationPosition[6];
 	double guessT0[16];
-	//matrixIdentity(guessT0,4);
-	initPose(guessT0);
+	
+	initPose(guessT0); //use from file instead
 
 	printMatrix(" ## init guessT0: ",guessT0,4,4);
 		
         double distanceInitial = fabs(guessT0[3])+fabs(guessT0[7])+fabs(guessT0[11]);
 	ASSERT(distanceInitial > 500, "Initial position is greater than 500 mm ");
-	AngleAxisFromT(guessT0, rotTrasl); //deg 
+	AngleAxisFromT(guessT0, orientationPosition); //deg 
 
 	asn1SccRigidBodyState initState;
 	
-	initState = ConvertStateToAsnState(rotTrasl, vel0);
-
+	initState = ConvertStateToAsnState(orientationPosition, vel0);
+	 // call an external DFPC here to initialize the tracker
 	 dfpc->initInput(initState);
 	        
 	int successCounter = 0;
@@ -166,7 +166,7 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 		
 	if(logGroundTruthError)
 	{
-			/////------------------- Ground truth pose----------------------
+	//------------------- Ground truth pose----------------------
 	  std::stringstream poseFilePath;
 	  poseFilePath << inputPosesFolder << "/" << poseFileNamesList.at(imageIndex);
 	  LoadInputPose(poseFilePath.str(),T_true);
@@ -174,16 +174,35 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	  printMatrix(" ## ground truth matrix read from file: ",T_true,4,4);
 
 	  //init tracker
-	  AngleAxisFromT(T_true, rotTrasl); //deg, mm
-	  initState = ConvertStateToAsnState(rotTrasl);
+	  AngleAxisFromT(T_true, orientationPosition); //deg, mm
+	  initState = ConvertStateToAsnState(orientationPosition);
 	  dfpc->initInput(initState);
 				
 	  }
+	 else
+	  {
+	  //init tracker from row-ordered transforamtion matrix from file
+	   if(imageIndex == 0)
+	   {
+	     std::stringstream poseFilePath;
+	     poseFilePath << inputPosesFolder << "/" << poseFileNamesList.at(imageIndex);
+	      LoadInputPose(poseFilePath.str(),T_true);
+		
+	      printMatrix(" ## Initial pose matrix from file: ",T_true,4,4);
+
+	 
+	      AngleAxisFromT(T_true, orientationPosition); //deg, mm
+	      initState = ConvertStateToAsnState(orientationPosition);
+	      dfpc->initInput(initState);
+	    }
 
 
-	////// Input: image time (image timestamp) ////////
-	time_images = (double) imageIndex*dtImages;
-	imageAcquisitionTime.microseconds = time_images*1000000;
+	   }
+
+
+	/// Input: image time (image timestamp) ///
+	timeImages = (double) imageIndex*dtImages;
+	imageAcquisitionTime.microseconds = timeImages*1000000;
 	dfpc->imageTimeInput(imageAcquisitionTime);
 
 	     		
@@ -206,28 +225,24 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	outputSuccess = dfpc->successOutput();
 	if(!outputSuccess)
 	 {
-	    std::cout << "########## TRACKING-FRAME "<<imageIndex<<": TARGET LOST " << outputSuccess << std::endl;
-	    // dfpc->doInitInput(true);	
+	    std::cout << "########## TRACKING-FRAME "<<imageIndex<<": NOT RELIABLE POSE ESTIMATE ! " << std::endl;
+	    // dfpc->doInitInput(true);	//if you have pose re-initializer
 	 }		
 	 else
 	 {
 	  if(imageIndex>0) 
 	  {
-	   //memcpy(guessT0,T_est,16*sizeof(double));
-	   //memcpy(vel0,vel_est,6*sizeof(double));
-	   dfpc->initInput(dfpc->stateOutput()); 
-	   //time0 = time_images;
-	   dfpc->initTimeInput(imageAcquisitionTime); 
+	    // copy last pose, vel0 and time0 to initInPut to re-init in case of loss
+	    dfpc->initInput(dfpc->stateOutput()); 
+	    dfpc->initTimeInput(imageAcquisitionTime); 
 	   }
-          std::cout << "########## TRACKING-FRAME "<<imageIndex<<": SUCCESS " << std::endl;
+           std::cout << "########## TRACKING-FRAME "<<imageIndex<<": SUCCESS " << std::endl;
 	 }
 
 	//----output--
-	outputPose = dfpc->stateOutput();
-
-	if(!outputSuccess)
-	   setState(outputPose, 0.0);
-
+	if(outputSuccess)
+	  outputPose = dfpc->stateOutput();
+	
 	//Log poses to file
 	writer.open(outputPoseFilePath.c_str(), std::ios::out | std::ios::app);
 
@@ -249,16 +264,16 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* guessT0)
 	{
 			
-	double rotTrasl[6];
+	double orientationPosition[6];
 	double velocity[6];
       
 
-	ConvertAsnStateToState(outputPose, rotTrasl,velocity);
+	ConvertAsnStateToState(outputPose, orientationPosition,velocity);
 	 
     	// Log to print output
 	std::cout<<" Output states: [ rx  ry  rz  tx  ty  tz  wx  wy  wz  vx  vy  vz] \n";
 	 for (int i = 0;i<6;i++)
-	   std::cout<<rotTrasl[i]<<" ";
+	   std::cout<<orientationPosition[i]<<" ";
 	 for (int i = 0;i<6;i++)
 	   std::cout<<velocity[i]<<" ";
 	 
@@ -275,8 +290,8 @@ void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* guessT0)
 	double r_est[3];
 	for(int i = 0;i < 3; i++)
 	{
-	 r_est[i] = rotTrasl[i]*M_PI/180.0;
-	 t_est[i] = rotTrasl[i+3];
+	 r_est[i] = orientationPosition[i]*M_PI/180.0;
+	 t_est[i] = orientationPosition[i+3];
 	}
 
 	matrixRvecToRmat(r_est, R_est);
@@ -315,7 +330,7 @@ void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* guessT0)
     	 {
 	 for (int i=0;i<6;i++)
 	 {  
-	  writer<<rotTrasl[i]<<" ";
+	  writer<<orientationPosition[i]<<" ";
 	 }
 	 for (int i=0;i<6;i++)
 	 {  
@@ -386,7 +401,6 @@ void EdgeTrackerExecutor::LoadInputPosesList()
 	  break;
 
 	}
-
 
 	posesListFile.close();
 
