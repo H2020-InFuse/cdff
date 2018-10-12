@@ -300,6 +300,26 @@ include_directories(
   SYSTEM "${_DEPENDENCIES_PREFIX}/include/pcl-1.8"
 )
 
+## Look for Edres-Wrapper ------------------------------------------------------
+
+find_package(EDRESWRAPPER)
+
+if(EDRESWRAPPER_FOUND)
+
+  find_package_mode(EDRESWRAPPER)
+
+  message(STATUS "Found EDRESWRAPPER headers in: ${EDRESWRAPPER_INCLUDE_DIRS}")
+  message(STATUS "Found EDRESWRAPPER compiled libraries in: ${EDRESWRAPPER_LIBRARIES}")
+
+  include_directories(SYSTEM ${EDRESWRAPPER_INCLUDE_DIRS})
+
+else()
+
+  # Abort if Edres-Wrapper is not found
+  return()
+
+endif()
+
 ## Dependencies: compiled libraries --------------------------------------------
 
 # TODO: this whole section shouldn't be necessary because all targets have an
