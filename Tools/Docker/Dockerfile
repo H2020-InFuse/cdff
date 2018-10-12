@@ -39,7 +39,7 @@ RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s pcl
 
 COPY installers/edreswrapper.sh /tmp/CDFF/Tools/Docker/installers/
-RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s edreswrapper
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s edres-wrapper
 
 ## Download, build, and install EnviRe and its dependencies
 

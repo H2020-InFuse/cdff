@@ -23,11 +23,11 @@
 #
 # CDFF
 
-function install4infuse_edreswrapper {
+function install4infuse_edres-wrapper {
 if [[ ! -d "${INSTALL_DIR}/include/edres-wrapper" ]]; then
 
   # Download source code, extract, and change to resulting directory
-  fetchsource_function edreswrapper edreswrapper-sdk-1.0.0.tar.gz http://web.magellium.fr/~H2020INFUSE/
+  fetchsource_function edres-wrapper edreswrapper-sdk-1.0.0.tar.gz http://web.magellium.fr/~H2020INFUSE/
 
   # Install
   install -m 0644 -D -t "${INSTALL_DIR}/include/edres-wrapper/" include/edres-wrapper/*
@@ -35,6 +35,6 @@ if [[ ! -d "${INSTALL_DIR}/include/edres-wrapper" ]]; then
   install -m 0644 -D -t "${INSTALL_DIR}/share/edreswrapper/" EDRESWRAPPERConfig.cmake
 
   # Remove source directory
-  clean_function edreswrapper
+  clean_function edres-wrapper
 fi
 }
