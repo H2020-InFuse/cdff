@@ -36,12 +36,6 @@
 #include <FrameToMatConverter.hpp>
 #include <MatToFrameConverter.hpp>
 #include <Converters/SupportTypes.hpp>
-/*
-#include <ConversionCache/ConversionCache.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-*/
 #include <iostream>
 
 using namespace CDFF;
@@ -66,14 +60,14 @@ void initPose(double* guessT0, double* velocity0 )
 {
 	 double  velocity[6] = {0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000};
 	 velocity0 = &velocity[0];
-	 double guessT00[16]= {0.755756, -0.272366, 0.595525, 213.044047,
-			 	 -0.008548, 0.905221, 0.424855, -202.064589,
-			 	 -0.654798, -0.326178, 0.681798, 519.789040,
+	 double guessT00[16]= {0.014377, -0.997371, 0.071024, 1207.899488,
+				 0.433600, 0.070224, 0.898365, 296.456254,
+				 -0.900991, 0.017880, 0.433469, 1202.087847,
 	      	 	 	  0.000000, 0.000000, 0.000000, 1.000000};
-	double TAdapt[16]= {0.998782, 0.036096, 0.033639, 4.999887,
-			-0.034878 ,0.998739, -0.036096, 9.473143,
-			-0.034899, 0.034878, 0.998782, 0.348889,
-			0.000000, 0.000000, 0.000000, 1.000000};
+	double TAdapt[16]= {1.0, 0.0, 0.0, 0.0,
+			    0.0, 1.0, 0.0, 0.0,
+			    0.0, 0.0, 1.0, 0.0,
+			    0.0, 0.0, 0.0, 1.0};
 
 	matrixProduct444(guessT00, TAdapt, guessT0);
 }
@@ -84,7 +78,7 @@ TEST_CASE( "Success Call to Configure (EdgeModelContourMatching)", "[configureDL
 	EdgeModelContourMatching* contourMatching = new EdgeModelContourMatching ;
 	contourMatching->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking");
 	contourMatching->setup();
-	std::cout<< " Tracker DFPC TEST SUCCEEDED-------------!"<<std::endl;
+	std::cout<< " Tracker DFPC- Setup Functionality Test success "<<std::endl;
 	
 	delete contourMatching;
 	
@@ -93,10 +87,13 @@ TEST_CASE( "Success Call to Configure (EdgeModelContourMatching)", "[configureDL
 
 TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTracker]")
 	{
-	cv::Mat inputImageLeft = cv::imread("../tests/Data/Images/DLR_OOS_sim_camL.png",0);
-	cv::Mat inputImageRight = cv::imread("../tests/Data/Images/DLR_OOS_sim_camL.png",0);
+	//source image type- ASN frame, but here cv::Mat. Conversions: cv::Mat --> ASN Frame
+
+	// cv:Mat image type
+	cv::Mat inputImageLeft = cv::imread("../tests/Data/Images/DLR_oos_camL0000.pgm",0);
+	cv::Mat inputImageRight = cv::imread("../tests/Data/Images/DLR_oos_camR0000.pgm",0);
 	MatToFrameConverter matToFrame;
-	
+	// ASN Frame type
 	FrameConstPtr inputFrameLeft = matToFrame.Convert(inputImageLeft);
 	FrameConstPtr inputFrameRight = matToFrame.Convert(inputImageRight);
 	
@@ -112,7 +109,7 @@ TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTra
 
 	//time
 	int frameCounter = 1; //just one frame
-	double dtImages = 0.1; //frame rate 10Hz
+	double dtImages = 0.33; //frame rate 3Hz
 	double timeImages = (double) frameCounter*dtImages;
 
 	asn1SccTime imageAcquisitionTime;
@@ -151,6 +148,7 @@ TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTra
         //output to ASN
 	bool success = contourMatching->successOutput();
 	asn1SccRigidBodyState estimatedState = contourMatching->stateOutput();
+	std::cout<< " Tracker DFPC- Process Functionality Test success "<<std::endl;
 
 	delete contourMatching;
 	

@@ -175,7 +175,7 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 
 	  //init tracker
 	  AngleAxisFromT(T_true, orientationPosition); //deg, mm
-	  initState = ConvertStateToAsnState(orientationPosition);
+	  initState = ConvertStateToAsnState(orientationPosition, vel0);
 	  dfpc->initInput(initState);
 				
 	  }
@@ -186,14 +186,13 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	   {
 	     std::stringstream poseFilePath;
 	     poseFilePath << inputPosesFolder << "/" << poseFileNamesList.at(imageIndex);
-	      LoadInputPose(poseFilePath.str(),T_true);
+	     LoadInputPose(poseFilePath.str(),T_true);
 		
-	      printMatrix(" ## Initial pose matrix from file: ",T_true,4,4);
-
+	     printMatrix(" ## Initial pose matrix from file: ",T_true,4,4);
 	 
-	      AngleAxisFromT(T_true, orientationPosition); //deg, mm
-	      initState = ConvertStateToAsnState(orientationPosition);
-	      dfpc->initInput(initState);
+	     AngleAxisFromT(T_true, orientationPosition); //deg, mm
+	     initState = ConvertStateToAsnState(orientationPosition, vel0);
+	     dfpc->initInput(initState);
 	    }
 
 
@@ -268,7 +267,7 @@ void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* guessT0)
 	double velocity[6];
       
 
-	ConvertAsnStateToState(outputPose, orientationPosition,velocity);
+	ConvertAsnStateToState(outputPose, orientationPosition, velocity);
 	 
     	// Log to print output
 	std::cout<<" Output states: [ rx  ry  rz  tx  ty  tz  wx  wy  wz  vx  vy  vz] \n";
@@ -280,19 +279,19 @@ void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* guessT0)
 	  std::cout<<std::endl;
 
 	// Log groundtruth pose erorrs (Orientation [radian])  
-     	if(logGroundTruthError)
+      if(logGroundTruthError)
      	{
-	double R_true[9];
-	double t_true[3];
-	rotTranslFromT(guessT0,  R_true, t_true);
-	double R_est[9];
-	double t_est[3];
-	double r_est[3];
-	for(int i = 0;i < 3; i++)
-	{
-	 r_est[i] = orientationPosition[i]*M_PI/180.0;
-	 t_est[i] = orientationPosition[i+3];
-	}
+	 double R_true[9];
+	 double t_true[3];
+	 rotTranslFromT(guessT0,  R_true, t_true);
+	 double R_est[9];
+	 double t_est[3];
+	 double r_est[3];
+	 for(int i = 0;i < 3; i++)
+	 {
+	  r_est[i] = orientationPosition[i]*M_PI/180.0;
+	  t_est[i] = orientationPosition[i+3];
+	 }
 
 	matrixRvecToRmat(r_est, R_est);
 	
@@ -309,7 +308,7 @@ void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* guessT0)
 	dtranslation[2] = t_true[2]-t_est[2];
 	// Log to print output
 	printMatrix(" ## Orientation error [radian] ",drho,3,1);
-	printMatrix(" ## Position error [mm] ",dtranslation,3,1);
+	printMatrix(" ## Position error [mm] ", dtranslation,3,1);
 	// Log to file
 	 for (int i=0;i<3;i++)
 	   { 
@@ -322,21 +321,27 @@ void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* guessT0)
 	    writer<<" ";
 
 	   }
+	for(int i=0;i<3;i++)
+	   {
+	    writer<< t_true[i];
+	    writer<<" ";
+
+	   }
 
 	   writer<<" \n ";
      	 }
      // Log the estimated pose (orientation [deg]) to file
-    	 else
-    	 {
-	 for (int i=0;i<6;i++)
-	 {  
-	  writer<<orientationPosition[i]<<" ";
-	 }
-	 for (int i=0;i<6;i++)
-	 {  
+      else
+    	{
+	  for (int i=0;i<6;i++)
+	  {  
+	   writer<<orientationPosition[i]<<" ";
+	  }
+	  for (int i=0;i<6;i++)
+	  {  
 	   writer<<velocity[i]<<" ";
-	 }
-	 writer<<"\n";
+	  }
+	  writer<<"\n";
          }	 
 
 	}
@@ -458,13 +463,13 @@ inline bool EdgeTrackerExecutor::isFileExist(const std::string& name)
 	}
 void EdgeTrackerExecutor::setState(asn1SccRigidBodyState& state, const double value)
 	{
-	 state.orient.arr[0] = value;
-	 state.orient.arr[1] = value;
- 	 state.orient.arr[2] = value;
+	 state.orient.arr[0] = 0.0;
+	 state.orient.arr[1] = 0.0;
+ 	 state.orient.arr[2] = 0.0;
 
-	 state.pos.arr[0] = value;
-	 state.pos.arr[1] = value;
- 	 state.pos.arr[2] = value;
+	 state.pos.arr[0] = 0.0;
+	 state.pos.arr[1] = 0.0;
+ 	 state.pos.arr[2] = 0.0;
 
 	 state.angular_velocity.arr[0] = value;
 	 state.angular_velocity.arr[1] = value;
