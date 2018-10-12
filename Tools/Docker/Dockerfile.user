@@ -81,6 +81,6 @@ CMD ["bash"]
 
 ## Image information
 
-LABEL version="0.3"
+LABEL version="0.4"
 LABEL maintainer="Romain Michalec <romain.michalec@strath.ac.uk>"
 LABEL description="A self-contained environment for building and testing CDFF-core and CDFF-support, and for using CDFF-dev"
