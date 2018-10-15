@@ -12,12 +12,7 @@
 #
 # ### Dependencies ------------------------------------------------------------
 #
-# Edres-wrapper has the following dependencies:
-#
-# * Required: boost1.53, gsl, jpeg.62, png15, atlas3, opencv2.4.3 
-#
-# The previous libraries have to be bundled with edreswrapper because we don't 
-# have full control on the version used by the edres library. 
+# This is a stub version of edreswrapper which has no dependency.
 #
 # ### Dependants --------------------------------------------------------------
 #
@@ -30,9 +25,9 @@ if [[ ! -d "${INSTALL_DIR}/include/edres-wrapper" ]]; then
   fetchsource_function edres-wrapper edreswrapper-sdk-1.0.0.tar.gz http://web.magellium.fr/~H2020INFUSE/
 
   # Install
+  install -m 0644 -D -t "${INSTALL_DIR}/share/edres-wrapper/" EDRESWRAPPERConfig.cmake
   install -m 0644 -D -t "${INSTALL_DIR}/include/edres-wrapper/" include/edres-wrapper/*
   install -m 0644 -D -t "${INSTALL_DIR}/lib/edres-wrapper/" lib/*
-  install -m 0644 -D -t "${INSTALL_DIR}/share/edreswrapper/" EDRESWRAPPERConfig.cmake
 
   # Remove source directory
   clean_function edres-wrapper
