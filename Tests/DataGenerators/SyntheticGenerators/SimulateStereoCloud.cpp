@@ -38,29 +38,38 @@ using namespace PoseWrapper;
 
 const std::string USAGE =
 " \n \
-This program requires four inputs: \n \
-1. a positive index of the model point cloud to use; \n \
-2. the path to the file containing a list of imformation from extracting a point cloud: (each line has form 'x y z qx qy qz qw imagePlanDistance imagePlaneResolution imagePlaneSize displacementErrorMean displacementErrorStandardDeviation missingPatchErrorMean missingPatchErrorStandardDeviation'); \n \
-3. the path to the output folder; \
-4. the output file name (in the output folder) that lists point cloud path and poses.  \n \n \
-Example usage: ./simulate_stereo_cloud 0 ../tests/Data/PointClouds/ViewPoses.txt ../tests/Data/PointClouds/ \n \n";
+This program has two modes of operations, generate a camera poses file and generate a set of points clouds given by a model as viewed by a set of camera poses. The mode are selected by the first \
+parameter which can be either CameraPoseGeneration or PointCloudGeneration. \n \n \
+In camera generation mode, two parameters are needed: \n \
+2. The index of the generated path; \n \
+3. The path of the output file. \n \n \
+Currently available indeces: \n \
+0: the camera moves along a circle in the xz plane, and points toward the center of the coordinate system. \n \n \
+In point cloud generation mode, four parameters are needed: \n \
+2. a positive index of the model point cloud to use; \n \
+3. the path to the file containing a list of imformation from extracting a point cloud: (each line has form 'x y z qx qy qz qw imagePlanDistance imagePlaneResolution imagePlaneSize displacementErrorMean displacementErrorStandardDeviation missingPatchErrorMean missingPatchErrorStandardDeviation'); \n \
+4. the path to the output folder; \
+5. the output file name (in the output folder) that lists point cloud path and poses.  \n \n \
+Example usage: ./simulate_stereo_cloud 0 ../tests/Data/PointClouds/ViewPoses.txt ../tests/Data/PointClouds/ \n \n \
+Currently available indeces: \n \
+0: the base point cloud is a cube rotated by 90 degrees around the x axis. \n \n ";
 
-int ExtractCloudIndex(char* argument)
+int ExtractIndex(char* argument)
 	{
 	static const std::string errorMessage = "The 1st parameter cloudIndex has to be a positive index";
-	float cloudIndex;
+	float index;
 
 	try 
 		{
-		cloudIndex = std::stoi(argument);
+		index = std::stoi(argument);
 		}
 	catch (...)
 		{
 		ASSERT(false, errorMessage);
 		}
-	ASSERT(cloudIndex >= 0, errorMessage);
+	ASSERT(index >= 0, errorMessage);
 
-	return cloudIndex;
+	return index;
 	}
 
 void RunSimulatorOnce(StereoCloudSimulator& simulator, std::ifstream& inputFile, std::ofstream& outputFile, pcl::PLYWriter& writer, int cloudIndex, const std::string& outputFolder)
@@ -110,79 +119,35 @@ void RunSimulatorOnce(StereoCloudSimulator& simulator, std::ifstream& inputFile,
 	counter++;
 	writer.write(outputFilePath, *pointCloud, true);		
 
-	outputFile << outputFileName << " " << 0 << " " << 0 << " " << 0 << " " << 0 << " " << 0 << " " << 0 << " " << 1 << std::endl; //There is a pose as required by the PointAssemblyTest.
-	}
-
-void PrintViewPoses(std::string outputFile)
-	{
-	const double resolution = 0.1;
-	const double radius = 2;
-	std::ofstream file(outputFile.c_str());
-
-	const double planeDistance = 1;
-	const double planeResolution = 0.001;
-	const double planSize = 0.1;
-	const double displacementErrorMean = 0;
-	const double displacementErrorStandardDeviation = 0;
-	const double missingPatchErrorMean = 0;
-	const double missingPatchErrorStandardDeviation = 0;
-	const double viewPositionErrorMean = 0;
-	const double viewPositionErrorStandardDeviation = 0;
-	const double viewOrientationErrorMean = 0;
-	const double viewOrientationStandardDeviation = 0;
-	
-	for(double angle = 0; angle < 2*M_PI; angle += resolution)
-		{
-		double x = radius*std::cos(angle);
-		double z = radius*std::sin(angle);
-		double y = 0.5;
-
-		double roll = std::atan2(y, radius);
-		double pitch = M_PI/2 + angle;
-		double yaw = 0;
-
-		file << x << " ";
-		file << y << " ";
-		file << z << " ";
-		file << std::setprecision(13);
-		file << roll << " ";
-		file << pitch << " ";
-		file << std::setprecision(5);
-		file << yaw << " ";
-		file << planeDistance << " ";
-		file << planeResolution << " ";
-		file << planSize << " ";
-		file << displacementErrorMean << " ";
-		file << displacementErrorStandardDeviation << " ";
-		file << missingPatchErrorMean << " ";
-		file << missingPatchErrorStandardDeviation << " ";
-		file << viewPositionErrorMean << " ";
-		file << viewPositionErrorStandardDeviation << " ";
-		file << viewOrientationErrorMean << " ";
-		file << viewOrientationStandardDeviation << " ";
-		file << std::endl;
-		}
-
-	file.close();
+	outputFile << outputFileName << " " << 0 << " " << 0 << " " << 0 << " " << 0 << " " << 0 << " " << 0 << " " << 1 << std::endl; //At the end of line, there is a pose for PointAssemblyTest.
 	}
 
 int main(int argc, char** argv)
 	{
-	PrintViewPoses("/Agridrive1/DLR/Synthetic/ViewPoses.txt");
-	ASSERT(argc >= 5, USAGE);
-	int cloudIndex = ExtractCloudIndex(argv[1]);
-	std::string poseFile = argv[2];
-	std::string outputFolder = argv[3];
-	std::string outputFileName = argv[4];
+	ASSERT(argc >= 4, USAGE)
+	std::string mode = argv[1];
+	int index = ExtractIndex(argv[2]);
+
+	if (mode == "CameraPoseGeneration")
+		{
+		StereoCloudSimulator::CreateCameraFile(index, "/Agridrive1/DLR/Synthetic/ViewPoses.txt");
+		return 0;
+		}
+
+	ASSERT(argc >= 6, USAGE);
+	ASSERT( mode == "PointCloudGeneration", USAGE);
+	std::string poseFile = argv[3];
+	std::string outputFolder = argv[4];
+	std::string outputFileName = argv[5];
 	std::string cloudFile = outputFolder + "/" + outputFileName;
 	
-	StereoCloudSimulator simulator(cloudIndex);
+	StereoCloudSimulator simulator(index);
 	std::ifstream inputFile(poseFile.c_str());
 	std::ofstream outputFile(cloudFile.c_str());
 	pcl::PLYWriter writer;
 	while(inputFile.good())
 		{
-		RunSimulatorOnce(simulator, inputFile, outputFile, writer, cloudIndex, outputFolder);
+		RunSimulatorOnce(simulator, inputFile, outputFile, writer, index, outputFolder);
 		}
 
 

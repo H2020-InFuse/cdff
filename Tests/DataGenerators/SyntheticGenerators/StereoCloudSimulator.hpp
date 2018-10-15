@@ -34,6 +34,7 @@
 #include <Pose.hpp>
 #include <stdlib.h>
 #include <iostream>
+#include <fstream>
 
 namespace DataGenerators {
 
@@ -62,6 +63,8 @@ namespace DataGenerators {
 
 		static void EulerAnglesToQuaternion(double roll, double pitch, double yaw, double& qx, double& qy, double& qz, double& qw);
 		static void QuaternionToEulerAngles(double qx, double qy, double qz, double qw, double& roll, double& pitch, double& yaw);
+
+		static void CreateCameraFile(int pathIndex, std::string outputFilePath);
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
@@ -95,8 +98,11 @@ namespace DataGenerators {
 
 		pcl::PointXYZ TransformPointFromCameraSystemToCloudSystem(pcl::PointXYZ pointInCameraSystem, PoseWrapper::Pose3D cameraPose);
 		bool ComputeCameraLineProjectionOnPointCloud(pcl::PointXYZ pointInCloudSystem, pcl::PointXYZ& projectionPoint);
+		pcl::PointXYZ ApplyRotation(pcl::PointXYZ point, double qx, double qy, double qz, double qw);
+		void AddFrustrumToPointCloud(PoseWrapper::Pose3D cameraPose, pcl::PointCloud<pcl::PointXYZ>::Ptr stereoCloud);
+
 		void InitializeOriginalCloudWithModel00();
-		
+		static void CreateCameraFileModel00(std::string outputFilePath);		
     };
 
 }

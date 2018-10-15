@@ -289,7 +289,9 @@ void DenseRegistrationFromStereo::UpdatePointCloud(PointCloudConstPtr imageCloud
 	PointCloudWrapper::PointCloudConstPtr outputPointCloud = NULL;
 	if (parameters.useAssemblerDfn)
 		{
-		cloudAssembler->Execute(*imageCloud, outPose, parameters.searchRadius, outputPointCloud);
+		PointCloudConstPtr transformedImageCloud = NULL;
+		cloudTransformer->Execute(*imageCloud, outPose, transformedImageCloud);
+		cloudAssembler->Execute(*transformedImageCloud, outPose, parameters.searchRadius, outputPointCloud);
 		}
 	else
 		{

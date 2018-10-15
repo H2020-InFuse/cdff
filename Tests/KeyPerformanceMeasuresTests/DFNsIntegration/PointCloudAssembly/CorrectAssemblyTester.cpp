@@ -86,13 +86,13 @@ void CorrectAssemblyTester::ExecuteDfns()
 	int numberOfEntries = pointCloudList.size();
 	for(int entryIndex = 0; entryIndex < numberOfEntries; entryIndex++)
 		{
+		PointCloudFileEntry& entry = pointCloudList.at(entryIndex);
+		inputCloud = LoadPointCloud(entry.filePath);
+
 		PRINT_TO_LOG("Processing File: ", entryIndex);		
 		float localProcessingTime = 0;
 		clock_t localBeginTime, localEndTime;
 		localBeginTime = clock();
-
-		PointCloudFileEntry& entry = pointCloudList.at(entryIndex);
-		inputCloud = LoadPointCloud(entry.filePath);
 		
 		PointCloudConstPtr transformedCloud = NULL;
 		transformer.Execute(*inputCloud, entry.pose, transformedCloud);
@@ -140,13 +140,14 @@ void CorrectAssemblyTester::LoadInputPointClouds()
 		file >> qy;
 		file >> qz;
 		file >> qw;
-		
+
 		if (file.good())
 			{
 			PointCloudFileEntry entry;
-			entry.filePath = pointCloudFilePath;
+			entry.filePath = dataFolderPath + "/" + pointCloudFilePath;
 			SetPosition(entry.pose, x, y, z);
 			SetOrientation(entry.pose, qx, qy, qy, qz);
+			pointCloudList.push_back(entry);
 			}
 		}
 	file.close();

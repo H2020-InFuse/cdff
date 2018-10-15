@@ -116,6 +116,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::ComputePointCloud()
 
 	Pose3D cameraPose = AddNoiseToCameraPose(viewPositionErrorSource, viewOrientationErrorSource);
 	int numberOfStepsInEachDirection = imagePlaneSize/(2*imagePlaneResolution);
+
 	pcl::PointXYZ planePoint; // this is the point in the camera system
 	planePoint.z = imagePlanDistance;
 	for(int horizontalStep = 0; horizontalStep < numberOfStepsInEachDirection; horizontalStep = (horizontalStep > 0) ? -horizontalStep : -horizontalStep + 1)
@@ -124,11 +125,8 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::ComputePointCloud()
 		for(int verticalStep = 0; verticalStep < numberOfStepsInEachDirection; verticalStep = (verticalStep > 0) ? -verticalStep : -verticalStep + 1)
 			{
 			planePoint.y = verticalStep * imagePlaneResolution;
-			//std::cout << "Working on plane point (" << planePoint.x << ", " << planePoint.y << ", " << planePoint.z << ")" << std::endl;
-
 			pcl::PointXYZ transformedPoint = TransformPointFromCameraSystemToCloudSystem(planePoint, cameraPose);
 
-			//std::cout << "Working on transformed plane point (" << transformedPoint.x << ", " << transformedPoint.y << ", " << transformedPoint.z << ")" << std::endl;
 			pcl::PointXYZ projection;
 			bool projectionExists = ComputeCameraLineProjectionOnPointCloud(transformedPoint, projection);
 			projection.x = projection.x + displancementErrorSource(randomEngine);
@@ -136,7 +134,6 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::ComputePointCloud()
 			projection.z = projection.z + displancementErrorSource(randomEngine);
 			if (projectionExists)
 				{
-				//std::cout << "Projection point is: (" << projection.x << ", " << projection.y << ", " << projection.z << ")" << std::endl;
 				stereoCloud->points.push_back(projection);
 				}
 			}
@@ -178,6 +175,19 @@ void StereoCloudSimulator::QuaternionToEulerAngles(double qx, double qy, double 
 	double sinYawCosPitch = 2.0 * (qw * qz + qx * qy);
 	double cosYawCosPitch = 1.0 - 2.0 * (qy * qy + qz * qz);  
 	yaw = std::atan2(sinYawCosPitch, cosYawCosPitch);
+	}
+
+void StereoCloudSimulator::CreateCameraFile(int pathIndex, std::string outputFilePath)
+	{
+	if (pathIndex == 0)
+		{
+		CreateCameraFileModel00(outputFilePath);
+		}
+	else
+		{
+		std::cout << "Index out of range" << std::endl;
+		abort();
+		}
 	}
 
 /* --------------------------------------------------------------------------
@@ -339,9 +349,60 @@ bool StereoCloudSimulator::ComputeCameraLineProjectionOnPointCloud(pcl::PointXYZ
 		return false;
 		}
 
-	//std::cout << "Distance: " << minimumDistance << std::endl;
 	projectionPoint = originalCloud->points.at(minimumDistanceIndex);
 	return true;
+	}
+
+pcl::PointXYZ StereoCloudSimulator::ApplyRotation(pcl::PointXYZ point, double qx, double qy, double qz, double qw)
+	{
+	Eigen::Quaternion<float> rotation(qw, qx, qy, qz);
+
+	Eigen::Vector3f eigenPoint(point.x, point.y, point.z);
+	Eigen::Vector3f eigenTransformedPoint = rotation * eigenPoint;
+
+	pcl::PointXYZ rotatedPoint;
+	rotatedPoint.x = eigenTransformedPoint.x();
+	rotatedPoint.y = eigenTransformedPoint.y();
+	rotatedPoint.z = eigenTransformedPoint.z();
+
+	return rotatedPoint;
+	}
+
+void StereoCloudSimulator::AddFrustrumToPointCloud(Pose3D cameraPose, pcl::PointCloud<pcl::PointXYZ>::Ptr stereoCloud)
+	{
+	int numberOfStepsInEachDirection = imagePlaneSize/(2*imagePlaneResolution);
+	pcl::PointXYZ planePoint; // this is the point in the camera system
+	planePoint.z = imagePlanDistance;
+	for(int horizontalStep = 0; horizontalStep < numberOfStepsInEachDirection; horizontalStep = (horizontalStep > 0) ? -horizontalStep : -horizontalStep + 1)
+		{
+		planePoint.x = horizontalStep * imagePlaneResolution;
+		for(int verticalStep = 0; verticalStep < numberOfStepsInEachDirection; verticalStep = (verticalStep > 0) ? -verticalStep : -verticalStep + 1)
+			{
+			planePoint.y = verticalStep * imagePlaneResolution;
+
+			pcl::PointXYZ transformedPoint = TransformPointFromCameraSystemToCloudSystem(planePoint, cameraPose);
+			if ( (horizontalStep == 0 && verticalStep == 0) || 
+				(horizontalStep == numberOfStepsInEachDirection-1 && verticalStep == numberOfStepsInEachDirection-1) || 
+				(horizontalStep == -numberOfStepsInEachDirection+1 && verticalStep == numberOfStepsInEachDirection-1) || 
+				(horizontalStep == numberOfStepsInEachDirection-1 && verticalStep == -numberOfStepsInEachDirection+1) || 
+				(horizontalStep == -numberOfStepsInEachDirection+1 && verticalStep == -numberOfStepsInEachDirection+1) )
+				{
+				double dx = transformedPoint.x - GetXPosition(cameraPose);
+				double dy = transformedPoint.y - GetYPosition(cameraPose);
+				double dz = transformedPoint.z - GetZPosition(cameraPose);
+				double lineLength = std::sqrt(dx*dx + dy*dy + dz*dz);				
+				for(double t = 0; t <= 3; t+=0.01)
+					{
+					pcl::PointXYZ linePoint;
+					linePoint.x = GetXPosition(cameraPose) +dx*t; 
+					linePoint.y = GetYPosition(cameraPose) +dy*t; 
+					linePoint.z = GetZPosition(cameraPose) +dz*t; 
+					stereoCloud->points.push_back(linePoint);
+					}
+				}
+			stereoCloud->points.push_back(transformedPoint);
+			}
+		}
 	}
 
 #define NEXT_BUT_LAST_IS_CUBE_SIZE(x) x = (x + CubeResolution < CubeSize) ? (x + CubeResolution) : ( x < CubeSize ? CubeSize : CubeSize + CubeResolution)
@@ -364,15 +425,74 @@ void StereoCloudSimulator::InitializeOriginalCloudWithModel00()
 				pcl::PointXYZ xzSidePoint(b, a, c);
 				pcl::PointXYZ xySidePoint(b, c, a);
 
-				originalCloud->points.push_back(yzSidePoint);
-				originalCloud->points.push_back(xzSidePoint);
-				originalCloud->points.push_back(xySidePoint);
+				pcl::PointXYZ yzSideRotated = ApplyRotation(yzSidePoint, 0.3894183423, 0, 0, 0.921060994);
+				pcl::PointXYZ xzSideRotated = ApplyRotation(xzSidePoint, 0.3894183423, 0, 0, 0.921060994);
+				pcl::PointXYZ xySideRotated = ApplyRotation(xySidePoint, 0.3894183423, 0, 0, 0.921060994);
+
+				originalCloud->points.push_back(yzSideRotated);
+				originalCloud->points.push_back(xzSideRotated);
+				originalCloud->points.push_back(xySideRotated);
 				}
 			}
 		} 
 	std::cout << "Cube construction is complete" << std::endl;
 	//pcl::PLYWriter writer;
 	//writer.write("/Agridrive1/DLR/Synthetic/Cube.ply", *originalCloud, true);
+	}
+
+void StereoCloudSimulator::CreateCameraFileModel00(std::string outputFilePath)
+	{
+	//The camera moves along a circle around the cube 00.
+	const double cubeSize = 0.1;
+	const double resolution = 0.1;
+	const double radius = 2;
+	std::ofstream file(outputFilePath.c_str());
+
+	const double planeDistance = 1;
+	const double planeResolution = 0.001;
+	const double planSize = 0.1;
+	const double displacementErrorMean = 0;
+	const double displacementErrorStandardDeviation = 0;
+	const double missingPatchErrorMean = 0;
+	const double missingPatchErrorStandardDeviation = 0;
+	const double viewPositionErrorMean = 0;
+	const double viewPositionErrorStandardDeviation = 0;
+	const double viewOrientationErrorMean = 0;
+	const double viewOrientationStandardDeviation = 0;
+	
+	for(double angle = 0; angle < 2*M_PI; angle += resolution)
+		{
+		double x = radius*std::sin(angle) + cubeSize/2;
+		double z = radius*std::cos(angle) + cubeSize/2;
+		double y = cubeSize/2;
+
+		double roll = 0;
+		double pitch = M_PI - angle;
+		double yaw = 0;
+
+		file << x << " ";
+		file << y << " ";
+		file << z << " ";
+		file << std::setprecision(13);
+		file << roll << " ";
+		file << pitch << " ";
+		file << std::setprecision(5);
+		file << yaw << " ";
+		file << planeDistance << " ";
+		file << planeResolution << " ";
+		file << planSize << " ";
+		file << displacementErrorMean << " ";
+		file << displacementErrorStandardDeviation << " ";
+		file << missingPatchErrorMean << " ";
+		file << missingPatchErrorStandardDeviation << " ";
+		file << viewPositionErrorMean << " ";
+		file << viewPositionErrorStandardDeviation << " ";
+		file << viewOrientationErrorMean << " ";
+		file << viewOrientationStandardDeviation << " ";
+		file << std::endl;
+		}
+
+	file.close();
 	}
 }
 /** @} */
