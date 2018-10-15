@@ -149,32 +149,23 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::ComputePointCloud()
 
 void StereoCloudSimulator::EulerAnglesToQuaternion(double roll, double pitch, double yaw, double& qx, double& qy, double& qz, double& qw)
 	{
-	double cosYaw = std::cos(yaw/2);
-	double sinYaw = std::sin(yaw/2);
-	double cosRoll = std::cos(roll/2);
-	double sinRoll = std::sin(roll/2);
-	double cosPitch = std::cos(pitch/2);
-	double sinPitch = std::sin(pitch/2);
+	Eigen::Quaternion<double> quaternion;
+	quaternion = Eigen::AngleAxisd(roll, Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(pitch, Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(yaw, Eigen::Vector3d::UnitZ());
 
-	qw = cosYaw * cosRoll * cosPitch + sinYaw * sinRoll * sinPitch;
-	qx = cosYaw * sinRoll * cosPitch - sinYaw * cosRoll * sinPitch;
-	qy = cosYaw * cosRoll * sinPitch + sinYaw * sinRoll * cosPitch;
-	qz = sinYaw * cosRoll * cosPitch - cosYaw * sinRoll * sinPitch;
+	qx = quaternion.x();
+	qy = quaternion.y();
+	qz = quaternion.z();
+	qw = quaternion.w();
 	}
 
 void StereoCloudSimulator::QuaternionToEulerAngles(double qx, double qy, double qz, double qw, double& roll, double& pitch, double& yaw)
 	{
-	double sinRollcosPitch = 2.0 * (qw * qx + qy * qz);
-	double cosRollcosPitch = 1.0 - 2.0 * (qx * qx + qy * qy);
-	roll = std::atan2(sinRollcosPitch, cosRollcosPitch);
+	Eigen::Quaternion<double> quaternion(qw, qx, qy, qz);
+	Eigen::Matrix<double,3,1> eulerAngles = quaternion.toRotationMatrix().eulerAngles(0, 1, 2);
 
-	double sinPitch = 2.0 * (qw * qy - qz * qx);
-	sinPitch = (sinPitch < -1 ) ? -1 : (sinPitch > 1 ? 1 : sinPitch);
-	pitch = std::asin(sinPitch);
-
-	double sinYawCosPitch = 2.0 * (qw * qz + qx * qy);
-	double cosYawCosPitch = 1.0 - 2.0 * (qy * qy + qz * qz);  
-	yaw = std::atan2(sinYawCosPitch, cosYawCosPitch);
+	roll = eulerAngles(0,0);
+	pitch = eulerAngles(1,0);
+	yaw = eulerAngles(2,0);
 	}
 
 void StereoCloudSimulator::CreateCameraFile(int pathIndex, std::string outputFilePath)
@@ -266,13 +257,13 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::GetCloudWithPatchNoise
 
 pcl::PointXYZ StereoCloudSimulator::TransformPointFromCameraSystemToCloudSystem(pcl::PointXYZ pointInCameraSystem, Pose3D cameraPose)
 	{
-	typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
-	Eigen::Quaternion<float> rotation(GetWRotation(cameraPose), GetXRotation(cameraPose), GetYRotation(cameraPose), GetZRotation(cameraPose));
-	Eigen::Translation<float, 3> translation( GetXPosition(cameraPose), GetYPosition(cameraPose), GetZPosition(cameraPose));
+	typedef Eigen::Transform<double, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
+	Eigen::Quaternion<double> rotation(GetWRotation(cameraPose), GetXRotation(cameraPose), GetYRotation(cameraPose), GetZRotation(cameraPose));
+	Eigen::Translation<double, 3> translation( GetXPosition(cameraPose), GetYPosition(cameraPose), GetZPosition(cameraPose));
 	AffineTransform affineTransform = translation * rotation.inverse();
 
-	Eigen::Vector3f eigenPoint(pointInCameraSystem.x, pointInCameraSystem.y, pointInCameraSystem.z);
-	Eigen::Vector3f eigenTransformedPoint = affineTransform * eigenPoint;
+	Eigen::Vector3d eigenPoint(pointInCameraSystem.x, pointInCameraSystem.y, pointInCameraSystem.z);
+	Eigen::Vector3d eigenTransformedPoint = affineTransform * eigenPoint;
 
 	pcl::PointXYZ projectionPoint;
 	projectionPoint.x = eigenTransformedPoint.x();

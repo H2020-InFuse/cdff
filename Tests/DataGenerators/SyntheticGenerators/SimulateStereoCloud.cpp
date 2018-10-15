@@ -47,10 +47,10 @@ Currently available indeces: \n \
 0: the camera moves along a circle in the xz plane, and points toward the center of the coordinate system. \n \n \
 In point cloud generation mode, four parameters are needed: \n \
 2. a positive index of the model point cloud to use; \n \
-3. the path to the file containing a list of imformation from extracting a point cloud: (each line has form 'x y z qx qy qz qw imagePlanDistance imagePlaneResolution imagePlaneSize displacementErrorMean displacementErrorStandardDeviation missingPatchErrorMean missingPatchErrorStandardDeviation'); \n \
+3. the path to the file containing a list of imformation from extracting a point cloud: (each line has form 'x y z qx qy qz qw imagePlanDistance imagePlaneResolution imagePlaneSize displacementErrorMean displacementErrorStandardDeviation missingPatchErrorMean missingPatchErrorStandardDeviation viewPositionErrorMean viewPositionErrorStandardDeviation viewOrientationErrorMean viewOrientationStandardDeviation'). All noise errors are modelled as gaussian random variables; \n \
 4. the path to the output folder; \
 5. the output file name (in the output folder) that lists point cloud path and poses.  \n \n \
-Example usage: ./simulate_stereo_cloud 0 ../tests/Data/PointClouds/ViewPoses.txt ../tests/Data/PointClouds/ \n \n \
+Example usage: ./simulate_stereo_cloud 0 ../tests/Data/PointClouds/ViewPoses.txt ../tests/Data/PointClouds/ output_clouds.txt\n \n \
 Currently available indeces: \n \
 0: the base point cloud is a cube rotated by 90 degrees around the x axis. \n \n ";
 
