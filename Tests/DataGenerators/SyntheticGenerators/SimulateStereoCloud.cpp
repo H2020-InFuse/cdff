@@ -130,7 +130,7 @@ int main(int argc, char** argv)
 
 	if (mode == "CameraPoseGeneration")
 		{
-		StereoCloudSimulator::CreateCameraFile(index, "/Agridrive1/DLR/Synthetic/ViewPoses.txt");
+		StereoCloudSimulator::CreateCameraFile(index, argv[2]);
 		return 0;
 		}
 
