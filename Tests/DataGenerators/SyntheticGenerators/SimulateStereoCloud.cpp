@@ -130,7 +130,7 @@ int main(int argc, char** argv)
 
 	if (mode == "CameraPoseGeneration")
 		{
-		StereoCloudSimulator::CreateCameraFile(index, argv[2]);
+		StereoCloudSimulator::CreateCameraFile(index, argv[3]);
 		return 0;
 		}
 
