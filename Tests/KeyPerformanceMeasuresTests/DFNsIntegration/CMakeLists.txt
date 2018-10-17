@@ -67,3 +67,15 @@ target_link_libraries(
 	correctness_harris_shot_ransac
 	cdff_helpers cdff_logger cdff_types converters_opencv harris_detector_3d feature_extraction_3d shot_descriptor_3d feature_description_3d ransac_3d feature_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
+
+add_executable(
+    correctness_nearest_neighbour_average
+    PointCloudAssembly/NearestNeighbourAverage.cpp
+    PointCloudAssembly/CorrectAssemblyTester.cpp
+)
+target_link_libraries(
+	correctness_nearest_neighbour_average
+	cdff_helpers cdff_logger cdff_types converters_opencv neighbour_point_average cartesian_system_transform pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters pcl_kdtree boost_system
+)
+
+
