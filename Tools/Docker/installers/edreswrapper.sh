@@ -25,7 +25,7 @@ if [[ ! -d "${INSTALL_DIR}/include/edres-wrapper" ]]; then
   fetchsource_function edres-wrapper edreswrapper-sdk-1.0.0.tar.gz http://web.magellium.fr/~H2020INFUSE/
 
   # Install
-  install -m 0644 -D -t "${INSTALL_DIR}/share/edreswrapper/" EDRESWRAPPERConfig.cmake
+  install -m 0644 -D -t "${INSTALL_DIR}/share/edres-wrapper/" Edres-WrapperConfig.cmake
   install -m 0644 -D -t "${INSTALL_DIR}/include/edres-wrapper/" include/edres-wrapper/*
   install -m 0644 -D -t "${INSTALL_DIR}/lib/edres-wrapper/" lib/*
 

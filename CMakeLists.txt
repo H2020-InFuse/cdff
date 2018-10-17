@@ -302,16 +302,16 @@ include_directories(
 
 ## Look for Edres-Wrapper ------------------------------------------------------
 
-find_package(EDRESWRAPPER)
+find_package(Edres-Wrapper)
 
-if(EDRESWRAPPER_FOUND)
+if(Edres-Wrapper_FOUND)
 
-  find_package_mode(EDRESWRAPPER)
+  find_package_mode(Edres-Wrapper)
 
-  message(STATUS "Found EDRESWRAPPER headers in: ${EDRESWRAPPER_INCLUDE_DIRS}")
-  message(STATUS "Found EDRESWRAPPER compiled libraries in: ${EDRESWRAPPER_LIBRARIES}")
+  message(STATUS "Found Edres-Wrapper headers in: ${Edres-Wrapper_INCLUDE_DIRS}")
+  message(STATUS "Found Edres-Wrapper compiled libraries in: ${Edres-Wrapper_LIBRARIES}")
 
-  include_directories(SYSTEM ${EDRESWRAPPER_INCLUDE_DIRS})
+  include_directories(SYSTEM ${Edres-Wrapper_INCLUDE_DIRS})
 
 else()
 
