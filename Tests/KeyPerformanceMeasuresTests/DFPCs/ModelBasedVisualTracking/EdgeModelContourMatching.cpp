@@ -109,7 +109,7 @@ int maindfpcTest(int argc, char* argv[], ModelBasedVisualTrackingInterface* dfpc
 	delete myexecutor;	
 	return 0;
 	}
- int main(int argc, char* argv[])
+int main(int argc, char* argv[])
 	{
 		EdgeModelContourMatching* modelTracker = new EdgeModelContourMatching();
 		
