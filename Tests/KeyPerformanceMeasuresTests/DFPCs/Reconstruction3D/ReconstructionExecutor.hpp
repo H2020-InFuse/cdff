@@ -68,7 +68,7 @@ class ReconstructionExecutor
 		void SetOutputFilePath(std::string outputPointCloudFilePath);
 		void SetOutliersFilePath(std::string outliersReferenceFilePath);
 		void SetMeasuresFilePath(std::string measuresReferenceFilePath);
-		void ExecuteDfpc();
+		void ExecuteDfpc(std::string transformFilePath = "");
 		bool IsOutliersQualitySufficient(float outliersPercentageThreshold);
 		bool IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage);
 		bool IsDimensionsQualitySufficient(float shapeSimilarityPercentange, float dimensionalErrorPercentage, float componentSizeThresholdPercentage);
@@ -139,6 +139,8 @@ class ReconstructionExecutor
 		float ComputeObjectDimension(int objectIndex);
 		float ComputeLineAbsoluteError(const Line& line);
 		float ComputeObjectShapeSimilarity(int objectIndex);
+
+		void SaveTransform(std::string transformFilePath);
 	};
 
 #endif
