@@ -39,6 +39,7 @@
 #include <DepthFiltering/ConvolutionFilter.hpp>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
 #include <PointCloudAssembly/NeighbourPointAverage.hpp>
+#include <PointCloudAssembly/VoxelBinning.hpp>
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 
@@ -372,6 +373,10 @@ PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(std::string d
 	if (dfnImplementation == "NeighbourPointAverage")
 	{
 		return new PointCloudAssembly::NeighbourPointAverage;
+	}
+	else if (dfnImplementation == "VoxelBinning")
+	{
+		return new PointCloudAssembly::VoxelBinning;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudAssembly implementation");
 	return NULL;

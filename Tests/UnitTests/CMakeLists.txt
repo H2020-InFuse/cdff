@@ -60,6 +60,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFPCs/HapticScanning/HapticScanning.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
     DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
+    DFNs/PointCloudAssembly/VoxelBinning.cpp
     DFNs/PointCloudTransform/CartesianSystemTransform.cpp
 )
 
@@ -132,6 +133,7 @@ set(UNITTEST_LIBRARIES Catch
     convolution_filter
     threshold_force
     neighbour_point_average
+    voxel_binning
     cartesian_system_transform
     dfpc_haptic_scanning
 )

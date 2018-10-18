@@ -12,3 +12,12 @@ target_link_libraries(
     neighbour_point_average
     point_cloud_assembly cdff_types yaml-cpp cdff_helpers converters_opencv
 )
+
+add_library(
+    voxel_binning
+    VoxelBinning.cpp
+)
+target_link_libraries(
+    voxel_binning
+    point_cloud_assembly cdff_types yaml-cpp cdff_helpers converters_opencv
+)
