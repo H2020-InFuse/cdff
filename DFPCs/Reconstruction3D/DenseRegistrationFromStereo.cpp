@@ -261,15 +261,27 @@ void DenseRegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud)
 		{
 		Pose3DConstPtr poseToPreviousPose = NULL;
 		registrator3d->Execute( imageCloud, bundleHistory->GetPointCloud(1), poseToPreviousPose, outSuccess);
-		if (outSuccess && !parameters.useAssemblerDfn)
+		if (outSuccess)
 			{
-			pointCloudMap.AttachPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, poseToPreviousPose);
-			Copy( pointCloudMap.GetLatestPose(), outPose);
-			}
-		else if (outSuccess)
-			{
-			Pose3D newPose = Sum(outPose, *poseToPreviousPose);
-			Copy(newPose, outPose);
+			if (parameters.useAssemblerDfn && parameters.matchToReconstructedCloud)
+				{
+				Copy(*poseToPreviousPose, outPose);
+				}
+			else if (parameters.useAssemblerDfn && !parameters.matchToReconstructedCloud)
+				{
+				Pose3D newPose = Sum(outPose, *poseToPreviousPose);
+				Copy(newPose, outPose);
+				}
+			else if (!parameters.useAssemblerDfn && parameters.matchToReconstructedCloud)
+				{
+				pointCloudMap.AddPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, poseToPreviousPose);
+				Copy(*poseToPreviousPose, outPose);
+				}
+			else
+				{
+				pointCloudMap.AttachPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, poseToPreviousPose);
+				Copy( pointCloudMap.GetLatestPose(), outPose);
+				}
 			}
 		#ifdef TESTING
 		logFile << outSuccess << " ";

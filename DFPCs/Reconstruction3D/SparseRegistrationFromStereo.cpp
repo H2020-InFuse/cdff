@@ -280,15 +280,27 @@ void SparseRegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud, Vis
 		{
 		Pose3DConstPtr poseToPreviousPose = NULL;
 		registrator3d->Execute(  featureCloud, bundleHistory->GetPointCloud(1), poseToPreviousPose, outSuccess);
-		if (outSuccess && !parameters.useAssemblerDfn)
+		if (outSuccess)
 			{
-			pointCloudMap.AttachPointCloud( imageCloud, keypointVector, poseToPreviousPose);
-			Copy( pointCloudMap.GetLatestPose(), outPose);
-			}
-		else if (outSuccess)
-			{	
-			Pose3D newPose = Sum(outPose, *poseToPreviousPose);
-			Copy(newPose, outPose);
+			if (parameters.useAssemblerDfn && parameters.matchToReconstructedCloud)
+				{
+				Copy(*poseToPreviousPose, outPose);
+				}
+			else if (parameters.useAssemblerDfn && !parameters.matchToReconstructedCloud)
+				{
+				Pose3D newPose = Sum(outPose, *poseToPreviousPose);
+				Copy(newPose, outPose);
+				}
+			else if (!parameters.useAssemblerDfn && parameters.matchToReconstructedCloud)
+				{
+				pointCloudMap.AddPointCloud( imageCloud, keypointVector, poseToPreviousPose);
+				Copy(*poseToPreviousPose, outPose);
+				}
+			else
+				{
+				pointCloudMap.AttachPointCloud( imageCloud, keypointVector, poseToPreviousPose);
+				Copy( pointCloudMap.GetLatestPose(), outPose);
+				}
 			}
 		#ifdef TESTING
 		logFile << outSuccess << " ";
