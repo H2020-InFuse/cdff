@@ -78,4 +78,14 @@ target_link_libraries(
 	cdff_helpers cdff_logger cdff_types converters_opencv neighbour_point_average cartesian_system_transform pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters pcl_kdtree boost_system
 )
 
+add_executable(
+    correctness_voxel_binning
+    PointCloudAssembly/VoxelBinning.cpp
+    PointCloudAssembly/CorrectAssemblyTester.cpp
+)
+target_link_libraries(
+	correctness_voxel_binning
+	cdff_helpers cdff_logger cdff_types converters_opencv voxel_binning cartesian_system_transform pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters pcl_kdtree boost_system
+)
+
 

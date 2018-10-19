@@ -68,6 +68,7 @@ RegistrationFromStereo::RegistrationFromStereo()
 	featuresMatcher3d = NULL;
 	cloudAssembler = NULL;
 	cloudTransformer = NULL;
+	cloudFilter = NULL;
 
 	bundleHistory = new BundleHistory(2);
 
@@ -87,6 +88,7 @@ RegistrationFromStereo::~RegistrationFromStereo()
 	DeleteIfNotNull(featuresMatcher3d);
 	DeleteIfNotNull(cloudAssembler);
 	DeleteIfNotNull(cloudTransformer);
+	DeleteIfNotNull(cloudFilter);
 
 	DeleteIfNotNull(bundleHistory);
 	}
@@ -112,8 +114,11 @@ void RegistrationFromStereo::run()
 	optionalLeftFilter->Execute(inLeftImage, filteredLeftImage);
 	optionalRightFilter->Execute(inRightImage, filteredRightImage);
 
+	PointCloudConstPtr unfilteredImageCloud = NULL;
+	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, unfilteredImageCloud);
+
 	PointCloudConstPtr imageCloud = NULL;
-	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, imageCloud);
+	cloudFilter->Execute(unfilteredImageCloud, imageCloud);
 
 	VisualPointFeatureVector3DConstPtr featureVector = NULL;
 	ComputeVisualFeatures(imageCloud, featureVector);
@@ -191,6 +196,7 @@ void RegistrationFromStereo::InstantiateDFNExecutors()
 	featuresExtractor3d = new FeaturesExtraction3DExecutor( static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") ) );
 	optionalFeaturesDescriptor3d = new FeaturesDescription3DExecutor( static_cast<FeaturesDescription3DInterface*>( configurator.GetDfn("featuresDescriptor3d", true) ) );
 	featuresMatcher3d = new FeaturesMatching3DExecutor( static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") ) );
+	cloudFilter = new PointCloudFilteringExecutor( static_cast<PointCloudFilteringInterface*>( configurator.GetDfn("cloudFilter", true) ) );
 	if (parameters.useAssemblerDfn)
 		{
 		cloudAssembler = new PointCloudAssemblyExecutor( static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") ) );
@@ -264,15 +270,27 @@ void RegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud, VisualPoi
 		{
 		Pose3DConstPtr poseToPreviousPose = NULL;
 		featuresMatcher3d->Execute( featureVector, bundleHistory->GetFeatures3d(1), poseToPreviousPose, outSuccess);
-		if (outSuccess && !parameters.useAssemblerDfn)
+		if (outSuccess)
 			{
-			pointCloudMap.AttachPointCloud( imageCloud, featureVector, poseToPreviousPose);
-			Copy( pointCloudMap.GetLatestPose(), outPose);
-			}
-		else if (outSuccess)
-			{	
-			Pose3D newPose = Sum(outPose, *poseToPreviousPose);
-			Copy(newPose, outPose);
+			if (parameters.useAssemblerDfn && parameters.matchToReconstructedCloud)
+				{
+				Copy(*poseToPreviousPose, outPose);
+				}
+			else if (parameters.useAssemblerDfn && !parameters.matchToReconstructedCloud)
+				{
+				Pose3D newPose = Sum(outPose, *poseToPreviousPose);
+				Copy(newPose, outPose);
+				}
+			else if (!parameters.useAssemblerDfn && parameters.matchToReconstructedCloud)
+				{
+				pointCloudMap.AddPointCloud( imageCloud, featureVector, poseToPreviousPose);
+				Copy(*poseToPreviousPose, outPose);
+				}
+			else
+				{
+				pointCloudMap.AttachPointCloud( imageCloud, featureVector, poseToPreviousPose);
+				Copy( pointCloudMap.GetLatestPose(), outPose);
+				}
 			}
 		#ifdef TESTING
 		logFile << outSuccess << " ";

@@ -41,6 +41,7 @@
 #include <FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
 #include <PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
 #include <PointCloudTransform/PointCloudTransformExecutor.hpp>
+#include <PointCloudFiltering/PointCloudFilteringExecutor.hpp>
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
@@ -116,6 +117,7 @@ namespace Reconstruction3D
 		CDFF::DFN::FeaturesMatching3DExecutor* featuresMatcher3d;
 		CDFF::DFN::PointCloudAssemblyExecutor* cloudAssembler;
 		CDFF::DFN::PointCloudTransformExecutor* cloudTransformer;
+		CDFF::DFN::PointCloudFilteringExecutor* cloudFilter;
 
 		#ifdef TESTING
 		std::ofstream logFile;

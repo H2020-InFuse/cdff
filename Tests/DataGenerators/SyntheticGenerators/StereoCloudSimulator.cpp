@@ -105,7 +105,7 @@ void StereoCloudSimulator::SetViewPoseNoiseModel(double positionMean, double pos
 	viewOrientationStandardDeviation = orientationStandardDeviation;
 	}
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::ComputePointCloud()
+pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::ComputePointCloud(PoseWrapper::Pose3D& cameraPose)
 	{
 	const double resolution = 1e-3;
 	std::normal_distribution<double> displancementErrorSource(displacementErrorMean, displacementErrorStandardDeviation);
@@ -114,8 +114,8 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::ComputePointCloud()
 	std::normal_distribution<double> viewOrientationErrorSource(viewOrientationErrorMean, viewOrientationStandardDeviation);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr stereoCloud(new pcl::PointCloud<pcl::PointXYZ>);
 
-	Pose3D cameraPose = AddNoiseToCameraPose(viewPositionErrorSource, viewOrientationErrorSource);
 	int numberOfStepsInEachDirection = imagePlaneSize/(2*imagePlaneResolution);
+	cameraPose = AddNoiseToCameraPose(viewPositionErrorSource, viewOrientationErrorSource, viewPose);
 
 	pcl::PointXYZ planePoint; // this is the point in the camera system
 	planePoint.z = imagePlanDistance;
@@ -125,7 +125,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::ComputePointCloud()
 		for(int verticalStep = 0; verticalStep < numberOfStepsInEachDirection; verticalStep = (verticalStep > 0) ? -verticalStep : -verticalStep + 1)
 			{
 			planePoint.y = verticalStep * imagePlaneResolution;
-			pcl::PointXYZ transformedPoint = TransformPointFromCameraSystemToCloudSystem(planePoint, cameraPose);
+			pcl::PointXYZ transformedPoint = TransformPointFromCameraSystemToCloudSystem(planePoint, viewPose);
 
 			pcl::PointXYZ projection;
 			bool projectionExists = ComputeCameraLineProjectionOnPointCloud(transformedPoint, projection);
@@ -144,7 +144,8 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::ComputePointCloud()
 	grid.setLeafSize(resolution, resolution, resolution);
 	grid.filter(*stereoCloud);
 
-	return GetCloudWithPatchNoise(stereoCloud, missingPatchErrorSource);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr patchNoiseCloud = GetCloudWithPatchNoise(stereoCloud, missingPatchErrorSource);
+	return TransformCloudInCameraSystem(patchNoiseCloud);
 	}
 
 void StereoCloudSimulator::EulerAnglesToQuaternion(double roll, double pitch, double yaw, double& qx, double& qy, double& qz, double& qw)
@@ -187,7 +188,8 @@ void StereoCloudSimulator::CreateCameraFile(int pathIndex, std::string outputFil
  *
  * --------------------------------------------------------------------------
  */
-Pose3D StereoCloudSimulator::AddNoiseToCameraPose(std::normal_distribution<double>& viewPositionErrorSource, std::normal_distribution<double>& viewOrientationErrorSource)
+Pose3D StereoCloudSimulator::AddNoiseToCameraPose(std::normal_distribution<double>& viewPositionErrorSource, std::normal_distribution<double>& viewOrientationErrorSource, 		
+	PoseWrapper::Pose3D& viewPose)
 	{
 	double x = GetXPosition(viewPose);
 	double y = GetYPosition(viewPose);
@@ -214,6 +216,7 @@ Pose3D StereoCloudSimulator::AddNoiseToCameraPose(std::normal_distribution<doubl
 	Pose3D cameraPose;
 	SetPosition(cameraPose, noisyX, noisyY, noisyZ);
 	SetOrientation(cameraPose, noisyQX, noisyQY, noisyQZ, noisyQW);
+	std::cout << "Noisy camera (" << noisyX <<", " << noisyY <<", " << noisyZ <<") (" << noisyQX << ", " << noisyQY << ", " << noisyQZ << ", " << noisyQW << ")" << std::endl;  
 	return cameraPose;
 	}
 
@@ -255,6 +258,20 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::GetCloudWithPatchNoise
 	return patchedCloud;
 	}
 
+pcl::PointCloud<pcl::PointXYZ>::Ptr StereoCloudSimulator::TransformCloudInCameraSystem(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+	{
+	pcl::PointCloud<pcl::PointXYZ>::Ptr transformedCloud(new pcl::PointCloud<pcl::PointXYZ>);
+
+	int numberOfPoints = cloud->points.size();
+	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+		{
+		pcl::PointXYZ transformedPoint = TransformPointFromCloudSystemToCameraSystem( cloud->points.at(pointIndex), viewPose);
+		transformedCloud->points.push_back(transformedPoint);
+		}
+
+	return transformedCloud;
+	}
+
 pcl::PointXYZ StereoCloudSimulator::TransformPointFromCameraSystemToCloudSystem(pcl::PointXYZ pointInCameraSystem, Pose3D cameraPose)
 	{
 	typedef Eigen::Transform<double, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
@@ -264,6 +281,24 @@ pcl::PointXYZ StereoCloudSimulator::TransformPointFromCameraSystemToCloudSystem(
 
 	Eigen::Vector3d eigenPoint(pointInCameraSystem.x, pointInCameraSystem.y, pointInCameraSystem.z);
 	Eigen::Vector3d eigenTransformedPoint = affineTransform * eigenPoint;
+
+	pcl::PointXYZ projectionPoint;
+	projectionPoint.x = eigenTransformedPoint.x();
+	projectionPoint.y = eigenTransformedPoint.y();
+	projectionPoint.z = eigenTransformedPoint.z();
+
+	return projectionPoint;
+	}
+
+pcl::PointXYZ StereoCloudSimulator::TransformPointFromCloudSystemToCameraSystem(pcl::PointXYZ pointInCameraSystem, Pose3D cameraPose)
+	{
+	typedef Eigen::Transform<double, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
+	Eigen::Quaternion<double> rotation(GetWRotation(cameraPose), GetXRotation(cameraPose), GetYRotation(cameraPose), GetZRotation(cameraPose));
+	Eigen::Translation<double, 3> translation( GetXPosition(cameraPose), GetYPosition(cameraPose), GetZPosition(cameraPose));
+	AffineTransform affineTransform = translation * rotation.inverse();
+
+	Eigen::Vector3d eigenPoint(pointInCameraSystem.x, pointInCameraSystem.y, pointInCameraSystem.z);
+	Eigen::Vector3d eigenTransformedPoint = affineTransform.inverse() * eigenPoint;
 
 	pcl::PointXYZ projectionPoint;
 	projectionPoint.x = eigenTransformedPoint.x();
