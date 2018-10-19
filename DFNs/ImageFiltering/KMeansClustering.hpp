@@ -2,8 +2,8 @@
 // Created by tch on 04/09/18.
 //
 
-#ifndef CDFF_KMEANSCLUSTERING_H
-#define CDFF_KMEANSCLUSTERING_H
+#ifndef IMAGEFILTERING_KMEANSCLUSTERING_HPP
+#define IMAGEFILTERING_KMEANSCLUSTERING_HPP
 
 #include <opencv2/core.hpp>
 
@@ -17,15 +17,7 @@ namespace CDFF {
         namespace ImageFiltering {
 
             class KMeansClustering : public ImageFilteringInterface {
-                struct Parameters {
-                    int num_centers = 5;
-                    int max_iterations = 20;
-                    double tolerance = 1e-2;
-                };
-
             public:
-                static const Parameters DefaultParameters;
-
                 KMeansClustering();
 
                 void configure() override;
@@ -33,6 +25,13 @@ namespace CDFF {
                 void process() override;
 
             private:
+
+                struct Parameters {
+                    int num_centers = 5;
+                    int max_iterations = 20;
+                    double tolerance = 1e-2;
+                };
+                static const Parameters DefaultParameters;
 
                 void ValidateParameters();
 
@@ -54,4 +53,4 @@ namespace CDFF {
         }
     }
 }
-#endif //CDFF_KMEANSCLUSTERING_H
+#endif //IMAGEFILTERING_KMEANSCLUSTERING_HPP

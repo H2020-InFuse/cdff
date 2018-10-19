@@ -66,11 +66,11 @@ KMeansClusteringTest::KMeansClusteringTest()
 void KMeansClusteringTest::SetupParameters()
 {
     AddParameter("KMeansClustering", "num_centers",
-            KMeansClustering::DefaultParameters.num_centers, 48);
+            5, 48);
     AddParameter("KMeansClustering", "max_iterations",
-                 KMeansClustering::DefaultParameters.max_iterations, 100);
+            20, 100);
     AddParameter("KMeansClustering", "tolerance",
-            KMeansClustering::DefaultParameters.tolerance, 10, .1);
+            1e-2, 10, .1);
 }
 
 void KMeansClusteringTest::DisplayResult()
