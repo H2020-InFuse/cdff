@@ -26,6 +26,7 @@
 #include <ImageFiltering/EdgeDetection.hpp>
 #include <ImageFiltering/BackgroundExtraction.hpp>
 #include <ImageFiltering/NormalVectorExtraction.hpp>
+#include <ImageFiltering/KMeansClustering.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <PrimitiveMatching/HuInvariants.hpp>
@@ -271,6 +272,8 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(std::string dfnImplem
     else if (dfnImplementation == "NormalVectorExtraction")
     {
         return new ImageFiltering::NormalVectorExtraction;
+    } else if (dfnImplementation == "KMeansClustering") {
+    	return new ImageFiltering::KMeansClustering;
     }
 
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN ImageFiltering implementation");

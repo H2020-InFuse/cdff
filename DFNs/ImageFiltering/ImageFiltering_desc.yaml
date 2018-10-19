@@ -14,3 +14,4 @@ implementations:
     - BackgroundSubtraction
     - EdgeDetection
     - NormalVectorExtraction
+    - KMeansClustering

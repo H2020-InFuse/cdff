@@ -33,6 +33,7 @@ target_link_libraries(
   image_undistortion
   image_undistortion_rectification
   cdff_dfn_background_subtraction
+  cdff_dfn_kmeans
   cdff_dfn_edge_detection
   cdff_dfn_normal_vector_extraction
   disparity_mapping
