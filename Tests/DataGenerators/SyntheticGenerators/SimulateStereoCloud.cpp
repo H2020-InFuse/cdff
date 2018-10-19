@@ -110,6 +110,7 @@ void RunSimulatorOnce(StereoCloudSimulator& simulator, std::ifstream& inputFile,
 	simulator.SetCamera(viewPose, imagePlanDistance, imagePlaneResolution, imagePlaneSize);
 	simulator.SetDisplacementNoiseModel(displacementErrorMean, displacementErrorStandardDeviation);
 	simulator.SetMissingPatchNoiseModel(missingPatchErrorMean, missingPatchErrorStandardDeviation);
+	simulator.SetViewPoseNoiseModel(viewPositionErrorMean, viewPositionErrorStandardDeviation, viewOrientationErrorMean, viewOrientationStandardDeviation);
 
 	std::cout << "Computing first cloud with data (" << x <<", " << y <<", " << z <<") (" << qx << ", " << qy << ", " << qz << ", " << qw << ")" << std::endl;  
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = simulator.ComputePointCloud();
@@ -119,7 +120,9 @@ void RunSimulatorOnce(StereoCloudSimulator& simulator, std::ifstream& inputFile,
 	counter++;
 	writer.write(outputFilePath, *pointCloud, true);		
 
-	outputFile << outputFileName << " " << 0 << " " << 0 << " " << 0 << " " << 0 << " " << 0 << " " << 0 << " " << 1 << std::endl; //At the end of line, there is a pose for PointAssemblyTest.
+	PoseWrapper::Pose3D cameraNoise = simulator.GetCameraNoise();
+	outputFile << outputFileName << " " << GetXPosition(cameraNoise) << " " << GetYPosition(cameraNoise) << " " << GetZPosition(cameraNoise) << " " 
+		<< GetXOrientation(cameraNoise) << " " << GetYOrientation(cameraNoise) << " " << GetZOrientation(cameraNoise) << " " << GetWOrientation(cameraNoise) << std::endl;
 	}
 
 int main(int argc, char** argv)

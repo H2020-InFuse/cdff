@@ -60,6 +60,7 @@ namespace DataGenerators {
 		void SetViewPoseNoiseModel(double positionMean, double positionStandardDeviation, double orientationMean, double orientationStandardDeviation);
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr ComputePointCloud();
+		PoseWrapper::Pose3D GetCameraNoise();
 
 		static void EulerAnglesToQuaternion(double roll, double pitch, double yaw, double& qx, double& qy, double& qz, double& qw);
 		static void QuaternionToEulerAngles(double qx, double qy, double qz, double qw, double& roll, double& pitch, double& yaw);
@@ -93,7 +94,8 @@ namespace DataGenerators {
 
 		std::default_random_engine randomEngine;
 
-		PoseWrapper::Pose3D AddNoiseToCameraPose(std::normal_distribution<double>& viewPositionErrorSource, std::normal_distribution<double>& viewOrientationErrorSource);
+		PoseWrapper::Pose3D AddNoiseToCameraPose(std::normal_distribution<double>& viewPositionErrorSource, std::normal_distribution<double>& viewOrientationErrorSource,
+			PoseWrapper::Pose3D& viewPose);
 		pcl::PointCloud<pcl::PointXYZ>::Ptr GetCloudWithPatchNoise(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::normal_distribution<double>& missingPatchErrorSource);
 
 		pcl::PointXYZ TransformPointFromCameraSystemToCloudSystem(pcl::PointXYZ pointInCameraSystem, PoseWrapper::Pose3D cameraPose);
