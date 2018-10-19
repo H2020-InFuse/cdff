@@ -78,5 +78,7 @@ target_link_libraries(
   convolution_filter
   threshold_force
   neighbour_point_average
+  voxel_binning
   cartesian_system_transform
+  statistical_outlier_removal
 )

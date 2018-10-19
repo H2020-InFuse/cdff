@@ -106,6 +106,7 @@ Pose3DConstPtr Icp3D::ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::ConstPtr 
 
 	// Run ICP
 	icp.align(*outputCloud);
+	PRINT_TO_LOG("icp fitness", icp.getFitnessScore());
 
 	// Check convergence
 	outSuccess = icp.hasConverged();

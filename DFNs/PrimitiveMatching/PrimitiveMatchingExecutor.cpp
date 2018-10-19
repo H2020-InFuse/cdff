@@ -27,19 +27,19 @@ PrimitiveMatchingExecutor::~PrimitiveMatchingExecutor()
 }
 
 //=====================================================================================================================
-void PrimitiveMatchingExecutor::Execute(FrameConstPtr inputFrame, const asn1SccT_StringArray& inputPrimitiveArray, asn1SccT_StringArray outputPrimitiveArray)
+void PrimitiveMatchingExecutor::Execute(FrameConstPtr inputFrame, const asn1SccStringSequence& inputPrimitiveSequence, asn1SccStringSequence outputPrimitiveSequence)
 {
-	Execute(inputFrame, inputPrimitiveArray, outputPrimitiveArray);
+	Execute(*inputFrame, inputPrimitiveSequence, outputPrimitiveSequence);
 }
 
 //=====================================================================================================================
-void PrimitiveMatchingExecutor::Execute(const Frame& inputFrame, const asn1SccT_StringArray& inputPrimitiveArray, asn1SccT_StringArray outputPrimitiveArray) //TODO
+void PrimitiveMatchingExecutor::Execute(const Frame& inputFrame, const asn1SccStringSequence& inputPrimitiveSequence, asn1SccStringSequence outputPrimitiveSequence)
 {
-	dfn->frameInput(inputFrame);
-	dfn->primitiveArrayInput(inputPrimitiveArray);
+	dfn->imageInput(inputFrame);
+	dfn->primitivesInput(inputPrimitiveSequence);
 	dfn->process();
 
-	outputPrimitiveArray = dfn->primitivesMatchedOutput();
+	outputPrimitiveSequence = dfn->primitivesOutput();
 }
 
 }

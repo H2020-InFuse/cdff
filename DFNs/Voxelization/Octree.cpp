@@ -59,7 +59,7 @@ void Octree::configure()
 void Octree::process()
 {
     // Read data from input port
-    cv::Mat input_image = Converters::FrameToMatConverter().Convert(&inFrame);
+    cv::Mat input_image = Converters::FrameToMatConverter().Convert(&inDepth);
 
     // Process data
     ValidateInputs(input_image);
@@ -69,7 +69,7 @@ void Octree::process()
     octree.addPointsFromInputCloud();
 
     // Write data to output port
-    outOctree = Converters::PclOctreeToOctreeConverter().Convert(octree);
+    outOctree = *Converters::PclOctreeToOctreeConverter().Convert(octree);
 }
 
 //=====================================================================================================================

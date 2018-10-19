@@ -29,11 +29,11 @@ namespace Converters
 {
 
 //=====================================================================================================================
-asn1SccT_Octree PclOctreeToOctreeConverter::Convert(const pcl::octree::OctreePointCloudSearch<pcl::PointXYZ>& tree)
+asn1SccOctree * PclOctreeToOctreeConverter::Convert(const pcl::octree::OctreePointCloudSearch<pcl::PointXYZ>& tree)
 {
-    asn1SccT_Octree output_octree;
-    output_octree.point_cloud = Converters::PclPointCloudToPointCloudConverter().Convert(tree.getInputCloud());
-    output_octree.resolution = tree.getResolution();
+    asn1SccOctree * output_octree = new asn1SccOctree();
+    output_octree->pointCloud = *Converters::PclPointCloudToPointCloudConverter().Convert(tree.getInputCloud());
+    output_octree->resolution = tree.getResolution();
     return output_octree;
 }
 

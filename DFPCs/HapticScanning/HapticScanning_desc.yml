@@ -1,18 +1,19 @@
 name: HapticScanning
 doc: Reconstruction of the environment using a force sensor as input
 dfns:
-    - name: ForceMeshGenerator
+  - name: ForceMeshGenerator
 input_ports:
-  - name: inputRoverPose
+  - name: armBasePose
     type: asn1SccPose
-    doc: Pose information
-  - name: inputPositions
-    type: asn1SccPointArray
-    doc: Array of 3D points
-  - name: inputForces
-    type: asn1SccDoubleArray
-    doc: Array of doubles with the force sensor input
+    doc: Pose of the arm's base
+  - name: armEndEffectorPose
+    type: asn1SccPointsSequence
+    doc: Pose of the arm's end-effector relative to the base
+  - name: armEndEffectorWrench
+    type: asn1SccDoublesSequence
+    doc: Wrench measured on the arm's end-effector
 output_ports:
   - name: outputPointCloud
     type: asn1SccPointcloud
-    doc: Reconstructed point cloud from the force sensor inputs
+    doc: Pointcloud reconstructed from the force sensor inputs
+         and written in the coordinate system of the arm's base

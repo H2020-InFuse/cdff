@@ -4,15 +4,15 @@ input_ports:
     - name: image
       type: asn1SccFrame
       doc: 2D image captured by a camera
-    - name: string array
-      type: asn1SccT_StringArray
+    - name: primitives
+      type: asn1SccStringSequence
       doc: string array with the names of the primitives to be searched for in the input image
 output_ports:
     - name: image
       type: asn1SccFrame
       doc: same image, with the contour that was matched to a primitive
-    - name: string array
-      type: asn1SccT_StringArray
+    - name: primitives
+      type: asn1SccStringSequence
       doc: string array with the names of the primitives ordered by matching probability
 implementations:
     - HuInvariants

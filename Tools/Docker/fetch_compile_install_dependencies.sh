@@ -3,6 +3,7 @@
 #This file fetches the dependencies in /Externals, builds and installs them.
 # Version 1.3
 
+
 #exit immediately if a simple command exits with a nonzero exit value.
 set -e
 
@@ -41,6 +42,7 @@ Configuration:
 			    can be used multiple times (-s LIB1 -s LIB2)
                             [LIB: cmake boost eigen flann qhull tinyxml2
 			    yamlccp vtk opencv pcl]
+  -e                        Full dependencies installation (required for Central DPM)
 
 Installation directories:
   -b DIR            	    Build all libraries in DIR
@@ -99,17 +101,7 @@ function find_installers {
  IFS=$PreviousIFS
 }
 
-function set_environnement {
-  envfile=$DIR/installers/infuse_environnement.env
-  if [ ! -f "$envfile" ]; then
-    echo "$envfile missing, cannot set INFUSE ENV."
-    exit
-  fi
-  source $envfile
-}
-
 function run_installers {
-#  set_environnement
 
   mkdir -p $BUILD_DIR
   mkdir -p $INSTALL_DIR
@@ -155,11 +147,24 @@ function fetchsource_function {
 }
 
 function fetchgit_function {
-	echo "Checking out $1"
-	git -C $SOURCE_DIR clone --depth 1 --single-branch --recursive -b $2 $3 $1
-	mkdir -p $BUILD_DIR/$1
-	cd $BUILD_DIR/$1
-  echo "Done. $1 Checked out."
+  echo "Cloning ${1}'s code repository"
+  # Uncomment the lines prefixed with #+# to install from local sources already
+  # available in ${SOURCE_DIR}/${1} instead of first cloning sources in there;
+  # this can be useful, for instance, for debugging purposes
+  #+# if [ ! -d "${SOURCE_DIR}/${1}" ]; then
+    if [ -z ${4} ]; then
+      git -C "${SOURCE_DIR}" clone --recursive --depth 1 --single-branch --branch "${2}" "${3}" "${1}"
+    else
+      echo "Checking out commit ${4}."
+      git -C "${SOURCE_DIR}" clone --recursive --branch "${2}" "${3}" "${1}"
+      git -C "${SOURCE_DIR}/${1}" checkout -f ${4}
+    fi	
+  #+# else
+  #+#   echo "Directory ${SOURCE_DIR}/${1} already exists, we will work with that one."
+  #+# fi
+  mkdir -p "${BUILD_DIR}/${1}"
+  cd "${BUILD_DIR}/${1}"
+  echo "Cloning ${1}'s code repository: done."
 }
 
 function clean_function {
@@ -180,6 +185,22 @@ function build_all_function {
  InstallersToRUN+=("opencv")
  InstallersToRUN+=("vtk")
  InstallersToRUN+=("pcl")
+ if [[ "$ENVIRE_FULL" = true ]]; then
+  InstallersToRUN+=("base_cmake")
+  InstallersToRUN+=("base_logging")
+  InstallersToRUN+=("sisl")
+  InstallersToRUN+=("base_types")  
+  InstallersToRUN+=("base_numeric")
+  InstallersToRUN+=("base_boost_serialization")
+  InstallersToRUN+=("console_bridge")
+  InstallersToRUN+=("poco")
+  InstallersToRUN+=("poco_vendor")
+  InstallersToRUN+=("class_loader")
+  InstallersToRUN+=("tools_plugin_manager")
+  InstallersToRUN+=("envire_envire_core")
+ #else
+ # InstallersToRUN+=("envire-min")
+ fi
   #for i in "${!infuse_dependencies_map[@]}"
   #do
   #  InstallersToRUN+=($i)
@@ -187,6 +208,9 @@ function build_all_function {
 }
 
 ###### MAIN PROGRAM
+
+source "${DIR}/installers/infuse_set_pkg_config_path.sh"
+
 
 # Attempt to cleanup leftover source folders if we exited early due to errors.
 function on_exit {
@@ -204,7 +228,7 @@ find_installers
 # A POSIX variable
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 # get options
-while getopts ":b:i:p:s:c" opt; do
+while getopts ":b:i:p:s:c:e" opt; do
     case "$opt" in
     h|\?)
         show_help
@@ -226,14 +250,19 @@ while getopts ":b:i:p:s:c" opt; do
     s)
   InstallersToRUN+=($OPTARG)
   	    ;;
+    e)
+      ENVIRE_FULL=true
+      echo "Envire will be installed in full version, along with all its dependencies."
+      ;;
     :)
       echo "Option -$OPTARG requires an argument." >&2
       exit 1
       ;;
+
     esac
 done
 
-if [ $OPTIND -eq 1 ]; then
+if [[ ( $OPTIND -eq 1 ) || ( ($OPTIND -eq 2 ) && ( "$ENVIRE_FULL" = true ) ) ]]  ; then
   # Check if `checkinstall` is installed. If it is installed we need superuser
   # privileges to complete the build & install for each package even if we're
   # not installing the packages globally.

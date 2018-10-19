@@ -1,44 +1,42 @@
 name: DEMBuilding
-doc: Digital elevation map building that replies on LIDAR or stereo Pointcloud and the estimated pose of the rover.
+doc: Digital elevation mapping based on an input pointcloud (lidar-captured or
+     reconstructed from stereo images) and the estimated pose of the rover
 dfns:
-    - name: PCTransform
-    - name: Rasterizer
-    - name: MapBuilder
-
+  - name: PCTransform
+  - name: Rasterizer
+  - name: MapBuilder
 input_ports:
-    - name: lPC
-      type: asn1SccPointcloud
-      doc: "Point cloud for rover DEM generation"
-      connections:
-        - dfn: PCTransform
-          port: readingPC
-    - name: estimatedPose
-      type: asn1SccTransformWithCovariance
-      doc: "Estimated pose from localization"
-      connections:
-        - dfn: PCTransform
-          port: guessPose
-        - dfn: PoseEstimator
-          port: prediction
-
+  - name: lPC
+    type: asn1SccPointcloud
+    doc: "Pointcloud for DEM generation"
+    connections:
+    - dfn: PCTransform
+      port: readingPC
+  - name: estimatedPose
+    type: asn1SccTransformWithCovariance
+    doc: "Pose estimated from localization"
+    connections:
+    - dfn: PCTransform
+      port: guessPose
+    - dfn: PoseEstimator
+      port: prediction
 output_ports:
-    - name: updatedMap
-      type: asn1SccMap
-      doc: "Updated DEM"
-      connections:
-          dfn: MapBuilder
-          port: updatedMap
-
+  - name: updatedMap
+    type: asn1SccMap
+    doc: "Updated DEM"
+    connections:
+    - dfn: MapBuilder
+      port: updatedMap
 internal_connections:
-    - from:
-        dfn: PCTransform
-        port: PC
-      to:
-        dfn: Rasterizer
-        port: pointCloud
-    - from:
-        dfn: Rasterizer
-        port: roverMap
-      to:
-        dfn: MapBuilder
-        port: roverMap
+  - from:
+      dfn: PCTransform
+      port: PC
+    to:
+      dfn: Rasterizer
+      port: pointCloud
+  - from:
+      dfn: Rasterizer
+      port: roverMap
+    to:
+      dfn: MapBuilder
+      port: roverMap

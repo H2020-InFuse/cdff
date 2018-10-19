@@ -3207,10 +3207,10 @@ DgmOctree::octreeCell::octreeCell(const DgmOctree* _parentOctree)
 
 DgmOctree::octreeCell::octreeCell(const octreeCell& cell)
 	: parentOctree(cell.parentOctree)
-	, level(cell.level)
 	, truncatedCode(cell.truncatedCode)
 	, index(cell.index)
 	, points(nullptr)
+	, level(cell.level)
 {
 	//copy constructor shouldn't be used (we can't properly share the 'points' reference)
 	assert(false);

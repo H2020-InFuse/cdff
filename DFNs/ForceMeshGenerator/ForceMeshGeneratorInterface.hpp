@@ -7,8 +7,12 @@
 #define FORCEMESHGENERATOR_FORCEMESHGENERATORINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <PointCloud.hpp>
-#include <Sequences.h>
+
+#include <memory>
+
+#include "Types/C/Pointcloud.h"
+#include "Types/C/Sequences.h"
+#include "Types/C/Wrench.h"
 
 namespace CDFF
 {
@@ -22,31 +26,38 @@ namespace DFN
         public:
 
             ForceMeshGeneratorInterface();
+            ~ForceMeshGeneratorInterface() override = default;
 
             /**
-             * Send value to input port
+             * Send value to input port armBasePose
              * @param pose: estimated rover pose relative to target
              */
-            virtual void roverPoseInput(const asn1SccPose& data);
+            virtual void armBasePoseInput(const asn1SccPose &pose);
 
             /**
-            * Send value to input port
-            * @param positions: end-effector positions
-            * @param forces: end-effector force measurements
+            * Send value to input port armEndEffectorWrench
+            * @param pose: end-effector positions
             */
-            virtual void positionAndForceInput(const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces);
+            virtual void armEndEffectorPoseInput(const asn1SccPose &pose);
 
             /**
-             * Query value from output port
+            * Send value to input port armEndEffectorWrench
+            * @param wrench: end-effector force measurements
+            */
+            virtual void armEndEffectorWrenchInput(const asn1SccWrench wrench);
+
+            /**
+             * Query value from output port outputPointCloud
              * @return point cloud
              */
-            virtual const asn1SccPointcloud& pointCloudOutput() const;
+            virtual const asn1SccPointcloud & pointCloudOutput() const;
 
         protected:
 
-            asn1SccPose inRoverPose;
-            asn1SccPointsSequence inPositions;
-            asn1SccDoublesSequence inForces;
+            asn1SccPose inArmBasePose;
+            asn1SccPose inArmEndEffectorPose;
+            asn1SccWrench inArmEndEffectorWrench;
+
             asn1SccPointcloud outPointCloud;
     };
 }

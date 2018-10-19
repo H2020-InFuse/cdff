@@ -1,77 +1,73 @@
-name: VisualOdometry_LAAS
-doc: Visual odometry which relies on wheel odometry and stereo images developed by LAAS.
+name: VisualOdometryLAAS
+doc: Visual odometry based on wheel odometry and stereo images and developed by LAAS
 dfns:
-    - name: StereoRectification
-    - name: FeatAndSigExtractorLeft
-    - name: FeatAndSigExtractorRight
-    - name: StereoFeatureMatching
-    - name: 3DPointTriangulation
-    - name: TemporalFeatureMatching
-    - name: 3D2DMotionEstimation
-
+  - name: StereoRectification
+  - name: FeatAndSigExtractorLeft
+  - name: FeatAndSigExtractorRight
+  - name: StereoFeatureMatching
+  - name: 3DPointTriangulation
+  - name: TemporalFeatureMatching
+  - name: 3D2DMotionEstimation
 input_ports:
-    - name: leftImage
-      type: asn1SccFrame
-      doc: "Left image frame"
-      connections:
-        - dfn: FeatandSigExtractorLeft
-          port: leftImage
-    - name: rightImage
-      type: asn1SccFrame
-      doc: "Right image frame"
-      connections:
-        - dfn: FeatandSigExtractorRight
-          port: rightImage
-    -name: motionGuess
-     type: asn1SccTransformWithCovariance
-     doc: "Optional prediction of the motion (e.g. from Wheel Odometry)"
-      connections:
-        - dfn: 3D2DMotionEstimation
-          port: motionGuess
-
+  - name: leftImage
+    type: asn1SccFrame
+    doc: "Left image frame"
+    connections:
+    - dfn: FeatandSigExtractorLeft
+      port: leftImage
+  - name: rightImage
+    type: asn1SccFrame
+    doc: "Right image frame"
+    connections:
+    - dfn: FeatandSigExtractorRight
+      port: rightImage
+  - name: motionGuess
+    type: asn1SccTransformWithCovariance
+    doc: "Optional prediction of the motion (from wheel odometry for instance)"
+    connections:
+    - dfn: 3D2DMotionEstimation
+      port: motionGuess
 output_ports:
-    - name: estimatedMotion
-      type: asn1SccTransformWithCovariance
-      doc: "Estimated transformation between the two frames"
-      connections:
-          dfn: 3D2DMotionEstimation
-          port: estimatedMotion
-
+  - name: estimatedMotion
+    type: asn1SccTransformWithCovariance
+    doc: "Estimated transformation between the two frames"
+    connections:
+    - dfn: 3D2DMotionEstimation
+      port: estimatedMotion
 internal_connections:
-    - from:
-        dfn: FeatAndSigExtractorLeft
-        port: leftFeatures
-      to:
-        dfn: StereoFeatureMatching
-        port: leftFeatures
-    - from:
-        dfn: FeatAndSigExtractorRight
-        port: rightFeatures
-      to:
-        dfn: StereoFeatureMatching
-        port: rightFeatures
-    - from:
-        dfn: StereoFeatureMatching
-        port: stereoMatchedFeatures
-      to:
-        dfn: 3DPointComputation
-        port: matches
-    - from:
-        dfn: 3DPointComputation
-        port: 3DPoints
-      to:
-        dfn: 3D2DMotionEstimation
-        port: curr3DPoints
-    - from:
-        dfn: FeatuAndSigExtractorsLeft
-        port: currLeftMatchedFeatures
-      to:
-        dfn: TemporalFeatureMatching
-        port: currMatchedFeatures
-    - from:
-        dfn: TemporalFeatureMatching
-        port: prevLeftMatchedFeatures
-      to:
-        dfn: 3D2DMotionEstimation
-        port: prevLeftMatchedFeatures    
-
+  - from:
+      dfn: FeatAndSigExtractorLeft
+      port: leftFeatures
+    to:
+      dfn: StereoFeatureMatching
+      port: leftFeatures
+  - from:
+      dfn: FeatAndSigExtractorRight
+      port: rightFeatures
+    to:
+      dfn: StereoFeatureMatching
+      port: rightFeatures
+  - from:
+      dfn: StereoFeatureMatching
+      port: stereoMatchedFeatures
+    to:
+      dfn: 3DPointComputation
+      port: matches
+  - from:
+      dfn: 3DPointComputation
+      port: 3DPoints
+    to:
+      dfn: 3D2DMotionEstimation
+      port: curr3DPoints
+  - from:
+      dfn: FeatuAndSigExtractorsLeft
+      port: currLeftMatchedFeatures
+    to:
+      dfn: TemporalFeatureMatching
+      port: currMatchedFeatures
+  - from:
+      dfn: TemporalFeatureMatching
+      port: prevLeftMatchedFeatures
+    to:
+      dfn: 3D2DMotionEstimation
+      port: prevLeftMatchedFeatures

@@ -38,6 +38,78 @@ void RequireExist(const PointCloud& cloud, float x, float y, float z)
 
 using namespace CartesianSystemTransformTest;
 
+TEST_CASE( "DFN simple processing step succeeds (CartesianSystemTransform)", "[SimpleProcess]" )
+{
+	PointCloudPtr cloud = NewPointCloud();
+	AddPoint(*cloud, 0, 0, 0);
+	AddPoint(*cloud, 1, 0, 0);
+	AddPoint(*cloud, 0, 1, 0);
+	AddPoint(*cloud, 0, 0, 1);
+
+	// First Input
+	Pose3D pose;
+	SetPosition(pose, 1, 2, 3);
+	SetOrientation(pose, 0, 0, 0, 1);
+
+	CartesianSystemTransform* cartesianTransform = new CartesianSystemTransform;
+
+	cartesianTransform->pointCloudInput(*cloud);
+	cartesianTransform->poseInput(pose);
+	cartesianTransform->process();
+	const PointCloud& output = cartesianTransform->transformedPointCloudOutput();
+
+	REQUIRE( GetNumberOfPoints(output) == 4);
+	RequireExist( output, 1, 2, 3);
+	RequireExist( output, 2, 2, 3);
+	RequireExist( output, 1, 3, 3);
+	RequireExist( output, 1, 2, 4);
+
+	//Second Input
+	SetPosition(pose, 0, 0, 0);
+	SetOrientation(pose, 1, 0, 0, 0);
+
+	cartesianTransform->pointCloudInput(*cloud);
+	cartesianTransform->poseInput(pose);
+	cartesianTransform->process();
+	const PointCloud& output2 = cartesianTransform->transformedPointCloudOutput();
+
+	REQUIRE( GetNumberOfPoints(output2) == 4);
+	RequireExist( output, 0, 0, 0);
+	RequireExist( output, 1, 0, 0);
+	RequireExist( output, 0, -1, 0);
+	RequireExist( output, 0, 0, -1);
+
+	//Third Input
+	SetPosition(pose, 0, 0, 0);
+	SetOrientation(pose, std::sin(M_PI/4), 0, 0, std::cos(M_PI/4));
+
+	cartesianTransform->pointCloudInput(*cloud);
+	cartesianTransform->poseInput(pose);
+	cartesianTransform->process();
+	const PointCloud& output3 = cartesianTransform->transformedPointCloudOutput();
+
+	REQUIRE( GetNumberOfPoints(output3) == 4);
+	RequireExist( output, 0, 0, 0);
+	RequireExist( output, 1, 0, 0);
+	RequireExist( output, 0, 1, 0);
+	RequireExist( output, 0, 0, -1);
+
+	//Fourth Input
+	SetPosition(pose, 1, 2, 3);
+	SetOrientation(pose, std::sin(M_PI/4), 0, 0, std::cos(M_PI/4));
+
+	cartesianTransform->pointCloudInput(*cloud);
+	cartesianTransform->poseInput(pose);
+	cartesianTransform->process();
+	const PointCloud& output4 = cartesianTransform->transformedPointCloudOutput();
+
+	REQUIRE( GetNumberOfPoints(output4) == 4);
+	RequireExist( output, 1, 2, 3);
+	RequireExist( output, 2, 2, 3);
+	RequireExist( output, 1, 3, 3);
+	RequireExist( output, 1, 2, 2);	
+}
+
 TEST_CASE( "DFN processing step succeeds (CartesianSystemTransform)", "[process]" )
 {
 	// Prepare simpler input data
