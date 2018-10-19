@@ -30,6 +30,12 @@
 #include <pcl/io/ply_io.h>
 #include <opencv2/highgui/highgui.hpp>
 
+#include <pcl/sample_consensus/method_types.h>
+#include <pcl/sample_consensus/model_types.h>
+#include <pcl/segmentation/sac_segmentation.h>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+
 
 using namespace FrameWrapper;
 using namespace PointCloudWrapper;
@@ -58,12 +64,18 @@ PointCloudGenerator::PointCloudGenerator(std::string inputFolderPath, std::strin
 	disparityMapping->configure();
 
 	disparityMappingExecutor = new CDFF::DFN::StereoReconstructionExecutor(disparityMapping);
+	planeFilteringEnabled = false;
 	}
 
 PointCloudGenerator::~PointCloudGenerator()
 	{
 	delete(disparityMappingExecutor);
 	delete(disparityMapping);
+	}
+
+void PointCloudGenerator::EnablePlaneFiltering()
+	{
+	planeFilteringEnabled = true;
 	}
 
 void PointCloudGenerator::GenerateClouds()
@@ -134,7 +146,16 @@ void PointCloudGenerator::ExecuteDisparityMapping(const InputEntry& inputEntry)
 	PointCloudConstPtr pointCloud = NULL;
 	disparityMappingExecutor->Execute(leftImage, rightImage, pointCloud);
 
-	SavePointCloud(pointCloud, inputEntry.pose);
+	if (planeFilteringEnabled)
+		{
+		pcl::PointCloud<pcl::PointXYZ>::ConstPtr outputCloud = FilterDominantPlane(pointCloud);
+		SavePointCloud(outputCloud, inputEntry.pose);
+		}
+	else
+		{
+		SavePointCloud(pointCloud, inputEntry.pose);
+		}
+
 
 	delete(leftImage);
 	delete(rightImage);
@@ -148,11 +169,49 @@ FrameConstPtr PointCloudGenerator::LoadImage(std::string imageFilePath)
 	return matFrameConverter.Convert(cvImage);
 	}
 
+pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudGenerator::FilterDominantPlane(PointCloudConstPtr pointCloud)
+	{
+	Converters::PointCloudToPclPointCloudConverter cloudConverter;
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud = cloudConverter.Convert(pointCloud);
+	
+	pcl::SACSegmentation<pcl::PointXYZ> ransacSegmentation;
+	ransacSegmentation.setOptimizeCoefficients (true);
+	ransacSegmentation.setModelType (pcl::SACMODEL_PLANE);
+	ransacSegmentation.setMethodType (pcl::SAC_RANSAC);
+	ransacSegmentation.setDistanceThreshold (0.05);
+
+	pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
+	pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
+	ransacSegmentation.setInputCloud (cloud);
+	ransacSegmentation.segment (*inliers, *coefficients);
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr leftoverCloud( new pcl::PointCloud<pcl::PointXYZ>() );
+	int leftoverIndex = 0;	
+	for(int indexIndex = 0; indexIndex < inliers->indices.size(); indexIndex++)
+		{
+		int pointIndex = inliers->indices.at(indexIndex);
+		while (leftoverIndex < pointIndex)
+			{
+			pcl::PointXYZ leftoverPoint= cloud->points.at(leftoverIndex);
+			leftoverCloud->points.push_back(leftoverPoint);
+			leftoverIndex++;
+			}
+		leftoverIndex++;
+		}
+
+	return leftoverCloud;
+	}
+
 void PointCloudGenerator::SavePointCloud(PointCloudConstPtr pointCloud, const Pose3D& pose)
+	{
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclOutputCloud = pclPointCloudConverter.Convert(pointCloud);
+	SavePointCloud(pclOutputCloud, pose);
+	}
+
+void PointCloudGenerator::SavePointCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclOutputCloud, const PoseWrapper::Pose3D& pose)
 	{
 	static unsigned saveIndex = 0;
 
-	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclOutputCloud = pclPointCloudConverter.Convert(pointCloud);
 	std::string plyFileName = "cloud_" + std::to_string(saveIndex) + ".ply";
 	std::string plyFilePath = outputFolderPath + "/" + plyFileName;
 

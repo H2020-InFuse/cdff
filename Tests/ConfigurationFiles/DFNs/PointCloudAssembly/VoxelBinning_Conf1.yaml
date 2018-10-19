@@ -1,0 +1,4 @@
+- Name: GeneralParameters
+  VoxelResolution: 0.01
+  UseIncrementalMode: true
+  UseDistanceFilter: true

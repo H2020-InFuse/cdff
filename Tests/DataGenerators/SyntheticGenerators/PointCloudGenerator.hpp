@@ -61,6 +61,7 @@ namespace DataGenerators {
         	~PointCloudGenerator();
 
 		void GenerateClouds();
+		void EnablePlaneFiltering();
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -85,6 +86,7 @@ namespace DataGenerators {
 		std::string poseFileName;
 		std::string outputFolderPath;
 		std::string cloudFileName;
+		bool planeFilteringEnabled;
 
 		CDFF::DFN::StereoReconstruction::HirschmullerDisparityMapping* disparityMapping;
 		CDFF::DFN::StereoReconstructionExecutor* disparityMappingExecutor;
@@ -97,7 +99,9 @@ namespace DataGenerators {
 		void ReadInputFiles();
 		void ExecuteDisparityMapping(const InputEntry& inputEntry);
 		FrameWrapper::FrameConstPtr LoadImage(std::string imageFilePath);
-		void SavePointCloud(PointCloudWrapper::PointCloudConstPtr pointCloud, const PoseWrapper::Pose3D& pose);		
+		pcl::PointCloud<pcl::PointXYZ>::ConstPtr FilterDominantPlane(PointCloudWrapper::PointCloudConstPtr pointCloud);
+		void SavePointCloud(PointCloudWrapper::PointCloudConstPtr pointCloud, const PoseWrapper::Pose3D& pose);
+		void SavePointCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclOutputCloud, const PoseWrapper::Pose3D& pose);	
     };
 
 }

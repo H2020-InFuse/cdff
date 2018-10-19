@@ -67,6 +67,7 @@ DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 	registrator3d = NULL;
 	cloudAssembler = NULL;
 	cloudTransformer = NULL;
+	cloudFilter = NULL;
 
 	bundleHistory = new BundleHistory(2);
 
@@ -84,6 +85,7 @@ DenseRegistrationFromStereo::~DenseRegistrationFromStereo()
 	DeleteIfNotNull(registrator3d);
 	DeleteIfNotNull(cloudAssembler);
 	DeleteIfNotNull(cloudTransformer);
+	DeleteIfNotNull(cloudFilter);
 
 	DeleteIfNotNull(bundleHistory);
 	delete( EMPTY_FEATURE_VECTOR );
@@ -110,8 +112,11 @@ void DenseRegistrationFromStereo::run()
 	optionalLeftFilter->Execute(inLeftImage, filteredLeftImage);
 	optionalRightFilter->Execute(inRightImage, filteredRightImage);
 
+	PointCloudConstPtr unfilteredImageCloud = NULL;
+	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, unfilteredImageCloud);
+
 	PointCloudConstPtr imageCloud = NULL;
-	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, imageCloud);
+	cloudFilter->Execute(unfilteredImageCloud, imageCloud);
 
 	if (!parameters.matchToReconstructedCloud)
 		{
@@ -188,6 +193,7 @@ void DenseRegistrationFromStereo::InstantiateDFNExecutors()
 	optionalRightFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) ) );
 	reconstructor3d = new StereoReconstructionExecutor( static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") ) );
 	registrator3d = new Registration3DExecutor( static_cast<Registration3DInterface*>( configurator.GetDfn("registrator3d") ) );
+	cloudFilter = new PointCloudFilteringExecutor( static_cast<PointCloudFilteringInterface*>( configurator.GetDfn("cloudFilter", true) ) );
 	if (parameters.useAssemblerDfn)
 		{
 		cloudAssembler = new PointCloudAssemblyExecutor( static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") ) );
@@ -261,15 +267,27 @@ void DenseRegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud)
 		{
 		Pose3DConstPtr poseToPreviousPose = NULL;
 		registrator3d->Execute( imageCloud, bundleHistory->GetPointCloud(1), poseToPreviousPose, outSuccess);
-		if (outSuccess && !parameters.useAssemblerDfn)
+		if (outSuccess)
 			{
-			pointCloudMap.AttachPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, poseToPreviousPose);
-			Copy( pointCloudMap.GetLatestPose(), outPose);
-			}
-		else if (outSuccess)
-			{
-			Pose3D newPose = Sum(outPose, *poseToPreviousPose);
-			Copy(newPose, outPose);
+			if (parameters.useAssemblerDfn && parameters.matchToReconstructedCloud)
+				{
+				Copy(*poseToPreviousPose, outPose);
+				}
+			else if (parameters.useAssemblerDfn && !parameters.matchToReconstructedCloud)
+				{
+				Pose3D newPose = Sum(outPose, *poseToPreviousPose);
+				Copy(newPose, outPose);
+				}
+			else if (!parameters.useAssemblerDfn && parameters.matchToReconstructedCloud)
+				{
+				pointCloudMap.AddPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, poseToPreviousPose);
+				Copy(*poseToPreviousPose, outPose);
+				}
+			else
+				{
+				pointCloudMap.AttachPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, poseToPreviousPose);
+				Copy( pointCloudMap.GetLatestPose(), outPose);
+				}
 			}
 		#ifdef TESTING
 		logFile << outSuccess << " ";

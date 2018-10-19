@@ -39,6 +39,7 @@
 #include <Registration3D/Registration3DExecutor.hpp>
 #include <PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
 #include <PointCloudTransform/PointCloudTransformExecutor.hpp>
+#include <PointCloudFiltering/PointCloudFilteringExecutor.hpp>
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
@@ -113,6 +114,7 @@ namespace Reconstruction3D
 		CDFF::DFN::Registration3DExecutor* registrator3d;
 		CDFF::DFN::PointCloudAssemblyExecutor* cloudAssembler;
 		CDFF::DFN::PointCloudTransformExecutor* cloudTransformer;
+		CDFF::DFN::PointCloudFilteringExecutor* cloudFilter;
 
 		#ifdef TESTING
 		std::ofstream logFile;
