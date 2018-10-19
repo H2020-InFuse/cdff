@@ -290,14 +290,14 @@ pcl::PointXYZ StereoCloudSimulator::TransformPointFromCameraSystemToCloudSystem(
 	return projectionPoint;
 	}
 
-pcl::PointXYZ StereoCloudSimulator::TransformPointFromCloudSystemToCameraSystem(pcl::PointXYZ pointInCameraSystem, Pose3D cameraPose)
+pcl::PointXYZ StereoCloudSimulator::TransformPointFromCloudSystemToCameraSystem(pcl::PointXYZ pointInCloudSystem, Pose3D cameraPose)
 	{
 	typedef Eigen::Transform<double, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
 	Eigen::Quaternion<double> rotation(GetWRotation(cameraPose), GetXRotation(cameraPose), GetYRotation(cameraPose), GetZRotation(cameraPose));
 	Eigen::Translation<double, 3> translation( GetXPosition(cameraPose), GetYPosition(cameraPose), GetZPosition(cameraPose));
 	AffineTransform affineTransform = translation * rotation.inverse();
 
-	Eigen::Vector3d eigenPoint(pointInCameraSystem.x, pointInCameraSystem.y, pointInCameraSystem.z);
+	Eigen::Vector3d eigenPoint(pointInCloudSystem.x, pointInCloudSystem.y, pointInCloudSystem.z);
 	Eigen::Vector3d eigenTransformedPoint = affineTransform.inverse() * eigenPoint;
 
 	pcl::PointXYZ projectionPoint;
