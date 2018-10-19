@@ -31,6 +31,12 @@
 #include <Visualizers/OpencvVisualizer.hpp>
 #include <Visualizers/PclVisualizer.hpp>
 
+#include <pcl/sample_consensus/method_types.h>
+#include <pcl/sample_consensus/model_types.h>
+#include <pcl/segmentation/sac_segmentation.h>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+
 
 namespace CDFF
 {
@@ -120,6 +126,46 @@ void SparseRegistrationFromStereo::run()
 	PointCloudConstPtr imageCloud = NULL;
 	cloudFilter->Execute(unfilteredImageCloud, imageCloud);
 
+	/***************** PLANE FILTERING *************************************/
+
+	
+	Converters::PointCloudToPclPointCloudConverter cloudConverter;
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud = cloudConverter.Convert(imageCloud);
+	
+	pcl::SACSegmentation<pcl::PointXYZ> ransacSegmentation;
+	ransacSegmentation.setOptimizeCoefficients (true);
+	ransacSegmentation.setModelType (pcl::SACMODEL_PLANE);
+	ransacSegmentation.setMethodType (pcl::SAC_RANSAC);
+	ransacSegmentation.setDistanceThreshold (0.05);
+
+	pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
+	pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
+	ransacSegmentation.setInputCloud (cloud);
+	ransacSegmentation.segment (*inliers, *coefficients);
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr leftoverCloud( new pcl::PointCloud<pcl::PointXYZ>() );
+	int leftoverIndex = 0;	
+	for(int indexIndex = 0; indexIndex < inliers->indices.size(); indexIndex++)
+		{
+		int pointIndex = inliers->indices.at(indexIndex);
+		while (leftoverIndex < pointIndex)
+			{
+			pcl::PointXYZ leftoverPoint= cloud->points.at(leftoverIndex);
+			leftoverCloud->points.push_back(leftoverPoint);
+			leftoverIndex++;
+			}
+		leftoverIndex++;
+		}
+	
+	bool newImageCloud = true;
+	Converters::PclPointCloudToPointCloudConverter inverseConverter;
+	imageCloud = inverseConverter.Convert(leftoverCloud);
+	
+
+	/********************************************************************/
+	/* END OF PLANE FILTERING */
+	/*********************************************************************/
+
 	VisualPointFeatureVector3DConstPtr keypointVector = NULL;
 	featuresExtractor3d->Execute(imageCloud, keypointVector);
 	DEBUG_SHOW_3D_VISUAL_FEATURES(imageCloud, keypointVector);
@@ -151,6 +197,17 @@ void SparseRegistrationFromStereo::run()
 		{
 		UpdatePointCloud(imageCloud);
 		}
+
+	/***************** PLANE FILTERING CLEANUP *************************************/
+	
+	if (newImageCloud)
+		{
+		delete(imageCloud);
+		}
+	
+	/********************************************************************/
+	/* END OF PLANE FILTERING CLEANUP */
+	/*********************************************************************/
 
 	#ifdef TESTING
 	logFile << std::endl;
