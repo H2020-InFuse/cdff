@@ -42,6 +42,7 @@
 #include <PointCloudAssembly/VoxelBinning.hpp>
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
+#include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
 
 #include <Errors/Assert.hpp>
 
@@ -132,12 +133,16 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	{
 		return CreatePointCloudTransform(dfnImplementation);
 	}
-    else if (dfnType == "Voxelization")
-    {
-        return CreateVoxelization(dfnImplementation);
-    }
+	else if (dfnType == "Voxelization")
+	{
+	return CreateVoxelization(dfnImplementation);
+	}
+	else if (dfnType == "PointCloudFiltering")
+	{
+	return CreatePointCloudFiltering(dfnImplementation);
+	}	
 
-    PRINT_TO_LOG("DFN: ", dfnType);
+	PRINT_TO_LOG("DFN: ", dfnType);
 	PRINT_TO_LOG("DFN implementation: ", dfnImplementation);
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN");
 	return NULL;
@@ -153,7 +158,7 @@ BundleAdjustmentInterface* DFNsBuilder::CreateBundleAdjustment(std::string dfnIm
 	{
 		return new BundleAdjustment::SvdDecomposition;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN BundleAdjustment implementation");
 	return NULL;
 }
 
@@ -163,7 +168,7 @@ CamerasTransformEstimationInterface* DFNsBuilder::CreateCamerasTransformEstimati
 	{
 		return new CamerasTransformEstimation::EssentialMatrixDecomposition;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN CameraTransformEstimation implementation");
 	return NULL;
 }
 
@@ -173,7 +178,7 @@ FeaturesDescription2DInterface* DFNsBuilder::CreateFeaturesDescription2D(std::st
 	{
 		return new FeaturesDescription2D::OrbDescriptor;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesDescription2D implementation");
 	return NULL;
 }
 
@@ -183,7 +188,7 @@ FeaturesDescription3DInterface* DFNsBuilder::CreateFeaturesDescription3D(std::st
 	{
 		return new FeaturesDescription3D::ShotDescriptor3D;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesDescription3D implementation");
 	return NULL;
 }
 
@@ -197,7 +202,7 @@ FeaturesExtraction2DInterface* DFNsBuilder::CreateFeaturesExtraction2D(std::stri
 	{
 		return new FeaturesExtraction2D::OrbDetectorDescriptor;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesMatching2D implementation");
 	return NULL;
 }
 
@@ -207,7 +212,7 @@ FeaturesExtraction3DInterface* DFNsBuilder::CreateFeaturesExtraction3D(std::stri
 	{
 		return new FeaturesExtraction3D::HarrisDetector3D;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesExtraction3D implementation");
 	return NULL;
 }
 
@@ -217,7 +222,7 @@ FeaturesMatching2DInterface* DFNsBuilder::CreateFeaturesMatching2D(std::string d
 	{
 		return new FeaturesMatching2D::FlannMatcher;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesMatching2D implementation");
 	return NULL;
 }
 
@@ -231,7 +236,7 @@ FeaturesMatching3DInterface* DFNsBuilder::CreateFeaturesMatching3D(std::string d
 	{
 		return new FeaturesMatching3D::Ransac3D;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesMatching3D implementation");
 	return NULL;
 }
 
@@ -241,7 +246,7 @@ FundamentalMatrixComputationInterface* DFNsBuilder::CreateFundamentalMatrixCompu
 	{
 		return new FundamentalMatrixComputation::FundamentalMatrixRansac;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN FundamentalMatrixComputation implementation");
 	return NULL;
 }
 
@@ -268,7 +273,7 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(std::string dfnImplem
         return new ImageFiltering::NormalVectorExtraction;
     }
 
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN ImageFiltering implementation");
 	return NULL;
 }
 
@@ -278,7 +283,7 @@ PerspectiveNPointSolvingInterface* DFNsBuilder::CreatePerspectiveNPointSolving(s
 	{
 		return new PerspectiveNPointSolving::IterativePnpSolver;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN PerspectiveNPointSolving implementation");
 	return NULL;
 }
 
@@ -288,7 +293,7 @@ PointCloudReconstruction2DTo3DInterface* DFNsBuilder::CreatePointCloudReconstruc
 	{
 		return new PointCloudReconstruction2DTo3D::Triangulation;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudReconstruction2DTo3D implementation");
 	return NULL;
 }
 
@@ -298,7 +303,7 @@ PrimitiveMatchingInterface* DFNsBuilder::CreatePrimitiveMatching(std::string dfn
 	{
 		return new PrimitiveMatching::HuInvariants;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN PrimitiveMatching implementation");
 	return NULL;
 }
 
@@ -312,7 +317,7 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(std::string dfnImplem
 	{
 		return new Registration3D::IcpCC;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN Registration3D implementation");
 	return NULL;
 }
 
@@ -330,7 +335,7 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(std::stri
 	{
 		return new StereoReconstruction::ScanlineOptimization;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoReconstruction implementation");
 	return NULL;
 }
 
@@ -344,7 +349,7 @@ Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(std::st
 	{
 		return new Transform3DEstimation::LeastSquaresMinimization;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN Transform3DEstimation implementation");
 	return NULL;
 }
 
@@ -354,7 +359,7 @@ DepthFilteringInterface* DFNsBuilder::CreateDepthFiltering(std::string dfnImplem
 	{
 		return new DepthFiltering::ConvolutionFilter();
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN DepthFiltering implementation");
 	return NULL;
 }
 
@@ -364,7 +369,7 @@ ForceMeshGeneratorInterface* DFNsBuilder::CreateForceMeshGenerator(std::string d
 	{
 		return new ForceMeshGenerator::ThresholdForce();
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN ForceMeshGenerator implementation");
 	return NULL;
 }
 
@@ -398,9 +403,19 @@ VoxelizationInterface* DFNsBuilder::CreateVoxelization(std::string dfnImplementa
 	{
 		return new Voxelization::Octree;
 	}
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudTransform implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN Voxelization implementation");
 	return NULL;
 }
+
+PointCloudFilteringInterface* DFNsBuilder::CreatePointCloudFiltering(std::string dfnImplementation)
+	{
+	if (dfnImplementation == "StatisticalOutlierRemoval")
+	{
+		return new PointCloudFiltering::StatisticalOutlierRemoval;
+	}
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudFiltering implementation");
+	return NULL;
+	}
 }
 }
 
