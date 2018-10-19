@@ -340,6 +340,7 @@ include_directories(
   Common/Types/CPP
   Common/Converters
   CentralDPM
+  CentralDPMTest
   DFNs
   DFPCs
   Tests
@@ -351,6 +352,7 @@ include_directories(
 
 add_subdirectory(Common)
 add_subdirectory(CentralDPM)
+add_subdirectory(CentralDPMTest)
 add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
 add_subdirectory(Tests)
