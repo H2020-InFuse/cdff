@@ -33,6 +33,7 @@
 #include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
 #include <PointCloudTransform/PointCloudTransformInterface.hpp>
 #include <Voxelization/VoxelizationInterface.hpp>
+#include <PointCloudFiltering/PointCloudFilteringInterface.hpp>
 
 #include <stdlib.h>
 #include <string>
@@ -74,6 +75,7 @@ namespace DFN
 			static PointCloudAssemblyInterface* CreatePointCloudAssembly(std::string dfnImplementation);
 			static PointCloudTransformInterface* CreatePointCloudTransform(std::string dfnImplementation);
 			static VoxelizationInterface* CreateVoxelization(std::string dfnImplementation);
+			static PointCloudFilteringInterface* CreatePointCloudFiltering(std::string dfnImplementation);
 	};
 }
 }

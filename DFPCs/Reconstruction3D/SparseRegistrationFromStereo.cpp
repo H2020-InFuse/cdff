@@ -31,6 +31,7 @@
 #include <Visualizers/OpencvVisualizer.hpp>
 #include <Visualizers/PclVisualizer.hpp>
 
+
 namespace CDFF
 {
 namespace DFPC
@@ -66,6 +67,7 @@ SparseRegistrationFromStereo::SparseRegistrationFromStereo()
 	registrator3d = NULL;
 	cloudAssembler = NULL;
 	cloudTransformer = NULL;
+	cloudFilter = NULL;
 
 	bundleHistory = new BundleHistory(2);
 	featureCloud = NewPointCloud();
@@ -85,6 +87,7 @@ SparseRegistrationFromStereo::~SparseRegistrationFromStereo()
 	DeleteIfNotNull(registrator3d);
 	DeleteIfNotNull(cloudAssembler);
 	DeleteIfNotNull(cloudTransformer);
+	DeleteIfNotNull(cloudFilter);
 
 	DeleteIfNotNull(bundleHistory);
 	DeleteIfNotNull(featureCloud);
@@ -111,8 +114,11 @@ void SparseRegistrationFromStereo::run()
 	optionalLeftFilter->Execute(inLeftImage, filteredLeftImage);
 	optionalRightFilter->Execute(inRightImage, filteredRightImage);
 
+	PointCloudConstPtr unfilteredImageCloud = NULL;
+	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, unfilteredImageCloud);
+
 	PointCloudConstPtr imageCloud = NULL;
-	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, imageCloud);
+	cloudFilter->Execute(unfilteredImageCloud, imageCloud);
 
 	VisualPointFeatureVector3DConstPtr keypointVector = NULL;
 	featuresExtractor3d->Execute(imageCloud, keypointVector);
@@ -196,6 +202,7 @@ void SparseRegistrationFromStereo::InstantiateDFNExecutors()
 	reconstructor3d = new StereoReconstructionExecutor( static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") ) );
 	featuresExtractor3d = new FeaturesExtraction3DExecutor( static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") ) );
 	registrator3d = new Registration3DExecutor( static_cast<Registration3DInterface*>( configurator.GetDfn("registrator3d") ) );
+	cloudFilter = new PointCloudFilteringExecutor( static_cast<PointCloudFilteringInterface*>( configurator.GetDfn("cloudFilter", true) ) );
 	if (parameters.useAssemblerDfn)
 		{
 		cloudAssembler = new PointCloudAssemblyExecutor( static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") ) );

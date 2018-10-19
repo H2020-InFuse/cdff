@@ -79,4 +79,5 @@ target_link_libraries(
   neighbour_point_average
   voxel_binning
   cartesian_system_transform
+  statistical_outlier_removal
 )

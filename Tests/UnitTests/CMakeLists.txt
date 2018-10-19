@@ -62,6 +62,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
     DFNs/PointCloudAssembly/VoxelBinning.cpp
     DFNs/PointCloudTransform/CartesianSystemTransform.cpp
+    DFNs/PointCloudFiltering/StatisticalOutlierRemoval.cpp
 )
 
 # Libraries used by the aforementioned source files. They will be linked in the
@@ -135,6 +136,7 @@ set(UNITTEST_LIBRARIES Catch
     neighbour_point_average
     voxel_binning
     cartesian_system_transform
+    statistical_outlier_removal
     dfpc_haptic_scanning
 )
 
