@@ -99,7 +99,7 @@ namespace DataGenerators {
 		pcl::PointCloud<pcl::PointXYZ>::Ptr TransformCloudInCameraSystem(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
 		pcl::PointXYZ TransformPointFromCameraSystemToCloudSystem(pcl::PointXYZ pointInCameraSystem, PoseWrapper::Pose3D cameraPose);
-		pcl::PointXYZ TransformPointFromCloudSystemToCameraSystem(pcl::PointXYZ pointInCameraSystem, PoseWrapper::Pose3D cameraPose);
+		pcl::PointXYZ TransformPointFromCloudSystemToCameraSystem(pcl::PointXYZ pointInCloudSystem, PoseWrapper::Pose3D cameraPose);
 		bool ComputeCameraLineProjectionOnPointCloud(pcl::PointXYZ pointInCloudSystem, pcl::PointXYZ& projectionPoint);
 		pcl::PointXYZ ApplyRotation(pcl::PointXYZ point, double qx, double qy, double qz, double qw);
 		void AddFrustrumToPointCloud(PoseWrapper::Pose3D cameraPose, pcl::PointCloud<pcl::PointXYZ>::Ptr stereoCloud);
