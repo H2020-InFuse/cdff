@@ -29,6 +29,7 @@
 #include "Errors/Assert.hpp"
 #include <iostream>
 
+using namespace DLRtracker;
 using namespace Converters;
 using namespace FrameWrapper;
 

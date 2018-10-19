@@ -11,7 +11,8 @@
 *****************************************************************************/
 #ifndef KALMANFILTER_H_
 #define KALMANFILTER_H_
-
+namespace DLRtracker
+{
 class KalmanFilter
 {
 	public:
@@ -52,5 +53,5 @@ class KalmanFilter
 		double m_time_est;
 		bool m_use_AngleAxis;
 };
-
+}
 #endif /* KALMANFILTER_H_ */

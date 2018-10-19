@@ -11,7 +11,8 @@
 #define PARSER3_H_
 
 #include "common.h"
-
+namespace DLRtracker
+{
 class  FileParser
 {
 	public:
@@ -28,5 +29,7 @@ class  FileParser
 		int parsePolyhedron(const char * fname, int& setup_global_array_counter, double * setup_global_array);
 		int parsePolyline(const char * fname, int& setup_global_array_counter, double * setup_global_array);
 };
+
+}
 
 #endif /* PARSER3_H_ */

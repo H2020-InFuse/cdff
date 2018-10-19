@@ -13,7 +13,8 @@
 #include "KalmanFilter.h"
 #include "Multibody.h"
 #include "ContourTracker.h"
-
+namespace DLRtracker
+{
 class  GenericObjectTracker
 {
 	public:
@@ -335,4 +336,5 @@ class  GenericObjectTracker
 		SimplePredictor m_SimplePredictor;
 };
 
+}
 #endif /* GENERICOBJECTTRACKER_H_ */

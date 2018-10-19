@@ -25,7 +25,8 @@
 	f 4 6 3 7 8
 	...
 */
-
+namespace DLRtracker
+{
 class Polyhedron
 {
 		friend class GenericObjectTracker;
@@ -125,5 +126,7 @@ class Polyhedron
 		double * m_face_camera_distances;
 		
 };
+
+}
 
 #endif /* POLYHEDRON_H_ */

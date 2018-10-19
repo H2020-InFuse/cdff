@@ -25,7 +25,8 @@
 	e 4 5
 	...
 */
-
+namespace DLRtracker
+{
 class Polyline
 {
 
@@ -76,5 +77,7 @@ class Polyline
 
 		double * m_vertices_camera;
 };
+
+}
 
 #endif /* POLYLINE_H_ */

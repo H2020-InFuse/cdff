@@ -11,7 +11,8 @@
 #define TRACKCONTOUR_H_
 
 #include "Multibody.h"
-
+namespace DLRtracker
+{
 class ContourTracker
 {
 	public:
@@ -157,5 +158,7 @@ class ContourTracker
 		
 		int m_IsCameraActive[_MAX_NCAMS];
 };
+
+}
 
 #endif /* TRACKCONTOUR_H_ */

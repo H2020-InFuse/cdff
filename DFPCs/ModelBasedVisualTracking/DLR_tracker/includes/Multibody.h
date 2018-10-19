@@ -15,8 +15,8 @@
 #include "Polyhedron.h"
 #include "Polyline.h"
 
-using namespace DLRtracker;
-
+namespace DLRtracker
+{
 class Multibody
 {
 	public:
@@ -346,5 +346,7 @@ class Multibody
 		bool m_reset_Zbuffer_externally;
 		double * m_Zbuffer_init_depth_maps[_MAX_NCAMS];
 };
+
+}
 
 #endif /* GENERICMODEL_H_ */

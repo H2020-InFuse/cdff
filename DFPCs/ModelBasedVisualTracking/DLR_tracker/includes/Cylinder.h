@@ -11,7 +11,8 @@
 #define CYLINDERMODEL_H_
 
 #include "common.h"
-
+namespace DLRtracker
+{
 class Cylinder
 {
 	public:
@@ -30,4 +31,5 @@ class Cylinder
 		double m_rc;
 };
 
+}
 #endif /* CYLINDERMODEL_H_ */

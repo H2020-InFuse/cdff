@@ -11,6 +11,8 @@
 #ifndef SIMPLEPREDICTOR_H_
 #define SIMPLEPREDICTOR_H_
 
+namespace DLRtracker
+{
 class SimplePredictor
 {
 	public:
@@ -35,5 +37,7 @@ class SimplePredictor
 		
 		bool m_use_AngleAxis;
 };
+
+}
 
 #endif /* SIMPLEPREDICTOR_H_ */

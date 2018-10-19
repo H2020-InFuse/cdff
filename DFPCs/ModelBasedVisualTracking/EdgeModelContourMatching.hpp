@@ -75,8 +75,8 @@ namespace DFPC
 	 * --------------------------------------------------------------------
 	 */	
 	private:
-		FileParser parser;
-		GenericObjectTracker DLRTracker;
+		DLRtracker::FileParser parser;
+		DLRtracker::GenericObjectTracker DLRTracker;
 		int status;
 		bool diagnostics;
 		double egomotion[16];
