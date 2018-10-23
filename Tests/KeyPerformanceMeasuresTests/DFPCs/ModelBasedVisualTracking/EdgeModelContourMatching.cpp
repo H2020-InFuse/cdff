@@ -98,7 +98,7 @@ int maindfpcTest(int argc, char* argv[], ModelBasedVisualTrackingInterface* dfpc
 
 	if(argc==7)
 	{
-	   myexecutor->logGroundTruthError = false;	
+	   myexecutor->logGroundTruthError = true;	
 	   myexecutor->SetInputFilesPaths(inputImagesFolder, inputImagesListFileName, inputPosesFolder, inputPosesListFileName);
 	}
 	else

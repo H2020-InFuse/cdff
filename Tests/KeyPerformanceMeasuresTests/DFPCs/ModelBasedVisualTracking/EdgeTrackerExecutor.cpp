@@ -178,9 +178,9 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	  initState = ConvertStateToAsnState(orientationPosition, vel0);
 	  dfpc->initInput(initState);
 				
-	  }
-	 else
-	  {
+	}
+	/*else
+	{
 	  //init tracker from row-ordered transforamtion matrix from file
 	   if(imageIndex == 0)
 	   {
@@ -193,10 +193,10 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	     AngleAxisFromT(T_true, orientationPosition); //deg, mm
 	     initState = ConvertStateToAsnState(orientationPosition, vel0);
 	     dfpc->initInput(initState);
-	    }
-
-
 	   }
+
+
+	} */
 
 
 	/// Input: image time (image timestamp) ///

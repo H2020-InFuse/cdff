@@ -74,9 +74,10 @@ void initPose(double* guessT0, double* velocity0 )
 }
 
 
+
 TEST_CASE( "Success Call to Configure (EdgeModelContourMatching)", "[configureDLRTracker]" ) 
 	{
-	EdgeModelContourMatching* contourMatching = new EdgeModelContourMatching ;
+	EdgeModelContourMatching* contourMatching = new EdgeModelContourMatching() ;
 	contourMatching->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking");
 	contourMatching->setup();
 	std::cout<< " Tracker DFPC- Setup Functionality Test success "<<std::endl;
@@ -86,19 +87,20 @@ TEST_CASE( "Success Call to Configure (EdgeModelContourMatching)", "[configureDL
 	}
 
 
+
 TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTracker]")
 	{
 	//source image type- ASN frame, but here cv::Mat. Conversions: cv::Mat --> ASN Frame
 
 	// cv:Mat image type
-	cv::Mat inputImageLeft = cv::imread("../tests/Data/Images/DLR_oos_camL0000.pgm",0);
-	cv::Mat inputImageRight = cv::imread("../tests/Data/Images/DLR_oos_camR0000.pgm",0);
+	cv::Mat inputImageLeft = cv::imread("../tests/Data/Images/DLR_OOS_camL0000.pgm",0);
+	cv::Mat inputImageRight = cv::imread("../tests/Data/Images/DLR_OOS_camR0000.pgm",0);
 	MatToFrameConverter matToFrame;
 	// ASN Frame type
 	FrameConstPtr inputFrameLeft = matToFrame.Convert(inputImageLeft);
 	FrameConstPtr inputFrameRight = matToFrame.Convert(inputImageRight);
 	
-	EdgeModelContourMatching* contourMatching = new EdgeModelContourMatching ;
+	EdgeModelContourMatching* contourMatching = new EdgeModelContourMatching();
 	
 	contourMatching->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking");
 	
@@ -154,7 +156,6 @@ TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTra
 	delete contourMatching;
 	
 	} 
-
 
 
 /** @} */

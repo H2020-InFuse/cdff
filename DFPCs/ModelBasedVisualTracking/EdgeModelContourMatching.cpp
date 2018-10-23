@@ -103,12 +103,14 @@ void EdgeModelContourMatching::run()
 	   {
             cv::Mat inputLeftImage = frameToMat.Convert(inImageLeft); 
 	    ASSERT(inputLeftImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
+	    ASSERT(inputLeftImage.rows > 0 && inputLeftImage.cols > 0," image empty: Tracker input is a gray scale image");	
 	    memcpy(images[c], inputLeftImage.data, DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
 	   }
 	   if(numberOfCameras > 1 && c == 1)
 	   {
 	    cv::Mat inputRightImage = frameToMat.Convert(inImageRight);
 	    ASSERT(inputRightImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
+	    ASSERT(inputRightImage.rows > 0 && inputRightImage.cols > 0," unsupported image type: Tracker input is a gray scale image");	
 	    memcpy(images[c], inputRightImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
 	   }
           }
@@ -192,7 +194,7 @@ void EdgeModelContourMatching::setup()
 	 DLRTracker.getObjectModel().changeLocalFrame(0);
       	 allocateImageMemory();
 	
-	dumpMemoryAlloc();
+	//dumpMemoryAlloc();
 	 
 	}
 	
