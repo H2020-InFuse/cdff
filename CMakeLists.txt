@@ -300,23 +300,22 @@ include_directories(
   SYSTEM "${_DEPENDENCIES_PREFIX}/include/pcl-1.8"
 )
 
-## Look for Edres-Wrapper ------------------------------------------------------
+## Look for Edres-Wrapper (optional dependency) --------------------------------
 
 find_package(Edres-Wrapper)
 
 if(Edres-Wrapper_FOUND)
 
   find_package_mode(Edres-Wrapper)
-
   message(STATUS "Found Edres-Wrapper headers in: ${Edres-Wrapper_INCLUDE_DIRS}")
   message(STATUS "Found Edres-Wrapper compiled libraries in: ${Edres-Wrapper_LIBRARIES}")
 
+  set(WITH_EDRES ON CACHE BOOL "Build Edres-dependent parts")
   include_directories(SYSTEM ${Edres-Wrapper_INCLUDE_DIRS})
 
 else()
 
-  # Abort if Edres-Wrapper is not found
-  return()
+  set(WITH_EDRES OFF CACHE BOOL "Build Edres-dependent parts")
 
 endif()
 
