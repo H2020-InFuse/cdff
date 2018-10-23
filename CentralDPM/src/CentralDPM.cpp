@@ -6,12 +6,17 @@
 #include <envire_core/plugin/ClassLoader.hpp>
 #include <envire_core/items/Item.hpp>
 
+#include <Loggers/StandardOutputLogger.hpp>
+
 using namespace envire::core;
 namespace CDFF
 {
 
     void CentralDPM::storePointcloud(const asn1SccPointcloud& pcl, const asn1SccT_String& pcl_id)
     {
+        std::string log_prefix = "[CentralDPM::storePointcloud] ";
+        StandardOutputLogger* logger = new StandardOutputLogger();
+
         EnvireGraph g;
 
         std::string itemname = "envire::core::Item<asn1SccPointcloud>";
@@ -24,15 +29,17 @@ namespace CDFF
         {
             if (loader->createEnvireItem(itemname, item)) // Creates the intsance of the item behind thje pointer
             {
-
                 item->setData(pcl);
                 item->contentsChanged();
-                std::cout << "We created an Item with a pcl in it" << std::endl;
+
+                logger->AddEntry(log_prefix + "We created an Item with a pcl in it", Logger::SUCCESS );
+                logger->Print();
 
                 const FrameId frame("PCL");
                 g.addFrame(frame);
                 g.addItemToFrame(frame, item);
-                std::cout << "We created a frame and added the pcl to it" << std::endl;
+                logger->AddEntry(log_prefix + "We created a frame and added the pcl to it", Logger::SUCCESS );
+                logger->Print();
 
                 //EnvireGraph h;
                 char charname[pcl_id.nCount];
@@ -40,7 +47,8 @@ namespace CDFF
                 std::string graph_id(charname);
                 std::string store_file("./"+graph_id+".graph");
                 g.saveToFile(store_file);
-                std::cout << "Graph saved to file "<< store_file  << std::endl;
+                logger->AddEntry(log_prefix + "Graph saved to file: " + store_file, Logger::SUCCESS );
+                logger->Print();
             }
         }
         else
@@ -52,22 +60,28 @@ namespace CDFF
 
     void CentralDPM::storeMap(const asn1SccMap& map, const asn1SccT_String& map_id)
     {
+        StandardOutputLogger* logger = new StandardOutputLogger();
+        std::string log_prefix = "[CentralDPM::storePointcloud] ";
         EnvireGraph g;
         std::string itemname = "envire::core::Item<asn1SccMap>";
         envire::core::ClassLoader *loader = envire::core::ClassLoader::getInstance();
         envire::core::Item<asn1SccMap>::Ptr item;
-        if (loader->hasClass(itemname)) // Check that the class can be used with class_loader?
+        if (loader->hasClass(itemname)) // Check that the class can be used with class_loader
         {
             if (loader->createEnvireItem(itemname, item)) // Creates the intsance of the item behind thje pointer
             {
                 item->setData(map);
                 item->contentsChanged();
-                std::cout << "[CentralDPM::storeMap] We created an Item with a map in it" << std::endl;
+                //std::cout << "[CentralDPM::storeMap] We created an Item with a map in it" << std::endl;
+                logger->AddEntry(log_prefix + "We created an Item with a map in it", Logger::SUCCESS );
+                logger->Print();
 
                 const FrameId frame("Map");
                 g.addFrame(frame);
                 g.addItemToFrame(frame, item);
-                std::cout << "[CentralDPM::storeMap] We created a frame and added the map to it" << std::endl;
+                //std::cout << "[CentralDPM::storeMap] We created a frame and added the map to it" << std::endl;
+                logger->AddEntry(log_prefix + "We created a frame and added the map to it", Logger::SUCCESS );
+                logger->Print();
 
                 //EnvireGraph h;
                 char charname[map_id.nCount+1];
@@ -77,7 +91,8 @@ namespace CDFF
 
                 std::string store_file("./"+graph_id+".graph");
                 g.saveToFile(store_file);
-                std::cout << "[CentralDPM::storeMap] Graph saved to file "<< store_file  << std::endl;
+                logger->AddEntry(log_prefix + "Graph saved to file " +store_file, Logger::SUCCESS );
+                logger->Print();
             }
         }
         else

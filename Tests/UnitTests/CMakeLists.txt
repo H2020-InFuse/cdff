@@ -11,6 +11,7 @@ target_include_directories(Catch SYSTEM INTERFACE "${CATCH_INCLUDE_DIR}")
 # Source files containing Catch test cases. They will be linked together to
 # produce the test executable. Add any additional file in ALPHABETICAL ORDER.
 set(UNITTEST_SOURCES UnitTests.cpp
+    CentralDPM/CentralDPM.cpp
     Common/BitStream/BitStream.cpp
     Common/Converters/MatCorrespondenceMaps2DSequenceConvertersTest.cpp
     Common/Converters/MatCorrespondenceMaps3DSequenceConvertersTest.cpp
@@ -72,6 +73,7 @@ set(UNITTEST_LIBRARIES Catch
     cdff_helpers
     cdff_logger
     cdff_types
+    central_dpm
     ceres_adjustment
     converters_opencv
     dfpc_configurator
@@ -147,3 +149,5 @@ target_link_libraries(cdff-unit-tests ${UNITTEST_LIBRARIES})
 # corresponding to the current source directory (i.e. corresponding to
 # ${CMAKE_CURRENT_SOURCE_DIR}).
 add_test(NAME unit-tests COMMAND cdff-unit-tests)
+
+include_directories("${CMAKE_SOURCE_DIR}/CentralDPM/src")

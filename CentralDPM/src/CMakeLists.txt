@@ -1,11 +1,15 @@
+
+set(CMAKE_CXX_FLAGS "-g")
+
 add_library(
-    centralDPM
+    central_dpm
     CentralDPM.cpp
 )
 
 target_link_libraries(
-    centralDPM
+    central_dpm
     cdff_types
+    cdff_logger
     ${ENVIRE_CORE_LIBRARIES}
     class_loader 
 )

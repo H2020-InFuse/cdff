@@ -16,8 +16,8 @@ namespace CDFF
 	{
 		public:
 
-			CentralDPM();
-			virtual ~CentralDPM();
+			CentralDPM(){};
+			virtual ~CentralDPM(){};
 
 			/**
 			 * Save the received pointcloud in disk associated to the id provided 
