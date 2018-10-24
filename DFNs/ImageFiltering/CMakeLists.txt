@@ -29,6 +29,9 @@ add_library(cdff_dfn_normal_vector_extraction NormalVectorExtraction.cpp)
 target_link_libraries(cdff_dfn_normal_vector_extraction
         cdff_validators image_filtering cdff_helpers yaml-cpp)
 
+add_library(cdff_dfn_kmeans KMeansClustering.cpp)
+target_link_libraries(cdff_dfn_kmeans image_filtering cdff_helpers cdff_validators)
+
 add_library(cdff_dfn_edge_detection EdgeDetection.cpp)
 target_link_libraries(cdff_dfn_edge_detection
         cdff_validators image_filtering cdff_helpers opencv_core yaml-cpp)

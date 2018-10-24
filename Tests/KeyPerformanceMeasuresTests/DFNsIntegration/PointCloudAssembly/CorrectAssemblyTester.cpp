@@ -146,7 +146,7 @@ void CorrectAssemblyTester::LoadInputPointClouds()
 			PointCloudFileEntry entry;
 			entry.filePath = dataFolderPath + "/" + pointCloudFilePath;
 			SetPosition(entry.pose, x, y, z);
-			SetOrientation(entry.pose, qx, qy, qy, qz);
+			SetOrientation(entry.pose, qx, qy, qz, qw);
 			pointCloudList.push_back(entry);
 			}
 		}
