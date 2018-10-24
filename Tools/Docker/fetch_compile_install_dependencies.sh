@@ -41,7 +41,7 @@ Configuration:
   -s LIB                    Only compile LIB
 			    can be used multiple times (-s LIB1 -s LIB2)
                             [LIB: cmake boost eigen flann qhull tinyxml2
-			    yamlccp vtk opencv pcl]
+			    yamlccp vtk opencv pcl edres-wrapper]
   -e                        Full dependencies installation (required for Central DPM)
 
 Installation directories:
@@ -185,6 +185,7 @@ function build_all_function {
  InstallersToRUN+=("opencv")
  InstallersToRUN+=("vtk")
  InstallersToRUN+=("pcl")
+ InstallersToRUN+=("edres-wrapper")
  if [[ "$ENVIRE_FULL" = true ]]; then
   InstallersToRUN+=("base_cmake")
   InstallersToRUN+=("base_logging")

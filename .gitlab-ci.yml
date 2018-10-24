@@ -1,4 +1,4 @@
-image: nexus.spaceapplications.com/repository/infuse/cdff-ci:1.9
+image: nexus.spaceapplications.com/repository/infuse/cdff-ci:2.0
 
 stages:
   - platform
