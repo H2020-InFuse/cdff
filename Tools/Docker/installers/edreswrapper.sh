@@ -3,16 +3,24 @@
 # romain.michalec@strath.ac.uk
 # This file is required by ../fetch_compile_install_dependencies.sh
 
-# ## Edres-wrapper 1.0.0 ======================================================
+# ## Edres-Wrapper 1.0.0 ======================================================
 #
 # Download   http://web.magellium.fr/~H2020INFUSE/edreswrapper-sdk-1.0.0.tar.gz
 #
-# This is a wrapper around the edres library to expose core functions for the 
-# CDFF.
+# Edres (Environnement de Développement pour la Robotique d'Exploration
+# Spatiale) is a proprietary C library developped by CNES as a framework for
+# autonomous space robotics.
+#
+# Edres-Wrapper is a C++ overlay that contains Edres and exposes core functions
+# of Edres for the CDFF to use.
+#
+# This version of Edres-Wrapper is a stub which exposes the ASN.1 interfaces,
+# but does nothing else. It allows Edres-dependent code to build. Such code
+# will not be operational.
 #
 # ### Dependencies ------------------------------------------------------------
 #
-# This is a stub version of edreswrapper which has no dependency.
+# The stub version has no dependency
 #
 # ### Dependants --------------------------------------------------------------
 #
