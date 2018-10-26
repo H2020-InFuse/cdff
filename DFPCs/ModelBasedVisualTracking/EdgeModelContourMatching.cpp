@@ -73,6 +73,7 @@ EdgeModelContourMatching::~EdgeModelContourMatching()
 	#endif
 	
 	}
+
 void EdgeModelContourMatching::allocateImageMemory()
 	{
 	 numberOfCameras = DLRTracker.getNcams();
@@ -90,7 +91,6 @@ void EdgeModelContourMatching::allocateImageMemory()
 	
 	
 	}
-
 
 void EdgeModelContourMatching::run() 
 	{
@@ -177,7 +177,6 @@ void EdgeModelContourMatching::setup()
 		
 	double setup_global_array[_MAX_PARSE_ARRAY];
 	int setup_global_array_counter;
-
 	std::string file_path_string = configurator.configurePath(configurationFilePath);
 
         const char* pathTOSpecifications = file_path_string.c_str();
@@ -194,7 +193,7 @@ void EdgeModelContourMatching::setup()
 	 DLRTracker.getObjectModel().changeLocalFrame(0);
       	 allocateImageMemory();
 	
-	//dumpMemoryAlloc();
+	dumpMemoryAlloc();
 	 
 	}
 	

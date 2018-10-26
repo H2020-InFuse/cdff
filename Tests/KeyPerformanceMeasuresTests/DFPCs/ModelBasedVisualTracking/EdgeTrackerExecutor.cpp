@@ -179,7 +179,7 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	  dfpc->initInput(initState);
 				
 	}
-	/*else
+	else
 	{
 	  //init tracker from row-ordered transforamtion matrix from file
 	   if(imageIndex == 0)
@@ -196,7 +196,7 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	   }
 
 
-	} */
+	} 
 
 
 	/// Input: image time (image timestamp) ///
@@ -257,7 +257,8 @@ void EdgeTrackerExecutor::ExecuteDfpc()
        }
 	std::cout<<" The tracking was successful for the given image sequence: "<<successCounter<<std::endl;
 	dfpcExecuted = true;
-	
+
+		
     }
 
 void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* guessT0)
@@ -360,7 +361,7 @@ void EdgeTrackerExecutor::LoadInputImage(std::string filePath, FrameWrapper::Fra
 	filterMedian(src_image, image, 5);
 	DELETE_IF_NOT_NULL(frame);
 	frame= frameConverter.Convert(image);
-
+	
 	}
 
 void EdgeTrackerExecutor::LoadInputPose(std::string filePath, double* groundTruthT)

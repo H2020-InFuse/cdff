@@ -81,8 +81,9 @@ TEST_CASE( "Success Call to Configure (EdgeModelContourMatching)", "[configureDL
 	contourMatching->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking");
 	contourMatching->setup();
 	std::cout<< " Tracker DFPC- Setup Functionality Test success "<<std::endl;
-	
+		
 	delete contourMatching;
+
 	
 	}
 
@@ -152,7 +153,7 @@ TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTra
 	bool success = contourMatching->successOutput();
 	asn1SccRigidBodyState estimatedState = contourMatching->stateOutput();
 	std::cout<< " Tracker DFPC- Process Functionality Test success "<<std::endl;
-
+	
 	delete contourMatching;
 	
 	} 

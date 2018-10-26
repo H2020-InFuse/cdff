@@ -59,7 +59,7 @@ Example: ./validation_DLR_model_tracker ../../tests/ConfigurationFiles/DFPCs/Mod
     (1d) 4rd parameter is the ground truth file path \n \
     (1e) 5th parameter is the ground truth pose list file name (the file contains three blank lines, and then for each line of the form: timeFloat pathToPose ; \n \
     (1f) 6th parameter  is the output pose file path; \n \n \
-Example: ./validation_DLR_model_tracker ../../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking/EPOS ../../tests/Data/Images/Sequences ImagesList.txt ../../tests/Data/\n  Images/Sequences  PosesList.txt ../../tests/Data/Images/Sequences/pose.txt \n";
+Example: ./validation_DLR_model_tracker ../../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking ../../tests/Data/Images/Sequences ImagesList.txt ../../tests/Data/\n  Images/Sequences  PosesList.txt ../../tests/Data/Images/Sequences/pose.txt \n";
 
 
 
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
 		EdgeModelContourMatching* modelTracker = new EdgeModelContourMatching();
 		
 		return maindfpcTest(argc,argv,modelTracker);
-		std::cout << "  test performance \n";
+		std::cout << " Testing performance ... \n";
 		delete modelTracker;
 		
 	return 0;

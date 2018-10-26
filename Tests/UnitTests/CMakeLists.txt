@@ -52,7 +52,6 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
     DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
     DFNs/Voxelization/Octree.cpp
-    DFPCs/ModelBasedVisualTracking/EdgeModelContourMatching.cpp
     DFPCs/Reconstruction3D/BundleHistory.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp

@@ -62,7 +62,7 @@ namespace DFPC
 		~EdgeModelContourMatching();
 		void run();
 		void setup();
-		
+				
 
 	/* --------------------------------------------------------------------
 	 * Protected
