@@ -20,7 +20,7 @@
 #include <pcl/common/geometry.h>
 #include <yaml-cpp/yaml.h>
 
-#include <Visualizers/PclVisualizer.hpp>
+//#include <Visualizers/PclVisualizer.hpp>
 
 using namespace Converters;
 using namespace PoseWrapper;
@@ -134,8 +134,6 @@ void BestDescriptorMatch::ComputeBestMatches( PointCloudWithFeatures sourceCloud
 			}
 		}
 
-	std::vector<int> list1;
-	std::vector<int> list2;
 	for(int sourceIndex = 0; sourceIndex < numberOfSourcePoints; sourceIndex++)
 		{
 		if ( minimumDistances.at(sourceIndex) < parameters.maxCorrespondenceDistance )
@@ -144,13 +142,8 @@ void BestDescriptorMatch::ComputeBestMatches( PointCloudWithFeatures sourceCloud
 			pcl::PointXYZ sinkPoint = sinkCloud.pointCloud->points.at( minimumSinkIndex.at(sourceIndex) );
 			bestMatchSourceCloud->points.push_back(sourcePoint);
 			bestMatchSinkCloud->points.push_back(sinkPoint);
-			std::string debugString = std::to_string(sourceIndex) + ", " + std::to_string( minimumSinkIndex.at(sourceIndex) ) + ", ";
-			PRINT_TO_LOG(debugString, minimumDistances.at(sourceIndex));
-			list1.push_back(sourceIndex);
-			list2.push_back( minimumSinkIndex.at(sourceIndex) );
 			}
 		}
-	DEBUG_SHOW_MATCHES(sourceCloud.pointCloud, sinkCloud.pointCloud, list1, list2);
 	}
 
 Pose3DConstPtr BestDescriptorMatch::ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::Ptr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::Ptr sinkCloud)
@@ -159,7 +152,6 @@ Pose3DConstPtr BestDescriptorMatch::ComputeTransform(pcl::PointCloud<pcl::PointX
 
 	Eigen::Matrix4f eigenTransform;
 	registration.estimateRigidTransformation(*sourceCloud, *sinkCloud, eigenTransform);
-	PRINT_TO_LOG("eigen", eigenTransform);
 
 	return EigenTransformToTransform3DConverter().Convert(eigenTransform);
 }
