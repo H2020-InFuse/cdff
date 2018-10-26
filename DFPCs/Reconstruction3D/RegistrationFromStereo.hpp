@@ -42,6 +42,8 @@
 #include <PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
 #include <PointCloudTransform/PointCloudTransformExecutor.hpp>
 #include <PointCloudFiltering/PointCloudFilteringExecutor.hpp>
+#include <Registration3D/Registration3DExecutor.hpp>
+
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
@@ -103,6 +105,7 @@ namespace Reconstruction3D
 			float pointCloudMapResolution;
 			bool matchToReconstructedCloud;
 			bool useAssemblerDfn;
+			bool useRegistratorDfn;
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
@@ -118,6 +121,7 @@ namespace Reconstruction3D
 		CDFF::DFN::PointCloudAssemblyExecutor* cloudAssembler;
 		CDFF::DFN::PointCloudTransformExecutor* cloudTransformer;
 		CDFF::DFN::PointCloudFilteringExecutor* cloudFilter;
+		CDFF::DFN::Registration3DExecutor* registrator3d;
 
 		#ifdef TESTING
 		std::ofstream logFile;

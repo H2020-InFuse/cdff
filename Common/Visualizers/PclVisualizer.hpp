@@ -36,8 +36,11 @@ class PclVisualizer
 		static void ShowPointCloud(PointCloudWrapper::PointCloudConstPtr pointCloud);
 		static void ShowVisualFeatures(PointCloudWrapper::PointCloudConstPtr pointCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr featuresVector);
 		static void ShowImage(pcl::PointCloud<pcl::RGB>::ConstPtr image);
+		static void ShowPoses(std::vector<PoseWrapper::Pose3D> poseList);
 
 		static void PlacePointCloud(PointCloudWrapper::PointCloudConstPtr sceneCloud, PointCloudWrapper::PointCloudConstPtr objectCloud, PoseWrapper::Pose3DConstPtr objectPoseInScene);
+		static void ShowMatches(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud1, pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud2, const std::vector<int>& indexList1, 
+			const std::vector<int>& indexList2);
 
 		static void SavePointCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, unsigned period = 1);
 		static void SavePointCloud(PointCloudWrapper::PointCloudConstPtr pointCloud, unsigned period = 1);
@@ -80,6 +83,8 @@ class PclVisualizer
 	#define DEBUG_SHOW_PCL_IMAGE(image)
 	#define DEBUG_SAVE_POINT_CLOUD(pointCloud)
 	#define DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(pointCloud, period)
+	#define DEBUG_SHOW_MATCHES(cloud1, cloud2, indexList1, indexList2)
+	#define DEBUG_SHOW_POSES(poseList)
 #else
 	#define DEBUG_SHOW_POINT_CLOUD(pointCloud) Visualizers::PclVisualizer::ShowPointCloud(pointCloud)
 	#define DEBUG_SHOW_POINT_CLOUDS(pointCloudsList) Visualizers::PclVisualizer::ShowPointClouds(pointCloudsList)
@@ -88,6 +93,8 @@ class PclVisualizer
 	#define DEBUG_SHOW_PCL_IMAGE(image) Visualizers::PclVisualizer::ShowImage(image)
 	#define DEBUG_SAVE_POINT_CLOUD(pointCloud) Visualizers::PclVisualizer::SavePointCloud(pointCloud)
 	#define DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(pointCloud, period) Visualizers::PclVisualizer::SavePointCloud(pointCloud, period)
+	#define DEBUG_SHOW_MATCHES(cloud1, cloud2, indexList1, indexList2) Visualizers::PclVisualizer::ShowMatches(cloud1, cloud2, indexList1, indexList2);
+	#define DEBUG_SHOW_POSES(poseList) Visualizers::PclVisualizer::ShowPoses(poseList);
 #endif
 
 #endif // PCL_VISUALIZER_HPP

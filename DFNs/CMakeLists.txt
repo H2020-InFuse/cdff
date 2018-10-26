@@ -29,6 +29,7 @@ target_link_libraries(
   orb_descriptor
   shot_descriptor_3d
   ransac_3d icp_3d
+  best_descriptor_match
   harris_detector_2d
   image_undistortion
   image_undistortion_rectification
