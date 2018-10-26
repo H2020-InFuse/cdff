@@ -73,7 +73,7 @@ CartesianSystemTransform::AffineTransform CartesianSystemTransform::ConvertCloud
 	{
 	Eigen::Quaternion<float> rotation(GetWRotation(cloudPoseInSystem), GetXRotation(cloudPoseInSystem), GetYRotation(cloudPoseInSystem), GetZRotation(cloudPoseInSystem));
 	Eigen::Translation<float, 3> translation( GetXPosition(cloudPoseInSystem), GetYPosition(cloudPoseInSystem), GetZPosition(cloudPoseInSystem));
-	AffineTransform affineTransform = translation * rotation.inverse();
+	AffineTransform affineTransform = translation * rotation;
 	return affineTransform;
 	}
 
