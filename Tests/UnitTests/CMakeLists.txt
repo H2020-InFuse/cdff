@@ -35,6 +35,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/FeaturesMatching2D/FlannMatcher.cpp
     DFNs/FeaturesMatching3D/Icp3D.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
+    DFNs/FeaturesMatching3D/BestDescriptorMatch.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
@@ -138,6 +139,7 @@ set(UNITTEST_LIBRARIES Catch
     cartesian_system_transform
     statistical_outlier_removal
     dfpc_haptic_scanning
+    best_descriptor_match
 )
 
 # Make the Catch executable that runs the unit tests

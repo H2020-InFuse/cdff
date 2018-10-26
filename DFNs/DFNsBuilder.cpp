@@ -20,6 +20,7 @@
 #include <FeaturesMatching2D/FlannMatcher.hpp>
 #include <FeaturesMatching3D/Icp3D.hpp>
 #include <FeaturesMatching3D/Ransac3D.hpp>
+#include <FeaturesMatching3D/BestDescriptorMatch.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
@@ -235,6 +236,10 @@ FeaturesMatching3DInterface* DFNsBuilder::CreateFeaturesMatching3D(std::string d
 	else if (dfnImplementation == "Ransac3D")
 	{
 		return new FeaturesMatching3D::Ransac3D;
+	}
+	else if (dfnImplementation == "BestDescriptorMatch")
+	{
+		return new FeaturesMatching3D::BestDescriptorMatch;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesMatching3D implementation");
 	return NULL;
