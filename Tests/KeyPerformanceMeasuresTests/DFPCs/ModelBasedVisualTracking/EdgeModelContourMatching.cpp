@@ -90,32 +90,32 @@ int maindfpcTest(int argc, char* argv[], ModelBasedVisualTrackingInterface* dfpc
 	outputPoseFilePath = argv[6];
 
 	}
-
 	
 	EdgeTrackerExecutor* myexecutor = new EdgeTrackerExecutor;
 	myexecutor->dtImages = 0.33; //sampling time
 	myexecutor->SetDfpc(configurationFilePath, dfpc);
-
+	//init tracker or log grondtruth error, by turning logGroundTruthError flag off or on
 	if(argc==7)
 	{
-	   myexecutor->logGroundTruthError = true;	
-	   myexecutor->SetInputFilesPaths(inputImagesFolder, inputImagesListFileName, inputPosesFolder, inputPosesListFileName);
+	  myexecutor->logGroundTruthError = false;	
+	  myexecutor->SetInputFilesPaths(inputImagesFolder, inputImagesListFileName, inputPosesFolder, inputPosesListFileName);
 	}
 	else
-		myexecutor->SetInputFilesPaths(inputImagesFolder, inputImagesListFileName);
+	  myexecutor->SetInputFilesPaths(inputImagesFolder, inputImagesListFileName);
 
 	myexecutor->SetOutputFilePath(outputPoseFilePath);
 	myexecutor->ExecuteDfpc();
 	delete myexecutor;	
 	return 0;
+
 	}
 int main(int argc, char* argv[])
 	{
-		EdgeModelContourMatching* modelTracker = new EdgeModelContourMatching();
+	 EdgeModelContourMatching* modelTracker = new EdgeModelContourMatching();
 		
-		return maindfpcTest(argc,argv,modelTracker);
-		std::cout << " Testing performance ... \n";
-		delete modelTracker;
+	 return maindfpcTest(argc,argv,modelTracker);
+	 std::cout << " Testing performance ... \n";
+	 delete modelTracker;
 		
 	return 0;
 	}

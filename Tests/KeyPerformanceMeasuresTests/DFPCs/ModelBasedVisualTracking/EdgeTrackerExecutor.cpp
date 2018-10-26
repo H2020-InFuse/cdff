@@ -126,8 +126,6 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	double guessT0[16];
 	
 	initPose(guessT0); //use from file instead
-
-	printMatrix(" ## init guessT0: ",guessT0,4,4);
 		
         double distanceInitial = fabs(guessT0[3])+fabs(guessT0[7])+fabs(guessT0[11]);
 	ASSERT(distanceInitial > 500, "Initial position is greater than 500 mm ");
