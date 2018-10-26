@@ -193,18 +193,20 @@ int mainComputePointCloudMode(int argc, char** argv, Reconstruction3DInterface* 
 	std::string inputImagesFolder;
 	std::string inputImagesListFileName;
 	std::string outputPointCloudFilePath;
+	std::string transformFilePath;
 
-	ASSERT(argc == 6, USAGE);
+	ASSERT(argc == 7, USAGE);
 	configurationFilePath = argv[2];
 	inputImagesFolder = argv[3];
 	inputImagesListFileName = argv[4];
 	outputPointCloudFilePath = argv[5];
+	transformFilePath = argv[6];
 
 
 	ReconstructionExecutor tester;
 	tester.SetDfpc(configurationFilePath, dfpc);
 	tester.SetInputFilesPaths(inputImagesFolder, inputImagesListFileName);
-	tester.ExecuteDfpc();
+	tester.ExecuteDfpc(transformFilePath);
 	tester.SaveOutputPointCloud(outputPointCloudFilePath);
 
 	return 0;
