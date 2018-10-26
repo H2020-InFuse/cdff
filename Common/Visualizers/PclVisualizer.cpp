@@ -153,6 +153,55 @@ void PclVisualizer::ShowImage(pcl::PointCloud<pcl::RGB>::ConstPtr image)
 	viewer.close();
 }
 
+void PclVisualizer::ShowPoses(std::vector<PoseWrapper::Pose3D> poseList)
+	{
+	RETURN_IF_DISABLED
+
+	pcl::visualization::PCLVisualizer viewer(WINDOW_NAME);
+	viewer.addCoordinateSystem(0.1);
+
+	int index = 0;
+	for( std::vector<PoseWrapper::Pose3D>::iterator pose = poseList.begin(); pose != poseList.end(); pose++)
+		{
+		double x = GetXPosition(*pose);
+		double y = GetYPosition(*pose);
+		double z = GetZPosition(*pose);
+		double qx = GetXOrientation(*pose);
+		double qy = GetYOrientation(*pose);
+		double qz = GetZOrientation(*pose);
+		double qw = GetWOrientation(*pose);
+
+		pcl::PointXYZ point(x, y, z);
+		pcl::PointXYZ axisX, axisY, axisZ;
+		
+		axisZ.x = 0.4 * (2*qx*qz + 2*qy*qw) + x;
+		axisZ.y = 0.4 * (2*qy*qz - 2*qx*qw) + y;
+		axisZ.z = 0.4 * (-qx*qx - qy*qy + qz*qz + qw*qw) + z;
+
+		axisX.x = 0.1 * (qx*qx - qy*qy - qz*qz + qw*qw) + x;
+		axisX.y = 0.1 * (2*qx*qy + 2*qz*qw) + y;
+		axisX.z = 0.1 * (2*qx*qz - 2*qy*qw) + z;
+
+		axisY.x = 0.2 * (2*qx*qy - 2*qz*qw) + x;
+		axisY.y = 0.2 * (-qx*qx + qy*qy - qz*qz + qw*qw) + y;
+		axisY.z = 0.2 * (2*qx*qw + 2*qy*qz) + z;
+
+		viewer.addLine<pcl::PointXYZ>(point, axisX, "lineX"+std::to_string(index));
+		viewer.addLine<pcl::PointXYZ>(point, axisY, "lineY"+std::to_string(index));
+		viewer.addLine<pcl::PointXYZ>(point, axisZ, "lineZ"+std::to_string(index));
+		index++;
+		}
+
+	while (!viewer.wasStopped())
+	{
+		viewer.spinOnce();
+		pcl_sleep(0.01);
+	}
+
+	viewer.removeAllPointClouds();
+	viewer.close();
+	}
+
 void PclVisualizer::PlacePointCloud(PointCloudConstPtr sceneCloud, PointCloudConstPtr objectCloud, Pose3DConstPtr objectPoseInScene)
 {
 	RETURN_IF_DISABLED
@@ -175,6 +224,44 @@ void PclVisualizer::PlacePointCloud(PointCloudConstPtr sceneCloud, PointCloudCon
 
 	ShowPointClouds(pointsCloudList);
 }
+
+void PclVisualizer::ShowMatches(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud1, pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud2, const std::vector<int>& indexList1, 
+	const std::vector<int>& indexList2)
+	{
+	RETURN_IF_DISABLED
+
+	pcl::visualization::PCLVisualizer viewer(WINDOW_NAME);
+	ASSERT(indexList1.size() == indexList2.size(), "PclVisualizer, indexList1 has different size with indexList2");
+	viewer.addCoordinateSystem(0.1);
+
+	Color cloudColor1 = COLORS_LIST[0];
+	Color cloudColor2 = COLORS_LIST[1];
+
+	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclCloudColor1(pointCloud1, cloudColor1.r, cloudColor1.g, cloudColor1.b);
+	viewer.addPointCloud(pointCloud1, pclCloudColor1, "cloud1");
+
+	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclCloudColor2(pointCloud2, cloudColor2.r, cloudColor2.g, cloudColor2.b);
+	viewer.addPointCloud(pointCloud2, pclCloudColor2, "cloud2");
+
+	for(int indexIndex = 0; indexIndex < indexList1.size(); indexIndex++)
+		{
+		int index1 = indexList1.at(indexIndex);
+		int index2 = indexList2.at(indexIndex);
+		pcl::PointXYZ point1 = pointCloud1->points.at(index1);
+		pcl::PointXYZ point2 = pointCloud2->points.at(index2);
+
+		viewer.addLine<pcl::PointXYZ>(point1, point2, "line"+std::to_string(indexIndex));
+		}
+
+	while (!viewer.wasStopped())
+	{
+		viewer.spinOnce();
+		pcl_sleep(0.01);
+	}
+
+	viewer.removeAllPointClouds();
+	viewer.close();
+	}
 
 void PclVisualizer::SavePointCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, unsigned period)
 {
