@@ -37,6 +37,7 @@ RUN apt-get update && apt-get install --yes --quiet \
     /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s opencv
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s vtk
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s pcl
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s edres-wrapper
 
 ## Download, build, and install EnviRe and its dependencies
 
@@ -45,6 +46,6 @@ RUN apt-get update && apt-get install --yes --quiet pkg-config libtinyxml-dev li
 
 ## Image information
 
-LABEL version="1.9"
+LABEL version="2.0"
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>, Romain Michalec <romain.michalec@strath.ac.uk>"
 LABEL description="Image providing the dependencies of CDFF-core and CDFF-support, compiled from source, and installed in /usr/local"
