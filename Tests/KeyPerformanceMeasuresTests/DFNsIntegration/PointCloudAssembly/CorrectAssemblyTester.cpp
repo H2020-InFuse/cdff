@@ -31,6 +31,8 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
+//#include <Visualizers/PclVisualizer.hpp> //include for debug code
+
 using namespace CDFF::DFN;
 using namespace Converters;
 using namespace PointCloudWrapper;
@@ -151,6 +153,15 @@ void CorrectAssemblyTester::LoadInputPointClouds()
 			}
 		}
 	file.close();
+
+	/*Visualizers::PclVisualizer::Enable();
+	std::vector<Pose3D> poseList;
+	for(int i=0; i<pointCloudList.size(); i++)
+		{
+		Pose3D pose = pointCloudList.at(i).pose;
+		poseList.push_back(pose);
+		}
+	DEBUG_SHOW_POSES(poseList);*/ //Debug Code
 	}
 
 PointCloudConstPtr CorrectAssemblyTester::LoadPointCloud(std::string pointCloudFilePath)
