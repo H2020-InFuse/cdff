@@ -58,8 +58,8 @@
 #   TODO: OpenNI2 support by the PCL (it is an optional dependency of pcl_io)
 #   is unlikely to be necessary for us
 #
-#   TODO: Message-Parsing Interface and Serialization disabled but check that
-#   we are not using a part of the PCL that could make use of them
+#   TODO: Message-Parsing Interface disabled but check that we are not using a
+#   part of the PCL that could make use of it
 #
 # * Boost header-only libraries required by the PCL:
 #
@@ -67,8 +67,6 @@
 #
 # * Compiled Boost libraries used by the CDFF:
 #
-#   + System
-#     FIXME: really?
 #   + Serialization
 #     Used by MAG
 #     Used by EnviRe in CDFF-dev: EnviRe uses it to serialize its graphs

@@ -70,7 +70,6 @@ set(UNITTEST_SOURCES UnitTests.cpp
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
 set(UNITTEST_LIBRARIES Catch
-    boost_system
     cc_core_lib
     cdff_helpers
     cdff_logger
@@ -144,6 +143,7 @@ set(UNITTEST_LIBRARIES Catch
 
 # Make the Catch executable that runs the unit tests
 add_executable(cdff-unit-tests ${UNITTEST_SOURCES})
+target_compile_definitions(cdff-unit-tests PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(cdff-unit-tests ${UNITTEST_LIBRARIES})
 
 # Register the Catch executable as a CTest test

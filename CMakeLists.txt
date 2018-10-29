@@ -144,7 +144,7 @@ endmacro()
 # CMake will look for the headers and the requested compiled libraries, as well
 # as the compiled libraries they depend on.
 
-find_package(Boost 1.66.0 REQUIRED COMPONENTS system)
+find_package(Boost 1.66.0 REQUIRED COMPONENTS serialization timer)
 
 if(Boost_FOUND)
 
@@ -167,7 +167,7 @@ if(Boost_FOUND)
   # * In your CMakeLists file:
   #     include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
   #     add_executable(mybin src1.cpp src2.cpp ...)
-  #     target_link_libraries(mybin Boost::date_time Boost::system ...)
+  #     target_link_libraries(mybin Boost::date_time Boost::serialization ...)
   #       # to link against the specified libraries and their dependencies
   #     target_link_libraries(mybin ${Boost_LIBRARIES})
   #       # to link against all requested libraries and their dependencies
@@ -179,8 +179,8 @@ if(Boost_FOUND)
   message(STATUS "Found Boost compiled libraries in: ${Boost_LIBRARY_DIRS}")
 
   # TODO: better reporting of imported targets
-  if(TARGET Boost::boost AND TARGET Boost::system)
-    message(STATUS "Succesfully imported targets: Boost::boost Boost::system")
+  if(TARGET Boost::boost AND TARGET Boost::serialization AND TARGET Boost::timer)
+    message(STATUS "Succesfully imported targets: Boost::boost Boost::serialization Boost::timer")
     message(STATUS "Pass them to your target_link_libraries() commands")
   endif()
 
@@ -302,7 +302,7 @@ include_directories(
 
 ## Look for Edres-Wrapper (optional dependency) --------------------------------
 
-find_package(Edres-Wrapper)
+find_package(Edres-Wrapper QUIET)
 
 if(Edres-Wrapper_FOUND)
 

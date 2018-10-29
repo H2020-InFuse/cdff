@@ -56,6 +56,7 @@ add_executable(
     DFNsIntegration/Odometry3D/HarrisShotIcp.cpp
     DFNsIntegration/Odometry3D/DetectionDescriptionMatching3D.cpp
 )
+target_compile_definitions(harris_shot_icp PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	harris_shot_icp
 	cdff_helpers cdff_logger cdff_types harris_detector_3d shot_descriptor_3d icp_3d performance_integration_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
@@ -66,6 +67,7 @@ add_executable(
     DFNsIntegration/Odometry3D/HarrisShotRansac.cpp
     DFNsIntegration/Odometry3D/DetectionDescriptionMatching3D.cpp
 )
+target_compile_definitions(harris_shot_ransac PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	harris_shot_ransac
 	cdff_helpers cdff_logger cdff_types harris_detector_3d shot_descriptor_3d ransac_3d performance_integration_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
@@ -87,6 +89,7 @@ add_executable(
 	DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
 	DFNs/StereoReconstruction/StereoReconstruction.cpp
 )
+target_compile_definitions(hirschmuller_disparity_mapping_performance_test PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	hirschmuller_disparity_mapping_performance_test
 	cdff_helpers cdff_logger cdff_types hirschmuller_disparity_mapping performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
@@ -97,6 +100,7 @@ add_executable(
 	DFNs/StereoReconstruction/ScanlineOptimization.cpp
 	DFNs/StereoReconstruction/StereoReconstruction.cpp
 )
+target_compile_definitions(scanline_optimization_performance_test PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	scanline_optimization_performance_test
 	cdff_helpers cdff_logger cdff_types scanline_optimization performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
