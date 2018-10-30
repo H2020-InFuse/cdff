@@ -4,6 +4,7 @@
  */
 
 #include <opencv2/imgproc.hpp>
+#include <random>
 
 #include <Types/C/Frame.h>
 #include <Converters/MatToFrameConverter.hpp>
