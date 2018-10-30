@@ -4,7 +4,7 @@ add_library(
 )
 target_link_libraries(
     cdff_opencv_visualizer
-    cdff_logger cdff_types opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui converters_opencv opencv_imgcodecs opencv_features2d boost_system
+    cdff_logger cdff_types opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui converters_opencv opencv_imgcodecs opencv_features2d
 )
 install(
     TARGETS cdff_opencv_visualizer
