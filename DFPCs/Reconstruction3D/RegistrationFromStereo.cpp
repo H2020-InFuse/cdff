@@ -336,6 +336,7 @@ void RegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud, VisualPoi
 		logFile << GetZOrientation(*poseToPreviousPose) << " ";
 		logFile << GetWOrientation(*poseToPreviousPose) << " ";
 		#endif
+		delete(poseToPreviousPose);
 		}
 	}
 
