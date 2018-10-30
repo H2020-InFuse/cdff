@@ -82,5 +82,4 @@ target_link_libraries(
   voxel_binning
   cartesian_system_transform
   statistical_outlier_removal
-  ${Boost_LIBRARIES}
 )
