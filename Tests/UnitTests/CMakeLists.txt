@@ -139,6 +139,7 @@ set(UNITTEST_LIBRARIES Catch
     statistical_outlier_removal
     dfpc_haptic_scanning
     best_descriptor_match
+    ${Boost_LIBRARIES}
 )
 
 # Make the Catch executable that runs the unit tests
