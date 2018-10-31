@@ -28,7 +28,7 @@ add_executable(
 target_compile_definitions(point_cloud_transformer PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	point_cloud_transformer
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer ${Boost_LIBRARIES}
+	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
 )
 
 add_executable(
