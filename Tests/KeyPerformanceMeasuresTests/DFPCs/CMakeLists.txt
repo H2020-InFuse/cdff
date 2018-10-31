@@ -6,7 +6,7 @@ add_executable(
 target_compile_definitions(quality_registration_from_stereo PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	quality_registration_from_stereo
-	registration_from_stereo converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
+	registration_from_stereo cdff_converters cdff_logger opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
 )
 
 add_executable(
@@ -17,7 +17,7 @@ add_executable(
 target_compile_definitions(quality_sparse_registration_from_stereo PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	quality_sparse_registration_from_stereo
-	sparse_registration_from_stereo converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
+	sparse_registration_from_stereo cdff_converters cdff_logger opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
 )
 
 add_executable(
@@ -28,7 +28,7 @@ add_executable(
 target_compile_definitions(quality_dense_registration_from_stereo PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	quality_dense_registration_from_stereo
-	dense_registration_from_stereo converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
+	dense_registration_from_stereo cdff_converters cdff_logger opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
 )
 
 add_executable(
@@ -39,7 +39,7 @@ add_executable(
 target_compile_definitions(quality_adjustment_from_stereo PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	quality_adjustment_from_stereo
-	adjustment_from_stereo converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
+	adjustment_from_stereo cdff_converters cdff_logger opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
 )
 
 add_executable(
@@ -50,7 +50,7 @@ add_executable(
 target_compile_definitions(quality_estimation_from_stereo PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	quality_estimation_from_stereo
-	estimation_from_stereo converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
+	estimation_from_stereo cdff_converters cdff_logger opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
 )
 
 add_executable(
@@ -61,7 +61,7 @@ add_executable(
 target_compile_definitions(quality_reconstruction_from_stereo PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	quality_reconstruction_from_stereo
-	reconstruction_from_stereo converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
+	reconstruction_from_stereo cdff_converters cdff_logger opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
 )
 
 add_executable(
@@ -72,6 +72,6 @@ add_executable(
 target_compile_definitions(quality_reconstruction_from_motion PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	quality_reconstruction_from_motion
-	reconstruction_from_motion converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
+	reconstruction_from_motion cdff_converters cdff_logger opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui yaml-cpp dfpc_configurator
 )
 

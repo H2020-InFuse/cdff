@@ -1,6 +1,6 @@
 set(GRAPHICALTEST_GUI_SOURCES MainInterface.cpp ButtonsInterface.cpp ParametersInterface.cpp)
 
-set(GRAPHICALTEST_CDFF_LIBRARIES converters_opencv cdff_logger)
+set(GRAPHICALTEST_CDFF_LIBRARIES cdff_converters cdff_logger)
 set(GRAPHICALTEST_OPENCV_LIBRARIES opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
 
 ## Graphical tests for the DFNs ------------------------------------------------

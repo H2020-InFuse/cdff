@@ -10,5 +10,5 @@ add_library(
 )
 target_link_libraries(
     essential_matrix_decomposition
-    cameras_transform_estimation cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core converters_opencv
+    cameras_transform_estimation cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core cdff_converters
 )
