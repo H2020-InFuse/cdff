@@ -10,5 +10,5 @@ add_library(
 )
 target_link_libraries(
     flann_matcher
-    feature_matching_2d cdff_types cdff_helpers yaml-cpp opencv_features2d opencv_flann opencv_core converters_opencv
+    feature_matching_2d cdff_types cdff_helpers yaml-cpp opencv_features2d opencv_flann opencv_core cdff_converters
 )

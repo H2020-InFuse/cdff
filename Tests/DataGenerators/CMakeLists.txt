@@ -7,7 +7,7 @@ add_library(
 )
 target_link_libraries(
 	synthetic_generators
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs 
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs 
 )
 
 add_library(
@@ -17,7 +17,7 @@ add_library(
 )
 target_link_libraries(
 	derived_generators
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
 )
 
 add_executable(
@@ -28,7 +28,7 @@ add_executable(
 target_compile_definitions(point_cloud_transformer PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	point_cloud_transformer
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
 )
 
 add_executable(
@@ -37,7 +37,7 @@ add_executable(
 )
 target_link_libraries(
 	data_set_transformer
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
 )
 
 add_executable(
@@ -75,7 +75,7 @@ add_executable(
 )
 target_link_libraries(
 	paint_image
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
 )
 
 add_executable(
@@ -86,7 +86,7 @@ add_executable(
 )
 target_link_libraries(
 	match_images
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
 )
 
 add_executable(
@@ -97,7 +97,7 @@ add_executable(
 )
 target_link_libraries(
 	match_multiple_images
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
 )
 
 add_executable(
@@ -108,7 +108,7 @@ add_executable(
 )
 target_link_libraries(
 	paint_lines
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d
 )
 
 add_executable(
@@ -119,7 +119,7 @@ add_executable(
 target_compile_definitions(match_clouds PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	match_clouds
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
 )
 
 add_executable(
@@ -130,7 +130,7 @@ add_executable(
 target_compile_definitions(detect_outliers PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	detect_outliers
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
 )
 
 add_executable(
@@ -141,7 +141,7 @@ add_executable(
 target_compile_definitions(measures_lines PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	measures_lines
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
 )
 
 add_executable(
@@ -152,7 +152,7 @@ add_executable(
 target_compile_definitions(simulate_stereo_cloud PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	simulate_stereo_cloud
-	cdff_logger cdff_types converters_opencv cdff_pcl_visualizer opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d yaml-cpp ${VTK_LIBRARIES} pcl_common pcl_filters pcl_io pcl_io_ply pcl_kdtree
+	cdff_logger cdff_types cdff_converters cdff_pcl_visualizer opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d yaml-cpp ${VTK_LIBRARIES} pcl_common pcl_filters pcl_io pcl_io_ply pcl_kdtree
 )
 
 add_executable(
@@ -163,6 +163,6 @@ add_executable(
 target_compile_definitions(generate_point_clouds PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	generate_point_clouds
-	cdff_logger cdff_types converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer hirschmuller_disparity_mapping
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer hirschmuller_disparity_mapping
 )
 

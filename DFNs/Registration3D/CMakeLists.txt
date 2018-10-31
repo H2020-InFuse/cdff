@@ -10,7 +10,7 @@ add_library(
 )
 target_link_libraries(
     registration_icp_3d
-    registration_3d cdff_types yaml-cpp cdff_helpers converters_opencv
+    registration_3d cdff_types yaml-cpp cdff_helpers cdff_converters
 )
 
 add_library(
@@ -19,5 +19,5 @@ add_library(
 )
 target_link_libraries(
     registration_icp_cc
-    registration_3d cdff_types yaml-cpp cdff_helpers converters_opencv cc_core_lib
+    registration_3d cdff_types yaml-cpp cdff_helpers cdff_converters cc_core_lib
 )

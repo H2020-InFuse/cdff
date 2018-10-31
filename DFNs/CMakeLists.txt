@@ -54,7 +54,7 @@ target_link_libraries(
   transform_3d_estimation_ceres
   hu_invariants
   octree
-  converters_opencv
+  cdff_converters
   pcl_common
   pcl_features
   pcl_search

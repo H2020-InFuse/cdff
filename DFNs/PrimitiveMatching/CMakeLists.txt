@@ -10,5 +10,5 @@ add_library(
 )
 target_link_libraries(
     hu_invariants
-    primitive_matching cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core converters_opencv
+    primitive_matching cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core cdff_converters
 )

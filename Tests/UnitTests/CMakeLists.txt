@@ -75,7 +75,7 @@ set(UNITTEST_LIBRARIES Catch
     cdff_logger
     cdff_types
     ceres_adjustment
-    converters_opencv
+    cdff_converters
     dfpc_configurator
     dfpc_implementation_features_matching_3d
     disparity_mapping
