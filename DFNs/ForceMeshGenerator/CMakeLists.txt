@@ -12,5 +12,5 @@ add_library(
 
 target_link_libraries(
     threshold_force
-    force_mesh_generator yaml-cpp cdff_helpers opencv_core converters_opencv
+    force_mesh_generator yaml-cpp cdff_helpers opencv_core cdff_converters
 )

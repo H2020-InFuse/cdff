@@ -144,7 +144,7 @@ endmacro()
 # CMake will look for the headers and the requested compiled libraries, as well
 # as the compiled libraries they depend on.
 
-find_package(Boost 1.66.0 REQUIRED COMPONENTS serialization timer)
+find_package(Boost 1.66.0 REQUIRED)
 
 if(Boost_FOUND)
 
@@ -169,8 +169,6 @@ if(Boost_FOUND)
   #     add_executable(mybin src1.cpp src2.cpp ...)
   #     target_link_libraries(mybin Boost::date_time Boost::serialization ...)
   #       # to link against the specified libraries and their dependencies
-  #     target_link_libraries(mybin ${Boost_LIBRARIES})
-  #       # to link against all requested libraries and their dependencies
   #
   # TODO: target_include_directories() should be preferred to include_
   # directories() but I don't understand how it works
@@ -179,17 +177,16 @@ if(Boost_FOUND)
   message(STATUS "Found Boost compiled libraries in: ${Boost_LIBRARY_DIRS}")
 
   # TODO: better reporting of imported targets
-  if(TARGET Boost::boost AND TARGET Boost::serialization AND TARGET Boost::timer)
-    message(STATUS "Succesfully imported targets: Boost::boost Boost::serialization Boost::timer")
-    message(STATUS "Pass them to your target_link_libraries() commands")
+  if(TARGET Boost::boost)
+    message(STATUS "Succesfully imported targets: Boost::boost")
   endif()
 
   message(STATUS "All requested Boost compiled libraries, "
     "and their dependencies: ${Boost_LIBRARIES}")
 
   # TODO: kept for compatibility with the existing CDFF code base: to be removed
-  # when all CMakeLists that define targets feature the appropriate [target_]
-  # include_directories()
+  # when all CMakeLists that define targets that use Boost libraries feature the
+  # appropriate [target_]include_directories()
   include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
 else()

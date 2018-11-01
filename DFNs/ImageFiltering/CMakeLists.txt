@@ -10,7 +10,7 @@ add_library(
 )
 target_link_libraries(
     image_undistortion
-    image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core converters_opencv
+    image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core cdff_converters
 )
 
 add_library(
@@ -19,7 +19,7 @@ add_library(
 )
 target_link_libraries(
     image_undistortion_rectification
-    image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core converters_opencv opencv_calib3d
+    image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core cdff_converters opencv_calib3d
 )
 
 add_library(cdff_dfn_background_subtraction BackgroundExtraction.cpp)
