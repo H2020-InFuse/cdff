@@ -66,11 +66,12 @@
 #
 # * Compiled Boost libraries used by the CDFF:
 #
-#   + Serialization
-#     Used by MAG
-#     Used by EnviRe in CDFF-dev: EnviRe uses it to serialize its graphs
-#   + Timer
-#     Used by MAG MiddlewareSupport
+#   + Serialization (in topic branches only)
+#     - Used by MAG
+#     - Used by DFKI's base-boost_serialization, a library for serializing the
+#       base types of EnviRe
+#   + Timer (in topic branches only)
+#     - Used by MAG MiddlewareSupport
 #
 # * Boost header-only libraries used by the CDFF:
 #
