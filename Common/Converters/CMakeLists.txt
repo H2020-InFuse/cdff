@@ -26,7 +26,7 @@ add_library(
     PclOctreeToOctreeConverter.cpp
     OctreeToPclOctreeConverter.cpp
 )
-target_link_libraries(cdff_converters opencv_core cdff_types)
+target_link_libraries(cdff_converters opencv_core cdff_types ${PCL_OCTREE_LIBRARIES})
 
 install(
     TARGETS cdff_converters

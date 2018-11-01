@@ -157,10 +157,10 @@ BaseTypesWrapper::T_UInt16 GetFrameWidth(const Frame& frame);
 BaseTypesWrapper::T_UInt16 GetFrameHeight(const Frame& frame);
 
 void SetFrameTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
-BaseTypesWrapper::T_UInt64 GetFrameTime(const Frame& frame);
+BaseTypesWrapper::T_Int64 GetFrameTime(const Frame& frame);
 
 void SetFrameReceivedTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
-BaseTypesWrapper::T_UInt64 GetFrameReceivedTime(const Frame& frame);
+BaseTypesWrapper::T_Int64 GetFrameReceivedTime(const Frame& frame);
 
 void SetFrameStatus(Frame& frame, FrameStatus frameStatus);
 FrameStatus GetFrameStatus(const Frame& frame);
