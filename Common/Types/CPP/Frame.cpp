@@ -170,16 +170,15 @@ void SetFrameTime(Frame& frame, BaseTypesWrapper::T_Int64 time){
 	frame.metadata.timeStamp.microseconds = time;
 }
 
-BaseTypesWrapper::T_UInt64 GetFrameTime(const Frame& frame){
+BaseTypesWrapper::T_Int64 GetFrameTime(const Frame& frame){
 	return frame.metadata.timeStamp.microseconds;
 }
 
-void SetFrameReceivedTime(Frame& frame, BaseTypesWrapper::T_Int64 time)
-{
+void SetFrameReceivedTime(Frame& frame, BaseTypesWrapper::T_Int64 time){
 	frame.metadata.receivedTime.microseconds = time;
 }
 
-BaseTypesWrapper::T_UInt64 GetFrameReceivedTime(const Frame& frame){
+BaseTypesWrapper::T_Int64 GetFrameReceivedTime(const Frame& frame){
 	return frame.metadata.receivedTime.microseconds;
 }
 
