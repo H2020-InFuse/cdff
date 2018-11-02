@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
-project(CDFF)
+project(CDFF VERSION 0.1 LANGUAGES C CXX)
 
 # Maintainer: Romain Michalec <romain.michalec@strath.ac.uk>
 
@@ -26,8 +26,8 @@ option(BUILD_SHARED_LIBS
 # the desired effect if bundled libraries were previously found, because
 # information about them will persist in the CMake cache. Delete the cache.
 
-set(USE_BUNDLED_DEPENDENCIES OFF CACHE BOOL
-  "Preferably link the CDFF against the libraries provided in the source tree")
+option(USE_BUNDLED_DEPENDENCIES
+  "Preferably link the CDFF against the libraries provided in the source tree" OFF)
 
 set(BUNDLED_DEPENDENCIES_PREFIX External/install CACHE PATH
   "Location of the libraries in the source tree")
@@ -50,7 +50,7 @@ enable_testing()
 # Flags passed to the compiler
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -march=native")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 ## Print basic information -----------------------------------------------------
