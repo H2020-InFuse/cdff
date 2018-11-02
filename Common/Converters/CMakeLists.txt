@@ -26,9 +26,10 @@ add_library(
     PclOctreeToOctreeConverter.cpp
     OctreeToPclOctreeConverter.cpp
 )
-target_link_libraries(cdff_converters opencv_core cdff_types ${PCL_OCTREE_LIBRARIES})
 
-install(
-    TARGETS cdff_converters
-    DESTINATION lib
-)
+target_link_libraries(cdff_converters
+    PUBLIC cdff_types Eigen3::Eigen opencv_core ${PCL_COMMON_LIBRARIES} ${PCL_OCTREE_LIBRARIES}
+    PRIVATE Boost::boost)
+
+install(TARGETS cdff_converters
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}")

@@ -289,13 +289,17 @@ find_package_mode(VTK)
 
 find_package(PCL 1.8.1 REQUIRED NAMES PCL PCL-1.8 CONFIGS PCLConfig.cmake)
 find_package_mode(PCL)
+add_definitions(${PCL_DEFINITIONS})
+include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+
+message(STATUS "Preprocessor definitions and compiler flags added by the PCL: ${PCL_DEFINITIONS}")
+message(STATUS "Found PCL headers, and the headers of its dependencies, in: ${PCL_INCLUDE_DIRS}")
+message(STATUS "Found PCL libraries in: ${PCL_LIBRARY_DIRS}")
+message(STATUS "All requested PCL libraries, and their dependencies: ${PCL_LIBRARIES}")
 
 find_package(OpenCV 3.4.0 REQUIRED)
 find_package_mode(OpenCV)
-
-include_directories(
-  SYSTEM "${_DEPENDENCIES_PREFIX}/include/pcl-1.8"
-)
 
 ## Look for Edres-Wrapper (optional dependency) --------------------------------
 
@@ -316,19 +320,28 @@ else()
 
 endif()
 
-## Dependencies: compiled libraries --------------------------------------------
+## Setup CDFF installation -----------------------------------------------------
 
-# TODO: this whole section shouldn't be necessary because all targets have an
-# adequate target_link_directories() command in their CMakeLists file, AFAICT.
-# However, if not provided, building the CDFF fails when linking CXX executable
-# ObservedSceneTest, with /usr/bin/ld errors: cannot find -lopencv_highgui
-# -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lyaml-cpp. Investigate.
+# Standard installation directories, as defined by the GNU Coding Standards:
+#
+# * CMAKE_INSTALL_INCLUDEDIR is include
+# * CMAKE_INSTALL_LIBDIR is lib
+# * CMAKE_INSTALL_BINDIR is bin
+# * Full list at https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html
+#
+# Use them in your installation rules, see example below for an example.
+# Installation rules will prefix with CMAKE_INSTALL_PREFIX which is /usr/local
+# by default.
 
-link_directories(
-  "${_DEPENDENCIES_PREFIX}/lib"
-)
+include(GNUInstallDirs)
 
-## CDFF ------------------------------------------------------------------------
+# Installation rule for all header files
+
+install(DIRECTORY Common DFNs DFPCs Tests
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+
+## Compile the CDFF ------------------------------------------------------------
 
 # Take into account the headers provided in the following directories
 #

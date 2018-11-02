@@ -7,7 +7,7 @@ add_library(
 )
 target_link_libraries(
 	synthetic_generators
-	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs 
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs
 )
 
 add_library(
@@ -163,6 +163,5 @@ add_executable(
 target_compile_definitions(generate_point_clouds PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	generate_point_clouds
-	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer hirschmuller_disparity_mapping
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters ${PCL_SEGMENTATION_LIBRARIES} yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer hirschmuller_disparity_mapping
 )
-
