@@ -436,7 +436,7 @@ target_compile_definitions(FeaturesMatching3DGuiTest PRIVATE BOOST_ERROR_CODE_HE
 target_link_libraries(
     FeaturesMatching3DGuiTest
     dfpc_implementation_features_matching_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator dfn_executors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     yaml-cpp ${VTK_LIBRARIES}
 )

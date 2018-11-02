@@ -31,13 +31,9 @@
 #include <Visualizers/OpencvVisualizer.hpp>
 #include <Visualizers/PclVisualizer.hpp>
 
-#define DELETE_PREVIOUS(object) \
-	{ \
-	if (object != NULL) \
-		{ \
-		delete(object); \
-		} \
-	} \
+#include <Executors/FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
+#include <Executors/FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
+#include <Executors/FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
 
 namespace CDFF
 {
@@ -85,24 +81,24 @@ void FeaturesMatching3D::run()
 	if (!modelFeaturesAvailable)
 		{	
 		VisualPointFeatureVector3DConstPtr modelKeypointVector = NULL;
-		featuresExtractor3d->Execute(inModel, modelKeypointVector);
-		optionalFeaturesDescriptor3d->Execute(&inModel, modelKeypointVector, modelFeatureVector);
+		Executors::Execute(featuresExtractor3d, inModel, modelKeypointVector);
+		Executors::Execute(optionalFeaturesDescriptor3d, &inModel, modelKeypointVector, modelFeatureVector);
 		modelFeaturesAvailable = true;
 		}
 
 
 	VisualPointFeatureVector3DConstPtr sceneKeypointVector = NULL;
 	VisualPointFeatureVector3DConstPtr sceneFeatureVector = NULL;
-	featuresExtractor3d->Execute(inScene, sceneKeypointVector);
-	optionalFeaturesDescriptor3d->Execute(&inScene, sceneKeypointVector, sceneFeatureVector);
+	Executors::Execute(featuresExtractor3d, inScene, sceneKeypointVector);
+	Executors::Execute(optionalFeaturesDescriptor3d, &inScene, sceneKeypointVector, sceneFeatureVector);
 
-	featuresMatcher3d->Execute(modelFeatureVector, sceneFeatureVector, &outPose, outSuccess);
+	Executors::Execute(featuresMatcher3d, modelFeatureVector, sceneFeatureVector, &outPose, outSuccess);
 	}
 
 void FeaturesMatching3D::setup()
 	{
 	configurator.configure(configurationFilePath);
-	InstantiateDFNExecutors();
+	InstantiateDFNs();
 	}
 
 void FeaturesMatching3D::modelInput(const asn1SccPointcloud& data)
@@ -118,11 +114,11 @@ void FeaturesMatching3D::modelInput(const asn1SccPointcloud& data)
  * --------------------------------------------------------------------------
  */
 
-void FeaturesMatching3D::InstantiateDFNExecutors()
+void FeaturesMatching3D::InstantiateDFNs()
 	{
-	featuresExtractor3d = new FeaturesExtraction3DExecutor( static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") ) );
-	optionalFeaturesDescriptor3d = new FeaturesDescription3DExecutor( static_cast<FeaturesDescription3DInterface*>( configurator.GetDfn("featuresDescriptor3d", true) ) );
-	featuresMatcher3d = new FeaturesMatching3DExecutor( static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") ) );
+	featuresExtractor3d = static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") );
+	optionalFeaturesDescriptor3d = static_cast<FeaturesDescription3DInterface*>( configurator.GetDfn("featuresDescriptor3d", true) );
+	featuresMatcher3d = static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") );
 	}
 
 }
