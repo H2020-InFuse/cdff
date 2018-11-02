@@ -92,7 +92,7 @@ add_executable(
 target_compile_definitions(hirschmuller_disparity_mapping_performance_test PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	hirschmuller_disparity_mapping_performance_test
-	cdff_helpers cdff_logger cdff_types hirschmuller_disparity_mapping performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
+	cdff_helpers cdff_logger cdff_types hirschmuller_disparity_mapping performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
 )
 
 add_executable(
@@ -103,7 +103,7 @@ add_executable(
 target_compile_definitions(scanline_optimization_performance_test PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	scanline_optimization_performance_test
-	cdff_helpers cdff_logger cdff_types scanline_optimization performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
+	cdff_helpers cdff_logger cdff_types scanline_optimization performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer opencv_imgcodecs
 )
 
 add_executable(
@@ -123,5 +123,5 @@ add_executable(
 )
 target_link_libraries(
 	image_undistortion_performance_test
-	cdff_helpers cdff_logger cdff_types image_undistortion performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer
+	cdff_helpers cdff_logger cdff_types image_undistortion performance_dfn_test_interface cdff_opencv_visualizer cdff_pcl_visualizer opencv_imgcodecs
 )

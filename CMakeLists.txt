@@ -9,6 +9,11 @@ project(CDFF)
 ## The setting will take priority over the project's default values (defined
 ## below) and update the entries present in the CMake cache (CMakeCache.txt).
 
+# Choose between building the CDFF as static libraries or shared libraries
+
+option(BUILD_SHARED_LIBS
+  "Build shared libraries instead of static libraries" OFF)
+
 # To use the libraries provided in the source tree, set USE_BUNDLED_DEPENDENCIES
 # to ON: CMake will look for headers, compiled libraries, and executable files
 # under BUNDLED_DEPENDENCIES_PREFIX before looking anywhere else, in particular
