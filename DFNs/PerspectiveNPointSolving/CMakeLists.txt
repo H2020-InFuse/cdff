@@ -1,7 +1,6 @@
 add_library(
     perspective_n_point_solving
     PerspectiveNPointSolvingInterface.cpp
-    PerspectiveNPointSolvingExecutor.cpp
 )
 
 add_library(

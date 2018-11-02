@@ -1,7 +1,6 @@
 add_library(
     transform_3d_estimation
     Transform3DEstimationInterface.cpp
-    Transform3DEstimationExecutor.cpp
 )
 
 add_library(

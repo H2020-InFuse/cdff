@@ -1,7 +1,6 @@
 add_library(
     feature_extraction_2d
     FeaturesExtraction2DInterface.cpp
-    FeaturesExtraction2DExecutor.cpp
 )
 
 add_library(

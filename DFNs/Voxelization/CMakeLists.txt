@@ -1,7 +1,6 @@
 add_library(
     voxelization
     VoxelizationInterface.cpp
-    VoxelizationExecutor.cpp
 )
 
 add_library(

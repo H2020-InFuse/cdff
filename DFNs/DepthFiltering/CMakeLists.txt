@@ -1,7 +1,6 @@
 add_library(
     depth_filtering
     DepthFilteringInterface.cpp
-    DepthFilteringExecutor.cpp
 )
 
 add_library(

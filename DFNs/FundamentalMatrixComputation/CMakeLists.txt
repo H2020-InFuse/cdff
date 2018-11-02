@@ -1,7 +1,6 @@
 add_library(
     fundamental_matrix_computation
     FundamentalMatrixComputationInterface.cpp
-    FundamentalMatrixComputationExecutor.cpp
 )
 
 add_library(

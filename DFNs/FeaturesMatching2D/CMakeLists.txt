@@ -1,7 +1,6 @@
 add_library(
     feature_matching_2d
     FeaturesMatching2DInterface.cpp
-    FeaturesMatching2DExecutor.cpp
 )
 
 add_library(

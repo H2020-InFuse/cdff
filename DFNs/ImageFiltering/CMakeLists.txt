@@ -1,7 +1,6 @@
 add_library(
     image_filtering
     ImageFilteringInterface.cpp
-    ImageFilteringExecutor.cpp
 )
 
 add_library(

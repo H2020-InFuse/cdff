@@ -1,7 +1,6 @@
 add_library(
     point_cloud_assembly
     PointCloudAssemblyInterface.cpp
-    PointCloudAssemblyExecutor.cpp
 )
 
 add_library(

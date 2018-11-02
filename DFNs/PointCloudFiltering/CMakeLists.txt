@@ -1,7 +1,6 @@
 add_library(
     point_cloud_filtering
     PointCloudFilteringInterface.cpp
-    PointCloudFilteringExecutor.cpp
 )
 
 add_library(
