@@ -32,20 +32,37 @@ else()
 
 endif()
 
-#compile everything from subfolders
-file(GLOB_RECURSE source_list
- "CPP/*.cpp"
- "C/*.c"
-)
 
-add_library(
-    cdff_types
-    ${source_list}
-)
-install(
-    TARGETS cdff_types
-    DESTINATION lib
-)
-target_link_libraries(
-    cdff_types cdff_logger
-)
+# libcdff_types
+
+file(GLOB datatypes
+    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    "C/*.c")
+
+message(STATUS "Transcompiled ASN.1 datatypes: ${datatypes}")
+
+set(wrappers
+    CPP/Array3D.cpp
+    CPP/BaseTypes.cpp
+    CPP/CorrespondenceMap2D.cpp
+    CPP/CorrespondenceMap3D.cpp
+    CPP/CorrespondenceMaps2DSequence.cpp
+    CPP/CorrespondenceMaps3DSequence.cpp
+    CPP/Frame.cpp
+    CPP/FramesSequence.cpp
+    CPP/Image.cpp
+    CPP/Matrix.cpp
+    CPP/PointCloud.cpp
+    CPP/Pose.cpp
+    CPP/PosesSequence.cpp
+    CPP/VisualPointFeatureVector2D.cpp
+    CPP/VisualPointFeatureVector3D.cpp)
+
+message(STATUS "C++ wrappers for the transcompiled ASN.1 datatypes: ${wrappers}")
+
+add_library(cdff_types
+    ${datatypes}
+    ${wrappers})
+
+install(TARGETS cdff_types
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}")

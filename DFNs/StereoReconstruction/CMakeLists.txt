@@ -28,5 +28,5 @@ add_library(
 )
 target_link_libraries(
     scanline_optimization
-    stereoReconstruction cdff_types yaml-cpp cdff_helpers cdff_converters cdff_pcl_visualizer pcl_common pcl_filters
+    stereoReconstruction cdff_types yaml-cpp cdff_helpers cdff_converters cdff_pcl_visualizer pcl_common pcl_filters ${PCL_STEREO_LIBRARIES}
 )
