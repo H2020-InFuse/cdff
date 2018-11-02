@@ -36,7 +36,7 @@
 
 #include <PointCloud.hpp>
 #include <Pose.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>

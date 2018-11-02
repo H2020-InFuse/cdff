@@ -45,10 +45,10 @@
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
 using namespace CDFF::DFN;
 using namespace CDFF::DFN::ImageFiltering;

@@ -13,8 +13,8 @@
 #include "PerspectiveNPointSolvingInterface.hpp"
 
 #include <PointCloud.hpp>
-#include <VisualPointFeatureVector2DToMatConverter.hpp>
-#include <MatToTransform3DConverter.hpp>
+#include <Converters/VisualPointFeatureVector2DToMatConverter.hpp>
+#include <Converters/MatToTransform3DConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/core/core.hpp>

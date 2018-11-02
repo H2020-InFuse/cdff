@@ -27,8 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <VisualPointFeatureVector2DToMatConverter.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Converters/VisualPointFeatureVector2DToMatConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <VisualPointFeatureVector2D.hpp>
 #include <Errors/Assert.hpp>
 

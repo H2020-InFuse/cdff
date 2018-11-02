@@ -15,7 +15,7 @@
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <FeaturesMatching3D/Icp3D.hpp>
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <Pose.hpp>
 

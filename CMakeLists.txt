@@ -363,7 +363,6 @@ include_directories(
   Common
   Common/Types/C
   Common/Types/CPP
-  Common/Converters
   DFNs
   DFPCs
   Tests

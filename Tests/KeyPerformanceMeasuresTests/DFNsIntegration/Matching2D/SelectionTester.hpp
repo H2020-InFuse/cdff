@@ -42,7 +42,7 @@
 #include <Pose.hpp>
 #include <BaseTypes.hpp>
 #include <CorrespondenceMap2D.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>

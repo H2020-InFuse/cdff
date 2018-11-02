@@ -15,7 +15,7 @@
 #include <CorrespondenceMap2D.hpp>
 #include <Pose.hpp>
 #include <PointCloud.hpp>
-#include <Transform3DToMatConverter.hpp>
+#include <Converters/Transform3DToMatConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/calib3d.hpp>

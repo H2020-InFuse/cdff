@@ -9,7 +9,7 @@
 
 #include "Icp3D.hpp"
 
-#include <EigenTransformToTransform3DConverter.hpp>
+#include <Converters/EigenTransformToTransform3DConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 

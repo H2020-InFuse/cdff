@@ -29,7 +29,7 @@
 #include <catch.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Voxelization/Octree.hpp>
 #include <Converters/OctreeToPclOctreeConverter.hpp>
 

@@ -38,7 +38,7 @@
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>

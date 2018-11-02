@@ -40,8 +40,8 @@
 #include <VisualPointFeatureVector3D.hpp>
 #include <PointCloud.hpp>
 #include <Pose.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <SupportTypes.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/SupportTypes.hpp>
 
 #include <stdlib.h>
 #include <fstream>

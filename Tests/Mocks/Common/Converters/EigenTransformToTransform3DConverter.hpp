@@ -30,7 +30,7 @@
  * --------------------------------------------------------------------------
  */
 #include "Mocks/Mock.hpp"
-#include <EigenTransformToTransform3DConverter.hpp>
+#include <Converters/EigenTransformToTransform3DConverter.hpp>
 
 namespace Mocks {
 

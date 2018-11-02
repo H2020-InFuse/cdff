@@ -40,8 +40,8 @@
 #include <Pose.hpp>
 #include <BaseTypes.hpp>
 #include <CorrespondenceMap3D.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <SupportTypes.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/SupportTypes.hpp>
 
 #include <stdlib.h>
 #include <fstream>

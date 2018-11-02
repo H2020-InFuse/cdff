@@ -40,7 +40,7 @@
 #include <VisualPointFeatureVector2D.hpp>
 #include <Frame.hpp>
 #include <Pose.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>

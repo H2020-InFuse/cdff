@@ -18,7 +18,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 #include <Eigen/Dense>
-#include <CorrespondenceMaps2DSequenceToMatConverter.hpp>
+#include <Converters/CorrespondenceMaps2DSequenceToMatConverter.hpp>
 
 namespace CDFF
 {

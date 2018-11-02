@@ -16,7 +16,7 @@
 #include <PointCloud.hpp>
 #include <VisualPointFeatureVector2D.hpp>
 #include <Pose.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Errors/Assert.hpp>
 
 #include <opencv2/core/core.hpp>

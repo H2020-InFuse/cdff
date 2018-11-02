@@ -33,7 +33,7 @@
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Frame.hpp>
 #include <Pose.hpp>
 #include <PointCloud.hpp>

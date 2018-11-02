@@ -14,7 +14,7 @@
 
 #include <PointCloud.hpp>
 #include <Pose.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <pcl/point_cloud.h>

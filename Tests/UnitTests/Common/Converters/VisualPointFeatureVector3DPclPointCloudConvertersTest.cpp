@@ -27,8 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
-#include <PclPointCloudToVisualPointFeatureVector3DConverter.hpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToVisualPointFeatureVector3DConverter.hpp>
 #include <VisualPointFeatureVector3D.hpp>
 #include <Errors/Assert.hpp>
 #include <boost/smart_ptr.hpp>

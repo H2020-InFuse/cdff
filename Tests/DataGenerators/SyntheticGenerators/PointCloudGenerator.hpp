@@ -39,8 +39,8 @@
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/StereoReconstructionExecutor.hpp>
 
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 namespace DataGenerators {
 

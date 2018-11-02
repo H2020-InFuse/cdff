@@ -34,7 +34,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Frame.hpp>
 #include <VisualPointFeatureVector2D.hpp>
 #include <Pose.hpp>

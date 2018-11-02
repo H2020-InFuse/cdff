@@ -33,8 +33,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 #include <ImageFiltering/ImageFilteringInterface.hpp>
-#include <MatToFrameConverter.hpp>
-#include <FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNs/PerformanceTestInterface.hpp>
 

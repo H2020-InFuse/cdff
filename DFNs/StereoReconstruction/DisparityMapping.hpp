@@ -13,7 +13,7 @@
 #include "StereoReconstructionInterface.hpp"
 
 #include <PointCloud.hpp>
-#include <FrameToMatConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/core/core.hpp>

@@ -36,10 +36,10 @@
 #include <PointCloud.hpp>
 #include <Pose.hpp>
 #include <VisualPointFeatureVector3D.hpp>
-#include <SupportTypes.hpp>
-#include <MatToFrameConverter.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/SupportTypes.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>

@@ -12,8 +12,8 @@
 
 #include "DepthFilteringInterface.hpp"
 #include <Frame.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>

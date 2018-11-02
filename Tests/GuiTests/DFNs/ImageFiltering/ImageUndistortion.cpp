@@ -28,8 +28,8 @@
  */
 #include <ImageFiltering/ImageUndistortion.hpp>
 
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Errors/Assert.hpp>
 
 #include <GuiTests/ParametersInterface.hpp>

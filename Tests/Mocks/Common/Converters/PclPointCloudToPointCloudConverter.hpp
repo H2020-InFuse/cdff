@@ -30,7 +30,7 @@
  * --------------------------------------------------------------------------
  */
 #include "Mocks/Mock.hpp"
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
 namespace Mocks {
 

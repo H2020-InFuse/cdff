@@ -12,7 +12,7 @@
  */
 
 #include <StereoReconstruction/DisparityMapping.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>

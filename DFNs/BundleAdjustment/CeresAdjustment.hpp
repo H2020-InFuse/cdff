@@ -19,7 +19,7 @@
 #include <yaml-cpp/yaml.h>
 #include <Eigen/Dense>
 #include <ceres/ceres.h>
-#include <CorrespondenceMaps2DSequenceToMatConverter.hpp>
+#include <Converters/CorrespondenceMaps2DSequenceToMatConverter.hpp>
 
 namespace CDFF
 {

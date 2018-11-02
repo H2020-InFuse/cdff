@@ -28,7 +28,7 @@
  */
 #include <catch.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 using namespace CDFF::DFN::ImageFiltering;
 using namespace Converters;

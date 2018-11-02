@@ -38,9 +38,9 @@
 
 #include <Frame.hpp>
 #include <PointCloud.hpp>
-#include <MatToFrameConverter.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>

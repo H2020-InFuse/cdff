@@ -27,8 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Frame.hpp>
 #include <Errors/Assert.hpp>
 

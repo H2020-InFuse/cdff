@@ -27,8 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <MatToCorrespondenceMaps2DSequenceConverter.hpp>
-#include <CorrespondenceMaps2DSequenceToMatConverter.hpp>
+#include <Converters/MatToCorrespondenceMaps2DSequenceConverter.hpp>
+#include <Converters/CorrespondenceMaps2DSequenceToMatConverter.hpp>
 #include <CorrespondenceMap2D.hpp>
 #include <Errors/Assert.hpp>
 

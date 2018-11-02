@@ -10,7 +10,7 @@
 #include "Icp3D.hpp"
 
 #include <PointCloud.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 

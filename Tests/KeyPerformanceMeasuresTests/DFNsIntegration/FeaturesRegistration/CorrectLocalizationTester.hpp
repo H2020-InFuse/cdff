@@ -38,7 +38,7 @@
 #include <PointCloud.hpp>
 #include <Pose.hpp>
 #include <VisualPointFeatureVector3D.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>

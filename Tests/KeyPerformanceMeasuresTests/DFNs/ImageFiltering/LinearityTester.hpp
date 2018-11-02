@@ -36,8 +36,8 @@
 #include <Errors/Assert.hpp>
 
 #include <Frame.hpp>
-#include <MatToFrameConverter.hpp>
-#include <FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>

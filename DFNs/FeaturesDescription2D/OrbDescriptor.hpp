@@ -13,8 +13,8 @@
 #include "FeaturesDescription2DInterface.hpp"
 #include <Frame.hpp>
 #include <VisualPointFeatureVector2D.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>

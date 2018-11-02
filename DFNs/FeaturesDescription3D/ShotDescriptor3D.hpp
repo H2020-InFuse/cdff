@@ -14,8 +14,8 @@
 
 #include <PointCloud.hpp>
 #include <VisualPointFeatureVector3D.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PointCloudToPclNormalsCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclNormalsCloudConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <pcl/point_cloud.h>

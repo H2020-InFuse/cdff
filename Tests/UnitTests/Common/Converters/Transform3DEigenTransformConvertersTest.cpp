@@ -27,8 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <Transform3DToEigenTransformConverter.hpp>
-#include <EigenTransformToTransform3DConverter.hpp>
+#include <Converters/Transform3DToEigenTransformConverter.hpp>
+#include <Converters/EigenTransformToTransform3DConverter.hpp>
 #include <Pose.hpp>
 #include <Errors/Assert.hpp>
 #include <boost/smart_ptr.hpp>
