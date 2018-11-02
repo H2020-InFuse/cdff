@@ -81,7 +81,7 @@ add_executable(
 target_compile_definitions(correctness_nearest_neighbour_average PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	correctness_nearest_neighbour_average
-	cdff_helpers cdff_logger cdff_types cdff_converters neighbour_point_average cartesian_system_transform pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters pcl_kdtree dfn_executors
+	cdff_helpers cdff_logger cdff_types cdff_converters neighbour_point_average cartesian_system_transform pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters pcl_kdtree cdff_dfn_executors
 )
 
 add_executable(
@@ -92,7 +92,7 @@ add_executable(
 target_compile_definitions(correctness_voxel_binning PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	correctness_voxel_binning
-	cdff_helpers cdff_logger cdff_types cdff_converters voxel_binning cartesian_system_transform pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters pcl_kdtree dfn_executors
+	cdff_helpers cdff_logger cdff_types cdff_converters voxel_binning cartesian_system_transform pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters pcl_kdtree cdff_dfn_executors
 )
 
 
