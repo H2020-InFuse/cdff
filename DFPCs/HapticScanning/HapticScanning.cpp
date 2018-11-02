@@ -5,6 +5,8 @@
 
 #include "HapticScanning.hpp"
 
+#include <Executors/ForceMeshGenerator/ForceMeshGeneratorExecutor.hpp>
+
 namespace CDFF
 {
 namespace DFPC
@@ -23,17 +25,17 @@ HapticScanning::~HapticScanning()
 void HapticScanning::setup()
 {
     configurator.configure(configurationFilePath);
-    InstantiateDFNExecutors();
+    InstantiateDFNs();
 }
 
 void HapticScanning::run()
 {
-    m_force_mesh_generator->Execute(inArmBasePose, inArmEndEffectorPose, inArmEndEffectorWrench, outPointCloud);
+    CDFF::DFN::Executors::Execute(m_force_mesh_generator.get(), inArmBasePose, inArmEndEffectorPose, inArmEndEffectorWrench, outPointCloud);
 }
 
-void HapticScanning::InstantiateDFNExecutors()
+void HapticScanning::InstantiateDFNs()
 {
-    m_force_mesh_generator.reset( new CDFF::DFN::ForceMeshGeneratorExecutor( dynamic_cast<CDFF::DFN::ForceMeshGeneratorInterface*>( configurator.GetDfn("forceMeshGenerator") ) ) );
+    m_force_mesh_generator.reset( dynamic_cast<CDFF::DFN::ForceMeshGeneratorInterface*>( configurator.GetDfn("forceMeshGenerator") ) );
 }
 
 }
