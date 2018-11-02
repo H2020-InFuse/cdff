@@ -31,6 +31,9 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
+#include <Executors/PointCloudTransform/PointCloudTransformExecutor.hpp>
+#include <Executors/PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
+
 //#include <Visualizers/PclVisualizer.hpp> //include for debug code
 
 using namespace CDFF::DFN;
@@ -44,9 +47,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-CorrectAssemblyTester::CorrectAssemblyTester(std::string configurationFile, PointCloudAssemblyInterface* assemblyDfn, std::string transformerConfigurationFile, PointCloudTransformInterface* transformDfn) :
-	assembler( assemblyDfn ),
-	transformer( transformDfn )
+CorrectAssemblyTester::CorrectAssemblyTester(std::string configurationFile, PointCloudAssemblyInterface* assemblyDfn, std::string transformerConfigurationFile, PointCloudTransformInterface* transformDfn)
 	{
 	this->transformerConfigurationFile = transformerConfigurationFile;
 	this->configurationFile = configurationFile;
@@ -97,10 +98,10 @@ void CorrectAssemblyTester::ExecuteDfns()
 		localBeginTime = clock();
 		
 		PointCloudConstPtr transformedCloud = NULL;
-		transformer.Execute(*inputCloud, entry.pose, transformedCloud);
+		Executors::Execute(transformDfn, *inputCloud, entry.pose, transformedCloud);
 
 		outputCloud = NULL;
-		assembler.Execute(*transformedCloud, zeroPose, radius, outputCloud);
+		Executors::Execute(assemblyDfn, *transformedCloud, zeroPose, radius, outputCloud);
 
 		DeleteIfNotNull(inputCloud);
 		localEndTime = clock();

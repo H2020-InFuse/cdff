@@ -37,7 +37,7 @@
 #include <iostream>
 #include <fstream>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
-#include <StereoReconstruction/StereoReconstructionExecutor.hpp>
+#include <StereoReconstruction/StereoReconstructionInterface.hpp>
 
 #include <PointCloudToPclPointCloudConverter.hpp>
 #include <MatToFrameConverter.hpp>
@@ -89,7 +89,6 @@ namespace DataGenerators {
 		bool planeFilteringEnabled;
 
 		CDFF::DFN::StereoReconstruction::HirschmullerDisparityMapping* disparityMapping;
-		CDFF::DFN::StereoReconstructionExecutor* disparityMappingExecutor;
 
 		std::vector<InputEntry> inputList;
 
