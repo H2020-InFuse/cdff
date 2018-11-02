@@ -331,7 +331,7 @@ target_compile_definitions(DenseRegistrationFromStereoGuiTest PRIVATE BOOST_ERRO
 target_link_libraries(
     DenseRegistrationFromStereoGuiTest
     dense_registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator  dfn_executors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     yaml-cpp ${VTK_LIBRARIES}
 )
@@ -346,7 +346,7 @@ target_compile_definitions(SparseRegistrationFromStereoGuiTest PRIVATE BOOST_ERR
 target_link_libraries(
     SparseRegistrationFromStereoGuiTest
     sparse_registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator dfn_executors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     yaml-cpp ${VTK_LIBRARIES}
 )
@@ -361,7 +361,7 @@ target_compile_definitions(AdjustmentFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_
 target_link_libraries(
     AdjustmentFromStereoGuiTest
     adjustment_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator dfn_executors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     yaml-cpp ${VTK_LIBRARIES}
 )
@@ -391,7 +391,7 @@ target_compile_definitions(ReconstructionFromStereoGuiTest PRIVATE BOOST_ERROR_C
 target_link_libraries(
     ReconstructionFromStereoGuiTest
     reconstruction_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator dfn_executors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     yaml-cpp ${VTK_LIBRARIES}
 )
@@ -406,7 +406,7 @@ target_compile_definitions(RegistrationFromStereoGuiTest PRIVATE BOOST_ERROR_COD
 target_link_libraries(
     RegistrationFromStereoGuiTest
     registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator  dfn_executors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     yaml-cpp ${VTK_LIBRARIES}
 )
@@ -421,7 +421,7 @@ target_compile_definitions(EstimationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_
 target_link_libraries(
     EstimationFromStereoGuiTest
     estimation_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator dfn_executors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     yaml-cpp ${VTK_LIBRARIES}
 )
