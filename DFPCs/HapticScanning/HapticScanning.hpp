@@ -28,7 +28,7 @@ namespace DFPC
 
         private:
             DfpcConfigurator configurator;
-            std::unique_ptr<CDFF::DFN::ForceMeshGeneratorInterface> m_force_mesh_generator;
+            CDFF::DFN::ForceMeshGeneratorInterface* m_force_mesh_generator;
 
             void InstantiateDFNs();
     };

@@ -87,15 +87,6 @@ SparseRegistrationFromStereo::SparseRegistrationFromStereo()
 
 SparseRegistrationFromStereo::~SparseRegistrationFromStereo()
 	{
-	DeleteIfNotNull(optionalLeftFilter);
-	DeleteIfNotNull(optionalRightFilter);
-	DeleteIfNotNull(reconstructor3d);
-	DeleteIfNotNull(featuresExtractor3d);
-	DeleteIfNotNull(registrator3d);
-	DeleteIfNotNull(cloudAssembler);
-	DeleteIfNotNull(cloudTransformer);
-	DeleteIfNotNull(cloudFilter);
-
 	DeleteIfNotNull(bundleHistory);
 	DeleteIfNotNull(featureCloud);
 	}

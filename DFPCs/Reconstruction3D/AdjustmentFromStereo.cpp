@@ -114,17 +114,6 @@ AdjustmentFromStereo::AdjustmentFromStereo() :
 
 AdjustmentFromStereo::~AdjustmentFromStereo()
 	{
-	delete(optionalLeftFilter);
-	delete(optionalRightFilter);
-	delete(reconstructor3d);
-	delete(featuresExtractor2d);
-	delete(optionalFeaturesDescriptor2d);
-	delete(featuresMatcher2d);
-	delete(bundleAdjuster);
-	delete(fundamentalMatrixComputer);
-	delete(perspectiveNPointSolver);
-	delete(reconstructor3dfrom2dmatches);
-
 	DeleteIfNotNull(bundleHistory);
 	DeleteIfNotNull(correspondencesRecorder);
 	DeleteIfNotNull(cleanCorrespondenceMap);

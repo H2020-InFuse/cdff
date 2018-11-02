@@ -30,12 +30,12 @@ void HapticScanning::setup()
 
 void HapticScanning::run()
 {
-    CDFF::DFN::Executors::Execute(m_force_mesh_generator.get(), inArmBasePose, inArmEndEffectorPose, inArmEndEffectorWrench, outPointCloud);
+    CDFF::DFN::Executors::Execute(m_force_mesh_generator, inArmBasePose, inArmEndEffectorPose, inArmEndEffectorWrench, outPointCloud);
 }
 
 void HapticScanning::InstantiateDFNs()
 {
-    m_force_mesh_generator.reset( dynamic_cast<CDFF::DFN::ForceMeshGeneratorInterface*>( configurator.GetDfn("forceMeshGenerator") ) );
+    m_force_mesh_generator = dynamic_cast<CDFF::DFN::ForceMeshGeneratorInterface*>( configurator.GetDfn("forceMeshGenerator") );
 }
 
 }

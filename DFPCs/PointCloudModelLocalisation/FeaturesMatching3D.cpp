@@ -67,10 +67,6 @@ FeaturesMatching3D::FeaturesMatching3D()
 
 FeaturesMatching3D::~FeaturesMatching3D()
 	{
-	DeleteIfNotNull(featuresExtractor3d);
-	DeleteIfNotNull(optionalFeaturesDescriptor3d);
-	DeleteIfNotNull(featuresMatcher3d);
-
 	DeleteIfNotNull(modelFeatureVector);
 	}
 

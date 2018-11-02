@@ -92,17 +92,6 @@ RegistrationFromStereo::RegistrationFromStereo()
 
 RegistrationFromStereo::~RegistrationFromStereo()
 	{
-	DeleteIfNotNull(optionalLeftFilter);
-	DeleteIfNotNull(optionalRightFilter);
-	DeleteIfNotNull(reconstructor3d);
-	DeleteIfNotNull(featuresExtractor3d);
-	DeleteIfNotNull(optionalFeaturesDescriptor3d);
-	DeleteIfNotNull(featuresMatcher3d);
-	DeleteIfNotNull(cloudAssembler);
-	DeleteIfNotNull(cloudTransformer);
-	DeleteIfNotNull(cloudFilter);
-	DeleteIfNotNull(registrator3d);
-
 	DeleteIfNotNull(bundleHistory);
 	}
 

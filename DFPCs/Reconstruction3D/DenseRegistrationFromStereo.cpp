@@ -86,14 +86,6 @@ DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 
 DenseRegistrationFromStereo::~DenseRegistrationFromStereo()
 	{
-	DeleteIfNotNull(optionalLeftFilter);
-	DeleteIfNotNull(optionalRightFilter);
-	DeleteIfNotNull(reconstructor3d);
-	DeleteIfNotNull(registrator3d);
-	DeleteIfNotNull(cloudAssembler);
-	DeleteIfNotNull(cloudTransformer);
-	DeleteIfNotNull(cloudFilter);
-
 	DeleteIfNotNull(bundleHistory);
 	delete( EMPTY_FEATURE_VECTOR );
 	}

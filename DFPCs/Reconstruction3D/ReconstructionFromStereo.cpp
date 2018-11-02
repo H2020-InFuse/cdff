@@ -100,16 +100,6 @@ ReconstructionFromStereo::ReconstructionFromStereo() :
 
 ReconstructionFromStereo::~ReconstructionFromStereo()
 	{
-	DeleteIfNotNull(optionalLeftFilter);
-	DeleteIfNotNull(optionalRightFilter);
-	DeleteIfNotNull(featuresExtractor);
-	DeleteIfNotNull(featuresMatcher);
-	DeleteIfNotNull(fundamentalMatrixComputer);
-	DeleteIfNotNull(perspectiveNPointSolver);
-	DeleteIfNotNull(reconstructor3d);
-	DeleteIfNotNull(optionalFeaturesDescriptor);
-	DeleteIfNotNull(reconstructor3dfrom2dmatches);
-
 	delete(perspectiveCloud);
 	delete(perspectiveVector);
 	delete(triangulatedKeypointCloud);

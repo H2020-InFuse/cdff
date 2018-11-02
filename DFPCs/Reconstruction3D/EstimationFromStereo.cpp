@@ -108,15 +108,6 @@ EstimationFromStereo::EstimationFromStereo() :
 
 EstimationFromStereo::~EstimationFromStereo()
 	{
-	DeleteIfNotNull(optionalLeftFilter);
-	DeleteIfNotNull(optionalRightFilter);
-	DeleteIfNotNull(reconstructor3d);
-	DeleteIfNotNull(featuresExtractor2d);
-	DeleteIfNotNull(optionalFeaturesDescriptor2d);
-	DeleteIfNotNull(featuresMatcher2d);
-	DeleteIfNotNull(reconstructor3dfrom2dmatches);
-	DeleteIfNotNull(transformEstimator);
-
 	DeleteIfNotNull(bundleHistory);
 	DeleteIfNotNull(correspondencesRecorder);
 	DeleteIfNotNull(leftTimeCorrespondenceMap);
