@@ -114,14 +114,14 @@ CMake variables given using the `-D` option are written to the CMake cache (`/pa
 
 CMake checks whether there is a directory called `Common/Types/C/`, meant to contain `.h` and `.c` files generated ("compiled") from the ASN.1 data types present in `Common/Types/ASN.1/`.
 
-If this directory isn't present, rather than compiling the ASN.1 data types locally, CMake runs the script `Tools/ASNToC/FetcherScript.sh` to download precompiled types from Space Apps' GitLab server. This is so as to avoid the user to compile the data types themselves, as the ASN.1 compiler has a heavy dependency on Mono and isn't typically run more than once.
+If this directory isn't present, rather than compiling the ASN.1 data types locally, CMake runs the script `Tools/ASN.1/FetcherScript.sh` to download precompiled types from Space Apps' GitLab server. This is so as to avoid the user to compile the data types themselves, as the ASN.1 compiler has a heavy dependency on Mono and isn't typically run more than once.
 
 You may still compile the data types yourself if you wish, and you should do so if:
 
 * The download fails (**warning:** currently happens if running CMake in a new branch *and* the types haven't been downloaded before; fixing in progress; a workaround is to run CMake once in the `master` branch before, or compile the types yourself).
 * You modify or create a new data type in `Common/Types/ASN.1/`.
 
-See the [ASNtoC documentation](/Tools/ASNtoC/Readme.md) for more information. An overview of the data types, wrappers, sizes, etc. can be found in [this table](https://drive.google.com/open?id=0B2f4AImIv45fRUFkeldjdTVtSUE).
+See the [ASN.1 documentation](/Tools/ASN.1/Readme.md) for more information. An overview of the data types, wrappers, sizes, etc. can be found in [this table](https://drive.google.com/open?id=0B2f4AImIv45fRUFkeldjdTVtSUE).
 
 ### Test and (optionally) install
 
