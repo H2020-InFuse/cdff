@@ -7,6 +7,21 @@ add_library(
     FeaturesMatching2D/FeaturesMatching2DExecutor.cpp
     FeaturesMatching3D/FeaturesMatching3DExecutor.cpp
     Registration3D/Registration3DExecutor.cpp
+    ImageFiltering/ImageFilteringExecutor.cpp
+    PointCloudTransform/PointCloudTransformExecutor.cpp
+    PointCloudFiltering/PointCloudFilteringExecutor.cpp
+    PointCloudAssembly/PointCloudAssemblyExecutor.cpp
+    StereoReconstruction/StereoReconstructionExecutor.cpp
+    PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.cpp
+    CamerasTransformEstimation/CamerasTransformEstimationExecutor.cpp
+    FundamentalMatrixComputation/FundamentalMatrixComputationExecutor.cpp
+    Transform3DEstimation/Transform3DEstimationExecutor.cpp
+    BundleAdjustment/BundleAdjustmentExecutor.cpp
+    PerspectiveNPointSolving/PerspectiveNPointSolvingExecutor.cpp
+    PrimitiveMatching/PrimitiveMatchingExecutor.cpp
+    Voxelization/VoxelizationExecutor.cpp
+    DepthFiltering/DepthFilteringExecutor.cpp
+    ForceMeshGenerator/ForceMeshGeneratorExecutor.cpp
 )
 target_link_libraries(
   dfn_executors
