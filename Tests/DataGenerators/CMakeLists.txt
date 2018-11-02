@@ -28,7 +28,7 @@ add_executable(
 target_compile_definitions(point_cloud_transformer PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	point_cloud_transformer
-	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer ${PCL_IO_LIBRARIES}
 )
 
 add_executable(
@@ -119,7 +119,7 @@ add_executable(
 target_compile_definitions(match_clouds PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	match_clouds
-	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_filters yaml-cpp cdff_pcl_visualizer ${PCL_COMMON_LIBRARIES} ${PCL_VISUALIZATION_LIBRARIES} ${PCL_KDTREE_LIBRARIES}
 )
 
 add_executable(
@@ -130,7 +130,7 @@ add_executable(
 target_compile_definitions(detect_outliers PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	detect_outliers
-	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_filters yaml-cpp cdff_pcl_visualizer ${PCL_COMMON_LIBRARIES} ${PCL_VISUALIZATION_LIBRARIES} ${PCL_IO_LIBRARIES}
 )
 
 add_executable(
@@ -141,7 +141,7 @@ add_executable(
 target_compile_definitions(measures_lines PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	measures_lines
-	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp ${VTK_LIBRARIES} cdff_pcl_visualizer
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_common pcl_filters yaml-cpp cdff_pcl_visualizer ${PCL_COMMON_LIBRARIES} ${PCL_VISUALIZATION_LIBRARIES} ${PCL_KDTREE_LIBRARIES} ${PCL_IO_LIBRARIES}
 )
 
 add_executable(

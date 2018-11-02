@@ -1,3 +1,5 @@
+# libcdff_visualizers_opencv and libcdff_visualizers_pcl
+
 add_library(cdff_opencv_visualizer
     OpencvVisualizer.cpp)
 
@@ -11,7 +13,7 @@ add_library(cdff_pcl_visualizer
 target_compile_definitions(cdff_pcl_visualizer PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(cdff_pcl_visualizer
     PUBLIC cdff_types ${PCL_COMMON_LIBRARIES}
-    PRIVATE cdff_converters ${PCL_VISUALIZATION_LIBRARIES} ${PCL_IO_LIBRARIES})
+    PRIVATE cdff_converters ${PCL_IO_LIBRARIES} ${PCL_VISUALIZATION_LIBRARIES})
 
 install(TARGETS cdff_opencv_visualizer cdff_pcl_visualizer
     DESTINATION "${CMAKE_INSTALL_LIBDIR}")
