@@ -263,6 +263,12 @@ if(Ceres_FOUND)
   # TODO: kept for compatibility with the existing CDFF code base: to be removed
   # when all CMakeLists that define targets feature the appropriate [target_]
   # include_directories()
+  # TODO: also, ${CERES_INCLUDE_DIRS} features /usr/include if some dependencies
+  # of Ceres have been installed as osdeps, so /usr/include will be before all
+  # other include dirs subsequently appended to the list, which can cause trouble
+  # when looking for a library which is in two different version in /usr/include
+  # and ${_DEPENDENCIES_PREFIX}/include -> really necessary to restrict the
+  # include dirs to specific targets
   include_directories(SYSTEM ${CERES_INCLUDE_DIRS})
 
 else()
@@ -374,8 +380,3 @@ add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
 add_subdirectory(Tests)
 add_subdirectory(CC)
-
-# TODO: is there an initial, default value for the directories that are searched
-# for header files? There isn't, as far as I understand, but triple-check. If
-# there is and it includes system directories, we should prepend the directories
-# we currently append to this list with include_directories().
