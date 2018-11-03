@@ -1,11 +1,11 @@
 #ifndef BUNDLEHISTORY_HPP
 #define BUNDLEHISTORY_HPP
 
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <VisualPointFeatureVector3D.hpp>
-#include <PointCloud.hpp>
-#include <CorrespondenceMap2D.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
 
 #include <vector>
 #include <map>

@@ -9,7 +9,7 @@
 
 #include "ScanlineOptimization.hpp"
 
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Visualizers/PclVisualizer.hpp>
 #include <Errors/Assert.hpp>
 

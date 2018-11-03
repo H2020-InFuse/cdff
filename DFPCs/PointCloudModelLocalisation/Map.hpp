@@ -10,10 +10,10 @@
 #ifndef POINTCLOUDMODELLOCALISATION_MAP_HPP
 #define POINTCLOUDMODELLOCALISATION_MAP_HPP
 
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <BaseTypes.hpp>
-#include <Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/BaseTypes.hpp>
+#include <Types/CPP/Frame.hpp>
 
 namespace CDFF
 {

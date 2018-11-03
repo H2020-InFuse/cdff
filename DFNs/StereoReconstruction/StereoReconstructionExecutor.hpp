@@ -8,8 +8,8 @@
 
 #include "DFNCommonInterface.hpp"
 #include "StereoReconstructionInterface.hpp"
-#include <PointCloud.hpp>
-#include <Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Frame.hpp>
 
 namespace CDFF
 {

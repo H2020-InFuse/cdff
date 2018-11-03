@@ -39,13 +39,13 @@
 #include <pcl/io/ply_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
 
-#include <MatToFrameConverter.hpp>
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <Pose.hpp>
-#include <PointCloud.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <PerformanceTests/DFPCs/PerformanceTestInterface.hpp>
 
 class Reconstruction3DTestInterface : public PerformanceTestInterface

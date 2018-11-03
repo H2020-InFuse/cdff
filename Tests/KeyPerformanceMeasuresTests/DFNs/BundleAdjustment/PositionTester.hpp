@@ -34,10 +34,10 @@
 #include <BundleAdjustment/BundleAdjustmentInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <CorrespondenceMap2D.hpp>
-#include <CorrespondenceMaps2DSequence.hpp>
-#include <Pose.hpp>
-#include <PosesSequence.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/CorrespondenceMaps2DSequence.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/PosesSequence.hpp>
 #include <Converters/MatToCorrespondenceMaps2DSequenceConverter.hpp>
 
 #include <stdlib.h>

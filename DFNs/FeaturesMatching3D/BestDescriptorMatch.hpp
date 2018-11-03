@@ -12,10 +12,10 @@
 
 #include "FeaturesMatching3DInterface.hpp"
 
-#include <VisualPointFeatureVector3D.hpp>
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
-#include <Pose.hpp>
-#include <SupportTypes.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/SupportTypes.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 namespace CDFF

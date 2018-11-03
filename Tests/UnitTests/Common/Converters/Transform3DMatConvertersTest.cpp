@@ -27,9 +27,9 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <Transform3DToMatConverter.hpp>
-#include <MatToTransform3DConverter.hpp>
-#include <Pose.hpp>
+#include <Converters/Transform3DToMatConverter.hpp>
+#include <Converters/MatToTransform3DConverter.hpp>
+#include <Types/CPP/Pose.hpp>
 #include <Errors/Assert.hpp>
 #include <boost/smart_ptr.hpp>
 #include <Eigen/Geometry>

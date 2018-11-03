@@ -30,7 +30,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 #include <Eigen/Core>
 #include <opencv2/core.hpp>
 

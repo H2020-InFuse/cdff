@@ -12,8 +12,8 @@
 
 #include "FeaturesMatching2DInterface.hpp"
 
-#include <CorrespondenceMap2D.hpp>
-#include <VisualPointFeatureVector2DToMatConverter.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Converters/VisualPointFeatureVector2DToMatConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/core/core.hpp>

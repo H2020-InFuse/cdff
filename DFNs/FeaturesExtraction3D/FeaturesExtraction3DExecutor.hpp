@@ -8,8 +8,8 @@
 
 #include "DFNCommonInterface.hpp"
 #include "FeaturesExtraction3DInterface.hpp"
-#include <PointCloud.hpp>
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
 namespace CDFF
 {

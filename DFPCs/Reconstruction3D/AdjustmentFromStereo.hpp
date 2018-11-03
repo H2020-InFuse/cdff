@@ -47,15 +47,15 @@
 #include <PerspectiveNPointSolving/PerspectiveNPointSolvingExecutor.hpp>
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>
 
-#include <VisualPointFeatureVector2D.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <CorrespondenceMaps2DSequence.hpp>
-#include <PosesSequence.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <Frame.hpp>
-#include <Pose.hpp>
-#include <Matrix.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/CorrespondenceMaps2DSequence.hpp>
+#include <Types/CPP/PosesSequence.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Matrix.hpp>
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"

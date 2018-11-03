@@ -33,7 +33,7 @@
 #include <pcl/io/ply_io.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 
 #include "../../DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.hpp"
 

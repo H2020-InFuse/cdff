@@ -48,16 +48,16 @@
 #include <FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
 
-#include <MatToVisualPointFeatureVector3DConverter.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <PclNormalsCloudToPointCloudConverter.hpp>
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector3DConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclNormalsCloudToPointCloudConverter.hpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>
 #include <PerformanceTests/Aggregator.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 
 #include <Eigen/Geometry>
 

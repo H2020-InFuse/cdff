@@ -28,7 +28,7 @@
  */
 #include <catch.hpp>
 #include <DepthFiltering/ConvolutionFilter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 /* --------------------------------------------------------------------------

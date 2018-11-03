@@ -30,8 +30,8 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <Frame.hpp>
-#include <Image.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/Image.hpp>
 
 namespace Converters {
 

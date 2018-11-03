@@ -12,8 +12,8 @@
  */
 
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <PclNormalsCloudToPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclNormalsCloudToPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>

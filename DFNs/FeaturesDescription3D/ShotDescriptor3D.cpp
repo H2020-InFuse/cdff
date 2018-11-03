@@ -9,8 +9,8 @@
 
 #include "ShotDescriptor3D.hpp"
 
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PointCloudToPclNormalsCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclNormalsCloudConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 

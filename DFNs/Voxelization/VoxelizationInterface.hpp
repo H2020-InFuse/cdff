@@ -7,8 +7,8 @@
 #define VOXELIZATION_VOXELIZATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Octree.h>
-#include <Frame.h>
+#include <Types/C/Octree.h>
+#include <Types/C/Frame.h>
 
 namespace CDFF
 {

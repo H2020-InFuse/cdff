@@ -7,8 +7,8 @@
 #define PRIMITIVEMATCHING_PRIMITIVEMATCHINGINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Frame.h>
-#include <Sequences.h>
+#include <Types/C/Frame.h>
+#include <Types/C/Sequences.h>
 
 namespace CDFF
 {

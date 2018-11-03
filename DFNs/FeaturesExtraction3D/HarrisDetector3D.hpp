@@ -12,9 +12,9 @@
 
 #include "FeaturesExtraction3DInterface.hpp"
 
-#include <PointCloud.hpp>
-#include <VisualPointFeatureVector3D.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <pcl/point_cloud.h>

@@ -9,8 +9,8 @@
 
 #include "HarrisDetector3D.hpp"
 
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <MatToVisualPointFeatureVector3DConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 

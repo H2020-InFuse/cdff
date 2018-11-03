@@ -48,12 +48,12 @@
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>
 #include <Transform3DEstimation/Transform3DEstimationExecutor.hpp>
 
-#include <VisualPointFeatureVector2D.hpp>
-#include <CorrespondenceMap3D.hpp>
-#include <CorrespondenceMaps3DSequence.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/CorrespondenceMap3D.hpp>
+#include <Types/CPP/CorrespondenceMaps3DSequence.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Frame.hpp>
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
@@ -61,10 +61,10 @@
 
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
-#include <Frame.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <Matrix.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Matrix.hpp>
 
 #ifdef TESTING
 #include <fstream>

@@ -7,9 +7,9 @@
 #define PERSPECTIVENPOINTSOLVING_PERSPECTIVENPOINTSOLVINGINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Pose.h>
-#include <Pointcloud.h>
-#include <VisualPointFeatureVector2D.h>
+#include <Types/C/Pose.h>
+#include <Types/C/Pointcloud.h>
+#include <Types/C/VisualPointFeatureVector2D.h>
 
 namespace CDFF
 {

@@ -35,8 +35,8 @@
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <CorrespondenceMap2D.hpp>
-#include <Matrix.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/Matrix.hpp>
 
 #include <stdlib.h>
 #include <fstream>

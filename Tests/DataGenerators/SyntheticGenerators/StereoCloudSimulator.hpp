@@ -31,7 +31,7 @@
  */
 #include <random>
 #include <pcl/io/ply_io.h>
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>

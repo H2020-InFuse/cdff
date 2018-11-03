@@ -12,7 +12,7 @@
  */
 
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>

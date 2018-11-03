@@ -27,7 +27,7 @@
  */
 #include "OpencvVisualizer.hpp"
 #include <Errors/Assert.hpp>
-#include <BaseTypes.hpp>
+#include <Types/CPP/BaseTypes.hpp>
 
 using namespace FrameWrapper;
 using namespace Converters;

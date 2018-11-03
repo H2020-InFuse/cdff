@@ -8,9 +8,9 @@
 
 #include "DFNCommonInterface.hpp"
 #include "PointCloudReconstruction2DTo3DInterface.hpp"
-#include <Pose.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 namespace CDFF
 {

@@ -7,8 +7,8 @@
 #define STEREORECONSTRUCTION_STEREORECONSTRUCTIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Frame.h>
-#include <Pointcloud.h>
+#include <Types/C/Frame.h>
+#include <Types/C/Pointcloud.h>
 
 #ifdef TESTING
 	#include <opencv2/imgproc/imgproc.hpp>

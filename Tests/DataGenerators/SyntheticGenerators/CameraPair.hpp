@@ -31,8 +31,8 @@
  */
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/Pose.hpp>
 
 
 namespace DataGenerators {

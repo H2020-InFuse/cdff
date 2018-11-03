@@ -31,7 +31,7 @@
  * --------------------------------------------------------------------------
  */
 #include "Mocks/Mock.hpp"
-#include <VisualPointFeatureVector2DToMatConverter.hpp>
+#include <Converters/VisualPointFeatureVector2DToMatConverter.hpp>
 
 
 namespace Mocks {

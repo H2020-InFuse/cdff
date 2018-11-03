@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup PerformaceTests
- * 
+ *
  * The application will print the size of the ASN defined types
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -26,16 +26,16 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <VisualPointFeatureVector3D.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <CorrespondenceMap3D.hpp>
-#include <Matrix.hpp>
-#include <Pose.hpp>
-#include <PointCloud.hpp>
-#include <DepthMap.h>
-#include <LaserScan.h>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/CorrespondenceMap3D.hpp>
+#include <Types/CPP/Matrix.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/C/DepthMap.h>
+#include <Types/C/LaserScan.h>
 #include <Errors/Assert.hpp>
 #include <string>
 
