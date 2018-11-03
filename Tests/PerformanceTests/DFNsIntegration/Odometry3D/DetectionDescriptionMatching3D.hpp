@@ -57,7 +57,7 @@
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>
 #include <PerformanceTests/Aggregator.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 
 #include <Eigen/Geometry>
 

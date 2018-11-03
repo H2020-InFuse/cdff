@@ -48,10 +48,10 @@
 
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
-#include <Frame.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
 #ifdef TESTING
 #include <fstream>

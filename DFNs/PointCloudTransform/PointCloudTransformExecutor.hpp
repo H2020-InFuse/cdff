@@ -8,8 +8,8 @@
 
 #include "DFNCommonInterface.hpp"
 #include "PointCloudTransformInterface.hpp"
-#include <PointCloud.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
 
 namespace CDFF
 {

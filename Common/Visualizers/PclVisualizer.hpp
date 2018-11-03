@@ -11,9 +11,9 @@
 #define PCL_VISUALIZER_HPP
 
 #include "OpencvVisualizer.hpp"
-#include <PointCloud.hpp>
-#include <VisualPointFeatureVector3D.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/Pose.hpp>
 
 #include <pcl/io/ply_io.h>
 #include <pcl/visualization/pcl_visualizer.h>

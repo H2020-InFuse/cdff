@@ -12,7 +12,7 @@
 
 #include "StereoReconstructionInterface.hpp"
 
-#include <PointCloud.hpp>
+#include <Types/CPP/PointCloud.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 

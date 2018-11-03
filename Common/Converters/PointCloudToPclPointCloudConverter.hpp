@@ -30,7 +30,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <PointCloud.hpp>
+#include <Types/CPP/PointCloud.hpp>
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 

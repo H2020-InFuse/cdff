@@ -13,12 +13,12 @@
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  * This is the storage of correspondence Maps, let (L0, R0), (L1, R1), ..., (LN, RN) be a sequence of image pair from the most recent to the oldest.
- * The correspondences between images are stored in the following order (L0-R0), (L0-L1), (L0-R1), ..., (L0-RN), (R0-L0), (R0-L1), (R0-R1), ..., 
+ * The correspondences between images are stored in the following order (L0-R0), (L0-L1), (L0-R1), ..., (L0-RN), (R0-L0), (R0-L1), (R0-R1), ...,
  * (R0, LN), (L1-R1), (L1-L2), ..., (L1-RN), ...., (LN-RN). The number N is defined by the parameter numberOfAdjustedStereoPairs.
  * Only the most recent N image pairs are kept in storage, the others will be discarded.
- * 
+ *
  * @{
  */
 
@@ -31,10 +31,10 @@
  *
  * --------------------------------------------------------------------------
  */
-#include "CorrespondenceMaps3DSequence.hpp"
-#include "CorrespondenceMap3D.hpp"
-#include "CorrespondenceMap2D.hpp"
-#include "PointCloud.hpp"
+#include <Types/CPP/CorrespondenceMaps3DSequence.hpp>
+#include <Types/CPP/CorrespondenceMap3D.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 
 namespace CDFF
@@ -60,10 +60,10 @@ class MultipleCorrespondencesRecorder
 		void AddCorrespondencesFromTwoImagePairs(std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> mapList,
 			std::vector<PointCloudWrapper::PointCloudConstPtr> pointCloudList);
 		void CompleteNewSequence();
-		
+
 		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr GetLatestCorrespondences();
 		void DiscardLatestCorrespondences();
-	
+
 	protected:
 
 	private:
@@ -105,8 +105,8 @@ class MultipleCorrespondencesRecorder
 		inline bool PointsAreDistinct(const BaseTypesWrapper::Point2D& point1, const BaseTypesWrapper::Point2D& point2)
 			{
 			return (point1.x != point2.x || point1.y != point2.y);
-			}		
-	
+			}
+
 	};
 
 }

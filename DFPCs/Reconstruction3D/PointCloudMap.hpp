@@ -31,10 +31,10 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <BaseTypes.hpp>
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/BaseTypes.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>

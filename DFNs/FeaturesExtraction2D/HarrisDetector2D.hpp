@@ -11,8 +11,8 @@
 #define FEATURESEXTRACTION2D_HARRISDETECTOR2D_HPP
 
 #include "FeaturesExtraction2DInterface.hpp"
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 #include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>

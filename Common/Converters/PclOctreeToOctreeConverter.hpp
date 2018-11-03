@@ -25,7 +25,7 @@
 
 
 #include <Eigen/Core>
-#include <BaseTypes.hpp>
+#include <Types/CPP/BaseTypes.hpp>
 #include <Voxelization/Octree.hpp>
 
 namespace Converters

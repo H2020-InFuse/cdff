@@ -17,7 +17,7 @@
 #include <FeaturesMatching3D/Icp3D.hpp>
 #include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 
 #include <boost/make_shared.hpp>
 

@@ -12,8 +12,8 @@
 
 #include "PointCloudAssemblyInterface.hpp"
 
-#include <PointCloud.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
 #include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 

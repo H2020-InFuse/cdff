@@ -31,7 +31,7 @@
 #include <Errors/Assert.hpp>
 
 #include<pcl/io/ply_io.h>
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 
 #include <Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Converters/SupportTypes.hpp>

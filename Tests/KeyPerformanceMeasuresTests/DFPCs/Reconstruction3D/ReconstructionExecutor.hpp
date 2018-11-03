@@ -32,10 +32,10 @@
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <Frame.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 #include <Converters/SupportTypes.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 #include <Converters/PointCloudToPclPointCloudConverter.hpp>

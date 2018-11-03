@@ -35,7 +35,7 @@
 #include <ImageFiltering/ImageFilteringInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <Frame.hpp>
+#include <Types/CPP/Frame.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 

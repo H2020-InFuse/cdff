@@ -11,8 +11,8 @@
 #define BUNDLEADJUSTMENT_CERESADJUSTMENT_HPP
 
 #include "BundleAdjustmentInterface.hpp"
-#include <FramesSequence.hpp>
-#include <PosesSequence.hpp>
+#include <Types/CPP/FramesSequence.hpp>
+#include <Types/CPP/PosesSequence.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>

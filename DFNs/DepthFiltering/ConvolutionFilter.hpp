@@ -11,7 +11,7 @@
 #define DEPTHFILTERING_FILTER_HPP
 
 #include "DepthFilteringInterface.hpp"
-#include <Frame.hpp>
+#include <Types/CPP/Frame.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>

@@ -362,7 +362,6 @@ install(DIRECTORY Common DFNs DFPCs Tests
 include_directories(
   Common
   Common/Types/C
-  Common/Types/CPP
   DFNs
   DFPCs
   Tests

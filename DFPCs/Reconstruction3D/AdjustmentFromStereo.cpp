@@ -30,7 +30,7 @@
 #include "Errors/Assert.hpp"
 #include <Visualizers/OpencvVisualizer.hpp>
 #include <Visualizers/PclVisualizer.hpp>
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
 namespace CDFF
 {

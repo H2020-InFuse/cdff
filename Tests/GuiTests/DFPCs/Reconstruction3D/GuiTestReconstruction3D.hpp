@@ -34,9 +34,9 @@
 #include <Errors/Assert.hpp>
 
 #include <Converters/MatToFrameConverter.hpp>
-#include <Frame.hpp>
-#include <Pose.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 #include <Converters/SupportTypes.hpp>
 

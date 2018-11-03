@@ -12,9 +12,9 @@
 
 #include "PointCloudReconstruction2DTo3DInterface.hpp"
 
-#include <CorrespondenceMap2D.hpp>
-#include <Pose.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
 #include <Converters/Transform3DToMatConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 

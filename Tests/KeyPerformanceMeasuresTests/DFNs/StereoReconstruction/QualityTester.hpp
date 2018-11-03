@@ -36,8 +36,8 @@
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <Frame.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 #include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Converters/PclPointCloudToPointCloudConverter.hpp>

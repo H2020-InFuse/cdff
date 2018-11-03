@@ -29,7 +29,7 @@
 #include <catch.hpp>
 #include <Converters/Transform3DToEigenTransformConverter.hpp>
 #include <Converters/EigenTransformToTransform3DConverter.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 #include <Errors/Assert.hpp>
 #include <boost/smart_ptr.hpp>
 #include <Eigen/Geometry>

@@ -29,7 +29,7 @@
 #include <catch.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 #include <Converters/MatToFrameConverter.hpp>
-#include <Frame.hpp>
+#include <Types/CPP/Frame.hpp>
 #include <Errors/Assert.hpp>
 
 using namespace Converters;

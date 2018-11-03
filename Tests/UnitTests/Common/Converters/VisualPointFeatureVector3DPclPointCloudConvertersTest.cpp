@@ -29,7 +29,7 @@
 #include <catch.hpp>
 #include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <Converters/PclPointCloudToVisualPointFeatureVector3DConverter.hpp>
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 #include <Errors/Assert.hpp>
 #include <boost/smart_ptr.hpp>
 

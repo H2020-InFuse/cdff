@@ -29,7 +29,7 @@
 #include <catch.hpp>
 #include <Converters/PointCloudToPclNormalsCloudConverter.hpp>
 #include <Converters/PclNormalsCloudToPointCloudConverter.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/PointCloud.hpp>
 #include <Errors/Assert.hpp>
 #include <boost/smart_ptr.hpp>
 

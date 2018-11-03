@@ -29,7 +29,7 @@
 #include <catch.hpp>
 #include <Converters/MatToCorrespondenceMaps3DSequenceConverter.hpp>
 #include <Converters/CorrespondenceMaps3DSequenceToMatConverter.hpp>
-#include <CorrespondenceMap3D.hpp>
+#include <Types/CPP/CorrespondenceMap3D.hpp>
 #include <Errors/Assert.hpp>
 
 using namespace Converters;

@@ -9,9 +9,9 @@
 #include "DFNCommonInterface.hpp"
 #include "CamerasTransformEstimationInterface.hpp"
 #include <VisualPointFeatureVector2D.h>
-#include <Matrix.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/Matrix.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/Pose.hpp>
 
 namespace CDFF
 {

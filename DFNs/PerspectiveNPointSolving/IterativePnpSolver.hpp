@@ -12,7 +12,7 @@
 
 #include "PerspectiveNPointSolvingInterface.hpp"
 
-#include <PointCloud.hpp>
+#include <Types/CPP/PointCloud.hpp>
 #include <Converters/VisualPointFeatureVector2DToMatConverter.hpp>
 #include <Converters/MatToTransform3DConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>

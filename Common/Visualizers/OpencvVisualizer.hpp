@@ -36,11 +36,11 @@
 #include <stdlib.h>
 #include <string>
 
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <Pose.hpp>
-#include <Matrix.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Matrix.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 
 namespace Visualizers

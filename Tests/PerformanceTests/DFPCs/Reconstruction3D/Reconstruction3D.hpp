@@ -40,10 +40,10 @@
 #include <pcl/visualization/pcl_visualizer.h>
 
 #include <Converters/MatToFrameConverter.hpp>
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <Pose.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 #include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <PerformanceTests/DFPCs/PerformanceTestInterface.hpp>

@@ -12,7 +12,7 @@
 
 #include "ImageFilteringInterface.hpp"
 
-#include <Frame.hpp>
+#include <Types/CPP/Frame.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>

@@ -35,10 +35,10 @@
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <Pose.hpp>
-#include <Matrix.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Matrix.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 #include <stdlib.h>
 #include <fstream>

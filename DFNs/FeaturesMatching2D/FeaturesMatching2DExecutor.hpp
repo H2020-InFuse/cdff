@@ -8,8 +8,8 @@
 
 #include "DFNCommonInterface.hpp"
 #include "FeaturesMatching2DInterface.hpp"
-#include <VisualPointFeatureVector2D.hpp>
-#include <CorrespondenceMap2D.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
 
 namespace CDFF
 {

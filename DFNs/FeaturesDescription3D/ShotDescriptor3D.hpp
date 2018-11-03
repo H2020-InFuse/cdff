@@ -12,8 +12,8 @@
 
 #include "FeaturesDescription3DInterface.hpp"
 
-#include <PointCloud.hpp>
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 #include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Converters/PointCloudToPclNormalsCloudConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>

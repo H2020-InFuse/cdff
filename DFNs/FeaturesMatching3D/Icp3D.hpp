@@ -12,9 +12,9 @@
 
 #include "FeaturesMatching3DInterface.hpp"
 
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 #include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 #include <Converters/SupportTypes.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 

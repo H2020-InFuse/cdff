@@ -35,11 +35,11 @@
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <VisualPointFeatureVector3D.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <BaseTypes.hpp>
-#include <CorrespondenceMap3D.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/BaseTypes.hpp>
+#include <Types/CPP/CorrespondenceMap3D.hpp>
 #include <Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Converters/SupportTypes.hpp>
 

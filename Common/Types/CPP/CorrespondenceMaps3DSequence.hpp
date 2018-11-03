@@ -13,10 +13,10 @@
 #ifndef CORRESPONDENCE_MAPS_3D_SEQUENCE_HPP
 #define CORRESPONDENCE_MAPS_3D_SEQUENCE_HPP
 
-#include <Sequences.h>
+#include <Types/C/Sequences.h>
 
 #include "BaseTypes.hpp"
-#include <CorrespondenceMap3D.hpp>
+#include "CorrespondenceMap3D.hpp"
 #include <stdlib.h>
 #include <memory>
 #include <vector>
@@ -50,7 +50,7 @@ void Clear(CorrespondenceMaps3DSequence& correspondenceMapsSequence);
 void AddCorrespondenceMap(CorrespondenceMaps3DSequence& correspondenceMapsSequence, const CorrespondenceMap3D& correspondenceMap);
 const CorrespondenceMap3D& GetCorrespondenceMap(const CorrespondenceMaps3DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 correspondenceMapIndex);
 void GetCorrespondenceMap(const CorrespondenceMaps3DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 frameIndex, CorrespondenceMap3D& correspondenceMap);
-BaseTypesWrapper::T_UInt32 GetNumberOfCorrespondenceMaps(const CorrespondenceMaps3DSequence& correspondenceMapsSequence); 
+BaseTypesWrapper::T_UInt32 GetNumberOfCorrespondenceMaps(const CorrespondenceMaps3DSequence& correspondenceMapsSequence);
 void RemoveCorrespondenceMaps(CorrespondenceMaps3DSequence& correspondenceMapsSequence, std::vector<BaseTypesWrapper::T_UInt32> correspondenceMapIndexOrderedList);
 void RemoveCorrespondences(CorrespondenceMaps3DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 mapIndex, std::vector<BaseTypesWrapper::T_UInt32> correspondenceIndexOrderedList);
 

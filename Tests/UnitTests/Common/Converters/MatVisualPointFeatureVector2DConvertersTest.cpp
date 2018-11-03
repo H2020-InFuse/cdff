@@ -29,7 +29,7 @@
 #include <catch.hpp>
 #include <Converters/VisualPointFeatureVector2DToMatConverter.hpp>
 #include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
-#include <VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
 #include <Errors/Assert.hpp>
 
 using namespace Converters;

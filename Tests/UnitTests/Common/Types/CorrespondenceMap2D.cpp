@@ -27,8 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <CorrespondenceMaps2DSequence.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/CorrespondenceMaps2DSequence.hpp>
 #include <Errors/Assert.hpp>
 
 using namespace CorrespondenceMap2DWrapper;

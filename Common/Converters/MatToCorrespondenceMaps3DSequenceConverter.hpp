@@ -30,7 +30,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <CorrespondenceMaps3DSequence.hpp>
+#include <Types/CPP/CorrespondenceMaps3DSequence.hpp>
 #include <opencv2/core/core.hpp>
 
 namespace Converters {
