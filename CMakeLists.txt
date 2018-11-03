@@ -358,6 +358,30 @@ foreach(header ${headers})
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/${dir}")
 endforeach(header)
 
+## Setup CDFF uninstallation ---------------------------------------------------
+
+# Add an uninstall target, see documentation in cmake_uninstall.cmake[.in]
+
+configure_file(
+  "${CMAKE_SOURCE_DIR}/Tools/CMake/cmake_uninstall.cmake.in"
+  "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+  @ONLY)
+
+add_custom_target(uninstall
+  COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+  VERBATIM)
+
+# Add a purge target, see documentation in cmake_purge.cmake[.in]
+
+configure_file(
+  "${CMAKE_SOURCE_DIR}/Tools/CMake/cmake_purge.cmake.in"
+  "${CMAKE_BINARY_DIR}/cmake_purge.cmake"
+  @ONLY)
+
+add_custom_target(purge
+  COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_purge.cmake"
+  VERBATIM)
+
 ## Compile the CDFF ------------------------------------------------------------
 
 # Take into account the headers provided in the following directories
