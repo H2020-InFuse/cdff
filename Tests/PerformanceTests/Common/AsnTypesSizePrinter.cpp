@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup PerformaceTests
- * 
+ *
  * The application will print the size of the ASN defined types
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -34,8 +34,8 @@
 #include <Types/CPP/Matrix.hpp>
 #include <Types/CPP/Pose.hpp>
 #include <Types/CPP/PointCloud.hpp>
-#include <DepthMap.h>
-#include <LaserScan.h>
+#include <Types/C/DepthMap.h>
+#include <Types/C/LaserScan.h>
 #include <Errors/Assert.hpp>
 #include <string>
 

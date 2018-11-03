@@ -7,7 +7,7 @@
 #define DEPTHFILTERING_DEPTHFILTERINGINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Frame.h>
+#include <Types/C/Frame.h>
 
 
 namespace CDFF

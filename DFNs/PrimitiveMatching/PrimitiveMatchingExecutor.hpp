@@ -9,7 +9,7 @@
 #include "DFNCommonInterface.hpp"
 #include "PrimitiveMatchingInterface.hpp"
 #include <Types/CPP/Frame.hpp>
-#include <Sequences.h>
+#include <Types/C/Sequences.h>
 
 namespace CDFF
 {

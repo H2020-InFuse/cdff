@@ -7,8 +7,8 @@
 #define FEATURESEXTRACTION2D_FEATURESEXTRACTION2DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <VisualPointFeatureVector2D.h>
-#include <Frame.h>
+#include <Types/C/VisualPointFeatureVector2D.h>
+#include <Types/C/Frame.h>
 
 namespace CDFF
 {

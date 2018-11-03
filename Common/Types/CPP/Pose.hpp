@@ -13,7 +13,7 @@
 #ifndef POSE_HPP
 #define POSE_HPP
 
-#include <Pose.h>
+#include <Types/C/Pose.h>
 
 #include "BaseTypes.hpp"
 #include <stdlib.h>

@@ -8,8 +8,8 @@
 
 #include "DFNCommonInterface.hpp"
 #include "FeaturesExtraction2DInterface.hpp"
-#include <VisualPointFeatureVector2D.h>
-#include <Frame.h>
+#include <Types/C/VisualPointFeatureVector2D.h>
+#include <Types/C/Frame.h>
 #include <Types/CPP/Frame.hpp>
 #include <Types/CPP/VisualPointFeatureVector2D.hpp>
 

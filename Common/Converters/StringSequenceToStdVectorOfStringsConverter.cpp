@@ -5,6 +5,9 @@
 * ---------------------------------------------------------------------------
 */
 
+// TODO: Create a C++ wrapper for the transcompiled ASN.1 type StringSequence
+// and use the wrapped type here instead of using the raw C type
+
 /*!
  * @file StringSequenceToStdVectorOfStringsConverter.cpp
  * @date 12/09/2018

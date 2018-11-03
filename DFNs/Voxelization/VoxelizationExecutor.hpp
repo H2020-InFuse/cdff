@@ -8,7 +8,7 @@
 
 #include "DFNCommonInterface.hpp"
 #include "VoxelizationInterface.hpp"
-#include <Frame.h>
+#include <Types/C/Frame.h>
 #include <Types/CPP/Frame.hpp>
 
 namespace CDFF

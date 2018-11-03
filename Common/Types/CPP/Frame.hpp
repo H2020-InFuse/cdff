@@ -14,9 +14,9 @@
 #define FRAME_HPP
 
 #include <Types/C/Frame.h>
-#include <Array3D.h>
+#include <Types/C/Array3D.h>
 #include "Array3D.hpp"
-#include <taste-extended.h>
+#include <Types/C/taste-extended.h>
 
 #include "BaseTypes.hpp"
 #include <stdlib.h>

@@ -7,8 +7,8 @@
 #define VISUALSLAMSTEREO_INTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
-#include <TransformWithCovariance.h>
-#include <Frame.h>
+#include <Types/C/TransformWithCovariance.h>
+#include <Types/C/Frame.h>
 
 namespace CDFF
 {

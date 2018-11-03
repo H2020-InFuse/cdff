@@ -9,7 +9,7 @@
 #include "DFNCommonInterface.hpp"
 #include "ForceMeshGeneratorInterface.hpp"
 #include <Types/CPP/PointCloud.hpp>
-#include <Sequences.h>
+#include <Types/C/Sequences.h>
 
 namespace CDFF
 {

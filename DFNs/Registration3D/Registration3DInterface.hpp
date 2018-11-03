@@ -7,8 +7,8 @@
 #define REGISTRATION3D_REGISTRATION3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Pointcloud.h>
-#include <Pose.h>
+#include <Types/C/Pointcloud.h>
+#include <Types/C/Pose.h>
 
 namespace CDFF
 {

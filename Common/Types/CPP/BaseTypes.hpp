@@ -13,12 +13,12 @@
 #ifndef BASE_TYPES_HPP
 #define BASE_TYPES_HPP
 
-#include <Frame.h>
-#include <VisualPointFeatureVector2D.h>
-#include <VisualPointFeatureVector3D.h>
-#include <Pointcloud.h>
-#include <Point.h>
-#include <CorrespondenceMap3D.h>
+#include <Types/C/Frame.h>
+#include <Types/C/VisualPointFeatureVector2D.h>
+#include <Types/C/VisualPointFeatureVector3D.h>
+#include <Types/C/Pointcloud.h>
+#include <Types/C/Point.h>
+#include <Types/C/CorrespondenceMap3D.h>
 
 #include <memory>
 

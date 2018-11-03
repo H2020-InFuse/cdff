@@ -8,7 +8,7 @@
 
 #include "DFNCommonInterface.hpp"
 #include "CamerasTransformEstimationInterface.hpp"
-#include <VisualPointFeatureVector2D.h>
+#include <Types/C/VisualPointFeatureVector2D.h>
 #include <Types/CPP/Matrix.hpp>
 #include <Types/CPP/CorrespondenceMap2D.hpp>
 #include <Types/CPP/Pose.hpp>

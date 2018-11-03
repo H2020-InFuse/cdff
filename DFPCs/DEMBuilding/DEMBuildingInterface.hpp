@@ -7,8 +7,8 @@
 #define DEMBUILDING_INTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
-#include <Pointcloud.h>
-#include <TransformWithCovariance.h>
+#include <Types/C/Pointcloud.h>
+#include <Types/C/TransformWithCovariance.h>
 
 namespace CDFF
 {

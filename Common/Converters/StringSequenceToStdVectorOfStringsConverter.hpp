@@ -5,6 +5,9 @@
 * --------------------------------------------------------------------------
 */
 
+// TODO: Create a C++ wrapper for the transcompiled ASN.1 type StringSequence
+// and use the wrapped type here instead of using the raw C type
+
 /*!
  * @file StringSequenceToStdVectorOfStringsConverter.hpp
  * @date 12/09/2018
@@ -13,9 +16,9 @@
 
 /*!
  * @addtogroup Converters
- * 
+ *
  *  This is the class for type conversion from StringSequence to std::vector<std::string>.
- *  
+ *
  *
  * @{
  */
@@ -23,8 +26,7 @@
 #ifndef STRINGSEQUENCE_TO_VECTOROFSTRINGS_CONVERTER_HPP
 #define STRINGSEQUENCE_TO_VECTOROFSTRINGS_CONVERTER_HPP
 
-
-#include <Sequences.h>
+#include <Types/C/Sequences.h>
 #include <vector>
 #include <string>
 
