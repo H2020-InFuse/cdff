@@ -28,8 +28,8 @@
  */
 #include "EstimationFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpencvVisualizer.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 #include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
 namespace CDFF

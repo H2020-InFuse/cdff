@@ -28,8 +28,8 @@
  */
 #include "SparseRegistrationFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpencvVisualizer.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 
 
 namespace CDFF

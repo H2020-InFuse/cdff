@@ -30,7 +30,7 @@
 #include "Errors/Assert.hpp"
 #include <Converters/Transform3DToEigenTransformConverter.hpp>
 #include <pcl/filters/voxel_grid.h>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 
 namespace CDFF
 {

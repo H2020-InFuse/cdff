@@ -19,7 +19,7 @@
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
 #include <pcl/io/ply_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 
 using namespace CDFF::DFN::FeaturesExtraction3D;
 using namespace Converters;

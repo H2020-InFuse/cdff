@@ -37,8 +37,8 @@
 #include <Types/CPP/Pose.hpp>
 #include <Types/CPP/PointCloud.hpp>
 
-#include <Visualizers/OpencvVisualizer.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 
 #include <boost/make_shared.hpp>
 
