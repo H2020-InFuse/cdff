@@ -63,7 +63,7 @@ if(listlength GREATER 0)
       message(FATAL_ERROR "Could not remove: $ENV{DESTDIR}${file}")
     endif()
 
-  endforeach(file)
+  endforeach()
 
 else()
 
