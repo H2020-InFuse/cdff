@@ -8,10 +8,9 @@
 
 #include "DFNCommonInterface.hpp"
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
-#include <VisualPointFeatureVector2D.h>
-#include <Matrix.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/Matrix.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/Pose.hpp>
 
 namespace CDFF
 {
@@ -33,13 +32,13 @@ namespace Executors
 * Methods (ii) and (iv) are creation methods, they copy the output of the DFN in the referenced output variable. Method (ii) takes a pointer, method (iv) takes a reference.
 */
 
-void Execute(CamerasTransformEstimationInterface* dfn, MatrixWrapper::Matrix3dConstPtr inputMatrix, CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputMatches, 
+void Execute(CamerasTransformEstimationInterface* dfn, MatrixWrapper::Matrix3dConstPtr inputMatrix, CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputMatches,
 	PoseWrapper::Pose3DConstPtr& outputTransform, bool& success);
-void Execute(CamerasTransformEstimationInterface* dfn, MatrixWrapper::Matrix3dConstPtr inputMatrix, CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputMatches, 
+void Execute(CamerasTransformEstimationInterface* dfn, MatrixWrapper::Matrix3dConstPtr inputMatrix, CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputMatches,
 	PoseWrapper::Pose3DPtr outputTransform, bool& success);
-void Execute(CamerasTransformEstimationInterface* dfn, const MatrixWrapper::Matrix3d& inputMatrix, const CorrespondenceMap2DWrapper::CorrespondenceMap2D& inputMatches, 
+void Execute(CamerasTransformEstimationInterface* dfn, const MatrixWrapper::Matrix3d& inputMatrix, const CorrespondenceMap2DWrapper::CorrespondenceMap2D& inputMatches,
 	PoseWrapper::Pose3DConstPtr& outputTransform, bool& success);
-void Execute(CamerasTransformEstimationInterface* dfn, const MatrixWrapper::Matrix3d& inputMatrix, const CorrespondenceMap2DWrapper::CorrespondenceMap2D& inputMatches, 
+void Execute(CamerasTransformEstimationInterface* dfn, const MatrixWrapper::Matrix3d& inputMatrix, const CorrespondenceMap2DWrapper::CorrespondenceMap2D& inputMatches,
 	PoseWrapper::Pose3D& outputTransform, bool& success);
 
 }

@@ -8,8 +8,8 @@
 
 #include "DFNCommonInterface.hpp"
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
-#include <Matrix.hpp>
-#include <CorrespondenceMap2D.hpp>
+#include <Types/CPP/Matrix.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
 
 namespace CDFF
 {

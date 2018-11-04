@@ -8,9 +8,9 @@
 
 #include "DFNCommonInterface.hpp"
 #include <PerspectiveNPointSolving/PerspectiveNPointSolvingInterface.hpp>
-#include <Pose.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 namespace CDFF
 {

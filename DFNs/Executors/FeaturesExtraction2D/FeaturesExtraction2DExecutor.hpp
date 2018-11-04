@@ -8,10 +8,8 @@
 
 #include "DFNCommonInterface.hpp"
 #include "FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp"
-#include <VisualPointFeatureVector2D.h>
-#include <Frame.h>
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
 
 namespace CDFF
 {
