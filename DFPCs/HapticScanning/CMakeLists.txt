@@ -13,5 +13,5 @@ add_library(
 )
 target_link_libraries(
     dfpc_haptic_scanning
-    haptic_scanning cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator
+    haptic_scanning cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator
 )

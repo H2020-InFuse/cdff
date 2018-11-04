@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include <random>
 #include <Errors/Assert.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 
 namespace DataGenerators
 {

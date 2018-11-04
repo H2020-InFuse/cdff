@@ -31,7 +31,7 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
-//#include <Visualizers/PclVisualizer.hpp> //include for debug code
+//#include <Visualizers/PCLVisualizer.hpp> //include for debug code
 
 using namespace CDFF::DFN;
 using namespace Converters;

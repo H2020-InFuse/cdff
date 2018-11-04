@@ -20,7 +20,7 @@
 #include <pcl/common/geometry.h>
 #include <yaml-cpp/yaml.h>
 
-//#include <Visualizers/PclVisualizer.hpp>
+//#include <Visualizers/PCLVisualizer.hpp>
 
 using namespace Converters;
 using namespace PoseWrapper;
