@@ -8,10 +8,10 @@
 
 #include "DFNCommonInterface.hpp"
 #include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
-#include <VisualPointFeatureVector2D.h>
-#include <Frame.h>
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
+#include <Types/C/VisualPointFeatureVector2D.h>
+#include <Types/C/Frame.h>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
 
 namespace CDFF
 {
@@ -33,16 +33,16 @@ namespace Executors
 * Methods (ii) and (iv) are creation methods, they copy the output of the DFN in the referenced output variable. Method (ii) takes a pointer, method (iv) takes a reference.
 */
 
-void Execute(FeaturesDescription2DInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inputVector, 
+void Execute(FeaturesDescription2DInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inputVector,
 			VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& outputVector);
 
-void Execute(FeaturesDescription2DInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inputVector, 
+void Execute(FeaturesDescription2DInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inputVector,
 			VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr outputVector);
 
-void Execute(FeaturesDescription2DInterface* dfn, const FrameWrapper::Frame& inputFrame, const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& inputVector, 
+void Execute(FeaturesDescription2DInterface* dfn, const FrameWrapper::Frame& inputFrame, const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& inputVector,
 			VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& outputVector);
 
-void Execute(FeaturesDescription2DInterface* dfn, const FrameWrapper::Frame& inputFrame, const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& inputVector, 
+void Execute(FeaturesDescription2DInterface* dfn, const FrameWrapper::Frame& inputFrame, const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& inputVector,
 			VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& outputVector);
 
 }

@@ -13,17 +13,17 @@
 
 /*!
  * @addtogroup DFPCs
- * 
+ *
  *  This DFN chain implements the Adjustment From Stereo as implementation of the DPFC for Reconstruction3D.
- *  This chain operates as follows: 
+ *  This chain operates as follows:
  *  the input is a stream of pairs of stereo images;
  *  the left and right images are used to reconstruct a 3D point cloud throught computation of a disparity map
- *  2d features and their descriptors are extracted from the left and right images; 
+ *  2d features and their descriptors are extracted from the left and right images;
  *  the left and right features are matched against each other and against the previous N left and right features;
  *  the point cloud and the matches are stored in a database for future processing;
  *  3d positions of the keypoints are found by triangulation;
- *  the 3d point correspondences among the latest N image pairs are used for the computation of the camera pose by means 3d transform estimation dfn.    
- * 
+ *  the 3d point correspondences among the latest N image pairs are used for the computation of the camera pose by means 3d transform estimation dfn.
+ *
  * @{
  */
 
@@ -48,12 +48,14 @@
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DInterface.hpp>
 #include <Transform3DEstimation/Transform3DEstimationInterface.hpp>
 
-#include <VisualPointFeatureVector2D.hpp>
-#include <CorrespondenceMap3D.hpp>
-#include <CorrespondenceMaps3DSequence.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/CorrespondenceMap3D.hpp>
+#include <Types/CPP/CorrespondenceMaps3DSequence.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/PosesSequence.hpp>
+#include <Types/CPP/Matrix.hpp>
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
@@ -61,11 +63,7 @@
 
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
-#include <Frame.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <PosesSequence.hpp>
-#include <Matrix.hpp>
+
 
 #ifdef TESTING
 #include <fstream>
@@ -106,7 +104,7 @@ namespace Reconstruction3D
 	/* --------------------------------------------------------------------
 	 * Private
 	 * --------------------------------------------------------------------
-	 */	
+	 */
 	private:
 		DfpcConfigurator configurator;
 		PointCloudMap pointCloudMap;
@@ -177,7 +175,7 @@ namespace Reconstruction3D
 		template <typename Type>
 		void DeleteIfNotNull(Type* &pointer)
 			{
-			if (pointer != NULL) 
+			if (pointer != NULL)
 				{
 				delete(pointer);
 				pointer = NULL;

@@ -8,8 +8,8 @@
 
 #include "DFNCommonInterface.hpp"
 #include <Transform3DEstimation/Transform3DEstimationInterface.hpp>
-#include <CorrespondenceMaps3DSequence.hpp>
-#include <PosesSequence.hpp>
+#include <Types/CPP/CorrespondenceMaps3DSequence.hpp>
+#include <Types/CPP/PosesSequence.hpp>
 
 namespace CDFF
 {
@@ -18,7 +18,7 @@ namespace DFN
 namespace Executors
 {
 /**
-* All the methods in this file execute the DFN for the computation of a point cloud for a pair of stereo images. 
+* All the methods in this file execute the DFN for the computation of a point cloud for a pair of stereo images.
 * A DFN instance has to be passed in the constructor of these class. Each method takes the following parameters:
 * @param inputMatches: input matches between 3d features;
 * @param outputTransforms: output camera poses of all the cameras (except the first) in the reference frame of the first camera;
@@ -32,13 +32,13 @@ namespace Executors
 * Methods (ii) and (iv) are creation methods, they copy the output of the DFN in the referenced output variable. Method (ii) takes a pointer, method (iv) takes a reference.
 */
 
-void Execute(Transform3DEstimationInterface* dfn, CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequenceConstPtr inputMatches, PoseWrapper::Poses3DSequenceConstPtr& outputTransforms, 
+void Execute(Transform3DEstimationInterface* dfn, CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequenceConstPtr inputMatches, PoseWrapper::Poses3DSequenceConstPtr& outputTransforms,
 	bool& success, float& error);
-void Execute(Transform3DEstimationInterface* dfn, CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequenceConstPtr inputMatches, PoseWrapper::Poses3DSequencePtr outputTransforms, 
+void Execute(Transform3DEstimationInterface* dfn, CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequenceConstPtr inputMatches, PoseWrapper::Poses3DSequencePtr outputTransforms,
 	bool& success, float& error);
-void Execute(Transform3DEstimationInterface* dfn, const CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequence& inputMatches, PoseWrapper::Poses3DSequenceConstPtr& outputTransforms, 
+void Execute(Transform3DEstimationInterface* dfn, const CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequence& inputMatches, PoseWrapper::Poses3DSequenceConstPtr& outputTransforms,
 	bool& success, float& error);
-void Execute(Transform3DEstimationInterface* dfn, const CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequence& inputMatches, PoseWrapper::Poses3DSequence& outputTransforms, 
+void Execute(Transform3DEstimationInterface* dfn, const CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequence& inputMatches, PoseWrapper::Poses3DSequence& outputTransforms,
 	bool& success, float& error);
 
 }

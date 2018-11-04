@@ -7,9 +7,9 @@
 #define FEATURESMATCHING3D_EXECUTOR_HPP
 
 #include "DFNCommonInterface.hpp"
-#include "FeaturesMatching3D/FeaturesMatching3DInterface.hpp"
-#include <VisualPointFeatureVector3D.hpp>
-#include <Pose.hpp>
+#include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/Pose.hpp>
 
 namespace CDFF
 {
@@ -18,7 +18,7 @@ namespace DFN
 namespace Executors
 {
 /**
-* All the methods in this class execute the DFN for the computation of the pose of the sink point cloud in the reference of the source point cloud. 
+* All the methods in this class execute the DFN for the computation of the pose of the sink point cloud in the reference of the source point cloud.
 * A DFN instance has to be passed in the constructor of these class. Each method takes the following parameters:
 * @param inputSourceVector: input vector of keypoints of the source cloud;
 * @param inputSinkVector: input vector of keypoints of the sink cloud;
@@ -32,16 +32,16 @@ namespace Executors
 * Methods (ii) and (iv) are creation methods, they copy the output of the DFN in the referenced output variable. Method (ii) takes a pointer, method (iv) takes a reference.
 */
 
-void Execute(FeaturesMatching3DInterface* dfn, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inputSourceVector, 
+void Execute(FeaturesMatching3DInterface* dfn, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inputSourceVector,
 	VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inputSinkVector, PoseWrapper::Pose3DConstPtr& outputTransform, bool& success);
 
-void Execute(FeaturesMatching3DInterface* dfn, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inputSourceVector, 
+void Execute(FeaturesMatching3DInterface* dfn, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inputSourceVector,
 	VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr inputSinkVector, PoseWrapper::Pose3DPtr outputTransform, bool& success);
 
-void Execute(FeaturesMatching3DInterface* dfn, const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& inputSourceVector, const 
+void Execute(FeaturesMatching3DInterface* dfn, const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& inputSourceVector, const
 	VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& inputSinkVector, PoseWrapper::Pose3DConstPtr& outputTransform, bool& success);
 
-void Execute(FeaturesMatching3DInterface* dfn, const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& inputSourceVector, const 
+void Execute(FeaturesMatching3DInterface* dfn, const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& inputSourceVector, const
 	VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& inputSinkVector, PoseWrapper::Pose3D& outputTransform, bool& success);
 
 }

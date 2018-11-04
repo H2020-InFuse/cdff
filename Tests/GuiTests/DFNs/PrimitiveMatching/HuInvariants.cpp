@@ -30,13 +30,13 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 #include <PrimitiveMatching/HuInvariants.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
-#include <StringSequenceToStdVectorOfStringsConverter.hpp>
-#include <StdVectorOfStringsToStringSequenceConverter.hpp>
+#include <Converters/StringSequenceToStdVectorOfStringsConverter.hpp>
+#include <Converters/StdVectorOfStringsToStringSequenceConverter.hpp>
 
 
 using namespace CDFF::DFN::PrimitiveMatching;

@@ -34,10 +34,10 @@
 #include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>

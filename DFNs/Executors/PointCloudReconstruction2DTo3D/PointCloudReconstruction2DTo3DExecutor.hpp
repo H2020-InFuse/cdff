@@ -8,9 +8,9 @@
 
 #include "DFNCommonInterface.hpp"
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DInterface.hpp>
-#include <Pose.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 namespace CDFF
 {
@@ -20,7 +20,7 @@ namespace Executors
 {
 
 /**
-* All the methods in this file execute the DFN for the computation of a point cloud from 2d feature matches and camera pose. 
+* All the methods in this file execute the DFN for the computation of a point cloud from 2d feature matches and camera pose.
 * A DFN instance has to be passed in the constructor of these class. Each method takes the following parameters:
 * @param inputMatches: input matches between 2d features of images taken by two cameras;
 * @param inputPose: pose of the second camera in the reference system of the first camera;
@@ -33,13 +33,13 @@ namespace Executors
 * Methods (ii) and (iv) are creation methods, they copy the output of the DFN in the referenced output variable. Method (ii) takes a pointer, method (iv) takes a reference.
 */
 
-void Execute(PointCloudReconstruction2DTo3DInterface* dfn, CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputMatches, PoseWrapper::Pose3DConstPtr inputPose, 
+void Execute(PointCloudReconstruction2DTo3DInterface* dfn, CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputMatches, PoseWrapper::Pose3DConstPtr inputPose,
 	PointCloudWrapper::PointCloudConstPtr& outputCloud);
-void Execute(PointCloudReconstruction2DTo3DInterface* dfn, CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputMatches, PoseWrapper::Pose3DConstPtr inputPose, 
+void Execute(PointCloudReconstruction2DTo3DInterface* dfn, CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputMatches, PoseWrapper::Pose3DConstPtr inputPose,
 	PointCloudWrapper::PointCloudPtr outputCloud);
-void Execute(PointCloudReconstruction2DTo3DInterface* dfn, const CorrespondenceMap2DWrapper::CorrespondenceMap2D& inputMatches, const PoseWrapper::Pose3D& inputPose, 
+void Execute(PointCloudReconstruction2DTo3DInterface* dfn, const CorrespondenceMap2DWrapper::CorrespondenceMap2D& inputMatches, const PoseWrapper::Pose3D& inputPose,
 	PointCloudWrapper::PointCloudConstPtr& outputCloud);
-void Execute(PointCloudReconstruction2DTo3DInterface* dfn, const CorrespondenceMap2DWrapper::CorrespondenceMap2D& inputMatches, const PoseWrapper::Pose3D& inputPose, 
+void Execute(PointCloudReconstruction2DTo3DInterface* dfn, const CorrespondenceMap2DWrapper::CorrespondenceMap2D& inputMatches, const PoseWrapper::Pose3D& inputPose,
 	PointCloudWrapper::PointCloud& outputCloud);
 
 }

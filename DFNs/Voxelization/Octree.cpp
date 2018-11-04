@@ -10,7 +10,7 @@
 #include "Octree.hpp"
 
 #include <Converters/PclOctreeToOctreeConverter.hpp>
-#include <FrameToMatConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
 
 #include <Errors/Assert.hpp>
 #include <fstream>

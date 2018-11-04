@@ -7,8 +7,8 @@
 #define POINTCLOUDFILTERING_POINTCLOUDTRANSFORMINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Pointcloud.h>
-#include <Pose.h>
+#include <Types/C/Pointcloud.h>
+#include <Types/C/Pose.h>
 
 namespace CDFF
 {

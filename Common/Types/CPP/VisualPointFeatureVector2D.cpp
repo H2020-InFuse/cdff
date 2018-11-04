@@ -9,7 +9,7 @@
 
 #include "VisualPointFeatureVector2D.hpp"
 #include <Errors/Assert.hpp>
-#include <BaseTypes.hpp>
+#include "BaseTypes.hpp"
 
 using namespace BaseTypesWrapper;
 

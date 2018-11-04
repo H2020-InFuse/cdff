@@ -1,26 +1,19 @@
-add_library(
-    cdff_opencv_visualizer
-    OpencvVisualizer.cpp
-)
-target_link_libraries(
-    cdff_opencv_visualizer
-    cdff_logger cdff_types opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui cdff_converters opencv_imgcodecs opencv_features2d
-)
-install(
-    TARGETS cdff_opencv_visualizer
-    DESTINATION lib
-)
+# libcdff_visualizers_opencv and libcdff_visualizers_pcl
 
-add_library(
-    cdff_pcl_visualizer
-    PclVisualizer.cpp
-)
-target_compile_definitions(cdff_pcl_visualizer PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
-target_link_libraries(
-    cdff_pcl_visualizer
-    cdff_converters cdff_logger cdff_types pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_outofcore pcl_kdtree pcl_tracking pcl_stereo pcl_recognition pcl_registration pcl_people pcl_keypoints pcl_surface pcl_segmentation pcl_sample_consensus pcl_stereo ${VTK_LIBRARIES}
-)
-install(
-    TARGETS cdff_pcl_visualizer
-    DESTINATION lib
-)
+add_library(cdff_visualizers_opencv
+    OpenCVVisualizer.cpp)
+
+target_link_libraries(cdff_visualizers_opencv
+    PUBLIC cdff_types opencv_core
+    PRIVATE cdff_converters opencv_highgui opencv_imgproc opencv_features2d)
+
+add_library(cdff_visualizers_pcl
+    PCLVisualizer.cpp)
+
+target_compile_definitions(cdff_visualizers_pcl PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(cdff_visualizers_pcl
+    PUBLIC cdff_types ${PCL_COMMON_LIBRARIES}
+    PRIVATE cdff_converters ${PCL_VISUALIZATION_LIBRARIES} ${PCL_IO_LIBRARIES})
+
+install(TARGETS cdff_visualizers_opencv cdff_visualizers_pcl
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}")

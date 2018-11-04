@@ -8,7 +8,7 @@
 
 #include "DFNCommonInterface.hpp"
 #include <ImageFiltering/ImageFilteringInterface.hpp>
-#include <Frame.hpp>
+#include <Types/CPP/Frame.hpp>
 
 namespace CDFF
 {

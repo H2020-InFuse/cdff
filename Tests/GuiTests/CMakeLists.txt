@@ -148,7 +148,7 @@ target_compile_definitions(HarrisDetector3DGuiTest PRIVATE BOOST_ERROR_CODE_HEAD
 target_link_libraries(
     HarrisDetector3DGuiTest
     harris_detector_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
 )
@@ -164,7 +164,7 @@ target_compile_definitions(Registration3DIcpGuiTest PRIVATE BOOST_ERROR_CODE_HEA
 target_link_libraries(
     Registration3DIcpGuiTest
     registration_icp_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree
     yaml-cpp ${VTK_LIBRARIES}
@@ -181,7 +181,7 @@ target_compile_definitions(Registration3DIcpCCGuiTest PRIVATE BOOST_ERROR_CODE_H
 target_link_libraries(
     Registration3DIcpCCGuiTest
     registration_icp_cc
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree
     yaml-cpp ${VTK_LIBRARIES}
@@ -266,7 +266,7 @@ target_compile_definitions(DisparityMappingGuiTest PRIVATE BOOST_ERROR_CODE_HEAD
 target_link_libraries(
     DisparityMappingGuiTest
     disparity_mapping
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
 )
@@ -282,7 +282,7 @@ target_compile_definitions(HirschmullerDisparityMappingGuiTest PRIVATE BOOST_ERR
 target_link_libraries(
     HirschmullerDisparityMappingGuiTest
     hirschmuller_disparity_mapping
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
 )
@@ -298,7 +298,7 @@ target_compile_definitions(ScanlineOptimizationGuiTest PRIVATE BOOST_ERROR_CODE_
 target_link_libraries(
     ScanlineOptimizationGuiTest
     scanline_optimization
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_visualization
     ${VTK_LIBRARIES}

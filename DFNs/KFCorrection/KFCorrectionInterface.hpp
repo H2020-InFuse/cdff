@@ -7,7 +7,7 @@
 #define KFCORRECTION_KFCORRECTIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <RigidBodyState.h>
+#include <Types/C/RigidBodyState.h>
 
 namespace CDFF
 {

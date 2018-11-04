@@ -3,7 +3,7 @@ add_library(
     Reconstruction3DInterface.cpp
 )
 target_link_libraries(
-	reconstruction_3d
+    reconstruction_3d
 )
 
 add_library(
@@ -14,7 +14,7 @@ add_library(
 )
 target_link_libraries(
     dense_registration_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator cdff_dfn_executors
+    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_executors
 )
 
 add_library(
@@ -25,7 +25,7 @@ add_library(
 )
 target_link_libraries(
     sparse_registration_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator cdff_dfn_executors
+    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_executors
 )
 
 add_library(
@@ -37,7 +37,7 @@ add_library(
 )
 target_link_libraries(
     adjustment_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator cdff_dfn_executors
+    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_executors
 )
 
 add_library(
@@ -47,7 +47,7 @@ add_library(
 )
 target_link_libraries(
     reconstruction_from_motion
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator
+    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator
 )
 
 add_library(
@@ -58,7 +58,7 @@ add_library(
 )
 target_link_libraries(
     reconstruction_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator cdff_dfn_executors
+    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_executors
 )
 
 add_library(
@@ -69,7 +69,7 @@ add_library(
 )
 target_link_libraries(
     registration_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator cdff_dfn_executors
+    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_executors
 )
 
 add_library(
@@ -81,6 +81,5 @@ add_library(
 )
 target_link_libraries(
     estimation_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_opencv_visualizer cdff_pcl_visualizer dfpc_configurator cdff_dfn_executors
+    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_executors
 )
-

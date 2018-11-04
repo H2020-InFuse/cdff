@@ -8,8 +8,8 @@
 
 #include "DFNCommonInterface.hpp"
 #include <ForceMeshGenerator/ForceMeshGeneratorInterface.hpp>
-#include <PointCloud.hpp>
-#include <Sequences.h>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/C/Sequences.h>
 
 namespace CDFF
 {

@@ -9,8 +9,8 @@
 
 #include "ScanlineOptimization.hpp"
 
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 #include <Errors/Assert.hpp>
 
 #include <pcl/filters/voxel_grid.h>

@@ -10,7 +10,7 @@
  * @{
  */
 
-#include <BaseTypes.hpp>
+#include "BaseTypes.hpp"
 #include <Errors/Assert.hpp>
 
 namespace BaseTypesWrapper

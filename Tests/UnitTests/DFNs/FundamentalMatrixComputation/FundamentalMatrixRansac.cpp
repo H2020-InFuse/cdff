@@ -29,8 +29,8 @@
 #include <catch.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 
-#include <FrameToMatConverter.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <DataGenerators/SyntheticGenerators/CameraPair.hpp>
 #include <Errors/Assert.hpp>
 

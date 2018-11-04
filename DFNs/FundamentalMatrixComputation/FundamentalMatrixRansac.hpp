@@ -12,9 +12,9 @@
 
 #include "FundamentalMatrixComputationInterface.hpp"
 
-#include <CorrespondenceMap2D.hpp>
-#include <Matrix.hpp>
-#include <BaseTypes.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/Matrix.hpp>
+#include <Types/CPP/BaseTypes.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/core/core.hpp>

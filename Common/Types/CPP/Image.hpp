@@ -14,7 +14,7 @@
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
 
-#include <Image.h>
+#include <Types/C/Image.h>
 
 #include "BaseTypes.hpp"
 #include <stdlib.h>

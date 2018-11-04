@@ -13,11 +13,11 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * This class is the main class for the performance test of the integration pipeline of the
  * following three DFNs: FeatureExtraction3D, FeatureDescription3D and FeatureMatching3D
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -44,16 +44,16 @@
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 
-#include <MatToVisualPointFeatureVector3DConverter.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <PclNormalsCloudToPointCloudConverter.hpp>
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector3DConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclNormalsCloudToPointCloudConverter.hpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>
 #include <PerformanceTests/Aggregator.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 
 #include <Eigen/Geometry>
 
@@ -71,7 +71,7 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 		~DetectionDescriptionMatching3DTestInterface();
 
 		void SetInputCloud(std::string inputCloudFile, float voxelGridFilterSize);
-		void SetModelsCloud(std::string groundTruthTransformFilePath, std::vector<std::string> modelsCloudFilesList); 
+		void SetModelsCloud(std::string groundTruthTransformFilePath, std::vector<std::string> modelsCloudFilesList);
 		void SetGroundTruth(float positionX, float positionY, float positionZ, float orientationX, float orientationY, float orientationZ, float orientationW);
 	protected:
 

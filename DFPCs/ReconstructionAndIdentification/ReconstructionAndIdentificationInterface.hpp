@@ -7,9 +7,9 @@
 #define RECONSTRUCTIONANDIDENTIFICATION_RECONSTRUCTIONANDIDENTIFICATIONINTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
-#include <Pose.h>
-#include <Pointcloud.h>
-#include <Frame.h>
+#include <Types/C/Pose.h>
+#include <Types/C/Pointcloud.h>
+#include <Types/C/Frame.h>
 
 namespace CDFF
 {

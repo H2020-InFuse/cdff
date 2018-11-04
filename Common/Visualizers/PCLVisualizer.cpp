@@ -7,10 +7,11 @@
  * @{
  */
 
-#include "PclVisualizer.hpp"
+#include "PCLVisualizer.hpp"
 #include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 
+#include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/io/ply_io.h>
 
 using namespace PointCloudWrapper;
@@ -48,7 +49,7 @@ void PclVisualizer::ShowPointClouds(std::vector< pcl::PointCloud<pcl::PointXYZ>:
 	RETURN_IF_DISABLED
 
 	pcl::visualization::PCLVisualizer viewer(WINDOW_NAME);
-	ASSERT(pointCloudsList.size() <= MAX_POINT_CLOUDS, "PclVisualizer, too many pointclouds to display");
+	ASSERT(pointCloudsList.size() <= MAX_POINT_CLOUDS, "PclVisualizer, too many point clouds to display");
 	viewer.addCoordinateSystem(0.1);
 
 	for (unsigned pointCloudIndex = 0; pointCloudIndex < pointCloudsList.size(); pointCloudIndex++)
@@ -154,15 +155,15 @@ void PclVisualizer::ShowImage(pcl::PointCloud<pcl::RGB>::ConstPtr image)
 }
 
 void PclVisualizer::ShowPoses(std::vector<PoseWrapper::Pose3D> poseList)
-	{
+{
 	RETURN_IF_DISABLED
 
 	pcl::visualization::PCLVisualizer viewer(WINDOW_NAME);
 	viewer.addCoordinateSystem(0.1);
 
 	int index = 0;
-	for( std::vector<PoseWrapper::Pose3D>::iterator pose = poseList.begin(); pose != poseList.end(); pose++)
-		{
+	for (std::vector<PoseWrapper::Pose3D>::iterator pose = poseList.begin(); pose != poseList.end(); pose++)
+	{
 		double x = GetXPosition(*pose);
 		double y = GetYPosition(*pose);
 		double z = GetZPosition(*pose);
@@ -173,7 +174,7 @@ void PclVisualizer::ShowPoses(std::vector<PoseWrapper::Pose3D> poseList)
 
 		pcl::PointXYZ point(x, y, z);
 		pcl::PointXYZ axisX, axisY, axisZ;
-		
+
 		axisZ.x = 0.4 * (2*qx*qz + 2*qy*qw) + x;
 		axisZ.y = 0.4 * (2*qy*qz - 2*qx*qw) + y;
 		axisZ.z = 0.4 * (-qx*qx - qy*qy + qz*qz + qw*qw) + z;
@@ -190,7 +191,7 @@ void PclVisualizer::ShowPoses(std::vector<PoseWrapper::Pose3D> poseList)
 		viewer.addLine<pcl::PointXYZ>(point, axisY, "lineY"+std::to_string(index));
 		viewer.addLine<pcl::PointXYZ>(point, axisZ, "lineZ"+std::to_string(index));
 		index++;
-		}
+	}
 
 	while (!viewer.wasStopped())
 	{
@@ -200,7 +201,7 @@ void PclVisualizer::ShowPoses(std::vector<PoseWrapper::Pose3D> poseList)
 
 	viewer.removeAllPointClouds();
 	viewer.close();
-	}
+}
 
 void PclVisualizer::PlacePointCloud(PointCloudConstPtr sceneCloud, PointCloudConstPtr objectCloud, Pose3DConstPtr objectPoseInScene)
 {
@@ -225,9 +226,8 @@ void PclVisualizer::PlacePointCloud(PointCloudConstPtr sceneCloud, PointCloudCon
 	ShowPointClouds(pointsCloudList);
 }
 
-void PclVisualizer::ShowMatches(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud1, pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud2, const std::vector<int>& indexList1, 
-	const std::vector<int>& indexList2)
-	{
+void PclVisualizer::ShowMatches(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud1, pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud2, const std::vector<int>& indexList1, const std::vector<int>& indexList2)
+{
 	RETURN_IF_DISABLED
 
 	pcl::visualization::PCLVisualizer viewer(WINDOW_NAME);
@@ -243,15 +243,15 @@ void PclVisualizer::ShowMatches(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCl
 	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclCloudColor2(pointCloud2, cloudColor2.r, cloudColor2.g, cloudColor2.b);
 	viewer.addPointCloud(pointCloud2, pclCloudColor2, "cloud2");
 
-	for(int indexIndex = 0; indexIndex < indexList1.size(); indexIndex++)
-		{
+	for (int indexIndex = 0; indexIndex < indexList1.size(); indexIndex++)
+	{
 		int index1 = indexList1.at(indexIndex);
 		int index2 = indexList2.at(indexIndex);
 		pcl::PointXYZ point1 = pointCloud1->points.at(index1);
 		pcl::PointXYZ point2 = pointCloud2->points.at(index2);
 
 		viewer.addLine<pcl::PointXYZ>(point1, point2, "line"+std::to_string(indexIndex));
-		}
+	}
 
 	while (!viewer.wasStopped())
 	{
@@ -261,7 +261,7 @@ void PclVisualizer::ShowMatches(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCl
 
 	viewer.removeAllPointClouds();
 	viewer.close();
-	}
+}
 
 void PclVisualizer::SavePointCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, unsigned period)
 {
@@ -319,7 +319,7 @@ PclVisualizer::PclVisualizer()
 {
 }
 
-const std::string PclVisualizer::WINDOW_NAME = "PCL Visualizer";
+const std::string PclVisualizer::WINDOW_NAME = "CDFF PCL-Based Visualizer";
 const std::string PclVisualizer::SAVE_FILE_BASE_NAME = "VisualizerCloud";
 const std::string PclVisualizer::SAVE_FILE_EXTENSION = ".ply";
 const PclVisualizer::Color PclVisualizer::COLORS_LIST[MAX_POINT_CLOUDS] =

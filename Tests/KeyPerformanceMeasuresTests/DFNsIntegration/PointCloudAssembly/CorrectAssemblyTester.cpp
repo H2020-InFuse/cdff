@@ -92,11 +92,11 @@ void CorrectAssemblyTester::ExecuteDfns()
 		PointCloudFileEntry& entry = pointCloudList.at(entryIndex);
 		inputCloud = LoadPointCloud(entry.filePath);
 
-		PRINT_TO_LOG("Processing File: ", entryIndex);		
+		PRINT_TO_LOG("Processing File: ", entryIndex);
 		float localProcessingTime = 0;
 		clock_t localBeginTime, localEndTime;
 		localBeginTime = clock();
-		
+
 		PointCloudConstPtr transformedCloud = NULL;
 		Executors::Execute(transformDfn, *inputCloud, entry.pose, transformedCloud);
 
@@ -107,7 +107,7 @@ void CorrectAssemblyTester::ExecuteDfns()
 		localEndTime = clock();
 		localProcessingTime = float(localEndTime - localBeginTime) / CLOCKS_PER_SEC;
 		PRINT_TO_LOG("Processing file took (seconds):", localProcessingTime);
-		processingTime += localProcessingTime;		
+		processingTime += localProcessingTime;
 		}
 	PRINT_TO_LOG("Total processing took (seconds):", processingTime);
 	}
@@ -118,7 +118,7 @@ void CorrectAssemblyTester::SaveOutput()
 	std::string fileString = dataFolderPath + "/" + outputPointCloudFile;
 
 	pcl::PLYWriter writer;
-	writer.write(fileString, *pclOutputCloud, true);	
+	writer.write(fileString, *pclOutputCloud, true);
 	}
 
 /* --------------------------------------------------------------------------

@@ -17,8 +17,8 @@
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 
 #include <DfpcConfigurator.hpp>
-#include <VisualPointFeatureVector3D.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 namespace CDFF
 {

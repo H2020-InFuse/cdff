@@ -30,7 +30,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include "SupportTypes.hpp"

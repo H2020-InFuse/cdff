@@ -16,7 +16,7 @@ hardware:
 autogeneration:
   stage : autogeneration
   script:
-      - cd Tools/ASNtoC
+      - cd Tools/ASN.1
       - ./GeneratorScript.sh
   artifacts:
     paths:

@@ -7,9 +7,9 @@
 #define STEREORECONSTRUCTION_EXECUTOR_HPP
 
 #include "DFNCommonInterface.hpp"
-#include "StereoReconstruction/StereoReconstructionInterface.hpp"
-#include <PointCloud.hpp>
-#include <Frame.hpp>
+#include <StereoReconstruction/StereoReconstructionInterface.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Frame.hpp>
 
 namespace CDFF
 {
@@ -18,7 +18,7 @@ namespace DFN
 namespace Executors
 {
 /**
-* All the methods in this class execute the DFN for the computation of a point cloud for a pair of stereo images. 
+* All the methods in this class execute the DFN for the computation of a point cloud for a pair of stereo images.
 * A DFN instance has to be passed in the constructor of these class. Each method takes the following parameters:
 * @param leftInputFrame: left camera image;
 * @param rightInputFrame: right camera image;
@@ -31,13 +31,13 @@ namespace Executors
 * Methods (ii) and (iv) are creation methods, they copy the output of the DFN in the referenced output variable. Method (ii) takes a pointer, method (iv) takes a reference.
 */
 
-void Execute(StereoReconstructionInterface* dfn, FrameWrapper::FrameConstPtr leftInputFrame, FrameWrapper::FrameConstPtr rightInputFrame, 
+void Execute(StereoReconstructionInterface* dfn, FrameWrapper::FrameConstPtr leftInputFrame, FrameWrapper::FrameConstPtr rightInputFrame,
 	PointCloudWrapper::PointCloudConstPtr& outputCloud);
-void Execute(StereoReconstructionInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, FrameWrapper::FrameConstPtr rightInputFrame, 
+void Execute(StereoReconstructionInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, FrameWrapper::FrameConstPtr rightInputFrame,
 	PointCloudWrapper::PointCloudPtr outputCloud);
-void Execute(StereoReconstructionInterface* dfn, const FrameWrapper::Frame& leftInputFrame, const FrameWrapper::Frame& rightInputFrame, 
+void Execute(StereoReconstructionInterface* dfn, const FrameWrapper::Frame& leftInputFrame, const FrameWrapper::Frame& rightInputFrame,
 	PointCloudWrapper::PointCloudConstPtr& outputCloud);
-void Execute(StereoReconstructionInterface* dfn, const FrameWrapper::Frame& leftInputFrame, const FrameWrapper::Frame& rightInputFrame, 
+void Execute(StereoReconstructionInterface* dfn, const FrameWrapper::Frame& leftInputFrame, const FrameWrapper::Frame& rightInputFrame,
 	PointCloudWrapper::PointCloud& outputCloud);
 
 }

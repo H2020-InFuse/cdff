@@ -8,8 +8,8 @@
 
 #include "DFNCommonInterface.hpp"
 #include <PointCloudTransform/PointCloudTransformInterface.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
 
 namespace CDFF
 {
@@ -32,13 +32,13 @@ namespace Executors
 * Methods (ii) and (iv) are creation methods, they copy the output of the DFN in the referenced output variable. Method (ii) takes a pointer, method (iv) takes a reference.
 */
 
-void Execute(PointCloudTransformInterface* dfn, PointCloudWrapper::PointCloudConstPtr inputCloud, PoseWrapper::Pose3DConstPtr inputPose, 
+void Execute(PointCloudTransformInterface* dfn, PointCloudWrapper::PointCloudConstPtr inputCloud, PoseWrapper::Pose3DConstPtr inputPose,
 	PointCloudWrapper::PointCloudConstPtr& outputCloud);
-void Execute(PointCloudTransformInterface* dfn, PointCloudWrapper::PointCloudConstPtr inputCloud, PoseWrapper::Pose3DConstPtr inputPose, 
+void Execute(PointCloudTransformInterface* dfn, PointCloudWrapper::PointCloudConstPtr inputCloud, PoseWrapper::Pose3DConstPtr inputPose,
 	PointCloudWrapper::PointCloudPtr outputCloud);
-void Execute(PointCloudTransformInterface* dfn, const PointCloudWrapper::PointCloud& inputCloud, const PoseWrapper::Pose3D& inputPose, 
+void Execute(PointCloudTransformInterface* dfn, const PointCloudWrapper::PointCloud& inputCloud, const PoseWrapper::Pose3D& inputPose,
 	PointCloudWrapper::PointCloudConstPtr& outputCloud);
-void Execute(PointCloudTransformInterface* dfn, const PointCloudWrapper::PointCloud& inputCloud, const PoseWrapper::Pose3D& inputPose, 
+void Execute(PointCloudTransformInterface* dfn, const PointCloudWrapper::PointCloud& inputCloud, const PoseWrapper::Pose3D& inputPose,
 	PointCloudWrapper::PointCloud& outputCloud);
 
 }

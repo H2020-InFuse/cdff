@@ -7,9 +7,9 @@
 #define FEATURESMATCHING2D_EXECUTOR_HPP
 
 #include "DFNCommonInterface.hpp"
-#include "FeaturesMatching2D/FeaturesMatching2DInterface.hpp"
-#include <VisualPointFeatureVector2D.hpp>
-#include <CorrespondenceMap2D.hpp>
+#include <FeaturesMatching2D/FeaturesMatching2DInterface.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
 
 namespace CDFF
 {
@@ -18,7 +18,7 @@ namespace DFN
 namespace Executors
 {
 /**
-* All the methods in this class execute the DFN for the computation of matches between feature vectors. 
+* All the methods in this class execute the DFN for the computation of matches between feature vectors.
 * A DFN instance has to be passed in the constructor of these class. Each method takes the following parameters:
 * @param inputSourceVector: input vector of keypoints of the source image;
 * @param inputSinkVector: input vector of keypoints of the sink image;
@@ -31,16 +31,16 @@ namespace Executors
 * Methods (ii) and (iv) are creation methods, they copy the output of the DFN in the referenced output variable. Method (ii) takes a pointer, method (iv) takes a reference.
 */
 
-void Execute(FeaturesMatching2DInterface* dfn, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inputSourceVector, 
+void Execute(FeaturesMatching2DInterface* dfn, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inputSourceVector,
 	VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inputSinkVector, CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr& outputMatches);
 
-void Execute(FeaturesMatching2DInterface* dfn, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inputSourceVector, 
+void Execute(FeaturesMatching2DInterface* dfn, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inputSourceVector,
 	VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr inputSinkVector, CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr outputMatches);
 
-void Execute(FeaturesMatching2DInterface* dfn, const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& inputSourceVector, const 
+void Execute(FeaturesMatching2DInterface* dfn, const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& inputSourceVector, const
 	VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& inputSinkVector, CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr& outputMatches);
 
-void Execute(FeaturesMatching2DInterface* dfn, const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& inputSourceVector, const 
+void Execute(FeaturesMatching2DInterface* dfn, const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& inputSourceVector, const
 	VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& inputSinkVector, CorrespondenceMap2DWrapper::CorrespondenceMap2D& outputMatches);
 
 }

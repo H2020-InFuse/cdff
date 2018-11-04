@@ -33,7 +33,7 @@
 #include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
 #include <FeaturesMatching2D/FlannMatcher.hpp>
 
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>
