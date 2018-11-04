@@ -356,7 +356,7 @@ foreach(header ${headers})
   get_filename_component(dir "${header}" DIRECTORY)
   install(FILES "${header}"
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/${dir}")
-endforeach(header)
+endforeach()
 
 ## Setup CDFF uninstallation ---------------------------------------------------
 
