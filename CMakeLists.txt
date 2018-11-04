@@ -340,17 +340,47 @@ endif()
 # * CMAKE_INSTALL_BINDIR is bin
 # * Full list at https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html
 #
-# Use them in your installation rules, see example below for an example.
-# Installation rules will prefix with CMAKE_INSTALL_PREFIX which is /usr/local
-# by default.
+# Use them in your install() commands, see example below. CMAKE_INSTALL_PREFIX,
+# default /usr/local, will be prepended to those directories.
 
 include(GNUInstallDirs)
 
-# Installation rule for all header files
+# Install all the header files
 
-install(DIRECTORY Common DFNs DFPCs Tests
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
-  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+file(GLOB_RECURSE headers
+  RELATIVE "${CMAKE_SOURCE_DIR}"
+  "Common/*.h" "Common/*.hpp" "DFNs/*.hpp" "DFPCs/*.hpp" "Tests/*.hpp")
+list(SORT headers)
+
+foreach(header ${headers})
+  get_filename_component(dir "${header}" DIRECTORY)
+  install(FILES "${header}"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/${dir}")
+endforeach(header)
+
+## Setup CDFF uninstallation ---------------------------------------------------
+
+# Add an uninstall target, see documentation in cmake_uninstall.cmake[.in]
+
+configure_file(
+  "${CMAKE_SOURCE_DIR}/Tools/CMake/cmake_uninstall.cmake.in"
+  "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+  @ONLY)
+
+add_custom_target(uninstall
+  COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+  VERBATIM)
+
+# Add a purge target, see documentation in cmake_purge.cmake[.in]
+
+configure_file(
+  "${CMAKE_SOURCE_DIR}/Tools/CMake/cmake_purge.cmake.in"
+  "${CMAKE_BINARY_DIR}/cmake_purge.cmake"
+  @ONLY)
+
+add_custom_target(purge
+  COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_purge.cmake"
+  VERBATIM)
 
 ## Compile the CDFF ------------------------------------------------------------
 
