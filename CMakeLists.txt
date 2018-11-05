@@ -291,6 +291,10 @@ include_directories(
   SYSTEM "${_DEPENDENCIES_PREFIX}/include"
 )
 
+link_directories(
+  "${_DEPENDENCIES_PREFIX}/lib"
+)
+
 ## Look for VTK, PCL, OpenCV ---------------------------------------------------
 
 # TODO: rework this section
