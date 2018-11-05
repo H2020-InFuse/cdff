@@ -6,8 +6,8 @@
 #ifndef CENTRAL_DPM_HPP
 #define CENTRAL_DPM_HPP
 
-#include <Pointcloud.h>
-#include <Map.h>
+#include <Types/C/Pointcloud.h>
+#include <Types/C/Map.h>
 
 namespace CDFF
 {

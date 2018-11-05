@@ -28,7 +28,7 @@
  */
 #include <catch.hpp>
 #include <CentralDPM.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/PointCloud.hpp>
 #include <string.h>
 
 using namespace PointCloudWrapper;

@@ -156,3 +156,5 @@ target_link_libraries(cdff-unit-tests ${unittest_libraries})
 # corresponding to the current source directory (i.e. corresponding to
 # ${CMAKE_CURRENT_SOURCE_DIR}).
 add_test(NAME unit-tests COMMAND cdff-unit-tests)
+
+include_directories("${CMAKE_SOURCE_DIR}/CentralDPM/src")
