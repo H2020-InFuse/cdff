@@ -17,7 +17,7 @@ namespace CDFF
         std::string log_prefix = "[CentralDPM::storePointcloud] ";
         StandardOutputLogger* logger = new StandardOutputLogger();
 
-        EnvireGraph g;
+        EnvireGraph* g = new EnvireGraph();
 
         std::string itemname = "envire::core::Item<asn1SccPointcloud>";
         
@@ -36,8 +36,8 @@ namespace CDFF
                 logger->Print();
 
                 const FrameId frame("PCL");
-                g.addFrame(frame);
-                g.addItemToFrame(frame, item);
+                g->addFrame(frame);
+                g->addItemToFrame(frame, item);
                 logger->AddEntry(log_prefix + "We created a frame and added the pcl to it", Logger::SUCCESS );
                 logger->Print();
 
@@ -46,7 +46,7 @@ namespace CDFF
                 memcpy( charname, &pcl_id.arr, pcl_id.nCount);
                 std::string graph_id(charname);
                 std::string store_file("./"+graph_id+".graph");
-                g.saveToFile(store_file);
+                g->saveToFile(store_file);
                 logger->AddEntry(log_prefix + "Graph saved to file: " + store_file, Logger::SUCCESS );
                 logger->Print();
             }
@@ -56,13 +56,20 @@ namespace CDFF
             throw std::invalid_argument("no class with name asn1SccPointcloud found in plugins");
         }
 
+        loader->destroyInstance();
+        delete(g);
+        
+        logger->AddEntry(log_prefix + "Loader has been destroyed", Logger::SUCCESS );
+        logger->Print();
+
+        exit(0);
     }
 
     void CentralDPM::storeMap(const asn1SccMap& map, const asn1SccT_String& map_id)
     {
         StandardOutputLogger* logger = new StandardOutputLogger();
-        std::string log_prefix = "[CentralDPM::storePointcloud] ";
-        EnvireGraph g;
+        std::string log_prefix = "[CentralDPM::storeMap] ";
+        EnvireGraph* g = new EnvireGraph();
         std::string itemname = "envire::core::Item<asn1SccMap>";
         envire::core::ClassLoader *loader = envire::core::ClassLoader::getInstance();
         envire::core::Item<asn1SccMap>::Ptr item;
@@ -77,8 +84,8 @@ namespace CDFF
                 logger->Print();
 
                 const FrameId frame("Map");
-                g.addFrame(frame);
-                g.addItemToFrame(frame, item);
+                g->addFrame(frame);
+                g->addItemToFrame(frame, item);
                 //std::cout << "[CentralDPM::storeMap] We created a frame and added the map to it" << std::endl;
                 logger->AddEntry(log_prefix + "We created a frame and added the map to it", Logger::SUCCESS );
                 logger->Print();
@@ -90,15 +97,24 @@ namespace CDFF
                 std::string graph_id(charname);
 
                 std::string store_file("./"+graph_id+".graph");
-                g.saveToFile(store_file);
+                g->saveToFile(store_file);
                 logger->AddEntry(log_prefix + "Graph saved to file " +store_file, Logger::SUCCESS );
                 logger->Print();
+
             }
+
         }
         else
         {
             throw std::invalid_argument("[CentralDPM::storeMap] No class with name asn1SccMap found in plugins");
         }
+        
+        loader->destroyInstance();
+        logger->AddEntry(log_prefix + "Loader has been destroyed", Logger::SUCCESS );
+        logger->Print();
+        delete(g);
+
+        exit(0);
 
     }
 
