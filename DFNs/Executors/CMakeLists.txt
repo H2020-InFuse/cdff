@@ -1,5 +1,5 @@
 add_library(
-    cdff_dfn_executors
+    cdff_dfn_dfnexecutors
     FeaturesDescription2D/FeaturesDescription2DExecutor.cpp
     FeaturesExtraction2D/FeaturesExtraction2DExecutor.cpp
     FeaturesExtraction3D/FeaturesExtraction3DExecutor.cpp
@@ -24,7 +24,7 @@ add_library(
     ForceMeshGenerator/ForceMeshGeneratorExecutor.cpp
 )
 target_link_libraries(
-  cdff_dfn_executors
+  cdff_dfn_dfnexecutors
   cdff_helpers
   cdff_logger
   cdff_types
