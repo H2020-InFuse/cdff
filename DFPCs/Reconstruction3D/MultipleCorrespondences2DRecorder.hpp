@@ -13,12 +13,12 @@
 
 /*!
  * @addtogroup DFNs
- * 
+ *
  * This is the storage of correspondence 2D Maps, let (L0, R0), (L1, R1), ..., (LN, RN) be a sequence of image pair from the most recent to the oldest.
- * The correspondences between images are stored in the following order (L0-R0), (L0-L1), (L0-R1), ..., (L0-RN), (R0-L0), (R0-L1), (R0-R1), ..., 
+ * The correspondences between images are stored in the following order (L0-R0), (L0-L1), (L0-R1), ..., (L0-RN), (R0-L0), (R0-L1), (R0-R1), ...,
  * (R0, LN), (L1-R1), (L1-L2), ..., (L1-RN), ...., (LN-RN). The number N is defined by the parameter numberOfAdjustedStereoPairs.
  * Only the most recent N image pairs are kept in storage, the others will be discarded.
- * 
+ *
  * @{
  */
 
@@ -31,10 +31,10 @@
  *
  * --------------------------------------------------------------------------
  */
-#include "CorrespondenceMaps2DSequence.hpp"
-#include "CorrespondenceMap3D.hpp"
-#include "CorrespondenceMap2D.hpp"
-#include "PointCloud.hpp"
+#include <Types/CPP/CorrespondenceMaps2DSequence.hpp>
+#include <Types/CPP/CorrespondenceMap3D.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 
 namespace CDFF
@@ -59,10 +59,10 @@ class MultipleCorrespondences2DRecorder
 		void InitializeNewSequence();
 		void AddCorrespondences(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr map);
 		void CompleteNewSequence();
-		
+
 		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequenceConstPtr GetLatestCorrespondences();
 		void DiscardLatestCorrespondences();
-	
+
 	protected:
 
 	private:
@@ -94,7 +94,7 @@ class MultipleCorrespondences2DRecorder
 		int GetPointConnectedSourceToSource(int mapIndex1, int correspondenceIndex, int mapIndex2);
 		int GetPointConnectedSinkToSource(int mapIndex1, int correspondenceIndex, int mapIndex2);
 		bool LastSinkIsValid(const std::vector<BaseTypesWrapper::T_UInt32>& chain, int sourceIndex);
-	
+
 	};
 
 }

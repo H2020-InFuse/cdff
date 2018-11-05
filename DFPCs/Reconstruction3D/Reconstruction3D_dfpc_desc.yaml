@@ -1,52 +1,56 @@
 name: Reconstruction3D
-doc: Interface of all DFPCs that reconstruct a 3D scene from a pair of stereo images
+doc: "DFPC that reconstructs a 3D scene from a stereo image pair"
 dfns:
-    - name: FeaturesExtraction2D
-    - name: FeaturesDescription2D
-    - name: FeaturesMatching2D
-    - name: FundamentalMatrixComputation
-    - name: CamerasTransformEstimation
-    - name: StereoReconstruction
-    - name: ImageFiltering
-    - name: PointCloudReconstruction2DTo3D
+  - name: FeaturesExtraction2D
+  - name: FeaturesDescription2D
+  - name: FeaturesMatching2D
+  - name: FundamentalMatrixComputation
+  - name: CamerasTransformEstimation
+  - name: StereoReconstruction
+  - name: ImageFiltering
+  - name: PointCloudReconstruction2DTo3D
 input_ports:
-    - name: leftImage
-      type: asn1SccFrame
-      doc: "a 2D left image taken from a stereo camera"
-      connections:
-        - dfn: ImageFiltering
-          port: image
-    - name: rightImage
-      type: asn1SccFrame
-      doc: "a 2D right image taken from a stereo camera"
-      connections:
-        - dfn: ImageFiltering
-          port: image
+  - name: leftImage
+    type: asn1SccFrame
+    doc: "2D left image captured by a stereo camera"
+    connections:
+    - dfn: ImageFiltering
+      port: image
+  - name: rightImage
+    type: asn1SccFrame
+    doc: "2D right image captured by a stereo camera"
+    connections:
+    - dfn: ImageFiltering
+      port: image
 output_ports:
-    - name: pointCloud
-      type: asn1SccPointcloud
-      doc: "This is the point cloud representing the 3D scene constructed so far."
-      connections:
-        dfn: StereoReconstruction
-        port: pointCloud
-        dfn: PointCloudReconstruction2DTo3D
-        port: pointCloud
-    - name: pose
-      type: asn1SccPose
-      doc: "This is the pose of the camera in the scene."
-      connections:
-        dfn: CamerasTransformEstimation
-        port: pose
-    - name: success
-      type: bool
-      doc: "this determines whether the dfpc determine the camera transform"
-      connections:
-        dfn: CamerasTransformEstimation
-        port: success
-      connections:
-        dfn: FeaturesMatching2D
-        port: success
-      connections:
-        dfn: FundamentalMatrixComputation
-        port: success
-
+  - name: pointCloud
+    type: asn1SccPointcloud
+    doc: "3D pointcloud representing the 3D scene reconstructed so far"
+    connections:
+    - dfn: StereoReconstruction
+      port: pointCloud
+    - dfn: PointCloudReconstruction2DTo3D
+      port: pointCloud
+  - name: pose
+    type: asn1SccPose
+    doc: "Pose of the camera in the scene"
+    connections:
+    - dfn: CamerasTransformEstimation
+      port: pose
+  - name: success
+    type: bool
+    doc: "Whether the DFPC could estimate the pose of the camera"
+    connections:
+    - dfn: CamerasTransformEstimation
+      port: success
+    - dfn: FeaturesMatching2D
+      port: success
+    - dfn: FundamentalMatrixComputation
+      port: success
+implementations:
+  - name: AdjustmentFromStereo
+  - name: DenseRegistrationFromStereo
+  - name: EstimationFromStereo
+  - name: ReconstructionFromStereo
+  - name: RegistrationFromStereo
+  - name: SparseRegistrationFromStereo

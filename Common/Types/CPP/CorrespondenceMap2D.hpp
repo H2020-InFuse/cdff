@@ -13,7 +13,7 @@
 #ifndef CORRESPONDENCE_MAP_2D_HPP
 #define CORRESPONDENCE_MAP_2D_HPP
 
-#include <CorrespondenceMap2D.h>
+#include <Types/C/CorrespondenceMap2D.h>
 
 #include "BaseTypes.hpp"
 #include <stdlib.h>

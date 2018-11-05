@@ -28,8 +28,15 @@
  */
 #include "DenseRegistrationFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpencvVisualizer.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
+
+#include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
+#include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
+#include <Executors/Registration3D/Registration3DExecutor.hpp>
+#include <Executors/PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
+#include <Executors/PointCloudTransform/PointCloudTransformExecutor.hpp>
+#include <Executors/PointCloudFiltering/PointCloudFilteringExecutor.hpp>
 
 namespace CDFF
 {
@@ -67,6 +74,7 @@ DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 	registrator3d = NULL;
 	cloudAssembler = NULL;
 	cloudTransformer = NULL;
+	cloudFilter = NULL;
 
 	bundleHistory = new BundleHistory(2);
 
@@ -78,13 +86,6 @@ DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 
 DenseRegistrationFromStereo::~DenseRegistrationFromStereo()
 	{
-	DeleteIfNotNull(optionalLeftFilter);
-	DeleteIfNotNull(optionalRightFilter);
-	DeleteIfNotNull(reconstructor3d);
-	DeleteIfNotNull(registrator3d);
-	DeleteIfNotNull(cloudAssembler);
-	DeleteIfNotNull(cloudTransformer);
-
 	DeleteIfNotNull(bundleHistory);
 	delete( EMPTY_FEATURE_VECTOR );
 	}
@@ -107,11 +108,14 @@ void DenseRegistrationFromStereo::run()
 
 	FrameConstPtr filteredLeftImage = NULL;
 	FrameConstPtr filteredRightImage = NULL;
-	optionalLeftFilter->Execute(inLeftImage, filteredLeftImage);
-	optionalRightFilter->Execute(inRightImage, filteredRightImage);
+	Executors::Execute(optionalLeftFilter, inLeftImage, filteredLeftImage);
+	Executors::Execute(optionalRightFilter, inRightImage, filteredRightImage);
+
+	PointCloudConstPtr unfilteredImageCloud = NULL;
+	Executors::Execute(reconstructor3d, filteredLeftImage, filteredRightImage, unfilteredImageCloud);
 
 	PointCloudConstPtr imageCloud = NULL;
-	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, imageCloud);
+	Executors::Execute(cloudFilter, unfilteredImageCloud, imageCloud);
 
 	if (!parameters.matchToReconstructedCloud)
 		{
@@ -149,7 +153,7 @@ void DenseRegistrationFromStereo::setup()
 	{
 	configurator.configure(configurationFilePath);
 	ConfigureExtraParameters();
-	InstantiateDFNExecutors();
+	InstantiateDFNs();
 
 	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
 	}
@@ -182,16 +186,17 @@ void DenseRegistrationFromStereo::ConfigureExtraParameters()
 	ASSERT(parameters.pointCloudMapResolution > 0, "DenseRegistrationFromStereo Error, Point Cloud Map resolution is not positive");
 	}
 
-void DenseRegistrationFromStereo::InstantiateDFNExecutors()
+void DenseRegistrationFromStereo::InstantiateDFNs()
 	{
-	optionalLeftFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) ) );
-	optionalRightFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) ) );
-	reconstructor3d = new StereoReconstructionExecutor( static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") ) );
-	registrator3d = new Registration3DExecutor( static_cast<Registration3DInterface*>( configurator.GetDfn("registrator3d") ) );
+	optionalLeftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) );
+	optionalRightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) );
+	reconstructor3d = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") );
+	registrator3d = static_cast<Registration3DInterface*>( configurator.GetDfn("registrator3d") );
+	cloudFilter = static_cast<PointCloudFilteringInterface*>( configurator.GetDfn("cloudFilter", true) );
 	if (parameters.useAssemblerDfn)
 		{
-		cloudAssembler = new PointCloudAssemblyExecutor( static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") ) );
-		cloudTransformer = new PointCloudTransformExecutor( static_cast<PointCloudTransformInterface*>( configurator.GetDfn("cloudTransformer") ) );
+		cloudAssembler = static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") );
+		cloudTransformer = static_cast<PointCloudTransformInterface*>( configurator.GetDfn("cloudTransformer") );
 		}
 	}
 
@@ -260,16 +265,28 @@ void DenseRegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud)
 	else
 		{
 		Pose3DConstPtr poseToPreviousPose = NULL;
-		registrator3d->Execute( imageCloud, bundleHistory->GetPointCloud(1), poseToPreviousPose, outSuccess);
-		if (outSuccess && !parameters.useAssemblerDfn)
+		Executors::Execute(registrator3d, imageCloud, bundleHistory->GetPointCloud(1), poseToPreviousPose, outSuccess);
+		if (outSuccess)
 			{
-			pointCloudMap.AttachPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, poseToPreviousPose);
-			Copy( pointCloudMap.GetLatestPose(), outPose);
-			}
-		else if (outSuccess)
-			{
-			Pose3D newPose = Sum(outPose, *poseToPreviousPose);
-			Copy(newPose, outPose);
+			if (parameters.useAssemblerDfn && parameters.matchToReconstructedCloud)
+				{
+				Copy(*poseToPreviousPose, outPose);
+				}
+			else if (parameters.useAssemblerDfn && !parameters.matchToReconstructedCloud)
+				{
+				Pose3D newPose = Sum(outPose, *poseToPreviousPose);
+				Copy(newPose, outPose);
+				}
+			else if (!parameters.useAssemblerDfn && parameters.matchToReconstructedCloud)
+				{
+				pointCloudMap.AddPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, poseToPreviousPose);
+				Copy(*poseToPreviousPose, outPose);
+				}
+			else
+				{
+				pointCloudMap.AttachPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, poseToPreviousPose);
+				Copy( pointCloudMap.GetLatestPose(), outPose);
+				}
 			}
 		#ifdef TESTING
 		logFile << outSuccess << " ";
@@ -289,7 +306,9 @@ void DenseRegistrationFromStereo::UpdatePointCloud(PointCloudConstPtr imageCloud
 	PointCloudWrapper::PointCloudConstPtr outputPointCloud = NULL;
 	if (parameters.useAssemblerDfn)
 		{
-		cloudAssembler->Execute(*imageCloud, outPose, parameters.searchRadius, outputPointCloud);
+		PointCloudConstPtr transformedImageCloud = NULL;
+		Executors::Execute(cloudTransformer, *imageCloud, outPose, transformedImageCloud);
+		Executors::Execute(cloudAssembler, *transformedImageCloud, outPose, parameters.searchRadius, outputPointCloud);
 		}
 	else
 		{

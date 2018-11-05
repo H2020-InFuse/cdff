@@ -30,7 +30,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 #include <opencv2/core/core.hpp>
 
 

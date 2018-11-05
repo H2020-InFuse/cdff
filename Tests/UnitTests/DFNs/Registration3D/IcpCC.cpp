@@ -13,7 +13,7 @@
 
 #include <catch.hpp>
 #include <Registration3D/IcpCC.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 
 #include <boost/make_shared.hpp>

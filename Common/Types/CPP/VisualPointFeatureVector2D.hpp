@@ -13,7 +13,7 @@
 #ifndef VISUAL_POINT_FEATURE_VECTOR_2D_HPP
 #define VISUAL_POINT_FEATURE_VECTOR_2D_HPP
 
-#include <VisualPointFeatureVector2D.h>
+#include <Types/C/VisualPointFeatureVector2D.h>
 
 #include "BaseTypes.hpp"
 #include <stdlib.h>

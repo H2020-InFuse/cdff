@@ -1,7 +1,6 @@
 add_library(
     voxelization
     VoxelizationInterface.cpp
-    VoxelizationExecutor.cpp
 )
 
 add_library(
@@ -11,5 +10,5 @@ add_library(
 
 target_link_libraries(
     octree
-    voxelization cdff_types yaml-cpp cdff_helpers opencv_core converters_opencv
+    voxelization cdff_types yaml-cpp cdff_helpers opencv_core cdff_converters
 )

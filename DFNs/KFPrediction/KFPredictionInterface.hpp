@@ -7,8 +7,8 @@
 #define KFPREDICTION_KFPREDICTIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Time.h>
-#include <RigidBodyState.h>
+#include <Types/C/Time.h>
+#include <Types/C/RigidBodyState.h>
 
 namespace CDFF
 {

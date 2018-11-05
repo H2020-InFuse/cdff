@@ -2,15 +2,15 @@ add_definitions(-DTEST_CONFIGURATIONS="${TEST_CONFIGURATIONS}")
 add_definitions(-DTEST_DATA="${TEST_DATA}")
 
 # Path to the directory containing Catch's single-include header (catch.hpp)
-set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/Tools/Catch")
+set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/Tests/Catch")
 
 # Define the Catch library
-add_library(Catch INTERFACE)
-target_include_directories(Catch SYSTEM INTERFACE "${CATCH_INCLUDE_DIR}")
+add_library(catch INTERFACE)
+target_include_directories(catch SYSTEM INTERFACE "${CATCH_INCLUDE_DIR}")
 
 # Source files containing Catch test cases. They will be linked together to
 # produce the test executable. Add any additional file in ALPHABETICAL ORDER.
-set(UNITTEST_SOURCES UnitTests.cpp
+set(unittest_sources UnitTests.cpp
     CentralDPM/CentralDPM.cpp
     Common/BitStream/BitStream.cpp
     Common/Converters/MatCorrespondenceMaps2DSequenceConvertersTest.cpp
@@ -28,78 +28,87 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
+    DFNs/DepthFiltering/DepthFiltering.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
     DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     DFNs/FeaturesMatching2D/FlannMatcher.cpp
+    DFNs/FeaturesMatching3D/BestDescriptorMatch.cpp
     DFNs/FeaturesMatching3D/Icp3D.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
+    DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
+    DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
+    DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
+    DFNs/PointCloudAssembly/VoxelBinning.cpp
+    DFNs/PointCloudFiltering/StatisticalOutlierRemoval.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
-    DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
-    DFNs/Transform3DEstimation/CeresEstimation.cpp
+    DFNs/PointCloudTransform/CartesianSystemTransform.cpp
+    DFNs/PrimitiveMatching/HuInvariants.cpp
     DFNs/Registration3D/Icp3D.cpp
     DFNs/Registration3D/IcpCC.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
-    DFNs/PrimitiveMatching/HuInvariants.cpp
-    DFNs/DepthFiltering/DepthFiltering.cpp
-    DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
-    DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
+    DFNs/Transform3DEstimation/CeresEstimation.cpp
+    DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
     DFNs/Voxelization/Octree.cpp
-    DFPCs/Reconstruction3D/BundleHistory.cpp
-    DFPCs/Reconstruction3D/PointCloudMap.cpp
-    DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
-    DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/HapticScanning/HapticScanning.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
-    DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
-    DFNs/PointCloudTransform/CartesianSystemTransform.cpp
+    DFPCs/Reconstruction3D/BundleHistory.cpp
+    DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
+    DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
+    DFPCs/Reconstruction3D/PointCloudMap.cpp
 )
 
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
-set(UNITTEST_LIBRARIES Catch
-    boost_system
+set(unittest_libraries catch
+    adjustment_from_stereo
+    best_descriptor_match
+    cartesian_system_transform
     cc_core_lib
+    cdff_converters
+    cdff_dfn_dfnexecutors
     cdff_helpers
     cdff_logger
     cdff_types
     central_dpm
     ceres_adjustment
-    converters_opencv
+    convolution_filter
     dfpc_configurator
+    dfpc_haptic_scanning
     dfpc_implementation_features_matching_3d
     disparity_mapping
     essential_matrix_decomposition
+    estimation_from_stereo
     flann_matcher
     fundamental_matrix_ransac
     harris_detector_2d
     harris_detector_3d
     hirschmuller_disparity_mapping
-    transform_3d_estimation_least_squares_minimization
-    transform_3d_estimation_ceres
+    hu_invariants
     icp_3d
     image_undistortion
     iterative_pnp_solver
     kalman_corrector
     kalman_predictor
 #[=[mock]=] # no longer used by any DFN unit test
+    neighbour_point_average
     opencv_core
     opencv_highgui
     opencv_imgcodecs
     opencv_imgproc
     opencv_video
-    orb_detector_descriptor
     orb_descriptor
+    orb_detector_descriptor
     pcl_common
     pcl_features
     pcl_filters
@@ -125,22 +134,20 @@ set(UNITTEST_LIBRARIES Catch
     registration_icp_3d
     registration_icp_cc
     shot_descriptor_3d
+    statistical_outlier_removal
     svd_decomposition
     synthetic_generators
-    triangulation
-    estimation_from_stereo
-    adjustment_from_stereo
-    hu_invariants
-    convolution_filter
     threshold_force
-    neighbour_point_average
-    cartesian_system_transform
-    dfpc_haptic_scanning
+    transform_3d_estimation_ceres
+    transform_3d_estimation_least_squares_minimization
+    triangulation
+    voxel_binning
 )
 
 # Make the Catch executable that runs the unit tests
-add_executable(cdff-unit-tests ${UNITTEST_SOURCES})
-target_link_libraries(cdff-unit-tests ${UNITTEST_LIBRARIES})
+add_executable(cdff-unit-tests ${unittest_sources})
+target_compile_definitions(cdff-unit-tests PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(cdff-unit-tests ${unittest_libraries})
 
 # Register the Catch executable as a CTest test
 #
@@ -149,5 +156,3 @@ target_link_libraries(cdff-unit-tests ${UNITTEST_LIBRARIES})
 # corresponding to the current source directory (i.e. corresponding to
 # ${CMAKE_CURRENT_SOURCE_DIR}).
 add_test(NAME unit-tests COMMAND cdff-unit-tests)
-
-include_directories("${CMAKE_SOURCE_DIR}/CentralDPM/src")

@@ -1,8 +1,8 @@
 # CDFF-specific exclude patterns
-build/
-Common/Types/C/
-Documentation/html/
 *~
+cmake_uninstall.cmake
+cmake_purge.cmake
+/build/
 
 # Prerequisites
 *.d

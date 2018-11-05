@@ -8,7 +8,7 @@
 
 #include "HapticScanningInterface.hpp"
 #include <DfpcConfigurator.hpp>
-#include <ForceMeshGenerator/ForceMeshGeneratorExecutor.hpp>
+#include <ForceMeshGenerator/ForceMeshGeneratorInterface.hpp>
 
 namespace CDFF
 {
@@ -28,9 +28,9 @@ namespace DFPC
 
         private:
             DfpcConfigurator configurator;
-            std::unique_ptr<CDFF::DFN::ForceMeshGeneratorExecutor> m_force_mesh_generator;
+            CDFF::DFN::ForceMeshGeneratorInterface* m_force_mesh_generator;
 
-            void InstantiateDFNExecutors();
+            void InstantiateDFNs();
     };
 }
 }

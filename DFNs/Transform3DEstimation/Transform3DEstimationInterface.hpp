@@ -7,10 +7,10 @@
 #define TRANSFORM3DESTIMATION_TRANSFORM3DESTIMATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Pose.h>
-#include <CorrespondenceMap3D.h>
-#include <Sequences.h>
-#include <Eigen.h>
+#include <Types/C/Pose.h>
+#include <Types/C/CorrespondenceMap3D.h>
+#include <Types/C/Sequences.h>
+#include <Types/C/Eigen.h>
 
 namespace CDFF
 {

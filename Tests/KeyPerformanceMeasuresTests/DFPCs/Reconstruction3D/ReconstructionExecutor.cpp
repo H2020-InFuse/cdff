@@ -122,7 +122,7 @@ void ReconstructionExecutor::SetMeasuresFilePath(std::string measuresReferenceFi
 	measuresReferenceWasLoaded = true;
 	}
 
-void ReconstructionExecutor::ExecuteDfpc()
+void ReconstructionExecutor::ExecuteDfpc(std::string transformFilePath)
 	{
 	ASSERT(inputImagesWereLoaded && dfpcWasLoaded, "Cannot execute DFPC if input images or the DFPC itself are not loaded");
 	ASSERT(leftImageFileNamesList.size() == rightImageFileNamesList.size(), "Left images list and right images list do not have same dimensions");
@@ -154,6 +154,8 @@ void ReconstructionExecutor::ExecuteDfpc()
 		Pose3DPtr newOutputCameraPose = NewPose3D();
 		Copy( dfpc->poseOutput(), *newOutputCameraPose);
 		outputCameraPose = newOutputCameraPose;
+
+		SaveTransform(transformFilePath);
 
 		outputSuccess = dfpc->successOutput();
 		successCounter = (outputSuccess ? successCounter+1 : successCounter);
@@ -421,6 +423,32 @@ float ReconstructionExecutor::ComputeObjectShapeSimilarity(int objectIndex)
 	float averageAbsoluteError = totalAbsoluteError / (float)objectsList.at(objectIndex).size();
 
 	return (1 - (averageAbsoluteError/dimension));
+	}
+
+void ReconstructionExecutor::SaveTransform(std::string transformFilePath)
+	{
+	if (transformFilePath == "")
+		{
+		return;
+		}
+	static unsigned index = 0;
+	std::ofstream file;
+
+	if (index == 0)
+		{
+		file.open(transformFilePath);
+		}
+	else
+		{
+		file.open(transformFilePath, std::ios::app);
+		}
+
+	ASSERT(file.good(), "Could not write in output transform file");
+	file << GetXPosition(*outputCameraPose) << " " << GetYPosition(*outputCameraPose) << " " << GetZPosition(*outputCameraPose) << " " << 
+		GetXOrientation(*outputCameraPose) << " " << GetYOrientation(*outputCameraPose) << " " << GetZOrientation(*outputCameraPose) << " " << GetWOrientation(*outputCameraPose) << std::endl;
+	file.close();
+
+	index++;
 	}
 
 /** @} */

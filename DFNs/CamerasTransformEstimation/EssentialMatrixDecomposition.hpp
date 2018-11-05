@@ -12,9 +12,9 @@
 
 #include "CamerasTransformEstimationInterface.hpp"
 
-#include <CorrespondenceMap2D.hpp>
-#include <Matrix.hpp>
-#include <MatToTransform3DConverter.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/Matrix.hpp>
+#include <Converters/MatToTransform3DConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/core/core.hpp>

@@ -13,10 +13,10 @@
 #ifndef FRAMES_SEQUENCE_HPP
 #define FRAMES_SEQUENCE_HPP
 
-#include <Sequences.h>
+#include <Types/C/Sequences.h>
 
 #include "BaseTypes.hpp"
-#include <Frame.hpp>
+#include "Frame.hpp"
 #include <stdlib.h>
 #include <memory>
 
@@ -49,7 +49,7 @@ void Clear(FramesSequence& framesSequence);
 void AddFrame(FramesSequence& framesSequence, const Frame& frame);
 const Frame& GetFrame(const FramesSequence& framesSequence, BaseTypesWrapper::T_UInt32 frameIndex);
 void GetFrame(const FramesSequence& framesSequence, BaseTypesWrapper::T_UInt32 frameIndex, Frame& frame);
-BaseTypesWrapper::T_UInt32 GetNumberOfFrames(const FramesSequence& framesSequence); 
+BaseTypesWrapper::T_UInt32 GetNumberOfFrames(const FramesSequence& framesSequence);
 
 BitStream ConvertToBitStream(const FramesSequence& sequence);
 void ConvertFromBitStream(BitStream bitStream, FramesSequence& sequence);

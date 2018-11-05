@@ -29,10 +29,12 @@ target_link_libraries(
   orb_descriptor
   shot_descriptor_3d
   ransac_3d icp_3d
+  best_descriptor_match
   harris_detector_2d
   image_undistortion
   image_undistortion_rectification
   cdff_dfn_background_subtraction
+  cdff_dfn_kmeans
   cdff_dfn_edge_detection
   cdff_dfn_normal_vector_extraction
   disparity_mapping
@@ -52,7 +54,7 @@ target_link_libraries(
   transform_3d_estimation_ceres
   hu_invariants
   octree
-  converters_opencv
+  cdff_converters
   pcl_common
   pcl_features
   pcl_search
@@ -77,5 +79,7 @@ target_link_libraries(
   convolution_filter
   threshold_force
   neighbour_point_average
+  voxel_binning
   cartesian_system_transform
+  statistical_outlier_removal
 )

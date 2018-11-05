@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 #include <Registration3D/Icp3D.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
@@ -37,7 +37,7 @@
 #include <signal.h>
 #include <execinfo.h>
 #include <pcl/filters/voxel_grid.h>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 
 using namespace CDFF::DFN::Registration3D;
 using namespace Converters;

@@ -34,21 +34,22 @@
  */
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
 
-#include <ImageFiltering/ImageFilteringExecutor.hpp>
-#include <StereoReconstruction/StereoReconstructionExecutor.hpp>
-#include <Registration3D/Registration3DExecutor.hpp>
-#include <PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
-#include <PointCloudTransform/PointCloudTransformExecutor.hpp>
+#include <ImageFiltering/ImageFilteringInterface.hpp>
+#include <StereoReconstruction/StereoReconstructionInterface.hpp>
+#include <Registration3D/Registration3DInterface.hpp>
+#include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
+#include <PointCloudTransform/PointCloudTransformInterface.hpp>
+#include <PointCloudFiltering/PointCloudFilteringInterface.hpp>
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
 
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
-#include <Frame.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
 #ifdef TESTING
 #include <fstream>
@@ -107,12 +108,13 @@ namespace Reconstruction3D
 		static const RegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
 		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;		
 
-		CDFF::DFN::ImageFilteringExecutor* optionalLeftFilter;
-		CDFF::DFN::ImageFilteringExecutor* optionalRightFilter;
-		CDFF::DFN::StereoReconstructionExecutor* reconstructor3d;
-		CDFF::DFN::Registration3DExecutor* registrator3d;
-		CDFF::DFN::PointCloudAssemblyExecutor* cloudAssembler;
-		CDFF::DFN::PointCloudTransformExecutor* cloudTransformer;
+		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
+		CDFF::DFN::Registration3DInterface* registrator3d;
+		CDFF::DFN::PointCloudAssemblyInterface* cloudAssembler;
+		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
+		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
 
 		#ifdef TESTING
 		std::ofstream logFile;
@@ -123,7 +125,7 @@ namespace Reconstruction3D
 		BundleHistory* bundleHistory;
 
 		void ConfigureExtraParameters();
-		void InstantiateDFNExecutors();
+		void InstantiateDFNs();
 
 		void UpdatePose(PointCloudWrapper::PointCloudConstPtr inputCloud);
 		void UpdatePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud);

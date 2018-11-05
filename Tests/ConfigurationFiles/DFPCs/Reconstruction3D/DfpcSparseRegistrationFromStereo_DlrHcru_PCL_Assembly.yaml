@@ -1,7 +1,7 @@
 - Name: DFNsChain
   Parameters:
   - Name: GeneralParameters
-    PointCloudMapResolution: 0.03
+    PointCloudMapResolution: 0.01
     SearchRadius: 80
     MatchToReconstructedCloud: true
     UseAssemblerDfn: true
@@ -50,9 +50,9 @@
     LeftPrinciplePointY: 383.36
     Baseline: 0.09290672099999999
   - Name: ReconstructionSpace
-    LimitX: 3.5
-    LimitY: 3.5
-    LimitZ: 3.5
+    LimitX: 1.5
+    LimitY: 1.5
+    LimitZ: 1.5
 - Name: featuresExtractor3d
   Type: FeaturesExtraction3D
   Implementation: HarrisDetector3D
@@ -80,7 +80,7 @@
   Implementation: NeighbourPointAverage
   Parameters:
   - Name: GeneralParameters
-    MaxNeighbourDistance: 0.1
+    MaxNeighbourDistance: 0.01
     UseIncrementalMode: true
     UseDistanceFilter: true
 - Name: cloudTransformer

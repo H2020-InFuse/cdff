@@ -7,7 +7,7 @@
 #define POSEFUSION_INTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
-#include <TransformWithCovariance.h>
+#include <Types/C/TransformWithCovariance.h>
 
 namespace CDFF
 {

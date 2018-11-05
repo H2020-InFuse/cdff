@@ -31,7 +31,7 @@
 #include <time.h>
 #include <ctime>
 #include <Errors/Assert.hpp>
-#include <BaseTypes.hpp>
+#include <Types/CPP/BaseTypes.hpp>
 #include <random>
 
 using namespace CorrespondenceMap2DWrapper;

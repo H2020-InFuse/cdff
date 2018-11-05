@@ -37,11 +37,11 @@
 #include <Errors/Assert.hpp>
 #include <ctime>
 
-#include <VisualPointFeatureVector3D.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <SupportTypes.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/SupportTypes.hpp>
 
 #include <stdlib.h>
 #include <fstream>

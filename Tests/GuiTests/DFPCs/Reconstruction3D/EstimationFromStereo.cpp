@@ -27,8 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include "GuiTestReconstruction3D.hpp"
-#include <Visualizers/OpencvVisualizer.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 #include <Reconstruction3D/EstimationFromStereo.hpp>
 #include <Errors/Assert.hpp>
 

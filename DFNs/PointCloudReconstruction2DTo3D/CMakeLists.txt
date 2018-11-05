@@ -1,7 +1,6 @@
 add_library(
     point_cloud_reconstruction_2d_to_3d
     PointCloudReconstruction2DTo3DInterface.cpp
-    PointCloudReconstruction2DTo3DExecutor.cpp
 )
 
 add_library(
@@ -10,5 +9,5 @@ add_library(
 )
 target_link_libraries(
     triangulation
-    point_cloud_reconstruction_2d_to_3d cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core converters_opencv
+    point_cloud_reconstruction_2d_to_3d cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core cdff_converters
 )

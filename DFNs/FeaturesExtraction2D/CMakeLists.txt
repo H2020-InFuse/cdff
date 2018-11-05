@@ -1,7 +1,6 @@
 add_library(
     feature_extraction_2d
     FeaturesExtraction2DInterface.cpp
-    FeaturesExtraction2DExecutor.cpp
 )
 
 add_library(
@@ -10,7 +9,7 @@ add_library(
 )
 target_link_libraries(
     harris_detector_2d
-    feature_extraction_2d cdff_types yaml-cpp cdff_helpers opencv_core converters_opencv
+    feature_extraction_2d cdff_types yaml-cpp cdff_helpers opencv_core cdff_converters opencv_imgproc cdff_logger
 )
 
 add_library(
@@ -19,5 +18,5 @@ add_library(
 )
 target_link_libraries(
     orb_detector_descriptor
-    feature_extraction_2d cdff_types yaml-cpp opencv_features2d cdff_helpers opencv_core converters_opencv
+    feature_extraction_2d cdff_types yaml-cpp opencv_features2d cdff_helpers opencv_core cdff_converters
 )

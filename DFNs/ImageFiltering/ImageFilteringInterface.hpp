@@ -7,7 +7,7 @@
 #define IMAGEFILTERING_IMAGEFILTERINGINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Frame.h>
+#include <Types/C/Frame.h>
 
 namespace CDFF
 {

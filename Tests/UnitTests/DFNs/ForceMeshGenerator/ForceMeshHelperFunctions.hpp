@@ -9,7 +9,7 @@
 
 #include <pcl/io/ply_io.h>
 #include <pcl/kdtree/kdtree_flann.h>
-#include <Pose.h>
+#include <Types/C/Pose.h>
 
 
 namespace ForceMeshHelperFunctions

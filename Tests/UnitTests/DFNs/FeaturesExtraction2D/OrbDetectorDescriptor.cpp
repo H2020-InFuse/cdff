@@ -28,7 +28,7 @@
  */
 #include <catch.hpp>
 #include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 using namespace CDFF::DFN::FeaturesExtraction2D;
 using namespace Converters;

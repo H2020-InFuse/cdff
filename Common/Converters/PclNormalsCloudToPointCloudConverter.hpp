@@ -32,7 +32,7 @@
  */
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <PointCloud.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 namespace Converters {
 
