@@ -75,6 +75,7 @@ set(unittest_libraries catch
     cartesian_system_transform
     cc_core_lib
     cdff_converters
+    cdff_dfn_dfnexecutors
     cdff_helpers
     cdff_logger
     cdff_types

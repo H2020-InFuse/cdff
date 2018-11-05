@@ -11,9 +11,11 @@
 #define POINTCLOUDMODELLOCALISATION_FEATURESMATCHING3D_HPP
 
 #include <PointCloudModelLocalisation/PointCloudModelLocalisationInterface.hpp>
-#include <FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
-#include <FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
-#include <FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
+
+#include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
+#include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
+#include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
+
 #include <DfpcConfigurator.hpp>
 #include <Types/CPP/VisualPointFeatureVector3D.hpp>
 #include <Types/CPP/PointCloud.hpp>
@@ -43,14 +45,14 @@ namespace PointCloudModelLocalisation
 	private:
 		DfpcConfigurator configurator;
 
-		CDFF::DFN::FeaturesExtraction3DExecutor* featuresExtractor3d;
-		CDFF::DFN::FeaturesDescription3DExecutor* optionalFeaturesDescriptor3d;
-		CDFF::DFN::FeaturesMatching3DExecutor* featuresMatcher3d;
+		CDFF::DFN::FeaturesExtraction3DInterface* featuresExtractor3d;
+		CDFF::DFN::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
+		CDFF::DFN::FeaturesMatching3DInterface* featuresMatcher3d;
 
 		bool modelFeaturesAvailable;
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr modelFeatureVector;
 
-		void InstantiateDFNExecutors();
+		void InstantiateDFNs();
 
 		void ExtractSceneFeatures();
 		void ExtractModelFeatures();

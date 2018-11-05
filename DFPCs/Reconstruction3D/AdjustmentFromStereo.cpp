@@ -32,6 +32,16 @@
 #include <Visualizers/PCLVisualizer.hpp>
 #include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
+#include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
+#include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
+#include <Executors/FeaturesExtraction2D/FeaturesExtraction2DExecutor.hpp>
+#include <Executors/FeaturesDescription2D/FeaturesDescription2DExecutor.hpp>
+#include <Executors/FeaturesMatching2D/FeaturesMatching2DExecutor.hpp>
+#include <Executors/BundleAdjustment/BundleAdjustmentExecutor.hpp>
+#include <Executors/FundamentalMatrixComputation/FundamentalMatrixComputationExecutor.hpp>
+#include <Executors/PerspectiveNPointSolving/PerspectiveNPointSolvingExecutor.hpp>
+#include <Executors/PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>
+
 namespace CDFF
 {
 namespace DFPC
@@ -104,17 +114,6 @@ AdjustmentFromStereo::AdjustmentFromStereo() :
 
 AdjustmentFromStereo::~AdjustmentFromStereo()
 	{
-	delete(optionalLeftFilter);
-	delete(optionalRightFilter);
-	delete(reconstructor3d);
-	delete(featuresExtractor2d);
-	delete(optionalFeaturesDescriptor2d);
-	delete(featuresMatcher2d);
-	delete(bundleAdjuster);
-	delete(fundamentalMatrixComputer);
-	delete(perspectiveNPointSolver);
-	delete(reconstructor3dfrom2dmatches);
-
 	DeleteIfNotNull(bundleHistory);
 	DeleteIfNotNull(correspondencesRecorder);
 	DeleteIfNotNull(cleanCorrespondenceMap);
@@ -139,8 +138,8 @@ void AdjustmentFromStereo::run()
 
 	FrameConstPtr filteredLeftImage = NULL;
 	FrameConstPtr filteredRightImage = NULL;
-	optionalLeftFilter->Execute(inLeftImage, filteredLeftImage);
-	optionalRightFilter->Execute(inRightImage, filteredRightImage);
+	Executors::Execute(optionalLeftFilter, inLeftImage, filteredLeftImage);
+	Executors::Execute(optionalRightFilter, inRightImage, filteredRightImage);
 
 	ComputeStereoPointCloud(filteredLeftImage, filteredRightImage);
 	ComputeVisualPointFeatures(filteredLeftImage, filteredRightImage);
@@ -243,7 +242,7 @@ void AdjustmentFromStereo::setup()
 	configurator.configure(configurationFilePath);
 	ConfigureExtraParameters(); //Configuration shall happen before alias assignment here.
 
-	InstantiateDFNExecutors();
+	InstantiateDFNs();
 
 	DeleteIfNotNull(bundleHistory);
 	bundleHistory = new BundleHistory(parameters.numberOfAdjustedStereoPairs + 1);
@@ -293,21 +292,21 @@ void AdjustmentFromStereo::ConfigureExtraParameters()
 	ASSERT(parameters.pointCloudMapResolution > 0, "AdjustmentFromStereo Error, Point Cloud Map resolution is not positive");
 	}
 
-void AdjustmentFromStereo::InstantiateDFNExecutors()
+void AdjustmentFromStereo::InstantiateDFNs()
 	{
-	optionalLeftFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) ) );
-	optionalRightFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) ) );
-	reconstructor3d = new StereoReconstructionExecutor( static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3d") ) );
-	featuresExtractor2d = new FeaturesExtraction2DExecutor( static_cast<FeaturesExtraction2DInterface*>( configurator.GetDfn("featuresExtractor2d") ) );
-	optionalFeaturesDescriptor2d = new FeaturesDescription2DExecutor( static_cast<FeaturesDescription2DInterface*>( configurator.GetDfn("featuresDescriptor2d", true) ) );
-	featuresMatcher2d = new FeaturesMatching2DExecutor( static_cast<FeaturesMatching2DInterface*>( configurator.GetDfn("featuresMatcher2d") ) );
-	bundleAdjuster = new BundleAdjustmentExecutor( static_cast<BundleAdjustmentInterface*>( configurator.GetDfn("bundleAdjuster") ) );
-	fundamentalMatrixComputer = new FundamentalMatrixComputationExecutor( static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") ) );
+	optionalLeftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) );
+	optionalRightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) );
+	reconstructor3d = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3d") );
+	featuresExtractor2d = static_cast<FeaturesExtraction2DInterface*>( configurator.GetDfn("featuresExtractor2d") );
+	optionalFeaturesDescriptor2d = static_cast<FeaturesDescription2DInterface*>( configurator.GetDfn("featuresDescriptor2d", true) );
+	featuresMatcher2d = static_cast<FeaturesMatching2DInterface*>( configurator.GetDfn("featuresMatcher2d") );
+	bundleAdjuster = static_cast<BundleAdjustmentInterface*>( configurator.GetDfn("bundleAdjuster") );
+	fundamentalMatrixComputer = static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") );
 
 	if (parameters.useBundleInitialEstimation)
 		{		
-		perspectiveNPointSolver = new PerspectiveNPointSolvingExecutor( static_cast<PerspectiveNPointSolvingInterface*>( configurator.GetDfn("perspectiveNPointSolver") ) );
-		reconstructor3dfrom2dmatches = new PointCloudReconstruction2DTo3DExecutor( static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3dfrom2dmatches") ) );
+		perspectiveNPointSolver = static_cast<PerspectiveNPointSolvingInterface*>( configurator.GetDfn("perspectiveNPointSolver") );
+		reconstructor3dfrom2dmatches = static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3dfrom2dmatches") );
 		}
 	}
 
@@ -318,7 +317,7 @@ void AdjustmentFromStereo::InstantiateDFNExecutors()
 void AdjustmentFromStereo::ComputeStereoPointCloud(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage)
 	{
 	PointCloudConstPtr imageCloud = NULL;
-	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, imageCloud);
+	Executors::Execute(reconstructor3d, filteredLeftImage, filteredRightImage, imageCloud);
 
 	bundleHistory->AddPointCloud(*imageCloud, STEREO_CLOUD_CATEGORY);
 	#ifdef TESTING
@@ -335,8 +334,8 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 	{
 	VisualPointFeatureVector2DConstPtr keypointVector = NULL;
 	VisualPointFeatureVector2DConstPtr featureVector = NULL;
-	featuresExtractor2d->Execute(filteredLeftImage, keypointVector);
-	optionalFeaturesDescriptor2d->Execute(filteredLeftImage, keypointVector, featureVector);
+	Executors::Execute(featuresExtractor2d, filteredLeftImage, keypointVector);
+	Executors::Execute(optionalFeaturesDescriptor2d, filteredLeftImage, keypointVector, featureVector);
 	bundleHistory->AddFeatures(*featureVector, LEFT_FEATURE_CATEGORY);
 	DEBUG_PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
@@ -346,8 +345,8 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 
 	keypointVector = NULL;
 	featureVector = NULL;
-	featuresExtractor2d->Execute(filteredRightImage, keypointVector);
-	optionalFeaturesDescriptor2d->Execute(filteredRightImage, keypointVector, featureVector);
+	Executors::Execute(featuresExtractor2d, filteredRightImage, keypointVector);
+	Executors::Execute(optionalFeaturesDescriptor2d, filteredRightImage, keypointVector, featureVector);
 	bundleHistory->AddFeatures(*featureVector, RIGHT_FEATURE_CATEGORY);
 	DEBUG_PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
@@ -358,7 +357,7 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
 	VisualPointFeatureVector2DConstPtr rightFeatureVector = bundleHistory->GetFeatures(0, RIGHT_FEATURE_CATEGORY);
 	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = NULL;
-	featuresMatcher2d->Execute(leftFeatureVector, rightFeatureVector,leftRightCorrespondenceMap);
+	Executors::Execute(featuresMatcher2d, leftFeatureVector, rightFeatureVector,leftRightCorrespondenceMap);
 	DEBUG_PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
 
 	#ifdef TESTING
@@ -368,7 +367,7 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 	MatrixWrapper::Matrix3dConstPtr fundamentalMatrix = NULL;
 	bool success = false;
 	CorrespondenceMap2DConstPtr inlierCorrespondenceMap = NULL;
-	fundamentalMatrixComputer->Execute(leftRightCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
+	Executors::Execute(fundamentalMatrixComputer, leftRightCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
 	DEBUG_PRINT_TO_LOG("Inlier Correspondences Number", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
 
 	#ifdef TESTING
@@ -379,12 +378,12 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 		{
 		if (success)
 			{
-			reconstructor3dfrom2dmatches->Execute(inlierCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
+			Executors::Execute(reconstructor3dfrom2dmatches, inlierCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
 			CleanUnmatchedFeatures(inlierCorrespondenceMap, triangulatedKeypointCloud);
 			}
 		else
 			{
-			reconstructor3dfrom2dmatches->Execute(leftRightCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
+			Executors::Execute(reconstructor3dfrom2dmatches, leftRightCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
 			CleanUnmatchedFeatures(leftRightCorrespondenceMap, triangulatedKeypointCloud);
 			}
 		//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
@@ -467,11 +466,11 @@ void AdjustmentFromStereo::CreateWorkingCorrespondences(VisualPointFeatureVector
 			}
 
 		CorrespondenceMap2DConstPtr leftTimeCorrespondenceMap = NULL;
-		featuresMatcher2d->Execute(featureVector, pastLeftFeatureVector, leftTimeCorrespondenceMap);
+		Executors::Execute(featuresMatcher2d, featureVector, pastLeftFeatureVector, leftTimeCorrespondenceMap);
 		correspondencesRecorder->AddCorrespondences(leftTimeCorrespondenceMap);
 
 		CorrespondenceMap2DConstPtr rightTimeCorrespondenceMap = NULL;
-		featuresMatcher2d->Execute(featureVector, pastRightFeatureVector, rightTimeCorrespondenceMap);
+		Executors::Execute(featuresMatcher2d, featureVector, pastRightFeatureVector, rightTimeCorrespondenceMap);
 		correspondencesRecorder->AddCorrespondences(rightTimeCorrespondenceMap);
 		} 
 	}
@@ -492,11 +491,11 @@ bool AdjustmentFromStereo::ComputeCameraPoses(PoseWrapper::Poses3DSequenceConstP
 		
 		EstimateCameraPoses(); 
 
-		bundleAdjuster->Execute(workingCorrespondenceMapSequence, estimatedCameraPoses, triangulatedKeypointCloud, cameraPoses, success, error);
+		Executors::Execute(bundleAdjuster, workingCorrespondenceMapSequence, estimatedCameraPoses, triangulatedKeypointCloud, cameraPoses, success, error);
 		}
 	else
 		{
-		bundleAdjuster->Execute(workingCorrespondenceMapSequence, cameraPoses, success, error);
+		Executors::Execute(bundleAdjuster, workingCorrespondenceMapSequence, cameraPoses, success, error);
 		}
 	
 	if (success)
@@ -569,20 +568,20 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 			break;
 			}
 		CorrespondenceMap2DConstPtr leftCorrespondenceMap = NULL;
-		featuresMatcher2d->Execute(leftFeatureVector, pastLeftFeatureVector, leftCorrespondenceMap);
+		Executors::Execute(featuresMatcher2d, leftFeatureVector, pastLeftFeatureVector, leftCorrespondenceMap);
 
 		Matrix3dConstPtr fundamentalMatrix = NULL;
 		Pose3DConstPtr pose = NULL;
 		bool success;
 		CorrespondenceMap2DConstPtr inlierCorrespondenceMap = NULL;
-		fundamentalMatrixComputer->Execute(leftCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
+		Executors::Execute(fundamentalMatrixComputer, leftCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
 		DEBUG_PRINT_TO_LOG("Number of inlier correspondences", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
 		#ifdef TESTING
 		logFile << GetNumberOfCorrespondences(*inlierCorrespondenceMap) << " ";
 		#endif
 		if (success)
 			{
-			//cameraTransformEstimator->Execute(fundamentalMatrix, inlierCorrespondenceMap, pose, success);
+			//Executors::Execute(cameraTransformEstimator, fundamentalMatrix, inlierCorrespondenceMap, pose, success);
 			EstimatePose(pastCorrespondenceMap, inlierCorrespondenceMap, pastTriangulatedCloud, pose, success);
 			}
 		if (success)
@@ -631,7 +630,7 @@ void AdjustmentFromStereo::EstimatePose(CorrespondenceMap2DConstPtr pastLeftRigh
 		}
 
 	pose = NULL;
-	perspectiveNPointSolver->Execute(keypointCloud, presentKeypointVector, pose, success);
+	Executors::Execute(perspectiveNPointSolver, keypointCloud, presentKeypointVector, pose, success);
 	}
 
 }

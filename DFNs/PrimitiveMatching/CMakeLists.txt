@@ -1,7 +1,6 @@
 add_library(
     primitive_matching
     PrimitiveMatchingInterface.cpp
-    PrimitiveMatchingExecutor.cpp
 )
 
 add_library(

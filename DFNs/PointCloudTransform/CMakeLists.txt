@@ -1,7 +1,6 @@
 add_library(
     point_cloud_transform
     PointCloudTransformInterface.cpp
-    PointCloudTransformExecutor.cpp
 )
 
 add_library(

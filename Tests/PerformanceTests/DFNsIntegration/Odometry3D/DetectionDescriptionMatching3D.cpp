@@ -28,6 +28,10 @@
  */
 #include "DetectionDescriptionMatching3D.hpp"
 
+#include <Executors/FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
+#include <Executors/FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
+#include <Executors/FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
+
 using namespace CDFF::DFN;
 using namespace Converters;
 using namespace PointCloudWrapper;
@@ -44,11 +48,11 @@ using namespace SupportTypes;
 DetectionDescriptionMatching3DTestInterface::DetectionDescriptionMatching3DTestInterface(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, 
 	std::string performanceMeasuresFileName, DFNsSet dfnsSet) : PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName)
 	{
-	extractor = new CDFF::DFN::FeaturesExtraction3DExecutor(dfnsSet.extractor);
+	extractor = dfnsSet.extractor;
 	AddDfn(dfnsSet.extractor);
-	descriptor = new CDFF::DFN::FeaturesDescription3DExecutor(dfnsSet.descriptor);
+	descriptor = dfnsSet.descriptor;
 	AddDfn(dfnsSet.descriptor);
-	matcher = new CDFF::DFN::FeaturesMatching3DExecutor(dfnsSet.matcher);
+	matcher = dfnsSet.matcher;
 	AddDfn(dfnsSet.matcher);
 
 	groundPositionDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
@@ -207,17 +211,17 @@ bool DetectionDescriptionMatching3DTestInterface::SetNextInputs()
 void DetectionDescriptionMatching3DTestInterface::ExecuteDfns()
 	{
 	VisualPointFeatureVector3DConstPtr sceneKeypointVector = NULL;
-	extractor->Execute(scenePointCloud, sceneKeypointVector);
-	descriptor->Execute(scenePointCloud, sceneKeypointVector, sceneFeatureVector);
+	Executors::Execute(extractor, scenePointCloud, sceneKeypointVector);
+	Executors::Execute(descriptor, scenePointCloud, sceneKeypointVector, sceneFeatureVector);
 	numberOfSceneKeypoints = GetNumberOfPoints(*sceneFeatureVector);
 
 	VisualPointFeatureVector3DConstPtr modelKeypointVector = NULL;
 	VisualPointFeatureVector3DConstPtr modelFeatureVector = NULL;
-	extractor->Execute(modelPointCloud, modelKeypointVector);
-	descriptor->Execute(modelPointCloud, modelKeypointVector, modelFeatureVector);
+	Executors::Execute(extractor, modelPointCloud, modelKeypointVector);
+	Executors::Execute(descriptor, modelPointCloud, modelKeypointVector, modelFeatureVector);
 	numberOfModelKeypoints = GetNumberOfPoints(*modelFeatureVector);
 
-	matcher->Execute(modelFeatureVector, sceneFeatureVector, modelPoseInScene, icpSuccess);
+	Executors::Execute(matcher, modelFeatureVector, sceneFeatureVector, modelPoseInScene, icpSuccess);
 	}
 
 DetectionDescriptionMatching3DTestInterface::MeasuresMap DetectionDescriptionMatching3DTestInterface::ExtractMeasures()

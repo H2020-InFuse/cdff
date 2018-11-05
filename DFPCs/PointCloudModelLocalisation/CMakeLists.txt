@@ -1,10 +1,9 @@
-
 add_library(
     point_cloud_model_localisation
     PointCloudModelLocalisationInterface.cpp
 )
 target_link_libraries(
-	point_cloud_model_localisation
+    point_cloud_model_localisation
 )
 
 add_library(
@@ -13,5 +12,5 @@ add_library(
 )
 target_link_libraries(
     dfpc_implementation_features_matching_3d
-    point_cloud_model_localisation cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator
+    point_cloud_model_localisation cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_dfnexecutors
 )

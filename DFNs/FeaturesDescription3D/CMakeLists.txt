@@ -1,7 +1,6 @@
 add_library(
     feature_description_3d
     FeaturesDescription3DInterface.cpp
-    FeaturesDescription3DExecutor.cpp
 )
 
 add_library(

@@ -31,6 +31,16 @@
 #include <Visualizers/OpenCVVisualizer.hpp>
 #include <Visualizers/PCLVisualizer.hpp>
 
+#include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
+#include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
+#include <Executors/FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
+#include <Executors/FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
+#include <Executors/FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
+#include <Executors/PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
+#include <Executors/PointCloudTransform/PointCloudTransformExecutor.hpp>
+#include <Executors/PointCloudFiltering/PointCloudFilteringExecutor.hpp>
+#include <Executors/Registration3D/Registration3DExecutor.hpp>
+
 namespace CDFF
 {
 namespace DFPC
@@ -82,17 +92,6 @@ RegistrationFromStereo::RegistrationFromStereo()
 
 RegistrationFromStereo::~RegistrationFromStereo()
 	{
-	DeleteIfNotNull(optionalLeftFilter);
-	DeleteIfNotNull(optionalRightFilter);
-	DeleteIfNotNull(reconstructor3d);
-	DeleteIfNotNull(featuresExtractor3d);
-	DeleteIfNotNull(optionalFeaturesDescriptor3d);
-	DeleteIfNotNull(featuresMatcher3d);
-	DeleteIfNotNull(cloudAssembler);
-	DeleteIfNotNull(cloudTransformer);
-	DeleteIfNotNull(cloudFilter);
-	DeleteIfNotNull(registrator3d);
-
 	DeleteIfNotNull(bundleHistory);
 	}
 
@@ -114,14 +113,14 @@ void RegistrationFromStereo::run()
 
 	FrameConstPtr filteredLeftImage = NULL;
 	FrameConstPtr filteredRightImage = NULL;
-	optionalLeftFilter->Execute(inLeftImage, filteredLeftImage);
-	optionalRightFilter->Execute(inRightImage, filteredRightImage);
+	Executors::Execute(optionalLeftFilter, inLeftImage, filteredLeftImage);
+	Executors::Execute(optionalRightFilter, inRightImage, filteredRightImage);
 
 	PointCloudConstPtr unfilteredImageCloud = NULL;
-	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, unfilteredImageCloud);
+	Executors::Execute(reconstructor3d, filteredLeftImage, filteredRightImage, unfilteredImageCloud);
 
 	PointCloudConstPtr imageCloud = NULL;
-	cloudFilter->Execute(unfilteredImageCloud, imageCloud);
+	Executors::Execute(cloudFilter, unfilteredImageCloud, imageCloud);
 
 	VisualPointFeatureVector3DConstPtr featureVector = NULL;
 	ComputeVisualFeatures(imageCloud, featureVector);
@@ -161,7 +160,7 @@ void RegistrationFromStereo::setup()
 	{
 	configurator.configure(configurationFilePath);
 	ConfigureExtraParameters();
-	InstantiateDFNExecutors();
+	InstantiateDFNs();
 
 	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
 	}
@@ -195,26 +194,26 @@ void RegistrationFromStereo::ConfigureExtraParameters()
 	ASSERT(parameters.pointCloudMapResolution > 0, "RegistrationFromStereo Error, Point Cloud Map resolution is not positive");
 	}
 
-void RegistrationFromStereo::InstantiateDFNExecutors()
+void RegistrationFromStereo::InstantiateDFNs()
 	{
-	optionalLeftFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) ) );
-	optionalRightFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) ) );
-	reconstructor3d = new StereoReconstructionExecutor( static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") ) );
-	featuresExtractor3d = new FeaturesExtraction3DExecutor( static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") ) );
-	optionalFeaturesDescriptor3d = new FeaturesDescription3DExecutor( static_cast<FeaturesDescription3DInterface*>( configurator.GetDfn("featuresDescriptor3d", true) ) );
-	featuresMatcher3d = new FeaturesMatching3DExecutor( static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") ) );
-	cloudFilter = new PointCloudFilteringExecutor( static_cast<PointCloudFilteringInterface*>( configurator.GetDfn("cloudFilter", true) ) );
+	optionalLeftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) );
+	optionalRightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) );
+	reconstructor3d = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") );
+	featuresExtractor3d = static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") );
+	optionalFeaturesDescriptor3d = static_cast<FeaturesDescription3DInterface*>( configurator.GetDfn("featuresDescriptor3d", true) );
+	featuresMatcher3d = static_cast<FeaturesMatching3DInterface*>( configurator.GetDfn("featuresMatcher3d") );
+	cloudFilter = static_cast<PointCloudFilteringInterface*>( configurator.GetDfn("cloudFilter", true) );
 	if (parameters.useRegistratorDfn)
 		{
-		registrator3d = new Registration3DExecutor( static_cast<Registration3DInterface*>( configurator.GetDfn("registrator3d") ) );
+		registrator3d = static_cast<Registration3DInterface*>( configurator.GetDfn("registrator3d") );
 		}
 	if (parameters.useAssemblerDfn)
 		{
-		cloudAssembler = new PointCloudAssemblyExecutor( static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") ) );
+		cloudAssembler = static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") );
 		}
 	if (parameters.useRegistratorDfn || parameters.useAssemblerDfn)
 		{
-		cloudTransformer = new PointCloudTransformExecutor( static_cast<PointCloudTransformInterface*>( configurator.GetDfn("cloudTransformer") ) );
+		cloudTransformer = static_cast<PointCloudTransformInterface*>( configurator.GetDfn("cloudTransformer") );
 		}
 	}
 
@@ -285,17 +284,17 @@ void RegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud, VisualPoi
 		Pose3DPtr poseToPreviousPose = NewPose3D();
 
 		Pose3DConstPtr poseToPreviousPoseClose = NULL;
-		featuresMatcher3d->Execute( featureVector, bundleHistory->GetFeatures3d(1), poseToPreviousPoseClose, outSuccess);
+		Executors::Execute(featuresMatcher3d, featureVector, bundleHistory->GetFeatures3d(1), poseToPreviousPoseClose, outSuccess);
 
 		if (outSuccess)
 			{
 			if (parameters.useRegistratorDfn)
 				{
 				PointCloudConstPtr closerCloud = NULL;
-				cloudTransformer->Execute(imageCloud, poseToPreviousPoseClose, closerCloud);
+				Executors::Execute(cloudTransformer, imageCloud, poseToPreviousPoseClose, closerCloud);
 
 				Pose3DConstPtr poseToPreviousPoseCloser = NULL;
-				registrator3d->Execute( closerCloud, bundleHistory->GetPointCloud(1), poseToPreviousPoseCloser, outSuccess);
+				Executors::Execute(registrator3d, closerCloud, bundleHistory->GetPointCloud(1), poseToPreviousPoseCloser, outSuccess);
 
 				(*poseToPreviousPose) = Sum(*poseToPreviousPoseClose, *poseToPreviousPoseCloser);
 				}
@@ -346,8 +345,8 @@ void RegistrationFromStereo::UpdatePointCloud(PointCloudConstPtr imageCloud, Vis
 	if (parameters.useAssemblerDfn)
 		{
 		PointCloudConstPtr transformedImageCloud = NULL;
-		cloudTransformer->Execute(*imageCloud, outPose, transformedImageCloud);
-		cloudAssembler->Execute(*transformedImageCloud, outPose, parameters.searchRadius, outputPointCloud);
+		Executors::Execute(cloudTransformer, *imageCloud, outPose, transformedImageCloud);
+		Executors::Execute(cloudAssembler, *transformedImageCloud, outPose, parameters.searchRadius, outputPointCloud);
 		if (parameters.matchToReconstructedCloud)
 			{
 			VisualPointFeatureVector3DConstPtr reconstructedFeatureVector = NULL;
@@ -391,10 +390,10 @@ void RegistrationFromStereo::ComputeVisualFeatures(PointCloudConstPtr inputCloud
 	{
 	ASSERT(outputFeatures == NULL, "RegistrationFromStereo error! ComputeVisualFeatures was called while outputFeatures is not NULL. OutputFeatures will be overwritten, look for memory leaks.");
 	VisualPointFeatureVector3DConstPtr keypointVector = NULL;
-	featuresExtractor3d->Execute(inputCloud, keypointVector);
+	Executors::Execute(featuresExtractor3d, inputCloud, keypointVector);
 	DEBUG_SHOW_3D_VISUAL_FEATURES(inputCloud, keypointVector);
 
-	optionalFeaturesDescriptor3d->Execute(inputCloud, keypointVector, outputFeatures);
+	Executors::Execute(optionalFeaturesDescriptor3d, inputCloud, keypointVector, outputFeatures);
 	DEBUG_PRINT_TO_LOG("Described Features:", GetNumberOfPoints(*outputFeatures));
 
 	#ifdef TESTING

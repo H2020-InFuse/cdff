@@ -31,6 +31,14 @@
 #include <Visualizers/OpenCVVisualizer.hpp>
 #include <Visualizers/PCLVisualizer.hpp>
 
+#include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
+#include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
+#include <Executors/FeaturesMatching2D/FeaturesMatching2DExecutor.hpp>
+#include <Executors/FeaturesExtraction2D/FeaturesExtraction2DExecutor.hpp>
+#include <Executors/FeaturesDescription2D/FeaturesDescription2DExecutor.hpp>
+#include <Executors/FundamentalMatrixComputation/FundamentalMatrixComputationExecutor.hpp>
+#include <Executors/PerspectiveNPointSolving/PerspectiveNPointSolvingExecutor.hpp>
+#include <Executors/PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>
 
 namespace CDFF
 {
@@ -92,16 +100,6 @@ ReconstructionFromStereo::ReconstructionFromStereo() :
 
 ReconstructionFromStereo::~ReconstructionFromStereo()
 	{
-	DeleteIfNotNull(optionalLeftFilter);
-	DeleteIfNotNull(optionalRightFilter);
-	DeleteIfNotNull(featuresExtractor);
-	DeleteIfNotNull(featuresMatcher);
-	DeleteIfNotNull(fundamentalMatrixComputer);
-	DeleteIfNotNull(perspectiveNPointSolver);
-	DeleteIfNotNull(reconstructor3d);
-	DeleteIfNotNull(optionalFeaturesDescriptor);
-	DeleteIfNotNull(reconstructor3dfrom2dmatches);
-
 	delete(perspectiveCloud);
 	delete(perspectiveVector);
 	delete(triangulatedKeypointCloud);
@@ -123,11 +121,11 @@ void ReconstructionFromStereo::run()
 
 	FrameConstPtr filteredLeftImage = NULL;
 	FrameConstPtr filteredRightImage = NULL;
-	optionalLeftFilter->Execute(inLeftImage, filteredLeftImage);
-	optionalRightFilter->Execute(inRightImage, filteredRightImage);
+	Executors::Execute(optionalLeftFilter, inLeftImage, filteredLeftImage);
+	Executors::Execute(optionalRightFilter, inRightImage, filteredRightImage);
 
 	PointCloudConstPtr imageCloud = NULL;
-	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, imageCloud);
+	Executors::Execute(reconstructor3d, filteredLeftImage, filteredRightImage, imageCloud);
 
 	ComputeCurrentMatches(filteredLeftImage, filteredRightImage);
 
@@ -170,7 +168,7 @@ void ReconstructionFromStereo::run()
 void ReconstructionFromStereo::setup()
 	{
 	configurator.configure(configurationFilePath);
-	InstantiateDFNExecutors();
+	InstantiateDFNs();
 	ConfigureExtraParameters();
 
 	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
@@ -206,25 +204,25 @@ void ReconstructionFromStereo::ConfigureExtraParameters()
 	ASSERT(parameters.pointCloudMapResolution > 0, "RegistrationFromStereo Error, Point Cloud Map resolution is not positive");
 	}
 
-void ReconstructionFromStereo::InstantiateDFNExecutors()
+void ReconstructionFromStereo::InstantiateDFNs()
 	{
-	optionalLeftFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) ) );
-	optionalRightFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) ) );
-	featuresExtractor = new FeaturesExtraction2DExecutor( static_cast<FeaturesExtraction2DInterface*>( configurator.GetDfn("featuresExtractor") ) );
-	featuresMatcher = new FeaturesMatching2DExecutor( static_cast<FeaturesMatching2DInterface*>( configurator.GetDfn("featuresMatcher") ) );
-	fundamentalMatrixComputer = new FundamentalMatrixComputationExecutor( static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") ) );
-	perspectiveNPointSolver = new PerspectiveNPointSolvingExecutor( static_cast<PerspectiveNPointSolvingInterface*>( configurator.GetDfn("perspectiveNPointSolver") ) );
-	reconstructor3d = new StereoReconstructionExecutor( static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") ) );
-	optionalFeaturesDescriptor = new FeaturesDescription2DExecutor( static_cast<FeaturesDescription2DInterface*>( configurator.GetDfn("featuresDescriptor", true) ) );
-	reconstructor3dfrom2dmatches = new PointCloudReconstruction2DTo3DExecutor( static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3dfrom2dmatches") ) );
+	optionalLeftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) );
+	optionalRightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) );
+	featuresExtractor = static_cast<FeaturesExtraction2DInterface*>( configurator.GetDfn("featuresExtractor") );
+	featuresMatcher = static_cast<FeaturesMatching2DInterface*>( configurator.GetDfn("featuresMatcher") );
+	fundamentalMatrixComputer = static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") );
+	perspectiveNPointSolver = static_cast<PerspectiveNPointSolvingInterface*>( configurator.GetDfn("perspectiveNPointSolver") );
+	reconstructor3d = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") );
+	optionalFeaturesDescriptor = static_cast<FeaturesDescription2DInterface*>( configurator.GetDfn("featuresDescriptor", true) );
+	reconstructor3dfrom2dmatches = static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3dfrom2dmatches") );
 	}
 
 void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftImage, FrameConstPtr filteredRightImage)
 	{
 	VisualPointFeatureVector2DConstPtr keypointVector = NULL;
 	VisualPointFeatureVector2DConstPtr featureVector = NULL;
-	featuresExtractor->Execute(filteredLeftImage, keypointVector);
-	optionalFeaturesDescriptor->Execute(filteredLeftImage, keypointVector, featureVector);
+	Executors::Execute(featuresExtractor, filteredLeftImage, keypointVector);
+	Executors::Execute(optionalFeaturesDescriptor, filteredLeftImage, keypointVector, featureVector);
 	bundleHistory->AddFeatures(*featureVector, LEFT_FEATURE_CATEGORY);
 	PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
@@ -234,8 +232,8 @@ void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftI
 
 	keypointVector = NULL;
 	featureVector = NULL;
-	featuresExtractor->Execute(filteredRightImage, keypointVector);
-	optionalFeaturesDescriptor->Execute(filteredRightImage, keypointVector, featureVector);
+	Executors::Execute(featuresExtractor, filteredRightImage, keypointVector);
+	Executors::Execute(optionalFeaturesDescriptor, filteredRightImage, keypointVector, featureVector);
 	bundleHistory->AddFeatures(*featureVector, RIGHT_FEATURE_CATEGORY);
 	DEBUG_PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
@@ -246,7 +244,7 @@ void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftI
 	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
 	VisualPointFeatureVector2DConstPtr rightFeatureVector = bundleHistory->GetFeatures(0, RIGHT_FEATURE_CATEGORY);
 	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = NULL;
-	featuresMatcher->Execute(leftFeatureVector, rightFeatureVector,leftRightCorrespondenceMap);
+	Executors::Execute(featuresMatcher, leftFeatureVector, rightFeatureVector,leftRightCorrespondenceMap);
 	DEBUG_PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
 
 	#ifdef TESTING
@@ -256,17 +254,17 @@ void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftI
 	MatrixWrapper::Matrix3dConstPtr fundamentalMatrix = NULL;
 	bool success = false;
 	CorrespondenceMap2DConstPtr inlierCorrespondenceMap = NULL;
-	fundamentalMatrixComputer->Execute(leftRightCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
+	Executors::Execute(fundamentalMatrixComputer, leftRightCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
 	DEBUG_PRINT_TO_LOG("Inlier Correspondences Number", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
 
 	if (success)
 		{
-		reconstructor3dfrom2dmatches->Execute(inlierCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
+		Executors::Execute(reconstructor3dfrom2dmatches, inlierCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
 		CleanUnmatchedFeatures(inlierCorrespondenceMap, triangulatedKeypointCloud);
 		}
 	else
 		{
-		reconstructor3dfrom2dmatches->Execute(leftRightCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
+		Executors::Execute(reconstructor3dfrom2dmatches, leftRightCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
 		CleanUnmatchedFeatures(leftRightCorrespondenceMap, triangulatedKeypointCloud);
 		}
 	//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
@@ -284,7 +282,7 @@ bool ReconstructionFromStereo::ComputeCameraMovement(Pose3DConstPtr& previousPos
 	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
 	VisualPointFeatureVector2DConstPtr pastLeftFeatureVector = bundleHistory->GetFeatures(1, LEFT_FEATURE_CATEGORY);
 	CorrespondenceMap2DConstPtr pastLeftCorrespondenceMap = NULL;
-	featuresMatcher->Execute(leftFeatureVector, pastLeftFeatureVector, pastLeftCorrespondenceMap);
+	Executors::Execute(featuresMatcher, leftFeatureVector, pastLeftFeatureVector, pastLeftCorrespondenceMap);
 	DEBUG_PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*pastLeftCorrespondenceMap) );
 
 	#ifdef TESTING
@@ -294,7 +292,7 @@ bool ReconstructionFromStereo::ComputeCameraMovement(Pose3DConstPtr& previousPos
 	MatrixWrapper::Matrix3dConstPtr pastLeftFundamentalMatrix = NULL;
 	bool pastSuccess = false;
 	CorrespondenceMap2DConstPtr pastInlierCorrespondenceMap = NULL;
-	fundamentalMatrixComputer->Execute(pastLeftCorrespondenceMap, pastLeftFundamentalMatrix, pastSuccess, pastInlierCorrespondenceMap);
+	Executors::Execute(fundamentalMatrixComputer, pastLeftCorrespondenceMap, pastLeftFundamentalMatrix, pastSuccess, pastInlierCorrespondenceMap);
 	DEBUG_PRINT_TO_LOG("Inlier Correspondences Number", GetNumberOfCorrespondences(*pastInlierCorrespondenceMap) );
 	
 	CorrespondenceMap2DConstPtr pastCorrespondenceMap = pastSuccess ? pastInlierCorrespondenceMap : pastLeftCorrespondenceMap;
@@ -325,7 +323,7 @@ bool ReconstructionFromStereo::ComputeCameraMovement(Pose3DConstPtr& previousPos
 	bool success;
 	DEBUG_PRINT_TO_LOG("Perspective cloud", GetNumberOfPoints(*perspectiveCloud) );
 	DEBUG_PRINT_TO_LOG("Perspective vector", GetNumberOfPoints(*perspectiveVector) );
-	perspectiveNPointSolver->Execute(perspectiveCloud, perspectiveVector, previousPoseToPose, success);
+	Executors::Execute(perspectiveNPointSolver, perspectiveCloud, perspectiveVector, previousPoseToPose, success);
 	DEBUG_PRINT_TO_LOG("Estimated pose", ToString(*previousPoseToPose));
 	DEBUG_PRINT_TO_LOG("success", (success ? "yes" : "no") );
 	return success;

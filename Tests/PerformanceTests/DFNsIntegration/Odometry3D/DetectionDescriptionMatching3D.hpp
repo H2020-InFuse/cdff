@@ -13,11 +13,11 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * This class is the main class for the performance test of the integration pipeline of the
  * following three DFNs: FeatureExtraction3D, FeatureDescription3D and FeatureMatching3D
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -43,10 +43,6 @@
 #include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
-
-#include <FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
-#include <FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
-#include <FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
 
 #include <Converters/MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Converters/PointCloudToPclPointCloudConverter.hpp>
@@ -75,7 +71,7 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 		~DetectionDescriptionMatching3DTestInterface();
 
 		void SetInputCloud(std::string inputCloudFile, float voxelGridFilterSize);
-		void SetModelsCloud(std::string groundTruthTransformFilePath, std::vector<std::string> modelsCloudFilesList); 
+		void SetModelsCloud(std::string groundTruthTransformFilePath, std::vector<std::string> modelsCloudFilesList);
 		void SetGroundTruth(float positionX, float positionY, float positionZ, float orientationX, float orientationY, float orientationZ, float orientationW);
 	protected:
 
@@ -94,9 +90,9 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 		int numberOfSceneKeypoints;
 		int numberOfModelKeypoints;
 
-		CDFF::DFN::FeaturesExtraction3DExecutor* extractor;
-		CDFF::DFN::FeaturesDescription3DExecutor* descriptor;
-		CDFF::DFN::FeaturesMatching3DExecutor* matcher;
+		CDFF::DFN::FeaturesExtraction3DInterface* extractor;
+		CDFF::DFN::FeaturesDescription3DInterface* descriptor;
+		CDFF::DFN::FeaturesMatching3DInterface* matcher;
 
 		Aggregator* groundPositionDistanceAggregator;
 		Aggregator* groundOrientationDistanceAggregator;

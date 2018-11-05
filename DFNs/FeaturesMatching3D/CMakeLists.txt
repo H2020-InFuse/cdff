@@ -1,7 +1,6 @@
 add_library(
     feature_matching_3d
     FeaturesMatching3DInterface.cpp
-    FeaturesMatching3DExecutor.cpp
 )
 
 add_library(

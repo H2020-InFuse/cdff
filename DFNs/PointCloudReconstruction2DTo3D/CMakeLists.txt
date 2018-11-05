@@ -1,7 +1,6 @@
 add_library(
     point_cloud_reconstruction_2d_to_3d
     PointCloudReconstruction2DTo3DInterface.cpp
-    PointCloudReconstruction2DTo3DExecutor.cpp
 )
 
 add_library(

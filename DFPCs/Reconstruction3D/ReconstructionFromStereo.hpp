@@ -34,14 +34,14 @@
  */
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
 
-#include <ImageFiltering/ImageFilteringExecutor.hpp>
-#include <StereoReconstruction/StereoReconstructionExecutor.hpp>
-#include <FeaturesMatching2D/FeaturesMatching2DExecutor.hpp>
-#include <FeaturesExtraction2D/FeaturesExtraction2DExecutor.hpp>
-#include <FeaturesDescription2D/FeaturesDescription2DExecutor.hpp>
-#include <FundamentalMatrixComputation/FundamentalMatrixComputationExecutor.hpp>
-#include <PerspectiveNPointSolving/PerspectiveNPointSolvingExecutor.hpp>
-#include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>
+#include <ImageFiltering/ImageFilteringInterface.hpp>
+#include <StereoReconstruction/StereoReconstructionInterface.hpp>
+#include <FeaturesMatching2D/FeaturesMatching2DInterface.hpp>
+#include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
+#include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
+#include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
+#include <PerspectiveNPointSolving/PerspectiveNPointSolvingInterface.hpp>
+#include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DInterface.hpp>
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
@@ -116,15 +116,15 @@ namespace Reconstruction3D
 		const std::string STEREO_CLOUD_CATEGORY;
 		const std::string TRIANGULATION_CLOUD_CATEGORY;
 
-		CDFF::DFN::ImageFilteringExecutor* optionalLeftFilter;
-		CDFF::DFN::ImageFilteringExecutor* optionalRightFilter;
-		CDFF::DFN::FeaturesExtraction2DExecutor* featuresExtractor;
-		CDFF::DFN::FeaturesDescription2DExecutor* optionalFeaturesDescriptor;
-		CDFF::DFN::FeaturesMatching2DExecutor* featuresMatcher;	
-		CDFF::DFN::FundamentalMatrixComputationExecutor* fundamentalMatrixComputer;	
-		CDFF::DFN::PerspectiveNPointSolvingExecutor* perspectiveNPointSolver;
-		CDFF::DFN::StereoReconstructionExecutor* reconstructor3d;
-		CDFF::DFN::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
+		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
+		CDFF::DFN::FeaturesExtraction2DInterface* featuresExtractor;
+		CDFF::DFN::FeaturesDescription2DInterface* optionalFeaturesDescriptor;
+		CDFF::DFN::FeaturesMatching2DInterface* featuresMatcher;	
+		CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;	
+		CDFF::DFN::PerspectiveNPointSolvingInterface* perspectiveNPointSolver;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
+		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
 
 		#ifdef TESTING
 		std::ofstream logFile;
@@ -141,7 +141,7 @@ namespace Reconstruction3D
 		PoseWrapper::Pose3D rightToLeftCameraPose;
 
 		void ConfigureExtraParameters();
-		void InstantiateDFNExecutors();
+		void InstantiateDFNs();
 
 		void ComputeCurrentMatches(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
 		bool ComputeCameraMovement(PoseWrapper::Pose3DConstPtr& previousPoseToPose);

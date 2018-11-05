@@ -1,7 +1,6 @@
 add_library(
     force_mesh_generator
     ForceMeshGeneratorInterface.cpp
-    ForceMeshGeneratorExecutor.cpp
 )
 target_link_libraries(force_mesh_generator cdff_validators)
 

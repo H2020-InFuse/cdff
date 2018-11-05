@@ -1,7 +1,6 @@
 add_library(
     cameras_transform_estimation
     CamerasTransformEstimationInterface.cpp
-    CamerasTransformEstimationExecutor.cpp
 )
 
 add_library(
