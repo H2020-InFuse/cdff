@@ -10,7 +10,7 @@ add_library(
 )
 target_link_libraries(
     harris_detector_2d
-    feature_extraction_2d cdff_types yaml-cpp cdff_helpers opencv_core cdff_converters opencv_imgproc
+    feature_extraction_2d cdff_types yaml-cpp cdff_helpers opencv_core cdff_converters opencv_imgproc cdff_logger
 )
 
 add_library(
