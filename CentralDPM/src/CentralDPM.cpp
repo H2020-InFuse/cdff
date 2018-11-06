@@ -1,6 +1,4 @@
 #include "CentralDPM.hpp"
-#include <iostream>
-#include <stdlib.h>
 
 #include <envire_core/graph/EnvireGraph.hpp>
 #include <envire_core/plugin/ClassLoader.hpp>

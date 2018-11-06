@@ -340,10 +340,6 @@ find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(ENVIRE_CORE REQUIRED envire_core)
 
-include_directories(
-  SYSTEM "${_DEPENDENCIES_PREFIX}/include/envire_core"
-)
-
 ## Setup CDFF installation -----------------------------------------------------
 
 # Standard installation directories, as defined by the GNU Coding Standards:

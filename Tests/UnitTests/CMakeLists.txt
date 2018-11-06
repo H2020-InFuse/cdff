@@ -75,12 +75,12 @@ set(unittest_libraries catch
     best_descriptor_match
     cartesian_system_transform
     cc_core_lib
+    cdff_centraldpm
     cdff_converters
     cdff_dfn_dfnexecutors
     cdff_helpers
     cdff_logger
     cdff_types
-    central_dpm
     ceres_adjustment
     convolution_filter
     dfpc_configurator
@@ -157,4 +157,6 @@ target_link_libraries(cdff-unit-tests ${unittest_libraries})
 # ${CMAKE_CURRENT_SOURCE_DIR}).
 add_test(NAME unit-tests COMMAND cdff-unit-tests)
 
-include_directories("${CMAKE_SOURCE_DIR}/CentralDPM/src")
+target_include_directories(
+    cdff-unit-tests
+    PRIVATE ${CMAKE_SOURCE_DIR}/CentralDPM/src)
