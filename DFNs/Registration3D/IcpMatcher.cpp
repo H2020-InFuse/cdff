@@ -316,7 +316,12 @@ Pose3DConstPtr IcpMatcher::ComputeTransform(PointMatcher<float>::DataPoints sour
 	{
 	PointMatcher<float>::TransformationParameters transform = icp(sourceCloud, sinkCloud);
 
-	FixTransformationMatrix(transform);
+	if (!FixTransformationMatrix(transform))
+		{
+		outSuccess = false;
+		return NULL;
+		}
+	outSuccess = true;
 	return eigenTransformToTransform3D.Convert(transform);
 	}
 
