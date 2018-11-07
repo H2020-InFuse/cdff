@@ -62,12 +62,21 @@ namespace DFPC
 namespace Reconstruction3D
 {
 
-/* --------------------------------------------------------------------------
+/**
+ * Dense 3D reconstruction. This DFPC computes a point cloud from a pair of stereo cameras, matches the computed cloud to a previous reconstruction or previous frame by means of a registration DFN, 
+ * computes the pose of the new cloud into the reconstructed cloud, and extends the reconstruction by merging the new cloud into the reconstructed cloud at the computed pose.
+ * This DFPC is configured according to the following parameters (beyond those that are needed to configure the DFN components):
  *
- * Class definition
- *
- * --------------------------------------------------------------------------
+ * @param SearchRadius, the output is given by the point of the reconstructed cloud contained within a sphere of center given by the current camera pose and radius given by this parameter;
+ * @param PointCloudMapResolution, the voxel resolution of the output point cloud, if the cloud is denser it will be filtered by PCL voxel filter;
+ * @param MatchToReconstructedCloud, whether the cloud is matched to the previous reconstruction or is matched to the previous frame;
+ * @param UseAssemblerDfn, whether the assembler DFN is used, if this argument is false the assembly is done by simple overlapping and voxel filtering;
+ * @param CloudUpdateTime, the number of frames between two point cloud assembly, intermediate frames are used only to update the pose and will not extend the point cloud;
+ * @param SaveCloudsToFile, whether to save the output clouds to file;
+ * @param CloudSaveTime, the number of frames between two saving of the point cloud, clouds will not be save during intermediate frames;
+ * @param cloudSavePath, the folder path where the point clouds are saved.
  */
+
     class DenseRegistrationFromStereo : public Reconstruction3DInterface
     {
 	/* --------------------------------------------------------------------
@@ -101,12 +110,17 @@ namespace Reconstruction3D
 			float pointCloudMapResolution;
 			bool matchToReconstructedCloud;
 			bool useAssemblerDfn;
+			int cloudUpdateTime;
+
+			bool saveCloudsToFile;
+			int cloudSaveTime;
+			std::string cloudSavePath;
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
 		RegistrationFromStereoOptionsSet parameters;
 		static const RegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
-		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;		
+		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;
 
 		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
 		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;

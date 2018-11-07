@@ -5,6 +5,10 @@
     SearchRadius: 80
     MatchToReconstructedCloud: true
     UseAssemblerDfn: true
+    CloudUpdateTime: 50
+    SaveCloudsToFile: true
+    CloudSaveTime: 100
+    CloudSavePath: /Agridrive1/DLR/BoxBag1
 - Name: reconstructor3D
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
