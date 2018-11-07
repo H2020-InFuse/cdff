@@ -9,8 +9,8 @@
 
 #include "IcpMatcher.hpp"
 
-#include <PointCloud.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
@@ -659,11 +659,12 @@ bool IcpMatcher::FixSingleRotationElement(PointMatcher<float>::TransformationPar
 
 bool IcpMatcher::NormalizeRotationMatrix(PointMatcher<float>::TransformationParameters& transform, float determinant)
 	{
+	float cubicDeterminantRoot = std::cbrt(determinant);
 	for(int rowIndex = 0; rowIndex < 3; rowIndex++)
 		{
 		for(int columnIndex = 0; columnIndex < 3; columnIndex++)
 			{
-			transform(rowIndex, columnIndex) = transform(rowIndex, columnIndex) / determinant;
+			transform(rowIndex, columnIndex) = transform(rowIndex, columnIndex) / cubicDeterminantRoot;
 			}
 		}
 	return true;

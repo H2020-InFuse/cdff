@@ -27,6 +27,6 @@ add_library(
 )
 target_link_libraries(
     registration_icp_matcher
-    registration_3d cdff_types yaml-cpp cdff_helpers converters_opencv cc_core_lib
+    registration_3d cdff_types yaml-cpp cdff_helpers cdff_converters cc_core_lib
 )
 

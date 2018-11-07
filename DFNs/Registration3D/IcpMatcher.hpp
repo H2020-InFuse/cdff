@@ -12,10 +12,10 @@
 
 #include "Registration3DInterface.hpp"
 
-#include <Pose.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <EigenTransformToTransform3DConverter.hpp>
-#include <Transform3DToEigenTransformConverter.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/EigenTransformToTransform3DConverter.hpp>
+#include <Converters/Transform3DToEigenTransformConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <pcl/point_cloud.h>

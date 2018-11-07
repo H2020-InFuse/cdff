@@ -27,7 +27,7 @@ add_executable(
 )
 target_link_libraries(
 	registration_3d_icp_matcher_test
-	cdff_helpers cdff_logger cdff_types converters_opencv registration_3d registration_icp_matcher opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system   ${libpointmatcher_LIBRARIES}
+	cdff_helpers cdff_logger cdff_types cdff_converters registration_3d registration_icp_matcher opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system   ${libpointmatcher_LIBRARIES}
 )
 
 add_executable(
