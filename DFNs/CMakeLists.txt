@@ -48,6 +48,7 @@ target_link_libraries(
   kalman_predictor
   registration_icp_3d
   registration_icp_cc
+  registration_icp_matcher
   ceres_adjustment
   svd_decomposition
   transform_3d_estimation_least_squares_minimization
@@ -82,4 +83,5 @@ target_link_libraries(
   voxel_binning
   cartesian_system_transform
   statistical_outlier_removal
+  ${libpointmatcher_LIBRARIES}
 )
