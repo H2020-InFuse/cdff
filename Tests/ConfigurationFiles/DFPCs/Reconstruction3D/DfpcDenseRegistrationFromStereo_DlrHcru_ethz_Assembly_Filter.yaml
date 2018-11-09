@@ -7,7 +7,10 @@
     UseAssemblerDfn: true
     CloudUpdateTime: 50
     SaveCloudsToFile: true
+    UpdateOnTimePassed: true
     CloudSaveTime: 100
+    CloudUpdateTranslationDistance: 0.1
+    CloudUpdateOrientationDistance: 0.1
     CloudSavePath: /Agridrive1/DLR/BoxBag1
 - Name: reconstructor3D
   Type: StereoReconstruction

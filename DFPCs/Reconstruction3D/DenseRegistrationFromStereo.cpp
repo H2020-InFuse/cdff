@@ -70,7 +70,11 @@ DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "MatchToReconstructedCloud", parameters.matchToReconstructedCloud, DEFAULT_PARAMETERS.matchToReconstructedCloud);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseAssemblerDfn", parameters.useAssemblerDfn, DEFAULT_PARAMETERS.useAssemblerDfn);
+
+	parametersHelper.AddParameter<bool>("GeneralParameters", "UpdateOnTimePassed", parameters.updateOnTimePassed, DEFAULT_PARAMETERS.updateOnTimePassed);
 	parametersHelper.AddParameter<int>("GeneralParameters", "CloudUpdateTime", parameters.cloudUpdateTime, DEFAULT_PARAMETERS.cloudUpdateTime);
+	parametersHelper.AddParameter<double>("GeneralParameters", "CloudUpdateTranslationDistance", parameters.cloudUpdateTranslationDistance, DEFAULT_PARAMETERS.cloudUpdateTranslationDistance);
+	parametersHelper.AddParameter<double>("GeneralParameters", "CloudUpdateOrientationDistance", parameters.cloudUpdateOrientationDistance, DEFAULT_PARAMETERS.cloudUpdateOrientationDistance);
 
 	parametersHelper.AddParameter<bool>("GeneralParameters", "SaveCloudsToFile", parameters.saveCloudsToFile, DEFAULT_PARAMETERS.saveCloudsToFile);
 	parametersHelper.AddParameter<int>("GeneralParameters", "CloudSaveTime", parameters.cloudSaveTime, DEFAULT_PARAMETERS.cloudSaveTime);
@@ -88,6 +92,7 @@ DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 	cloudFilter = NULL;
 
 	bundleHistory = new BundleHistory(2);
+	outputPoseAtLastMergeSet = false;
 
 	#ifdef TESTING
 	logFile.open("/InFuse/myLog.txt");
@@ -138,40 +143,16 @@ void DenseRegistrationFromStereo::run()
 	#endif
 
 	UpdatePose(imageCloud);
-
-	static int mergeCounter = 0;
-	if (!outSuccess)
+	if (parameters.updateOnTimePassed)
 		{
-		bundleHistory->RemoveEntry(0);
+		UpdatePointCloudOnTimePassed(imageCloud);
 		}
 	else
 		{
-		if (mergeCounter == 0)
-			{
-			UpdatePointCloud(imageCloud);
-			}
-		else
-			{
-			bundleHistory->AddPointCloud(outPointCloud);
-			}
+		UpdatePointCloudOnDistanceCovered(imageCloud);
 		}
-	mergeCounter = (mergeCounter + 1) % parameters.cloudUpdateTime;
 
-	if (parameters.saveCloudsToFile)
-		{
-		static int saveCounter = 0;
-		if (saveCounter == 0)
-			{
-			static int fileNumber = 0;
-			std::string outputFilePath = parameters.cloudSavePath + "/intermediate_output_" + std::to_string(fileNumber) + ".ply";
-			Converters::PointCloudToPclPointCloudConverter inConverter;		
-			pcl::PointCloud<pcl::PointXYZ>::ConstPtr transformedCloud = inConverter.Convert( bundleHistory->GetPointCloud(0) );
-			pcl::PLYWriter writer;
-			writer.write(outputFilePath, *transformedCloud, true);
-			fileNumber += parameters.cloudSaveTime;
-			}
-		saveCounter = (saveCounter + 1) % parameters.cloudSaveTime;
-		}
+	SaveOutputCloud();
 
 	#ifdef TESTING
 	logFile << std::endl;
@@ -201,7 +182,10 @@ const DenseRegistrationFromStereo::RegistrationFromStereoOptionsSet DenseRegistr
 	/*.pointCloudMapResolution =*/ 1e-2,
 	/*.matchToReconstructedCloud =*/ false,
 	/*.useAssemblerDfn=*/ false,
+	/*.updateOnTimePassed=*/ true,
 	/*.cloudUpdateTime=*/ 50,
+	/*.cloudUpdateTranslationDistance=*/ 0.5,
+	/*.cloudUpdateOrientationDistance=*/ 0.5,
 	/*.saveCloudsToFile=*/ false,
 	/*.cloudSaveTime=*/ 100,
 	/*.cloudSavePath=*/ ""
@@ -220,6 +204,8 @@ void DenseRegistrationFromStereo::ConfigureExtraParameters()
 	ASSERT(parameters.pointCloudMapResolution > 0, "DenseRegistrationFromStereo Error, Point Cloud Map resolution is not positive");
 	ASSERT(parameters.cloudUpdateTime > 0, "DenseRegistrationFromStereo Error, cloudUpdateTime is not positive");
 	ASSERT(parameters.cloudSaveTime > 0, "DenseRegistrationFromStereo Error, cloudUpdateTime is not positive");
+	ASSERT(parameters.cloudUpdateTranslationDistance > 0, "DenseRegistrationFromStereo Error, cloudUpdateTranslationDistance is not positive");
+	ASSERT(parameters.cloudUpdateOrientationDistance > 0, "DenseRegistrationFromStereo Error, cloudUpdateOrientationDistance is not positive");
 	if (parameters.saveCloudsToFile)
 		{
 		ASSERT( access(parameters.cloudSavePath.c_str(), 0) == 0, "DenseRegistrationFromStereo Error, save folder does not exists");
@@ -344,7 +330,55 @@ void DenseRegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud)
 		}
 	}
 
-void DenseRegistrationFromStereo::UpdatePointCloud(PointCloudConstPtr imageCloud)
+void DenseRegistrationFromStereo::UpdatePointCloudOnTimePassed(PointCloudWrapper::PointCloudConstPtr imageCloud)
+	{
+	static int mergeCounter = 0;
+	if (!outSuccess)
+		{
+		bundleHistory->RemoveEntry(0);
+		}
+	else
+		{
+		if (mergeCounter == 0)
+			{
+			float translationDistance = ComputeTranslationDistance(outPose, outputPoseAtLastMerge);
+			float orientationDistance = ComputeOrientationDistance(outPose, outputPoseAtLastMerge);
+			PRINT_TO_LOG("translationDistance", translationDistance);
+			PRINT_TO_LOG("orientationDistance", orientationDistance);
+			MergePointCloud(imageCloud);
+			}
+		else
+			{
+			bundleHistory->AddPointCloud(outPointCloud);
+			}
+		}
+	mergeCounter = (mergeCounter + 1) % parameters.cloudUpdateTime;
+	}
+
+void DenseRegistrationFromStereo::UpdatePointCloudOnDistanceCovered(PointCloudWrapper::PointCloudConstPtr imageCloud)
+	{
+	if (!outSuccess)
+		{
+		bundleHistory->RemoveEntry(0);
+		}
+	else
+		{
+		float translationDistance = ComputeTranslationDistance(outPose, outputPoseAtLastMerge);
+		float orientationDistance = ComputeOrientationDistance(outPose, outputPoseAtLastMerge);
+		if (translationDistance > parameters.cloudUpdateTranslationDistance || orientationDistance > parameters.cloudUpdateOrientationDistance)
+			{
+			MergePointCloud(imageCloud);
+			Copy(outPose, outputPoseAtLastMerge);
+			outputPoseAtLastMergeSet = true;
+			}
+		else
+			{
+			bundleHistory->AddPointCloud(outPointCloud);
+			}
+		}
+	}
+
+void DenseRegistrationFromStereo::MergePointCloud(PointCloudConstPtr imageCloud)
 	{
 	PointCloudWrapper::PointCloudConstPtr outputPointCloud = NULL;
 	if (parameters.useAssemblerDfn)
@@ -376,6 +410,27 @@ void DenseRegistrationFromStereo::UpdatePointCloud(PointCloudConstPtr imageCloud
 		{
 		DeleteIfNotNull(outputPointCloud);
 		}
+	}
+
+void DenseRegistrationFromStereo::SaveOutputCloud()
+	{
+	if (!parameters.saveCloudsToFile)
+		{
+		return;
+		}
+	
+	static int saveCounter = 0;
+	if (saveCounter == 0)
+		{
+		static int fileNumber = 0;
+		std::string outputFilePath = parameters.cloudSavePath + "/intermediate_output_" + std::to_string(fileNumber) + ".ply";
+		Converters::PointCloudToPclPointCloudConverter inConverter;		
+		pcl::PointCloud<pcl::PointXYZ>::ConstPtr transformedCloud = inConverter.Convert( bundleHistory->GetPointCloud(0) );
+		pcl::PLYWriter writer;
+		writer.write(outputFilePath, *transformedCloud, true);
+		fileNumber += parameters.cloudSaveTime;
+		}
+	saveCounter = (saveCounter + 1) % parameters.cloudSaveTime;
 	}
 
 }

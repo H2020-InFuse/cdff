@@ -110,7 +110,11 @@ namespace Reconstruction3D
 			float pointCloudMapResolution;
 			bool matchToReconstructedCloud;
 			bool useAssemblerDfn;
+
+			bool updateOnTimePassed;
 			int cloudUpdateTime;
+			double cloudUpdateTranslationDistance;
+			double cloudUpdateOrientationDistance; 
 
 			bool saveCloudsToFile;
 			int cloudSaveTime;
@@ -137,12 +141,18 @@ namespace Reconstruction3D
 
 		//Helpers
 		BundleHistory* bundleHistory;
+		PoseWrapper::Pose3D outputPoseAtLastMerge;
+		bool outputPoseAtLastMergeSet;
 
 		void ConfigureExtraParameters();
 		void InstantiateDFNs();
 
 		void UpdatePose(PointCloudWrapper::PointCloudConstPtr inputCloud);
-		void UpdatePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud);
+		void UpdatePointCloudOnTimePassed(PointCloudWrapper::PointCloudConstPtr inputCloud);
+		void UpdatePointCloudOnDistanceCovered(PointCloudWrapper::PointCloudConstPtr inputCloud);
+		void MergePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud);
+
+		void SaveOutputCloud();
 
 		/*
 		* Inline Methods
