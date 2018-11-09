@@ -341,10 +341,6 @@ void DenseRegistrationFromStereo::UpdatePointCloudOnTimePassed(PointCloudWrapper
 		{
 		if (mergeCounter == 0)
 			{
-			float translationDistance = ComputeTranslationDistance(outPose, outputPoseAtLastMerge);
-			float orientationDistance = ComputeOrientationDistance(outPose, outputPoseAtLastMerge);
-			PRINT_TO_LOG("translationDistance", translationDistance);
-			PRINT_TO_LOG("orientationDistance", orientationDistance);
 			MergePointCloud(imageCloud);
 			}
 		else
@@ -365,7 +361,7 @@ void DenseRegistrationFromStereo::UpdatePointCloudOnDistanceCovered(PointCloudWr
 		{
 		float translationDistance = ComputeTranslationDistance(outPose, outputPoseAtLastMerge);
 		float orientationDistance = ComputeOrientationDistance(outPose, outputPoseAtLastMerge);
-		if (translationDistance > parameters.cloudUpdateTranslationDistance || orientationDistance > parameters.cloudUpdateOrientationDistance)
+		if (!outputPoseAtLastMergeSet || translationDistance > parameters.cloudUpdateTranslationDistance || orientationDistance > parameters.cloudUpdateOrientationDistance)
 			{
 			MergePointCloud(imageCloud);
 			Copy(outPose, outputPoseAtLastMerge);
