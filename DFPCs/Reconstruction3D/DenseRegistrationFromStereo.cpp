@@ -44,6 +44,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <pcl/kdtree/kdtree_flann.h>
+
 namespace CDFF
 {
 namespace DFPC
@@ -66,15 +68,19 @@ using namespace PointCloudWrapper;
 DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 	EMPTY_FEATURE_VECTOR( NewVisualPointFeatureVector3D() )
 	{
+	#define ADD_PARAMETER_WITH_HELPER(type, helperType, groupName, parameterName, parameterVariable) \
+		parametersHelper.AddParameter<type, helperType>(groupName, parameterName, parameters.parameterVariable, DEFAULT_PARAMETERS.parameterVariable);
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "MatchToReconstructedCloud", parameters.matchToReconstructedCloud, DEFAULT_PARAMETERS.matchToReconstructedCloud);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseAssemblerDfn", parameters.useAssemblerDfn, DEFAULT_PARAMETERS.useAssemblerDfn);
 
-	parametersHelper.AddParameter<bool>("GeneralParameters", "UpdateOnTimePassed", parameters.updateOnTimePassed, DEFAULT_PARAMETERS.updateOnTimePassed);
+	ADD_PARAMETER_WITH_HELPER(CloudUpdateType, CloudUpdateTypeHelper, "GeneralParameters", "CloudUpdateType", cloudUpdateType);
 	parametersHelper.AddParameter<int>("GeneralParameters", "CloudUpdateTime", parameters.cloudUpdateTime, DEFAULT_PARAMETERS.cloudUpdateTime);
 	parametersHelper.AddParameter<double>("GeneralParameters", "CloudUpdateTranslationDistance", parameters.cloudUpdateTranslationDistance, DEFAULT_PARAMETERS.cloudUpdateTranslationDistance);
 	parametersHelper.AddParameter<double>("GeneralParameters", "CloudUpdateOrientationDistance", parameters.cloudUpdateOrientationDistance, DEFAULT_PARAMETERS.cloudUpdateOrientationDistance);
+	parametersHelper.AddParameter<float>("GeneralParameters", "OverlapThreshold", parameters.overlapThreshold, DEFAULT_PARAMETERS.overlapThreshold);
 
 	parametersHelper.AddParameter<bool>("GeneralParameters", "SaveCloudsToFile", parameters.saveCloudsToFile, DEFAULT_PARAMETERS.saveCloudsToFile);
 	parametersHelper.AddParameter<int>("GeneralParameters", "CloudSaveTime", parameters.cloudSaveTime, DEFAULT_PARAMETERS.cloudSaveTime);
@@ -143,13 +149,17 @@ void DenseRegistrationFromStereo::run()
 	#endif
 
 	UpdatePose(imageCloud);
-	if (parameters.updateOnTimePassed)
+	if (parameters.cloudUpdateType == CloudUpdateType::TimePassed)
 		{
 		UpdatePointCloudOnTimePassed(imageCloud);
 		}
-	else
+	else if (parameters.cloudUpdateType == CloudUpdateType::DistanceCovered)
 		{
 		UpdatePointCloudOnDistanceCovered(imageCloud);
+		}
+	else
+		{
+		UpdatePointCloudOnMaximumOverlapping(imageCloud);
 		}
 
 	SaveOutputCloud();
@@ -182,14 +192,43 @@ const DenseRegistrationFromStereo::RegistrationFromStereoOptionsSet DenseRegistr
 	/*.pointCloudMapResolution =*/ 1e-2,
 	/*.matchToReconstructedCloud =*/ false,
 	/*.useAssemblerDfn=*/ false,
-	/*.updateOnTimePassed=*/ true,
+	/*.cloudUpdateType=*/ CloudUpdateType::TimePassed,
 	/*.cloudUpdateTime=*/ 50,
 	/*.cloudUpdateTranslationDistance=*/ 0.5,
 	/*.cloudUpdateOrientationDistance=*/ 0.5,
+	/*.overlapThreshold=*/ 0.02,
 	/*.saveCloudsToFile=*/ false,
 	/*.cloudSaveTime=*/ 100,
 	/*.cloudSavePath=*/ ""
 	};
+
+DenseRegistrationFromStereo::CloudUpdateTypeHelper::CloudUpdateTypeHelper
+	(const std::string& parameterName, CloudUpdateType& boundVariable, const CloudUpdateType& defaultValue) :
+	ParameterHelper(parameterName, boundVariable, defaultValue)
+{
+}
+
+DenseRegistrationFromStereo::CloudUpdateType DenseRegistrationFromStereo::CloudUpdateTypeHelper::Convert(const std::string& cloudUpdateType)
+{
+	if (cloudUpdateType == "Time" || cloudUpdateType == "0")
+	{
+		return CloudUpdateType::TimePassed;
+	}
+	if (cloudUpdateType == "Distance" || cloudUpdateType == "1")
+	{
+		return CloudUpdateType::DistanceCovered;
+	}
+	else if (cloudUpdateType == "Overlapping" || cloudUpdateType == "2")
+	{
+		return CloudUpdateType::MaximumOverlapping;
+	}
+	else
+	{
+		std::string errorString = "DenseRegistrationFromStereo ConfigurationError: cloudUpdateType has to be one of ";
+		errorString += "{Time, Distance, Overlapping}";
+		ASSERT(false, errorString);
+	}
+}
 
 /* --------------------------------------------------------------------------
  *
@@ -206,6 +245,7 @@ void DenseRegistrationFromStereo::ConfigureExtraParameters()
 	ASSERT(parameters.cloudSaveTime > 0, "DenseRegistrationFromStereo Error, cloudUpdateTime is not positive");
 	ASSERT(parameters.cloudUpdateTranslationDistance > 0, "DenseRegistrationFromStereo Error, cloudUpdateTranslationDistance is not positive");
 	ASSERT(parameters.cloudUpdateOrientationDistance > 0, "DenseRegistrationFromStereo Error, cloudUpdateOrientationDistance is not positive");
+	ASSERT(parameters.overlapThreshold > 0, "DenseRegistrationFromStereo Error, overlapThreshold is not positive");
 	if (parameters.saveCloudsToFile)
 		{
 		ASSERT( access(parameters.cloudSavePath.c_str(), 0) == 0, "DenseRegistrationFromStereo Error, save folder does not exists");
@@ -341,7 +381,12 @@ void DenseRegistrationFromStereo::UpdatePointCloudOnTimePassed(PointCloudWrapper
 		{
 		if (mergeCounter == 0)
 			{
+			float translationDistance = ComputeTranslationDistance(outPose, outputPoseAtLastMerge);
+			float orientationDistance = ComputeOrientationDistance(outPose, outputPoseAtLastMerge);
+			PRINT_TO_LOG("translationDistance", translationDistance);
+			PRINT_TO_LOG("orientationDistance", orientationDistance);
 			MergePointCloud(imageCloud);
+			Copy(outPose, outputPoseAtLastMerge);
 			}
 		else
 			{
@@ -366,6 +411,32 @@ void DenseRegistrationFromStereo::UpdatePointCloudOnDistanceCovered(PointCloudWr
 			MergePointCloud(imageCloud);
 			Copy(outPose, outputPoseAtLastMerge);
 			outputPoseAtLastMergeSet = true;
+			}
+		else
+			{
+			bundleHistory->AddPointCloud(outPointCloud);
+			}
+		}
+	}
+
+void DenseRegistrationFromStereo::UpdatePointCloudOnMaximumOverlapping(PointCloudWrapper::PointCloudConstPtr inputCloud)
+	{
+	static bool firstCloud = true;
+	if (!outSuccess)
+		{
+		bundleHistory->RemoveEntry(0);
+		}
+	else
+		{
+		float overlappingRatio = 0;
+		if (!firstCloud)
+			{
+			overlappingRatio = ComputeOverlappingRatio(inputCloud, bundleHistory->GetPointCloud(1));
+			}
+		if (firstCloud || overlappingRatio < parameters.overlapThreshold)
+			{
+			MergePointCloud(inputCloud);
+			firstCloud = false;
 			}
 		else
 			{
@@ -427,6 +498,31 @@ void DenseRegistrationFromStereo::SaveOutputCloud()
 		fileNumber += parameters.cloudSaveTime;
 		}
 	saveCounter = (saveCounter + 1) % parameters.cloudSaveTime;
+	}
+
+float DenseRegistrationFromStereo::ComputeOverlappingRatio(PointCloudConstPtr cloud, PointCloudConstPtr sceneCloud)
+	{
+	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclSceneCloud = pointCloudToPclPointCloudConverter.Convert(sceneCloud);
+
+	pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
+	kdtree.setInputCloud(pclSceneCloud);
+
+	std::vector<int> indexList;
+	std::vector<float> squaredDistanceList;
+
+	int numberOfPoints = GetNumberOfPoints(*cloud);
+	int overlappingCounter = 0;
+	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+		{
+		pcl::PointXYZ searchPoint( GetXCoordinate(*cloud, pointIndex), GetYCoordinate(*cloud, pointIndex), GetZCoordinate(*cloud, pointIndex) );
+		kdtree.radiusSearch( searchPoint, parameters.overlapThreshold, indexList, squaredDistanceList );
+		if (indexList.size() > 0)
+			{
+			overlappingCounter++;
+			}
+		}
+
+	return ( static_cast<float>(overlappingCounter) / static_cast<float>(numberOfPoints) );
 	}
 
 }

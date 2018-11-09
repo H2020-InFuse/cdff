@@ -51,6 +51,8 @@
 #include <Types/CPP/Pose.hpp>
 #include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+
 #ifdef TESTING
 #include <fstream>
 #endif
@@ -104,6 +106,20 @@ namespace Reconstruction3D
 		PointCloudMap pointCloudMap;
 		bool firstInput;
 
+		enum CloudUpdateType
+			{
+			TimePassed,
+			DistanceCovered,
+			MaximumOverlapping
+			};
+		class CloudUpdateTypeHelper : public Helpers::ParameterHelper<CloudUpdateType, std::string>
+			{
+			public:
+				CloudUpdateTypeHelper(const std::string& parameterName, CloudUpdateType& boundVariable, const CloudUpdateType& defaultValue);
+			private:
+				CloudUpdateType Convert(const std::string& value);
+			};
+
 		struct RegistrationFromStereoOptionsSet
 			{
 			float searchRadius;
@@ -111,10 +127,11 @@ namespace Reconstruction3D
 			bool matchToReconstructedCloud;
 			bool useAssemblerDfn;
 
-			bool updateOnTimePassed;
+			CloudUpdateType cloudUpdateType;
 			int cloudUpdateTime;
 			double cloudUpdateTranslationDistance;
-			double cloudUpdateOrientationDistance; 
+			double cloudUpdateOrientationDistance;
+			float overlapThreshold;
 
 			bool saveCloudsToFile;
 			int cloudSaveTime;
@@ -143,6 +160,7 @@ namespace Reconstruction3D
 		BundleHistory* bundleHistory;
 		PoseWrapper::Pose3D outputPoseAtLastMerge;
 		bool outputPoseAtLastMergeSet;
+		Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloudConverter;
 
 		void ConfigureExtraParameters();
 		void InstantiateDFNs();
@@ -150,9 +168,11 @@ namespace Reconstruction3D
 		void UpdatePose(PointCloudWrapper::PointCloudConstPtr inputCloud);
 		void UpdatePointCloudOnTimePassed(PointCloudWrapper::PointCloudConstPtr inputCloud);
 		void UpdatePointCloudOnDistanceCovered(PointCloudWrapper::PointCloudConstPtr inputCloud);
+		void UpdatePointCloudOnMaximumOverlapping(PointCloudWrapper::PointCloudConstPtr inputCloud);
 		void MergePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud);
 
 		void SaveOutputCloud();
+		float ComputeOverlappingRatio(PointCloudWrapper::PointCloudConstPtr cloud, PointCloudWrapper::PointCloudConstPtr sceneCloud);
 
 		/*
 		* Inline Methods

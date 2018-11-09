@@ -7,8 +7,9 @@
     UseAssemblerDfn: true
     CloudUpdateTime: 50
     SaveCloudsToFile: true
-    UpdateOnTimePassed: true
+    CloudUpdateType: Time
     CloudSaveTime: 100
+    OverlapThreshold: 0.01
     CloudUpdateTranslationDistance: 0.1
     CloudUpdateOrientationDistance: 0.1
     CloudSavePath: /Agridrive1/DLR/BoxBag1
