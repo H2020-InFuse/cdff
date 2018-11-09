@@ -11,7 +11,7 @@
 #   - World-to-camera transformation matrix (12 elements row-wise, the last row is [0,0,0,1])
 ############################
 # Number of cameras
-2
+1
 ############################
 # Camera 1
 #   Resolution (x,y)

@@ -11,9 +11,8 @@
 *****************************************************************************/
 #ifndef COMMON_H_
 #define COMMON_H_
-
-
-#define _USE_OPENCV_DISPLAY
+//uncomment for visualization
+//#define _USE_OPENCV_DISPLAY
 #define _USE_STD
 #define _DO_BIG_ALLOCATION
 #ifdef _USE_STD

@@ -83,8 +83,7 @@ namespace DFPC
 		int numberOfCameras;
 		unsigned char* images[];
 		unsigned char* imageOutputColor;
-	        cv::Mat imageOutputColorCV;
-		int xResolutionMax;
+	        int xResolutionMax;
 		int yResolutionMax;
 
 		DfpcConfigurator configurator;

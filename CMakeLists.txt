@@ -336,7 +336,7 @@ link_directories(
 set(DLR_TRACKER_PREFIX DFPCs/ModelBasedVisualTracking/DLR_tracker) 
 
 include_directories(
-  "${DLR_TRACKER_PREFIX}/includes"
+  "${DLR_TRACKER_PREFIX}/include"
 )
 
 link_directories(

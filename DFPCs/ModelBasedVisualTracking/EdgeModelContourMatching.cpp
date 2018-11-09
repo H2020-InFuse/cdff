@@ -53,6 +53,7 @@ EdgeModelContourMatching::EdgeModelContourMatching()
 	#ifdef _DO_BIG_ALLOCATION
 		           //Uchar,   UcharPtr, Double,  Float,   Int, IntPtr,  Short)	
 		doBigMalloc(102400000, 1200000, 12000000, 200000, 5600000, 1400000, 3200000); 
+		
 	#endif
 	matrixIdentity(egomotion, 4);
 	

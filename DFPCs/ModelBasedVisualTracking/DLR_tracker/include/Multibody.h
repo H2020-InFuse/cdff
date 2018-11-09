@@ -15,6 +15,7 @@
 #include "Polyhedron.h"
 #include "Polyline.h"
 
+//using namespace DLRtracker;
 namespace DLRtracker
 {
 class Multibody

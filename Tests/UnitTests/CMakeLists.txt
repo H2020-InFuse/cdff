@@ -52,6 +52,7 @@ set(UNITTEST_SOURCES UnitTests.cpp
     DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
     DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
     DFNs/Voxelization/Octree.cpp
+    DFPCs/ModelBasedVisualTracking/EdgeModelContourMatching.cpp # memory intensive!
     DFPCs/Reconstruction3D/BundleHistory.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
@@ -80,7 +81,7 @@ set(UNITTEST_LIBRARIES Catch
     dfpc_implementation_edge_model_contour_matching
     dfpc_implementation_features_matching_3d
     disparity_mapping
-    DLR_tracker_shared
+    DLRtracker_core
     essential_matrix_decomposition
     flann_matcher
     fundamental_matrix_ransac

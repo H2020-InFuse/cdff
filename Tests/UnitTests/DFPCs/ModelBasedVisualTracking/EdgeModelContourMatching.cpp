@@ -52,6 +52,7 @@ using namespace FrameWrapper;
  *
  * Test Cases
  *
+ * 
  * --------------------------------------------------------------------------
  */
 
@@ -79,9 +80,8 @@ TEST_CASE( "Success Call to Configure (EdgeModelContourMatching)", "[configureDL
 	{
 	EdgeModelContourMatching* contourMatching = new EdgeModelContourMatching() ;
 	contourMatching->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking");
-	contourMatching->setup();
-	std::cout<< " Tracker DFPC- Setup Functionality Test success "<<std::endl;
-		
+	contourMatching->setup();// comment (off) since called in [processDLRTracker] TEST CASE, otherwise requires large memory pre-allocation 
+			
 	delete contourMatching;
 
 	
@@ -104,7 +104,7 @@ TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTra
 	EdgeModelContourMatching* contourMatching = new EdgeModelContourMatching();
 	
 	contourMatching->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking");
-	
+	// setup needed to test process
 	contourMatching->setup();	
 		
 	//Image:
