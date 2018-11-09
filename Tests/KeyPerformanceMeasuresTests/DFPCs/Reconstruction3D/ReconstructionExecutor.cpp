@@ -317,6 +317,7 @@ void ReconstructionExecutor::ConfigureDfpc()
 
 float ReconstructionExecutor::ComputeCameraDistanceError()
 	{
+	ASSERT(pointsToCameraMatrix.rows > 0, "No measures available in input file");
 	float cameraDistanceError = 0;
 	for(int pointIndex = 0; pointIndex < pointsToCameraMatrix.rows; pointIndex++)
 		{
