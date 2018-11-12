@@ -102,6 +102,8 @@ namespace Reconstruction3D
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
+
 		DfpcConfigurator configurator;
 		PointCloudMap pointCloudMap;
 		bool firstInput;
@@ -172,8 +174,8 @@ namespace Reconstruction3D
 		void MergePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud);
 
 		void SaveOutputCloud();
-		float ComputeOverlappingRatio(PointCloudWrapper::PointCloudConstPtr cloud, PointCloudWrapper::PointCloudConstPtr sceneCloud);
-
+		float ComputeOverlappingRatio(PointCloudWrapper::PointCloudConstPtr cloud, const PoseWrapper::Pose3D& pose, PointCloudWrapper::PointCloudConstPtr sceneCloud);
+		pcl::PointXYZ TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform);
 		/*
 		* Inline Methods
 		*

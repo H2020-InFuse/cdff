@@ -385,6 +385,14 @@ void DenseRegistrationFromStereo::UpdatePointCloudOnTimePassed(PointCloudWrapper
 			float orientationDistance = ComputeOrientationDistance(outPose, outputPoseAtLastMerge);
 			PRINT_TO_LOG("translationDistance", translationDistance);
 			PRINT_TO_LOG("orientationDistance", orientationDistance);
+
+			static bool first = true;
+			if (!first)
+				{
+				float overlappingRatio = ComputeOverlappingRatio(imageCloud, outPose, bundleHistory->GetPointCloud(1));
+				PRINT_TO_LOG("overlappingRation", overlappingRatio);
+				}
+			first = false;
 			MergePointCloud(imageCloud);
 			Copy(outPose, outputPoseAtLastMerge);
 			}
@@ -431,7 +439,7 @@ void DenseRegistrationFromStereo::UpdatePointCloudOnMaximumOverlapping(PointClou
 		float overlappingRatio = 0;
 		if (!firstCloud)
 			{
-			overlappingRatio = ComputeOverlappingRatio(inputCloud, bundleHistory->GetPointCloud(1));
+			overlappingRatio = ComputeOverlappingRatio(inputCloud, outPose, bundleHistory->GetPointCloud(1));
 			}
 		if (firstCloud || overlappingRatio < parameters.overlapThreshold)
 			{
@@ -500,9 +508,13 @@ void DenseRegistrationFromStereo::SaveOutputCloud()
 	saveCounter = (saveCounter + 1) % parameters.cloudSaveTime;
 	}
 
-float DenseRegistrationFromStereo::ComputeOverlappingRatio(PointCloudConstPtr cloud, PointCloudConstPtr sceneCloud)
+float DenseRegistrationFromStereo::ComputeOverlappingRatio(PointCloudConstPtr cloud, const Pose3D& pose, PointCloudConstPtr sceneCloud)
 	{
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclSceneCloud = pointCloudToPclPointCloudConverter.Convert(sceneCloud);
+
+	Eigen::Quaternion<float> rotation(GetWOrientation(pose), GetXOrientation(pose),	GetYOrientation(pose), GetZOrientation(pose) );
+	Eigen::Translation<float, 3> translation(GetXPosition(pose), GetYPosition(pose), GetZPosition(pose));
+	AffineTransform affineTransform = translation * rotation;
 
 	pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
 	kdtree.setInputCloud(pclSceneCloud);
@@ -515,7 +527,8 @@ float DenseRegistrationFromStereo::ComputeOverlappingRatio(PointCloudConstPtr cl
 	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 		{
 		pcl::PointXYZ searchPoint( GetXCoordinate(*cloud, pointIndex), GetYCoordinate(*cloud, pointIndex), GetZCoordinate(*cloud, pointIndex) );
-		kdtree.radiusSearch( searchPoint, parameters.overlapThreshold, indexList, squaredDistanceList );
+		pcl::PointXYZ transformedSearchPoint = TransformPoint( searchPoint, affineTransform );
+		kdtree.radiusSearch( transformedSearchPoint, parameters.overlapThreshold, indexList, squaredDistanceList );
 		if (indexList.size() > 0)
 			{
 			overlappingCounter++;
@@ -523,6 +536,17 @@ float DenseRegistrationFromStereo::ComputeOverlappingRatio(PointCloudConstPtr cl
 		}
 
 	return ( static_cast<float>(overlappingCounter) / static_cast<float>(numberOfPoints) );
+	}
+
+pcl::PointXYZ DenseRegistrationFromStereo::TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform)
+	{
+	Eigen::Vector3f eigenPoint(point.x, point.y, point.z);
+	Eigen::Vector3f eigenTransformedPoint = affineTransform * eigenPoint;
+	pcl::PointXYZ transformedPoint;
+	transformedPoint.x = eigenTransformedPoint.x();
+	transformedPoint.y = eigenTransformedPoint.y();
+	transformedPoint.z = eigenTransformedPoint.z();
+	return transformedPoint;
 	}
 
 }
