@@ -364,7 +364,7 @@ endforeach()
 
 ## Setup CDFF uninstallation ---------------------------------------------------
 
-<<<<<<< HEAD
+
 #  DLR tracker library
 #
 set(DLR_TRACKER_PREFIX DFPCs/ModelBasedVisualTracking/DLR_tracker) 
@@ -379,7 +379,7 @@ link_directories(
 
 
 ## CDFF ------------------------------------------------------------------------
-=======
+
 # Add an uninstall target, see documentation in cmake_uninstall.cmake[.in]
 
 configure_file(
@@ -403,7 +403,6 @@ add_custom_target(purge
   VERBATIM)
 
 ## Compile the CDFF ------------------------------------------------------------
->>>>>>> origin/master
 
 # Take into account the headers provided in the following directories
 #
