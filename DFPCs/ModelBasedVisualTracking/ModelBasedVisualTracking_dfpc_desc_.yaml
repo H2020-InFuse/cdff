@@ -17,7 +17,10 @@ input_ports:
      doc: " initialization time " 	
   - name: doInit
      type: bool
-     doc: " determines whether the tracker dfpc need initialization"		
+     doc: " determines whether the tracker dfpc need initialization"	
+  - name:  egoMotion
+     type: RigidBodyState
+     doc: " the ego motion (position and orientation) of a manipulator with respect to its base  "	
 output_ports:
     - name: state
       type: RigidBodyState

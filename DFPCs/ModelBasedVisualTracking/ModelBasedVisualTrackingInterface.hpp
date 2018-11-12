@@ -81,11 +81,16 @@ namespace DFPC
             * @param init, the initialization velocity and pose
             */
             virtual void initInput(const asn1SccRigidBodyState& data);
-	   /**
+	    /**
             * Send value to input port doInit
             * @param doInit, whether to initialize the tracker pose & velcotiy or not
             */
             virtual void doInitInput(bool data);
+	   /**
+            * Send value to input port egoMotion
+            * @param egoMotion, the egomotion (position and orientation) of a manipulator with respect to its base
+            */
+            virtual void egoMotionInput(const asn1SccRigidBodyState& data);
 
             /**
             * Receive value from output port pose
@@ -110,6 +115,7 @@ namespace DFPC
 	     asn1SccTime inImageTime;
 	     asn1SccTime inInitTime;
 	     bool inDoInit;
+	     asn1SccRigidBodyState inEgoMotion;
              asn1SccRigidBodyState outState;
 	     bool outSuccess;
 

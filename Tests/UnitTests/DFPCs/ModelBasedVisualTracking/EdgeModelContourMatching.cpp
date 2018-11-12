@@ -91,7 +91,7 @@ TEST_CASE( "Success Call to Configure (EdgeModelContourMatching)", "[configureDL
 
 TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTracker]")
 	{
-	//source image type- ASN frame, but here cv::Mat. Conversions: cv::Mat --> ASN Frame
+	//image type- ASN frame,  cv::Mat --> ASN Frame
 
 	// cv:Mat image type
 	cv::Mat inputImageLeft = cv::imread("../tests/Data/Images/DLR_OOS_camL0000.pgm",0);
@@ -147,7 +147,17 @@ TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTra
  	initState.velocity.arr[2] = velocity0[5];
 
 	contourMatching->initInput(initState);
-		
+	//EgoMotion:
+	asn1SccRigidBodyState egoMotion;
+	egoMotion.orient.arr[0] = 0.0;
+	egoMotion.orient.arr[1] = 0.0;
+ 	egoMotion.orient.arr[2] = 0.0;
+
+	egoMotion.pos.arr[0] = 0.0;
+	egoMotion.pos.arr[1] = 0.0;
+ 	egoMotion.pos.arr[2] = 0.0;
+	contourMatching->egoMotionInput(egoMotion);	
+
 	contourMatching->run();
         //output to ASN
 	bool success = contourMatching->successOutput();

@@ -55,8 +55,7 @@ EdgeModelContourMatching::EdgeModelContourMatching()
 		doBigMalloc(102400000, 1200000, 12000000, 200000, 5600000, 1400000, 3200000); 
 		
 	#endif
-	matrixIdentity(egomotion, 4);
-	
+		
 	configurationFilePath = "";
 	}
 
@@ -133,6 +132,11 @@ void EdgeModelContourMatching::run()
 	ConvertAsnStateToState(inInit, rotTrasl, velocity0);
 
 	 TfromAngleAxis(rotTrasl, guessT0);
+
+	double egomotion[16];
+	ConvertAsnStateToState(inEgoMotion, rotTrasl);
+	TfromAngleAxis(rotTrasl, egomotion);
+
 		
  	double estimatedT[16];
 	double estimatedLastT[16];
@@ -223,13 +227,16 @@ void EdgeModelContourMatching::ConvertAsnStateToState(asn1SccRigidBodyState& sta
 	 pose[3] = state.pos.arr[0];
 	 pose[4] = state.pos.arr[1];
  	 pose[5] = state.pos.arr[2];
-	
+
+	 if(velocity != NULL)
+	 {
 	 velocity[0] = state.angular_velocity.arr[0];
 	 velocity[1] = state.angular_velocity.arr[1];
  	 velocity[2] = state.angular_velocity.arr[2];
 	 velocity[3] = state.velocity.arr[3]; 
 	 velocity[4] = state.velocity.arr[4]; 
 	 velocity[5] = state.velocity.arr[5]; 
+	 }
 	 	
 	}
 

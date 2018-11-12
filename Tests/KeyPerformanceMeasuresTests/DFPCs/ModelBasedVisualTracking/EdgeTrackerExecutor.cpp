@@ -136,6 +136,19 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	initState = ConvertStateToAsnState(orientationPosition, vel0);
 	 // call an external DFPC here to initialize the tracker
 	 dfpc->initInput(initState);
+
+	//EgoMotion of a Manipulator- zero if not available 
+	
+	asn1SccRigidBodyState egoMotion;
+	egoMotion.orient.arr[0] = 0.0;
+	egoMotion.orient.arr[1] = 0.0;
+ 	egoMotion.orient.arr[2] = 0.0;
+
+	egoMotion.pos.arr[0] = 0.0;
+	egoMotion.pos.arr[1] = 0.0;
+ 	egoMotion.pos.arr[2] = 0.0;
+	dfpc->egoMotionInput(egoMotion);
+
 	        
 	int successCounter = 0;
 	float processingTime = 0;

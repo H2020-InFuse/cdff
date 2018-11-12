@@ -76,6 +76,10 @@ void ModelBasedVisualTrackingInterface::doInitInput(bool data)
 	{
          inDoInit = data;
 	}
+void ModelBasedVisualTrackingInterface::egoMotionInput(const asn1SccRigidBodyState& data)
+	{
+         inEgoMotion = data;
+	}
 
 asn1SccRigidBodyState ModelBasedVisualTrackingInterface::stateOutput() 
 	{
