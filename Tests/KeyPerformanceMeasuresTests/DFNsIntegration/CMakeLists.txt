@@ -59,7 +59,7 @@ add_executable(
 target_compile_definitions(correctness_harris_shot_icp PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	correctness_harris_shot_icp
-	cdff_helpers cdff_logger cdff_types cdff_converters harris_detector_3d feature_extraction_3d shot_descriptor_3d feature_description_3d icp_3d feature_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
+	cdff_helpers cdff_logger cdff_types cdff_converters harris_detector_3d feature_extraction_3d shot_descriptor_3d feature_description_3d icp_3d feature_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters cdff_visualizers_pcl
 )
 
 add_executable(
@@ -70,7 +70,7 @@ add_executable(
 target_compile_definitions(correctness_harris_shot_ransac PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	correctness_harris_shot_ransac
-	cdff_helpers cdff_logger cdff_types cdff_converters harris_detector_3d feature_extraction_3d shot_descriptor_3d feature_description_3d ransac_3d feature_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
+	cdff_helpers cdff_logger cdff_types cdff_converters harris_detector_3d feature_extraction_3d shot_descriptor_3d feature_description_3d ransac_3d feature_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters cdff_visualizers_pcl
 )
 
 add_executable(

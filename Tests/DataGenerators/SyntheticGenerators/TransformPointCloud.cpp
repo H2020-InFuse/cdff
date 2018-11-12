@@ -114,6 +114,20 @@ int main(int argc, char** argv)
 			PRINT_TO_LOG("Rescaling by", scale);
 			pointCloudTransformer.Rescale(scale);			
 			}
+		else if (command == "show_with")
+			{
+			std::string inputFile;
+			float positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW;
+			std::cin >> inputFile;
+			std::cin >> positionX;
+			std::cin >> positionY;
+			std::cin >> positionZ;
+			std::cin >> rotationX;
+			std::cin >> rotationY;
+			std::cin >> rotationZ;
+			std::cin >> rotationW;	
+			pointCloudTransformer.ShowWithAddedCloud(inputFile, positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW);
+			}
 		}
 
 	return 0;

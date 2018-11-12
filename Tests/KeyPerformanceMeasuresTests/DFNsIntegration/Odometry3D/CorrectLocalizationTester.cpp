@@ -31,6 +31,8 @@
 #include<pcl/io/ply_io.h>
 #include <ctime>
 
+#include <Visualizers/PCLVisualizer.hpp>
+
 using namespace CDFF::DFN;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
@@ -124,7 +126,7 @@ void CorrectLocalizationTester::SetDfns(CDFF::DFN::FeaturesExtraction3DInterface
 		}
 	}
 
-void CorrectLocalizationTester::ExecuteDfns()
+void CorrectLocalizationTester::ExecuteDfns(bool showClouds)
 	{
 	ASSERT(dfnsWereConfigured, "Error: there was a call to ExecuteDfns before actually configuring the DFNs");
 	ASSERT(inputsWereLoaded && groundTruthWasLoaded, "Error: there was a call to ExecuteDfns before actually loading inputs");
@@ -134,6 +136,11 @@ void CorrectLocalizationTester::ExecuteDfns()
 	DescribeFeatures();
 	MatchFeatures();
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
+
+	if (showClouds)
+		{
+		ShowClouds();
+		}
 	}
 
 bool CorrectLocalizationTester::IsOutputCorrect(float relativeLocationError, float relativeOrientationError, float absoluteLocationError)
@@ -255,13 +262,13 @@ void CorrectLocalizationTester::MatchFeatures()
 
 void CorrectLocalizationTester::LoadPointClouds()
 	{
-	pcl::PointCloud<pcl::PointXYZ>::Ptr baseScenePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	baseScenePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(sceneCloudFilePath, *baseScenePclCloud);
 
 	DELETE_IF_NOT_NULL(inputSceneCloud);
 	inputSceneCloud = pointCloudConverter.Convert(baseScenePclCloud);
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr baseModelPclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	baseModelPclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(modelCloudFilePath, *baseModelPclCloud);
 
 	DELETE_IF_NOT_NULL(inputModelCloud);
@@ -387,6 +394,38 @@ float CorrectLocalizationTester::ComputeModelSize()
 	float squaredSize = differenceX*differenceX + differenceY*differenceY + differenceZ*differenceZ;
 
 	return std::sqrt(squaredSize);
+	}
+
+void CorrectLocalizationTester::ShowClouds()
+	{
+	Eigen::Quaternion<float> rotation(GetWOrientation(*outputModelPoseInScene), GetXOrientation(*outputModelPoseInScene), 
+		GetYOrientation(*outputModelPoseInScene), GetZOrientation(*outputModelPoseInScene) );
+	Eigen::Translation<float, 3> translation(GetXPosition(*outputModelPoseInScene), GetYPosition(*outputModelPoseInScene), GetZPosition(*outputModelPoseInScene));
+	AffineTransform affineTransform = translation * rotation;
+	
+	pcl::PointCloud<pcl::PointXYZ>::Ptr transformedModelCloud(new pcl::PointCloud<pcl::PointXYZ>);
+	transformedModelCloud->points.resize( baseModelPclCloud->points.size() );
+	for(unsigned pointIndex = 0; pointIndex < baseModelPclCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ transformedPoint = TransformPoint( baseModelPclCloud->points.at(pointIndex), affineTransform );
+		transformedModelCloud->points.at(pointIndex) = transformedPoint;
+		}
+
+	std::vector< pcl::PointCloud<pcl::PointXYZ>::ConstPtr > cloudsList = { baseScenePclCloud, transformedModelCloud };
+	Visualizers::PclVisualizer::Enable();
+	Visualizers::PclVisualizer::ShowPointClouds(cloudsList);
+	Visualizers::PclVisualizer::Disable();
+	}
+
+pcl::PointXYZ CorrectLocalizationTester::TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform)
+	{
+	Eigen::Vector3f eigenPoint(point.x, point.y, point.z);
+	Eigen::Vector3f eigenTransformedPoint = affineTransform * eigenPoint;
+	pcl::PointXYZ transformedPoint;
+	transformedPoint.x = eigenTransformedPoint.x();
+	transformedPoint.y = eigenTransformedPoint.y();
+	transformedPoint.z = eigenTransformedPoint.z();
+	return transformedPoint;
 	}
 
 /** @} */

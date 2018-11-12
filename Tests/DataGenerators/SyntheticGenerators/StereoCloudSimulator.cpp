@@ -65,6 +65,10 @@ StereoCloudSimulator::StereoCloudSimulator(int cloudIndex) :
 		{
 		InitializeOriginalCloudWithModel00();
 		}
+	else if (cloudIndex == 1)
+		{
+		InitializeOriginalCloudWithModel01();
+		}
 	else
 		{
 		std::cout << "Index out of range" << std::endl;
@@ -464,6 +468,55 @@ void StereoCloudSimulator::InitializeOriginalCloudWithModel00()
 	std::cout << "Cube construction is complete" << std::endl;
 	//pcl::PLYWriter writer;
 	//writer.write("/Agridrive1/DLR/Synthetic/Cube.ply", *originalCloud, true);
+	}
+
+#define NEXT_BUT_LAST_IS_SIZE(x, size) x = (x + resolution < size) ? (x + resolution) : ( x < size ? size : size + resolution)
+
+void StereoCloudSimulator::InitializeOriginalCloudWithModel01()
+	{
+	const double width = 0.34;
+	const double height = 0.24;
+	const double depth = 0.20;
+	const double resolution = 0.005;
+
+	for(double x = 0; x < width + resolution/2; NEXT_BUT_LAST_IS_SIZE(x, width))
+		{
+		for(double y = 0; y < height + resolution/2; NEXT_BUT_LAST_IS_SIZE(y, height))
+			{
+			pcl::PointXYZ xySideFront(x, y, 0);
+			pcl::PointXYZ xySideBack(x, y, depth);		
+
+			originalCloud->points.push_back(xySideFront);
+			originalCloud->points.push_back(xySideBack);	
+			}
+		}
+
+	for(double x = 0; x < width + resolution/2; NEXT_BUT_LAST_IS_SIZE(x, width))
+		{
+		for(double z = 0; z < depth + resolution/2; NEXT_BUT_LAST_IS_SIZE(z, depth))
+			{
+			pcl::PointXYZ xzSideFront(x, 0, z);
+			pcl::PointXYZ xzSideBack(x, height, z);
+
+			originalCloud->points.push_back(xzSideFront);
+			originalCloud->points.push_back(xzSideBack);			
+			}
+		}
+
+	for(double z = 0; z < depth + resolution/2; NEXT_BUT_LAST_IS_SIZE(z, depth))
+		{
+		for(double y = 0; y < height + resolution/2; NEXT_BUT_LAST_IS_SIZE(y, height))
+			{
+			pcl::PointXYZ yzSideFront(0, y, z);
+			pcl::PointXYZ yzSideBack(width, y, z);	
+
+			originalCloud->points.push_back(yzSideFront);
+			originalCloud->points.push_back(yzSideBack);	
+			}
+		}
+	
+	pcl::PLYWriter writer;
+	writer.write("/Agridrive1/DLR/Synthetic/Payload.ply", *originalCloud, true);
 	}
 
 void StereoCloudSimulator::CreateCameraFileModel00(std::string outputFilePath)

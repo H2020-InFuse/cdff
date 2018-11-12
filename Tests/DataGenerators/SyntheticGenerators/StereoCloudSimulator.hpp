@@ -105,6 +105,7 @@ namespace DataGenerators {
 		void AddFrustrumToPointCloud(PoseWrapper::Pose3D cameraPose, pcl::PointCloud<pcl::PointXYZ>::Ptr stereoCloud);
 
 		void InitializeOriginalCloudWithModel00();
+		void InitializeOriginalCloudWithModel01();
 		static void CreateCameraFileModel00(std::string outputFilePath);		
     };
 
