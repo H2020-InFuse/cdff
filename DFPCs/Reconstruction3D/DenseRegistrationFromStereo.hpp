@@ -134,6 +134,7 @@ namespace Reconstruction3D
 			double cloudUpdateTranslationDistance;
 			double cloudUpdateOrientationDistance;
 			float overlapThreshold;
+			float overlapInlierDistance;
 
 			bool saveCloudsToFile;
 			int cloudSaveTime;

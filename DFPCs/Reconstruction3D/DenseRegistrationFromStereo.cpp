@@ -81,6 +81,7 @@ DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 	parametersHelper.AddParameter<double>("GeneralParameters", "CloudUpdateTranslationDistance", parameters.cloudUpdateTranslationDistance, DEFAULT_PARAMETERS.cloudUpdateTranslationDistance);
 	parametersHelper.AddParameter<double>("GeneralParameters", "CloudUpdateOrientationDistance", parameters.cloudUpdateOrientationDistance, DEFAULT_PARAMETERS.cloudUpdateOrientationDistance);
 	parametersHelper.AddParameter<float>("GeneralParameters", "OverlapThreshold", parameters.overlapThreshold, DEFAULT_PARAMETERS.overlapThreshold);
+	parametersHelper.AddParameter<float>("GeneralParameters", "OverlapInlierDistance", parameters.overlapInlierDistance, DEFAULT_PARAMETERS.overlapInlierDistance);
 
 	parametersHelper.AddParameter<bool>("GeneralParameters", "SaveCloudsToFile", parameters.saveCloudsToFile, DEFAULT_PARAMETERS.saveCloudsToFile);
 	parametersHelper.AddParameter<int>("GeneralParameters", "CloudSaveTime", parameters.cloudSaveTime, DEFAULT_PARAMETERS.cloudSaveTime);
@@ -196,7 +197,8 @@ const DenseRegistrationFromStereo::RegistrationFromStereoOptionsSet DenseRegistr
 	/*.cloudUpdateTime=*/ 50,
 	/*.cloudUpdateTranslationDistance=*/ 0.5,
 	/*.cloudUpdateOrientationDistance=*/ 0.5,
-	/*.overlapThreshold=*/ 0.02,
+	/*.overlapThreshold=*/ 0.80,
+	/*.overlapInlierDistance=*/ 0.01,
 	/*.saveCloudsToFile=*/ false,
 	/*.cloudSaveTime=*/ 100,
 	/*.cloudSavePath=*/ ""
@@ -246,6 +248,7 @@ void DenseRegistrationFromStereo::ConfigureExtraParameters()
 	ASSERT(parameters.cloudUpdateTranslationDistance > 0, "DenseRegistrationFromStereo Error, cloudUpdateTranslationDistance is not positive");
 	ASSERT(parameters.cloudUpdateOrientationDistance > 0, "DenseRegistrationFromStereo Error, cloudUpdateOrientationDistance is not positive");
 	ASSERT(parameters.overlapThreshold > 0, "DenseRegistrationFromStereo Error, overlapThreshold is not positive");
+	ASSERT(parameters.overlapInlierDistance > 0, "DenseRegistrationFromStereo Error, overlapInlierDistance is not positive");
 	if (parameters.saveCloudsToFile)
 		{
 		ASSERT( access(parameters.cloudSavePath.c_str(), 0) == 0, "DenseRegistrationFromStereo Error, save folder does not exists");
@@ -528,7 +531,7 @@ float DenseRegistrationFromStereo::ComputeOverlappingRatio(PointCloudConstPtr cl
 		{
 		pcl::PointXYZ searchPoint( GetXCoordinate(*cloud, pointIndex), GetYCoordinate(*cloud, pointIndex), GetZCoordinate(*cloud, pointIndex) );
 		pcl::PointXYZ transformedSearchPoint = TransformPoint( searchPoint, affineTransform );
-		kdtree.radiusSearch( transformedSearchPoint, parameters.overlapThreshold, indexList, squaredDistanceList );
+		kdtree.radiusSearch( transformedSearchPoint, parameters.overlapInlierDistance, indexList, squaredDistanceList );
 		if (indexList.size() > 0)
 			{
 			overlappingCounter++;
