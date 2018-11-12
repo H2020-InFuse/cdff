@@ -32,11 +32,11 @@
 #include <ModelBasedVisualTracking/ModelBasedVisualTrackingInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <Frame.hpp>
-#include <RigidBodyState.h>
-#include <Time.h>
-#include <SupportTypes.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/C/RigidBodyState.h>
+#include <Types/C/Time.h>
+#include <Converters/SupportTypes.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>

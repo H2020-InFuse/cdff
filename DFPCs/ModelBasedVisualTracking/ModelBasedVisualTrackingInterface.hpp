@@ -28,12 +28,12 @@
  * --------------------------------------------------------------------------
  */
 #include "DFPCCommonInterface.hpp"
-#include "RigidBodyState.h"
-#include <Time.h>
-#include "Eigen.h"
-#include <Frame.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Types/C/RigidBodyState.h>
+#include <Types/C/Time.h>
+#include <Types/C/Eigen.h>
+#include <Types/CPP/Frame.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 namespace CDFF
 {

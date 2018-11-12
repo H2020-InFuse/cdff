@@ -5,7 +5,7 @@ add_executable(
 )
 target_link_libraries(
 	validation_DLR_model_tracker
-	dfpc_implementation_edge_model_contour_matching converters_opencv cdff_logger converters_opencv opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator
+	dfpc_implementation_edge_model_contour_matching cdff_converters cdff_logger opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system yaml-cpp dfpc_configurator
 )
 
 add_executable(

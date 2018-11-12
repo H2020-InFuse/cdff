@@ -30,11 +30,11 @@
 #include <ModelBasedVisualTracking/EdgeModelContourMatching.hpp>
 #include <catch.hpp>
 #include <Errors/Assert.hpp>
-#include "RigidBodyState.h"
-#include "Time.h"
-#include "Eigen.h"
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Types/C/RigidBodyState.h>
+#include <Types/C/Time.h>
+#include <Types/C/Eigen.h>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Converters/SupportTypes.hpp>
 #include <iostream>
 
