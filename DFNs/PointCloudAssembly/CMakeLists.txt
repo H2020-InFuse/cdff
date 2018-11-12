@@ -20,3 +20,12 @@ target_link_libraries(
     voxel_binning
     point_cloud_assembly cdff_types yaml-cpp cdff_helpers cdff_converters
 )
+
+add_library(
+    matcher_assembly
+    MatcherAssembly.cpp
+)
+target_link_libraries(
+    matcher_assembly
+    point_cloud_assembly cdff_types yaml-cpp cdff_helpers cdff_converters
+)

@@ -43,6 +43,7 @@
 #include <ForceMeshGenerator/ThresholdForce.hpp>
 #include <PointCloudAssembly/NeighbourPointAverage.hpp>
 #include <PointCloudAssembly/VoxelBinning.hpp>
+#include <PointCloudAssembly/MatcherAssembly.hpp>
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
@@ -395,6 +396,10 @@ PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(std::string d
 	else if (dfnImplementation == "VoxelBinning")
 	{
 		return new PointCloudAssembly::VoxelBinning;
+	}
+	else if (dfnImplementation == "MatcherAssembly")
+	{
+		return new PointCloudAssembly::MatcherAssembly;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudAssembly implementation");
 	return NULL;
