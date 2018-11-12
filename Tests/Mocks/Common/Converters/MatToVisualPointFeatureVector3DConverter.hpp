@@ -31,7 +31,7 @@
  * --------------------------------------------------------------------------
  */
 #include "Mocks/Mock.hpp"
-#include <MatToVisualPointFeatureVector3DConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector3DConverter.hpp>
 
 
 namespace Mocks {

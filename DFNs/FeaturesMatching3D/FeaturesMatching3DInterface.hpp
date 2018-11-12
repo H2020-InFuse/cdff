@@ -7,8 +7,8 @@
 #define FEATURESMATCHING3D_FEATURESMATCHING3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <VisualPointFeatureVector3D.h>
-#include <Pose.h>
+#include <Types/C/VisualPointFeatureVector3D.h>
+#include <Types/C/Pose.h>
 
 namespace CDFF
 {

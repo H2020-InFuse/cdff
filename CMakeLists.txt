@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
-project(CDFF)
+project(CDFF VERSION 0.1 LANGUAGES C CXX)
 
 # Maintainer: Romain Michalec <romain.michalec@strath.ac.uk>
 
@@ -8,6 +8,11 @@ project(CDFF)
 ## You can set these cache entries on the cmake command line: -D <var>=<value>.
 ## The setting will take priority over the project's default values (defined
 ## below) and update the entries present in the CMake cache (CMakeCache.txt).
+
+# Choose between building the CDFF as static libraries or shared libraries
+
+option(BUILD_SHARED_LIBS
+  "Build shared libraries instead of static libraries" OFF)
 
 # To use the libraries provided in the source tree, set USE_BUNDLED_DEPENDENCIES
 # to ON: CMake will look for headers, compiled libraries, and executable files
@@ -21,8 +26,8 @@ project(CDFF)
 # the desired effect if bundled libraries were previously found, because
 # information about them will persist in the CMake cache. Delete the cache.
 
-set(USE_BUNDLED_DEPENDENCIES OFF CACHE BOOL
-  "Preferably link the CDFF against the libraries provided in the source tree")
+option(USE_BUNDLED_DEPENDENCIES
+  "Preferably link the CDFF against the libraries provided in the source tree" OFF)
 
 set(BUNDLED_DEPENDENCIES_PREFIX External/install CACHE PATH
   "Location of the libraries in the source tree")
@@ -45,7 +50,7 @@ enable_testing()
 # Flags passed to the compiler
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -march=native")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 ## Print basic information -----------------------------------------------------
@@ -144,7 +149,7 @@ endmacro()
 # CMake will look for the headers and the requested compiled libraries, as well
 # as the compiled libraries they depend on.
 
-find_package(Boost 1.66.0 REQUIRED COMPONENTS system)
+find_package(Boost 1.66.0 REQUIRED)
 
 if(Boost_FOUND)
 
@@ -167,10 +172,8 @@ if(Boost_FOUND)
   # * In your CMakeLists file:
   #     include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
   #     add_executable(mybin src1.cpp src2.cpp ...)
-  #     target_link_libraries(mybin Boost::date_time Boost::system ...)
+  #     target_link_libraries(mybin Boost::date_time Boost::serialization ...)
   #       # to link against the specified libraries and their dependencies
-  #     target_link_libraries(mybin ${Boost_LIBRARIES})
-  #       # to link against all requested libraries and their dependencies
   #
   # TODO: target_include_directories() should be preferred to include_
   # directories() but I don't understand how it works
@@ -179,17 +182,16 @@ if(Boost_FOUND)
   message(STATUS "Found Boost compiled libraries in: ${Boost_LIBRARY_DIRS}")
 
   # TODO: better reporting of imported targets
-  if(TARGET Boost::boost AND TARGET Boost::system)
-    message(STATUS "Succesfully imported targets: Boost::boost Boost::system")
-    message(STATUS "Pass them to your target_link_libraries() commands")
+  if(TARGET Boost::boost)
+    message(STATUS "Succesfully imported targets: Boost::boost")
   endif()
 
   message(STATUS "All requested Boost compiled libraries, "
     "and their dependencies: ${Boost_LIBRARIES}")
 
   # TODO: kept for compatibility with the existing CDFF code base: to be removed
-  # when all CMakeLists that define targets feature the appropriate [target_]
-  # include_directories()
+  # when all CMakeLists that define targets that use Boost libraries feature the
+  # appropriate [target_]include_directories()
   include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
 else()
@@ -261,6 +263,12 @@ if(Ceres_FOUND)
   # TODO: kept for compatibility with the existing CDFF code base: to be removed
   # when all CMakeLists that define targets feature the appropriate [target_]
   # include_directories()
+  # TODO: also, ${CERES_INCLUDE_DIRS} features /usr/include if some dependencies
+  # of Ceres have been installed as osdeps, so /usr/include will be before all
+  # other include dirs subsequently appended to the list, which can cause trouble
+  # when looking for a library which is in two different version in /usr/include
+  # and ${_DEPENDENCIES_PREFIX}/include -> really necessary to restrict the
+  # include dirs to specific targets
   include_directories(SYSTEM ${CERES_INCLUDE_DIRS})
 
 else()
@@ -283,6 +291,10 @@ include_directories(
   SYSTEM "${_DEPENDENCIES_PREFIX}/include"
 )
 
+link_directories(
+  "${_DEPENDENCIES_PREFIX}/lib"
+)
+
 ## Look for VTK, PCL, OpenCV ---------------------------------------------------
 
 # TODO: rework this section
@@ -292,17 +304,21 @@ find_package_mode(VTK)
 
 find_package(PCL 1.8.1 REQUIRED NAMES PCL PCL-1.8 CONFIGS PCLConfig.cmake)
 find_package_mode(PCL)
+add_definitions(${PCL_DEFINITIONS})
+include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+
+message(STATUS "Preprocessor definitions and compiler flags added by the PCL: ${PCL_DEFINITIONS}")
+message(STATUS "Found PCL headers, and the headers of its dependencies, in: ${PCL_INCLUDE_DIRS}")
+message(STATUS "Found PCL libraries in: ${PCL_LIBRARY_DIRS}")
+message(STATUS "All requested PCL libraries, and their dependencies: ${PCL_LIBRARIES}")
 
 find_package(OpenCV 3.4.0 REQUIRED)
 find_package_mode(OpenCV)
 
-include_directories(
-  SYSTEM "${_DEPENDENCIES_PREFIX}/include/pcl-1.8"
-)
-
 ## Look for Edres-Wrapper (optional dependency) --------------------------------
 
-find_package(Edres-Wrapper)
+find_package(Edres-Wrapper QUIET)
 
 if(Edres-Wrapper_FOUND)
 
@@ -319,18 +335,36 @@ else()
 
 endif()
 
-## Dependencies: compiled libraries --------------------------------------------
+## Setup CDFF installation -----------------------------------------------------
 
-# TODO: this whole section shouldn't be necessary because all targets have an
-# adequate target_link_directories() command in their CMakeLists file, AFAICT.
-# However, if not provided, building the CDFF fails when linking CXX executable
-# ObservedSceneTest, with /usr/bin/ld errors: cannot find -lopencv_highgui
-# -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lyaml-cpp. Investigate.
+# Standard installation directories, as defined by the GNU Coding Standards:
+#
+# * CMAKE_INSTALL_INCLUDEDIR is include
+# * CMAKE_INSTALL_LIBDIR is lib
+# * CMAKE_INSTALL_BINDIR is bin
+# * Full list at https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html
+#
+# Use them in your install() commands, see example below. CMAKE_INSTALL_PREFIX,
+# default /usr/local, will be prepended to those directories.
 
-link_directories(
-  "${_DEPENDENCIES_PREFIX}/lib"
-)
+include(GNUInstallDirs)
 
+# Install all the header files
+
+file(GLOB_RECURSE headers
+  RELATIVE "${CMAKE_SOURCE_DIR}"
+  "Common/*.h" "Common/*.hpp" "DFNs/*.hpp" "DFPCs/*.hpp" "Tests/*.hpp")
+list(SORT headers)
+
+foreach(header ${headers})
+  get_filename_component(dir "${header}" DIRECTORY)
+  install(FILES "${header}"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/${dir}")
+endforeach()
+
+## Setup CDFF uninstallation ---------------------------------------------------
+
+<<<<<<< HEAD
 #  DLR tracker library
 #
 set(DLR_TRACKER_PREFIX DFPCs/ModelBasedVisualTracking/DLR_tracker) 
@@ -345,6 +379,31 @@ link_directories(
 
 
 ## CDFF ------------------------------------------------------------------------
+=======
+# Add an uninstall target, see documentation in cmake_uninstall.cmake[.in]
+
+configure_file(
+  "${CMAKE_SOURCE_DIR}/Tools/CMake/cmake_uninstall.cmake.in"
+  "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+  @ONLY)
+
+add_custom_target(uninstall
+  COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+  VERBATIM)
+
+# Add a purge target, see documentation in cmake_purge.cmake[.in]
+
+configure_file(
+  "${CMAKE_SOURCE_DIR}/Tools/CMake/cmake_purge.cmake.in"
+  "${CMAKE_BINARY_DIR}/cmake_purge.cmake"
+  @ONLY)
+
+add_custom_target(purge
+  COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_purge.cmake"
+  VERBATIM)
+
+## Compile the CDFF ------------------------------------------------------------
+>>>>>>> origin/master
 
 # Take into account the headers provided in the following directories
 #
@@ -359,13 +418,9 @@ link_directories(
 
 include_directories(
   Common
-  Common/Types/C
-  Common/Types/CPP
-  Common/Converters
   DFNs
   DFPCs
   Tests
-  Tools
   CC
 )
 
@@ -376,8 +431,3 @@ add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
 add_subdirectory(Tests)
 add_subdirectory(CC)
-
-# TODO: is there an initial, default value for the directories that are searched
-# for header files? There isn't, as far as I understand, but triple-check. If
-# there is and it includes system directories, we should prepend the directories
-# we currently append to this list with include_directories().

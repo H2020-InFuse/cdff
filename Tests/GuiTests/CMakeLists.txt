@@ -1,6 +1,6 @@
 set(GRAPHICALTEST_GUI_SOURCES MainInterface.cpp ButtonsInterface.cpp ParametersInterface.cpp)
 
-set(GRAPHICALTEST_CDFF_LIBRARIES converters_opencv cdff_logger)
+set(GRAPHICALTEST_CDFF_LIBRARIES cdff_converters cdff_logger)
 set(GRAPHICALTEST_OPENCV_LIBRARIES opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui)
 
 ## Graphical tests for the DFNs ------------------------------------------------
@@ -144,10 +144,11 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(HarrisDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(HarrisDetector3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     HarrisDetector3DGuiTest
     harris_detector_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
 )
@@ -159,13 +160,14 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(Registration3DIcpGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(Registration3DIcpGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Registration3DIcpGuiTest
     registration_icp_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -175,13 +177,14 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(Registration3DIcpCCGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(Registration3DIcpCCGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Registration3DIcpCCGuiTest
     registration_icp_cc
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -191,13 +194,14 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(ShotDescriptor3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(ShotDescriptor3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ShotDescriptor3DGuiTest
     shot_descriptor_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_keypoints
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -207,13 +211,14 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(Icp3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(Icp3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Icp3DGuiTest
     icp_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -223,13 +228,14 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(Ransac3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(Ransac3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Ransac3DGuiTest
     ransac_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -239,13 +245,14 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(TriangulationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(TriangulationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     TriangulationGuiTest
     triangulation
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_visualization
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -255,10 +262,11 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(DisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(DisparityMappingGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     DisparityMappingGuiTest
     disparity_mapping
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
 )
@@ -270,10 +278,11 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(HirschmullerDisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(HirschmullerDisparityMappingGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     HirschmullerDisparityMappingGuiTest
     hirschmuller_disparity_mapping
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
 )
@@ -285,10 +294,11 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(ScanlineOptimizationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(ScanlineOptimizationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ScanlineOptimizationGuiTest
     scanline_optimization
-    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_pcl_visualizer
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_visualization
     ${VTK_LIBRARIES}
@@ -317,12 +327,13 @@ add_executable(
     DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
 )
 set_target_properties(DenseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(DenseRegistrationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     DenseRegistrationFromStereoGuiTest
     dense_registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator  cdff_dfn_dfnexecutors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -331,12 +342,13 @@ add_executable(
     DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
 )
 set_target_properties(SparseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(SparseRegistrationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     SparseRegistrationFromStereoGuiTest
     sparse_registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -345,12 +357,13 @@ add_executable(
     DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
 )
 set_target_properties(AdjustmentFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(AdjustmentFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     AdjustmentFromStereoGuiTest
     adjustment_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -359,12 +372,13 @@ add_executable(
     DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
 )
 set_target_properties(ReconstructionFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(ReconstructionFromMotionGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ReconstructionFromMotionGuiTest
     reconstruction_from_motion
     ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -373,12 +387,13 @@ add_executable(
     DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
 )
 set_target_properties(ReconstructionFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(ReconstructionFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ReconstructionFromStereoGuiTest
     reconstruction_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -387,12 +402,13 @@ add_executable(
     DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
 )
 set_target_properties(RegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(RegistrationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     RegistrationFromStereoGuiTest
     registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator  cdff_dfn_dfnexecutors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -401,12 +417,13 @@ add_executable(
     DFPCs/Reconstruction3D/GuiTestReconstruction3D.cpp
 )
 set_target_properties(EstimationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(EstimationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     EstimationFromStereoGuiTest
     estimation_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -415,12 +432,13 @@ add_executable(
     DFPCs/PointCloudModelLocalisation/GuiTestPointCloudModelLocalisation.cpp
 )
 set_target_properties(FeaturesMatching3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(FeaturesMatching3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     FeaturesMatching3DGuiTest
     dfpc_implementation_features_matching_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -429,12 +447,13 @@ add_executable(
     DFPCs/ReconstructionAndIdentification/GuiTestReconstructionAndIdentification.cpp
 )
 set_target_properties(RegistrationAndMatchingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(RegistrationAndMatchingGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     RegistrationAndMatchingGuiTest
     registration_and_matching
     ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 
@@ -445,13 +464,14 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(StereoReconstruction PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(StereoReconstruction PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     StereoReconstruction
     image_undistortion orb_detector_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -461,11 +481,12 @@ add_executable(
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 set_target_properties(StereoReconstruction2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(StereoReconstruction2 PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     StereoReconstruction2
     image_undistortion harris_detector_2d orb_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
-    boost_system yaml-cpp ${VTK_LIBRARIES}
+    yaml-cpp ${VTK_LIBRARIES}
 )

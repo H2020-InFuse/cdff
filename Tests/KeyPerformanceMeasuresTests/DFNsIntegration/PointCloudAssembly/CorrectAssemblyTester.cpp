@@ -31,6 +31,11 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
+#include <Executors/PointCloudTransform/PointCloudTransformExecutor.hpp>
+#include <Executors/PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
+
+//#include <Visualizers/PclVisualizer.hpp> //include for debug code
+
 using namespace CDFF::DFN;
 using namespace Converters;
 using namespace PointCloudWrapper;
@@ -42,9 +47,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-CorrectAssemblyTester::CorrectAssemblyTester(std::string configurationFile, PointCloudAssemblyInterface* assemblyDfn, std::string transformerConfigurationFile, PointCloudTransformInterface* transformDfn) :
-	assembler( assemblyDfn ),
-	transformer( transformDfn )
+CorrectAssemblyTester::CorrectAssemblyTester(std::string configurationFile, PointCloudAssemblyInterface* assemblyDfn, std::string transformerConfigurationFile, PointCloudTransformInterface* transformDfn)
 	{
 	this->transformerConfigurationFile = transformerConfigurationFile;
 	this->configurationFile = configurationFile;
@@ -89,22 +92,22 @@ void CorrectAssemblyTester::ExecuteDfns()
 		PointCloudFileEntry& entry = pointCloudList.at(entryIndex);
 		inputCloud = LoadPointCloud(entry.filePath);
 
-		PRINT_TO_LOG("Processing File: ", entryIndex);		
+		PRINT_TO_LOG("Processing File: ", entryIndex);
 		float localProcessingTime = 0;
 		clock_t localBeginTime, localEndTime;
 		localBeginTime = clock();
-		
+
 		PointCloudConstPtr transformedCloud = NULL;
-		transformer.Execute(*inputCloud, entry.pose, transformedCloud);
+		Executors::Execute(transformDfn, *inputCloud, entry.pose, transformedCloud);
 
 		outputCloud = NULL;
-		assembler.Execute(*transformedCloud, zeroPose, radius, outputCloud);
+		Executors::Execute(assemblyDfn, *transformedCloud, zeroPose, radius, outputCloud);
 
 		DeleteIfNotNull(inputCloud);
 		localEndTime = clock();
 		localProcessingTime = float(localEndTime - localBeginTime) / CLOCKS_PER_SEC;
 		PRINT_TO_LOG("Processing file took (seconds):", localProcessingTime);
-		processingTime += localProcessingTime;		
+		processingTime += localProcessingTime;
 		}
 	PRINT_TO_LOG("Total processing took (seconds):", processingTime);
 	}
@@ -115,7 +118,7 @@ void CorrectAssemblyTester::SaveOutput()
 	std::string fileString = dataFolderPath + "/" + outputPointCloudFile;
 
 	pcl::PLYWriter writer;
-	writer.write(fileString, *pclOutputCloud, true);	
+	writer.write(fileString, *pclOutputCloud, true);
 	}
 
 /* --------------------------------------------------------------------------
@@ -151,6 +154,15 @@ void CorrectAssemblyTester::LoadInputPointClouds()
 			}
 		}
 	file.close();
+
+	/*Visualizers::PclVisualizer::Enable();
+	std::vector<Pose3D> poseList;
+	for(int i=0; i<pointCloudList.size(); i++)
+		{
+		Pose3D pose = pointCloudList.at(i).pose;
+		poseList.push_back(pose);
+		}
+	DEBUG_SHOW_POSES(poseList);*/ //Debug Code
 	}
 
 PointCloudConstPtr CorrectAssemblyTester::LoadPointCloud(std::string pointCloudFilePath)

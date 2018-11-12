@@ -37,10 +37,10 @@
 #include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <VisualPointFeatureVector2D.hpp>
-#include <Frame.hpp>
-#include <Pose.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>

@@ -12,11 +12,11 @@
 
 #include "Transform3DEstimationInterface.hpp"
 
-#include <CorrespondenceMap3D.hpp>
-#include <CorrespondenceMaps3DSequence.hpp>
-#include <PosesSequence.hpp>
-#include <Pose.hpp>
-#include <Matrix.hpp>
+#include <Types/CPP/CorrespondenceMap3D.hpp>
+#include <Types/CPP/CorrespondenceMaps3DSequence.hpp>
+#include <Types/CPP/PosesSequence.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Matrix.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/core/core.hpp>

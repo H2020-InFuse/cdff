@@ -30,7 +30,7 @@
  * --------------------------------------------------------------------------
  */
 #include "Mocks/Mock.hpp"
-#include <Transform3DToMatConverter.hpp>
+#include <Converters/Transform3DToMatConverter.hpp>
 
 namespace Mocks {
 

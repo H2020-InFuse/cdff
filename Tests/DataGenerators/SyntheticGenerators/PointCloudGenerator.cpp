@@ -36,6 +36,8 @@
 #include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
+#include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
+
 
 using namespace FrameWrapper;
 using namespace PointCloudWrapper;
@@ -63,13 +65,11 @@ PointCloudGenerator::PointCloudGenerator(std::string inputFolderPath, std::strin
 	disparityMapping->setConfigurationFile(dfnConf);
 	disparityMapping->configure();
 
-	disparityMappingExecutor = new CDFF::DFN::StereoReconstructionExecutor(disparityMapping);
 	planeFilteringEnabled = false;
 	}
 
 PointCloudGenerator::~PointCloudGenerator()
 	{
-	delete(disparityMappingExecutor);
 	delete(disparityMapping);
 	}
 
@@ -144,7 +144,7 @@ void PointCloudGenerator::ExecuteDisparityMapping(const InputEntry& inputEntry)
 	FrameConstPtr rightImage = LoadImage(inputEntry.rightImagePath);
 
 	PointCloudConstPtr pointCloud = NULL;
-	disparityMappingExecutor->Execute(leftImage, rightImage, pointCloud);
+	CDFF::DFN::Executors::Execute(disparityMapping, leftImage, rightImage, pointCloud);
 
 	if (planeFilteringEnabled)
 		{

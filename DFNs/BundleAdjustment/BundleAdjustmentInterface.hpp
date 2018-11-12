@@ -7,9 +7,9 @@
 #define BUNDLEADJUSTMENT_BUNDLEADJUSTMENTINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <CorrespondenceMaps2DSequence.hpp>
-#include <PosesSequence.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/CorrespondenceMaps2DSequence.hpp>
+#include <Types/CPP/PosesSequence.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 namespace CDFF
 {

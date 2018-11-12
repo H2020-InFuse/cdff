@@ -29,8 +29,8 @@
  * --------------------------------------------------------------------------
  */
 #include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
 
 namespace CDFF
 {

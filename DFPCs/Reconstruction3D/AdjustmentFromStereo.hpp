@@ -37,25 +37,25 @@
  */
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
 
-#include <ImageFiltering/ImageFilteringExecutor.hpp>
-#include <StereoReconstruction/StereoReconstructionExecutor.hpp>
-#include <FeaturesExtraction2D/FeaturesExtraction2DExecutor.hpp>
-#include <FeaturesDescription2D/FeaturesDescription2DExecutor.hpp>
-#include <FeaturesMatching2D/FeaturesMatching2DExecutor.hpp>
-#include <BundleAdjustment/BundleAdjustmentExecutor.hpp>
-#include <FundamentalMatrixComputation/FundamentalMatrixComputationExecutor.hpp>
-#include <PerspectiveNPointSolving/PerspectiveNPointSolvingExecutor.hpp>
-#include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>
+#include <ImageFiltering/ImageFilteringInterface.hpp>
+#include <StereoReconstruction/StereoReconstructionInterface.hpp>
+#include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
+#include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
+#include <FeaturesMatching2D/FeaturesMatching2DInterface.hpp>
+#include <BundleAdjustment/BundleAdjustmentInterface.hpp>
+#include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
+#include <PerspectiveNPointSolving/PerspectiveNPointSolvingInterface.hpp>
+#include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DInterface.hpp>
 
-#include <VisualPointFeatureVector2D.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <CorrespondenceMaps2DSequence.hpp>
-#include <PosesSequence.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <Frame.hpp>
-#include <Pose.hpp>
-#include <Matrix.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/CorrespondenceMaps2DSequence.hpp>
+#include <Types/CPP/PosesSequence.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Matrix.hpp>
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
@@ -131,17 +131,17 @@ namespace Reconstruction3D
 		const std::string STEREO_CLOUD_CATEGORY;
 		const std::string TRIANGULATION_CLOUD_CATEGORY;
 
-		//DFN Executors
-		CDFF::DFN::ImageFilteringExecutor* optionalLeftFilter;
-		CDFF::DFN::ImageFilteringExecutor* optionalRightFilter;
-		CDFF::DFN::StereoReconstructionExecutor* reconstructor3d;
-		CDFF::DFN::FeaturesExtraction2DExecutor* featuresExtractor2d;
-		CDFF::DFN::FeaturesDescription2DExecutor* optionalFeaturesDescriptor2d;
-		CDFF::DFN::FeaturesMatching2DExecutor* featuresMatcher2d;
-		CDFF::DFN::BundleAdjustmentExecutor* bundleAdjuster;
-		CDFF::DFN::FundamentalMatrixComputationExecutor* fundamentalMatrixComputer;
-		CDFF::DFN::PerspectiveNPointSolvingExecutor* perspectiveNPointSolver;
-		CDFF::DFN::PointCloudReconstruction2DTo3DExecutor* reconstructor3dfrom2dmatches;
+		//DFN Interfaces
+		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
+		CDFF::DFN::FeaturesExtraction2DInterface* featuresExtractor2d;
+		CDFF::DFN::FeaturesDescription2DInterface* optionalFeaturesDescriptor2d;
+		CDFF::DFN::FeaturesMatching2DInterface* featuresMatcher2d;
+		CDFF::DFN::BundleAdjustmentInterface* bundleAdjuster;
+		CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;
+		CDFF::DFN::PerspectiveNPointSolvingInterface* perspectiveNPointSolver;
+		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
 
 		#ifdef TESTING
 		std::ofstream logFile;
@@ -162,7 +162,7 @@ namespace Reconstruction3D
 		PointCloudWrapper::PointCloudPtr keypointCloud;
 
 		void ConfigureExtraParameters();
-		void InstantiateDFNExecutors();
+		void InstantiateDFNs();
 
 		void ComputeVisualPointFeatures(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
 		void CleanUnmatchedFeatures(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr map, PointCloudWrapper::PointCloudPtr cloud);

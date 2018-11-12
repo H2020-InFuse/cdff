@@ -1,6 +1,8 @@
 
 #include "KMeansClustering.hpp"
 
+#include <random>
+
 #include <Validators/Frame.hpp>
 #include <Validators/Number.hpp>
 #include <Converters/MatToFrameConverter.hpp>

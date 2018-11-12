@@ -13,17 +13,16 @@
 #ifndef FRAME_HPP
 #define FRAME_HPP
 
-#include <Frame.h>
-#include <Array3D.h>
-#include <Array3D.hpp>
-#include <taste-extended.h>
+#include <Types/C/Frame.h>
+#include <Types/C/Array3D.h>
+#include "Array3D.hpp"
+#include <Types/C/taste-extended.h>
 
 #include "BaseTypes.hpp"
 #include <stdlib.h>
 #include <memory>
-#include "Errors/Assert.hpp"
+#include <Errors/Assert.hpp>
 #include <cstring>
-#include <Types/C/Frame.h>
 
 /**
  *  The `Frame` type is the C++ interface to the compiled ASN.1 Frame. A
@@ -157,10 +156,10 @@ BaseTypesWrapper::T_UInt16 GetFrameWidth(const Frame& frame);
 BaseTypesWrapper::T_UInt16 GetFrameHeight(const Frame& frame);
 
 void SetFrameTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
-BaseTypesWrapper::T_UInt64 GetFrameTime(const Frame& frame);
+BaseTypesWrapper::T_Int64 GetFrameTime(const Frame& frame);
 
 void SetFrameReceivedTime(Frame& frame, BaseTypesWrapper::T_Int64 time);
-BaseTypesWrapper::T_UInt64 GetFrameReceivedTime(const Frame& frame);
+BaseTypesWrapper::T_Int64 GetFrameReceivedTime(const Frame& frame);
 
 void SetFrameStatus(Frame& frame, FrameStatus frameStatus);
 FrameStatus GetFrameStatus(const Frame& frame);

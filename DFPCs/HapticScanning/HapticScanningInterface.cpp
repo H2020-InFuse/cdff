@@ -4,7 +4,7 @@
  */
 
 #include "HapticScanningInterface.hpp"
-//#include <PointCloud.hpp>
+//#include <Types/CPP/PointCloud.hpp>
 
 namespace CDFF
 {

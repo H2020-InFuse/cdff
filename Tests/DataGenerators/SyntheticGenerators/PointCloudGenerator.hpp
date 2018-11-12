@@ -32,15 +32,15 @@
  */
 #include <random>
 #include <pcl/io/ply_io.h>
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
-#include <StereoReconstruction/StereoReconstructionExecutor.hpp>
+#include <StereoReconstruction/StereoReconstructionInterface.hpp>
 
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 namespace DataGenerators {
 
@@ -89,7 +89,6 @@ namespace DataGenerators {
 		bool planeFilteringEnabled;
 
 		CDFF::DFN::StereoReconstruction::HirschmullerDisparityMapping* disparityMapping;
-		CDFF::DFN::StereoReconstructionExecutor* disparityMappingExecutor;
 
 		std::vector<InputEntry> inputList;
 

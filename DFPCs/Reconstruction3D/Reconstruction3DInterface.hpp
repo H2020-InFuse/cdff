@@ -7,9 +7,9 @@
 #define RECONSTRUCTION3D_RECONSTRUCTION3DINTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
-#include <Frame.h>
-#include <Pose.h>
-#include <Pointcloud.h>
+#include <Types/C/Frame.h>
+#include <Types/C/Pose.h>
+#include <Types/C/Pointcloud.h>
 
 namespace CDFF
 {

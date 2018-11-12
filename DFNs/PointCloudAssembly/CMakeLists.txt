@@ -1,7 +1,6 @@
 add_library(
     point_cloud_assembly
     PointCloudAssemblyInterface.cpp
-    PointCloudAssemblyExecutor.cpp
 )
 
 add_library(
@@ -10,7 +9,7 @@ add_library(
 )
 target_link_libraries(
     neighbour_point_average
-    point_cloud_assembly cdff_types yaml-cpp cdff_helpers converters_opencv
+    point_cloud_assembly cdff_types yaml-cpp cdff_helpers cdff_converters
 )
 
 add_library(
@@ -19,5 +18,5 @@ add_library(
 )
 target_link_libraries(
     voxel_binning
-    point_cloud_assembly cdff_types yaml-cpp cdff_helpers converters_opencv
+    point_cloud_assembly cdff_types yaml-cpp cdff_helpers cdff_converters
 )

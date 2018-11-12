@@ -7,9 +7,9 @@
 #define ABSOLUTELOCALIZATION_INTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
-#include <TransformWithCovariance.h>
-#include <Pointcloud.h>
-#include <Frame.h>
+#include <Types/C/TransformWithCovariance.h>
+#include <Types/C/Pointcloud.h>
+#include <Types/C/Frame.h>
 
 namespace CDFF
 {

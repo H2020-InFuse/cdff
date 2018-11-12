@@ -7,8 +7,8 @@
 #define FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXCOMPUTATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Eigen.h>
-#include <CorrespondenceMap2D.h>
+#include <Types/C/Eigen.h>
+#include <Types/C/CorrespondenceMap2D.h>
 
 namespace CDFF
 {

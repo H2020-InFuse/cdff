@@ -28,8 +28,6 @@
  */
 
 #include <catch.hpp>
-#include <boost/cast.hpp>
-
 #include <pcl/io/ply_io.h>
 #include <pcl/kdtree/kdtree_flann.h>
 

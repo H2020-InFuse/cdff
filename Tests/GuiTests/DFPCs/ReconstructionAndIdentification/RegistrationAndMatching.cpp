@@ -27,8 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include "GuiTestReconstructionAndIdentification.hpp"
-#include <Visualizers/OpencvVisualizer.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 #include <ReconstructionAndIdentification/RegistrationAndMatching.hpp>
 #include <Errors/Assert.hpp>
 

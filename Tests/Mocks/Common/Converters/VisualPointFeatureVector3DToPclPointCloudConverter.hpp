@@ -30,7 +30,7 @@
  * --------------------------------------------------------------------------
  */
 #include "Mocks/Mock.hpp"
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 
 namespace Mocks {
 

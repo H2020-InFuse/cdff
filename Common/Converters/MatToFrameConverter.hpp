@@ -30,7 +30,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <Frame.hpp>
+#include <Types/CPP/Frame.hpp>
 #include <opencv2/core/core.hpp>
 
 

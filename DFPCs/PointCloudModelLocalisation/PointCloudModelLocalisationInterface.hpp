@@ -7,8 +7,8 @@
 #define POINTCLOUDMODELLOCALISATION_POINTCLOUDMODELLOCALISATIONINTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
-#include <Pose.h>
-#include <Pointcloud.h>
+#include <Types/C/Pose.h>
+#include <Types/C/Pointcloud.h>
 
 namespace CDFF
 {

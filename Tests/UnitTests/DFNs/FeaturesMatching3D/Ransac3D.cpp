@@ -13,7 +13,7 @@
 
 #include <catch.hpp>
 #include <FeaturesMatching3D/Ransac3D.hpp>
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 
 #include <boost/make_shared.hpp>

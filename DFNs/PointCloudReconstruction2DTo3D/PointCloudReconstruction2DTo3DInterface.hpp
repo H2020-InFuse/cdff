@@ -7,9 +7,9 @@
 #define POINTCLOUDRECONSTRUCTION2DTO3D_POINTCLOUDRECONSTRUCTION2DTO3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <CorrespondenceMap2D.h>
-#include <Pose.h>
-#include <Pointcloud.h>
+#include <Types/C/CorrespondenceMap2D.h>
+#include <Types/C/Pose.h>
+#include <Types/C/Pointcloud.h>
 
 namespace CDFF
 {

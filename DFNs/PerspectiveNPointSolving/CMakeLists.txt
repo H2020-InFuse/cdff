@@ -1,7 +1,6 @@
 add_library(
     perspective_n_point_solving
     PerspectiveNPointSolvingInterface.cpp
-    PerspectiveNPointSolvingExecutor.cpp
 )
 
 add_library(
@@ -10,5 +9,5 @@ add_library(
 )
 target_link_libraries(
     iterative_pnp_solver
-    perspective_n_point_solving cdff_types cdff_helpers yaml-cpp opencv_features2d opencv_calib3d opencv_core converters_opencv
+    perspective_n_point_solving cdff_types cdff_helpers yaml-cpp opencv_features2d opencv_calib3d opencv_core cdff_converters
 )

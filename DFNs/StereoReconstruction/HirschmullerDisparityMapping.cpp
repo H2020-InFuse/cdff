@@ -9,7 +9,7 @@
 
 #include "HirschmullerDisparityMapping.hpp"
 
-#include <Visualizers/OpencvVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
 #include <Errors/Assert.hpp>
 
 #include <opencv2/calib3d.hpp>

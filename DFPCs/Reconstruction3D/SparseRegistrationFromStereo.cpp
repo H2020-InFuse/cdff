@@ -28,9 +28,16 @@
  */
 #include "SparseRegistrationFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpencvVisualizer.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 
+#include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
+#include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
+#include <Executors/FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
+#include <Executors/Registration3D/Registration3DExecutor.hpp>
+#include <Executors/PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
+#include <Executors/PointCloudTransform/PointCloudTransformExecutor.hpp>
+#include <Executors/PointCloudFiltering/PointCloudFilteringExecutor.hpp>
 
 namespace CDFF
 {
@@ -80,15 +87,6 @@ SparseRegistrationFromStereo::SparseRegistrationFromStereo()
 
 SparseRegistrationFromStereo::~SparseRegistrationFromStereo()
 	{
-	DeleteIfNotNull(optionalLeftFilter);
-	DeleteIfNotNull(optionalRightFilter);
-	DeleteIfNotNull(reconstructor3d);
-	DeleteIfNotNull(featuresExtractor3d);
-	DeleteIfNotNull(registrator3d);
-	DeleteIfNotNull(cloudAssembler);
-	DeleteIfNotNull(cloudTransformer);
-	DeleteIfNotNull(cloudFilter);
-
 	DeleteIfNotNull(bundleHistory);
 	DeleteIfNotNull(featureCloud);
 	}
@@ -111,17 +109,17 @@ void SparseRegistrationFromStereo::run()
 
 	FrameConstPtr filteredLeftImage = NULL;
 	FrameConstPtr filteredRightImage = NULL;
-	optionalLeftFilter->Execute(inLeftImage, filteredLeftImage);
-	optionalRightFilter->Execute(inRightImage, filteredRightImage);
+	Executors::Execute(optionalLeftFilter, inLeftImage, filteredLeftImage);
+	Executors::Execute(optionalRightFilter, inRightImage, filteredRightImage);
 
 	PointCloudConstPtr unfilteredImageCloud = NULL;
-	reconstructor3d->Execute(filteredLeftImage, filteredRightImage, unfilteredImageCloud);
+	Executors::Execute(reconstructor3d, filteredLeftImage, filteredRightImage, unfilteredImageCloud);
 
 	PointCloudConstPtr imageCloud = NULL;
-	cloudFilter->Execute(unfilteredImageCloud, imageCloud);
+	Executors::Execute(cloudFilter, unfilteredImageCloud, imageCloud);
 
 	VisualPointFeatureVector3DConstPtr keypointVector = NULL;
-	featuresExtractor3d->Execute(imageCloud, keypointVector);
+	Executors::Execute(featuresExtractor3d, imageCloud, keypointVector);
 	DEBUG_SHOW_3D_VISUAL_FEATURES(imageCloud, keypointVector);
 
 	if (!parameters.matchToReconstructedCloud)
@@ -162,7 +160,7 @@ void SparseRegistrationFromStereo::setup()
 	{
 	configurator.configure(configurationFilePath);
 	ConfigureExtraParameters();
-	InstantiateDFNExecutors();
+	InstantiateDFNs();
 
 	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
 	}
@@ -195,18 +193,18 @@ void SparseRegistrationFromStereo::ConfigureExtraParameters()
 	ASSERT(parameters.pointCloudMapResolution > 0, "SparseRegistrationFromStereo Error, Point Cloud Map resolution is not positive");
 	}
 
-void SparseRegistrationFromStereo::InstantiateDFNExecutors()
+void SparseRegistrationFromStereo::InstantiateDFNs()
 	{
-	optionalLeftFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) ) );
-	optionalRightFilter = new ImageFilteringExecutor( static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) ) );
-	reconstructor3d = new StereoReconstructionExecutor( static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") ) );
-	featuresExtractor3d = new FeaturesExtraction3DExecutor( static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") ) );
-	registrator3d = new Registration3DExecutor( static_cast<Registration3DInterface*>( configurator.GetDfn("registrator3d") ) );
-	cloudFilter = new PointCloudFilteringExecutor( static_cast<PointCloudFilteringInterface*>( configurator.GetDfn("cloudFilter", true) ) );
+	optionalLeftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) );
+	optionalRightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) );
+	reconstructor3d = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") );
+	featuresExtractor3d = static_cast<FeaturesExtraction3DInterface*>( configurator.GetDfn("featuresExtractor3d") );
+	registrator3d = static_cast<Registration3DInterface*>( configurator.GetDfn("registrator3d") );
+	cloudFilter = static_cast<PointCloudFilteringInterface*>( configurator.GetDfn("cloudFilter", true) );
 	if (parameters.useAssemblerDfn)
 		{
-		cloudAssembler = new PointCloudAssemblyExecutor( static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") ) );
-		cloudTransformer = new PointCloudTransformExecutor( static_cast<PointCloudTransformInterface*>( configurator.GetDfn("cloudTransformer") ) );
+		cloudAssembler = static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") );
+		cloudTransformer = static_cast<PointCloudTransformInterface*>( configurator.GetDfn("cloudTransformer") );
 		}
 	}
 
@@ -286,7 +284,7 @@ void SparseRegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud, Vis
 	else
 		{
 		Pose3DConstPtr poseToPreviousPose = NULL;
-		registrator3d->Execute(  featureCloud, bundleHistory->GetPointCloud(1), poseToPreviousPose, outSuccess);
+		Executors::Execute(registrator3d, featureCloud, bundleHistory->GetPointCloud(1), poseToPreviousPose, outSuccess);
 		if (outSuccess)
 			{
 			if (parameters.useAssemblerDfn && parameters.matchToReconstructedCloud)
@@ -328,12 +326,12 @@ void SparseRegistrationFromStereo::UpdatePointCloud(PointCloudConstPtr imageClou
 	if (parameters.useAssemblerDfn)
 		{
 		PointCloudConstPtr transformedImageCloud = NULL;
-		cloudTransformer->Execute(*imageCloud, outPose, transformedImageCloud);
-		cloudAssembler->Execute(*transformedImageCloud, outPose, parameters.searchRadius, outputPointCloud);
+		Executors::Execute(cloudTransformer, *imageCloud, outPose, transformedImageCloud);
+		Executors::Execute(cloudAssembler, *transformedImageCloud, outPose, parameters.searchRadius, outputPointCloud);
 		if (parameters.matchToReconstructedCloud)
 			{
 			VisualPointFeatureVector3DConstPtr keypointVector = NULL;
-			featuresExtractor3d->Execute(imageCloud, keypointVector);
+			Executors::Execute(featuresExtractor3d, imageCloud, keypointVector);
 			ComputeFeatureCloud(keypointVector); //This will set up featureCloud
 			bundleHistory->AddPointCloud(*featureCloud);
 			}

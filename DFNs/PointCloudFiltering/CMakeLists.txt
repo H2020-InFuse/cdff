@@ -1,7 +1,6 @@
 add_library(
     point_cloud_filtering
     PointCloudFilteringInterface.cpp
-    PointCloudFilteringExecutor.cpp
 )
 
 add_library(
@@ -10,5 +9,5 @@ add_library(
 )
 target_link_libraries(
     statistical_outlier_removal
-    point_cloud_filtering cdff_types yaml-cpp cdff_helpers converters_opencv
+    point_cloud_filtering cdff_types yaml-cpp cdff_helpers cdff_converters
 )
