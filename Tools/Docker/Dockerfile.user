@@ -20,15 +20,18 @@ SHELL ["/bin/bash", "-c"]
 
 COPY fetch_compile_install_dependencies.sh /tmp/CDFF/Tools/Docker/
 COPY installers/ /tmp/CDFF/Tools/Docker/installers/
+COPY patches/ /tmp/CDFF/Tools/Docker/patches/
 
 RUN apt-get update && apt-get install --yes --quiet liblzma-dev libbz2-dev zlib1g-dev && \
     /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s boost
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s yaml-cpp
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s eigen
 RUN apt-get update && apt-get install --yes --quiet libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev && \
     /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s ceres
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s nabo
+RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s pointmatcher
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s flann
 RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s qhull
-RUN /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s yaml-cpp
 RUN apt-get update && apt-get install --yes --quiet \
       libavcodec-dev libavformat-dev libswscale-dev \
       libjpeg-dev libpng++-dev libdc1394-22-dev libjasper-dev libtiff5-dev \
@@ -81,6 +84,6 @@ CMD ["bash"]
 
 ## Image information
 
-LABEL version="0.4.1"
+LABEL version="0.4.2"
 LABEL maintainer="Romain Michalec <romain.michalec@strath.ac.uk>"
 LABEL description="A self-contained environment for building and testing CDFF-core and CDFF-support, and for using CDFF-dev"
