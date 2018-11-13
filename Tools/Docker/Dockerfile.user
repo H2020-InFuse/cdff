@@ -20,6 +20,7 @@ SHELL ["/bin/bash", "-c"]
 
 COPY fetch_compile_install_dependencies.sh /tmp/CDFF/Tools/Docker/
 COPY installers/ /tmp/CDFF/Tools/Docker/installers/
+COPY patches/ /tmp/CDFF/Tools/Docker/patches/
 
 RUN apt-get update && apt-get install --yes --quiet liblzma-dev libbz2-dev zlib1g-dev && \
     /tmp/CDFF/Tools/Docker/fetch_compile_install_dependencies.sh -i /usr/local -s boost
