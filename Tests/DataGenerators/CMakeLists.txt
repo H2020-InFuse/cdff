@@ -123,6 +123,17 @@ target_link_libraries(
 )
 
 add_executable(
+    overlap_clouds
+    SyntheticGenerators/OverlapClouds.cpp
+    SyntheticGenerators/CloudsOverlapper.cpp
+)
+target_compile_definitions(match_clouds PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+	overlap_clouds
+	cdff_logger cdff_types cdff_converters opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui opencv_calib3d pcl_filters yaml-cpp cdff_visualizers_pcl ${PCL_COMMON_LIBRARIES} ${PCL_VISUALIZATION_LIBRARIES} ${PCL_KDTREE_LIBRARIES}
+)
+
+add_executable(
     detect_outliers
     SyntheticGenerators/DetectOutliers.cpp
     SyntheticGenerators/OutliersDetector.cpp
