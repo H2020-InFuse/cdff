@@ -13,6 +13,15 @@ target_link_libraries(
 )
 
 add_library(
+    neighbour_single_point_average
+    NeighbourSinglePointAverage.cpp
+)
+target_link_libraries(
+    neighbour_single_point_average
+    point_cloud_assembly cdff_types yaml-cpp cdff_helpers cdff_converters
+)
+
+add_library(
     voxel_binning
     VoxelBinning.cpp
 )

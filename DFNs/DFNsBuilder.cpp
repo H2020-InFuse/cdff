@@ -42,6 +42,7 @@
 #include <DepthFiltering/ConvolutionFilter.hpp>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
 #include <PointCloudAssembly/NeighbourPointAverage.hpp>
+#include <PointCloudAssembly/NeighbourSinglePointAverage.hpp>
 #include <PointCloudAssembly/VoxelBinning.hpp>
 #include <PointCloudAssembly/MatcherAssembly.hpp>
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
@@ -400,6 +401,10 @@ PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(std::string d
 	else if (dfnImplementation == "MatcherAssembly")
 	{
 		return new PointCloudAssembly::MatcherAssembly;
+	}
+	if (dfnImplementation == "NeighbourSinglePointAverage")
+	{
+		return new PointCloudAssembly::NeighbourSinglePointAverage;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudAssembly implementation");
 	return NULL;
