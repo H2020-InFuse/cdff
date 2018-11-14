@@ -56,8 +56,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 ## Print basic information -----------------------------------------------------
 
 message(STATUS "Generating makefiles for project: ${PROJECT_NAME}")
-message(STATUS "Top-level source directory: ${PROJECT_SOURCE_DIR}")
-message(STATUS "Top-level build directory:  ${PROJECT_BINARY_DIR}")
+message(STATUS "Top-level source directory: ${CMAKE_SOURCE_DIR}")
+message(STATUS "Top-level build directory:  ${CMAKE_BINARY_DIR}")
 
 ## Work in progress ------------------------------------------------------------
 
@@ -90,7 +90,7 @@ endif()
 if(USE_BUNDLED_DEPENDENCIES)
 
   set(CMAKE_MODULE_PATH
-    "${PROJECT_SOURCE_DIR}/${BUNDLED_DEPENDENCIES_PREFIX}/share/cmake-3.11.4/Modules")
+    "${CMAKE_SOURCE_DIR}/${BUNDLED_DEPENDENCIES_PREFIX}/share/cmake-3.11.4/Modules")
 
 else()
 
