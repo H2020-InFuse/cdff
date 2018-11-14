@@ -24,7 +24,7 @@ set(unittest_sources UnitTests.cpp
     Common/Converters/VisualPointFeatureVector3DPclPointCloudConvertersTest.cpp
     Common/Helpers/ParametersHelper.cpp
     Common/Types/CorrespondenceMap2D.cpp
-    DFNs/BundleAdjustment/CeresAdjustment.cpp
+    #DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
@@ -55,7 +55,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/Registration3D/IcpMatcher.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
-    DFNs/Transform3DEstimation/CeresEstimation.cpp
+    #DFNs/Transform3DEstimation/CeresEstimation.cpp
     DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
     DFNs/Voxelization/Octree.cpp
     DFPCs/DfpcConfigurator.cpp
@@ -80,7 +80,7 @@ set(unittest_libraries catch
     cdff_helpers
     cdff_logger
     cdff_types
-    ceres_adjustment
+    #ceres_adjustment
     convolution_filter
     dfpc_configurator
     dfpc_haptic_scanning
@@ -138,7 +138,7 @@ set(unittest_libraries catch
     svd_decomposition
     synthetic_generators
     threshold_force
-    transform_3d_estimation_ceres
+    #transform_3d_estimation_ceres
     transform_3d_estimation_least_squares_minimization
     triangulation
     voxel_binning
