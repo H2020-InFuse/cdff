@@ -38,8 +38,9 @@ Configuration:
   -s LIB   Build and install LIB
            Can be repeated (-s LIB1 -s LIB2 ...)
            Default:
-             Build and install the following LIBs: boost yaml-cpp eigen ceres
-             flann nabo pointmatcher qhull opencv vtk pcl edres-wrapper
+             Build and install the following LIBs: boost yaml-cpp eigen
+             cloudcompare-core ceres flann nabo pointmatcher qhull opencv
+             vtk pcl edres-wrapper
   -e       Build and install EnviRe and its dependencies
            Required by CDFF::CentralDPM
            Default:
@@ -182,6 +183,7 @@ function build_all_function {
  InstallersToRUN+=("boost")
  InstallersToRUN+=("yaml-cpp")
  InstallersToRUN+=("eigen")
+ InstallersToRUN+=("cloudcompare-core")
  InstallersToRUN+=("ceres")
  InstallersToRUN+=("nabo")
  InstallersToRUN+=("pointmatcher")
