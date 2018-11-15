@@ -403,7 +403,6 @@ include_directories(
   Common
   DFNs
   DFPCs
-  Tests
   CC
 )
 
@@ -412,5 +411,14 @@ include_directories(
 add_subdirectory(Common)
 add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
-add_subdirectory(Tests)
 add_subdirectory(CC)
+
+# Optionally compile the tests (unit tests, interactive tests, performance
+# tests, etc)
+
+option(BUILD_TESTS "Build the CDFF's tests" ON)
+
+if(BUILD_TESTS)
+  include_directories(Tests)
+  add_subdirectory(Tests)
+endif()
