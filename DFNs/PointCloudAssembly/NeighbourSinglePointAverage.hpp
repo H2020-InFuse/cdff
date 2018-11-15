@@ -60,6 +60,8 @@ namespace PointCloudAssembly
 			struct NeighbourSinglePointAverageOptionsSet
 			{
 				float maxNeighbourDistance;
+				bool ignoreUnmatchedPointsOnFirstCloud;
+				bool ignoreUnmatchedPointsOnSecondCloud;
 				bool useIncrementalMode;
 				bool useDistanceFilter;
 			};
@@ -90,7 +92,7 @@ namespace PointCloudAssembly
 
 			//This method assemble the final point cloud.
 			void AssemblePointCloud();
-			void AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const std::map<int, pcl::PointXYZ >& replacementMap);
+			void AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const std::map<int, pcl::PointXYZ >& replacementMap, bool ignoreCloseUmantchedPoints = false);
 
 			pcl::PointXYZ ComputeAveragePoint(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const std::vector<int>& indexList);
 			pcl::PointXYZ ComputeAveragePoint(const pcl::PointXYZ& firstPoint, const pcl::PointXYZ& secondPoint);

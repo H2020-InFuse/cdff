@@ -32,6 +32,8 @@ namespace PointCloudAssembly
 NeighbourSinglePointAverage::NeighbourSinglePointAverage()
 {
 	parametersHelper.AddParameter<float>("GeneralParameters", "MaxNeighbourDistance", parameters.maxNeighbourDistance, DEFAULT_PARAMETERS.maxNeighbourDistance);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "IgnoreUnmatchedPointsOnFirstCloud", parameters.ignoreUnmatchedPointsOnFirstCloud, DEFAULT_PARAMETERS.ignoreUnmatchedPointsOnFirstCloud);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "IgnoreUnmatchedPointsOnSecondCloud", parameters.ignoreUnmatchedPointsOnSecondCloud, DEFAULT_PARAMETERS.ignoreUnmatchedPointsOnSecondCloud);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseIncrementalMode", parameters.useIncrementalMode, DEFAULT_PARAMETERS.useIncrementalMode);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDistanceFilter", parameters.useDistanceFilter, DEFAULT_PARAMETERS.useDistanceFilter);
 
@@ -86,6 +88,8 @@ void NeighbourSinglePointAverage::process()
 const NeighbourSinglePointAverage::NeighbourSinglePointAverageOptionsSet NeighbourSinglePointAverage::DEFAULT_PARAMETERS
 {
 	/*.maxNeighbourDistance =*/ 0.01,
+	/*.ignoreUnmatchedPointsOnFirstCloud =*/ false,
+	/*.ignoreUnmatchedPointsOnSecondCloud =*/ false,
 	/*.useIncrementalMode =*/ false,
 	/*.useDistanceFilter =*/ false
 };
@@ -148,11 +152,11 @@ void NeighbourSinglePointAverage::AssemblePointCloud()
 		assembledCloud->points.push_back( pcl::PointXYZ(replacement) );
 		}
 
-	AssembleLeftoverPoints(firstCloud, firstReplacementMap);
-	AssembleLeftoverPoints(secondCloud, secondReplacementMap);
+	AssembleLeftoverPoints(firstCloud, firstReplacementMap, parameters.ignoreUnmatchedPointsOnFirstCloud);
+	AssembleLeftoverPoints(secondCloud, secondReplacementMap, parameters.ignoreUnmatchedPointsOnSecondCloud);
 	}
 
-void NeighbourSinglePointAverage::AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const std::map<int, pcl::PointXYZ >& replacementMap)
+void NeighbourSinglePointAverage::AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const std::map<int, pcl::PointXYZ >& replacementMap, bool ignoreCloseUmantchedPoints)
 	{
 	//We compute replaced cloud as the point cloud containing all points in cloud that appear in replacement Map.
 	pcl::PointCloud<pcl::PointXYZ>::Ptr replacedCloud( new pcl::PointCloud<pcl::PointXYZ> );
@@ -195,6 +199,10 @@ void NeighbourSinglePointAverage::AssembleLeftoverPoints(pcl::PointCloud<pcl::Po
 			pcl::PointXYZ searchPoint = cloud->points.at(pointIndex);
 			if (searchTree.nearestKSearch(searchPoint, 1, indexList, squaredDistanceList) > 0)
 				{
+				if (ignoreCloseUmantchedPoints && squaredDistanceList.at(0) < parameters.maxNeighbourDistance)
+					{
+					continue;
+					}
 				int closestIndex = indexList.at(0);
 				int replacedPointIndex = replacedCloudToCloudIndexList.at(closestIndex);
 				pcl::PointXYZ replacedPoint = cloud->points.at(replacedPointIndex);
