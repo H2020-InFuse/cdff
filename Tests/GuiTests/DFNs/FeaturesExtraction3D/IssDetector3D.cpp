@@ -3,7 +3,7 @@
  */
 
 /**
- * Test application for the DFN HarrisDetector3D
+ * Test application for the DFN IssDetector3D
  */
 
 /**
@@ -11,7 +11,7 @@
  * @{
  */
 
-#include <FeaturesExtraction3D/HarrisDetector3D.hpp>
+#include <FeaturesExtraction3D/IssDetector3D.hpp>
 #include <Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
@@ -29,16 +29,16 @@ using namespace PointCloudWrapper;
 const std::string USAGE =" \n as optional parameter, provide a path to a ply file \n";
 const std::string DEFAULT_INPUT_FILE = "../../tests/Data/PointClouds/bunny0.ply";
 
-class HarrisDetector3DTestInterface : public DFNTestInterface
+class IssDetector3DTestInterface : public DFNTestInterface
 {
 	public:
 
-		HarrisDetector3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string inputFile = DEFAULT_INPUT_FILE);
-		~HarrisDetector3DTestInterface();
+		IssDetector3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string inputFile = DEFAULT_INPUT_FILE);
+		~IssDetector3DTestInterface();
 
 	private:
 
-		HarrisDetector3D* harris;
+		IssDetector3D* iss;
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud;
 		PointCloudConstPtr inputCloud;
@@ -49,11 +49,11 @@ class HarrisDetector3DTestInterface : public DFNTestInterface
 		void DisplayResult();
 };
 
-HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string inputFile)
+IssDetector3DTestInterface::IssDetector3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string inputFile)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 {
-	harris = new HarrisDetector3D;
-	SetDFN(harris);
+	iss = new IssDetector3D;
+	SetDFN(iss);
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
@@ -67,31 +67,33 @@ HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(std::string dfnName
 		}
 	}
 	inputCloud = PclPointCloudToPointCloudConverter().Convert(pclCloud);
-	harris->pointcloudInput(*inputCloud);
+	iss->pointcloudInput(*inputCloud);
 
-	outputWindowName = "Harris Detector 3D Result";
+	outputWindowName = "Iss Detector 3D Result";
 }
 
-HarrisDetector3DTestInterface::~HarrisDetector3DTestInterface()
+IssDetector3DTestInterface::~IssDetector3DTestInterface()
 {
-	delete harris;
+	delete iss;
 	delete inputCloud;
 }
 
-void HarrisDetector3DTestInterface::SetupParameters()
+void IssDetector3DTestInterface::SetupParameters()
 {
-	AddParameter("GeneralParameters", "NonMaxSuppression", 1, 1);
-	AddParameter("GeneralParameters", "Radius", 0.010, 0.100, 0.001);
-	AddParameter("GeneralParameters", "SearchRadius", 0.010, 0.100, 0.001);
-	AddParameter("GeneralParameters", "EnableRefinement", 0, 1);
-	AddParameter("GeneralParameters", "DetectionThreshold", 0.0010, 0.0100, 0.0001);
-	AddParameter("GeneralParameters", "NumberOfThreads", 0, 10);
-	AddParameter("GeneralParameters", "HarrisMethod", 0, 4);
+	AddParameter("GeneralParameters", "SalientRadius", 0.0001, 1, 0.0001);
+	AddParameter("GeneralParameters", "NonMaximaSupressionRadius", 0.0001, 1, 0.0001);
+	AddParameter("GeneralParameters", "NormalRadius", 0.0000, 1, 0.0001);
+
+	AddParameter("GeneralParameters", "FirstThreshold", 0.975, 1, 0.001);
+	AddParameter("GeneralParameters", "SecondThreshold", 0.975, 1, 0.001);
+	AddParameter("GeneralParameters", "MinNumberOfNeighbours", 5, 100);
+	AddParameter("GeneralParameters", "AngleThreshold", 1.74, 2, 0.01);
+	AddParameter("GeneralParameters", "NumberOfThreads", 0, 8);
 }
 
-void HarrisDetector3DTestInterface::DisplayResult()
+void IssDetector3DTestInterface::DisplayResult()
 {
-	const VisualPointFeatureVector3D& features = harris->featuresOutput();
+	const VisualPointFeatureVector3D& features = iss->featuresOutput();
 
 	PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
 	PRINT_TO_LOG("Virtual memory used (kb): ", GetTotalVirtualMemoryUsedKB());
@@ -106,7 +108,7 @@ int main(int argc, char **argv)
 	ASSERT(argc <= 2, USAGE);
 	std::string inputFile = (argc == 1) ? DEFAULT_INPUT_FILE : argv[1];
 
-	HarrisDetector3DTestInterface interface("HarrisDetector3D", 100, 40, inputFile);
+	IssDetector3DTestInterface interface("IssDetector3D", 100, 40, inputFile);
 	interface.Run();
 };
 

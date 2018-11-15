@@ -154,6 +154,22 @@ target_link_libraries(
 )
 
 add_executable(
+    IssDetector3DGuiTest
+    DFNs/FeaturesExtraction3D/IssDetector3D.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(IssDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(IssDetector3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+    IssDetector3DGuiTest
+    iss_detector_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
+)
+
+add_executable(
     Registration3DIcpGuiTest
     DFNs/Registration3D/Icp3D.cpp
     DFNs/DFNTestInterface.cpp
