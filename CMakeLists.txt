@@ -278,7 +278,7 @@ else()
 
 endif()
 
-## Don't look for FLANN, QHull, yaml-cpp ---------------------------------------
+## Don't look for FLANN, QHull, yaml-cpp, CloudCompare-core --------------------
 
 # There aren't any CMake find modules nor any package configuration files for
 # those libraries, so just add the main include directory and use the libraries
