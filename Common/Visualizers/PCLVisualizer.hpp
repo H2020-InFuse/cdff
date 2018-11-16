@@ -68,6 +68,7 @@ namespace Visualizers
 			static bool enabledSaving;
 
 			static pcl::PointXYZ TransformPoint(pcl::PointXYZ point, PoseWrapper::Transform3DConstPtr transform);
+			static void ShowPointCloudsAndSpheres(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sphereCloud);
 	};
 }
 

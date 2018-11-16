@@ -1,4 +1,6 @@
 - Name: GeneralParameters
   MaxNeighbourDistance: 0.01
+  IgnoreUnmatchedPointsOnFirstCloud: false
+  IgnoreUnmatchedPointsOnSecondCloud: false
   UseIncrementalMode: true
   UseDistanceFilter: true
