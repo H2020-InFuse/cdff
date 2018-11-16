@@ -1,0 +1,10 @@
+--- CMakeLists.txt.no_examples	2018-11-16 15:32:14.567895935 +0000
++++ CMakeLists.txt.no_tests	2018-11-16 15:33:16.911894750 +0000
+@@ -168,7 +168,6 @@
+ 
+ enable_testing()
+ 
+-add_subdirectory(tests)
+ add_subdirectory(python)
+ 
+ # Install catkin package.xml

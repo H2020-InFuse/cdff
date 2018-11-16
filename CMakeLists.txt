@@ -338,6 +338,7 @@ if(Edres-Wrapper_FOUND)
 
 else()
 
+  message(STATUS "Edres-Wrapper not found: Edres-dependent parts will not be built")
   option(WITH_EDRES "Build Edres-dependent parts" OFF)
 
 endif()
@@ -357,6 +358,7 @@ if(DLRTRACKER-CORE_FOUND)
 
 else()
 
+  message(STATUS "DLRTracker-core not found: DLRTracker-dependent parts will not be built")
   option(WITH_DLRTRACKER "Build DLRTracker-dependent parts" OFF)
 
 endif()
