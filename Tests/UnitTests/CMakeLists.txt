@@ -2,7 +2,7 @@ add_definitions(-DTEST_CONFIGURATIONS="${TEST_CONFIGURATIONS}")
 add_definitions(-DTEST_DATA="${TEST_DATA}")
 
 # Path to the directory containing Catch's single-include header (catch.hpp)
-set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/Tests/Catch")
+set(CATCH_INCLUDE_DIR "Catch")
 
 # Define the Catch library
 add_library(catch INTERFACE)
