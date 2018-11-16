@@ -23,7 +23,20 @@
 #     └── libDLRtracker_core.so.1.0.0
 #
 # you can put the archive in "${SOURCE_DIR}", and use this installation script
-# to install the library in "${INSTALL_DIR}".
+# to install the library in "${INSTALL_DIR}" as follow:
+#
+# ${INSTALL_DIR}
+# ├── share
+# │   └── DLRtracker_core
+# │       └── DLRtracker_coreConfig.cmake
+# ├── include
+# │   └── DLRtracker_core
+# │       └── .h header files
+# └── lib
+#     └── DLRtracker_core
+#         ├── libDLRtracker_core.so -> libDLRtracker_core.so.1
+#         ├── libDLRtracker_core.so.1 -> libDLRtracker_core.so.1.0.0
+#         └── libDLRtracker_core.so.1.0.0
 #
 # ### Dependencies ------------------------------------------------------------
 #
@@ -32,7 +45,7 @@
 #   + C math library
 #   + C++ standard library
 #
-# * Optional:
+# * Required if the library was compiled with OpenCV support:
 #   + The following OpenCV libraries: core, imgcodecs, imgproc, highgui
 #
 # ### Dependants --------------------------------------------------------------

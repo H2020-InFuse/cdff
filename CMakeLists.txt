@@ -324,14 +324,33 @@ if(Edres-Wrapper_FOUND)
 
   find_package_mode(Edres-Wrapper)
   message(STATUS "Found Edres-Wrapper headers in: ${Edres-Wrapper_INCLUDE_DIRS}")
-  message(STATUS "Found Edres-Wrapper compiled libraries in: ${Edres-Wrapper_LIBRARIES}")
+  message(STATUS "Found Edres-Wrapper libraries, and their dependencies: ${Edres-Wrapper_LIBRARIES}")
 
-  set(WITH_EDRES ON CACHE BOOL "Build Edres-dependent parts")
+  option(WITH_EDRES "Build Edres-dependent parts" ON)
   include_directories(SYSTEM ${Edres-Wrapper_INCLUDE_DIRS})
 
 else()
 
-  set(WITH_EDRES OFF CACHE BOOL "Build Edres-dependent parts")
+  option(WITH_EDRES "Build Edres-dependent parts" OFF)
+
+endif()
+
+## Look for DLRTracker-core (optional dependency) ------------------------------
+
+find_package(DLRtracker_core QUIET)
+
+if(DLRTRACKER-CORE_FOUND)
+
+  find_package_mode(DLRtracker_core)
+  message(STATUS "Found DLRTracker-core headers in: ${DLRTRACKER-CORE_INCLUDE_DIRS}")
+  message(STATUS "Found DLRTracker-core libraries, and their dependencies: ${DLRTRACKER-CORE_LIBRARIES}")
+
+  option(WITH_DLRTRACKER "Build DLRTracker-dependent parts" ON)
+  include_directories(SYSTEM ${DLRTRACKER-CORE_INCLUDE_DIRS})
+
+else()
+
+  option(WITH_DLRTRACKER "Build DLRTracker-dependent parts" OFF)
 
 endif()
 
