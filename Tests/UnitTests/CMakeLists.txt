@@ -46,7 +46,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
     DFNs/PointCloudAssembly/VoxelBinning.cpp
-    DFNs/PointCloudAssembly/MatcherAssembly.cpp
+    #DFNs/PointCloudAssembly/MatcherAssembly.cpp
     DFNs/PointCloudFiltering/StatisticalOutlierRemoval.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFNs/PointCloudTransform/CartesianSystemTransform.cpp
