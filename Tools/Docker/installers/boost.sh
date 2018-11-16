@@ -57,6 +57,8 @@
 #       base types of EnviRe
 #   + Timer (in topic branches only)
 #     - Used by MAG MiddlewareSupport
+#   + Atomic
+#     - Dependency of Ogre3D, which is a dependency of VISP, used for the model-based tracking DFNs
 #
 # * Header-only Boost libraries used by the CDFF:
 #
@@ -72,7 +74,7 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
   # Build and install
   mkdir build
   ./bootstrap.sh \
-    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono,serialization,timer,program_options \
+    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono,serialization,timer,program_options,atomic \
     --prefix="${INSTALL_DIR}"
   ./b2 --build-dir=build -q -j ${CPUS} link=shared install
 

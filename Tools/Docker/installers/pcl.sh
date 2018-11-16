@@ -37,6 +37,9 @@ if [[ ! -d "${INSTALL_DIR}/include/pcl-1.8" ]]; then
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_MODULE_PATH="${INSTALL_DIR}/share/cmake-3.11.4/Modules" \
     -D CMAKE_PREFIX_PATH=../../install \
+    -D HAVE_SSE4_2_EXTENSIONS=NO \
+    -D HAVE_SSE4_1_EXTENSIONS=NO \
+    -D WITH_CUDA=OFF \
     -D CMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
     ../
 
