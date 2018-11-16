@@ -41,28 +41,13 @@
 #
 # ### Dependants --------------------------------------------------------------
 #
+# * libpointmatcher
 # * PCL
 # * CDFF
 #
-# Neither we nor the PCL need *all* the Boost.* libraries that require building:
-#
-# * Compiled Boost libraries used by the PCL (sources: https://github.com/
-#   PointCloudLibrary/pcl/blob/master/cmake/pcl_find_boost.cmake and http://
-#   www.pointclouds.org/documentation/tutorials/building_pcl.php):
-#
-#   + Required: Date_Time Filesystem Iostreams System Thread
-#   + Required if WITH_OPENNI2: Chrono
-#   + Optional: MPI Serialization
-#
-#   TODO: OpenNI2 support by the PCL (it is an optional dependency of pcl_io)
-#   is unlikely to be necessary for us
-#
-#   TODO: Message-Parsing Interface disabled but check that we are not using a
-#   part of the PCL that could make use of it
-#
-# * Boost header-only libraries required by the PCL:
-#
-#   + Undocumented, but at least SmartPtr
+# Neither the CDFF nor its dependencies require *all* the Boost.* libraries.
+# The following list are those required by the CDFF. For those required by the
+# dependencies, see their respective installers.
 #
 # * Compiled Boost libraries used by the CDFF:
 #
@@ -72,8 +57,10 @@
 #       base types of EnviRe
 #   + Timer (in topic branches only)
 #     - Used by MAG MiddlewareSupport
+#   + Atomic
+#     - Dependency of Ogre3D, which is a dependency of VISP, used for the model-based tracking DFNs
 #
-# * Boost header-only libraries used by the CDFF:
+# * Header-only Boost libraries used by the CDFF:
 #
 #   + SmartPtr
 #   + String_Algo
@@ -87,7 +74,7 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
   # Build and install
   mkdir build
   ./bootstrap.sh \
-    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono,serialization,timer \
+    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono,serialization,timer,program_options,atomic \
     --prefix="${INSTALL_DIR}"
   ./b2 --build-dir=build -q -j ${CPUS} link=shared install
 
