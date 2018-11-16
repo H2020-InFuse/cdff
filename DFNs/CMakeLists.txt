@@ -81,6 +81,7 @@ target_link_libraries(
   threshold_force
   neighbour_point_average
   voxel_binning
+  matcher_assembly
   cartesian_system_transform
   statistical_outlier_removal
 )
