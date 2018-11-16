@@ -33,6 +33,7 @@
 #include <PrimitiveMatching/HuInvariants.hpp>
 #include <Registration3D/Icp3D.hpp>
 #include <Registration3D/IcpCC.hpp>
+#include <Registration3D/IcpMatcher.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
@@ -324,6 +325,10 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(std::string dfnImplem
 	else if (dfnImplementation == "IcpCC")
 	{
 		return new Registration3D::IcpCC;
+	}
+	else if (dfnImplementation == "IcpMatcher")
+	{
+		return new Registration3D::IcpMatcher;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN Registration3D implementation");
 	return NULL;

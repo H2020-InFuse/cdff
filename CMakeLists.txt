@@ -316,6 +316,13 @@ message(STATUS "All requested PCL libraries, and their dependencies: ${PCL_LIBRA
 find_package(OpenCV 3.4.0 REQUIRED)
 find_package_mode(OpenCV)
 
+## Look for libpointmatcher ---------------------------------------------------
+
+# TODO: rework this section
+
+find_package(libpointmatcher 1.3.0 REQUIRED)
+
+
 ## Look for Edres-Wrapper (optional dependency) --------------------------------
 
 find_package(Edres-Wrapper QUIET)

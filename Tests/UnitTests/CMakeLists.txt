@@ -52,6 +52,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/PrimitiveMatching/HuInvariants.cpp
     DFNs/Registration3D/Icp3D.cpp
     DFNs/Registration3D/IcpCC.cpp
+    #DFNs/Registration3D/IcpMatcher.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
@@ -131,6 +132,7 @@ set(unittest_libraries catch
 #[=[reconstruction_from_stereo]=]
     registration_icp_3d
     registration_icp_cc
+    registration_icp_matcher
     shot_descriptor_3d
     statistical_outlier_removal
     svd_decomposition
