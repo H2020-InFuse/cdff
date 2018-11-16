@@ -321,7 +321,6 @@ find_package_mode(OpenCV)
 # TODO: rework this section
 
 find_package(libpointmatcher 1.3.0 REQUIRED)
-include_directories(SYSTEM ${libpointmatcher_INCLUDE_DIRS})
 
 
 ## Look for Edres-Wrapper (optional dependency) --------------------------------
