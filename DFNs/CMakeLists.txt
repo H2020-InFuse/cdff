@@ -80,6 +80,7 @@ target_link_libraries(
   convolution_filter
   threshold_force
   neighbour_point_average
+  neighbour_single_point_average
   voxel_binning
   matcher_assembly
   cartesian_system_transform

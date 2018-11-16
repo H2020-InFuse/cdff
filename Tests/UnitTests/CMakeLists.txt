@@ -45,6 +45,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
+    DFNs/PointCloudAssembly/NeighbourSinglePointAverage.cpp
     DFNs/PointCloudAssembly/VoxelBinning.cpp
     #DFNs/PointCloudAssembly/MatcherAssembly.cpp
     DFNs/PointCloudFiltering/StatisticalOutlierRemoval.cpp
@@ -102,6 +103,7 @@ set(unittest_libraries catch
     kalman_predictor
 #[=[mock]=] # no longer used by any DFN unit test
     neighbour_point_average
+    neighbour_single_point_average
     opencv_core
     opencv_highgui
     opencv_imgcodecs
