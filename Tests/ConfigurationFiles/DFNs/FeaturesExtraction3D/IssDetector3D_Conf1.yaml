@@ -1,6 +1,6 @@
 - Name: GeneralParameters
   SalientRadius: 0.0001
-  NonMaximaSupressionRadius: 0.0
+  NonMaximaSupressionRadius: 0.0001
   NormalRadius: 0.0
   BorderRadius: 0.0
   FirstThreshold: 0.975
