@@ -51,6 +51,8 @@
 #include <Types/CPP/Pose.hpp>
 #include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+
 #ifdef TESTING
 #include <fstream>
 #endif
@@ -62,12 +64,21 @@ namespace DFPC
 namespace Reconstruction3D
 {
 
-/* --------------------------------------------------------------------------
+/**
+ * Dense 3D reconstruction. This DFPC computes a point cloud from a pair of stereo cameras, matches the computed cloud to a previous reconstruction or previous frame by means of a registration DFN, 
+ * computes the pose of the new cloud into the reconstructed cloud, and extends the reconstruction by merging the new cloud into the reconstructed cloud at the computed pose.
+ * This DFPC is configured according to the following parameters (beyond those that are needed to configure the DFN components):
  *
- * Class definition
- *
- * --------------------------------------------------------------------------
+ * @param SearchRadius, the output is given by the point of the reconstructed cloud contained within a sphere of center given by the current camera pose and radius given by this parameter;
+ * @param PointCloudMapResolution, the voxel resolution of the output point cloud, if the cloud is denser it will be filtered by PCL voxel filter;
+ * @param MatchToReconstructedCloud, whether the cloud is matched to the previous reconstruction or is matched to the previous frame;
+ * @param UseAssemblerDfn, whether the assembler DFN is used, if this argument is false the assembly is done by simple overlapping and voxel filtering;
+ * @param CloudUpdateTime, the number of frames between two point cloud assembly, intermediate frames are used only to update the pose and will not extend the point cloud;
+ * @param SaveCloudsToFile, whether to save the output clouds to file;
+ * @param CloudSaveTime, the number of frames between two saving of the point cloud, clouds will not be save during intermediate frames;
+ * @param cloudSavePath, the folder path where the point clouds are saved.
  */
+
     class DenseRegistrationFromStereo : public Reconstruction3DInterface
     {
 	/* --------------------------------------------------------------------
@@ -91,9 +102,25 @@ namespace Reconstruction3D
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+		typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
+
 		DfpcConfigurator configurator;
 		PointCloudMap pointCloudMap;
 		bool firstInput;
+
+		enum CloudUpdateType
+			{
+			TimePassed,
+			DistanceCovered,
+			MaximumOverlapping
+			};
+		class CloudUpdateTypeHelper : public Helpers::ParameterHelper<CloudUpdateType, std::string>
+			{
+			public:
+				CloudUpdateTypeHelper(const std::string& parameterName, CloudUpdateType& boundVariable, const CloudUpdateType& defaultValue);
+			private:
+				CloudUpdateType Convert(const std::string& value);
+			};
 
 		struct RegistrationFromStereoOptionsSet
 			{
@@ -101,12 +128,23 @@ namespace Reconstruction3D
 			float pointCloudMapResolution;
 			bool matchToReconstructedCloud;
 			bool useAssemblerDfn;
+
+			CloudUpdateType cloudUpdateType;
+			int cloudUpdateTime;
+			double cloudUpdateTranslationDistance;
+			double cloudUpdateOrientationDistance;
+			float overlapThreshold;
+			float overlapInlierDistance;
+
+			bool saveCloudsToFile;
+			int cloudSaveTime;
+			std::string cloudSavePath;
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
 		RegistrationFromStereoOptionsSet parameters;
 		static const RegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
-		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;		
+		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;
 
 		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
 		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
@@ -123,13 +161,22 @@ namespace Reconstruction3D
 
 		//Helpers
 		BundleHistory* bundleHistory;
+		PoseWrapper::Pose3D outputPoseAtLastMerge;
+		bool outputPoseAtLastMergeSet;
+		Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloudConverter;
 
 		void ConfigureExtraParameters();
 		void InstantiateDFNs();
 
 		void UpdatePose(PointCloudWrapper::PointCloudConstPtr inputCloud);
-		void UpdatePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud);
+		void UpdatePointCloudOnTimePassed(PointCloudWrapper::PointCloudConstPtr inputCloud);
+		void UpdatePointCloudOnDistanceCovered(PointCloudWrapper::PointCloudConstPtr inputCloud);
+		void UpdatePointCloudOnMaximumOverlapping(PointCloudWrapper::PointCloudConstPtr inputCloud);
+		void MergePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud);
 
+		void SaveOutputCloud();
+		float ComputeOverlappingRatio(PointCloudWrapper::PointCloudConstPtr cloud, const PoseWrapper::Pose3D& pose, PointCloudWrapper::PointCloudConstPtr sceneCloud);
+		pcl::PointXYZ TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform);
 		/*
 		* Inline Methods
 		*

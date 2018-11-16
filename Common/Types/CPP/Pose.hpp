@@ -88,6 +88,8 @@ BaseTypesWrapper::T_Double GetZRotation(const Pose3D& pose);
 BaseTypesWrapper::T_Double GetWRotation(const Pose3D& pose);
 
 Pose3D Sum(const Pose3D& pose1, const Pose3D& pose2);
+BaseTypesWrapper::T_Double ComputeTranslationDistance(const Pose3D& pose1, const Pose3D& pose2);
+BaseTypesWrapper::T_Double ComputeOrientationDistance(const Pose3D& pose1, const Pose3D& pose2);
 
 BitStream ConvertToBitStream(const Pose3D& pose);
 void ConvertFromBitStream(BitStream bitStream, Pose3D& pose);
