@@ -1,5 +1,5 @@
 --- CMakeLists.txt	2018-11-09 15:44:42.560717311 +0000
-+++ CMakeLists.txt.patched	2018-11-09 15:46:35.946483229 +0000
++++ CMakeLists.txt.no_python_bindings	2018-11-09 15:46:35.946483229 +0000
 @@ -170,7 +170,6 @@
  
  add_subdirectory(examples)

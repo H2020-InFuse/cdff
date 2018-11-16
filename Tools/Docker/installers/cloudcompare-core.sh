@@ -3,7 +3,7 @@
 # romain.michalec@strath.ac.uk
 # This file is required by ../fetch_compile_install_dependencies.sh
 
-# ## CloudCompare-core (CCLib) 2.9.1+git20181104 ==============================
+# ## CloudCompare core algorithms (CCLib) 2.9.1+git20181115 ===================
 #
 # Homepage        https://www.cloudcompare.org
 # Repository      https://github.com/CloudCompare/CloudCompare
@@ -13,17 +13,16 @@
 # Documentation   https://github.com/CloudCompare/CloudCompare/blob/master/README.md
 #
 # CloudCompare is a 3D point cloud processing software. Its core algorithms,
-# located in the CC/ subdirectory of its code base, can be built in isolation
-# of the rest of the code base. The result is a library called CCLib and
-# installed as follow:
+# located in the CC/ subdirectory of its code base, make up a library called
+# CCLib that can be built in isolation of the rest of the code base. The result
+# can be installed as follow:
 #
 # ${INSTALL_DIR}
 # ├── include
-# │   └── cloudcompare
+# │   └── cloudcompare-core
 # │       └── .h header files
 # └── lib
-#     └── cloudcompare
-#         └── libCC_CORE_LIB.so
+#     └── libcloudcompare_core.so
 #
 # ### Dependencies ------------------------------------------------------------
 #
@@ -41,15 +40,17 @@
 #
 # CDFF::DFN::Registration3D and any DFPC using it
 
-# TODO patch to rename library, put it into lib/, use CMAKE_INSTALL_PREFIX
-# TODO patch to install headers into include/
-
 function install4infuse_cloudcompare-core {
-if [[ ! -d "${INSTALL_DIR}/include/cloudcompare" ]]; then
+if [[ ! -d "${INSTALL_DIR}/include/cloudcompare-core" ]]; then
 
     # Download source code and change to resulting directory
-    fetchgit_function cloudcompare master https://github.com/CloudCompare/CloudCompare.git 2122acf8128ad4eb3be3baf143cf737ffc81a67e
+    fetchgit_function cloudcompare master https://github.com/CloudCompare/CloudCompare.git e1b281c2b229f8aa7dd961853cf93e130e1cfa5c
     cd "${SOURCE_DIR}/cloudcompare/CC"
+
+    # Patch
+    patch CMakeLists.txt < "${DIR}/patches/cloudcompare-core-2.9.1+git20181115-rename_library.patch"
+    patch CMakeLists.txt < "${DIR}/patches/cloudcompare-core-2.9.1+git20181115-install_library.patch"
+    patch CMakeLists.txt < "${DIR}/patches/cloudcompare-core-2.9.1+git20181115-install_headers.patch"
 
     # Build
     mkdir build
@@ -61,16 +62,13 @@ if [[ ! -d "${INSTALL_DIR}/include/cloudcompare" ]]; then
         -D COMPILE_CC_CORE_LIB_WITH_QT=OFF \
         -D COMPILE_CC_CORE_LIB_WITH_CGAL=OFF \
         -D COMPILE_CC_CORE_LIB_WITH_TBB=OFF \
-        -D CMAKE_INSTALL_LIBDIR="${INSTALL_DIR}/lib" \
+        -D CMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
         "${SOURCE_DIR}/cloudcompare/CC"
 
     make --jobs=${CPUS}
 
-    # Install the compiled library
-    make --jobs=${CPUS} install
-
-    # Install the headers
-    install -m 0644 -D -t "${INSTALL_DIR}"/include/cloudcompare/ "${SOURCE_DIR}"/cloudcompare/CC/include/*.h
+    # Install
+    install_function libcloudcompare-core 2.9.1+git20181115+cdff
 
     # Remove source and build directories
     clean_function cloudcompare
