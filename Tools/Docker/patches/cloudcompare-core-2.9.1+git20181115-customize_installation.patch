@@ -1,5 +1,5 @@
---- CMakeLists.txt	2018-11-15 22:58:31.259960811 +0000
-+++ CMakeLists.txt.rename_library	2018-11-15 23:20:33.151935679 +0000
+--- CC/CMakeLists.txt
++++ CC/CMakeLists.txt
 @@ -9,7 +9,7 @@
  option( COMPILE_CC_CORE_LIB_SHARED "Check to compile CC_CORE_LIB as a shared library (DLL/so)" ON )
  
@@ -9,7 +9,7 @@
  
  include ( ../cmake/CMakePolicies.cmake )
  include ( ../cmake/CMakeSetCompilerOptions.cmake )
-@@ -71,10 +71,10 @@
+@@ -71,10 +71,11 @@
  	# Install (shared) library to specified destinations
  	if( WIN32 OR APPLE )
  		foreach( dest ${INSTALL_DESTINATIONS} )
@@ -18,7 +18,8 @@
  		endforeach()
  	else()
 -		install_shared( CC_CORE_LIB ${CMAKE_INSTALL_LIBDIR}/cloudcompare 0 ) #default destination: /usr/lib/cloudcompare
-+		install_shared( cloudcompare_core ${CMAKE_INSTALL_LIBDIR}/cloudcompare 0 ) #default destination: /usr/lib/cloudcompare
++		install_shared( cloudcompare_core ${CMAKE_INSTALL_PREFIX}/lib 0 ) #default destination: /usr/local/lib
++		install(FILES ${header_list} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/cloudcompare-core") #default destination: /usr/local/include/cloudcompare-core
  	endif()
  endif()
  

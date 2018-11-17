@@ -40,9 +40,7 @@ if [[ ! -d "${INSTALL_DIR}/include/nabo" ]]; then
     cd "${SOURCE_DIR}/nabo"
 
     # Patch
-    patch CMakeLists.txt < "${DIR}/patches/nabo-1.0.6+git20180418-no_examples.patch"
-    patch CMakeLists.txt < "${DIR}/patches/nabo-1.0.6+git20180418-no_tests.patch"
-    patch CMakeLists.txt < "${DIR}/patches/nabo-1.0.6+git20180418-no_python_bindings.patch"
+    patch -p0 < "${DIR}/patches/nabo-1.0.6+git20180418-disable_unnecessary_parts.patch"
 
     # Build
     mkdir build

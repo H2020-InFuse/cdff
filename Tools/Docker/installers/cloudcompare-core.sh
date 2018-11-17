@@ -45,16 +45,14 @@ if [[ ! -d "${INSTALL_DIR}/include/cloudcompare-core" ]]; then
 
     # Download source code and change to resulting directory
     fetchgit_function cloudcompare master https://github.com/CloudCompare/CloudCompare.git e1b281c2b229f8aa7dd961853cf93e130e1cfa5c
-    cd "${SOURCE_DIR}/cloudcompare/CC"
+    cd "${SOURCE_DIR}/cloudcompare"
 
     # Patch
-    patch CMakeLists.txt < "${DIR}/patches/cloudcompare-core-2.9.1+git20181115-rename_library.patch"
-    patch CMakeLists.txt < "${DIR}/patches/cloudcompare-core-2.9.1+git20181115-install_library.patch"
-    patch CMakeLists.txt < "${DIR}/patches/cloudcompare-core-2.9.1+git20181115-install_headers.patch"
+    patch -p0 < "${DIR}/patches/cloudcompare-core-2.9.1+git20181115-customize_installation.patch"
 
     # Build
-    mkdir build
-    cd build
+    mkdir CC/build
+    cd CC/build
 
     cmake \
         -D CMAKE_BUILD_TYPE=Release \
