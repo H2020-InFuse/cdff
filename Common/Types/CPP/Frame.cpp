@@ -127,6 +127,11 @@ FrameSharedPtr SharedClone(const Frame& source)
 void Initialize(Frame& frame)
 {
 Array3DWrapper::Initialize(frame.data);
+
+frame.metadata.pixelModel = FramePixelModel::asn1Sccpix_UNDEF;
+frame.metadata.mode = MODE_UNDEFINED;
+frame.metadata.status = STATUS_EMPTY;
+
 frame.metadata.pixelCoeffs.nCount = 0;
 frame.metadata.errValues.nCount = 0;
 frame.metadata.attributes.nCount = 0;
