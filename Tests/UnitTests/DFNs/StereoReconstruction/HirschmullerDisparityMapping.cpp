@@ -13,7 +13,7 @@
 
 #include <catch.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 
 using namespace CDFF::DFN::StereoReconstruction;

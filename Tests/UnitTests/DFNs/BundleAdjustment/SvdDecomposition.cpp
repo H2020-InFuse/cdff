@@ -28,7 +28,7 @@
  */
 #include <catch.hpp>
 #include <BundleAdjustment/SvdDecomposition.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Eigen/Dense>
 
 using namespace CDFF::DFN::BundleAdjustment;

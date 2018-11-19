@@ -12,9 +12,9 @@
  */
 
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <Pose.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>

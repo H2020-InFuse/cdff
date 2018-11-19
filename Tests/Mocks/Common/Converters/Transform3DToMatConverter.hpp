@@ -30,7 +30,7 @@
  * --------------------------------------------------------------------------
  */
 #include "Mocks/Mock.hpp"
-#include <Transform3DToMatConverter.hpp>
+#include <Converters/Transform3DToMatConverter.hpp>
 
 namespace Mocks {
 
@@ -48,7 +48,7 @@ class Transform3DToMatConverter : public Mock, public Converters::Transform3DToM
 	 */
 	public:
 		virtual ~Transform3DToMatConverter();
-		cv::Mat Convert(const PoseWrapper::Transform3DConstPtr transform);
+		const cv::Mat Convert(const PoseWrapper::Transform3DConstPtr& transform) override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

@@ -33,7 +33,7 @@ namespace Converters
 class OctreeToPclOctreeConverter
 {
 	public:
-		const pcl::octree::OctreePointCloudSearch<pcl::PointXYZ> Convert(const asn1SccT_Octree& data);
+		const pcl::octree::OctreePointCloudSearch<pcl::PointXYZ> Convert(const asn1SccOctree& data);
 };
 }
 

@@ -33,8 +33,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
-#include <MatToFrameConverter.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNs/PerformanceTestInterface.hpp>
 #include <pcl/io/ply_io.h>

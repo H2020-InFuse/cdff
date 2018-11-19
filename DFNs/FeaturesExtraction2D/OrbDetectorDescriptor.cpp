@@ -8,8 +8,8 @@
  */
 
 #include "OrbDetectorDescriptor.hpp"
-#include <FrameToMatConverter.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <stdlib.h>
 #include <fstream>

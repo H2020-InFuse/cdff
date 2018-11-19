@@ -9,7 +9,7 @@
 
 #include "Ransac3D.hpp"
 
-#include <EigenTransformToTransform3DConverter.hpp>
+#include <Converters/EigenTransformToTransform3DConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
@@ -138,11 +138,20 @@ Pose3DConstPtr Ransac3D::ComputeTransform(PointCloudWithFeatures sourceCloud, Po
 	// Setup output
 	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud(new pcl::PointCloud<pcl::PointXYZ>);
 
-	// Run RANSAC
-	ransac->align(*outputCloud);
+	try 
+		{
+		// Run RANSAC
+		ransac->align(*outputCloud);
 
-	// Check convergence
-	outSuccess = ransac->hasConverged();
+		// Check convergence
+		outSuccess = ransac->hasConverged();
+		}
+	catch ( ... )
+		{
+		VERIFY(false, "Ransac failed with exception!");
+		outSuccess = false;
+		}
+
 	if (outSuccess)
 	{
 		Eigen::Matrix4f eigenTransform = ransac->getFinalTransformation();

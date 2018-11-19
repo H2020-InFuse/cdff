@@ -1,0 +1,90 @@
+cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
+
+# Maintainer: Romain Michalec <romain.michalec@strath.ac.uk>
+
+## Uninstallation script (based on install_manifest.txt) -----------------------
+##
+## This script is executed by the uninstall target (make uninstall). It parses
+## the install manifest, which is the list of files installed by the install
+## target (make install), and removes all of those same files. That is similar
+## to running "xargs rm < install_manifest.txt" in UNIX.
+##
+## Empty directories are removed as well, unless they are standard installation
+## directories, as defined by the GNU Coding Standards (CMake's GNUInstallDirs
+## module must be loaded when this script is processed by the configure_file()
+## command in the top-level listfile).
+##
+## Known issues:
+##
+## * Files created at runtime, if any, are not listed in the install manifest.
+##   This script won't know they exist and will not remove them. Use the purge
+##   target (make purge) to delete them.
+##
+## * Directories which don't contained installed files, but only subdirectories,
+##   are not detected and therefore not removed by this script. Consequently,
+##   a remnant of the installation tree structure is left out on the disk. Use
+##   the purge target (make purge) to delete them.
+##
+## Based on: https://gitlab.kitware.com/cmake/community/wikis/FAQ#can-i-do-make-
+## uninstall-with-cmake
+
+# Standard installation directories, as defined by the GNU Coding Standards
+
+set(stddirs
+  "@CMAKE_INSTALL_FULL_INCLUDEDIR@"
+  "@CMAKE_INSTALL_FULL_LIBDIR@"
+  "@CMAKE_INSTALL_FULL_BINDIR@")
+
+# Get install manifest
+
+set(manifest "@CMAKE_BINARY_DIR@/install_manifest.txt")
+
+if(NOT EXISTS "${manifest}")
+  message(FATAL_ERROR "Cannot find install manifest: ${manifest}\n"
+    "This usually means that installation has not been performed")
+endif()
+
+# Parse install manifest
+
+file(STRINGS "${manifest}" files)
+foreach(file ${files})
+
+  if(IS_SYMLINK "$ENV{DESTDIR}${file}" OR EXISTS "$ENV{DESTDIR}${file}")
+
+    # Remove each installed file; you must have the appropriate filesystem
+    # rights to do that
+
+    message(STATUS "Removing: $ENV{DESTDIR}${file}")
+    execute_process(
+      COMMAND "@CMAKE_COMMAND@" -E remove "$ENV{DESTDIR}${file}"
+      RESULT_VARIABLE error)
+    if(error)
+      message(FATAL_ERROR "Could not remove: $ENV{DESTDIR}${file}")
+    endif()
+
+    # Remove the corresponding directory if it is empty, unless it is a standard
+    # installation directory; you must have the appropriate filesystem rights to
+    # do that
+
+    get_filename_component(dir "${file}" DIRECTORY)
+    if(NOT dir IN_LIST stddirs)
+      file(GLOB contents RELATIVE "$ENV{DESTDIR}${dir}" "$ENV{DESTDIR}${dir}/*")
+      list(LENGTH contents listlength)
+      if(listlength EQUAL 0)
+        message(STATUS "Removing: $ENV{DESTDIR}${dir}")
+        execute_process(
+          COMMAND "@CMAKE_COMMAND@" -E remove_directory "$ENV{DESTDIR}${dir}"
+          RESULT_VARIABLE error)
+        if(error)
+          message(FATAL_ERROR "Could not remove: $ENV{DESTDIR}${dir}")
+        endif()
+      endif()
+    endif()
+
+  else()
+
+    message(STATUS "No file $ENV{DESTDIR}${file} to remove")
+
+  endif()
+
+endforeach()

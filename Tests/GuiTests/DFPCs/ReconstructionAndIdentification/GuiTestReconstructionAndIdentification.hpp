@@ -33,10 +33,10 @@
 #include <ReconstructionAndIdentification/ReconstructionAndIdentificationInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <MatToFrameConverter.hpp>
-#include <Frame.hpp>
-#include <Pose.hpp>
-#include <PointCloud.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 #include <Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Converters/SupportTypes.hpp>

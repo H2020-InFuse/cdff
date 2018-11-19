@@ -7,9 +7,9 @@
 #define CAMERASTRANSFORMESTIMATION_CAMERASTRANSFORMESTIMATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Pose.h>
-#include <CorrespondenceMap2D.h>
-#include <Eigen.h>
+#include <Types/C/Pose.h>
+#include <Types/C/CorrespondenceMap2D.h>
+#include <Types/C/Eigen.h>
 
 namespace CDFF
 {

@@ -28,7 +28,7 @@
  */
 #include <catch.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <DataGenerators/SyntheticGenerators/CameraPair.hpp>
 

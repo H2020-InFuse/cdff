@@ -29,7 +29,7 @@
 #include <catch.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Voxelization/Octree.hpp>
 #include <Converters/OctreeToPclOctreeConverter.hpp>
 
@@ -54,13 +54,13 @@ TEST_CASE( "Call to process (Octree)", "[process]" )
     std::unique_ptr<CDFF::DFN::Voxelization::Octree> octree(new CDFF::DFN::Voxelization::Octree());
 
     // Send input data to DFN
-    octree->frameInput(*inputFrame);
+    octree->depthInput(*inputFrame);
 
     // Run DFN
     octree->process();
 
     // Query output data from DFN
-    const asn1SccT_Octree output = octree->octreeOutput();
+    const asn1SccOctree & output = octree->octreeOutput();
     pcl::octree::OctreePointCloudSearch<pcl::PointXYZ> output_octree = Converters::OctreeToPclOctreeConverter().Convert(output);
 
     // Check the output

@@ -13,8 +13,8 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
-#include <CorrespondenceMap3D.h>
-#include <Eigen.h>
+#include <Types/C/CorrespondenceMap3D.h>
+#include <Types/C/Eigen.h>
 
 #include "BaseTypes.hpp"
 #include <memory>

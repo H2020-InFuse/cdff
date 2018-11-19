@@ -25,7 +25,7 @@
 
 
 #include <Eigen/Core>
-#include <BaseTypes.hpp>
+#include <Types/CPP/BaseTypes.hpp>
 #include <Voxelization/Octree.hpp>
 
 namespace Converters
@@ -34,7 +34,7 @@ namespace Converters
 class PclOctreeToOctreeConverter
 {
 	public:
-	asn1SccT_Octree Convert(const pcl::octree::OctreePointCloudSearch<pcl::PointXYZ>& tree);
+	asn1SccOctree * Convert(const pcl::octree::OctreePointCloudSearch<pcl::PointXYZ>& tree);
 };
 }
 

@@ -9,8 +9,8 @@
 
 #include "ShotDescriptor3D.hpp"
 
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PointCloudToPclNormalsCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclNormalsCloudConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
@@ -314,7 +314,7 @@ void ShotDescriptor3D::ValidateMandatoryInputs(pcl::PointCloud<pcl::PointXYZ>::C
 {
 	ASSERT(indicesList->size() <= pointCloud->points.size(), "ShotDescriptor3D Error: There are more keypoints than points in the pointcloud");
 
-	for (unsigned pointIndex; pointIndex < pointCloud->points.size(); pointIndex++)
+	for (size_t pointIndex = 0; pointIndex < pointCloud->points.size(); pointIndex++)
 	{
 		pcl::PointXYZ point = pointCloud->points.at(pointIndex);
 		if (point.x != point.x || point.y != point.y || point.z != point.z)
@@ -332,7 +332,7 @@ bool ShotDescriptor3D::IsNormalsCloudValid(pcl::PointCloud<pcl::PointXYZ>::Const
 		return false;
 	}
 
-	for (unsigned pointIndex; pointIndex < normalsCloud->points.size(); pointIndex++)
+	for (size_t pointIndex = 0; pointIndex < normalsCloud->points.size(); pointIndex++)
 	{
 		pcl::Normal normal = normalsCloud->points.at(pointIndex);
 		if (normal.normal_x != normal.normal_x || normal.normal_y != normal.normal_y || normal.normal_z != normal.normal_z)

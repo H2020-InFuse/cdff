@@ -7,8 +7,8 @@
 #define FEATURESDESCRIPTION2D_FEATURESDESCRIPTION2DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <VisualPointFeatureVector2D.h>
-#include <Frame.h>
+#include <Types/C/VisualPointFeatureVector2D.h>
+#include <Types/C/Frame.h>
 
 namespace CDFF
 {

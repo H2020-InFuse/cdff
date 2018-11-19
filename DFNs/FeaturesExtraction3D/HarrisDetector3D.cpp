@@ -9,8 +9,8 @@
 
 #include "HarrisDetector3D.hpp"
 
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <MatToVisualPointFeatureVector3DConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
@@ -186,7 +186,7 @@ void HarrisDetector3D::ValidateParameters()
 
 void HarrisDetector3D::ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
 {
-	for (unsigned pointIndex; pointIndex < pointCloud->points.size(); pointIndex++)
+	for (size_t pointIndex = 0; pointIndex < pointCloud->points.size(); pointIndex++)
 	{
 		pcl::PointXYZ point = pointCloud->points.at(pointIndex);
 		if (point.x != point.x || point.y != point.y || point.z != point.z)

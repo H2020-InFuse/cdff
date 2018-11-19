@@ -8,7 +8,7 @@
  */
 
 #include "SvdDecomposition.hpp"
-#include <FrameToMatConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 #include <stdlib.h>

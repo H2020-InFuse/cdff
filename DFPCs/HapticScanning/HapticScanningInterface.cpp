@@ -4,6 +4,7 @@
  */
 
 #include "HapticScanningInterface.hpp"
+//#include <Types/CPP/PointCloud.hpp>
 
 namespace CDFF
 {
@@ -13,6 +14,7 @@ namespace DFPC
 //=====================================================================================================================
 HapticScanningInterface::HapticScanningInterface()
 {
+    asn1SccPointcloud_Initialize(&outPointCloud);
 }
 
 //=====================================================================================================================
@@ -21,20 +23,26 @@ HapticScanningInterface::~HapticScanningInterface()
 }
 
 //=====================================================================================================================
-void HapticScanningInterface::roverPoseInput(const asn1SccPose& data)
+void HapticScanningInterface::armBasePoseInput(const asn1SccPose& data)
 {
-    inRoverPose = data;
+    inArmBasePose = data;
+}
+
+
+//=====================================================================================================================
+void HapticScanningInterface::armEndEffectorPoseInput(const asn1SccPose &pose)
+{
+    inArmEndEffectorPose = pose;
 }
 
 //=====================================================================================================================
-void HapticScanningInterface::positionAndForceInput(const asn1SccPointsSequence & positions, const asn1SccDoublesSequence & forces)
+void HapticScanningInterface::armEndEffectorWrenchInput(const asn1SccWrench &wrench)
 {
-    inPositions = positions;
-    inForces = forces;
+    inArmEndEffectorWrench = wrench;
 }
 
 //=====================================================================================================================
-const asn1SccPointcloud& HapticScanningInterface::pointCloudOutput() const
+const asn1SccPointcloud &HapticScanningInterface::pointCloudOutput() const
 {
     return outPointCloud;
 }

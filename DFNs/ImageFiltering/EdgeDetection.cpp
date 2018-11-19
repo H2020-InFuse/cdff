@@ -12,7 +12,8 @@
 #include <Converters/FrameToMatConverter.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 
-#include "Validators.hpp"
+#include "Validators/Frame.hpp"
+#include "Validators/Number.hpp"
 
 namespace CDFF
 {
@@ -60,8 +61,8 @@ namespace CDFF
 
             void EdgeDetection::ValidateParameters() {
                 Validators::Number::IsOdd(parameters.NoiseReductionKernelSize);
-                Validators::Number::GreaterThan(parameters.NoiseReductionKernelSize, 1);
-                Validators::Number::GreaterThan(parameters.CannyHighThreshold, parameters.CannyLowThreshold);
+                Validators::Number::IsGreaterThan(parameters.NoiseReductionKernelSize, 1);
+                Validators::Number::IsGreaterThan(parameters.CannyHighThreshold, parameters.CannyLowThreshold);
             }
 
             void EdgeDetection::ValidateInputs(FrameWrapper::Frame const &frame) {

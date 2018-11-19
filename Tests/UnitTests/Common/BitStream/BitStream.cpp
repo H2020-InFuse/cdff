@@ -27,18 +27,18 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <Frame.hpp>
-#include <BaseTypes.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <Matrix.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <CorrespondenceMap3D.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <VisualPointFeatureVector3D.hpp>
-#include <CorrespondenceMaps2DSequence.hpp>
-#include <FramesSequence.hpp>
-#include <PosesSequence.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/BaseTypes.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Matrix.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/CorrespondenceMap3D.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/CorrespondenceMaps2DSequence.hpp>
+#include <Types/CPP/FramesSequence.hpp>
+#include <Types/CPP/PosesSequence.hpp>
 #include <Errors/Assert.hpp>
 
 using namespace FrameWrapper;

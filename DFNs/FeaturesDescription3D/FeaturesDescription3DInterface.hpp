@@ -7,8 +7,8 @@
 #define FEATURESDESCRIPTION3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <VisualPointFeatureVector3D.h>
-#include <Pointcloud.h>
+#include <Types/C/VisualPointFeatureVector3D.h>
+#include <Types/C/Pointcloud.h>
 
 namespace CDFF
 {

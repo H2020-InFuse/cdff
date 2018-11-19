@@ -47,11 +47,12 @@ const std::string USAGE =
 " \n \
 The program has four usages depending on the first parameter: \n \
 (i) 1st parameter is the mode of operation it can be one of (ComputePointCloud, EvaluateOutliers, EvaluateDistanceToCamera, EvaluateDimensions). The modes are explained one by one: \n \n \n \
-Mode (a. ComputePointCloud) in this mode the stereo reconstruction dfn is executed and its result is saved to a ply file, you need 4 additional parameters: \n \
+Mode (a. ComputePointCloud) in this mode the stereo reconstruction dfn is executed and its result is saved to a ply file, you need 5 additional parameters: \n \
 (a.ii) 2nd parameter is the configuration file path of the dfpc implementation RegistrationFromStereo; \n \
 (a.iii) 3rd parameter is the folder containing the images list file; \n \
 (a.iv) 4th is the image list file name (the file contains three blank lines, and then a triple for each line of the form: timeFloat pathToLeftImage pathToRightImage; \n \
-(a.v) 5th is the output cloud file path, in ply format; \n \n \
+(a.v) 5th is the output cloud file path, in ply format; \n \
+(a.vi) 6th is the output poses file \n \n \
 Example usage: ./quality_registration_from_stereo ComputePointCloud ../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcRegistrationFromStereo_DevonIsland.yaml \
 ../tests/Data/Images ImagesList.txt ../tests/Data/PointClouds/Road.ply \n \n \n \
 After you run (a), you should open the result with the tool DataGenerator/detect_outliers. Using the tool, you should detect those cloud points which should not appear in the scene. \
@@ -193,18 +194,19 @@ int mainComputePointCloudMode(int argc, char** argv, Reconstruction3DInterface* 
 	std::string inputImagesFolder;
 	std::string inputImagesListFileName;
 	std::string outputPointCloudFilePath;
+	std::string transformFilePath;
 
-	ASSERT(argc == 6, USAGE);
+	ASSERT(argc == 7, USAGE);
 	configurationFilePath = argv[2];
 	inputImagesFolder = argv[3];
 	inputImagesListFileName = argv[4];
 	outputPointCloudFilePath = argv[5];
-
+	transformFilePath = argv[6];
 
 	ReconstructionExecutor tester;
 	tester.SetDfpc(configurationFilePath, dfpc);
 	tester.SetInputFilesPaths(inputImagesFolder, inputImagesListFileName);
-	tester.ExecuteDfpc();
+	tester.ExecuteDfpc(transformFilePath);
 	tester.SaveOutputPointCloud(outputPointCloudFilePath);
 
 	return 0;

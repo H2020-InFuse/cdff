@@ -32,14 +32,14 @@
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <Frame.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <VisualPointFeatureVector3D.hpp>
-#include <SupportTypes.hpp>
-#include <MatToFrameConverter.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Converters/SupportTypes.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -68,7 +68,7 @@ class ReconstructionExecutor
 		void SetOutputFilePath(std::string outputPointCloudFilePath);
 		void SetOutliersFilePath(std::string outliersReferenceFilePath);
 		void SetMeasuresFilePath(std::string measuresReferenceFilePath);
-		void ExecuteDfpc();
+		void ExecuteDfpc(std::string transformFilePath = "");
 		bool IsOutliersQualitySufficient(float outliersPercentageThreshold);
 		bool IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage);
 		bool IsDimensionsQualitySufficient(float shapeSimilarityPercentange, float dimensionalErrorPercentage, float componentSizeThresholdPercentage);
@@ -139,6 +139,8 @@ class ReconstructionExecutor
 		float ComputeObjectDimension(int objectIndex);
 		float ComputeLineAbsoluteError(const Line& line);
 		float ComputeObjectShapeSimilarity(int objectIndex);
+
+		void SaveTransform(std::string transformFilePath);
 	};
 
 #endif

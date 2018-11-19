@@ -1,0 +1,73 @@
+cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
+
+# Maintainer: Romain Michalec <romain.michalec@strath.ac.uk>
+
+## Uninstallation script (based on the installation directories) ---------------
+##
+## This script is executed by the purge target (make purge). It removes the
+## following files and directories (contents included):
+##
+##   $ENV{DESTDIR}@CMAKE_INSTALL_FULL_INCLUDEDIR@/@PROJECT_NAME@/
+##   $ENV{DESTDIR}@CMAKE_INSTALL_FULL_LIBDIR@/libcdff_*
+##   $ENV{DESTDIR}@CMAKE_INSTALL_FULL_BINDIR@/cdff-*
+##
+## That is similar to running the appropriate "rm" and "rm -r" in UNIX.
+##
+## CMake's GNUInstallDirs module must be loaded when this script is processed by
+## the configure_file() command in the top-level listfile.
+##
+## Beware: this script is provided "as is", and although I have taken every
+## reasonable care to ensure that it doesn't delete more than the aforementioned
+## files and directories, I disclaim all warranties with regard to it.
+
+# Standard installation directories, as defined by the GNU Coding Standards
+
+set(includedir "@CMAKE_INSTALL_FULL_INCLUDEDIR@")
+set(libdir "@CMAKE_INSTALL_FULL_LIBDIR@")
+set(bindir "@CMAKE_INSTALL_FULL_BINDIR@")
+
+# Remove directories; you must have the appropriate filesystem rights to do that
+
+if(IS_DIRECTORY "$ENV{DESTDIR}${includedir}/@PROJECT_NAME@")
+
+  message(STATUS "Removing: $ENV{DESTDIR}${includedir}/@PROJECT_NAME@")
+  execute_process(
+    COMMAND "@CMAKE_COMMAND@" -E remove_directory "$ENV{DESTDIR}${includedir}/@PROJECT_NAME@"
+    RESULT_VARIABLE error)
+  if(error)
+    message(FATAL_ERROR "Could not remove: $ENV{DESTDIR}${includedir}/@PROJECT_NAME@")
+  endif()
+
+else()
+
+  message(STATUS "No directory $ENV{DESTDIR}${includedir}/@PROJECT_NAME@ to remove")
+
+endif()
+
+# Remove files; you must have the appropriate filesystem rights to do that
+
+file(GLOB libraries LIST_DIRECTORIES false "$ENV{DESTDIR}${libdir}/libcdff_*")
+file(GLOB binaries LIST_DIRECTORIES false "$ENV{DESTDIR}${bindir}/cdff-*")
+
+set(files ${libraries} ${binaries})
+list(LENGTH files listlength)
+if(listlength GREATER 0)
+
+  foreach(file ${files})
+
+    message(STATUS "Removing: $ENV{DESTDIR}${file}")
+    execute_process(
+      COMMAND "@CMAKE_COMMAND@" -E remove "$ENV{DESTDIR}${file}"
+      RESULT_VARIABLE error)
+    if(error)
+      message(FATAL_ERROR "Could not remove: $ENV{DESTDIR}${file}")
+    endif()
+
+  endforeach()
+
+else()
+
+  message(STATUS "No CDFF files to remove in $ENV{DESTDIR}${libdir}")
+  message(STATUS "No CDFF files to remove in $ENV{DESTDIR}${bindir}")
+
+endif()

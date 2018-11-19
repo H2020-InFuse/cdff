@@ -9,7 +9,7 @@
 
 #include "IterativePnpSolver.hpp"
 
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 #include <Errors/Assert.hpp>
 
 #include <opencv2/opencv_modules.hpp>

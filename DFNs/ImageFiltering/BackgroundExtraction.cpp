@@ -4,12 +4,13 @@
  */
 
 #include <opencv2/imgproc.hpp>
+#include <random>
 
 #include <Types/C/Frame.h>
 #include <Converters/MatToFrameConverter.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 
-#include "Validators.hpp"
+#include "Validators/Frame.hpp"
 #include "BackgroundExtraction.hpp"
 
 using namespace FrameWrapper;

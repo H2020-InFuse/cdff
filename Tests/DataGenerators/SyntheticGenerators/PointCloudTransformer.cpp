@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include <random>
 #include <Errors/Assert.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 
 namespace DataGenerators
 {
@@ -184,6 +184,30 @@ void PointCloudTransformer::Rescale(float scale)
 		point.y = point.y * scale;
 		point.z = point.z * scale;
 		}	
+	}
+
+void PointCloudTransformer::ShowWithAddedCloud(std::string cloudFilePath, float positionX, float positionY, float positionZ, float rotationX, float rotationY, float rotationZ, float rotationW)
+	{
+	InitTransformedCloud();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr addedCloud(new pcl::PointCloud<pcl::PointXYZ>);
+	pcl::io::loadPLYFile(cloudFilePath, *addedCloud);
+
+	Eigen::Quaternion<float> rotation(rotationW, rotationX, rotationY, rotationZ);
+	Eigen::Translation<float, 3> translation(positionX, positionY, positionZ);
+	AffineTransform affineTransform = translation * rotation;
+	
+	pcl::PointCloud<pcl::PointXYZ>::Ptr addedTransformedCloud(new pcl::PointCloud<pcl::PointXYZ>);
+	addedTransformedCloud->points.resize( addedCloud->points.size() );
+	for(unsigned pointIndex = 0; pointIndex < addedCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ transformedPoint = TransformPoint( addedCloud->points.at(pointIndex), affineTransform );
+		addedTransformedCloud->points.at(pointIndex) = transformedPoint;
+		}
+
+	std::vector< pcl::PointCloud<pcl::PointXYZ>::ConstPtr > cloudsList = { transformedCloud, addedTransformedCloud };
+	Visualizers::PclVisualizer::Enable();
+	Visualizers::PclVisualizer::ShowPointClouds(cloudsList);
+	Visualizers::PclVisualizer::Disable();
 	}
 
 /* --------------------------------------------------------------------------

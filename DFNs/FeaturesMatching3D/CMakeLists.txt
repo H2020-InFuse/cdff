@@ -1,7 +1,6 @@
 add_library(
     feature_matching_3d
     FeaturesMatching3DInterface.cpp
-    FeaturesMatching3DExecutor.cpp
 )
 
 add_library(
@@ -19,5 +18,14 @@ add_library(
 )
 target_link_libraries(
     icp_3d
+    feature_matching_3d cdff_types yaml-cpp cdff_helpers
+)
+
+add_library(
+    best_descriptor_match
+    BestDescriptorMatch.cpp
+)
+target_link_libraries(
+    best_descriptor_match
     feature_matching_3d cdff_types yaml-cpp cdff_helpers
 )

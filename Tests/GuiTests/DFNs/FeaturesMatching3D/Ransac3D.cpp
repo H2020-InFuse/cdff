@@ -12,9 +12,9 @@
  */
 
 #include <FeaturesMatching3D/Ransac3D.hpp>
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <EigenTransformToTransform3DConverter.cpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/EigenTransformToTransform3DConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>

@@ -1,7 +1,6 @@
 add_library(
     depth_filtering
     DepthFilteringInterface.cpp
-    DepthFilteringExecutor.cpp
 )
 
 add_library(
@@ -11,5 +10,5 @@ add_library(
 
 target_link_libraries(
     convolution_filter
-    depth_filtering cdff_types yaml-cpp cdff_helpers opencv_core converters_opencv
+    depth_filtering cdff_types yaml-cpp cdff_helpers opencv_core cdff_converters
 )
