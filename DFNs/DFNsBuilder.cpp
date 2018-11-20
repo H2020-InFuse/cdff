@@ -18,6 +18,7 @@
 #include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
 #include <FeaturesExtraction3D/IssDetector3D.hpp>
+#include <FeaturesExtraction3D/CornerDetector3D.hpp>
 #include <FeaturesMatching2D/FlannMatcher.hpp>
 #include <FeaturesMatching3D/Icp3D.hpp>
 #include <FeaturesMatching3D/Ransac3D.hpp>
@@ -221,6 +222,10 @@ FeaturesExtraction3DInterface* DFNsBuilder::CreateFeaturesExtraction3D(std::stri
 	if (dfnImplementation == "IssDetector3D")
 	{
 		return new FeaturesExtraction3D::IssDetector3D;
+	}
+	if (dfnImplementation == "CornerDetector3D")
+	{
+		return new FeaturesExtraction3D::CornerDetector3D;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesExtraction3D implementation");
 	return NULL;
