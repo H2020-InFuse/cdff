@@ -46,7 +46,7 @@ using namespace CDFF::DFN::FeaturesMatching3D;
 
 const std::string USAGE =
 " \n \
-You should provide at least seven parameters: \n \
+You should provide at least eight parameters: \n \
 (i) the configuration file path of Harris Detector 3D; \n \
 (ii) the configuration file path of Shot Descriptor 3D; \n \
 (iii) the configuration file path of Ransac 3D; \n \
@@ -54,6 +54,7 @@ You should provide at least seven parameters: \n \
 (v) the model input cloud file path, the input cloud file should be in ply format; \n \
 (vi) the text file containing the ground truth pose on one line with format x y z qx qy qz qw \n \
 (vii) the operating distance expressed in meters; \n \
+(viii) whether to show the output point cloud or not, either Show or NoShow; \n \
 Optionally you can add up to three float parameters: \n \
 (i) relativeLocationError: the maximum position error expressed as ratio to the size of the model, it needs to be in the interval [0,1]. The default is 0.10; \n \
 (ii) relativeOrientationError: the maximum orientation error expressed as ratio to the size of the model, it needs to be in the interval [0,1]. The default is 0.10; \n \
@@ -141,8 +142,9 @@ int main(int argc, char** argv)
 	float relativeLocationError = 0.10;
 	float relativeOrientationError = 0.10;
 	float errorRatioComparedToOperatingDistance = 0.05;
+	std::string showFlag;
 
-	ASSERT(argc >= 8, USAGE);
+	ASSERT(argc >= 9, USAGE);
 	harrisConfigurationFilePath = argv[1];
 	shotConfigurationFilePath = argv[2];
 	ransacConfigurationFilePath = argv[3];
@@ -150,18 +152,19 @@ int main(int argc, char** argv)
 	modelFilePath = argv[5];
 	groundTruthPoseFilePath = argv[6];
 	operatingDistance = ExtractOperatingDistance(argv[7]);
+	showFlag = argv[8];
 
-	if (argc >= 9)
-		{
-		relativeLocationError = ExtractRelativeLocationError(argv[8]);
-		}
 	if (argc >= 10)
 		{
-		relativeLocationError = ExtractRelativeOrientationError(argv[9]);
+		relativeLocationError = ExtractRelativeLocationError(argv[9]);
 		}
 	if (argc >= 11)
 		{
-		relativeLocationError = ExtractErrorRatio(argv[10]);
+		relativeLocationError = ExtractRelativeOrientationError(argv[10]);
+		}
+	if (argc >= 12)
+		{
+		relativeLocationError = ExtractErrorRatio(argv[11]);
 		}
 	 
 	HarrisDetector3D* harris = new HarrisDetector3D();
@@ -173,7 +176,7 @@ int main(int argc, char** argv)
 	tester.SetConfigurationFiles(harrisConfigurationFilePath, shotConfigurationFilePath, ransacConfigurationFilePath);
 	tester.SetInputClouds(sceneFilePath, modelFilePath, groundTruthPoseFilePath);
 
-	tester.ExecuteDfns();
+	tester.ExecuteDfns( showFlag == "Show" );
 	float absoluteLocationError = operatingDistance * errorRatioComparedToOperatingDistance;
 	bool success = tester.IsOutputCorrect(relativeLocationError, relativeOrientationError, absoluteLocationError);
 

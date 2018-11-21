@@ -45,9 +45,11 @@ target_link_libraries(
   iterative_pnp_solver
   triangulation
   harris_detector_3d
+  iss_detector_3d
   kalman_predictor
   registration_icp_3d
   registration_icp_cc
+  registration_icp_matcher
   ceres_adjustment
   svd_decomposition
   transform_3d_estimation_least_squares_minimization
@@ -79,7 +81,9 @@ target_link_libraries(
   convolution_filter
   threshold_force
   neighbour_point_average
+  neighbour_single_point_average
   voxel_binning
+  matcher_assembly
   cartesian_system_transform
   statistical_outlier_removal
 )

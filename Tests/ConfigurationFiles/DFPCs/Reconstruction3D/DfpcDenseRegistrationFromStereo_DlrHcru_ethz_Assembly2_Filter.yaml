@@ -1,0 +1,131 @@
+- Name: DFNsChain
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudMapResolution: 0.01
+    SearchRadius: 80
+    MatchToReconstructedCloud: true
+    UseAssemblerDfn: true
+    CloudUpdateTime: 50
+    SaveCloudsToFile: true
+    CloudUpdateType: Time
+    CloudSaveTime: 100
+    OverlapThreshold: 0.80
+    OverlapInlierDistance: 0.01
+    CloudUpdateTranslationDistance: 0.1
+    CloudUpdateOrientationDistance: 0.1
+    CloudSavePath: /Agridrive1/DLR/BoxBag1
+- Name: reconstructor3D
+  Type: StereoReconstruction
+  Implementation: HirschmullerDisparityMapping
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudSamplingDensity: 0.1
+    UseFullScaleTwoPassAlgorithm: false
+    UseDisparityToDepthMap: false
+  - Name: Prefilter
+    Maximum: 25
+  - Name: Disparities
+    Minimum: 0
+    NumberOfIntervals: 256
+    UseMaximumDifference: true
+    MaximumDifference: 5
+    SpeckleRange: 22
+    SpeckleWindow: 300
+    SmoothnessParameter1: 600
+    SmoothnessParameter2: 2000
+  - Name: BlocksMatching
+    BlockSize: 15
+    UniquenessRatio: 1
+  - Name: DisparityToDepthMap
+    Element_0_0: 1
+    Element_0_1: 0
+    Element_0_2: 0
+    Element_0_3: -279.0498046875
+    Element_1_0: 0
+    Element_1_1: 1
+    Element_1_2: 0
+    Element_1_3: 29.868621826172
+    Element_2_0: 0
+    Element_2_1: 0
+    Element_2_2: 0
+    Element_2_3: -8192.8300337838
+    Element_3_0: 0
+    Element_3_1: 0
+    Element_3_2: 3.3436329786051
+    Element_3_3: -0
+  - Name: StereoCamera
+    LeftFocalLength: 868.664
+    LeftPrinciplePointX: 519.775
+    LeftPrinciplePointY: 383.36
+    Baseline: 0.09290672099999999
+  - Name: ReconstructionSpace
+    LimitX: 2.5
+    LimitY: 2.5
+    LimitZ: 2.5
+- Name: registrator3d
+  Type: Registration3D
+  Implementation: IcpMatcher
+  Parameters:
+  - Name: GeneralParameters
+    KdTreeNumberOfNearestNeighbours: 1
+    KdTreeMatchingEpsilon: 3.16
+    MinimizerType: PointToPlane
+    MaximumIterations: 40
+    MaxTranslationDistance: 0.001
+    MaxRotationDistance: 0.01
+    SmoothnessLength: 4
+    UseDefault: true
+    FixRotationByNormalization: false
+  - Name: DistanceLimitPrefilter
+    UseOnSource: false
+    StepOnSource: 0
+    UseOnSink: false
+    StepOnSink: 0
+    ThresholdDimension: Radial
+    DistanceThreshold: 1.0
+    RemovePointsWithinThreshold: true
+  - Name: RandomSamplingPrefilter
+    UseOnSource: true
+    StepOnSource: 1
+    UseOnSink: false
+    StepOnSink: 0
+    Probability: 0.75
+  - Name: SamplingSurfaceNormalPrefilter
+    UseOnSource: false
+    StepOnSource: 0
+    UseOnSink: true
+    StepOnSink: 1
+    NumberOfNeighbours: 5
+    KeepNormals: true
+    KeepDensities: false
+    KeepEigenValues: false
+    KeepEigenVectors: false
+  - Name: trimmedDistancePostfilter
+    Use: true
+    Step: 1
+    Ratio: 0.85
+- Name: cloudAssembler
+  Type: PointCloudAssembly
+  Implementation: NeighbourSinglePointAverage
+  Parameters:
+  - Name: GeneralParameters
+    MaxNeighbourDistance: 0.01
+    IgnoreUnmatchedPointsOnFirstCloud: false
+    IgnoreUnmatchedPointsOnSecondCloud: false
+    UseIncrementalMode: true
+    UseDistanceFilter: true
+- Name: cloudTransformer
+  Type: PointCloudTransform
+  Implementation: CartesianSystemTransform
+  Parameters:
+  - Name: GeneralParameters
+    Placeholder: false
+- Name: cloudFilter
+  Type: PointCloudFiltering
+  Implementation: StatisticalOutlierRemoval
+  Parameters:
+  - Name: GeneralParameters
+    NumberOfNearestNeighbours: 50
+    StandardDeviationMultiplier: 1
+    TakeOutliersOnly: false
+

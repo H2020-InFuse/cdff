@@ -17,6 +17,7 @@
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
 #include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
+#include <FeaturesExtraction3D/IssDetector3D.hpp>
 #include <FeaturesMatching2D/FlannMatcher.hpp>
 #include <FeaturesMatching3D/Icp3D.hpp>
 #include <FeaturesMatching3D/Ransac3D.hpp>
@@ -33,6 +34,7 @@
 #include <PrimitiveMatching/HuInvariants.hpp>
 #include <Registration3D/Icp3D.hpp>
 #include <Registration3D/IcpCC.hpp>
+#include <Registration3D/IcpMatcher.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
@@ -41,7 +43,9 @@
 #include <DepthFiltering/ConvolutionFilter.hpp>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
 #include <PointCloudAssembly/NeighbourPointAverage.hpp>
+#include <PointCloudAssembly/NeighbourSinglePointAverage.hpp>
 #include <PointCloudAssembly/VoxelBinning.hpp>
+#include <PointCloudAssembly/MatcherAssembly.hpp>
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
@@ -214,6 +218,10 @@ FeaturesExtraction3DInterface* DFNsBuilder::CreateFeaturesExtraction3D(std::stri
 	{
 		return new FeaturesExtraction3D::HarrisDetector3D;
 	}
+	if (dfnImplementation == "IssDetector3D")
+	{
+		return new FeaturesExtraction3D::IssDetector3D;
+	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesExtraction3D implementation");
 	return NULL;
 }
@@ -325,6 +333,10 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(std::string dfnImplem
 	{
 		return new Registration3D::IcpCC;
 	}
+	else if (dfnImplementation == "IcpMatcher")
+	{
+		return new Registration3D::IcpMatcher;
+	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN Registration3D implementation");
 	return NULL;
 }
@@ -390,6 +402,14 @@ PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(std::string d
 	else if (dfnImplementation == "VoxelBinning")
 	{
 		return new PointCloudAssembly::VoxelBinning;
+	}
+	else if (dfnImplementation == "MatcherAssembly")
+	{
+		return new PointCloudAssembly::MatcherAssembly;
+	}
+	if (dfnImplementation == "NeighbourSinglePointAverage")
+	{
+		return new PointCloudAssembly::NeighbourSinglePointAverage;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudAssembly implementation");
 	return NULL;

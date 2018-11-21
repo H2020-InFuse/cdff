@@ -2,7 +2,7 @@ add_definitions(-DTEST_CONFIGURATIONS="${TEST_CONFIGURATIONS}")
 add_definitions(-DTEST_DATA="${TEST_DATA}")
 
 # Path to the directory containing Catch's single-include header (catch.hpp)
-set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/Tests/Catch")
+set(CATCH_INCLUDE_DIR "Catch")
 
 # Define the Catch library
 add_library(catch INTERFACE)
@@ -33,6 +33,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
     DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
+    DFNs/FeaturesExtraction3D/IssDetector3D.cpp
     DFNs/FeaturesMatching2D/FlannMatcher.cpp
     DFNs/FeaturesMatching3D/BestDescriptorMatch.cpp
     DFNs/FeaturesMatching3D/Icp3D.cpp
@@ -45,13 +46,16 @@ set(unittest_sources UnitTests.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
+    DFNs/PointCloudAssembly/NeighbourSinglePointAverage.cpp
     DFNs/PointCloudAssembly/VoxelBinning.cpp
+    #DFNs/PointCloudAssembly/MatcherAssembly.cpp
     DFNs/PointCloudFiltering/StatisticalOutlierRemoval.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFNs/PointCloudTransform/CartesianSystemTransform.cpp
     DFNs/PrimitiveMatching/HuInvariants.cpp
     DFNs/Registration3D/Icp3D.cpp
     DFNs/Registration3D/IcpCC.cpp
+    #DFNs/Registration3D/IcpMatcher.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
@@ -93,6 +97,7 @@ set(unittest_libraries catch
     fundamental_matrix_ransac
     harris_detector_2d
     harris_detector_3d
+    iss_detector_3d
     hirschmuller_disparity_mapping
     hu_invariants
     icp_3d
@@ -102,6 +107,7 @@ set(unittest_libraries catch
     kalman_predictor
 #[=[mock]=] # no longer used by any DFN unit test
     neighbour_point_average
+    neighbour_single_point_average
     opencv_core
     opencv_highgui
     opencv_imgcodecs
@@ -133,6 +139,7 @@ set(unittest_libraries catch
 #[=[reconstruction_from_stereo]=]
     registration_icp_3d
     registration_icp_cc
+    registration_icp_matcher
     shot_descriptor_3d
     statistical_outlier_removal
     svd_decomposition
@@ -142,6 +149,7 @@ set(unittest_libraries catch
     transform_3d_estimation_least_squares_minimization
     triangulation
     voxel_binning
+    matcher_assembly
 )
 
 # Make the Catch executable that runs the unit tests
