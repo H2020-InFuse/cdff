@@ -87,7 +87,6 @@ set(unittest_libraries catch
     dfpc_haptic_scanning
     dfpc_implementation_features_matching_3d
     disparity_mapping
-    DLRtracker_core
     essential_matrix_decomposition
     estimation_from_stereo
     flann_matcher

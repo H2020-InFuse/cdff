@@ -159,7 +159,7 @@ TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTra
 	contourMatching->egoMotionInput(egoMotion);	
 
 	contourMatching->run();
-        //output to ASN
+        //output  ASN type
 	bool success = contourMatching->successOutput();
 	asn1SccRigidBodyState estimatedState = contourMatching->stateOutput();
 	std::cout<< " Tracker DFPC- Process Functionality Test success "<<std::endl;

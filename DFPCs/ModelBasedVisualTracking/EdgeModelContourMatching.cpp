@@ -139,7 +139,6 @@ void EdgeModelContourMatching::run()
 
 		
  	double estimatedT[16];
-	double estimatedLastT[16];
 	double estimatedVelocity[6];
 	double ErrorCovariance[6*6];
 	//outputs for ASN:  outSuccess,outState
@@ -206,11 +205,8 @@ bool EdgeModelContourMatching::edgeMatching(unsigned char** images, double timeI
 	{
 	bool success;
 	double degreesOfFreedom[6] = {1,1,1,1,1,1};
-	bool timing=false;
-	bool debug_show=false;
-	bool diagnostics=false;
-
-	status = DLRTracker.poseEstimation(images, timeImages, egomotion, guessT0, velocity0, time0, estimatedT, estimatedVelocity, ErrorCovariance, degreesOfFreedom, useInitialGuess, timing, debug_show, diagnostics);
+		
+	status = DLRTracker.poseEstimation(images, timeImages, egomotion, guessT0, velocity0, time0, estimatedT, estimatedVelocity, ErrorCovariance, degreesOfFreedom, useInitialGuess, false, false, false);
 
 	if(status==0)
 	 	success = true;

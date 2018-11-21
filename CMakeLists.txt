@@ -287,6 +287,26 @@ endif()
 # TODO: there are .pc files though, that might be of use in conjunction with
 # CMake's pkg-config module
 
+# Look for DLRtracker_core if exist
+
+find_package(DLRtracker_core REQUIRED)
+
+if(DLRtracker_core_FOUND)
+find_package_mode(DLRtracker_core)
+  message(STATUS "Found DLRtracker_core headers in: ${DLRTRACKER-CORE_INCLUDE_DIRS}")
+  message(STATUS "Found DLRtracker_core compiled libraries in: ${DLRTRACKER-CORE_LIBRARIES}")
+
+  set(WITH_DLRTRACKER ON CACHE BOOL "Build DLRtracker_core-dependent parts")
+  include_directories(SYSTEM ${DLRTRACKER-CORE_INCLUDE_DIRS})
+
+else()
+
+  set(WITH_DLRTRACKER OFF CACHE BOOL "Build DLRtracker_core-dependent parts")
+
+endif()
+
+
+
 include_directories(
   SYSTEM "${_DEPENDENCIES_PREFIX}/include"
 )
@@ -367,15 +387,15 @@ endforeach()
 
 #  DLR tracker library
 #
-set(DLR_TRACKER_PREFIX DFPCs/ModelBasedVisualTracking/DLR_tracker) 
+#set(DLR_TRACKER_PREFIX DFPCs/ModelBasedVisualTracking/DLR_tracker) 
 
-include_directories(
-  "${DLR_TRACKER_PREFIX}/include"
-)
+#include_directories(
+#  "${DLR_TRACKER_PREFIX}/include"
+#)
 
-link_directories(
-  "${DLR_TRACKER_PREFIX}/lib"
-)
+#link_directories(
+#  "${DLR_TRACKER_PREFIX}/lib"
+#)
 
 
 ## CDFF ------------------------------------------------------------------------

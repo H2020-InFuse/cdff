@@ -100,7 +100,7 @@ void EdgeTrackerExecutor::initPose(double* guessT0)
 
 void EdgeTrackerExecutor::initVelocity(double* velocity0)
 	{
-	// often starts at  Rest 
+	//  starts at  Rest 
 	 double  startVelocity[6] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
 	 velocity0 = &startVelocity[0];
 	

@@ -30,8 +30,8 @@
  */
 #include <ModelBasedVisualTracking/ModelBasedVisualTrackingInterface.hpp>
 #include <DfpcConfigurator.hpp>
-#include <FileParser.h>
-#include <GenericObjectTracker.h>
+#include <DLRtracker_core/FileParser.h>
+#include <DLRtracker_core/GenericObjectTracker.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -78,7 +78,6 @@ namespace DFPC
 		DLRtracker::FileParser parser;
 		DLRtracker::GenericObjectTracker DLRTracker;
 		int status;
-		bool diagnostics;
 		int numberOfCameras;
 		unsigned char* images[];
 		unsigned char* imageOutputColor;
