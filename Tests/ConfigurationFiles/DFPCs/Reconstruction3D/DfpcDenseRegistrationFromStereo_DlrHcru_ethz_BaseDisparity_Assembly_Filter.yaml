@@ -101,19 +101,19 @@
     UseFullScaleTwoPassAlgorithm: false
     UseDisparityToDepthMap: false
   - Name: Prefilter
-    Maximum: 5
+    Maximum: 7
   - Name: Disparities
     Minimum: 0
-    NumberOfIntervals: 64
+    NumberOfIntervals: 128
     UseMaximumDifference: false
     MaximumDifference: 0
-    SpeckleRange: 1
-    SpeckleWindow: 100
-    SmoothnessParameter1: 160
-    SmoothnessParameter2: 400
+    SpeckleRange: 4
+    SpeckleWindow: 1000
+    SmoothnessParameter1: 120
+    SmoothnessParameter2: 500
   - Name: BlocksMatching
-    BlockSize: 13
-    UniquenessRatio: 15
+    BlockSize: 15
+    UniquenessRatio: 10
   - Name: DisparityToDepthMap
     Element_0_0: -49.7218171579
     Element_0_1: 0.000
