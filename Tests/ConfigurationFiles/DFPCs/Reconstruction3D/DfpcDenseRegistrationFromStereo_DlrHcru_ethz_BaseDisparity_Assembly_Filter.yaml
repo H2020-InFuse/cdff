@@ -1,0 +1,207 @@
+- Name: DFNsChain
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudMapResolution: 0.01
+    SearchRadius: 80
+    MatchToReconstructedCloud: true
+    UseAssemblerDfn: true
+    CloudUpdateTime: 50
+    SaveCloudsToFile: true
+    CloudUpdateType: Time
+    CloudSaveTime: 100
+    OverlapThreshold: 0.80
+    OverlapInlierDistance: 0.01
+    CloudUpdateTranslationDistance: 0.1
+    CloudUpdateOrientationDistance: 0.1
+    CloudSavePath: /Agridrive1/DLR/BoxBag1
+- Name: leftFilter
+  Type: ImageFiltering
+  Implementation: ImageUndistortionRectification
+  Parameters:
+  - Name: GeneralParameters
+    InterpolationMethod: Linear
+    BorderMode: Constant
+    ConstantBorderValue: 0
+    TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsRight.yaml
+    CameraConfigurationMode: Internal
+  - Name: CameraMatrix
+    FocalLengthX: 682.559
+    FocalLengthY: 682.261
+    PrinciplePointX: 288.105
+    PrinciplePointY: 225.578
+  - Name: Distortion
+    UseK3: false
+    UseK4ToK6: false 
+    K1: -0.185871
+    K2: 0.231580
+    P1: 0.0
+    P2: 0.0
+    K3: 0.0
+    K4: 0.0
+    K5: 0.0
+    K6: 0.0
+  - Name: ImageSize
+    Width: 528
+    Height: 406
+  - Name: RectificationMatrix
+    Element_0_0: 1.0000
+    Element_0_1: 0.0000
+    Element_0_2: 0.0000
+    Element_1_0: 0.0000
+    Element_1_1: 1.0000
+    Element_1_2: 0.0000
+    Element_2_0: 0.0000
+    Element_2_1: 0.0000
+    Element_2_2: 1.0000
+- Name: rightFilter
+  Type: ImageFiltering
+  Implementation: ImageUndistortionRectification
+  Parameters:
+  - Name: GeneralParameters
+    InterpolationMethod: Linear
+    BorderMode: Constant
+    ConstantBorderValue: 0
+    TransformMapsFilePath: ../../tests/ConfigurationFiles/DFNs/ImageFiltering/ImageUndistortionRectificationTransformMapsRight.yaml
+    CameraConfigurationMode: Internal
+  - Name: CameraMatrix
+    FocalLengthX: 683.218
+    FocalLengthY: 682.758
+    PrinciplePointX: 268.276
+    PrinciplePointY: 227.224
+  - Name: Distortion
+    UseK3: false
+    UseK4ToK6: false 
+    K1: -0.187921
+    K2: 0.222672
+    P1: 0.0
+    P2: 0.0
+    K3: 0.0
+    K4: 0.0
+    K5: 0.0
+    K6: 0.0
+  - Name: ImageSize
+    Width: 528
+    Height: 406
+  - Name: RectificationMatrix
+    Element_0_0: 0.999999
+    Element_0_1: 0.00143456
+    Element_0_2: 0.000181407
+    Element_1_0: 0.00143580
+    Element_1_1: 0.999974
+    Element_1_2: -0.00713006
+    Element_2_0: -0.000171140
+    Element_2_1: 0.00713032
+    Element_2_2: 0.999975
+- Name: reconstructor3D
+  Type: StereoReconstruction
+  Implementation: DisparityMapping
+  Parameters:
+  - Name: GeneralParameters
+    PointCloudSamplingDensity: 0.1
+    UseFullScaleTwoPassAlgorithm: false
+    UseDisparityToDepthMap: false
+  - Name: Prefilter
+    Maximum: 31
+  - Name: Disparities
+    Minimum: 0
+    NumberOfIntervals: 128
+    UseMaximumDifference: false
+    MaximumDifference: 10
+    SpeckleRange: 8
+    SpeckleWindow: 100
+    SmoothnessParameter1: 600
+    SmoothnessParameter2: 10000
+  - Name: BlocksMatching
+    BlockSize: 5
+    UniquenessRatio: 1
+  - Name: DisparityToDepthMap
+    Element_0_0: -49.7218171579
+    Element_0_1: 0.000
+    Element_0_2: 0.000
+    Element_0_3: 14325.10413230559
+    Element_1_0: 0.000
+    Element_1_1: -49.743534802
+    Element_1_2: 0.000
+    Element_1_3: 11221.04709356555
+    Element_2_0: 0.000
+    Element_2_1: 0.000
+    Element_2_2: 0.000
+    Element_2_3: -33938.07379754732
+    Element_3_0: 0.000
+    Element_3_1: 0.000
+    Element_3_2: -682.261
+    Element_3_3: 13528.553369
+  - Name: StereoCamera
+    LeftFocalLength: 682.559
+    LeftPrinciplePointX: 288.105
+    LeftPrinciplePointY: 225.578
+    Baseline: 0.0728780
+  - Name: ReconstructionSpace
+    LimitX: 2.5
+    LimitY: 2.5
+    LimitZ: 2.5
+- Name: registrator3d
+  Type: Registration3D
+  Implementation: IcpMatcher
+  Parameters:
+  - Name: GeneralParameters
+    KdTreeNumberOfNearestNeighbours: 1
+    KdTreeMatchingEpsilon: 3.16
+    MinimizerType: PointToPlane
+    MaximumIterations: 40
+    MaxTranslationDistance: 0.001
+    MaxRotationDistance: 0.01
+    SmoothnessLength: 4
+    UseDefault: true
+    FixRotationByNormalization: false
+  - Name: DistanceLimitPrefilter
+    UseOnSource: false
+    StepOnSource: 0
+    UseOnSink: false
+    StepOnSink: 0
+    ThresholdDimension: Radial
+    DistanceThreshold: 1.0
+    RemovePointsWithinThreshold: true
+  - Name: RandomSamplingPrefilter
+    UseOnSource: true
+    StepOnSource: 1
+    UseOnSink: false
+    StepOnSink: 0
+    Probability: 0.75
+  - Name: SamplingSurfaceNormalPrefilter
+    UseOnSource: false
+    StepOnSource: 0
+    UseOnSink: true
+    StepOnSink: 1
+    NumberOfNeighbours: 5
+    KeepNormals: true
+    KeepDensities: false
+    KeepEigenValues: false
+    KeepEigenVectors: false
+  - Name: trimmedDistancePostfilter
+    Use: true
+    Step: 1
+    Ratio: 0.85
+- Name: cloudAssembler
+  Type: PointCloudAssembly
+  Implementation: NeighbourPointAverage
+  Parameters:
+  - Name: GeneralParameters
+    MaxNeighbourDistance: 0.01
+    UseIncrementalMode: true
+    UseDistanceFilter: true
+- Name: cloudTransformer
+  Type: PointCloudTransform
+  Implementation: CartesianSystemTransform
+  Parameters:
+  - Name: GeneralParameters
+    Placeholder: false
+- Name: cloudFilter
+  Type: PointCloudFiltering
+  Implementation: StatisticalOutlierRemoval
+  Parameters:
+  - Name: GeneralParameters
+    NumberOfNearestNeighbours: 50
+    StandardDeviationMultiplier: 1
+    TakeOutliersOnly: false
+
