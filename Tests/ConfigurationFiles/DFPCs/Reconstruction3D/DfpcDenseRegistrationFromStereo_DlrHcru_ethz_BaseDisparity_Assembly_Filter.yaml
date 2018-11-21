@@ -5,7 +5,7 @@
     SearchRadius: 80
     MatchToReconstructedCloud: true
     UseAssemblerDfn: true
-    CloudUpdateTime: 50
+    CloudUpdateTime: 5
     SaveCloudsToFile: true
     CloudUpdateType: Time
     CloudSaveTime: 100
@@ -101,19 +101,19 @@
     UseFullScaleTwoPassAlgorithm: false
     UseDisparityToDepthMap: false
   - Name: Prefilter
-    Maximum: 31
+    Maximum: 5
   - Name: Disparities
     Minimum: 0
-    NumberOfIntervals: 128
+    NumberOfIntervals: 64
     UseMaximumDifference: false
-    MaximumDifference: 10
-    SpeckleRange: 8
+    MaximumDifference: 0
+    SpeckleRange: 1
     SpeckleWindow: 100
-    SmoothnessParameter1: 600
-    SmoothnessParameter2: 10000
+    SmoothnessParameter1: 160
+    SmoothnessParameter2: 400
   - Name: BlocksMatching
-    BlockSize: 5
-    UniquenessRatio: 1
+    BlockSize: 13
+    UniquenessRatio: 15
   - Name: DisparityToDepthMap
     Element_0_0: -49.7218171579
     Element_0_1: 0.000
