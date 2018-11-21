@@ -94,7 +94,7 @@
     Element_2_2: 0.999975
 - Name: reconstructor3D
   Type: StereoReconstruction
-  Implementation: DisparityMapping
+  Implementation: HirschmullerDisparityMapping
   Parameters:
   - Name: GeneralParameters
     PointCloudSamplingDensity: 0.1
