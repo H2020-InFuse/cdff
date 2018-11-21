@@ -77,7 +77,7 @@ BoostLibs+=("chrono")
 BoostLibs+=("serialization")
 BoostLibs+=("timer")
 BoostLibs+=("program_options")
-BoostLibs+=("atomic2")
+BoostLibs+=("atomic")
 boostLibraries= printf "%s," "${BoostLibs[@]}" | cut -d "," -f 1-${#BoostLibs[@]}
 BoostComplete=true
 
