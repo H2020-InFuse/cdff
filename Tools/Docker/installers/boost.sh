@@ -68,27 +68,27 @@
 function install4infuse_boost {
 
 BoostLibs=()
-BoostLibs+=("date_time")
-BoostLibs+=("filesystem")
-BoostLibs+=("iostreams")
-BoostLibs+=("system")
-BoostLibs+=("thread")
-BoostLibs+=("chrono")
-BoostLibs+=("serialization")
-BoostLibs+=("timer")
-BoostLibs+=("program_options")
-BoostLibs+=("atomic")
-boostLibraries= printf "%s," "${BoostLibs[@]}" | cut -d "," -f 1-${#BoostLibs[@]}
+BoostLibs+=(date_time)
+BoostLibs+=(filesystem)
+BoostLibs+=(iostreams)
+BoostLibs+=(system)
+BoostLibs+=(thread)
+BoostLibs+=(chrono)
+BoostLibs+=(serialization)
+BoostLibs+=(timer)
+BoostLibs+=(program_options)
+BoostLibs+=(atomic)
+
 BoostComplete=true
 
 
 if [[ -d "${INSTALL_DIR}/include/boost" ]]; then
- echo "Boost Found, checking sub libs..."
+ echo "Boost Found, checking compiled libraries..."
   for i in "${BoostLibs[@]}"
   do
-    if [[ ! -d "${INSTALL_DIR}/include/boost/"$i ]] ;  then
+    if [[ ! -f "${INSTALL_DIR}/lib/libboost_${i}.so" ]] ;  then
       BoostComplete=false
-      echo "missing Boost" $i
+      echo missing libboost_${i}.so
     fi
   done
 else
@@ -96,7 +96,7 @@ else
  BoostComplete=false
 fi
 
-if [[ $BoostComplete = false ]]; then
+if [[ ${BoostComplete} = false ]]; then
 echo "installing"
   # Download source code, extract, and change to resulting directory
   fetchsource_function boost boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/
@@ -104,7 +104,7 @@ echo "installing"
   # Build and install
   mkdir build
   ./bootstrap.sh \
-    --with-libraries="${boostLibraries}" \
+    --with-libraries=$(echo ${BoostLibs[@]} | tr " " ,) \
     --prefix="${INSTALL_DIR}"
   ./b2 --build-dir=build -q -j ${CPUS} link=shared install
 
