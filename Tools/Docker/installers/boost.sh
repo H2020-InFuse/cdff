@@ -66,15 +66,45 @@
 #   + String_Algo
 
 function install4infuse_boost {
-if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
 
+BoostLibs=()
+BoostLibs+=(date_time)
+BoostLibs+=(filesystem)
+BoostLibs+=(iostreams)
+BoostLibs+=(system)
+BoostLibs+=(thread)
+BoostLibs+=(chrono)
+BoostLibs+=(serialization)
+BoostLibs+=(timer)
+BoostLibs+=(program_options)
+BoostLibs+=(atomic)
+
+BoostComplete=true
+
+
+if [[ -d "${INSTALL_DIR}/include/boost" ]]; then
+ echo "Boost Found, checking compiled libraries..."
+  for i in "${BoostLibs[@]}"
+  do
+    if [[ ! -f "${INSTALL_DIR}/lib/libboost_${i}.so" ]] ;  then
+      BoostComplete=false
+      echo missing libboost_${i}.so
+    fi
+  done
+else
+ echo "Boost Not Found."
+ BoostComplete=false
+fi
+
+if [[ ${BoostComplete} = false ]]; then
+echo "installing"
   # Download source code, extract, and change to resulting directory
   fetchsource_function boost boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/
 
   # Build and install
   mkdir build
   ./bootstrap.sh \
-    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono,serialization,timer,program_options,atomic \
+    --with-libraries=$(echo ${BoostLibs[@]} | tr " " ,) \
     --prefix="${INSTALL_DIR}"
   ./b2 --build-dir=build -q -j ${CPUS} link=shared install
 
@@ -86,5 +116,7 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
 
   # Remove source and build directories
   clean_function boost
+else
+    echo "Boost is already complete."
 fi
 }
