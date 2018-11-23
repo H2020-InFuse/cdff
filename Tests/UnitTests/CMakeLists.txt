@@ -78,7 +78,7 @@ set(unittest_libraries catch
     adjustment_from_stereo
     best_descriptor_match
     cartesian_system_transform
-    cc_core_lib
+    cloudcompare_core
     cdff_converters
     cdff_dfn_dfnexecutors
     cdff_helpers

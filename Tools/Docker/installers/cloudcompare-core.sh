@@ -48,7 +48,7 @@ if [[ ! -d "${INSTALL_DIR}/include/cloudcompare-core" ]]; then
     cd "${SOURCE_DIR}/cloudcompare"
 
     # Patch
-    patch -p0 < "${DIR}/patches/cloudcompare-core-2.9.1+git20181115-customize_installation.patch"
+    patch -p0 < "${DIR}/../patches/cloudcompare-core-2.9.1+git20181115-customize_installation.patch"
 
     # Build
     mkdir CC/build
