@@ -46,6 +46,7 @@ target_link_libraries(
   triangulation
   harris_detector_3d
   iss_detector_3d
+  corner_detector_3d
   kalman_predictor
   registration_icp_3d
   registration_icp_cc

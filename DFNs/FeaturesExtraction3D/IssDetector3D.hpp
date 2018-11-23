@@ -36,13 +36,14 @@ namespace FeaturesExtraction3D
 	 * Extraction of keypoints in a 3D pointcloud using the Harris Detector
 	 * algorithm.
 	 *
-	 * @param nonMaxSuppression
-	 * @param radius
-	 * @param searchRadius
-	 * @param detectionThreshold
-	 * @param enableRefinement
+	 * @param salientRadius
+	 * @param nonMaximaSupressionRadius
+	 * @param normalRadius
+	 * @param firstThreshold
+	 * @param secondThreshold
+	 * @param minNumberOfNeighbours
+	 * @param angleThreshold
 	 * @param numberOfThreads
-	 * @param method
 	 * @param outputFormat
 	 *        Format of the returned pointcloud of keypoints:
 	 *        * Positions:

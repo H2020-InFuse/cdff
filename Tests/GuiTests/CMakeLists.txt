@@ -170,6 +170,23 @@ target_link_libraries(
 )
 
 add_executable(
+    CornerDetector3DGuiTest
+    DFNs/FeaturesExtraction3D/CornerDetector3D.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(CornerDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(CornerDetector3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+    CornerDetector3DGuiTest
+    corner_detector_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
+    ${PCL_LIBRARIES}
+)
+
+add_executable(
     Registration3DIcpGuiTest
     DFNs/Registration3D/Icp3D.cpp
     DFNs/DFNTestInterface.cpp
