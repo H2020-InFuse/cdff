@@ -431,7 +431,6 @@ include_directories(
   Common
   DFNs
   DFPCs
-  CC
 )
 
 # Process all subdirectories containing a CMakeLists file
@@ -439,7 +438,6 @@ include_directories(
 add_subdirectory(Common)
 add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
-add_subdirectory(CC)
 
 # Optionally compile the tests (unit tests, interactive tests, performance
 # tests, etc)
