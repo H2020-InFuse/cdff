@@ -146,7 +146,7 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
     $ docker cdff [--name=container-name] [--hostname=container-hostname]
     ```
 
-You can then build and test the CDFF. See the [main readme file](/Readme.md#download-and-compile) at the root of the repository for information on how to do that.
+You can then build and test the CDFF. See the [main readme file](/README.md#download-and-compile) at the root of the repository for information on how to do that.
 
 ## Option 2: install the CDFF's dependencies yourself on your computer
 
@@ -221,7 +221,7 @@ to search for what CMake calls "packages" and which are in our case libraries, t
   - Libraries in `External/install/`
   - Build the CDFF with `cmake -D USE_BUNDLED_DEPENDENCIES=ON /path/to/CDFF/`
 
-See the [main readme file](/Readme.md) at the root of the repository for more information.
+See the [main readme file](/README.md) at the root of the repository for more information.
 
 ## How to add a new CDFF dependency?
 

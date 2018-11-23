@@ -15,7 +15,7 @@ if(NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/C")
         # h2020infuse/cdff:latest Docker image for instance, so we can run
         # a contained transcompilation of the ASN.1 data types
         set(action "Transcompiling the")
-        set(script "${PROJECT_SOURCE_DIR}/Tools/ASN.1/GeneratorScript.sh")
+        set(script "${CMAKE_SOURCE_DIR}/Tools/ASN.1/GeneratorScript.sh")
 
     else()
 
@@ -24,7 +24,7 @@ if(NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/C")
         # installed (only works for branches which have been pushed to this
         # server)
         set(action "Downloading transcompiled")
-        set(script "${PROJECT_SOURCE_DIR}/Tools/ASN.1/FetcherScript.sh")
+        set(script "${CMAKE_SOURCE_DIR}/Tools/ASN.1/FetcherScript.sh")
 
     endif()
 

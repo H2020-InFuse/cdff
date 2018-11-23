@@ -26,7 +26,7 @@ There are two ways you can build the CDFF (Core and Support components):
 
     We provide a Docker image based on Ubuntu 16.04 where build tools and the CDFF's dependencies are pre-installed. You can spawn a container from that image, mount the CDFF's code inside it, and compile. That image, and the libraries it contains, make up a common **reference environment** for the CDFF.
 
-    We have documentation about [using Docker and the InFuse Docker image](https://drive.google.com/open?id=1aW3_giavOZdvOljEEfun4W0Cq2tlnDvb8S3y2bysjpw), however perhaps start with [this short section](/External/Readme.md#option-1-get-the-cdffs-dependencies-packaged-in-a-docker-image) in the documentation about the dependencies of the CDFF.
+    We have documentation about [using Docker and the InFuse Docker image](https://drive.google.com/open?id=1aW3_giavOZdvOljEEfun4W0Cq2tlnDvb8S3y2bysjpw), however perhaps start with [this short section](/External/README.md#option-1-get-the-cdffs-dependencies-packaged-in-a-docker-image) in the documentation about the dependencies of the CDFF.
 
     The TL;DR is (seriously, read the documentation though, not all these options are necessary all the time):
 
@@ -71,7 +71,7 @@ There are two ways you can build the CDFF (Core and Support components):
 
     This might take up to an hour. If you choose this route remember to pass `-D USE_BUNDLED_DEPENDENCIES=ON` to CMake when building.
 
-    The documentation about the [dependencies of the CDFF](/External/Readme.md) describes this topic in more detail.
+    The documentation about the [dependencies of the CDFF](/External/README.md) describes this topic in more detail.
 
     Once you have installed all the dependencies and build tools, you can build the CDFF (Core and Support):
 
@@ -121,7 +121,7 @@ You may still compile the data types yourself if you wish, and you should do so 
 * The download fails (**warning:** currently happens if running CMake in a new branch *and* the types haven't been downloaded before; fixing in progress; a workaround is to run CMake once in the `master` branch before, or compile the types yourself).
 * You modify or create a new data type in `Common/Types/ASN.1/`.
 
-See the [ASN.1 documentation](/Tools/ASN.1/Readme.md) for more information. An overview of the data types, wrappers, sizes, etc. can be found in [this table](https://drive.google.com/open?id=0B2f4AImIv45fRUFkeldjdTVtSUE).
+See the [ASN.1 documentation](/Tools/ASN.1/README.md) for more information. An overview of the data types, wrappers, sizes, etc. can be found in [this table](https://drive.google.com/open?id=0B2f4AImIv45fRUFkeldjdTVtSUE).
 
 ### Test and (optionally) install
 
@@ -139,7 +139,7 @@ Once the CDFF (Core and Support) is built you can run the unit tests with:
 
 ### Linked documentation
 
-* [Dependencies of the CDFF](/External/Readme.md)
+* [Dependencies of the CDFF](/External/README.md)
 * [Using Docker and the InFuse Docker image](https://drive.google.com/open?id=1aW3_giavOZdvOljEEfun4W0Cq2tlnDvb8S3y2bysjpw)
 
 ## Contributing to the CDFF

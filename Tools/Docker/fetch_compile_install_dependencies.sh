@@ -30,29 +30,33 @@ else
 fi
 
 function show_help {
-
   cat <<EOF
 Usage: $0 [OPTION]...
 
-Defaults for the options are specified in brackets.
-
 Configuration:
-  -h, ?               	    Display this help and exit
-  -s LIB                    Only compile LIB
-			    can be used multiple times (-s LIB1 -s LIB2)
-                            [LIB: cmake boost eigen flann qhull tinyxml2
-			    yamlccp vtk opencv pcl edres-wrapper]
-  -e                        Full dependencies installation (required for Central DPM)
+  -h, -?   Display this help and quit
+  -s LIB   Build and install LIB
+           Can be repeated (-s LIB1 -s LIB2 ...)
+           Default:
+             Build and install the following LIBs: boost yaml-cpp eigen
+             cloudcompare-core ceres flann nabo pointmatcher qhull opencv
+             vtk pcl edres-wrapper
+  -e       Build and install EnviRe and its dependencies
+           Required by CDFF::CentralDPM
+           Default:
+             Disabled
+  -c       Print the current configuration
 
-Installation directories:
-  -b DIR            	    Build all libraries in DIR
-                            [$BUILD_DIR]
-  -i DIR            	    Install all libraries in DIR
-                            [$INSTALL_DIR]
-  -p DIR            	    Directory where packages are stored
-                            [$PKG_DIR]
-  -c                        Print current Configuration only
-
+Directories:
+  -b DIR   Prefix for build directories
+           Default:
+             ${BUILD_DIR}
+  -i DIR   Installation prefix
+           Default:
+             ${INSTALL_DIR}
+  -p DIR   Output directory for packages made by CheckInstall, if available
+           Default:
+             ${PKG_DIR}
 EOF
 }
 
@@ -177,11 +181,14 @@ function clean_function {
 
 function build_all_function {
  InstallersToRUN+=("boost")
+ InstallersToRUN+=("yaml-cpp")
  InstallersToRUN+=("eigen")
+ InstallersToRUN+=("cloudcompare-core")
  InstallersToRUN+=("ceres")
+ InstallersToRUN+=("nabo")
+ InstallersToRUN+=("pointmatcher")
  InstallersToRUN+=("flann")
  InstallersToRUN+=("qhull")
- InstallersToRUN+=("yaml-cpp")
  InstallersToRUN+=("opencv")
  InstallersToRUN+=("vtk")
  InstallersToRUN+=("pcl")

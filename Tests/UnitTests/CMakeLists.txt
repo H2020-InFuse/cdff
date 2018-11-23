@@ -2,7 +2,7 @@ add_definitions(-DTEST_CONFIGURATIONS="${TEST_CONFIGURATIONS}")
 add_definitions(-DTEST_DATA="${TEST_DATA}")
 
 # Path to the directory containing Catch's single-include header (catch.hpp)
-set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/Tests/Catch")
+set(CATCH_INCLUDE_DIR "Catch")
 
 # Define the Catch library
 add_library(catch INTERFACE)
@@ -49,14 +49,14 @@ set(unittest_sources UnitTests.cpp
     DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
     DFNs/PointCloudAssembly/NeighbourSinglePointAverage.cpp
     DFNs/PointCloudAssembly/VoxelBinning.cpp
-    DFNs/PointCloudAssembly/MatcherAssembly.cpp
+    #DFNs/PointCloudAssembly/MatcherAssembly.cpp
     DFNs/PointCloudFiltering/StatisticalOutlierRemoval.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFNs/PointCloudTransform/CartesianSystemTransform.cpp
     DFNs/PrimitiveMatching/HuInvariants.cpp
     DFNs/Registration3D/Icp3D.cpp
     DFNs/Registration3D/IcpCC.cpp
-    DFNs/Registration3D/IcpMatcher.cpp
+    #DFNs/Registration3D/IcpMatcher.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp

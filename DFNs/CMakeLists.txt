@@ -87,5 +87,4 @@ target_link_libraries(
   matcher_assembly
   cartesian_system_transform
   statistical_outlier_removal
-  ${libpointmatcher_LIBRARIES}
 )
