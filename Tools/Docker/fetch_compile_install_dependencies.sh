@@ -1,26 +1,20 @@
-#!/bin/bash
-#xma@spaceapplications.com
-#This file fetches the dependencies in /Externals, builds and installs them.
-# Version 1.3
+#!/usr/bin/env bash
 
+# xma@spaceapplications.com, romain.michalec@strath.ac.uk
+# This script downloads, builds, and installs the direct dependencies of the
+# CDFF. It doesn't take care of the recurse dependencies of the CDFF.
 
-#exit immediately if a simple command exits with a nonzero exit value.
+# Exit the shell immediately if a command exits with a non-zero status
 set -e
 
-#Get working directory and script containing directory
-SOURCE="${BASH_SOURCE[0]}"
-while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
-  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-  SOURCE="$(readlink "$SOURCE")"
-  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-done
-DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+# Canonical path to the directory containing this script
+DIR="$(dirname "$(readlink --canonicalize "${BASH_SOURCE[0]}")")"
 
-# directory where the files will be build and installed
-SOURCE_DIR="$(readlink -m $DIR"/../../External/source")"
-BUILD_DIR="$(readlink -m $DIR"/../../External/build")"
-INSTALL_DIR="$(readlink -m $DIR"/../../External/install")"
-PKG_DIR="$(readlink -m $DIR"/../../External/package")"
+# Canonical paths to the build and installation directories
+SOURCE_DIR="$(readlink --canonicalize "${DIR}/../../External/source")"
+BUILD_DIR="$(readlink --canonicalize "${DIR}/../../External/build")"
+INSTALL_DIR="$(readlink --canonicalize "${DIR}/../../External/install")"
+PKG_DIR="$(readlink --canonicalize "${DIR}/../../External/package")"
 
 # How many processors?
 if [ -f /proc/cpuinfo ]; then
@@ -61,7 +55,7 @@ EOF
 }
 
 function show_configuration {
-  echo -n "Dependencies that will be BUILT : "
+  echo -n "Dependencies that will be BUILT: "
   for i in "${InstallersToRUN[@]}"
   do
     if [[ ${infuse_dependencies_map[$i]} ]] ;  then
@@ -107,12 +101,12 @@ function find_installers {
 
 function run_installers {
 
-  mkdir -p $BUILD_DIR
-  mkdir -p $INSTALL_DIR
-  mkdir -p $PKG_DIR
-  mkdir -p $SOURCE_DIR
+  mkdir -p "${SOURCE_DIR}"
+  mkdir -p "${BUILD_DIR}"
+  mkdir -p "${INSTALL_DIR}"
+  mkdir -p "${PKG_DIR}"
 
-  cd $BUILD_DIR
+  cd "${BUILD_DIR}"
   for i in "${InstallersToRUN[@]}"
   do
     if [[ ${infuse_dependencies_map[$i]} ]] ;  then
@@ -162,7 +156,7 @@ function fetchgit_function {
       echo "Checking out commit ${4}."
       git -C "${SOURCE_DIR}" clone --recursive --branch "${2}" "${3}" "${1}"
       git -C "${SOURCE_DIR}/${1}" checkout -f ${4}
-    fi	
+    fi
   #+# else
   #+#   echo "Directory ${SOURCE_DIR}/${1} already exists, we will work with that one."
   #+# fi
@@ -197,7 +191,7 @@ function build_all_function {
   InstallersToRUN+=("base_cmake")
   InstallersToRUN+=("base_logging")
   InstallersToRUN+=("sisl")
-  InstallersToRUN+=("base_types")  
+  InstallersToRUN+=("base_types")
   InstallersToRUN+=("base_numeric")
   InstallersToRUN+=("base_boost_serialization")
   InstallersToRUN+=("console_bridge")
