@@ -58,8 +58,8 @@ EOF
 # Print selected configuration
 function show_configuration {
   printf "Dependencies that will be built and installed:"
-  for dependency in "${InstallersToRUN[@]}"; do
-    if [[ ${infuse_dependencies_map[${dependency}]} ]] ;  then
+  for dependency in "${dependencies[@]}"; do
+    if [[ ${installers[${dependency}]} ]] ;  then
       printf " %s" ${dependency}
     fi
   done
@@ -71,29 +71,29 @@ function show_configuration {
 }
 
 # Import all functions present in all scripts in the installers/ subdirectory
-declare -A infuse_dependencies_map
+declare -A installers
 function find_installers {
   if [[ ! -d "${DIR}/installers" ]]; then
     echo "${DIR}/installers directory missing"
     exit 1
   fi
 
-  for installer in "${DIR}"/installers/*.sh
+  for file in "${DIR}"/installers/*.sh
   do
-     source "${installer}"
+     source "${file}"
   done
 
   PreviousIFS=$IFS
   IFS=$'\n'
-  INFUSE_INSTALLER_PREFIX=install4infuse_
+  installer_prefix=install4infuse_
   for f in $(declare -F); do
     fct_name="${f:11}"
-    if [[ ${fct_name} == ${INFUSE_INSTALLER_PREFIX}* ]]; then
-      dependency=${fct_name#${INFUSE_INSTALLER_PREFIX}}
-      infuse_dependencies_map[${dependency}]=${fct_name}
+    if [[ ${fct_name} == ${installer_prefix}* ]]; then
+      dependency=${fct_name#${installer_prefix}}
+      installers[${dependency}]=${fct_name}
     fi
   done
-  echo "Found installers for:" "${!infuse_dependencies_map[@]}"
+  echo "Found installers for:" "${!installers[@]}"
   IFS=$PreviousIFS
 }
 
@@ -105,12 +105,12 @@ function run_installers {
   mkdir -p "${PKG_DIR}"
 
   cd "${BUILD_DIR}"
-  for dependency in "${InstallersToRUN[@]}"; do
-    if [[ ${infuse_dependencies_map[${dependency}]} ]]; then
+  for dependency in "${dependencies[@]}"; do
+    if [[ ${installers[${dependency}]} ]]; then
       echo "#"
       echo "# Running installer for ${dependency}"
       echo "#"
-      eval ${infuse_dependencies_map[${dependency}]}
+      eval ${installers[${dependency}]}
       echo "#"
       echo "# Running installer for ${dependency}: done"
       echo "#"
@@ -169,20 +169,20 @@ function clean_function {
 }
 
 function build_all_function {
-  InstallersToRUN=(boost yaml-cpp eigen cloudcompare-core ceres nabo \
+  dependencies=(boost yaml-cpp eigen cloudcompare-core ceres nabo \
     pointmatcher flann qhull opencv vtk pcl edres-wrapper)
   if [[ "${ENVIRE_FULL}" = true ]]; then
-    InstallersToRUN+=(base_cmake base_logging sisl base_types base_numeric  \
+    dependencies+=(base_cmake base_logging sisl base_types base_numeric  \
       base_boost_serialization console_bridge poco poco_vendor class_loader \
       tools_plugin_manager envire_envire_core)
   #else
-    #InstallersToRUN+=(envire-min)
+    #dependencies+=(envire-min)
   fi
 }
 
 # Cleanup leftover source directories in case of early termination on error
 function on_exit {
-  for dependency in "${InstallersToRUN[@]}"; do
+  for dependency in "${dependencies[@]}"; do
     if [[ -d  "${SOURCE_DIR}/${dependency}" ]]; then
       echo "Removing leftover source directory: ${SOURCE_DIR}/${dependency}"
       rm -rf "${SOURCE_DIR:?}/${dependency}"
@@ -210,7 +210,7 @@ function set_pkgconfig_path {
 find_installers
 
 # Parse the arguments provided by the user
-InstallersToRUN=()
+dependencies=()
 # A POSIX variable
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 # get options
@@ -234,7 +234,7 @@ while getopts ":b:i:p:s:c:e" opt; do
         PKG_DIR=$OPTARG
         ;;
     s)
-        InstallersToRUN+=($OPTARG)
+        dependencies+=($OPTARG)
         ;;
     e)
         ENVIRE_FULL=true
