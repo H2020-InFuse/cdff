@@ -128,6 +128,12 @@ int main(int argc, char** argv)
 			std::cin >> rotationW;	
 			pointCloudTransformer.ShowWithAddedCloud(inputFile, positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW);
 			}
+		else if (command == "reduce")
+			{
+			int targetNumberOfPoints;
+			std::cin >> targetNumberOfPoints;
+			pointCloudTransformer.Reduce(targetNumberOfPoints);
+			}
 		}
 
 	return 0;
