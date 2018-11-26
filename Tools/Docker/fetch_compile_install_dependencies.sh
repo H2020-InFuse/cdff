@@ -8,13 +8,14 @@
 set -e
 
 # Canonical path to the directory containing this script
-DIR="$(dirname "$(readlink --canonicalize "${BASH_SOURCE[0]}")")"
+DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 # Canonical paths to the build and installation directories
-SOURCE_DIR="$(readlink --canonicalize "${DIR}/../../External/source")"
-BUILD_DIR="$(readlink --canonicalize "${DIR}/../../External/build")"
-INSTALL_DIR="$(readlink --canonicalize "${DIR}/../../External/install")"
-PKG_DIR="$(readlink --canonicalize "${DIR}/../../External/package")"
+# (-m because External/ doesn't exist yet when building a Docker image)
+SOURCE_DIR="$(readlink -m "${DIR}/../../External/source")"
+BUILD_DIR="$(readlink -m "${DIR}/../../External/build")"
+INSTALL_DIR="$(readlink -m "${DIR}/../../External/install")"
+PKG_DIR="$(readlink -m "${DIR}/../../External/package")"
 
 # How many processors?
 if [ -f /proc/cpuinfo ]; then
