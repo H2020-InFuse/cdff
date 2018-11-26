@@ -87,7 +87,7 @@ set(unittest_libraries catch
     ceres_adjustment
     convolution_filter
     dfpc_configurator
-    dfpc_implementation_edge_model_contour_matching
+    cdff_dfpc_implementation_edge_model_contour_matching
     dfpc_haptic_scanning
     dfpc_implementation_features_matching_3d
     disparity_mapping

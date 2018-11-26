@@ -1,32 +1,33 @@
 name: ModelBasedVisualTracking
+doc: "Model based tracking based on image edges and contour matching"
 input_ports:
   - name: imageLeft
-   type: Frame
-   doc: " a gray image from left camera"
+    type: Frame
+    doc: " a gray image from left camera"
   - name: imageRight
-   type: Frame
-   doc: " a gray image from right camera"
+    type: Frame
+    doc: " a gray image from right camera"
   - name: imageTime
-     type: asn1SccTime
-     doc: " Image Acquisition time"
+    type: asn1SccTime
+    doc: " Image Acquisition time"
   - name:  init
-   type: RigidBodyState
-   doc: " the initial velocity and pose  "
+    type: RigidBodyState
+    doc: " the initial velocity and pose  "
   - name: initTime
-     type: asn1SccTime
-     doc: " initialization time " 	
+    type: asn1SccTime
+    doc: " initialization time " 	
   - name: doInit
-     type: bool
-     doc: " determines whether the tracker dfpc need initialization"	
+    type: bool
+    doc: " determines whether the tracker dfpc need initialization"	
   - name:  egoMotion
-     type: RigidBodyState
-     doc: " the ego motion (position and orientation) of a manipulator with respect to its base  "	
+    type: RigidBodyState
+    doc: " the ego motion (position and orientation) of a manipulator with respect to its base  "	
 output_ports:
-    - name: state
-      type: RigidBodyState
-      doc: " the rigid body state, pose and local velocity of the target "
-    - name: success
-      type: bool
-      doc: " determines whether the dfpc could track the target model"
+  - name: state
+    type: RigidBodyState
+    doc: " the rigid body state, pose and local velocity of the target "
+  - name: success
+    type: bool
+    doc: " determines whether the dfpc could track the target model"
     
 
