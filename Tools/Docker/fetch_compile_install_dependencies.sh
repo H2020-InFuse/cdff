@@ -148,7 +148,6 @@ function fetchgit_function {
     if [ -z ${4} ]; then
       git -C "${SOURCE_DIR}" clone --recursive --depth 1 --single-branch --branch "${2}" "${3}" "${1}"
     else
-      echo "Checking out commit ${4}."
       git -C "${SOURCE_DIR}" clone --recursive --branch "${2}" "${3}" "${1}"
       git -C "${SOURCE_DIR}/${1}" checkout -f ${4}
     fi
