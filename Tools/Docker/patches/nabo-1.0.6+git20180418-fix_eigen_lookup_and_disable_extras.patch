@@ -1,6 +1,22 @@
 --- CMakeLists.txt
 +++ CMakeLists.txt
-@@ -168,10 +168,6 @@
+@@ -98,13 +98,8 @@
+ 
+ # eigen 2 or 3
+ find_path(EIGEN_INCLUDE_DIR Eigen/Core
+-	/usr/local/include/eigen3
+-	/usr/local/include/eigen2
+-	/usr/local/include/eigen
+-	/usr/include/eigen3
+-	/usr/include/eigen2
+-	/usr/include/eigen
+-	/opt/local/include/eigen3
++	PATHS /usr/local/include /usr/include opt/local/include
++	PATH_SUFFIXES eigen3 eigen2 eigen
+ )
+ 
+ # optionally, opencl
+@@ -168,10 +163,6 @@
  
  enable_testing()
  

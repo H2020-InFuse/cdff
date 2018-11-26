@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 function install4infuse_console_bridge {
 if [[ ! -n $(find $PKG_DIR -name 'console_bridge*') ]]; then

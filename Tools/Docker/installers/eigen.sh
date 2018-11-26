@@ -1,9 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #xma@spaceapplications.com
 #This file is needed by ../fetch_compile_install_dependencies.sh
 # Version 1.0
-
-depends_eigen=cmake;
 
 function install4infuse_eigen {
 if [[ ! -n $(find $PKG_DIR -name 'eigen*') ]]; then

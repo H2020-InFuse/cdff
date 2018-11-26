@@ -1,26 +1,21 @@
-#!/bin/bash
-#xma@spaceapplications.com
-#This file fetches the dependencies in /Externals, builds and installs them.
-# Version 1.3
+#!/usr/bin/env bash
 
+# xma@spaceapplications.com, romain.michalec@strath.ac.uk
+# This script downloads, builds, and installs the direct dependencies of the
+# CDFF. It doesn't take care of the recurse dependencies of the CDFF.
 
-#exit immediately if a simple command exits with a nonzero exit value.
+# Exit the shell immediately if a command exits with a non-zero status
 set -e
 
-#Get working directory and script containing directory
-SOURCE="${BASH_SOURCE[0]}"
-while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
-  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-  SOURCE="$(readlink "$SOURCE")"
-  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-done
-DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+# Canonical path to the directory containing this script
+DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
-# directory where the files will be build and installed
-SOURCE_DIR="$(readlink -m $DIR"/../../External/source")"
-BUILD_DIR="$(readlink -m $DIR"/../../External/build")"
-INSTALL_DIR="$(readlink -m $DIR"/../../External/install")"
-PKG_DIR="$(readlink -m $DIR"/../../External/package")"
+# Canonical paths to the build and installation directories
+# (-m because External/ doesn't exist yet when building a Docker image)
+SOURCE_DIR="$(readlink -m "${DIR}/../../External/source")"
+BUILD_DIR="$(readlink -m "${DIR}/../../External/build")"
+INSTALL_DIR="$(readlink -m "${DIR}/../../External/install")"
+PKG_DIR="$(readlink -m "${DIR}/../../External/package")"
 
 # How many processors?
 if [ -f /proc/cpuinfo ]; then
@@ -29,9 +24,10 @@ else
   CPUS=1
 fi
 
+# Print usage
 function show_help {
   cat <<EOF
-Usage: $0 [OPTION]...
+Usage: ${BASH_SOURCE[0]} [OPTION]...
 
 Configuration:
   -h, -?   Display this help and quit
@@ -60,81 +56,75 @@ Directories:
 EOF
 }
 
+# Print selected configuration
 function show_configuration {
-  echo -n "Dependencies that will be BUILT : "
-  for i in "${InstallersToRUN[@]}"
-  do
-    if [[ ${infuse_dependencies_map[$i]} ]] ;  then
-      echo -n "$i ";
+  printf "Dependencies that will be built and installed:"
+  for dependency in "${dependencies[@]}"; do
+    if [[ ${installers[${dependency}]} ]] ;  then
+      printf " %s" ${dependency}
     fi
   done
-
-  echo ""
-  echo "source directory   = ${SOURCE_DIR}"
-  echo "build directory    = ${BUILD_DIR}"
-  echo "install directory  = ${INSTALL_DIR}"
-  echo "Packages directory = ${PKG_DIR}"
+  printf "\n"
+  echo "Prefix for source directories: ${SOURCE_DIR}"
+  echo "Prefix for build directories : ${BUILD_DIR}"
+  echo "Installation prefix:           ${INSTALL_DIR}"
+  echo "Output directory for packages: ${PKG_DIR}"
 }
 
-# imports all functions present in all scripts in "/installers" folder
-InstallersToRUN=()
-INFUSE_INSTALLER_PREFIX="install4infuse_"
-declare -A infuse_dependencies_map
+# Import all functions present in all scripts in the installers/ subdirectory
+declare -A installers
 function find_installers {
-  if [ ! -d $DIR/installers ]; then
-    echo "$DIR/installers directory missing"
-    exit
+  if [[ ! -d "${DIR}/installers" ]]; then
+    echo "${DIR}/installers directory missing"
+    exit 1
   fi
 
-  for i in `find $DIR/installers/ -name "*.sh"`
+  for file in "${DIR}"/installers/*.sh
   do
-     source $i
+     source "${file}"
   done
 
   PreviousIFS=$IFS
   IFS=$'\n'
+  installer_prefix=install4infuse_
   for f in $(declare -F); do
     fct_name="${f:11}"
-     if [[ $fct_name == $INFUSE_INSTALLER_PREFIX* ]]; then
-      dep=${fct_name#$INFUSE_INSTALLER_PREFIX}
-      infuse_dependencies_map[$dep]=$fct_name
+    if [[ ${fct_name} == ${installer_prefix}* ]]; then
+      dependency=${fct_name#${installer_prefix}}
+      installers[${dependency}]=${fct_name}
     fi
   done
-
- echo "Found infuse installers for :" ${!infuse_dependencies_map[@]}
- IFS=$PreviousIFS
+  echo "Found installers for:" "${!installers[@]}"
+  IFS=$PreviousIFS
 }
 
+# Run all requested installers who have an install function
 function run_installers {
+  mkdir -p "${SOURCE_DIR}"
+  mkdir -p "${BUILD_DIR}"
+  mkdir -p "${INSTALL_DIR}"
+  mkdir -p "${PKG_DIR}"
 
-  mkdir -p $BUILD_DIR
-  mkdir -p $INSTALL_DIR
-  mkdir -p $PKG_DIR
-  mkdir -p $SOURCE_DIR
-
-  cd $BUILD_DIR
-  for i in "${InstallersToRUN[@]}"
-  do
-    if [[ ${infuse_dependencies_map[$i]} ]] ;  then
-      # RUN the actual function
-      echo ""
+  cd "${BUILD_DIR}"
+  for dependency in "${dependencies[@]}"; do
+    if [[ ${installers[${dependency}]} ]]; then
       echo "#"
-      echo "# Running INFUSE $i installer"
+      echo "# Running installer for ${dependency}"
       echo "#"
-      echo ""
-      eval ${infuse_dependencies_map[$i]}
-      echo ""
-      echo "INFUSE $i installer Done."
+      eval ${installers[${dependency}]}
+      echo "#"
+      echo "# Running installer for ${dependency}: done"
+      echo "#"
     fi
   done
 }
 
 function install_function {
-if (command -v checkinstall); then
-   sudo checkinstall -y --pakdir $PKG_DIR --nodoc --pkgname="$1" --pkgversion="$2"
-else
+  if (command -v checkinstall); then
+   sudo checkinstall -y --pakdir "${PKG_DIR}" --nodoc --pkgname="${1}" --pkgversion="${2}"
+  else
    make --jobs=${CPUS} install
-fi
+  fi
 }
 
 function fetchsource_function {
@@ -143,11 +133,11 @@ function fetchsource_function {
   cd "${SOURCE_DIR}/${1}"
   wget "${3}${2}"
   if [[ "${2: -7}" == ".tar.gz" ]]; then
-    tar xf "${2}"
+    tar x --file="${2}"
     rm -f "${2}"
     cd "${2%.tar.gz}"
   fi
-  echo "Downloading ${1}: done."
+  echo "Downloading ${1}: done"
 }
 
 function fetchgit_function {
@@ -159,80 +149,68 @@ function fetchgit_function {
     if [ -z ${4} ]; then
       git -C "${SOURCE_DIR}" clone --recursive --depth 1 --single-branch --branch "${2}" "${3}" "${1}"
     else
-      echo "Checking out commit ${4}."
       git -C "${SOURCE_DIR}" clone --recursive --branch "${2}" "${3}" "${1}"
       git -C "${SOURCE_DIR}/${1}" checkout -f ${4}
-    fi	
+    fi
   #+# else
   #+#   echo "Directory ${SOURCE_DIR}/${1} already exists, we will work with that one."
   #+# fi
   mkdir -p "${BUILD_DIR}/${1}"
   cd "${BUILD_DIR}/${1}"
-  echo "Cloning ${1}'s code repository: done."
+  echo "Cloning ${1}'s code repository: done"
 }
 
 function clean_function {
   echo "Removing ${1} source and build directories"
   cd "${SOURCE_DIR}"
-  rm -rf "${SOURCE_DIR}/${1}"
-  rm -rf "${BUILD_DIR}/${1}"
-  echo "Removing ${1} source and build directories: done."
+  rm -rf "${SOURCE_DIR:?}/${1}"
+  rm -rf "${BUILD_DIR:?}/${1}"
+  echo "Removing ${1} source and build directories: done"
 }
 
 function build_all_function {
- InstallersToRUN+=("boost")
- InstallersToRUN+=("yaml-cpp")
- InstallersToRUN+=("eigen")
- InstallersToRUN+=("cloudcompare-core")
- InstallersToRUN+=("ceres")
- InstallersToRUN+=("nabo")
- InstallersToRUN+=("pointmatcher")
- InstallersToRUN+=("flann")
- InstallersToRUN+=("qhull")
- InstallersToRUN+=("opencv")
- InstallersToRUN+=("vtk")
- InstallersToRUN+=("pcl")
- InstallersToRUN+=("edres-wrapper")
- if [[ "$ENVIRE_FULL" = true ]]; then
-  InstallersToRUN+=("base_cmake")
-  InstallersToRUN+=("base_logging")
-  InstallersToRUN+=("sisl")
-  InstallersToRUN+=("base_types")  
-  InstallersToRUN+=("base_numeric")
-  InstallersToRUN+=("base_boost_serialization")
-  InstallersToRUN+=("console_bridge")
-  InstallersToRUN+=("poco")
-  InstallersToRUN+=("poco_vendor")
-  InstallersToRUN+=("class_loader")
-  InstallersToRUN+=("tools_plugin_manager")
-  InstallersToRUN+=("envire_envire_core")
- #else
- # InstallersToRUN+=("envire-min")
- fi
-  #for i in "${!infuse_dependencies_map[@]}"
-  #do
-  #  InstallersToRUN+=($i)
-  #done
+  dependencies=(boost yaml-cpp eigen cloudcompare-core ceres nabo \
+    pointmatcher flann qhull opencv vtk pcl edres-wrapper)
+  if [[ "${ENVIRE_FULL}" = true ]]; then
+    dependencies+=(base_cmake base_logging sisl base_types base_numeric  \
+      base_boost_serialization console_bridge poco poco_vendor class_loader \
+      tools_plugin_manager envire_envire_core)
+  #else
+    #dependencies+=(envire-min)
+  fi
 }
 
-###### MAIN PROGRAM
-
-source "${DIR}/installers/infuse_set_pkg_config_path.sh"
-
-
-# Attempt to cleanup leftover source folders if we exited early due to errors.
+# Cleanup leftover source directories in case of early termination on error
 function on_exit {
-  for i in "${InstallersToRUN[@]}"; do
-    if [[ -d  "${SOURCE_DIR}/$i" ]] ; then
-          echo "Removing left over source folder: ${SOURCE_DIR}/$i"
-      rm -rf "${SOURCE_DIR}/$i"
+  for dependency in "${dependencies[@]}"; do
+    if [[ -d  "${SOURCE_DIR}/${dependency}" ]]; then
+      echo "Removing leftover source directory: ${SOURCE_DIR}/${dependency}"
+      rm -rf "${SOURCE_DIR:?}/${dependency}"
     fi
   done
 }
 trap on_exit EXIT
 
+# If ENVIRE_FULL: add pkg-config directories to PKG_CONFIG_PATH, if they aren't
+# in PKG_CONFIG_PATH already, and export PKG_CONFIG_PATH to the environment
+function set_pkgconfig_path {
+  AddToPkg="${INSTALL_DIR}/lib/pkgconfig:${INSTALL_DIR}/share/pkgconfig"
+  if [[ ":${PKG_CONFIG_PATH}:" != *":${AddToPkg}:"* ]]; then
+    export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:${AddToPkg}"
+  fi
+
+  export LD_LIBRARY_PATH="${INSTALL_DIR}/lib"
+  export Rock_DIR="${INSTALL_DIR}/share/rock"
+  export console_bridge_DIR="${INSTALL_DIR}/share/console_bridge"
+}
+
+###### MAIN PROGRAM
+
+# Parse the installers/ subdirectory
 find_installers
 
+# Parse the arguments provided by the user
+dependencies=()
 # A POSIX variable
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 # get options
@@ -247,30 +225,30 @@ while getopts ":b:i:p:s:c:e" opt; do
         exit 0
         ;;
     b)
-	BUILD_DIR=$OPTARG
+        BUILD_DIR=$OPTARG
         ;;
     i)
-	INSTALL_DIR=$OPTARG
+        INSTALL_DIR=$OPTARG
         ;;
     p)
-	PKG_DIR=$OPTARG
+        PKG_DIR=$OPTARG
         ;;
     s)
-  InstallersToRUN+=($OPTARG)
-  	    ;;
+        dependencies+=($OPTARG)
+        ;;
     e)
-      ENVIRE_FULL=true
-      echo "Envire will be installed in full version, along with all its dependencies."
-      ;;
+        ENVIRE_FULL=true
+        echo "A complete version of EnviRe will be installed, along with EnviRe's dependencies"
+        set_pkgconfig_path
+        ;;
     :)
-      echo "Option -$OPTARG requires an argument." >&2
-      exit 1
-      ;;
-
+        echo "Option -$OPTARG requires an argument." >&2
+        exit 1
+        ;;
     esac
 done
 
-if [[ ( $OPTIND -eq 1 ) || ( ($OPTIND -eq 2 ) && ( "$ENVIRE_FULL" = true ) ) ]]  ; then
+if [[ ($OPTIND -eq 1) || ( ($OPTIND -eq 2) && (${ENVIRE_FULL} = true) ) ]]; then
   # Check if `checkinstall` is installed. If it is installed we need superuser
   # privileges to complete the build & install for each package even if we're
   # not installing the packages globally.
@@ -278,13 +256,15 @@ if [[ ( $OPTIND -eq 1 ) || ( ($OPTIND -eq 2 ) && ( "$ENVIRE_FULL" = true ) ) ]] 
     echo "Caching your sudo password for install scripts ... "
     sudo true
   else
-    echo "Warning: checkinstall is not installed. No distribution packages will be generated."
+    echo "Checkinstall is not installed. No distribution packages will be generated."
   fi
 
+  # Default when no -s argument is provided: build everything
   build_all_function
 fi
 shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 
+# Print selected configuration and run the selected installers
 show_configuration
 run_installers

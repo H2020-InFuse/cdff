@@ -322,6 +322,9 @@ find_package_mode(OpenCV)
 
 find_package(libpointmatcher 1.3.0 REQUIRED)
 
+# Usage:
+# target_include_directories(<target> SYSTEM PRIVATE|PUBLIC ${POINTMATCHER_INCLUDE_DIRS})
+# target_link_libraries(<target> PRIVATE|PUBLIC ${POINTMATCHER_LIBRARIES})
 
 ## Look for Edres-Wrapper (optional dependency) --------------------------------
 
