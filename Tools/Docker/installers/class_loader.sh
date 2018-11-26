@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Dependency: console_bridge
 
 function install4infuse_class_loader {

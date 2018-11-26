@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Dependency: poco
 
 function install4infuse_poco_vendor {

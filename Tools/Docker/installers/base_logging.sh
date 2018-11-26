@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Dependency: base_cmake
 
 function install4infuse_base_logging {
