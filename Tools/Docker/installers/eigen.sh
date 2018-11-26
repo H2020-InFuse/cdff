@@ -3,8 +3,6 @@
 #This file is needed by ../fetch_compile_install_dependencies.sh
 # Version 1.0
 
-depends_eigen=cmake;
-
 function install4infuse_eigen {
 if [[ ! -n $(find $PKG_DIR -name 'eigen*') ]]; then
     fetchgit_function eigen 3.3.4 https://github.com/eigenteam/eigen-git-mirror

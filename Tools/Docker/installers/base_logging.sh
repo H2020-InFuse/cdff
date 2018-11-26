@@ -1,4 +1,4 @@
-depends_tools_plugin_manager=base_cmake;
+# Dependency: base_cmake
 
 function install4infuse_base_logging {
 if [[ ! -n $(find $PKG_DIR -name 'base_logging*') ]]; then

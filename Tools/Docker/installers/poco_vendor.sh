@@ -1,5 +1,4 @@
-
-depends_poco_vendor=poco;
+# Dependency: poco
 
 function install4infuse_poco_vendor {
 if [[ ! -n $(find $PKG_DIR -name 'poco_vendor*') ]]; then

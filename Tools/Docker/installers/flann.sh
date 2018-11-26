@@ -3,7 +3,7 @@
 #This file is needed by ../fetch_compile_install_dependencies.sh
 # Version 1.0
 
-depends_flann=eigen;
+# Dependency: Eigen
 
 function install4infuse_flann {
 if [[ ! -n $(find $PKG_DIR -name 'flann*') ]]; then

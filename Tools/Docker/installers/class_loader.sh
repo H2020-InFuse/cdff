@@ -1,4 +1,4 @@
-depends_class_loader=console_bridge;
+# Dependency: console_bridge
 
 function install4infuse_class_loader {
 if [[ ! -n $(find $PKG_DIR -name 'class_loader*') ]]; then
