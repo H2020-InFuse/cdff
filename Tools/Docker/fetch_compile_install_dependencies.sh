@@ -191,6 +191,19 @@ function on_exit {
 }
 trap on_exit EXIT
 
+# If ENVIRE_FULL: add pkg-config directories to PKG_CONFIG_PATH, if they aren't
+# in PKG_CONFIG_PATH already, and export PKG_CONFIG_PATH to the environment
+function set_pkgconfig_path {
+  AddToPkg="${INSTALL_DIR}/lib/pkgconfig:${INSTALL_DIR}/share/pkgconfig"
+  if [[ ":${PKG_CONFIG_PATH}:" != *":${AddToPkg}:"* ]]; then
+    export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:${AddToPkg}"
+  fi
+
+  export LD_LIBRARY_PATH="${INSTALL_DIR}/lib"
+  export Rock_DIR="${INSTALL_DIR}/share/rock"
+  export console_bridge_DIR="${INSTALL_DIR}/share/console_bridge"
+}
+
 ###### MAIN PROGRAM
 
 # Parse the installers/ subdirectory
@@ -226,7 +239,7 @@ while getopts ":b:i:p:s:c:e" opt; do
     e)
         ENVIRE_FULL=true
         echo "A complete version of EnviRe will be installed, along with EnviRe's dependencies"
-        source "${DIR}/installers/infuse_set_pkg_config_path.sh"
+        set_pkgconfig_path
         ;;
     :)
         echo "Option -$OPTARG requires an argument." >&2
