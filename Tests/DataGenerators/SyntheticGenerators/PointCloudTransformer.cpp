@@ -31,6 +31,7 @@
 #include <random>
 #include <Errors/Assert.hpp>
 #include <Visualizers/PCLVisualizer.hpp>
+#include <pcl/kdtree/kdtree_flann.h>
 
 namespace DataGenerators
 {
@@ -208,6 +209,50 @@ void PointCloudTransformer::ShowWithAddedCloud(std::string cloudFilePath, float 
 	Visualizers::PclVisualizer::Enable();
 	Visualizers::PclVisualizer::ShowPointClouds(cloudsList);
 	Visualizers::PclVisualizer::Disable();
+	}
+
+void PointCloudTransformer::Reduce(int targetNumberOfPoints)
+	{
+	InitTransformedCloud();
+
+	pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
+	kdtree.setInputCloud (transformedCloud);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr newTransformedCloud(new pcl::PointCloud<pcl::PointXYZ>);
+	std::srand(std::time(nullptr));
+
+	int numberOfLeftoverPoints = transformedCloud->points.size();
+	int numberOfPointsToKeep = newTransformedCloud->points.size();
+	while (numberOfLeftoverPoints + numberOfPointsToKeep > targetNumberOfPoints && numberOfPointsToKeep < targetNumberOfPoints)
+		{
+		int pointsToRemoveForEachKeptPoint = numberOfLeftoverPoints/(targetNumberOfPoints - numberOfPointsToKeep);	
+		std::vector<int> indexList(pointsToRemoveForEachKeptPoint+1);
+		std::vector<float> squaredDistancesList(pointsToRemoveForEachKeptPoint+1);
+
+		int randomNumber = std::round(static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * static_cast<float>(transformedCloud->points.size()-1));
+
+		pcl::PointXYZ searchPoint = transformedCloud->points.at( randomNumber );
+		kdtree.nearestKSearch (searchPoint, pointsToRemoveForEachKeptPoint+1, indexList, squaredDistancesList);
+
+		newTransformedCloud->points.push_back(searchPoint);
+		std::sort(indexList.begin(), indexList.end());
+
+		for(int i=pointsToRemoveForEachKeptPoint; i>=0; i--)
+			{
+			int pointToRemove = indexList.at(i);
+			std::vector<pcl::PointXYZ, Eigen::aligned_allocator<pcl::PointXYZ> >::iterator elementToRemove = transformedCloud->points.begin() + pointToRemove;
+			transformedCloud->points.erase(elementToRemove);
+			}
+
+		numberOfLeftoverPoints = transformedCloud->points.size();
+		numberOfPointsToKeep = newTransformedCloud->points.size();		
+		}
+
+	for( int pointIndex=0; pointIndex < numberOfLeftoverPoints; pointIndex++)
+		{
+		pcl::PointXYZ newPoint = transformedCloud->points.at(pointIndex);		
+		newTransformedCloud->points.push_back(newPoint);
+		}
+	transformedCloud = newTransformedCloud;
 	}
 
 /* --------------------------------------------------------------------------
