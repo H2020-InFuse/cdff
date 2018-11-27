@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 function install4infuse_base_boost_serialization {
 if [[ ! -n $(find $PKG_DIR -name 'base_boost_serialization*') ]]; then
 	fetchgit_function base_boost_serialization master https://github.com/envire/base-boost_serialization.git d35b751223b352cc6d99ffd6c455fd62121bf9b6

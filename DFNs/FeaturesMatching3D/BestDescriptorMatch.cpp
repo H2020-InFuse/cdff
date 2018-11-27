@@ -39,15 +39,6 @@ BestDescriptorMatch::BestDescriptorMatch()
 	parametersHelper.AddParameter<double>(
 		"GeneralParameters", "MaxCorrespondenceDistance",
 		parameters.maxCorrespondenceDistance, DEFAULT_PARAMETERS.maxCorrespondenceDistance);
-	parametersHelper.AddParameter<int>(
-		"GeneralParameters", "MaximumIterations",
-		parameters.maximumIterations, DEFAULT_PARAMETERS.maximumIterations);
-	parametersHelper.AddParameter<double>(
-		"GeneralParameters", "TransformationEpsilon",
-		parameters.transformationEpsilon, DEFAULT_PARAMETERS.transformationEpsilon);
-	parametersHelper.AddParameter<double>(
-		"GeneralParameters", "EuclideanFitnessEpsilon",
-		parameters.euclideanFitnessEpsilon, DEFAULT_PARAMETERS.euclideanFitnessEpsilon);
 
 	configurationFilePath = "";
 }
@@ -100,10 +91,7 @@ void BestDescriptorMatch::process()
 
 const BestDescriptorMatch::BestDescriptorMatchOptionsSet BestDescriptorMatch::DEFAULT_PARAMETERS =
 {
-	/*.maxCorrespondenceDistance =*/ 0.05,
-	/*.maximumIterations =*/ 50,
-	/*.transformationEpsilon =*/ 1e-8,
-	/*.euclideanFitnessEpsilon =*/ 1.0
+	/*.maxCorrespondenceDistance =*/ 0.05
 };
 
 
@@ -183,9 +171,6 @@ Pose3DConstPtr BestDescriptorMatch::Convert(Eigen::Matrix4f eigenTransform)
 void BestDescriptorMatch::ValidateParameters()
 {
 	ASSERT(parameters.maxCorrespondenceDistance >= 0, "BestDescriptorMatch Configuration error, Max Correspondence Distance is negative");
-	ASSERT(parameters.maximumIterations >= 0, "BestDescriptorMatch Configuration error, Maximum Iterations is negative");
-	ASSERT(parameters.transformationEpsilon > 0, "BestDescriptorMatch Configuration error, Transformation Epsilon is not strictly positive");
-	ASSERT(parameters.euclideanFitnessEpsilon > 0, "BestDescriptorMatch Configuration error, Euclidean Fitness Epsilon is not strictly positive");
 }
 
 void BestDescriptorMatch::ValidateInputs(PointCloudWithFeatures sourceCloud, PointCloudWithFeatures sinkCloud)

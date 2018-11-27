@@ -50,6 +50,9 @@ if [[ ! -d "${INSTALL_DIR}/include/pointmatcher" ]]; then
     fetchgit_function pointmatcher master https://github.com/ethz-asl/libpointmatcher.git 591241e360e5c7ce7b4b35b9e99f88b1db521e8b
     cd "${SOURCE_DIR}/pointmatcher"
 
+    # Patch
+    patch -p0 < "${DIR}/patches/pointmatcher-1.3.0+git20181105-fix_eigen_lookup.patch"
+
     # Build
     mkdir build
     cd build

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 function install4infuse_base_cmake {
 if [[ ! -n $(find $PKG_DIR -name 'base_cmake*') ]]; then
 	fetchgit_function base_cmake master https://github.com/rock-core/base-cmake a1703a0b30dcc0380a5be147ea2ee1ca89fa25b3

@@ -1,0 +1,13 @@
+--- CMakeLists.txt
++++ CMakeLists.txt
+@@ -125,8 +125,8 @@
+ # DEPENDENCY: eigen 3
+ #--------------------
+ find_path(EIGEN_INCLUDE_DIR Eigen/Core
+-	/usr/local/include/eigen3
+-	/usr/include/eigen3
++	PATHS /usr/local/include /usr/include
++	PATH_SUFFIXES eigen3
+ )
+ include_directories(${EIGEN_INCLUDE_DIR})
+ #note: no library to add, eigen rely only on headers

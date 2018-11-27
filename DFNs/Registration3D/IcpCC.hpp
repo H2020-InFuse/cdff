@@ -20,8 +20,8 @@
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <RegistrationTools.h>
-#include <ChunkedPointCloud.h>
+#include <cloudcompare-core/RegistrationTools.h>
+#include <cloudcompare-core/PointCloud.h>
 
 #include <string>
 
@@ -104,15 +104,15 @@ namespace Registration3D
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 			Converters::EigenTransformToTransform3DConverter eigenTransformToTransform3D;
 
-			void ComputeTransform(CCLib::ChunkedPointCloud* sourceCloud, CCLib::ChunkedPointCloud* sinkCloud);
-			CCLib::ChunkedPointCloud* Convert(PointCloudWrapper::PointCloudConstPtr cloud);
+			void ComputeTransform(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud);
+			CCLib::PointCloud* Convert(PointCloudWrapper::PointCloudConstPtr cloud);
 			void ConvertParametersToCCParametersList();
 			CCLib::RegistrationTools::ScaledTransformation ConvertTrasformToCCTransform(const PoseWrapper::Pose3D& transform);
 			PoseWrapper::Pose3D ConvertCCTransformToTranform(const CCLib::RegistrationTools::ScaledTransformation& ccTransform);
 
 			void ValidateParameters();
-			void ValidateInputs(CCLib::ChunkedPointCloud* sourceCloud, CCLib::ChunkedPointCloud* sinkCloud);
-			void ValidateCloud(CCLib::ChunkedPointCloud* cloud);
+			void ValidateInputs(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud);
+			void ValidateCloud(CCLib::PointCloud* cloud);
 	};
 }
 }

@@ -1,9 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #xma@spaceapplications.com
 #This file is needed by ../fetch_compile_install_dependencies.sh
 # Version 1.0
-
-depends_opencv=flann;
 
 function install4infuse_opencv {
 if [[ ! -n $(find $PKG_DIR -name 'opencv*') ]]; then

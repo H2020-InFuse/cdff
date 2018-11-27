@@ -1,4 +1,6 @@
-depends_tools_plugin_manager=console_bridge;
+#!/usr/bin/env bash
+
+# Dependency: console_bridge
 
 function install4infuse_tools_plugin_manager {
 if [[ ! -n $(find $PKG_DIR -name 'tools_plugin_manager*') ]]; then
