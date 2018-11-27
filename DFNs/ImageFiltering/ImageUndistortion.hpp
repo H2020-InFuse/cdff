@@ -7,21 +7,25 @@
  * @{
  */
 
-#ifndef IMAGEUNDISTORTION_HPP
-#define IMAGEUNDISTORTION_HPP
+#ifndef IMAGEFILTERING_IMAGEUNDISTORTION_HPP
+#define IMAGEFILTERING_IMAGEUNDISTORTION_HPP
 
 #include "ImageFilteringInterface.hpp"
 
-#include <Frame.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace ImageFiltering
 {
 	/**
 	 * Undistort a 2D image (filter provided by OpenCV).
@@ -81,7 +85,9 @@ namespace dfn_ci
 		void Configure(const YAML::Node& configurationNode);
 	};
 }
+}
+}
 
-#endif // IMAGEUNDISTORTION_HPP
+#endif // IMAGEFILTERING_IMAGEUNDISTORTION_HPP
 
 /** @} */

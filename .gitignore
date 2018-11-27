@@ -1,8 +1,8 @@
-#Infuse specifics
-build/
-Common/Types/C/
-Documentation/html/
+# CDFF-specific exclude patterns
 *~
+cmake_uninstall.cmake
+cmake_purge.cmake
+/build/
 
 # Prerequisites
 *.d

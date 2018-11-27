@@ -28,11 +28,11 @@
  */
 #include <catch.hpp>
 #include <Transform3DEstimation/LeastSquaresMinimization.hpp>
-#include <PosesSequence.hpp>
-#include <CorrespondenceMaps3DSequence.hpp>
+#include <Types/CPP/PosesSequence.hpp>
+#include <Types/CPP/CorrespondenceMaps3DSequence.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::Transform3DEstimation;
 using namespace BaseTypesWrapper;
 using namespace PoseWrapper;
 using namespace CorrespondenceMap3DWrapper;

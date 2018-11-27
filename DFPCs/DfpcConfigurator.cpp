@@ -31,9 +31,12 @@
 #include <fstream>
 #include <DFNsBuilder.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 
 /* --------------------------------------------------------------------------
  *
@@ -77,7 +80,7 @@ std::string DfpcConfigurator::GetExtraParametersConfigurationFilePath()
 
 DFNCommonInterface* DfpcConfigurator::GetDfn(std::string dfnName, bool optional)
 	{
-	std::map<std::string, dfn_ci::DFNCommonInterface*>::iterator dfnElement = dfnsSet.find(dfnName);
+	std::map<std::string, DFNCommonInterface*>::iterator dfnElement = dfnsSet.find(dfnName);
 	if ( dfnElement != dfnsSet.end() )
 		{
 		return dfnElement->second;
@@ -147,7 +150,7 @@ std::string DfpcConfigurator::ComputeConfigurationFolderPath(std::string configu
 	{
  	static const char slash = '/';
 
-   	unsigned lastSlashIndex = configurationFilePath.rfind(slash, configurationFilePath.length());
+   	size_t lastSlashIndex = configurationFilePath.rfind(slash, configurationFilePath.length());
    	if (lastSlashIndex != std::string::npos) 
 		{
       		return configurationFilePath.substr(0, lastSlashIndex);
@@ -179,6 +182,6 @@ void DfpcConfigurator::DestroyDfns()
 	}
 
 }
-
+}
 
 /** @} */

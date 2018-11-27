@@ -1,0 +1,41 @@
+--- CMakeLists.txt
++++ CMakeLists.txt
+@@ -98,13 +98,8 @@
+ 
+ # eigen 2 or 3
+ find_path(EIGEN_INCLUDE_DIR Eigen/Core
+-	/usr/local/include/eigen3
+-	/usr/local/include/eigen2
+-	/usr/local/include/eigen
+-	/usr/include/eigen3
+-	/usr/include/eigen2
+-	/usr/include/eigen
+-	/opt/local/include/eigen3
++	PATHS /usr/local/include /usr/include opt/local/include
++	PATH_SUFFIXES eigen3 eigen2 eigen
+ )
+ 
+ # optionally, opencl
+@@ -168,10 +163,6 @@
+ 
+ enable_testing()
+ 
+-add_subdirectory(examples)
+-add_subdirectory(tests)
+-add_subdirectory(python)
+-
+ # Install catkin package.xml
+ install(FILES package.xml DESTINATION share/libnabo)
+ 
+--- package.xml
++++ package.xml
+@@ -14,9 +14,7 @@
+ 	<!-- The *_depend tags are used to specify dependencies -->
+ 	<buildtool_depend>cmake</buildtool_depend>
+ 	<build_depend>eigen</build_depend>
+-	<build_depend>boost</build_depend>
+ 	<run_depend>eigen</run_depend>
+-	<run_depend>boost</run_depend>
+ 	<run_depend>catkin</run_depend>
+ 
+ 	<export>

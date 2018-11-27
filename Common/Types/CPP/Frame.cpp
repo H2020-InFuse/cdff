@@ -127,6 +127,11 @@ FrameSharedPtr SharedClone(const Frame& source)
 void Initialize(Frame& frame)
 {
 Array3DWrapper::Initialize(frame.data);
+
+frame.metadata.pixelModel = FramePixelModel::asn1Sccpix_UNDEF;
+frame.metadata.mode = MODE_UNDEFINED;
+frame.metadata.status = STATUS_EMPTY;
+
 frame.metadata.pixelCoeffs.nCount = 0;
 frame.metadata.errValues.nCount = 0;
 frame.metadata.attributes.nCount = 0;
@@ -150,7 +155,6 @@ FrameMode GetFrameMode(const Frame& frame)
 	return frame.metadata.mode;
 }
 
-
 void SetFrameSize(Frame& frame, T_UInt16 width, T_UInt16 height)
 {
 	frame.data.cols = width;
@@ -167,18 +171,39 @@ T_UInt16 GetFrameHeight(const Frame& frame)
 	return frame.data.rows;
 }
 
+void SetFrameTime(Frame& frame, BaseTypesWrapper::T_Int64 time){
+	frame.metadata.timeStamp.microseconds = time;
+}
+
+BaseTypesWrapper::T_Int64 GetFrameTime(const Frame& frame){
+	return frame.metadata.timeStamp.microseconds;
+}
+
+void SetFrameReceivedTime(Frame& frame, BaseTypesWrapper::T_Int64 time){
+	frame.metadata.receivedTime.microseconds = time;
+}
+
+BaseTypesWrapper::T_Int64 GetFrameReceivedTime(const Frame& frame){
+	return frame.metadata.receivedTime.microseconds;
+}
+
 void SetFrameStatus(Frame& frame, FrameStatus frameStatus)
 {
     frame.metadata.status = frameStatus;
 }
+
 FrameStatus GetFrameStatus(const Frame& frame)
 {
     return frame.metadata.status;
 }
 
-void ClearData(Frame& frame)
+void ClearData(Frame& frame, bool overwrite)
 {
 	frame.data.data.nCount = 0;
+	if (overwrite)
+	{
+		memset(frame.data.data.arr, 0, Array3DWrapper::MAX_ARRAY3D_BYTE_SIZE);
+	}
 }
 
 byte GetDataByte(const Frame& frame, int index)

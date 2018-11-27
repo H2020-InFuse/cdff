@@ -8,8 +8,8 @@
  */
 
 #include "HarrisDetector2D.hpp"
-#include <FrameToMatConverter.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 #include <stdlib.h>
@@ -20,7 +20,11 @@ using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesExtraction2D
 {
 
 HarrisDetector2D::HarrisDetector2D()
@@ -67,21 +71,21 @@ void HarrisDetector2D::process()
 
 const HarrisDetector2D::HarrisOptionsSet HarrisDetector2D::DEFAULT_PARAMETERS =
 {
-	.generalParameters =
+	//.generalParameters =
 	{
-		.apertureSize = 3,
-		.blockSize = 3,
-		.parameterK = 0.5,
-		.detectionThreshold = 45,
-		.useGaussianBlur = false
+		/*.apertureSize =*/ 3,
+		/*.blockSize =*/ 3,
+		/*.parameterK =*/ 0.5,
+		/*.detectionThreshold =*/ 45,
+		/*.useGaussianBlur =*/ false
 	},
 
-	.gaussianBlurParameters =
+	//.gaussianBlurParameters =
 	{
-		.kernelWidth = 0,
-		.kernelHeight = 0,
-		.widthStandardDeviation = 0,
-		.heightStandardDeviation = 0
+		/*.kernelWidth =*/ 0,
+		/*.kernelHeight =*/ 0,
+		/*.widthStandardDeviation =*/ 0,
+		/*.heightStandardDeviation =*/ 0
 	}
 };
 
@@ -172,6 +176,8 @@ void HarrisDetector2D::ValidateInputs(cv::Mat inputImage)
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "HarrisDetector2D error: input image is empty");
 }
 
+}
+}
 }
 
 /** @} */

@@ -5,7 +5,9 @@
 
 #include "KFPredictionInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 KFPredictionInterface::KFPredictionInterface()
@@ -36,6 +38,7 @@ const asn1SccRigidBodyState& KFPredictionInterface::predictedStateCovarianceOutp
     return outPredictedStateCovariance;
 }
 
+}
 }
 
 /** @} */

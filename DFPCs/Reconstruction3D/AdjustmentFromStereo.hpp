@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Adjustment From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows: 
@@ -26,8 +26,8 @@
  * @{
  */
 
-#ifndef ADJUSTMENTFROMSTEREO
-#define ADJUSTMENTFROMSTEREO
+#ifndef RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
+#define RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -44,24 +44,38 @@
 #include <FeaturesMatching2D/FeaturesMatching2DInterface.hpp>
 #include <BundleAdjustment/BundleAdjustmentInterface.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
-#include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
+#include <PerspectiveNPointSolving/PerspectiveNPointSolvingInterface.hpp>
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DInterface.hpp>
 
-#include <VisualPointFeatureVector2D.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/CorrespondenceMaps2DSequence.hpp>
+#include <Types/CPP/PosesSequence.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Matrix.hpp>
 
 #include "PointCloudMap.hpp"
+#include "BundleHistory.hpp"
+#include "MultipleCorrespondences2DRecorder.hpp"
+
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
-#include <Frame.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <Matrix.hpp>
 
 
-namespace dfpc_ci {
+#ifdef TESTING
+#include <fstream>
+#endif
+
+
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -111,81 +125,79 @@ namespace dfpc_ci {
 		AdjustmentFromStereoOptionsSet parameters;
 		static const AdjustmentFromStereoOptionsSet DEFAULT_PARAMETERS;
 
-		dfn_ci::ImageFilteringInterface* optionalLeftFilter;
-		dfn_ci::ImageFilteringInterface* optionalRightFilter;
-		dfn_ci::StereoReconstructionInterface* reconstructor3d;
-		dfn_ci::FeaturesExtraction2DInterface* featuresExtractor2d;
-		dfn_ci::FeaturesDescription2DInterface* optionalFeaturesDescriptor2d;
-		dfn_ci::FeaturesMatching2DInterface* featuresMatcher2d;
-		dfn_ci::BundleAdjustmentInterface* bundleAdjuster;
+		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;
+		const std::string LEFT_FEATURE_CATEGORY;
+		const std::string RIGHT_FEATURE_CATEGORY;
+		const std::string STEREO_CLOUD_CATEGORY;
+		const std::string TRIANGULATION_CLOUD_CATEGORY;
 
-		dfn_ci::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;
-		dfn_ci::CamerasTransformEstimationInterface* cameraTransformEstimator;
-		dfn_ci::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
+		//DFN Interfaces
+		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
+		CDFF::DFN::FeaturesExtraction2DInterface* featuresExtractor2d;
+		CDFF::DFN::FeaturesDescription2DInterface* optionalFeaturesDescriptor2d;
+		CDFF::DFN::FeaturesMatching2DInterface* featuresMatcher2d;
+		CDFF::DFN::BundleAdjustmentInterface* bundleAdjuster;
+		CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;
+		CDFF::DFN::PerspectiveNPointSolvingInterface* perspectiveNPointSolver;
+		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
 
-		FrameWrapper::FramePtr leftImage;
-		FrameWrapper::FramePtr rightImage;
-		FrameWrapper::FramePtr filteredLeftImage;
-		FrameWrapper::FramePtr filteredRightImage;
-		PointCloudWrapper::PointCloudConstPtr imagesCloud;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr leftKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr rightKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr leftFeaturesVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr rightFeaturesVector;
-		std::vector<PointCloudWrapper::PointCloudConstPtr> pointCloudsList;
-		std::vector<VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr> featuresVectorsList;
-		std::vector< std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> > currentCorrespondenceMapsList;
+		#ifdef TESTING
+		std::ofstream logFile;
+		#endif
 
-		/*This is the storage of correspondence Maps, let (L0, R0), (L1, R1), ..., (LN, RN) be a sequence of image pair from the most recent to the oldest.
-		* The correspondences between images are stored in the following order (L0-R0), (L0-L1), (L0-R1), ..., (L0-RN), (R0-L0), (R0-L1), (R0-R1), ..., 
-		* (R0, LN), (L1-R1), (L1-L2), ..., (L1-RN), ...., (LN-RN). The number N is defined by the parameter numberOfAdjustedStereoPairs.
-		* Only the most recent N image pairs are kept in storage, the others will be discarded. */
-		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr historyCorrespondenceMaps;
-		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequencePtr workingCorrespondenceMaps;
-		PoseWrapper::Poses3DSequencePtr latestCameraPoses;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr emptyFeaturesVector;
-		PoseWrapper::Pose3DPtr previousCameraPose;
+		//Helpers
+		BundleHistory* bundleHistory;
+		MultipleCorrespondences2DRecorder* correspondencesRecorder;
+		PoseWrapper::Pose3D rightToLeftCameraPose;
 
-		MatrixWrapper::Matrix3dPtr fundamentalMatrix;
-		PoseWrapper::Pose3DPtr cameraTransform;
-		PointCloudWrapper::PointCloudPtr estimatedPointCloud;
+		//Intermediate data
+		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr cleanCorrespondenceMap;
+		PointCloudWrapper::PointCloudPtr triangulatedKeypointCloud;
+
+		//Support data when using initial estimation
 		PoseWrapper::Poses3DSequencePtr estimatedCameraPoses;
+		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr presentKeypointVector; 
+		PointCloudWrapper::PointCloudPtr keypointCloud;
 
 		void ConfigureExtraParameters();
-		void AssignDfnsAlias();
+		void InstantiateDFNs();
 
-		void FilterImages();
-		void ComputeVisualPointFeatures();
+		void ComputeVisualPointFeatures(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
+		void CleanUnmatchedFeatures(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr map, PointCloudWrapper::PointCloudPtr cloud);
+		void ComputeStereoPointCloud(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
+		void CreateWorkingCorrespondences();
+		void CreateWorkingCorrespondences(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featureVector);
+		bool ComputeCameraPoses(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
+		void EstimatePose(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr pastLeftRightCorrespondenceMap, 
+			CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr leftPresentPastCorrespondenceMap, 
+			PointCloudWrapper::PointCloudConstPtr pastCloud, PoseWrapper::Pose3DConstPtr& pose, bool& success);
 
-		void FilterImage(FrameWrapper::FramePtr image, dfn_ci::ImageFilteringInterface* filter, FrameWrapper::FramePtr& filteredImage);
-		void ComputeStereoPointCloud();
-		void ExtractFeatures(FrameWrapper::FrameConstPtr filteredImage, VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& keypointsVector);
-		void DescribeFeatures(
-			FrameWrapper::FrameConstPtr image,
-			VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr keypointsVector,
-			VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& featuresVector);
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr MatchFeatures(
-			VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr sourceFeaturesVector,
-			VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr sinkFeaturesVector);
-		bool ComputeCameraPoses();
+		void EstimateCameraPoses();
 
-		bool EstimatePointCloud();
-		bool EstimateCameraPoses();
-		bool ComputeFundamentalMatrix(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputCorrespondenceMap, MatrixWrapper::Matrix3dPtr outputFundamentalMatrix);
-		bool ComputeCameraTransform(
-			CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputCorrespondenceMap, 
-			MatrixWrapper::Matrix3dPtr inputFundamentalMatrix, 
-			PoseWrapper::Pose3DPtr outputCameraTransform);
-		void ComputeStereoPointCloud(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr inputCorrespondenceMap);
-		void CleanBundleAdjustmentInputs();
-		int StaticCastToInt(float value);
-		void UpdateHistory();
-		void ClearDiscardedData();
+		void AddAllPointCloudsToMap(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
+		void AddLastPointCloudToMap(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
 
-		PoseWrapper::Pose3DConstPtr AddAllPointCloudsToMap();
-		PoseWrapper::Pose3DConstPtr AddLastPointCloudToMap();
+		/*
+		* Inline Methods
+		*
+		*/
+
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
     };
 }
-#endif
-/* AdjustmentFromStereo.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_ADJUSTMENTFROMSTEREO_HPP
+
 /** @} */

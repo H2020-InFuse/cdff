@@ -9,7 +9,7 @@
 
 #include "FlannMatcher.hpp"
 
-#include <VisualPointFeatureVector2DToMatConverter.hpp>
+#include <Converters/VisualPointFeatureVector2DToMatConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <Macros/YamlcppMacros.hpp>
 
@@ -20,7 +20,11 @@ using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace CorrespondenceMap2DWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesMatching2D
 {
 
 FlannMatcher::FlannMatcher()
@@ -92,7 +96,7 @@ void FlannMatcher::process()
 
 	// Write data to output port
 	CorrespondenceMap2DConstPtr tmp = Convert(matchesMatrix, sourceFeaturesMatrix, sinkFeaturesMatrix);
-	Copy(*tmp, outMatches);
+	CleanLowScoringMatches(tmp, &outMatches);
 	delete(tmp);
 }
 
@@ -185,53 +189,53 @@ FlannMatcher::MatcherMethod FlannMatcher::MatcherMethodHelper::Convert(const std
 
 const FlannMatcher::FlannMatcherOptionsSet FlannMatcher::DEFAULT_PARAMETERS =
 {
-	.generalOptionsSet =
+	//.generalOptionsSet =
 	{
-		.distanceThreshold = 0.02,
-		.numberOfChecks = 32,
-		.epsilon = 0,
-		.sortedSearch = false,
-		.matcherMethod = KD_TREE_SEARCH,
-		.acceptanceRatio = 0.75
+		/*.distanceThreshold =*/ 0.02,
+		/*.numberOfChecks =*/ 32,
+		/*.epsilon =*/ 0,
+		/*.sortedSearch =*/ false,
+		/*.matcherMethod =*/ KD_TREE_SEARCH,
+		/*.acceptanceRatio =*/ 0.75
 	},
-	.kdTreeSearchOptionsSet =
+	//.kdTreeSearchOptionsSet =
 	{
-		.numberOfTrees = 4
+		/*.numberOfTrees =*/ 4
 	},
-	.kMeansClusteringOptionsSet =
+	//.kMeansClusteringOptionsSet =
 	{
-		.branching = 32,
-		.iterations = 11,
-		.centersInitialization = cvflann::FLANN_CENTERS_RANDOM,
-		.convertibleBoundIndex = 0.2
+		/*.branching =*/ 32,
+		/*.iterations =*/ 11,
+		/*.centersInitialization =*/ cvflann::FLANN_CENTERS_RANDOM,
+		/*.convertibleBoundIndex =*/ 0.2
 	},
-	.autotunedOptionsSet =
+	//.autotunedOptionsSet =
 	{
-		.targetPrecision = 0.8,
-		.buildWeight = 0.01,
-		.memoryWeight = 0,
-		.sampleFraction = 0.1
+		/*.targetPrecision = */0.8,
+		/*.buildWeight =*/ 0.01,
+		/*.memoryWeight =*/ 0,
+		/*.sampleFraction =*/ 0.1
 	},
-	.hierarchicalClusteringOptionsSet =
+	//.hierarchicalClusteringOptionsSet =
 	{
-		.branching = 32,
-		.centersInitialization = cvflann::FLANN_CENTERS_RANDOM,
-		.numberOfTrees = 4,
-		.leafSize = 100
+		/*.branching =*/ 32,
+		/*.centersInitialization =*/ cvflann::FLANN_CENTERS_RANDOM,
+		/*.numberOfTrees =*/ 4,
+		/*.leafSize =*/ 100
 	},
-	.localitySensitiveHashingOptionsSet =
+	//.localitySensitiveHashingOptionsSet =
 	{
-		.tableNumber = 1,
-		.keySize = 4,
-		.multiProbeLevel = 2
+		/*.tableNumber =*/ 1,
+		/*.keySize =*/ 4,
+		/*.multiProbeLevel =*/ 2
 	},
-	.compositeSearchOptionsSet =
+	//.compositeSearchOptionsSet =
 	{
-		.branching = 32,
-		.iterations = 11,
-		.centersInitialization = cvflann::FLANN_CENTERS_RANDOM,
-		.convertibleBoundIndex = 0.2,
-		.numberOfTrees = 4
+		/*.branching =*/ 32,
+		/*.iterations =*/ 11,
+		/*.centersInitialization =*/ cvflann::FLANN_CENTERS_RANDOM,
+		/*.convertibleBoundIndex =*/ 0.2,
+		/*.numberOfTrees =*/ 4
 	}
 };
 
@@ -331,6 +335,35 @@ std::vector<cv::DMatch> FlannMatcher::ComputeMatches(cv::Mat sourceDescriptorsMa
 	return sequenceOfSelectedMatches;
 }
 
+void FlannMatcher::CleanLowScoringMatches(CorrespondenceMap2DConstPtr correspondenceMap, CorrespondenceMap2DPtr cleanMap)
+	{
+	Copy(*correspondenceMap, *cleanMap);
+
+	std::vector<BaseTypesWrapper::T_UInt32> removeIndexList;
+	for(int correspondenceIndex1=0; correspondenceIndex1< GetNumberOfCorrespondences(*cleanMap); correspondenceIndex1++)
+		{
+		BaseTypesWrapper::Point2D source1 = GetSource(*cleanMap, correspondenceIndex1);
+		BaseTypesWrapper::Point2D sink1 = GetSink(*cleanMap, correspondenceIndex1);
+		if (source1.x != source1.x || source1.y != source1.y || sink1.x != sink1.x || sink1.y != sink1.y)
+			{
+			removeIndexList.push_back(correspondenceIndex1);
+			continue;
+			}
+		bool found = false;
+		for (int correspondenceIndex2=0; correspondenceIndex2<correspondenceIndex1 && !found; correspondenceIndex2++)
+			{
+			BaseTypesWrapper::Point2D source2 = GetSource(*cleanMap, correspondenceIndex2);
+			BaseTypesWrapper::Point2D sink2 = GetSink(*cleanMap, correspondenceIndex2);
+			if ( (source1.x == source2.x && source1.y == source2.y) || (sink1.x == sink2.x && sink1.y == sink2.y) )
+				{
+				removeIndexList.push_back(correspondenceIndex1);
+				found = true;
+				}
+			}
+		}
+	RemoveCorrespondences(*cleanMap, removeIndexList);
+	}
+
 cv::Mat FlannMatcher::ConvertToValidType(cv::Mat floatDescriptorsMatrix)
 {
 	if (parameters.generalOptionsSet.matcherMethod == LOCALITY_SENSITIVE_HASHING)
@@ -412,6 +445,8 @@ void FlannMatcher::ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeat
 	ASSERT( sourceFeaturesMatrix.cols > 0, "FlannMatcher Error: Input features vectors are empty");
 }
 
+}
+}
 }
 
 /** @} */

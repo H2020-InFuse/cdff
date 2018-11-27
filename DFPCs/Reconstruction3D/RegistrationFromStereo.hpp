@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Registration From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows: 
@@ -23,8 +23,8 @@
  * @{
  */
 
-#ifndef REGISTRATION_FROM_STEREO_HPP
-#define REGISTRATION_FROM_STEREO_HPP
+#ifndef RECONSTRUCTION3D_REGISTRATIONFROMSTEREO_HPP
+#define RECONSTRUCTION3D_REGISTRATIONFROMSTEREO_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -39,16 +39,32 @@
 #include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
+#include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
+#include <PointCloudTransform/PointCloudTransformInterface.hpp>
+#include <PointCloudFiltering/PointCloudFilteringInterface.hpp>
+#include <Registration3D/Registration3DInterface.hpp>
+
 
 #include "PointCloudMap.hpp"
+#include "BundleHistory.hpp"
+
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
-#include <Frame.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
-namespace dfpc_ci {
+#ifdef TESTING
+#include <fstream>
+#endif
+
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -87,44 +103,60 @@ namespace dfpc_ci {
 			{
 			float searchRadius;
 			float pointCloudMapResolution;
+			bool matchToReconstructedCloud;
+			bool useAssemblerDfn;
+			bool useRegistratorDfn;
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
 		RegistrationFromStereoOptionsSet parameters;
 		static const RegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
 
-		dfn_ci::ImageFilteringInterface* optionalLeftFilter;
-		dfn_ci::ImageFilteringInterface* optionalRightFilter;
-		dfn_ci::StereoReconstructionInterface* reconstructor3D;
-		dfn_ci::FeaturesExtraction3DInterface* featuresExtractor3d;
-		dfn_ci::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
-		dfn_ci::FeaturesMatching3DInterface* featuresMatcher3d;
+		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
+		CDFF::DFN::FeaturesExtraction3DInterface* featuresExtractor3d;
+		CDFF::DFN::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
+		CDFF::DFN::FeaturesMatching3DInterface* featuresMatcher3d;
+		CDFF::DFN::PointCloudAssemblyInterface* cloudAssembler;
+		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
+		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
+		CDFF::DFN::Registration3DInterface* registrator3d;
 
-		FrameWrapper::FramePtr leftImage;
-		FrameWrapper::FramePtr rightImage;
-		FrameWrapper::FramePtr filteredLeftImage;
-		FrameWrapper::FramePtr filteredRightImage;
-		PointCloudWrapper::PointCloudPtr pointCloud;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr pointCloudKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr pointCloudFeaturesVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneFeaturesVector;
-		PoseWrapper::Pose3DPtr cameraPoseInScene;
-		PoseWrapper::Pose3DPtr previousCameraPoseInScene;
+		#ifdef TESTING
+		std::ofstream logFile;
+		void WriteOutputToLogFile();
+		#endif
+
+		//Helpers
+		BundleHistory* bundleHistory;
 
 		void ConfigureExtraParameters();
-		void AssignDfnsAlias();
+		void InstantiateDFNs();
 
-		bool ComputeCameraMovement();
-		void ComputePointCloud();
+		void UpdatePose(PointCloudWrapper::PointCloudConstPtr inputCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr outputFeatures);
+		void UpdatePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr outputFeatures);
+		void ComputeVisualFeatures(PointCloudWrapper::PointCloudConstPtr inputCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& outputFeatures);
 
-		void FilterLeftImage();
-		void FilterRightImage();
-		void ComputeStereoPointCloud();
-		void ExtractPointCloudFeatures();
-		void DescribePointCloudFeatures();
-		bool MatchPointCloudWithSceneFeatures();
+		/*
+		* Inline Methods
+		*
+		*/
+
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
     };
 }
-#endif
-/* RegistrationFromStereo.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_REGISTRATIONFROMSTEREO_HPP
+
 /** @} */

@@ -33,13 +33,14 @@
 #include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
 #include <FeaturesMatching2D/FlannMatcher.hpp>
 
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>
 
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesExtraction2D;
+using namespace CDFF::DFN::FeaturesMatching2D;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;

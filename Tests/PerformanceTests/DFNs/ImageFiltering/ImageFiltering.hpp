@@ -33,8 +33,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 #include <ImageFiltering/ImageFilteringInterface.hpp>
-#include <MatToFrameConverter.hpp>
-#include <FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNs/PerformanceTestInterface.hpp>
 
@@ -46,7 +46,7 @@ class ImageFilteringTestInterface : public PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		ImageFilteringTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, dfn_ci::ImageFilteringInterface* filter);
+		ImageFilteringTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, CDFF::DFN::ImageFilteringInterface* filter);
 		~ImageFilteringTestInterface();
 
 		void SetImageFilePath(std::string baseImageFolder, std::string imagesListFileName);
@@ -72,7 +72,7 @@ class ImageFilteringTestInterface : public PerformanceTestInterface
 
 		FrameWrapper::FrameConstPtr inputFrame;
 
-		dfn_ci::ImageFilteringInterface* filter;
+		CDFF::DFN::ImageFilteringInterface* filter;
 		void ReadImageFileNamesList();
 
 		bool SetNextInputs();

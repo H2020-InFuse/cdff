@@ -34,9 +34,9 @@
 #include <Registration3D/Registration3DInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -57,7 +57,7 @@ class CorrectLocalizationTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		CorrectLocalizationTester(std::string configurationFile, dfn_ci::Registration3DInterface* dfn);
+		CorrectLocalizationTester(std::string configurationFile, CDFF::DFN::Registration3DInterface* dfn);
 		~CorrectLocalizationTester();
 
 		void SetInputClouds(std::string sceneCloudFilePath, std::string modelCloudFilePath, std::string groundTruthPoseFilePath);
@@ -81,7 +81,7 @@ class CorrectLocalizationTester
 		std::string configurationFile;
 		std::string sceneCloudFilePath, modelCloudFilePath, groundTruthPoseFilePath;
 		std::string guessPoseFilePath;
-		dfn_ci::Registration3DInterface* dfn;
+		CDFF::DFN::Registration3DInterface* dfn;
 
 		PointCloudWrapper::PointCloudConstPtr inputSceneCloud;
 		PointCloudWrapper::PointCloudConstPtr inputModelCloud;

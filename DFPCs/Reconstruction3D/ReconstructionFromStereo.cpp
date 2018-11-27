@@ -28,21 +28,28 @@
  */
 #include "ReconstructionFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpencvVisualizer.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 
-#define DELETE_PREVIOUS(object) \
-	{ \
-	if (object != NULL) \
-		{ \
-		delete(object); \
-		} \
-	} \
+#include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
+#include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
+#include <Executors/FeaturesMatching2D/FeaturesMatching2DExecutor.hpp>
+#include <Executors/FeaturesExtraction2D/FeaturesExtraction2DExecutor.hpp>
+#include <Executors/FeaturesDescription2D/FeaturesDescription2DExecutor.hpp>
+#include <Executors/FundamentalMatrixComputation/FundamentalMatrixComputationExecutor.hpp>
+#include <Executors/PerspectiveNPointSolving/PerspectiveNPointSolvingExecutor.hpp>
+#include <Executors/PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace VisualPointFeatureVector2DWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
 using namespace FrameWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace MatrixWrapper;
@@ -55,106 +62,119 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-ReconstructionFromStereo::ReconstructionFromStereo(Map* map)
+ReconstructionFromStereo::ReconstructionFromStereo() :
+	EMPTY_FEATURE_VECTOR( NewVisualPointFeatureVector3D() ),
+	LEFT_FEATURE_CATEGORY ( "orb_left" ),
+	RIGHT_FEATURE_CATEGORY ( "orb_right" ),
+	STEREO_CLOUD_CATEGORY( "stereo_cloud" ),
+	TRIANGULATION_CLOUD_CATEGORY( "triangulation_cloud" )
 	{
-	if (map == NULL)
-		{
-		this->map = new ObservedScene();
-		}
-	else
-		{
-		this->map = map;
-		}
-
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
+	parametersHelper.AddParameter<float>("GeneralParameters", "Baseline", parameters.baseline, DEFAULT_PARAMETERS.baseline);
 
-	currentLeftImage = NewFrame();
-	currentRightImage = NewFrame();
-	filteredCurrentLeftImage = NULL;
-	filteredPastLeftImage = NewFrame();
-	filteredCurrentRightImage = NULL;
-	currentLeftKeypointsVector = NewVisualPointFeatureVector2D();
-	pastLeftKeypointsVector = NewVisualPointFeatureVector2D();
-	currentRightKeypointsVector = NewVisualPointFeatureVector2D();
-	currentLeftFeaturesVector = NULL;
-	pastLeftFeaturesVector = NULL;
-	currentRightFeaturesVector = NULL;
-	pastToCurrentCorrespondenceMap = NewCorrespondenceMap2D();
-	leftToRightCorrespondenceMap = NewCorrespondenceMap2D();
-	fundamentalMatrix = NewMatrix3d();
-	pastToCurrentCameraTransform = NewPose3D();
-	pointCloud = NewPointCloud();
-
-	leftFilter = NULL;
-	rightFilter = NULL;
+	optionalLeftFilter = NULL;
+	optionalRightFilter = NULL;
 	featuresExtractor = NULL;
 	featuresMatcher = NULL;
 	fundamentalMatrixComputer = NULL;
-	cameraTransformEstimator = NULL;
-	reconstructor3D = NULL;
+	perspectiveNPointSolver = NULL;
+	reconstructor3d = NULL;
 	optionalFeaturesDescriptor = NULL;
+	reconstructor3dfrom2dmatches = NULL;
+
+	perspectiveCloud = NewPointCloud();
+	perspectiveVector = NewVisualPointFeatureVector2D();
+	triangulatedKeypointCloud = NewPointCloud();
+	cleanCorrespondenceMap = NewCorrespondenceMap2D();
+
+	bundleHistory = new BundleHistory(2);
 
 	configurationFilePath = "";
+	firstInput = true;
+	#ifdef TESTING
+	logFile.open("/InFuse/myLog.txt");
+	logFile.close();
+	#endif
 	}
 
 ReconstructionFromStereo::~ReconstructionFromStereo()
 	{
-	if (leftFilter != NULL)
-		{
-		DELETE_PREVIOUS(filteredCurrentLeftImage);
-		}
-	if (rightFilter != NULL)
-		{
-		DELETE_PREVIOUS(filteredCurrentRightImage);
-		}
-	delete(filteredPastLeftImage);
+	delete(perspectiveCloud);
+	delete(perspectiveVector);
+	delete(triangulatedKeypointCloud);
+	delete(cleanCorrespondenceMap);
 
-	if (optionalFeaturesDescriptor != NULL)
-		{
-		DELETE_PREVIOUS(currentLeftFeaturesVector);
-		DELETE_PREVIOUS(pastLeftFeaturesVector);
-		DELETE_PREVIOUS(currentRightFeaturesVector);
-		}
-
-	delete(currentLeftImage);
-	delete(currentRightImage);
-	delete(currentLeftKeypointsVector);
-	delete(pastLeftKeypointsVector);
-	delete(currentRightKeypointsVector);
-
-	delete(pastToCurrentCorrespondenceMap);
-	delete(leftToRightCorrespondenceMap);
-	delete(fundamentalMatrix);
-	delete(pastToCurrentCameraTransform);
-	delete(pointCloud);
+	delete(bundleHistory);
+	
+	delete(EMPTY_FEATURE_VECTOR);
 	}
 
-/**
-* The process method is split into three steps 
-* (i) computation of the camera transform between the current camera pose and the pose of the camera at an appropriate past time instant, the appropriate time instant is the most recent one that allows
-* a computation of the transform, if there exists one
-* (ii) if a camera transform is computed, then a point cloud is computed from the left and right images of the stereo camera
-* (iii) the point cloud rover map is updated with the newly computed point cloud.
-*
-**/
 void ReconstructionFromStereo::run() 
 	{
+	#ifdef TESTING
+	logFile.open("/InFuse/myLog.txt", std::ios::app);
+	#endif
 	DEBUG_PRINT_TO_LOG("Structure from stereo start", "");
-	outSuccess = ComputeCameraMovement();
+
+	bundleHistory->AddImages(inLeftImage, inRightImage);
+
+	FrameConstPtr filteredLeftImage = NULL;
+	FrameConstPtr filteredRightImage = NULL;
+	Executors::Execute(optionalLeftFilter, inLeftImage, filteredLeftImage);
+	Executors::Execute(optionalRightFilter, inRightImage, filteredRightImage);
+
+	PointCloudConstPtr imageCloud = NULL;
+	Executors::Execute(reconstructor3d, filteredLeftImage, filteredRightImage, imageCloud);
+
+	ComputeCurrentMatches(filteredLeftImage, filteredRightImage);
+
+	if (firstInput)
+		{
+		firstInput = false;
+		outSuccess = true;
+
+		Pose3D zeroPose;
+		SetPosition(zeroPose, 0, 0, 0);
+		SetOrientation(zeroPose, 0, 0, 0, 1);
+		pointCloudMap.AddPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, &zeroPose);
+		}
+	else
+		{
+		Pose3DConstPtr previousPoseToPose = NULL;
+		outSuccess = ComputeCameraMovement(previousPoseToPose);
+		pointCloudMap.AttachPointCloud( imageCloud, EMPTY_FEATURE_VECTOR, previousPoseToPose);
+		}
 
 	if (outSuccess)
 		{
-		ComputePointCloud();
-		UpdateScene();
+		Copy( pointCloudMap.GetLatestPose(), outPose);
+		PointCloudWrapper::PointCloudConstPtr outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(&outPose, parameters.searchRadius);
+		Copy(*outputPointCloud, outPointCloud); 
+
+		DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
+		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
+
+		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
+		DeleteIfNotNull(outputPointCloud);
 		}
+
+	#ifdef TESTING
+	logFile << std::endl;
+	logFile.close();
+	#endif
 	}
 
 void ReconstructionFromStereo::setup()
 	{
 	configurator.configure(configurationFilePath);
-	AssignDfnsAlias();
+	InstantiateDFNs();
 	ConfigureExtraParameters();
+
+	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
+
+	SetPosition(rightToLeftCameraPose, -parameters.baseline, 0, 0);
+	SetOrientation(rightToLeftCameraPose, 0, 0, 0, 1);
 	}
 
 /* --------------------------------------------------------------------------
@@ -166,8 +186,9 @@ void ReconstructionFromStereo::setup()
 
 const ReconstructionFromStereo::ReconstructionFromStereoOptionsSet ReconstructionFromStereo::DEFAULT_PARAMETERS = 
 	{
-	.searchRadius = -1,
-	.pointCloudMapResolution = 1e-2
+	/*.searchRadius =*/ -1,
+	/*.pointCloudMapResolution =*/ 1e-2,
+	/*.baseline =*/ 1
 	};
 
 /* --------------------------------------------------------------------------
@@ -181,296 +202,155 @@ void ReconstructionFromStereo::ConfigureExtraParameters()
 	parametersHelper.ReadFile( configurator.GetExtraParametersConfigurationFilePath() );
 
 	ASSERT(parameters.pointCloudMapResolution > 0, "RegistrationFromStereo Error, Point Cloud Map resolution is not positive");
-	map->SetPointCloudMapResolution(parameters.pointCloudMapResolution);
 	}
 
-void ReconstructionFromStereo::AssignDfnsAlias()
+void ReconstructionFromStereo::InstantiateDFNs()
 	{
-	leftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) );
-	rightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) );
-	featuresExtractor = static_cast<FeaturesExtraction2DInterface*>( configurator.GetDfn("featureExtractor") );
+	optionalLeftFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("leftFilter", true) );
+	optionalRightFilter = static_cast<ImageFilteringInterface*>( configurator.GetDfn("rightFilter", true) );
+	featuresExtractor = static_cast<FeaturesExtraction2DInterface*>( configurator.GetDfn("featuresExtractor") );
 	featuresMatcher = static_cast<FeaturesMatching2DInterface*>( configurator.GetDfn("featuresMatcher") );
 	fundamentalMatrixComputer = static_cast<FundamentalMatrixComputationInterface*>( configurator.GetDfn("fundamentalMatrixComputer") );
-	cameraTransformEstimator = static_cast<CamerasTransformEstimationInterface*>( configurator.GetDfn("cameraTransformEstimator") );
-	reconstructor3D = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") );
+	perspectiveNPointSolver = static_cast<PerspectiveNPointSolvingInterface*>( configurator.GetDfn("perspectiveNPointSolver") );
+	reconstructor3d = static_cast<StereoReconstructionInterface*>( configurator.GetDfn("reconstructor3D") );
 	optionalFeaturesDescriptor = static_cast<FeaturesDescription2DInterface*>( configurator.GetDfn("featuresDescriptor", true) );
-
-	ASSERT(featuresExtractor != NULL, "DFPC Structure from motion error: featuresExtractor DFN configured incorrectly");
-	ASSERT(featuresMatcher != NULL, "DFPC Structure from motion error: featuresMatcher DFN configured incorrectly");
-	ASSERT(fundamentalMatrixComputer != NULL, "DFPC Structure from motion error: fundamentalMatrixComputer DFN configured incorrectly");
-	ASSERT(cameraTransformEstimator != NULL, "DFPC Structure from motion error: cameraTransformEstimator DFN configured incorrectly");
-	ASSERT(reconstructor3D != NULL, "DFPC Structure from motion error: reconstructor3D DFN configured incorrectly");
-
-	//This data should be initialized only if the relative DFN is used.
-	if (leftFilter != NULL)
-		{
-		filteredCurrentLeftImage = NewFrame();
-		}
-	if (rightFilter != NULL)
-		{
-		filteredCurrentRightImage = NewFrame();
-		}
-	if (optionalFeaturesDescriptor != NULL)
-		{
-		currentLeftFeaturesVector = NewVisualPointFeatureVector2D();
-		pastLeftFeaturesVector = NewVisualPointFeatureVector2D();
-		currentRightFeaturesVector = NewVisualPointFeatureVector2D();
-		}
+	reconstructor3dfrom2dmatches = static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3dfrom2dmatches") );
 	}
 
-/**
-* The ComputeCameraMovement Method performs the following operation
-*
-* (i) Filtering, features extraction and computation of features descriptor applied to the current left camera image;
-* (ii) Search of an appropriate past image, this is a linear search on all the past images starting with the most recent one;
-*      (ii a) for each past image, there is a filtering, features extraction and computation of features descriptor applied to the past left camera image;
-*      (ii b) features matching, computation of the fundamental matrix and extimation of the transform between present and past pose are performed on the base of the extracted features
-*      (ii c) the search stops when a transform is successfully estimated or there are no more past images
-**/
-bool ReconstructionFromStereo::ComputeCameraMovement()
+void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftImage, FrameConstPtr filteredRightImage)
 	{
-	Copy(inLeftImage, *currentLeftImage);
-	Copy(inRightImage, *currentRightImage);
-	map->AddFrames(currentLeftImage, currentRightImage);
+	VisualPointFeatureVector2DConstPtr keypointVector = NULL;
+	VisualPointFeatureVector2DConstPtr featureVector = NULL;
+	Executors::Execute(featuresExtractor, filteredLeftImage, keypointVector);
+	Executors::Execute(optionalFeaturesDescriptor, filteredLeftImage, keypointVector, featureVector);
+	bundleHistory->AddFeatures(*featureVector, LEFT_FEATURE_CATEGORY);
+	PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
-	FilterCurrentLeftImage();
-	ExtractCurrentLeftFeatures();
-	DescribeCurrentLeftFeatures();
+	#ifdef TESTING
+	logFile << GetNumberOfPoints(*keypointVector) << " " << GetNumberOfPoints(*featureVector) << " ";
+	#endif
 
+	keypointVector = NULL;
+	featureVector = NULL;
+	Executors::Execute(featuresExtractor, filteredRightImage, keypointVector);
+	Executors::Execute(optionalFeaturesDescriptor, filteredRightImage, keypointVector, featureVector);
+	bundleHistory->AddFeatures(*featureVector, RIGHT_FEATURE_CATEGORY);
+	DEBUG_PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
+
+	#ifdef TESTING
+	logFile << GetNumberOfPoints(*keypointVector) << " " << GetNumberOfPoints(*featureVector) << " ";
+	#endif
+
+	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
+	VisualPointFeatureVector2DConstPtr rightFeatureVector = bundleHistory->GetFeatures(0, RIGHT_FEATURE_CATEGORY);
+	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = NULL;
+	Executors::Execute(featuresMatcher, leftFeatureVector, rightFeatureVector,leftRightCorrespondenceMap);
+	DEBUG_PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
+
+	#ifdef TESTING
+	logFile << GetNumberOfCorrespondences(*leftRightCorrespondenceMap) << " ";
+	#endif
+
+	MatrixWrapper::Matrix3dConstPtr fundamentalMatrix = NULL;
 	bool success = false;
-	for(pastLeftImage = map->GetNextReferenceLeftFrame(); !success && pastLeftImage != NULL; pastLeftImage = map->GetNextReferenceLeftFrame())
-		{
-		DEBUG_PRINT_TO_LOG("Selected Past Frame", success);
-		FilterPastLeftImage();
-		ExtractPastLeftFeatures();
-		DescribePastLeftFeatures();
+	CorrespondenceMap2DConstPtr inlierCorrespondenceMap = NULL;
+	Executors::Execute(fundamentalMatrixComputer, leftRightCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
+	DEBUG_PRINT_TO_LOG("Inlier Correspondences Number", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
 
-		MatchCurrentAndPastFeatures();
-		success = ComputeFundamentalMatrix();
-		if (success)
+	if (success)
+		{
+		Executors::Execute(reconstructor3dfrom2dmatches, inlierCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
+		CleanUnmatchedFeatures(inlierCorrespondenceMap, triangulatedKeypointCloud);
+		}
+	else
+		{
+		Executors::Execute(reconstructor3dfrom2dmatches, leftRightCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
+		CleanUnmatchedFeatures(leftRightCorrespondenceMap, triangulatedKeypointCloud);
+		}
+	//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
+	DEBUG_PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
+	DEBUG_PRINT_TO_LOG("Clean Matches Number", GetNumberOfCorrespondences(*cleanCorrespondenceMap) );
+	bundleHistory->AddPointCloud(*triangulatedKeypointCloud, TRIANGULATION_CLOUD_CATEGORY);
+	bundleHistory->AddMatches(*cleanCorrespondenceMap);
+	#ifdef TESTING
+	logFile << GetNumberOfPoints(*triangulatedKeypointCloud) << " " << GetNumberOfCorrespondences(*cleanCorrespondenceMap) << " ";
+	#endif
+	}
+
+bool ReconstructionFromStereo::ComputeCameraMovement(Pose3DConstPtr& previousPoseToPose)
+	{
+	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
+	VisualPointFeatureVector2DConstPtr pastLeftFeatureVector = bundleHistory->GetFeatures(1, LEFT_FEATURE_CATEGORY);
+	CorrespondenceMap2DConstPtr pastLeftCorrespondenceMap = NULL;
+	Executors::Execute(featuresMatcher, leftFeatureVector, pastLeftFeatureVector, pastLeftCorrespondenceMap);
+	DEBUG_PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*pastLeftCorrespondenceMap) );
+
+	#ifdef TESTING
+	logFile << GetNumberOfCorrespondences(*pastLeftCorrespondenceMap) << " ";
+	#endif
+
+	MatrixWrapper::Matrix3dConstPtr pastLeftFundamentalMatrix = NULL;
+	bool pastSuccess = false;
+	CorrespondenceMap2DConstPtr pastInlierCorrespondenceMap = NULL;
+	Executors::Execute(fundamentalMatrixComputer, pastLeftCorrespondenceMap, pastLeftFundamentalMatrix, pastSuccess, pastInlierCorrespondenceMap);
+	DEBUG_PRINT_TO_LOG("Inlier Correspondences Number", GetNumberOfCorrespondences(*pastInlierCorrespondenceMap) );
+	
+	CorrespondenceMap2DConstPtr pastCorrespondenceMap = pastSuccess ? pastInlierCorrespondenceMap : pastLeftCorrespondenceMap;
+	CorrespondenceMap2DConstPtr currentCorrespondenceMap = bundleHistory->GetMatches(0);
+	PointCloudConstPtr currentPointCloud = bundleHistory->GetPointCloud(0, TRIANGULATION_CLOUD_CATEGORY);
+
+	ClearPoints(*perspectiveCloud);
+	ClearPoints(*perspectiveVector);
+	int numberOfPoints = GetNumberOfPoints(*currentPointCloud);
+	int numberOfPastCorrespondences = GetNumberOfCorrespondences(*pastCorrespondenceMap);
+	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+		{
+		BaseTypesWrapper::Point2D currentSource = GetSource(*currentCorrespondenceMap, pointIndex);
+		BaseTypesWrapper::Point2D currentSink = GetSink(*currentCorrespondenceMap, pointIndex);
+		for(int correspondenceIndex = 0; correspondenceIndex < numberOfPastCorrespondences; correspondenceIndex++)
 			{
-			success = ComputePastToCurrentTransform();
+			BaseTypesWrapper::Point2D currentMatchedSource = GetSource(*pastCorrespondenceMap, correspondenceIndex);
+			BaseTypesWrapper::Point2D pastSink = GetSink(*pastCorrespondenceMap, correspondenceIndex);
+			if (currentSource.x == currentMatchedSource.x && currentSource.y == currentMatchedSource.y)
+				{
+				AddPoint(*perspectiveCloud, GetXCoordinate(*currentPointCloud, pointIndex), GetYCoordinate(*currentPointCloud, pointIndex), GetZCoordinate(*currentPointCloud, pointIndex));
+				AddPoint(*perspectiveVector, pastSink.x, pastSink.y);
+				}
 			}
 		}
 
+	previousPoseToPose = NULL;
+	bool success;
+	DEBUG_PRINT_TO_LOG("Perspective cloud", GetNumberOfPoints(*perspectiveCloud) );
+	DEBUG_PRINT_TO_LOG("Perspective vector", GetNumberOfPoints(*perspectiveVector) );
+	Executors::Execute(perspectiveNPointSolver, perspectiveCloud, perspectiveVector, previousPoseToPose, success);
+	DEBUG_PRINT_TO_LOG("Estimated pose", ToString(*previousPoseToPose));
+	DEBUG_PRINT_TO_LOG("success", (success ? "yes" : "no") );
 	return success;
 	}
 
-/**
-* The ComputePointCloud Method works under the assumption that the current left image has been already filtered by a previous processing step.
-*
-* The method filters the current right image, and uses the filtered current left and right images for the computation of a point cloud.
-*
-**/
-void ReconstructionFromStereo::ComputePointCloud()
+void ReconstructionFromStereo::CleanUnmatchedFeatures(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr map, PointCloudWrapper::PointCloudPtr cloud)
 	{
-	ASSERT(filteredCurrentLeftImage != NULL, "ReconstructionFromStereo error, ComputePointCloud called before filtering the left image");
-	FilterCurrentRightImage();
-	ComputeStereoPointCloud();
-	}
+	ASSERT( GetNumberOfCorrespondences(*map) == GetNumberOfPoints(*cloud), "CleanUmatchedFeatures error: expected same number of points in map and cloud");
+	Copy(*map, *cleanCorrespondenceMap);	
 
-/**
-* The UpdateScene Method performs the following operation
-*
-* (i) The computed transform between the current and the past images is provided to the Map object, which updates the current pose of the camera;
-* (ii) The computed point cloud is provided to the Map object, which updates the whole point cloud map, by adding more cloud points using the current camera location as a reference
-* (iii) A part of the point cloud is extracted as output of the DFPC, this part contains the points withing a given searchRadius from the current camera pose, when the search radius is -1
-*       all cloud points are taken.
-**/
-void ReconstructionFromStereo::UpdateScene()
-	{
-	map->AddFramePoseInReference(pastToCurrentCameraTransform);
-	map->AddPointCloudInLastReference(pointCloud);
-
-	Pose3DConstPtr outputPose = map->GetCurrentFramePoseInOrigin();
-	PointCloudConstPtr outputPointCloud = map->GetPartialScene(parameters.searchRadius);
-
-	Copy(*outputPose, outPose);
-	Copy(*outputPointCloud, outPointCloud);
-	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*outputPointCloud));
-	DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
-	}
-
-void ReconstructionFromStereo::FilterCurrentLeftImage()
-	{
-	if (leftFilter != NULL)
+	std::vector<BaseTypesWrapper::T_UInt32> removeIndexList;	
+	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*cloud); pointIndex++)
 		{
-		leftFilter->imageInput(*currentLeftImage);
-		leftFilter->process();
-		Copy( leftFilter->imageOutput(), *filteredCurrentLeftImage);
-		DEBUG_PRINT_TO_LOG("Filtered Current Frame", "");
+		float x = GetXCoordinate(*cloud, pointIndex);
+		float y = GetYCoordinate(*cloud, pointIndex);
+		float z = GetZCoordinate(*cloud, pointIndex);
+		if ( x != x || y != y || z != z)
+			{
+			removeIndexList.push_back(pointIndex);
+			}
 		}
-	else
-		{
-		filteredCurrentLeftImage = currentLeftImage;
-		}
+	RemoveCorrespondences(*cleanCorrespondenceMap, removeIndexList);
+	RemovePoints(*cloud, removeIndexList);
 	}
 
-void ReconstructionFromStereo::FilterPastLeftImage()
-	{
-	if (leftFilter != NULL)
-		{
-		leftFilter->imageInput(*pastLeftImage);
-		leftFilter->process();
-		Copy( leftFilter->imageOutput(), *filteredPastLeftImage);
-		DEBUG_PRINT_TO_LOG("Filtered Past Frame", "");
-		}
-	else
-		{
-		Copy(*pastLeftImage, *filteredPastLeftImage);
-		}
-	}
-
-void ReconstructionFromStereo::FilterCurrentRightImage()
-	{
-	if (rightFilter != NULL)
-		{
-		rightFilter->imageInput(*currentRightImage);
-		rightFilter->process();
-		Copy( rightFilter->imageOutput(), *filteredCurrentRightImage);
-		DEBUG_PRINT_TO_LOG("Filtered Current Right Frame", "");
-		}
-	else
-		{
-		filteredCurrentRightImage = currentRightImage;
-		}
-	}
-
-void ReconstructionFromStereo::ExtractCurrentLeftFeatures()
-	{
-	featuresExtractor->frameInput(*filteredCurrentLeftImage);
-	featuresExtractor->process();
-	Copy( featuresExtractor->featuresOutput(), *currentLeftKeypointsVector);
-	DEBUG_PRINT_TO_LOG("Extracted Current Features", GetNumberOfPoints(*currentLeftKeypointsVector) );
-	}
-
-void ReconstructionFromStereo::ExtractPastLeftFeatures()
-	{
-	featuresExtractor->frameInput(*filteredPastLeftImage);
-	featuresExtractor->process();
-	Copy( featuresExtractor->featuresOutput(), *pastLeftKeypointsVector);
-	DEBUG_PRINT_TO_LOG("Extracted Past Features", GetNumberOfPoints(*pastLeftKeypointsVector) );
-	}
-
-void ReconstructionFromStereo::ExtractCurrentRightFeatures()
-	{
-	featuresExtractor->frameInput(*filteredCurrentRightImage);
-	featuresExtractor->process();
-	Copy( featuresExtractor->featuresOutput(), *currentRightKeypointsVector);
-	DEBUG_PRINT_TO_LOG("Extracted Current Right Features", GetNumberOfPoints(*currentRightKeypointsVector) );
-	}
-
-void ReconstructionFromStereo::DescribeCurrentLeftFeatures()
-	{
-	if (optionalFeaturesDescriptor != NULL)
-		{
-		optionalFeaturesDescriptor->frameInput(*filteredCurrentLeftImage);
-		optionalFeaturesDescriptor->featuresInput(*currentLeftKeypointsVector);
-		optionalFeaturesDescriptor->process();
-		Copy( optionalFeaturesDescriptor->featuresOutput(), *currentLeftFeaturesVector);
-		DEBUG_PRINT_TO_LOG("Described Current Features", GetNumberOfPoints(*currentLeftFeaturesVector) );
-		}
-	else
-		{
-		currentLeftFeaturesVector = currentLeftKeypointsVector;
-		}
-	}
-
-void ReconstructionFromStereo::DescribePastLeftFeatures()
-	{
-	if (optionalFeaturesDescriptor != NULL)
-		{
-		optionalFeaturesDescriptor->frameInput(*filteredPastLeftImage);
-		optionalFeaturesDescriptor->featuresInput(*pastLeftKeypointsVector);
-		optionalFeaturesDescriptor->process();
-		Copy(optionalFeaturesDescriptor->featuresOutput(), *pastLeftFeaturesVector);
-		DEBUG_PRINT_TO_LOG("Described Past Features", GetNumberOfPoints(*pastLeftFeaturesVector) );
-		}
-	else
-		{
-		pastLeftFeaturesVector = pastLeftKeypointsVector;
-		}
-	}
-
-void ReconstructionFromStereo::DescribeCurrentRightFeatures()
-	{
-	if (optionalFeaturesDescriptor != NULL)
-		{
-		optionalFeaturesDescriptor->frameInput(*filteredCurrentRightImage);
-		optionalFeaturesDescriptor->featuresInput(*currentRightKeypointsVector);
-		optionalFeaturesDescriptor->process();
-		Copy( optionalFeaturesDescriptor->featuresOutput(), *currentRightFeaturesVector);
-		DEBUG_PRINT_TO_LOG("Described Current Right Features", GetNumberOfPoints(*currentRightFeaturesVector) );
-		}
-	else
-		{
-		currentRightFeaturesVector = currentRightKeypointsVector;
-		}
-	}
-
-void ReconstructionFromStereo::MatchCurrentAndPastFeatures()
-	{
-	featuresMatcher->sourceFeaturesInput(*currentLeftFeaturesVector);
-	featuresMatcher->sinkFeaturesInput(*pastLeftFeaturesVector);
-	featuresMatcher->process();
-	Copy( featuresMatcher->matchesOutput(), *pastToCurrentCorrespondenceMap);	
-	DEBUG_PRINT_TO_LOG("Correspondences", GetNumberOfCorrespondences(*pastToCurrentCorrespondenceMap) );
-	DEBUG_SHOW_2D_CORRESPONDENCES(filteredCurrentLeftImage, filteredPastLeftImage, pastToCurrentCorrespondenceMap);
-	}
-
-void ReconstructionFromStereo::MatchLeftAndRightFeatures()
-	{
-	featuresMatcher->sourceFeaturesInput(*currentRightFeaturesVector);
-	featuresMatcher->sinkFeaturesInput(*currentLeftFeaturesVector);
-	featuresMatcher->process();
-	Copy( featuresMatcher->matchesOutput(), *leftToRightCorrespondenceMap);	
-	DEBUG_PRINT_TO_LOG("Left Right Correspondences", GetNumberOfCorrespondences(*leftToRightCorrespondenceMap) );
-	DEBUG_SHOW_2D_CORRESPONDENCES(filteredCurrentRightImage, filteredCurrentLeftImage, leftToRightCorrespondenceMap);
-	}
-
-bool ReconstructionFromStereo::ComputeFundamentalMatrix()
-	{
-	if (GetNumberOfCorrespondences(*pastToCurrentCorrespondenceMap) < 8 )
-		{
-		return false;
-		}
-	fundamentalMatrixComputer->matchesInput(*pastToCurrentCorrespondenceMap);
-	fundamentalMatrixComputer->process();
-	Copy( fundamentalMatrixComputer->fundamentalMatrixOutput(), *fundamentalMatrix);	
-	bool fundamentalMatrixSuccess =  fundamentalMatrixComputer->successOutput();
-	DEBUG_PRINT_TO_LOG("Fundamental Matrix", fundamentalMatrixSuccess);
-	if(fundamentalMatrixSuccess)
-		{
-		DEBUG_SHOW_MATRIX(fundamentalMatrix);
-		}
-	return fundamentalMatrixSuccess;
-	}
-
-bool ReconstructionFromStereo::ComputePastToCurrentTransform()
-	{
-	cameraTransformEstimator->fundamentalMatrixInput(*fundamentalMatrix);
-	cameraTransformEstimator->matchesInput(*pastToCurrentCorrespondenceMap);
-	cameraTransformEstimator->process();
-	Copy( cameraTransformEstimator->transformOutput(), *pastToCurrentCameraTransform);
-	bool essentialMatrixSuccess = cameraTransformEstimator->successOutput();
-	DEBUG_PRINT_TO_LOG("Essential Matrix", essentialMatrixSuccess);
-	if(essentialMatrixSuccess)
-		{
-		DEBUG_SHOW_POSE(pastToCurrentCameraTransform);
-		}
-	return essentialMatrixSuccess;
-	}
-
-void ReconstructionFromStereo::ComputeStereoPointCloud()
-	{
-	reconstructor3D->leftInput(*filteredCurrentLeftImage);
-	reconstructor3D->rightInput(*filteredCurrentRightImage);
-	reconstructor3D->process();
-	Copy( reconstructor3D->pointcloudOutput(), *pointCloud);
-	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*pointCloud));
-	DEBUG_SHOW_POINT_CLOUD(pointCloud);
-	}
-
+}
+}
 }
 
 

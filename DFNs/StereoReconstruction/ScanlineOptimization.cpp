@@ -9,8 +9,8 @@
 
 #include "ScanlineOptimization.hpp"
 
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 #include <Errors/Assert.hpp>
 
 #include <pcl/filters/voxel_grid.h>
@@ -21,7 +21,11 @@
 using namespace PointCloudWrapper;
 using namespace FrameWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace StereoReconstruction
 {
 
 ScanlineOptimization::ScanlineOptimization()
@@ -85,35 +89,35 @@ const float ScanlineOptimization::EPSILON = 0.0001;
 
 const ScanlineOptimization::ScanlineOptimizationOptionsSet ScanlineOptimization::DEFAULT_PARAMETERS =
 {
-	.costAggregationRadius = 5,
-	.spatialBandwidth = 25,
-	.colorBandwidth = 15,
-	.strongSmoothnessPenalty = 1,
-	.weakSmoothnessPenalty = 1,
-	.pointCloudSamplingDensity = 1,
-	.voxelGridLeafSize = 0,
-	.matchingOptionsSet =
+	/*.costAggregationRadius =*/ 5,
+	/*.spatialBandwidth =*/ 25,
+	/*.colorBandwidth =*/ 15,
+	/*.strongSmoothnessPenalty =*/ 1,
+	/*.weakSmoothnessPenalty =*/ 1,
+	/*.pointCloudSamplingDensity =*/ 1,
+	/*.voxelGridLeafSize =*/ 0,
+	//.matchingOptionsSet =
 	{
-		.numberOfDisparities = 60,
-		.horizontalOffset = 0,
-		.ratioFilter = 5,
-		.peakFilter = 0,
-		.usePreprocessing = false,
-		.useLeftRightConsistencyCheck = false,
-		.leftRightConsistencyThreshold = 1
+		/*.numberOfDisparities =*/ 60,
+		/*.horizontalOffset =*/ 0,
+		/*.ratioFilter =*/ 5,
+		/*.peakFilter =*/ 0,
+		/*.usePreprocessing =*/ false,
+		/*.useLeftRightConsistencyCheck =*/ false,
+		/*.leftRightConsistencyThreshold =*/ 1
 	},
-	.cameraParameters =
+	//.cameraParameters =
 	{
-		.leftPrinciplePointX = 0,
-		.leftPrinciplePointY = 0,
-		.leftFocalLength = 1,
-		.baseline = 1
+		/*.leftPrinciplePointX =*/ 0,
+		/*.leftPrinciplePointY =*/ 0,
+		/*.leftFocalLength =*/ 1,
+		/*.baseline =*/ 1
 	},
-	.reconstructionSpace =
+	//.reconstructionSpace =
 	{
-		.limitX = 20,
-		.limitY = 20,
-		.limitZ = 40
+		/*.limitX =*/ 20,
+		/*.limitY =*/ 20,
+		/*.limitZ =*/ 40
 	}
 };
 
@@ -268,6 +272,8 @@ cv::Mat ScanlineOptimization::PclImageToCvMatrix(PclImagePtr pclImage)
 	return cvImage;
 }
 
+}
+}
 }
 
 /** @} */

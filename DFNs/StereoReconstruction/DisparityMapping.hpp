@@ -7,18 +7,22 @@
  * @{
  */
 
-#ifndef DISPARITYMAPPING_HPP
-#define DISPARITYMAPPING_HPP
+#ifndef STEREORECONSTRUCTION_DISPARITYMAPPING_HPP
+#define STEREORECONSTRUCTION_DISPARITYMAPPING_HPP
 
 #include "StereoReconstructionInterface.hpp"
 
-#include <PointCloud.hpp>
-#include <FrameToMatConverter.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Converters/FrameToMatConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/core/core.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace StereoReconstruction
 {
 	/**
 	 * Scene reconstruction (as a 3D pointcloud) from 2D stereo images, using
@@ -197,7 +201,9 @@ namespace dfn_ci
 			#endif
 	};
 }
+}
+}
 
-#endif // DISPARITYMAPPING_HPP
+#endif // STEREORECONSTRUCTION_DISPARITYMAPPING_HPP
 
 /** @} */

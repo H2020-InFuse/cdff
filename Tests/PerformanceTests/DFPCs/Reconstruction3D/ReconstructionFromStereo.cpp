@@ -29,7 +29,7 @@
 #include <Reconstruction3D/ReconstructionFromStereo.hpp>
 #include "Reconstruction3D.hpp"
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::Reconstruction3D;
 
 const std::string USAGE =
 	"This method takes two parameters: \n \

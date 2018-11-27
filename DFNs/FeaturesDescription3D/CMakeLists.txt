@@ -9,5 +9,5 @@ add_library(
 )
 target_link_libraries(
     shot_descriptor_3d
-    feature_description_3d cdff_types yaml-cpp cdff_helpers converters_opencv
+    feature_description_3d cdff_types yaml-cpp cdff_helpers cdff_converters
 )

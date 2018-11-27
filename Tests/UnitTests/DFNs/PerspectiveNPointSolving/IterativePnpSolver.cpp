@@ -13,15 +13,15 @@
 
 #include <catch.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
-#include <PointCloud.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <Pose.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Errors/Assert.hpp>
 
 #include <opencv2/core/core.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::PerspectiveNPointSolving;
 using namespace PointCloudWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace PoseWrapper;

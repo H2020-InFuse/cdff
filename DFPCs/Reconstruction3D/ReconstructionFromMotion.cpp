@@ -28,8 +28,8 @@
  */
 #include "ReconstructionFromMotion.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpencvVisualizer.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 
 #define DELETE_PREVIOUS(object) \
 	{ \
@@ -39,9 +39,14 @@
 		} \
 	} \
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
 using namespace CorrespondenceMap2DWrapper;
@@ -178,17 +183,17 @@ void ReconstructionFromMotion::setup()
 
 const ReconstructionFromMotion::ReconstructionFromMotionOptionsSet ReconstructionFromMotion::DEFAULT_PARAMETERS = 
 	{
-	.searchRadius = -1,
-	.pointCloudMapResolution = 1e-2,
-	.rightToLeftCameraPose = 
+	/*.searchRadius =*/ -1,
+	/*.pointCloudMapResolution =*/ 1e-2,
+	//.rightToLeftCameraPose = 
 		{
-		.positionX = 0.122,
-		.positionY = 0,
-		.positionZ = 0,
-		.orientationX = 0,
-		.orientationY = 0,
-		.orientationZ = 0,
-		.orientationW = 1
+		/*.positionX =*/ 0.122,
+		/*.positionY =*/ 0,
+		/*.positionZ =*/ 0,
+		/*.orientationX =*/ 0,
+		/*.orientationY =*/ 0,
+		/*.orientationZ =*/ 0,
+		/*.orientationW =*/ 1
 		}
 	};
 
@@ -505,6 +510,8 @@ void ReconstructionFromMotion::ComputeStereoPointCloud()
 	DEBUG_SHOW_POINT_CLOUD(pointCloud);
 	}
 
+}
+}
 }
 
 

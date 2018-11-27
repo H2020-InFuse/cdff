@@ -13,12 +13,12 @@
 
 #include <catch.hpp>
 #include <FeaturesMatching3D/Ransac3D.hpp>
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 
 #include <boost/make_shared.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesMatching3D;
 using namespace Converters;
 using namespace PoseWrapper;
 using namespace VisualPointFeatureVector3DWrapper;

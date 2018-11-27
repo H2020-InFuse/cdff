@@ -7,20 +7,24 @@
  * @{
  */
 
-#ifndef ICP3D_HPP
-#define ICP3D_HPP
+#ifndef REGISTRATION3D_ICP3D_HPP
+#define REGISTRATION3D_ICP3D_HPP
 
 #include "Registration3DInterface.hpp"
 
-#include <Pose.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <EigenTransformToTransform3DConverter.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/EigenTransformToTransform3DConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Registration3D
 {
 	/**
 	 * Registration of pointclouds using the ICP algorithm
@@ -64,7 +68,9 @@ namespace dfn_ci
 			void ValidateCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
 	};
 }
+}
+}
 
-#endif // ICP3D_HPP
+#endif // REGISTRATION3D_ICP3D_HPP
 
 /** @} */

@@ -18,7 +18,8 @@ using namespace BaseTypesWrapper;
 void Copy(const PointCloud& source, PointCloud& destination)
 {
 	ClearPoints(destination);
-	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(source); pointIndex++)
+	int numberOfPoints = GetNumberOfPoints(source);
+	for (int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 	{
 		AddPoint(destination, GetXCoordinate(source, pointIndex), GetYCoordinate(source, pointIndex), GetZCoordinate(source, pointIndex));
 	}
@@ -106,19 +107,19 @@ int GetNumberOfPoints(const PointCloud& pointCloud)
 
 T_Double GetXCoordinate(const PointCloud& pointCloud, int pointIndex)
 {
-	ASSERT_ON_TEST(pointIndex < pointCloud.data.points.nCount, "A missing point was requested from a features vector 2D");
+	ASSERT_ON_TEST(pointIndex < pointCloud.data.points.nCount, "A missing point was requested from a point cloud");
 	return pointCloud.data.points.arr[pointIndex].arr[0];
 }
 
 T_Double GetYCoordinate(const PointCloud& pointCloud, int pointIndex)
 {
-	ASSERT_ON_TEST(pointIndex < pointCloud.data.points.nCount, "A missing point was requested from a features vector 2D");
+	ASSERT_ON_TEST(pointIndex < pointCloud.data.points.nCount, "A missing point was requested from a point cloud");
 	return pointCloud.data.points.arr[pointIndex].arr[1];
 }
 
 T_Double GetZCoordinate(const PointCloud& pointCloud, int pointIndex)
 {
-	ASSERT_ON_TEST(pointIndex < pointCloud.data.points.nCount, "A missing point was requested from a features vector 2D");
+	ASSERT_ON_TEST(pointIndex < pointCloud.data.points.nCount, "A missing point was requested from a a point cloud");
 	return pointCloud.data.points.arr[pointIndex].arr[2];
 }
 

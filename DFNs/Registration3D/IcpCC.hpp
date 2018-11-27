@@ -7,25 +7,29 @@
  * @{
  */
 
-#ifndef ICPCC_HPP
-#define ICPCC_HPP
+#ifndef REGISTRATION3D_ICPCC_HPP
+#define REGISTRATION3D_ICPCC_HPP
 
 #include "Registration3DInterface.hpp"
 
-#include <Pose.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <EigenTransformToTransform3DConverter.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/EigenTransformToTransform3DConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
-#include <PointCloud.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <RegistrationTools.h>
-#include <ChunkedPointCloud.h>
+#include <cloudcompare-core/RegistrationTools.h>
+#include <cloudcompare-core/PointCloud.h>
 
 #include <string>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Registration3D
 {
 	/**
 	 * Registration of Point clouds using the ICP algorithm and the CC library
@@ -100,18 +104,20 @@ namespace dfn_ci
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 			Converters::EigenTransformToTransform3DConverter eigenTransformToTransform3D;
 
-			void ComputeTransform(CCLib::ChunkedPointCloud* sourceCloud, CCLib::ChunkedPointCloud* sinkCloud);
-			CCLib::ChunkedPointCloud* Convert(PointCloudWrapper::PointCloudConstPtr cloud);
+			void ComputeTransform(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud);
+			CCLib::PointCloud* Convert(PointCloudWrapper::PointCloudConstPtr cloud);
 			void ConvertParametersToCCParametersList();
 			CCLib::RegistrationTools::ScaledTransformation ConvertTrasformToCCTransform(const PoseWrapper::Pose3D& transform);
 			PoseWrapper::Pose3D ConvertCCTransformToTranform(const CCLib::RegistrationTools::ScaledTransformation& ccTransform);
 
 			void ValidateParameters();
-			void ValidateInputs(CCLib::ChunkedPointCloud* sourceCloud, CCLib::ChunkedPointCloud* sinkCloud);
-			void ValidateCloud(CCLib::ChunkedPointCloud* cloud);
+			void ValidateInputs(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud);
+			void ValidateCloud(CCLib::PointCloud* cloud);
 	};
 }
+}
+}
 
-#endif // ICPCC_HPP
+#endif // REGISTRATION3D_ICPCC_HPP
 
 /** @} */

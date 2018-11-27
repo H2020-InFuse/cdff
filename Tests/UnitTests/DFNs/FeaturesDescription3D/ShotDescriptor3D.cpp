@@ -9,9 +9,9 @@
 
 #include <catch.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesDescription3D;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace VisualPointFeatureVector3DWrapper;

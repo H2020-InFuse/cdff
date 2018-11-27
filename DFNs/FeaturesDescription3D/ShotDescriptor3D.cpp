@@ -9,8 +9,8 @@
 
 #include "ShotDescriptor3D.hpp"
 
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PointCloudToPclNormalsCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclNormalsCloudConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
@@ -24,7 +24,11 @@ using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesDescription3D
 {
 
 ShotDescriptor3D::ShotDescriptor3D()
@@ -75,8 +79,9 @@ void ShotDescriptor3D::configure()
 void ShotDescriptor3D::process()
 {
 	// Handle empty keypoint vector
-	if (GetNumberOfPoints(inFeatures) == 0)
+	if (GetNumberOfPoints(inFeatures) == 0 || GetNumberOfPoints(inPointcloud) == 0)
 	{
+		ClearPoints(outFeatures);
 		return;
 	}
 
@@ -118,18 +123,18 @@ ShotDescriptor3D::OutputFormat ShotDescriptor3D::OutputFormatHelper::Convert(con
 
 const ShotDescriptor3D::ShotOptionsSet ShotDescriptor3D::DEFAULT_PARAMETERS
 {
-	.baseOptions =
+	//.baseOptions =
 	{
-		.localReferenceFrameEstimationRadius = 0.10,
-		.searchRadius = 0.01,
-		.outputFormat = POSITIONS_OUTPUT,
-		.enableNormalsEstimation = true,
-		.forceNormalsEstimation = true
+		/*.localReferenceFrameEstimationRadius =*/ 0.10,
+		/*.searchRadius =*/ 0.01,
+		/*.outputFormat =*/ POSITIONS_OUTPUT,
+		/*.enableNormalsEstimation =*/ true,
+		/*.forceNormalsEstimation =*/ true
 	},
-	.normalEstimationOptions =
+	//.normalEstimationOptions =
 	{
-		.searchRadius = 0.00,
-		.neighboursSetSize = 10
+		/*.searchRadius =*/ 0.00,
+		/*.neighboursSetSize =*/ 10
 	}
 };
 
@@ -246,7 +251,7 @@ VisualPointFeatureVector3DConstPtr ShotDescriptor3D::Convert(
 	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
 	ClearPoints(*featuresVector);
 	bool computedNanFeature = false;
-	for (unsigned pointIndex = 0; pointIndex < indicesList->size(); pointIndex++)
+	for (unsigned pointIndex = 0; pointIndex < indicesList->size() && pointIndex < MAX_FEATURE_3D_POINTS; pointIndex++)
 	{
 		if (parameters.baseOptions.outputFormat == POSITIONS_OUTPUT)
 		{
@@ -309,7 +314,7 @@ void ShotDescriptor3D::ValidateMandatoryInputs(pcl::PointCloud<pcl::PointXYZ>::C
 {
 	ASSERT(indicesList->size() <= pointCloud->points.size(), "ShotDescriptor3D Error: There are more keypoints than points in the pointcloud");
 
-	for (unsigned pointIndex; pointIndex < pointCloud->points.size(); pointIndex++)
+	for (size_t pointIndex = 0; pointIndex < pointCloud->points.size(); pointIndex++)
 	{
 		pcl::PointXYZ point = pointCloud->points.at(pointIndex);
 		if (point.x != point.x || point.y != point.y || point.z != point.z)
@@ -327,7 +332,7 @@ bool ShotDescriptor3D::IsNormalsCloudValid(pcl::PointCloud<pcl::PointXYZ>::Const
 		return false;
 	}
 
-	for (unsigned pointIndex; pointIndex < normalsCloud->points.size(); pointIndex++)
+	for (size_t pointIndex = 0; pointIndex < normalsCloud->points.size(); pointIndex++)
 	{
 		pcl::Normal normal = normalsCloud->points.at(pointIndex);
 		if (normal.normal_x != normal.normal_x || normal.normal_y != normal.normal_y || normal.normal_z != normal.normal_z)
@@ -340,6 +345,8 @@ bool ShotDescriptor3D::IsNormalsCloudValid(pcl::PointCloud<pcl::PointXYZ>::Const
 	return true;
 }
 
+}
+}
 }
 
 /** @} */

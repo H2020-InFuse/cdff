@@ -9,7 +9,7 @@ add_library(
 )
 target_link_libraries(
     svd_decomposition
-    bundle_adjustment cdff_types yaml-cpp cdff_helpers opencv_core converters_opencv
+    bundle_adjustment cdff_types yaml-cpp cdff_helpers opencv_core cdff_converters
 )
 
 add_library(
@@ -18,5 +18,5 @@ add_library(
 )
 target_link_libraries(
     ceres_adjustment
-    bundle_adjustment cdff_types yaml-cpp cdff_helpers cdff_logger opencv_core converters_opencv ${CERES_LIBRARIES}
+    bundle_adjustment cdff_types yaml-cpp cdff_helpers cdff_logger opencv_core cdff_converters ${CERES_LIBRARIES}
 )

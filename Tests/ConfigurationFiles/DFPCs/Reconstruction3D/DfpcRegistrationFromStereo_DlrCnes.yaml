@@ -1,7 +1,7 @@
 - Name: DFNsChain
   Parameters:
   - Name: GeneralParameters
-    PointCloudMapResolution: 0.1
+    PointCloudMapResolution: 0.01
     SearchRadius: 80
 - Name: reconstructor3D
   Type: StereoReconstruction
@@ -48,9 +48,9 @@
     LeftPrinciplePointY: 385.304
     Baseline: 0.09290672099999999
   - Name: ReconstructionSpace
-    LimitX: 15
-    LimitY: 15
-    LimitZ: 15
+    LimitX: 1.5
+    LimitY: 1.5
+    LimitZ: 1.5
 - Name: featuresExtractor3d
   Type: FeaturesExtraction3D
   Implementation: HarrisDetector3D

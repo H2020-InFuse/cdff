@@ -3,15 +3,17 @@
  * @{
  */
 
-#ifndef PERSPECTIVENPOINTSOLVING_INTERFACE_HPP
-#define PERSPECTIVENPOINTSOLVING_INTERFACE_HPP
+#ifndef PERSPECTIVENPOINTSOLVING_PERSPECTIVENPOINTSOLVINGINTERFACE_HPP
+#define PERSPECTIVENPOINTSOLVING_PERSPECTIVENPOINTSOLVINGINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Pose.h>
-#include <Pointcloud.h>
-#include <VisualPointFeatureVector2D.h>
+#include <Types/C/Pose.h>
+#include <Types/C/Pointcloud.h>
+#include <Types/C/VisualPointFeatureVector2D.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that solves the Perspective-n-Point problem
@@ -57,7 +59,8 @@ namespace dfn_ci
             bool outSuccess;
     };
 }
+}
 
-#endif // PERSPECTIVENPOINTSOLVING_INTERFACE_HPP
+#endif // PERSPECTIVENPOINTSOLVING_PERSPECTIVENPOINTSOLVINGINTERFACE_HPP
 
 /** @} */

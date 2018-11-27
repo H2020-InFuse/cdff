@@ -9,7 +9,7 @@
 
 #include "Ransac3D.hpp"
 
-#include <EigenTransformToTransform3DConverter.hpp>
+#include <Converters/EigenTransformToTransform3DConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
@@ -28,7 +28,11 @@ using namespace PoseWrapper;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace SupportTypes;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesMatching3D
 {
 
 Ransac3D::Ransac3D()
@@ -94,12 +98,12 @@ void Ransac3D::process()
 
 const Ransac3D::RansacOptionsSet Ransac3D::DEFAULT_PARAMETERS =
 {
-	.similarityThreshold = 0.9,
-	.inlierFraction = 0.25,
-	.correspondenceRandomness = 5,
-	.numberOfSamples = 3,
-	.maximumIterations = 50000,
-	.maxCorrespondenceDistance = 0.00125
+	/*.similarityThreshold =*/ 0.9,
+	/*.inlierFraction =*/ 0.25,
+	/*.correspondenceRandomness =*/ 5,
+	/*.numberOfSamples =*/ 3,
+	/*.maximumIterations =*/ 50000,
+	/*.maxCorrespondenceDistance =*/ 0.00125
 };
 
 /**
@@ -134,11 +138,20 @@ Pose3DConstPtr Ransac3D::ComputeTransform(PointCloudWithFeatures sourceCloud, Po
 	// Setup output
 	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud(new pcl::PointCloud<pcl::PointXYZ>);
 
-	// Run RANSAC
-	ransac->align(*outputCloud);
+	try 
+		{
+		// Run RANSAC
+		ransac->align(*outputCloud);
 
-	// Check convergence
-	outSuccess = ransac->hasConverged();
+		// Check convergence
+		outSuccess = ransac->hasConverged();
+		}
+	catch ( ... )
+		{
+		VERIFY(false, "Ransac failed with exception!");
+		outSuccess = false;
+		}
+
 	if (outSuccess)
 	{
 		Eigen::Matrix4f eigenTransform = ransac->getFinalTransformation();
@@ -204,6 +217,8 @@ void Ransac3D::ValidateCloud(PointCloudWithFeatures cloud)
 	}
 }
 
+}
+}
 }
 
 /** @} */

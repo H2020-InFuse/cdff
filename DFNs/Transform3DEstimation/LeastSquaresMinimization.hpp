@@ -7,25 +7,28 @@
  * @{
  */
 
-#ifndef LEASTSQUARESMINIMIZATION_HPP
-#define LEASTSQUARESMINIMIZATION_HPP
+#ifndef TRANSFORM3DESTIMATION_LEASTSQUARESMINIMIZATION_HPP
+#define TRANSFORM3DESTIMATION_LEASTSQUARESMINIMIZATION_HPP
 
 #include "Transform3DEstimationInterface.hpp"
 
-#include <CorrespondenceMap3D.hpp>
-#include <CorrespondenceMaps3DSequence.hpp>
-#include <PosesSequence.hpp>
-#include <Pose.hpp>
-#include <Matrix.hpp>
+#include <Types/CPP/CorrespondenceMap3D.hpp>
+#include <Types/CPP/CorrespondenceMaps3DSequence.hpp>
+#include <Types/CPP/PosesSequence.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/Matrix.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
 {
-
+namespace DFN
+{
+namespace Transform3DEstimation
+{
 	/**
 	 * Estimation of the geometric transformation between matches of 3d points,
 	 * by least squares minimization.
@@ -37,7 +40,7 @@ namespace dfn_ci
 	 * (iii) Computation of the pose from the output of the linear system.
 	 *
 	 * @param maximumAllowedError
-	 *        this is the maximum error allowed (root of the squared error), if a 
+	 *        this is the maximum error allowed (root of the squared error), if a
 	 *	  a transform estimation exceeds this error, no transform output is provided.
 	 */
 	class LeastSquaresMinimization : public Transform3DEstimationInterface
@@ -71,7 +74,9 @@ namespace dfn_ci
 			void ValidateInputs(const CorrespondenceMap3DWrapper::CorrespondenceMap3D& map);
 	};
 }
+}
+}
 
-#endif // LEASTSQUARESMINIMIZATION_HPP
+#endif // TRANSFORM3DESTIMATION_LEASTSQUARESMINIMIZATION_HPP
 
 /** @} */

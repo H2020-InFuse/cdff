@@ -18,7 +18,8 @@ using namespace BaseTypesWrapper;
 void Copy(const FramesSequence& source, FramesSequence& destination)
 {
 	Clear(destination);
-	for(T_UInt32 frameIndex = 0; frameIndex < GetNumberOfFrames(destination); frameIndex++)
+	T_UInt32 numberOfFrames = GetNumberOfFrames(destination);
+	for(T_UInt32 frameIndex = 0; frameIndex < numberOfFrames; frameIndex++)
 		{
 		AddFrame(destination, GetFrame(source, frameIndex));
 		}

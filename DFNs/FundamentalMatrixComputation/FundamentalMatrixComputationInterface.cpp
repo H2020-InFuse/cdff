@@ -5,7 +5,9 @@
 
 #include "FundamentalMatrixComputationInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FundamentalMatrixComputationInterface::FundamentalMatrixComputationInterface()
@@ -31,6 +33,12 @@ bool FundamentalMatrixComputationInterface::successOutput() const
     return outSuccess;
 }
 
+const asn1SccCorrespondenceMap2D& FundamentalMatrixComputationInterface::inlierMatchesOutput() const
+{
+    return outInlierMatches;
+}
+
+}
 }
 
 /** @} */

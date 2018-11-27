@@ -7,18 +7,22 @@
  * @{
  */
 
-#ifndef RANSAC3D_HPP
-#define RANSAC3D_HPP
+#ifndef FEATURESMATCHING3D_RANSAC3D_HPP
+#define FEATURESMATCHING3D_RANSAC3D_HPP
 
 #include "FeaturesMatching3DInterface.hpp"
 
-#include <VisualPointFeatureVector3D.hpp>
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
-#include <Pose.hpp>
-#include <SupportTypes.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/SupportTypes.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesMatching3D
 {
 	/**
 	 * 3D feature matching using RANSAC (provided by PCL): detect and find the
@@ -91,7 +95,9 @@ namespace dfn_ci
 				Converters::SupportTypes::PointCloudWithFeatures cloud);
 	};
 }
+}
+}
 
-#endif // RANSAC3D_HPP
+#endif // FEATURESMATCHING3D_RANSAC3D_HPP
 
 /** @} */

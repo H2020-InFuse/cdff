@@ -1,8 +1,9 @@
 - Name: DFNsChain
   Parameters:
   - Name: GeneralParameters
-    PointCloudMapResolution: 0.1
+    PointCloudMapResolution: 0.01
     SearchRadius: 80
+    MatchToReconstructedCloud: true
 - Name: reconstructor3D
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
@@ -48,18 +49,18 @@
     LeftPrinciplePointY: 383.36
     Baseline: 0.09290672099999999
   - Name: ReconstructionSpace
-    LimitX: 35
-    LimitY: 35
-    LimitZ: 35
+    LimitX: 3.5
+    LimitY: 3.5
+    LimitZ: 3.5
 - Name: featuresExtractor3d
   Type: FeaturesExtraction3D
   Implementation: HarrisDetector3D
   Parameters:
   - Name: GeneralParameters
     Radius: 0.01
-    SearchRadius: 0.1
+    SearchRadius: 0.01
     NonMaxSuppression: true
-    DetectionThreshold: 0.001
+    DetectionThreshold: 0.009
     EnableRefinement: false
     NumberOfThreads: 0
     HarrisMethod: Harris
@@ -79,10 +80,12 @@
     NeighboursSetSize: 0
 - Name: featuresMatcher3d
   Type: FeaturesMatching3D
-  Implementation: Icp3D
+  Implementation: Ransac3D
   Parameters:
   - Name: GeneralParameters
-    MaxCorrespondenceDistance: 0.1
-    MaximumIterations: 200
-    TransformationEpsilon: 1e-8
-    EuclideanFitnessEpsilon: 1
+    SimilarityThreshold: 0.50
+    InlierFraction: 0.50
+    CorrespondenceRandomness: 25
+    NumberOfSamples: 3
+    MaximumIterations: 95000
+    MaxCorrespondenceDistance: 0.10

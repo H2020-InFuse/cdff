@@ -12,9 +12,9 @@
  */
 
 #include <FeaturesMatching3D/Icp3D.hpp>
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <EigenTransformToTransform3DConverter.cpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/EigenTransformToTransform3DConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
@@ -29,7 +29,7 @@
 #include <signal.h>
 #include <execinfo.h>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesMatching3D;
 using namespace Converters;
 using namespace PoseWrapper;
 using namespace VisualPointFeatureVector3DWrapper;

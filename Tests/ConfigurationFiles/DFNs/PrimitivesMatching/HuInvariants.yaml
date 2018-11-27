@@ -1,0 +1,3 @@
+- Name: GeneralParameters
+  MinimumArea: 0
+  TemplatesFolder: "../tests/Data/Images/primitive_matching/templates/"

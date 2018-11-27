@@ -35,9 +35,9 @@
 #include <ImageFiltering/ImageFilteringInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <Frame.hpp>
-#include <MatToFrameConverter.hpp>
-#include <FrameToMatConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -61,7 +61,7 @@ class LinearityTester
 		LinearityTester();
 		~LinearityTester();
 
-		void SetDfn(std::string configurationFilePath, dfn_ci::ImageFilteringInterface* dfn);
+		void SetDfn(std::string configurationFilePath, CDFF::DFN::ImageFilteringInterface* dfn);
 		void SetFilesPaths(std::string inputImageFilePath, std::string outputImageFilePath);
 		void ExecuteDfn();
 		bool IsResultLinear(std::string referenceLinesFilePath, float relativeDistortionDifference);
@@ -102,7 +102,7 @@ class LinearityTester
 
 		Converters::MatToFrameConverter frameConverter;
 		Converters::FrameToMatConverter inverseFrameConverter;
-		dfn_ci::ImageFilteringInterface* dfn;
+		CDFF::DFN::ImageFilteringInterface* dfn;
 
 		bool dfnWasSet;
 		bool inputImageWasLoaded;

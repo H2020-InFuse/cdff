@@ -9,8 +9,8 @@
 
 #include "Icp3D.hpp"
 
-#include <PointCloud.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
@@ -21,7 +21,11 @@ using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Registration3D
 {
 
 Icp3D::Icp3D()
@@ -72,10 +76,10 @@ void Icp3D::process()
 
 const Icp3D::IcpOptionsSet Icp3D::DEFAULT_PARAMETERS =
 {
-	.maxCorrespondenceDistance = 0.05,
-	.maximumIterations = 50,
-	.transformationEpsilon = 1e-8,
-	.euclideanFitnessEpsilon = 1.0
+	/*.maxCorrespondenceDistance =*/ 0.05,
+	/*.maximumIterations =*/ 50,
+	/*.transformationEpsilon =*/ 1e-8,
+	/*.euclideanFitnessEpsilon =*/ 1.0
 };
 
 /**
@@ -142,6 +146,8 @@ void Icp3D::ValidateCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud)
 	}
 }
 
+}
+}
 }
 
 /** @} */

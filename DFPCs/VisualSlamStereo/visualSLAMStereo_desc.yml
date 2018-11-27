@@ -1,0 +1,85 @@
+name: VisualSLAMStereo
+doc: Simultaneous localization and mapping based on odometry and stereo images
+dfns:
+  - name: FeatAndSigExtractorStereo
+  - name: PoseEstimator
+  - name: Relocaliser
+  - name: LoopClosure
+  - name: Tracker
+  - name: Mapper
+input_ports:
+  - name: leftImage
+    type: asn1SccFrame
+    doc: "TODO"
+    connections:
+    - dfn: FeatAndSigExtractorStereo
+      port: leftImage
+  - name: rightImage
+    type: asn1SccFrame
+    doc: "TODO"
+    connections:
+    - dfn: FeatAndSigExtractorStereo
+      port: rightImage
+  - name: roverPose
+    type: asn1SccTransformWithCovariance
+    doc: "Pose of the rover estimated from odometry"
+    connections:
+    - dfn: PoseEstimator
+      port: camPosePred
+output_ports:
+  - name: estimatedPose
+    type: asn1SccTransformWithCovariance
+    doc: "Pose of the rover estimated from using SLAM"
+    connections:
+    - dfn: Tracker
+      port: camPose
+# TODO: Ask MAG Are there no operations to create maps?
+#operations:
+#  - name: "getMap"
+#    inputs:
+#      - output_type: asn1SccMap
+#        doc : "Delivers the current map"
+internal_connections:
+  - from:
+      dfn: FeatAndSigExtractorStereo
+      port: descriptors
+    to:
+      dfn: Relocaliser
+      port: curFeatSig
+  - from:
+      dfn: FeatAndSigExtractorStereo
+      port: descriptors
+    to:
+      dfn: LoopClosure
+      port: curFeatSig
+  # TODO Ask if the following connection is missing in their description
+  #- from:
+  #    dfn: FeatAndSigExtractorStereo
+  #    port: descriptors
+  #  to:
+  #    dfn: Tracker
+  #    port: curFeatSig
+  - from:
+      dfn: PoseEstimator
+      port: camPosePred
+    to:
+      dfn: Relocaliser
+      port: campPosePred
+  - from:
+      dfn: Relocaliser
+      port: camPosePred
+    to:
+      dfn: Tracker
+      port: campPosePred
+  - from:
+      dfn: LoopClosure
+      port: camPosePred
+    to:
+      dfn: Mapper
+      port: curFeatSig
+  - from:
+      dfn: Tracker
+      port: curFeatSig
+    to:
+      dfn: Mapper
+      port: curFeatSig

@@ -50,7 +50,7 @@ class ParameterHelperInterface
 	 */
 	public:
 		ParameterHelperInterface(const std::string& parameterName);
-		~ParameterHelperInterface();
+		virtual ~ParameterHelperInterface();
 
 		bool HasName(const std::string& parameterName) const;
 		std::string GetName() const;

@@ -31,8 +31,8 @@
  */
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <CorrespondenceMap2D.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/Pose.hpp>
 
 
 namespace DataGenerators {
@@ -61,8 +61,8 @@ namespace DataGenerators {
 		void SetSecondCameraTranslation( float x, float y, float z);
 		void SetSecondCameraPose(PoseWrapper::Pose3DConstPtr secondCameraPose);
 		cv::Mat GetFundamentalMatrix();
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr GetSomeRandomCorrespondences(unsigned correspondencesNumber);
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr GetSomeRandomCorrespondences(unsigned correspondencesNumber, cv::Mat& pointCloud);
+		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr GetSomeRandomCorrespondences(unsigned correspondencesNumber, float noiseStandardDeviation = 0);
+		CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr GetSomeRandomCorrespondences(unsigned correspondencesNumber, cv::Mat& pointCloud, float noiseStandardDeviation = 0);
 
 	/* --------------------------------------------------------------------
 	 * Protected

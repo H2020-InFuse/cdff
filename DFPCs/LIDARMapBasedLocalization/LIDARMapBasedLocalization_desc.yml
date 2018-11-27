@@ -1,0 +1,38 @@
+name: LIDARMapBasedLocalization
+doc: Localization based on LIDAR pointcloud and rover odometry
+dfns:
+  - name: PCMatcher
+  - name: PoseEstimator
+input_ports:
+  - name: lPC
+    type: asn1SccPointcloud
+    doc: "Pointcloud from LIDAR"
+    connections:
+    - dfn: PCMatcher
+      port: newPC
+  - name: odoPose
+    type: asn1SccTransformWithCovariance
+    doc: "Pose estimate (from odometry)"
+    connections:
+    - dfn: PCMatcher
+      port: odoPose
+output_ports:
+  - name: lidarPose
+    type: asn1SccTransformWithCovariance
+    doc: "Pose estimate (from LIDAR pointcloud and rover odometry)"
+    connections:
+    - dfn: PoseEstimator
+      port: lidarPose
+internal_connections:
+  - from:
+      dfn: PCMatcher
+      port: overlap
+    to:
+      dfn: PoseEstimator
+      port: overlap
+  - from:
+      dfn: PCMatcher
+      port: transformation
+    to:
+      dfn: PoseEstimator
+      port: transformation

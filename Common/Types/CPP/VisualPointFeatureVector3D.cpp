@@ -9,7 +9,7 @@
 
 #include "VisualPointFeatureVector3D.hpp"
 #include <Errors/Assert.hpp>
-#include <BaseTypes.hpp>
+#include "BaseTypes.hpp"
 
 using namespace BaseTypesWrapper;
 
@@ -19,7 +19,8 @@ namespace VisualPointFeatureVector3DWrapper
 void Copy(const VisualPointFeatureVector3D& source, VisualPointFeatureVector3D& destination)
 {
 	ClearPoints(destination);
-	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(source); pointIndex++)
+	int numberOfPoints = GetNumberOfPoints(source);
+	for (int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 	{
 		if (GetPointType(source, pointIndex) == VISUAL_POINT_POSITION)
 		{
@@ -33,7 +34,8 @@ void Copy(const VisualPointFeatureVector3D& source, VisualPointFeatureVector3D& 
 		if (GetPointType(source, pointIndex) != VISUAL_POINT_NONE)
 		{
 			ClearDescriptor(destination, pointIndex);
-			for (int componentIndex = 0; componentIndex < GetNumberOfDescriptorComponents(source, pointIndex); componentIndex++)
+			int numberOfDescriptorComponents = GetNumberOfDescriptorComponents(source, pointIndex);
+			for (int componentIndex = 0; componentIndex < numberOfDescriptorComponents; componentIndex++)
 			{
 				AddDescriptorComponent(destination, pointIndex, GetDescriptorComponent(source, pointIndex, componentIndex));
 			}

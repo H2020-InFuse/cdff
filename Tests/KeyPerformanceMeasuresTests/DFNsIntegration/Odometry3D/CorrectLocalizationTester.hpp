@@ -37,11 +37,11 @@
 #include <Errors/Assert.hpp>
 #include <ctime>
 
-#include <VisualPointFeatureVector3D.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <SupportTypes.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/SupportTypes.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -67,9 +67,9 @@ class CorrectLocalizationTester
 
 		void SetInputClouds(std::string sceneCloudFilePath, std::string modelCloudFilePath, std::string groundTruthPoseFilePath);
 		void SetConfigurationFiles(std::string extractorConfigurationFile, std::string descriptorConfigurationFile, std::string matcherConfigurationFile);
-		void SetDfns(dfn_ci::FeaturesExtraction3DInterface* extractor, dfn_ci::FeaturesDescription3DInterface* descriptor, dfn_ci::FeaturesMatching3DInterface* matcher);
+		void SetDfns(CDFF::DFN::FeaturesExtraction3DInterface* extractor, CDFF::DFN::FeaturesDescription3DInterface* descriptor, CDFF::DFN::FeaturesMatching3DInterface* matcher);
 
-		void ExecuteDfns();
+		void ExecuteDfns(bool showClouds = false);
 		bool IsOutputCorrect(float relativeLocationError, float relativeOrientationError, float absoluteLocationError);
 
 	/* --------------------------------------------------------------------
@@ -84,11 +84,13 @@ class CorrectLocalizationTester
 	 * --------------------------------------------------------------------
 	 */
 	private:
+		typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
+
 		std::string extractorConfigurationFile, descriptorConfigurationFile, matcherConfigurationFile;
 		std::string sceneCloudFilePath, modelCloudFilePath, groundTruthPoseFilePath;
-		dfn_ci::FeaturesExtraction3DInterface* extractor;
-		dfn_ci::FeaturesDescription3DInterface* descriptor;
-		dfn_ci::FeaturesMatching3DInterface* matcher;
+		CDFF::DFN::FeaturesExtraction3DInterface* extractor;
+		CDFF::DFN::FeaturesDescription3DInterface* descriptor;
+		CDFF::DFN::FeaturesMatching3DInterface* matcher;
 
 		PointCloudWrapper::PointCloudConstPtr inputSceneCloud;
 		PointCloudWrapper::PointCloudConstPtr inputModelCloud;
@@ -99,6 +101,9 @@ class CorrectLocalizationTester
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelFeaturesVector;
 		PoseWrapper::Pose3DConstPtr outputModelPoseInScene;
 		bool outputMatcherSuccess;
+
+		pcl::PointCloud<pcl::PointXYZ>::Ptr baseScenePclCloud;
+		pcl::PointCloud<pcl::PointXYZ>::Ptr baseModelPclCloud;
 
 		Converters::PclPointCloudToPointCloudConverter pointCloudConverter;
 		bool dfnsWereConfigured;
@@ -118,6 +123,9 @@ class CorrectLocalizationTester
 		float ComputeLocationError();
 		float ComputeOrientationError(float modelSize);
 		float ComputeModelSize();
+
+		void ShowClouds();
+		pcl::PointXYZ TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform);
 	};
 
 #endif

@@ -9,19 +9,24 @@
 
 #include "IcpCC.hpp"
 
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
 #include <pcl/registration/icp.h>
 #include <yaml-cpp/yaml.h>
+#include <cloudcompare-core/PointCloud.h>
 
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
 using namespace CCLib;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Registration3D
 {
 
 IcpCC::IcpCC()
@@ -58,8 +63,8 @@ void IcpCC::process()
 		return;
 	}
 
-	ChunkedPointCloud *inputSourceCloud = Convert(&inSourceCloud);
-	ChunkedPointCloud *inputSinkCloud = Convert(&inSinkCloud);
+	CCLib::PointCloud *inputSourceCloud = Convert(&inSourceCloud);
+	CCLib::PointCloud *inputSinkCloud = Convert(&inSinkCloud);
 
 	// Process data
 	ValidateInputs(inputSourceCloud, inputSinkCloud);
@@ -94,17 +99,17 @@ IcpCC::ConvergenceType IcpCC::ConvergenceTypeHelper::Convert(const std::string& 
 
 const IcpCC::IcpOptionsSet IcpCC::DEFAULT_PARAMETERS =
 {
-	.convergenceType = MINIMUM_ERROR_REDUCTION,
-	.minimumErrorReduction = 1e-5,
-	.maximumNumberOfIterations = 20,
-	.scaleIsAdjustable = false,
-	.farthestPointsAreFilteredOut = false,
-	.samplingLimit = 50000,
-	.finalOverlapRatio = 1.0,
-	.maximumNumberOfThreads = 0
+	/*.convergenceType =*/ MINIMUM_ERROR_REDUCTION,
+	/*.minimumErrorReduction =*/ 1e-5,
+	/*.maximumNumberOfIterations =*/ 20,
+	/*.scaleIsAdjustable =*/ false,
+	/*.farthestPointsAreFilteredOut =*/ false,
+	/*.samplingLimit =*/ 50000,
+	/*.finalOverlapRatio =*/ 1.0,
+	/*.maximumNumberOfThreads =*/ 0
 };
 
-void IcpCC::ComputeTransform(ChunkedPointCloud* sourceCloud, ChunkedPointCloud* sinkCloud)
+void IcpCC::ComputeTransform(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud)
 {
 	RegistrationTools::ScaledTransformation scaledTransform;
 	if (inUseGuess)
@@ -136,9 +141,9 @@ void IcpCC::ComputeTransform(ChunkedPointCloud* sourceCloud, ChunkedPointCloud* 
 	}
 }
 
-ChunkedPointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
+	CCLib::PointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
 {
-	ChunkedPointCloud* ccCloud = new ChunkedPointCloud;
+	CCLib::PointCloud* ccCloud = new CCLib::PointCloud;
 	ccCloud->reserve( GetNumberOfPoints(*cloud) );
 
 	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(*cloud); pointIndex++)
@@ -232,13 +237,13 @@ void IcpCC::ValidateParameters()
 	ASSERT(parameters.maximumNumberOfThreads >= 0, "IcpCC Configuration Error, maximumNumberOfThreads has to be greater or equal to zero");
 }
 
-void IcpCC::ValidateInputs(ChunkedPointCloud* sourceCloud, ChunkedPointCloud* sinkCloud)
+void IcpCC::ValidateInputs(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud)
 {
 	ValidateCloud(sourceCloud);
 	ValidateCloud(sinkCloud);
 }
 
-void IcpCC::ValidateCloud(ChunkedPointCloud* cloud)
+void IcpCC::ValidateCloud(CCLib::PointCloud* cloud)
 {
 	for (unsigned pointIndex = 0; pointIndex < cloud->size(); pointIndex++)
 	{
@@ -249,6 +254,8 @@ void IcpCC::ValidateCloud(ChunkedPointCloud* cloud)
 	}
 }
 
+}
+}
 }
 
 /** @} */

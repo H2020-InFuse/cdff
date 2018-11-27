@@ -1,10 +1,10 @@
 - Name: DFNsChain
   Parameters:
   - Name: GeneralParameters
-    Baseline: 1
-    PointCloudMapResolution: 0.1
+    Baseline: 0.09290672099999999
+    PointCloudMapResolution: 0.01
     SearchRadius: 80
-    NumberOfAdjustedStereoPairs: 2
+    NumberOfAdjustedStereoPairs: 4
     UseBundleInitialEstimation: false
 - Name: reconstructor3d
   Type: StereoReconstruction
@@ -51,9 +51,9 @@
     LeftPrinciplePointY: 383.36
     Baseline: 0.09290672099999999
   - Name: ReconstructionSpace
-    LimitX: 35
-    LimitY: 35
-    LimitZ: 35
+    LimitX: 3.5
+    LimitY: 3.5
+    LimitZ: 3.5
 - Name: featuresExtractor2d
   Type: FeaturesExtraction2D
   Implementation: OrbDetectorDescriptor
@@ -96,5 +96,12 @@
     PrinciplePointY: 390.755
   - Name: GeneralParameters
     Baseline: 0.09290672099999999
-    SquaredPixelErrorTolerance: 1e-4
-    
+    SquaredPixelErrorTolerance: 100000000
+- Name: fundamentalMatrixComputer
+  Type: FundamentalMatrixComputation
+  Implementation: FundamentalMatrixRansac
+  Parameters:
+  - Name: GeneralParameters
+    OutlierThreshold: 1 
+    Confidence: 0.90
+    MaximumSymmetricEpipolarDistance: 0.05    

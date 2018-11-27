@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #xma@spaceapplications.com
 #This file is needed by ../fetch_compile_install_dependencies.sh
 # Version 1.0

@@ -1,0 +1,18 @@
+name: PrimitiveMatching
+doc: DFN that finds primitives in a 2D image
+input_ports:
+    - name: image
+      type: asn1SccFrame
+      doc: 2D image captured by a camera
+    - name: primitives
+      type: asn1SccStringSequence
+      doc: string array with the names of the primitives to be searched for in the input image
+output_ports:
+    - name: image
+      type: asn1SccFrame
+      doc: same image, with the contour that was matched to a primitive
+    - name: primitives
+      type: asn1SccStringSequence
+      doc: string array with the names of the primitives ordered by matching probability
+implementations:
+    - HuInvariants

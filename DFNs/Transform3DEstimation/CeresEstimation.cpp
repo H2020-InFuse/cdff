@@ -24,7 +24,11 @@ using namespace CorrespondenceMap3DWrapper;
 using namespace Helpers;
 using namespace BaseTypesWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Transform3DEstimation
 {
 
 CeresEstimation::CeresEstimation()
@@ -50,12 +54,22 @@ void CeresEstimation::process()
 	int numberOfCorrespondenceMaps = GetNumberOfCorrespondenceMaps(inMatches);
 	int numberOfCameras = ComputeNumberOfCameras(numberOfCorrespondenceMaps);
 
+	//If there are not enough correspondences, process fails.
+	for(int mapIndex = 0; mapIndex < numberOfCorrespondenceMaps; mapIndex++)
+		{
+		if ( GetNumberOfCorrespondences ( GetCorrespondenceMap(inMatches, mapIndex) ) < 4 )
+			{
+			outError = -1;
+			outSuccess = false;
+			return;
+			}
+		}
+
 	std::vector<Transform3d> transformList(numberOfCorrespondenceMaps);
 	InitializeTransforms(transformList);
-	float error = SolveEstimation(inMatches, numberOfCameras, transformList);
+	outError = SolveEstimation(inMatches, numberOfCameras, transformList);
 	
-	DEBUG_PRINT_TO_LOG("error", error);
-	if (error > parameters.maximumAllowedError)
+	if (outError > parameters.maximumAllowedError || outError < 0)
 		{
 		outSuccess = false;
 		return;
@@ -143,8 +157,8 @@ ceres::CostFunction* CeresEstimation::Transform3DCostFunctor::Create(Point3D sou
 
 const CeresEstimation::CeresEstimationOptionsSet CeresEstimation::DEFAULT_PARAMETERS =
 {
-	.maximumAllowedError = 0.01,
-	.maximumAllowedDeterminantError = 0.05
+	/*.maximumAllowedError =*/ 0.01,
+	/*.maximumAllowedDeterminantError =*/ 0.05
 };
 
 int CeresEstimation::ComputeNumberOfCameras(int numberOfCorrespondenceMaps)
@@ -190,6 +204,7 @@ void CeresEstimation::InitializeTransforms(std::vector<Transform3d>& transformLi
 float CeresEstimation::SolveEstimation(const CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequence& sequence, int numberOfCameras, std::vector<Transform3d>& transformList)
 	{
 	ceres::Problem transformEstimation;
+	int numberOfResiduals = 0;
 	int sourceIndex = 0;
 	int sinkIndex = 1;
 	int firstMapIndexWithSinkAsSource = numberOfCameras - 1; //This is the first map where the current sink becomes source
@@ -203,6 +218,7 @@ float CeresEstimation::SolveEstimation(const CorrespondenceMap3DWrapper::Corresp
 
 			ceres::CostFunction* transform3DCostFunctor = Transform3DCostFunctor::Create ( sourcePoint, sinkPoint, 1);
 			transformEstimation.AddResidualBlock( transform3DCostFunctor, NULL, transformList.at(mapIndex) );
+			numberOfResiduals += 3;
 
 			//These are the constraints for the double transform sourcePoint -> sinkPoint -> secondSinkPoint
 			for(int secondSinkIndex = sinkIndex + 1; secondSinkIndex < numberOfCameras; secondSinkIndex++)
@@ -217,6 +233,7 @@ float CeresEstimation::SolveEstimation(const CorrespondenceMap3DWrapper::Corresp
 						{
 						ceres::CostFunction* transform3DCostFunctor = Transform3DCostFunctor::Create ( sourcePoint, secondSinkPoint, 2);
 						transformEstimation.AddResidualBlock( transform3DCostFunctor, NULL, transformList.at(mapIndex), transformList.at(secondMapIndex) );
+						numberOfResiduals += 3;
 						}
 					}
 				}
@@ -236,6 +253,11 @@ float CeresEstimation::SolveEstimation(const CorrespondenceMap3DWrapper::Corresp
 			}
 		}
 
+	if (numberOfResiduals < 6 * numberOfCameras)
+		{
+		return -1;
+		}
+
 	//Calling the solver
 	ceres::Solver::Options ceresOptions;
 	ceresOptions.linear_solver_type = ceres::DENSE_SCHUR;
@@ -243,7 +265,7 @@ float CeresEstimation::SolveEstimation(const CorrespondenceMap3DWrapper::Corresp
 	ceresOptions.logging_type = ceres::SILENT;
 	ceres::Solver::Summary summary;
 	ceres::Solve(ceresOptions, &transformEstimation, &summary);
-	return summary.final_cost;
+	return summary.final_cost / static_cast<float>(numberOfResiduals);
 	}
 
 bool CeresEstimation::SetOutputPoses(const std::vector<Transform3d>& transformList)
@@ -358,6 +380,8 @@ void CeresEstimation::ValidateInputs(const CorrespondenceMap3D& map)
 	
 }
 
+}
+}
 }
 
 /** @} */

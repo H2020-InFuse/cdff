@@ -1,0 +1,12 @@
+name: DepthFiltering
+doc: DFN that filters a 2D depth image
+input_ports:
+    - name: inputFrame
+      type: asn1SccFrame
+      doc: 2D depth image
+output_ports:
+    - name: ouputFrame
+      type: asn1SccFrame
+      doc: filtered 2D depth image
+implementations:
+    - Filter

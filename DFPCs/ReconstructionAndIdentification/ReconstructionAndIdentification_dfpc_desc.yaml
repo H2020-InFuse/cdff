@@ -1,0 +1,59 @@
+name: ReconstructionAndIdentification
+doc: "DFPC that reconstructs a 3D scene from a stereo image pair
+     and finds the position of a given model pointcloud in it"
+dfns:
+  - name: FeaturesExtraction3D
+  - name: FeaturesDescription3D
+  - name: FeaturesMatching3D
+  - name: StereoReconstruction
+  - name: ImageFiltering
+input_ports:
+  - name: leftImage
+    type: asn1SccFrame
+    doc: "2D left image captured by a stereo camera"
+    connections:
+      - dfn: ImageFiltering
+        port: image
+  - name: rightImage
+    type: asn1SccFrame
+    doc: "2D right image captured by a stereo camera"
+    connections:
+      - dfn: ImageFiltering
+        port: image
+  - name: model
+    type: asn1SccPointcloud
+    doc: "3D pointcloud model"
+    connections:
+      - dfn: FeaturesExtraction3D
+        port: pointCloud
+  - name: computeModelFeatures
+    type: bool
+    doc: "Whether model features will be computed. Must be true the first time
+         a model is provided. For optimal performance it should be false on all
+         subsequent calls."
+    connections:
+      - dfn: NoDfn
+        port: noPort
+output_ports:
+  - name: pointCloud
+    type: asn1SccPointcloud
+    doc: "3D scene pointcloud, representing the 3D scene reconstructed so far"
+    connections:
+      - dfn: StereoReconstruction
+        port: pointCloud
+      - dfn: PointCloudReconstruction2DTo3D
+        port: pointCloud
+  - name: pose
+    type: asn1SccPose
+    doc: "Pose of the model in the scene"
+    connections:
+      - dfn: FeaturesMatching3D
+        port: pose
+  - name: success
+    type: bool
+    doc: "Whether the DFPC could localize the model"
+    connections:
+      - dfn: FeaturesMatching3D
+        port: success
+implementations:
+  - name: ReconstructionAndMatching

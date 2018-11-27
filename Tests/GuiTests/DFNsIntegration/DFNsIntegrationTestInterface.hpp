@@ -36,8 +36,6 @@
 #include <string>
 #include <vector>
 
-using namespace dfn_ci;
-
 /* --------------------------------------------------------------------------
  *
  * Class definition
@@ -55,10 +53,10 @@ class DFNsIntegrationTestInterface
 		~DFNsIntegrationTestInterface();
 
 		void Run();
-		void AddDFN(DFNCommonInterface* dfn, std::string dfnName);
-		void AddParameter(DFNCommonInterface* dfn, std::string groupName, std::string name, int defaultValue, int maxValue);
-		void AddParameter(DFNCommonInterface* dfn, std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
-		void AddSignedParameter(DFNCommonInterface* dfn, std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
+		void AddDFN(CDFF::DFN::DFNCommonInterface* dfn, std::string dfnName);
+		void AddParameter(CDFF::DFN::DFNCommonInterface* dfn, std::string groupName, std::string name, int defaultValue, int maxValue);
+		void AddParameter(CDFF::DFN::DFNCommonInterface* dfn, std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
+		void AddSignedParameter(CDFF::DFN::DFNCommonInterface* dfn, std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
 
 		double GetTotalProcessingTimeSeconds();
 		double GetLastProcessingTimeSeconds(unsigned timeIndex);
@@ -69,7 +67,7 @@ class DFNsIntegrationTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	protected:
-		unsigned GetDfnIndex(DFNCommonInterface* dfn);
+		unsigned GetDfnIndex(CDFF::DFN::DFNCommonInterface* dfn);
 
 	/* --------------------------------------------------------------------
 	 * Private
@@ -80,7 +78,7 @@ class DFNsIntegrationTestInterface
 		std::vector<ParametersInterface> parametersInterfaceList;
 
 		std::vector<std::string> dfnsNamesList;
-		std::vector<DFNCommonInterface*> dfnsList;
+		std::vector<CDFF::DFN::DFNCommonInterface*> dfnsList;
 		static const std::string baseFilePath;
 		std::vector<double> processingTime;
 		double totalProcessingTime;
@@ -92,13 +90,12 @@ class DFNsIntegrationTestInterface
 		void CleanProcessingTime();
 		std::string GetDfnFilePath(unsigned dfnIndex);
 		void ConfigureDFNs();
-		static void ProcessCallback(void* referenceToClass);
 		void ProcessCallback();
 
 		virtual void ResetProcess() = 0;
 		virtual bool IsProcessCompleted() = 0;
 		virtual void UpdateState() = 0;
-		virtual DFNCommonInterface* PrepareNextDfn() = 0;
+		virtual CDFF::DFN::DFNCommonInterface* PrepareNextDfn() = 0;
 
 
 	};

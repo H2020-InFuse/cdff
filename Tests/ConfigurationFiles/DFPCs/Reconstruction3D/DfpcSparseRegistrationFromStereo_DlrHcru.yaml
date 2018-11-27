@@ -1,8 +1,9 @@
 - Name: DFNsChain
   Parameters:
   - Name: GeneralParameters
-    PointCloudMapResolution: 0.1
+    PointCloudMapResolution: 0.01
     SearchRadius: 80
+    MatchToReconstructedCloud: true
 - Name: reconstructor3D
   Type: StereoReconstruction
   Implementation: HirschmullerDisparityMapping
@@ -48,23 +49,23 @@
     LeftPrinciplePointY: 383.36
     Baseline: 0.09290672099999999
   - Name: ReconstructionSpace
-    LimitX: 35
-    LimitY: 35
-    LimitZ: 35
+    LimitX: 3.5
+    LimitY: 3.5
+    LimitZ: 3.5
 - Name: featuresExtractor3d
   Type: FeaturesExtraction3D
   Implementation: HarrisDetector3D
   Parameters:
   - Name: GeneralParameters
     Radius: 0.01
-    SearchRadius: 0.1
+    SearchRadius: 0.01
     NonMaxSuppression: true
     DetectionThreshold: 0.001
     EnableRefinement: false
     NumberOfThreads: 0
     HarrisMethod: Harris
     OutputFormat: Positions
-- Name: cloudRegistrator
+- Name: registrator3d
   Type: Registration3D
   Implementation: IcpCC
   Parameters:

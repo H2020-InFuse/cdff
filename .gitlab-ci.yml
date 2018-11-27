@@ -1,4 +1,4 @@
-image: nexus.spaceapplications.com/repository/infuse/cdff-ci:1.8.1
+image: nexus.spaceapplications.com/repository/infuse/cdff-ci:2.0.3
 
 stages:
   - platform
@@ -16,7 +16,7 @@ hardware:
 autogeneration:
   stage : autogeneration
   script:
-      - cd Tools/ASNtoC
+      - cd Tools/ASN.1
       - ./GeneratorScript.sh
   artifacts:
     paths:
@@ -26,12 +26,14 @@ autogeneration:
 build:
   stage: build
   script:
-      - pwd
-      - mkdir build
-      - cd build
-      - cmake -DCMAKE_INSTALL_PREFIX=./ ..
-      - CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)
-      - make --jobs=${CPUS} --output-sync=target
+      - "pwd"
+      - "mkdir build"
+      - "cd build"
+      - "cmake -DCMAKE_INSTALL_PREFIX=./ .."
+      - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
+      - "JOBS=$((CPUS/2))"
+      - "JOBS=$((JOBS > 0 ? JOBS : 1))"
+      - "make --jobs=${JOBS} --output-sync=target"
   artifacts:
     paths:
       - build/

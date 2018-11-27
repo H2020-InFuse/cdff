@@ -1,0 +1,4 @@
+- Name: GeneralParameters
+  NumberOfNearestNeighbours: 50
+  StandardDeviationMultiplier: 1
+  TakeOutliersOnly: false

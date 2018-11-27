@@ -13,11 +13,11 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * This class is the main class for the performance test of the integration pipeline of the
  * following three DFNs: FeatureExtraction3D, FeatureDescription3D and FeatureMatching3D
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -44,16 +44,16 @@
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 
-#include <MatToVisualPointFeatureVector3DConverter.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <PclNormalsCloudToPointCloudConverter.hpp>
-#include <VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector3DConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclNormalsCloudToPointCloudConverter.hpp>
+#include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>
 #include <PerformanceTests/Aggregator.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 
 #include <Eigen/Geometry>
 
@@ -62,16 +62,16 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 	public:
 		struct DFNsSet
 			{
-			dfn_ci::FeaturesExtraction3DInterface* extractor;
-			dfn_ci::FeaturesDescription3DInterface* descriptor;
-			dfn_ci::FeaturesMatching3DInterface* matcher;
+			CDFF::DFN::FeaturesExtraction3DInterface* extractor;
+			CDFF::DFN::FeaturesDescription3DInterface* descriptor;
+			CDFF::DFN::FeaturesMatching3DInterface* matcher;
 			};
 
 		DetectionDescriptionMatching3DTestInterface(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName, DFNsSet dfnsSet);
 		~DetectionDescriptionMatching3DTestInterface();
 
 		void SetInputCloud(std::string inputCloudFile, float voxelGridFilterSize);
-		void SetModelsCloud(std::string groundTruthTransformFilePath, std::vector<std::string> modelsCloudFilesList); 
+		void SetModelsCloud(std::string groundTruthTransformFilePath, std::vector<std::string> modelsCloudFilesList);
 		void SetGroundTruth(float positionX, float positionY, float positionZ, float orientationX, float orientationY, float orientationZ, float orientationW);
 	protected:
 
@@ -84,16 +84,15 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 
 		PointCloudWrapper::PointCloudConstPtr scenePointCloud;
 		PointCloudWrapper::PointCloudConstPtr modelPointCloud;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneFeaturesVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelFeaturesVector;
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr sceneFeatureVector;
 		bool icpSuccess;
-		PoseWrapper::Pose3DConstPtr modelPoseInScene;
+		PoseWrapper::Pose3DPtr modelPoseInScene;
+		int numberOfSceneKeypoints;
+		int numberOfModelKeypoints;
 
-		dfn_ci::FeaturesExtraction3DInterface* extractor;
-		dfn_ci::FeaturesDescription3DInterface* descriptor;
-		dfn_ci::FeaturesMatching3DInterface* matcher;
+		CDFF::DFN::FeaturesExtraction3DInterface* extractor;
+		CDFF::DFN::FeaturesDescription3DInterface* descriptor;
+		CDFF::DFN::FeaturesMatching3DInterface* matcher;
 
 		Aggregator* groundPositionDistanceAggregator;
 		Aggregator* groundOrientationDistanceAggregator;

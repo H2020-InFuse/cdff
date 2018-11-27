@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the LinearityTester class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -32,7 +32,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace FrameWrapper;
 
@@ -48,7 +48,7 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
-LinearityTester::LinearityTester() 
+LinearityTester::LinearityTester()
 	{
 	inputFrame = NULL;
 	outputFrame = NULL;
@@ -63,7 +63,7 @@ LinearityTester::~LinearityTester()
 	DELETE_IF_NOT_NULL(outputFrame);
 	}
 
-void LinearityTester::SetDfn(std::string configurationFilePath, dfn_ci::ImageFilteringInterface* dfn)
+void LinearityTester::SetDfn(std::string configurationFilePath, CDFF::DFN::ImageFilteringInterface* dfn)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;
@@ -132,7 +132,7 @@ void LinearityTester::LoadInputImage()
 	inputImage = cv::imread(inputImageFilePath, CV_LOAD_IMAGE_COLOR);
 	ASSERT(inputImage.cols > 0 && inputImage.rows > 0, "Error: Loaded input image is empty");
 
-	DELETE_IF_NOT_NULL(inputFrame);	
+	DELETE_IF_NOT_NULL(inputFrame);
 	inputFrame = frameConverter.Convert(inputImage);
 	}
 
@@ -146,7 +146,7 @@ void LinearityTester::LoadReferenceLines()
 
 	double minLineIndex, maxLineIndex;
 	cv::minMaxLoc(linesMatrix(cv::Rect(2, 0, 1, linesMatrix.rows)), &minLineIndex, &maxLineIndex);
-	ASSERT(minLineIndex == 0, "Error, output xml file contains some data but the format is incorrect");	
+	ASSERT(minLineIndex == 0, "Error, output xml file contains some data but the format is incorrect");
 
 
 	for(int lineIndex = 0; lineIndex <= maxLineIndex; lineIndex++)
@@ -201,7 +201,7 @@ float LinearityTester::ComputeErrorOnLine(const Line& line)
 	for(int pointIndex = 0; pointIndex < line.size(); pointIndex++)
 		{
 		pointsMatrix.at<float>(pointIndex, 0) = line.at(pointIndex).x;
-		pointsMatrix.at<float>(pointIndex, 1) = line.at(pointIndex).y;		
+		pointsMatrix.at<float>(pointIndex, 1) = line.at(pointIndex).y;
 		}
 
 	cv::Vec4f lineModel; // (lineModel[0], lineModel[1]) is the line vector, (lineModel[2], lineModel[3]) is the line origin

@@ -37,10 +37,10 @@
 #include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <VisualPointFeatureVector2D.hpp>
-#include <Frame.hpp>
-#include <Pose.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -61,7 +61,7 @@ class SelectionTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		SelectionTester(std::string configurationFilePath, dfn_ci::FeaturesExtraction2DInterface* dfn);
+		SelectionTester(std::string configurationFilePath, CDFF::DFN::FeaturesExtraction2DInterface* dfn);
 		~SelectionTester();
 
 		void SetFilesPaths(std::string inputImageFilePath, std::string numberReferenceFilePath, std::string precisionReferenceFilePath);
@@ -90,7 +90,7 @@ class SelectionTester
 		cv::Mat precisionKeypointsMatrix;
 
 		Converters::MatToFrameConverter frameConverter;
-		dfn_ci::FeaturesExtraction2DInterface* dfn;
+		CDFF::DFN::FeaturesExtraction2DInterface* dfn;
 
 		bool inputImageWasLoaded;
 		bool numberReferenceWasLoaded;

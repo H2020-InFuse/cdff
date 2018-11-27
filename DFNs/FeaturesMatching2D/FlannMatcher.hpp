@@ -7,13 +7,13 @@
  * @{
  */
 
-#ifndef FLANNMATCHER_HPP
-#define FLANNMATCHER_HPP
+#ifndef FEATURESMATCHING2D_FLANNMATCHER_HPP
+#define FEATURESMATCHING2D_FLANNMATCHER_HPP
 
 #include "FeaturesMatching2DInterface.hpp"
 
-#include <CorrespondenceMap2D.hpp>
-#include <VisualPointFeatureVector2DToMatConverter.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Converters/VisualPointFeatureVector2DToMatConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/core/core.hpp>
@@ -22,7 +22,11 @@
 #include <opencv2/opencv_modules.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesMatching2D
 {
 	/**
 	 * 2D feature matching using FLANN (provided by OpenCV).
@@ -185,6 +189,8 @@ namespace dfn_ci
 
 			cv::Ptr<cv::flann::IndexParams> ConvertParameters();
 			std::vector< cv::DMatch > ComputeMatches(cv::Mat sourceDescriptorsMatrix, cv::Mat sinkDescriptorsMatrix);
+			void CleanLowScoringMatches(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap, 
+				CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr cleanMap);
 			cv::Mat ConvertToValidType(cv::Mat floatDescriptorsMatrix);
 			CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr Convert(std::vector<cv::DMatch> matchesVector, cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix);
 
@@ -192,7 +198,9 @@ namespace dfn_ci
 			void ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix);
 	};
 }
+}
+}
 
-#endif // FLANNMATCHER_HPP
+#endif // FEATURESMATCHING2D_FLANNMATCHER_HPP
 
 /** @} */

@@ -28,8 +28,8 @@
  */
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
 
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Errors/Assert.hpp>
 
 #include <GuiTests/ParametersInterface.hpp>
@@ -40,7 +40,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::ImageFiltering;
 using namespace Converters;
 using namespace FrameWrapper;
 

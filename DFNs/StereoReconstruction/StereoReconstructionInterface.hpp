@@ -3,18 +3,20 @@
  * @{
  */
 
-#ifndef STEREORECONSTRUCTION_INTERFACE_HPP
-#define STEREORECONSTRUCTION_INTERFACE_HPP
+#ifndef STEREORECONSTRUCTION_STEREORECONSTRUCTIONINTERFACE_HPP
+#define STEREORECONSTRUCTION_STEREORECONSTRUCTIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Frame.h>
-#include <Pointcloud.h>
+#include <Types/C/Frame.h>
+#include <Types/C/Pointcloud.h>
 
 #ifdef TESTING
 	#include <opencv2/imgproc/imgproc.hpp>
 #endif
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 	/**
 	 * DFN that turns a pair of stereo images into a reconstructed 3D scene
@@ -66,7 +68,8 @@ namespace dfn_ci
 
 	};
 }
+}
 
-#endif // STEREORECONSTRUCTION_INTERFACE_HPP
+#endif // STEREORECONSTRUCTION_STEREORECONSTRUCTIONINTERFACE_HPP
 
 /** @} */

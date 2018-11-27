@@ -3,14 +3,16 @@
  * @{
  */
 
-#ifndef FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
-#define FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
+#ifndef FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXCOMPUTATIONINTERFACE_HPP
+#define FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXCOMPUTATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Eigen.h>
-#include <CorrespondenceMap2D.h>
+#include <Types/C/Eigen.h>
+#include <Types/C/CorrespondenceMap2D.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that estimates the fundamental matrix of a camera pair based on pairs
@@ -48,15 +50,22 @@ namespace dfn_ci
              *         returned matrix is meaningless.
              */
             virtual bool successOutput() const;
+            /**
+             * Query value from output port "inlierMatches"
+             * @return inlierMatches: "keypoints matches whose reprojection error is below a given threshold."
+             */
+            virtual const asn1SccCorrespondenceMap2D& inlierMatchesOutput() const;
 
         protected:
 
             asn1SccCorrespondenceMap2D inMatches;
             asn1SccMatrix3d outFundamentalMatrix;
             bool outSuccess;
+	    asn1SccCorrespondenceMap2D outInlierMatches;
     };
 }
+}
 
-#endif // FUNDAMENTALMATRIXCOMPUTATION_INTERFACE_HPP
+#endif // FUNDAMENTALMATRIXCOMPUTATION_FUNDAMENTALMATRIXCOMPUTATIONINTERFACE_HPP
 
 /** @} */

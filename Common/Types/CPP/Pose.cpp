@@ -9,6 +9,7 @@
 
 #include "Pose.hpp"
 #include <Errors/Assert.hpp>
+#include <cmath>
 
 namespace PoseWrapper
 {
@@ -143,6 +144,74 @@ T_Double GetWRotation(const Pose3D& pose)
 {
 	return GetWOrientation(pose);
 }
+
+Pose3D Sum(const Pose3D& pose1, const Pose3D& pose2)
+	{
+	T_Double x1 = GetXPosition(pose1);
+	T_Double y1 = GetYPosition(pose1);
+	T_Double z1 = GetZPosition(pose1);
+	T_Double qx1 = GetXOrientation(pose1);
+	T_Double qy1 = GetYOrientation(pose1);
+	T_Double qz1 = GetZOrientation(pose1);
+	T_Double qw1 = GetWOrientation(pose1);
+
+	T_Double x2 = GetXPosition(pose2);
+	T_Double y2 = GetYPosition(pose2);
+	T_Double z2 = GetZPosition(pose2);
+	T_Double qx2 = GetXOrientation(pose2);
+	T_Double qy2 = GetYOrientation(pose2);
+	T_Double qz2 = GetZOrientation(pose2);
+	T_Double qw2 = GetWOrientation(pose2);
+
+	T_Double x = x1 + x2;
+	T_Double y = y1 + y2;
+	T_Double z = z1 + z2;
+	T_Double qx = (qw2 * qx1 + qx2 * qw1 - qy2 * qz1 + qz2 * qy1);
+	T_Double qy = (qw2 * qy1 + qx2 * qz1 + qy2 * qw1 - qz2 * qx1);
+	T_Double qz = (qw2 * qz1 - qx2 * qy1 + qy2 * qx1 + qz2 * qw1);
+	T_Double qw = (qw2 * qw1 - qx2 * qx1 - qy2 * qy1 - qz2 * qz1);
+
+	Pose3D sum;
+	SetPosition(sum, x, y, z);
+	SetOrientation(sum, qx, qy, qz, qw);
+	return sum;
+	}
+
+T_Double ComputeTranslationDistance(const Pose3D& pose1, const Pose3D& pose2)
+	{
+	T_Double x1 = GetXPosition(pose1);
+	T_Double y1 = GetYPosition(pose1);
+	T_Double z1 = GetZPosition(pose1);
+
+	T_Double x2 = GetXPosition(pose2);
+	T_Double y2 = GetYPosition(pose2);
+	T_Double z2 = GetZPosition(pose2);
+
+	T_Double diffX = x1 - x2;
+	T_Double diffY = y1 - y2;
+	T_Double diffZ = z1 - z2;
+
+	return std::sqrt( diffX*diffX + diffY*diffY + diffZ*diffZ);
+	}
+
+BaseTypesWrapper::T_Double ComputeOrientationDistance(const Pose3D& pose1, const Pose3D& pose2)
+	{
+	T_Double qx1 = GetXOrientation(pose1);
+	T_Double qy1 = GetYOrientation(pose1);
+	T_Double qz1 = GetZOrientation(pose1);
+	T_Double qw1 = GetWOrientation(pose1);
+
+	T_Double qx2 = GetXOrientation(pose2);
+	T_Double qy2 = GetYOrientation(pose2);
+	T_Double qz2 = GetZOrientation(pose2);
+	T_Double qw2 = GetWOrientation(pose2);
+
+	T_Double norm1 = std::sqrt(qx1*qx1 + qy1*qy1 + qz1*qz1 + qw1*qw1);
+	T_Double norm2 = std::sqrt(qx2*qx2 + qy2*qy2 + qz2*qz2 + qw2*qw2);
+
+	T_Double normalizedScalarProduct = (qx1*qx2 + qy1*qy2 + qz1*qz2 + qw1*qw2) / (norm1 * norm2);
+	return (1 - normalizedScalarProduct);
+	}
 
 BitStream ConvertToBitStream(const Pose3D& pose)
 	CONVERT_TO_BIT_STREAM(pose, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose_Encode)

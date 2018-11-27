@@ -3,14 +3,16 @@
  * @{
  */
 
-#ifndef FEATURESEXTRACTION2D_INTERFACE_HPP
-#define FEATURESEXTRACTION2D_INTERFACE_HPP
+#ifndef FEATURESEXTRACTION2D_FEATURESEXTRACTION2DINTERFACE_HPP
+#define FEATURESEXTRACTION2D_FEATURESEXTRACTION2DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <VisualPointFeatureVector2D.h>
-#include <Frame.h>
+#include <Types/C/VisualPointFeatureVector2D.h>
+#include <Types/C/Frame.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that extracts 2D keypoints from a 2D image
@@ -40,7 +42,8 @@ namespace dfn_ci
             asn1SccVisualPointFeatureVector2D outFeatures;
     };
 }
+}
 
-#endif // FEATURESEXTRACTION2D_INTERFACE_HPP
+#endif // FEATURESEXTRACTION2D_FEATURESEXTRACTION2DINTERFACE_HPP
 
 /** @} */

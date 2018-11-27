@@ -18,7 +18,8 @@ using namespace BaseTypesWrapper;
 void Copy(const CorrespondenceMaps2DSequence& source, CorrespondenceMaps2DSequence& destination)
 {
 	Clear(destination);
-	for(T_UInt32 correspondenceMapIndex = 0; correspondenceMapIndex < GetNumberOfCorrespondenceMaps(destination); correspondenceMapIndex++)
+	T_UInt32 numberOfMaps = GetNumberOfCorrespondenceMaps(source);
+	for(T_UInt32 correspondenceMapIndex = 0; correspondenceMapIndex < numberOfMaps; correspondenceMapIndex++)
 		{
 		AddCorrespondenceMap(destination, GetCorrespondenceMap(source, correspondenceMapIndex));
 		}

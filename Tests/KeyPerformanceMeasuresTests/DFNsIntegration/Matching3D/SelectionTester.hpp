@@ -35,13 +35,13 @@
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <VisualPointFeatureVector3D.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <BaseTypes.hpp>
-#include <CorrespondenceMap3D.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <SupportTypes.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/BaseTypes.hpp>
+#include <Types/CPP/CorrespondenceMap3D.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/SupportTypes.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -65,7 +65,7 @@ class SelectionTester
 		SelectionTester();
 		~SelectionTester();
 
-		void SetDfns(dfn_ci::FeaturesDescription3DInterface* descriptor, dfn_ci::FeaturesMatching3DInterface* matcher);
+		void SetDfns(CDFF::DFN::FeaturesDescription3DInterface* descriptor, CDFF::DFN::FeaturesMatching3DInterface* matcher);
 		void SetConfigurationFilePaths(std::string featuresDescriptorConfigurationFilePath, std::string featuresMatcherConfigurationFilePath);
 		void SetInputFilesPaths(std::string sourceCloudFilePath, std::string sinkCloudFilePath, std::string correspondencesFilePath);
 		void ExecuteDfns();
@@ -100,8 +100,8 @@ class SelectionTester
 		bool matcherSuccess;
 
 		Converters::PclPointCloudToPointCloudConverter pointCloudConverter;
-		dfn_ci::FeaturesDescription3DInterface* descriptor;
-		dfn_ci::FeaturesMatching3DInterface* matcher;
+		CDFF::DFN::FeaturesDescription3DInterface* descriptor;
+		CDFF::DFN::FeaturesMatching3DInterface* matcher;
 
 		bool dfnsWereLoaded;
 		bool inputCloudsWereLoaded;

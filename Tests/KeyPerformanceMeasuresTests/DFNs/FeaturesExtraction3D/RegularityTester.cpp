@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup GuiTests
- * 
+ *
  * Implementation of the RegularityTester class.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -31,7 +31,7 @@
 #include<pcl/io/ply_io.h>
 #include <ctime>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
@@ -49,7 +49,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-RegularityTester::RegularityTester(std::string configurationFilePath, std::string pointCloudFilePath, AverageSeparationType averageSeparationType, FeaturesExtraction3DInterface* dfn) 
+RegularityTester::RegularityTester(std::string configurationFilePath, std::string pointCloudFilePath, AverageSeparationType averageSeparationType, FeaturesExtraction3DInterface* dfn)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->pointCloudFilePath = pointCloudFilePath;
@@ -120,7 +120,7 @@ void RegularityTester::LoadPointCloud()
 	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(pointCloudFilePath, *basePclCloud);
 
-	DELETE_IF_NOT_NULL(inputCloud);	
+	DELETE_IF_NOT_NULL(inputCloud);
 	inputCloud = pointCloudConverter.Convert(basePclCloud);
 	}
 
@@ -134,7 +134,7 @@ float RegularityTester::ComputeAverageSeparation()
 	{
 	switch(averageSeparationType)
 		{
-		case POINTS_PAIR_DISTANCE: 
+		case POINTS_PAIR_DISTANCE:
 			{
 			PRINT_TO_LOG("Averaging distance between each pairs of points", "");
 			return ComputeAveragePointsPairDistance();
@@ -161,12 +161,12 @@ float RegularityTester::ComputeAveragePointsPairDistance()
 	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 		{
 		for(int secondPointIndex = pointIndex+1; secondPointIndex < numberOfPoints; secondPointIndex++)
-			{	
+			{
 			sumOfDistances += ComputeDistance(pointIndex, secondPointIndex);
-			}	
+			}
 		}
 
-	double pointPairsNumber = numberOfPoints * (numberOfPoints-1) / 2;	
+	double pointPairsNumber = numberOfPoints * (numberOfPoints-1) / 2;
 	return (sumOfDistances / pointPairsNumber);
 	}
 
@@ -179,7 +179,7 @@ float RegularityTester::ComputeAverageClosestNeighbourDistance()
 	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 		{
 		float closestNeighbourDistance;
-		
+
 		//Initializing closest distance
 		if (pointIndex == 0)
 			{
@@ -191,7 +191,7 @@ float RegularityTester::ComputeAverageClosestNeighbourDistance()
 			}
 
 		//Search for the closest distance of the point with its neighbours
-		for(int secondPointIndex = 0; secondPointIndex < numberOfPoints; secondPointIndex++)	
+		for(int secondPointIndex = 0; secondPointIndex < numberOfPoints; secondPointIndex++)
 			{
 			float distance = ComputeDistance(secondPointIndex, pointIndex);
 			if (pointIndex != secondPointIndex && distance < closestNeighbourDistance)
@@ -240,7 +240,7 @@ void RegularityTester::CompleteCluster(Cluster& cluster, std::vector<bool>& poin
 	int numberOfPoints = GetNumberOfPoints(*outputFeaturesVector);
 
 	//This loop will expand the cluster as long as its distance size does not exceed the distanceThreshold. Only points which do not belong to other clusters will be used in the expansion.
-	float clusterSize = ComputeClusterSize(cluster);	
+	float clusterSize = ComputeClusterSize(cluster);
 	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 		{
 		if ( pointsAreInOneCluster.at(pointIndex) )
@@ -253,11 +253,11 @@ void RegularityTester::CompleteCluster(Cluster& cluster, std::vector<bool>& poin
 			{
 			continue;
 			}
-			
+
 		cluster.push_back(pointIndex);
 		clusterSize = wouldBeSize;
 		pointsAreInOneCluster.at(pointIndex) = true;
-		}			
+		}
 	}
 
 bool RegularityTester::ThereAreNoGaps(float distanceThreshold)
@@ -334,8 +334,8 @@ bool RegularityTester::ThereAreNoClusters(float distanceThreshold)
 float RegularityTester::ComputeDistance(int pointIndex1, int pointIndex2)
 	{
 	const float& x1 = GetXCoordinate(*outputFeaturesVector, pointIndex1);
-	const float& y1 = GetYCoordinate(*outputFeaturesVector, pointIndex1);	
-	const float& z1 = GetZCoordinate(*outputFeaturesVector, pointIndex1);	
+	const float& y1 = GetYCoordinate(*outputFeaturesVector, pointIndex1);
+	const float& z1 = GetZCoordinate(*outputFeaturesVector, pointIndex1);
 	const float& x2 = GetXCoordinate(*outputFeaturesVector, pointIndex2);
 	const float& y2 = GetYCoordinate(*outputFeaturesVector, pointIndex2);
 	const float& z2 = GetZCoordinate(*outputFeaturesVector, pointIndex2);
@@ -346,7 +346,7 @@ float RegularityTester::ComputeDistance(const Cluster& cluster1, const Cluster& 
 	{
 	ASSERT(cluster1.size() > 0 && cluster2.size() > 0, "Error: trying to compute cluster distance between empty clusters");
 	float distance = ComputeDistance(cluster1.at(0), cluster2.at(0));
-	
+
 	//Computing the smallest pairwise distance between two points: one point for each cluster.
 	for(int clusterIndex1 = 0; clusterIndex1 < cluster1.size(); clusterIndex1++)
 		{
@@ -385,7 +385,7 @@ float RegularityTester::ComputeClusterSize(const Cluster& cluster)
 float RegularityTester::ComputeWouldBeSizeIfPointWasAdded(const Cluster& cluster, int pointIndex, float currentSize)
 	{
 	float distance = currentSize;
-	
+
 	//The loop computes the maximum distance between the added point and a point in the cluster. If this distance is higher than the currentDistance than it becomes the new cluster size.
 	for(int clusterIndex = 0; clusterIndex < cluster.size(); clusterIndex++)
 		{
@@ -395,7 +395,7 @@ float RegularityTester::ComputeWouldBeSizeIfPointWasAdded(const Cluster& cluster
 			distance = pointsDistance;
 			}
 		}
-	return distance;	
+	return distance;
 	}
 
 float RegularityTester::ComputeAverageNumberOfPointsInCluster()

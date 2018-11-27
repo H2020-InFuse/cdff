@@ -24,7 +24,11 @@ using namespace CorrespondenceMap3DWrapper;
 using namespace Helpers;
 using namespace BaseTypesWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace Transform3DEstimation
 {
 
 LeastSquaresMinimization::LeastSquaresMinimization()
@@ -57,15 +61,13 @@ void LeastSquaresMinimization::process()
 		cv::Mat coefficientMatrix, valueMatrix;
 		bool success = CreateLinearSystem(map, coefficientMatrix, valueMatrix);
 
-		float error = 0;
 		cv::Mat transformMatrix;
 		if (success)
 			{
-			transformMatrix = SolveLinearSystem(coefficientMatrix, valueMatrix, error);
+			transformMatrix = SolveLinearSystem(coefficientMatrix, valueMatrix, outError);
 			}
 
-		DEBUG_PRINT_TO_LOG("error", error);
-		if (!success || error > parameters.maximumAllowedError)
+		if (!success || outError > parameters.maximumAllowedError)
 			{
 			if (numberOfCorrespondences == 1)
 				{
@@ -170,7 +172,7 @@ void LeastSquaresMinimization::AddTransformOutput(cv::Mat transformMatrix)
 
 const LeastSquaresMinimization::LeastSquaresMinimizationOptionsSet LeastSquaresMinimization::DEFAULT_PARAMETERS =
 {
-	.maximumAllowedError = 0.001
+	/*.maximumAllowedError =*/ 0.001
 };
 
 void LeastSquaresMinimization::ValidateParameters()
@@ -183,6 +185,8 @@ void LeastSquaresMinimization::ValidateInputs(const CorrespondenceMap3D& map)
 	
 }
 
+}
+}
 }
 
 /** @} */

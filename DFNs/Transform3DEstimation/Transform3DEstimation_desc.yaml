@@ -12,7 +12,7 @@ input_ports:
 output_ports:
     - name: transforms
       type: asn1SccPosesSequence
-      doc: "this is an estimation of the poses of O2 in O1, O3 in O1, ..., On in O, 
+      doc: "this is an estimation of the poses of O1 in O2, O1 in O3, ..., O1 in On, 
 	    O2 in O3, O2 in O4, ..., O2 in On, ..., On-1 in On.
             A pose has null quaternion if it was impossible to compute, as computation
 	    may fail if matches are not good enough."
@@ -21,5 +21,9 @@ output_ports:
       doc: "boolean flag indicating successful computation of the pose of O2 in O1, 
 	   only when the input matches contain a single map, map(01-02). If the
 	   matches contain multiple maps, this output is always true."
+    - mame: error
+      type: float
+      doc: "The square error of the optimal transform estimation"
 implementations:
     - LeastSquaresMinimization
+    - CeresEstimation

@@ -7,21 +7,25 @@
  * @{
  */
 
-#ifndef ORBDESCRIPTOR_HPP
-#define ORBDESCRIPTOR_HPP
+#ifndef FEATURESDESCRIPTION2D_ORBDESCRIPTOR_HPP
+#define FEATURESDESCRIPTION2D_ORBDESCRIPTOR_HPP
 
 #include "FeaturesDescription2DInterface.hpp"
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/features2d.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesDescription2D
 {
 	/**
 	 * Computation of descriptors for input 2D keypoints using ORB (rotated
@@ -79,7 +83,9 @@ namespace dfn_ci
 			static int ConvertToScoreType(std::string scoreType);
 	};
 }
+}
+}
 
-#endif // ORBDESCRIPTOR_HPP
+#endif // FEATURESDESCRIPTION2D_ORBDESCRIPTOR_HPP
 
 /** @} */

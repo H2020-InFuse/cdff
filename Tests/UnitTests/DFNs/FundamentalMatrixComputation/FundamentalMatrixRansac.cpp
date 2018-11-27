@@ -29,14 +29,14 @@
 #include <catch.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 
-#include <FrameToMatConverter.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <DataGenerators/SyntheticGenerators/CameraPair.hpp>
 #include <Errors/Assert.hpp>
 
 #include <time.h>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FundamentalMatrixComputation;
 using namespace Converters;
 using namespace BaseTypesWrapper;
 using namespace MatrixWrapper;
@@ -79,8 +79,10 @@ void FundamentalMatrixTest::RandomCorrespondencesTest(PoseWrapper::Pose3DConstPt
 	const Matrix3d& output = ransac.fundamentalMatrixOutput();
 	bool success = ransac.successOutput();
 	REQUIRE(success == true);
+	const CorrespondenceMap2D& inliers = ransac.inlierMatchesOutput();
 
 	ValidateOutput(&output, cvFundamentalMatrix);
+	REQUIRE( GetNumberOfCorrespondences(inliers) == GetNumberOfCorrespondences(*input) );
 	}
 
 void FundamentalMatrixTest::FailureTest()

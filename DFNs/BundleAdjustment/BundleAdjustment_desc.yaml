@@ -33,5 +33,9 @@ output_ports:
       type: bool
       doc: whether the estimation of the poses was successful. 
            If this variable is false the poses sequence is meaningless.
+    - name: error
+      type: float
+      doc: the squared estimation error.
 implementations:
     - UdvDecomposition
+    - CeresAdjustment

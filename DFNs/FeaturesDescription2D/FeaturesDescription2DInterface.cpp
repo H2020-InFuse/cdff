@@ -5,7 +5,9 @@
 
 #include "FeaturesDescription2DInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 FeaturesDescription2DInterface::FeaturesDescription2DInterface()
@@ -31,6 +33,7 @@ const asn1SccVisualPointFeatureVector2D& FeaturesDescription2DInterface::feature
     return outFeatures;
 }
 
+}
 }
 
 /** @} */

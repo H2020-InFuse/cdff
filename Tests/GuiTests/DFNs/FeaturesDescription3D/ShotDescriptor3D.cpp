@@ -12,8 +12,8 @@
  */
 
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
-#include <PclNormalsCloudToPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclNormalsCloudToPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
@@ -21,7 +21,7 @@
 #include <pcl/io/ply_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesDescription3D;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;

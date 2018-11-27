@@ -1,0 +1,12 @@
+name: PointCloudFiltering
+doc: DFN that applies a filter on a point cloud
+input_ports:
+    - name: pointCloud
+      type: asn1SccPointcloud
+      doc: input point cloud
+output_ports:
+    - name: filteredPointCloud
+      type: asn1SccPointcloud
+      doc: point cloud after filter is applied
+implementations:
+    - StatisticalOutlierRemova

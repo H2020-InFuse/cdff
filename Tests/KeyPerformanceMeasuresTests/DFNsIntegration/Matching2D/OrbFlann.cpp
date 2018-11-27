@@ -34,7 +34,8 @@
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesDescription2D;
+using namespace CDFF::DFN::FeaturesMatching2D;
 
 /* --------------------------------------------------------------------------
  *

@@ -7,14 +7,14 @@
  * @{
  */
 
-#ifndef HARRISDETECTOR3D_HPP
-#define HARRISDETECTOR3D_HPP
+#ifndef FEATURESEXTRACTION3D_HARRISDETECTOR3D_HPP
+#define FEATURESEXTRACTION3D_HARRISDETECTOR3D_HPP
 
 #include "FeaturesExtraction3DInterface.hpp"
 
-#include <PointCloud.hpp>
-#include <VisualPointFeatureVector3D.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <pcl/point_cloud.h>
@@ -25,7 +25,11 @@
 #include <stdlib.h>
 #include <string>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesExtraction3D
 {
 	/**
 	 * Extraction of keypoints in a 3D pointcloud using the Harris Detector
@@ -105,7 +109,9 @@ namespace dfn_ci
 			void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 	};
 }
+}
+}
 
-#endif // HARRISDETECTOR3D_HPP
+#endif // FEATURESEXTRACTION3D_HARRISDETECTOR3D_HPP
 
 /** @} */

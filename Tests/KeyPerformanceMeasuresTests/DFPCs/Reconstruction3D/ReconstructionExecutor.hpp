@@ -32,14 +32,14 @@
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <Frame.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <VisualPointFeatureVector3D.hpp>
-#include <SupportTypes.hpp>
-#include <MatToFrameConverter.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
+#include <Converters/SupportTypes.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -63,12 +63,12 @@ class ReconstructionExecutor
 		ReconstructionExecutor();
 		~ReconstructionExecutor();
 
-		void SetDfpc(std::string configurationFilePath, dfpc_ci::Reconstruction3DInterface* dfpc);
+		void SetDfpc(std::string configurationFilePath, CDFF::DFPC::Reconstruction3DInterface* dfpc);
 		void SetInputFilesPaths(std::string inputImagesFolder, std::string inputImagesListFileName);
 		void SetOutputFilePath(std::string outputPointCloudFilePath);
 		void SetOutliersFilePath(std::string outliersReferenceFilePath);
 		void SetMeasuresFilePath(std::string measuresReferenceFilePath);
-		void ExecuteDfpc();
+		void ExecuteDfpc(std::string transformFilePath = "");
 		bool IsOutliersQualitySufficient(float outliersPercentageThreshold);
 		bool IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage);
 		bool IsDimensionsQualitySufficient(float shapeSimilarityPercentange, float dimensionalErrorPercentage, float componentSizeThresholdPercentage);
@@ -117,7 +117,7 @@ class ReconstructionExecutor
 		Converters::MatToFrameConverter frameConverter;
 		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 		Converters::PclPointCloudToPointCloudConverter inverseCloudConverter;
-		dfpc_ci::Reconstruction3DInterface* dfpc;
+		CDFF::DFPC::Reconstruction3DInterface* dfpc;
 
 		bool inputImagesWereLoaded;
 		bool outputPointCloudWasLoaded;
@@ -139,6 +139,8 @@ class ReconstructionExecutor
 		float ComputeObjectDimension(int objectIndex);
 		float ComputeLineAbsoluteError(const Line& line);
 		float ComputeObjectShapeSimilarity(int objectIndex);
+
+		void SaveTransform(std::string transformFilePath);
 	};
 
 #endif

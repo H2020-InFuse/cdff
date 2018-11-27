@@ -9,7 +9,7 @@
 
 #include "IterativePnpSolver.hpp"
 
-#include <Pose.hpp>
+#include <Types/CPP/Pose.hpp>
 #include <Errors/Assert.hpp>
 
 #include <opencv2/opencv_modules.hpp>
@@ -18,7 +18,11 @@
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace PerspectiveNPointSolving
 {
 
 IterativePnpSolver::IterativePnpSolver()
@@ -43,6 +47,12 @@ void IterativePnpSolver::configure()
 
 void IterativePnpSolver::process()
 {
+	if (GetNumberOfPoints(inPoints) < 4)
+	{
+		outSuccess = false;
+		return;	
+	}
+
 	// Read data from input ports
 	cv::Mat points = Convert(&inPoints);
 	cv::Mat projections = visualPointFeatureVector2DToMat.Convert(&inProjections);
@@ -62,12 +72,12 @@ void IterativePnpSolver::process()
 
 const IterativePnpSolver::IterativePnpOptionsSet IterativePnpSolver::DEFAULT_PARAMETERS =
 {
-	.cameraMatrix =
+	//.cameraMatrix =
 	{
-		.focalLengthX = 1,
-		.focalLengthY = 1,
-		.principalPointX = 0,
-		.principalPointY = 0
+		/*.focalLengthX =*/ 1,
+		/*.focalLengthY =*/ 1,
+		/*.principalPointX =*/ 0,
+		/*.principalPointY =*/ 0
 	}
 };
 
@@ -128,6 +138,8 @@ void IterativePnpSolver::ValidateInputs(cv::Mat points, cv::Mat projections)
 		"IterativePnpSolver Error: the points and their projections are in a different number");
 }
 
+}
+}
 }
 
 /** @} */

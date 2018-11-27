@@ -33,10 +33,10 @@
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <MatToFrameConverter.hpp>
-#include <Frame.hpp>
-#include <Pose.hpp>
-#include <PointCloud.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
 #include <Converters/SupportTypes.hpp>
 
@@ -72,7 +72,7 @@ class GuiTestReconstruction3D
 		GuiTestReconstruction3D(std::string configurationFilePath, std::string imageFilesFolder, std::string imagesListFileName, ImageFilesType imageFilesType);
 		~GuiTestReconstruction3D();
 
-		void Run(dfpc_ci::Reconstruction3DInterface& reconstructor3d);
+		void Run(CDFF::DFPC::Reconstruction3DInterface& reconstructor3d);
 
 	/* --------------------------------------------------------------------
 	 * Protected

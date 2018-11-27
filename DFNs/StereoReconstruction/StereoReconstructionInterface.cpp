@@ -5,7 +5,9 @@
 
 #include "StereoReconstructionInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 StereoReconstructionInterface::StereoReconstructionInterface()
@@ -31,6 +33,7 @@ const asn1SccPointcloud& StereoReconstructionInterface::pointcloudOutput() const
     return outPointcloud;
 }
 
+}
 }
 
 /** @} */

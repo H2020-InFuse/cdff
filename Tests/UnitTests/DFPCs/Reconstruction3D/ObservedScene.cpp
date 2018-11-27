@@ -34,16 +34,16 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 
-#include <MatToFrameConverter.hpp>
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <Pose.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/Pose.hpp>
 
 #include <ConversionCache/ConversionCache.hpp>
 #include <Stubs/Common/ConversionCache/CacheHandler.hpp>
 #include <Mocks/Common/Converters/PclPointCloudToPointCloudConverter.hpp>
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::Reconstruction3D;
 using namespace FrameWrapper;
 using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;

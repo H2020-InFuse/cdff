@@ -34,10 +34,10 @@
 #include <BundleAdjustment/BundleAdjustmentInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <CorrespondenceMap2D.hpp>
-#include <CorrespondenceMaps2DSequence.hpp>
-#include <Pose.hpp>
-#include <PosesSequence.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/CorrespondenceMaps2DSequence.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/PosesSequence.hpp>
 #include <Converters/MatToCorrespondenceMaps2DSequenceConverter.hpp>
 
 #include <stdlib.h>
@@ -59,7 +59,7 @@ class PositionTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		PositionTester(std::string configurationFilePath, dfn_ci::BundleAdjustmentInterface* dfn);
+		PositionTester(std::string configurationFilePath, CDFF::DFN::BundleAdjustmentInterface* dfn);
 		~PositionTester();
 
 		void SetFilesPaths(std::string inputCorrespondenceFilePath, std::string positionReferenceFilePath);
@@ -88,7 +88,7 @@ class PositionTester
 		bool bundleAdjustmentSuccess;
 
 		Converters::MatToCorrespondenceMaps2DSequenceConverter correspondenceConverter;
-		dfn_ci::BundleAdjustmentInterface* dfn;
+		CDFF::DFN::BundleAdjustmentInterface* dfn;
 
 		bool correspondencesWereLoaded;
 		bool positionReferencesWereLoaded;

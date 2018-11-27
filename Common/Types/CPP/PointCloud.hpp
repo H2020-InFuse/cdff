@@ -13,7 +13,7 @@
 #ifndef POINT_CLOUD_HPP
 #define POINT_CLOUD_HPP
 
-#include <Pointcloud.h>
+#include <Types/C/Pointcloud.h>
 
 #include "BaseTypes.hpp"
 #include <stdlib.h>

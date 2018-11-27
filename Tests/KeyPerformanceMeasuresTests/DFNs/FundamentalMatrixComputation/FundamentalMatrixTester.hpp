@@ -35,8 +35,8 @@
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
 #include <Errors/Assert.hpp>
 
-#include <CorrespondenceMap2D.hpp>
-#include <Matrix.hpp>
+#include <Types/CPP/CorrespondenceMap2D.hpp>
+#include <Types/CPP/Matrix.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -57,7 +57,7 @@ class FundamentalMatrixTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		FundamentalMatrixTester(std::string configurationFilePath, dfn_ci::FundamentalMatrixComputationInterface* dfn);
+		FundamentalMatrixTester(std::string configurationFilePath, CDFF::DFN::FundamentalMatrixComputationInterface* dfn);
 		~FundamentalMatrixTester();
 
 		void SetInputFilePath(std::string inputCorrespondenceFilePath);
@@ -82,7 +82,7 @@ class FundamentalMatrixTester
 		MatrixWrapper::Matrix3dConstPtr outputFundamentalMatrix;
 		bool outputComputationSuccess;
 
-		dfn_ci::FundamentalMatrixComputationInterface* dfn;
+		CDFF::DFN::FundamentalMatrixComputationInterface* dfn;
 
 		bool inputCorrespondencesWereLoaded;
 

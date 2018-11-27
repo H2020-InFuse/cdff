@@ -205,7 +205,8 @@ void ShapesProfiler::PointPickingCallback(const pcl::visualization::PointPicking
 			{
 			found = true;
 			int32_t verifyIndex =  visualizedIndicesList.at(pointIndexr);
-			ASSERT(verifyIndex == originalPointIndex, "The point does not match the visualization");
+			VERIFY(verifyIndex == originalPointIndex, "The point does not match the visualization");
+			found = (verifyIndex == originalPointIndex);
 			}
 		}
 	

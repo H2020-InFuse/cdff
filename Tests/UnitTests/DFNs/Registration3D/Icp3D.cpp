@@ -13,12 +13,12 @@
 
 #include <catch.hpp>
 #include <Registration3D/Icp3D.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 
 #include <boost/make_shared.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::Registration3D;
 using namespace Converters;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;

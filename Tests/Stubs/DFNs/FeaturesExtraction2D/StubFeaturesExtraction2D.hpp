@@ -13,9 +13,9 @@
 
 /*!
  * @addtogroup DFNs
- * 
- *  This is a stub DFN for the extraction of 2D keypoint from a 2D image. 
- *  At the moment it does nothing, but we plan to add a fake behaviour.  
+ *
+ *  This is a stub DFN for the extraction of 2D keypoint from a 2D image.
+ *  At the moment it does nothing, but we plan to add a fake behaviour.
  *
  * @{
  */
@@ -29,11 +29,15 @@
  * --------------------------------------------------------------------------
  */
 #include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
 
-
-namespace dfn_ci {
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesExtraction2D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -62,10 +66,13 @@ namespace dfn_ci {
 	/* --------------------------------------------------------------------
 	 * Private
 	 * --------------------------------------------------------------------
-	 */	
+	 */
 	private:
     };
 }
+}
+}
+
 #endif
 /* StubFeaturesExtraction2D.hpp */
 /** @} */

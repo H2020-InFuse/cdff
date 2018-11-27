@@ -8,7 +8,7 @@
  */
 
 #include "SvdDecomposition.hpp"
-#include <FrameToMatConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 #include <stdlib.h>
@@ -20,7 +20,11 @@ using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;
 using namespace BaseTypesWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace BundleAdjustment
 {
 
 SvdDecomposition::SvdDecomposition()
@@ -74,26 +78,27 @@ void SvdDecomposition::process()
 	DecomposeMeasurementMatrix(measurementMatrix, compatibleRotationMatrix, compatiblePositionMatrix);
 
 	ConvertRotationTranslationMatricesToPosesSequence(translationMatrix, compatibleRotationMatrix, outPosesSequence);
+	outError = -1;
 	outSuccess = true;
 }
 
 const SvdDecomposition::SvdDecompositionOptionsSet SvdDecomposition::DEFAULT_PARAMETERS =
 {
-	.leftCameraMatrix =
+	//.leftCameraMatrix =
 	{
-		.focalLengthX = 1,
-		.focalLengthY = 1,
-		.principalPointX = 0,
-		.principalPointY = 0,
+		/*.focalLengthX =*/ 1,
+		/*.focalLengthY =*/ 1,
+		/*.principalPointX =*/ 0,
+		/*.principalPointY =*/ 0,
 	},
-	.rightCameraMatrix =
+	//.rightCameraMatrix =
 	{
-		.focalLengthX = 1,
-		.focalLengthY = 1,
-		.principalPointX = 0,
-		.principalPointY = 0,
+		/*.focalLengthX =*/ 1,
+		/*.focalLengthY =*/ 1,
+		/*.principalPointX =*/ 0,
+		/*.principalPointY =*/ 0,
 	},
-	.baseline = 1.0
+	/*.baseline =*/ 1.0
 };
 
 void SvdDecomposition::DecomposeMeasurementMatrix(cv::Mat measurementMatrix, cv::Mat& compatibleRotationMatrix, cv::Mat& compatiblePositionMatrix)
@@ -263,6 +268,8 @@ cv::Mat SvdDecomposition::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatri
 
 	return cvCameraMatrix;
 	}
+}
+}
 }
 
 /** @} */

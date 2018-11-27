@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * This is the test interface for the implementation of the performance test for DFPC Reconstruction 3D
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -39,13 +39,13 @@
 #include <pcl/io/ply_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
 
-#include <MatToFrameConverter.hpp>
-#include <Frame.hpp>
-#include <VisualPointFeatureVector2D.hpp>
-#include <Pose.hpp>
-#include <PointCloud.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/PointCloud.hpp>
 
-#include <PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
 #include <PerformanceTests/DFPCs/PerformanceTestInterface.hpp>
 
 class Reconstruction3DTestInterface : public PerformanceTestInterface
@@ -55,7 +55,7 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		Reconstruction3DTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, dfpc_ci::Reconstruction3DInterface* reconstructor);
+		Reconstruction3DTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, CDFF::DFPC::Reconstruction3DInterface* reconstructor);
 		~Reconstruction3DTestInterface();
 
 		void SetImageFilesPath(std::string baseFolderPath, std::string imagesListFileName);
@@ -78,10 +78,10 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 		bool saveOutputCloud;
 		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 
-		dfpc_ci::ObservedScene* map;
-		dfpc_ci::Reconstruction3DInterface* reconstructor;
+		CDFF::DFPC::Reconstruction3D::ObservedScene* map;
+		CDFF::DFPC::Reconstruction3DInterface* reconstructor;
 		void ReadImagesList();
-	
+
 		std::vector<std::string> leftImageFileNamesList;
 		std::vector<std::string> rightImageFileNamesList;
 		std::vector<FrameWrapper::FrameConstPtr> leftImagesList;

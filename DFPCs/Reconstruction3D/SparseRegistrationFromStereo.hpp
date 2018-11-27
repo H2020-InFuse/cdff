@@ -12,7 +12,7 @@
  */
 
 /*!
- * @addtogroup DFNs
+ * @addtogroup DFPCs
  * 
  *  This DFN chain implements the Registration From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows: 
@@ -24,8 +24,8 @@
  * @{
  */
 
-#ifndef SPARSE_REGISTRATION_FROM_STEREO_HPP
-#define SPARSE_REGISTRATION_FROM_STEREO_HPP
+#ifndef RECONSTRUCTION3D_SPARSEREGISTRATIONFROMSTEREO_HPP
+#define RECONSTRUCTION3D_SPARSEREGISTRATIONFROMSTEREO_HPP
 
 /* --------------------------------------------------------------------------
  *
@@ -39,16 +39,30 @@
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
 #include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
 #include <Registration3D/Registration3DInterface.hpp>
+#include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
+#include <PointCloudTransform/PointCloudTransformInterface.hpp>
+#include <PointCloudFiltering/PointCloudFilteringInterface.hpp>
 
 #include "PointCloudMap.hpp"
+#include "BundleHistory.hpp"
+
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
-#include <Frame.hpp>
-#include <PointCloud.hpp>
-#include <Pose.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
+#ifdef TESTING
+#include <fstream>
+#endif
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 /* --------------------------------------------------------------------------
  *
@@ -83,48 +97,62 @@ namespace dfpc_ci {
 		PointCloudMap pointCloudMap;
 		bool firstInput;
 
-		struct SparseRegistrationFromStereoOptionsSet
+		struct RegistrationFromStereoOptionsSet
 			{
 			float searchRadius;
 			float pointCloudMapResolution;
+			bool matchToReconstructedCloud;
+			bool useAssemblerDfn;
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
-		SparseRegistrationFromStereoOptionsSet parameters;
-		static const SparseRegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
+		RegistrationFromStereoOptionsSet parameters;
+		static const RegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
 
-		dfn_ci::ImageFilteringInterface* optionalLeftFilter;
-		dfn_ci::ImageFilteringInterface* optionalRightFilter;
-		dfn_ci::StereoReconstructionInterface* reconstructor3D;
-		dfn_ci::FeaturesExtraction3DInterface* featuresExtractor;
-		dfn_ci::Registration3DInterface* cloudRegistrator;
+		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
+		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
+		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
+		CDFF::DFN::FeaturesExtraction3DInterface* featuresExtractor3d;
+		CDFF::DFN::Registration3DInterface* registrator3d;
+		CDFF::DFN::PointCloudAssemblyInterface* cloudAssembler;
+		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
+		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
 
-		FrameWrapper::FramePtr leftImage;
-		FrameWrapper::FramePtr rightImage;
-		FrameWrapper::FramePtr filteredLeftImage;
-		FrameWrapper::FramePtr filteredRightImage;
-		PointCloudWrapper::PointCloudPtr imagesCloud;
-		PointCloudWrapper::PointCloudConstPtr imagesSparseCloud;
-		PointCloudWrapper::PointCloudConstPtr sceneSparseCloud;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr imagesCloudKeypointsVector;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr sceneCloudKeypointsVector;
-		PoseWrapper::Pose3DPtr cameraPoseInScene;
-		PoseWrapper::Pose3DPtr previousCameraPoseInScene;
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr emptyFeaturesVector;
+		#ifdef TESTING
+		std::ofstream logFile;
+		void WriteOutputToLogFile();
+		#endif
+
+		//Helpers
+		BundleHistory* bundleHistory;
+		PointCloudWrapper::PointCloudPtr featureCloud;
 
 		void ConfigureExtraParameters();
-		void AssignDfnsAlias();
+		void InstantiateDFNs();
+		void ComputeFeatureCloud(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr vector);
 
-		void ComputePointCloud();
+		void UpdatePose(PointCloudWrapper::PointCloudConstPtr inputCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr keypointVector);
+		void UpdatePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud);
 
-		void FilterLeftImage();
-		void FilterRightImage();
-		void ComputeStereoPointCloud();
-		void ComputeImagesCloudKeypoints();
-		PointCloudWrapper::PointCloudConstPtr FromKeypointsToCloud(VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr keypointsVector);
-		bool RegisterImagesCloudOnScene();
+		/*
+		* Inline Methods
+		*
+		*/
+
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
     };
 }
-#endif
-/* SparseRegistrationFromStereo.hpp */
+}
+}
+
+#endif // RECONSTRUCTION3D_SPARSEREGISTRATIONFROMSTEREO_HPP
+
 /** @} */

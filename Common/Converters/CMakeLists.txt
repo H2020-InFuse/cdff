@@ -1,30 +1,38 @@
-add_library(
-    converters_opencv
-    FrameToMatConverter.cpp
+# libcdff_converters
+
+set(converters
     MatToFrameConverter.cpp
+    FrameToMatConverter.cpp
     FrameToImageConverter.cpp
     MatToVisualPointFeatureVector2DConverter.cpp
     VisualPointFeatureVector2DToMatConverter.cpp
     MatToVisualPointFeatureVector3DConverter.cpp
     VisualPointFeatureVector3DToMatConverter.cpp
-    VisualPointFeatureVector3DToPclPointCloudConverter.cpp
     PclPointCloudToVisualPointFeatureVector3DConverter.cpp
-    PointCloudToPclPointCloudConverter.cpp
+    VisualPointFeatureVector3DToPclPointCloudConverter.cpp
     PclPointCloudToPointCloudConverter.cpp
-    Transform3DToEigenTransformConverter.cpp
+    PointCloudToPclPointCloudConverter.cpp
     EigenTransformToTransform3DConverter.cpp
-    Transform3DToMatConverter.cpp
+    Transform3DToEigenTransformConverter.cpp
     MatToTransform3DConverter.cpp
+    Transform3DToMatConverter.cpp
+    PclNormalsCloudToPointCloudConverter.cpp
     PointCloudToPclNormalsCloudConverter.cpp
-    PclNormalsCloudToPointCloudConverter.cpp  
-    CorrespondenceMaps2DSequenceToMatConverter.cpp
     MatToCorrespondenceMaps2DSequenceConverter.cpp
-    CorrespondenceMaps3DSequenceToMatConverter.cpp
+    CorrespondenceMaps2DSequenceToMatConverter.cpp
     MatToCorrespondenceMaps3DSequenceConverter.cpp
-)
-target_link_libraries(converters_opencv opencv_core cdff_types)
+    CorrespondenceMaps3DSequenceToMatConverter.cpp
+    StdVectorOfStringsToStringSequenceConverter.cpp
+    StringSequenceToStdVectorOfStringsConverter.cpp
+    PclOctreeToOctreeConverter.cpp
+    OctreeToPclOctreeConverter.cpp)
 
-install(
-    TARGETS converters_opencv
-    DESTINATION lib
-)
+add_library(cdff_converters
+    ${converters})
+
+target_link_libraries(cdff_converters
+    PUBLIC cdff_types Eigen3::Eigen opencv_core ${PCL_COMMON_LIBRARIES} ${PCL_OCTREE_LIBRARIES}
+    PRIVATE Boost::boost)
+
+install(TARGETS cdff_converters
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}")

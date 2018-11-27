@@ -38,7 +38,7 @@
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <Errors/Assert.hpp>
 #include <PerformanceTests/DFNsIntegration/PerformanceTestInterface.hpp>
@@ -47,7 +47,10 @@
 #include <Eigen/Geometry>
 
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::FeaturesExtraction2D;
+using namespace CDFF::DFN::FeaturesMatching2D;
+using namespace CDFF::DFN::FundamentalMatrixComputation;
+using namespace CDFF::DFN::CamerasTransformEstimation;
 using namespace Converters;
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;

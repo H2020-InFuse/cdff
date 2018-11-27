@@ -32,7 +32,6 @@
 #include <opencv2/core/core.hpp>
 #include<pcl/io/ply_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
-#include <ConversionCache/ConversionCache.hpp>
 
 #include <Errors/Assert.hpp>
 #include <GuiTests/ParametersInterface.hpp>
@@ -47,24 +46,20 @@
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <PclPointCloudToPointCloudConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/PclPointCloudToPointCloudConverter.hpp>
 
-#include <Stubs/Common/ConversionCache/CacheHandler.hpp>
-#include <Mocks/Common/Converters/FrameToMatConverter.hpp>
-#include <Mocks/Common/Converters/MatToFrameConverter.hpp>
-#include <Mocks/Common/Converters/MatToVisualPointFeatureVector2DConverter.hpp>
-#include <Mocks/Common/Converters/VisualPointFeatureVector2DToMatConverter.hpp>
-#include <Mocks/Common/Converters/PointCloudToPclPointCloudConverter.hpp>
-#include <Mocks/Common/Converters/MatToTransform3DConverter.hpp>
-#include <Mocks/Common/Converters/Transform3DToMatConverter.hpp>
-
-
-using namespace dfn_ci;
+using namespace CDFF::DFN;
+using namespace CDFF::DFN::ImageFiltering;
+using namespace CDFF::DFN::PointCloudReconstruction2DTo3D;
+using namespace CDFF::DFN::FeaturesMatching2D;
+using namespace CDFF::DFN::FeaturesExtraction2D;
+using namespace CDFF::DFN::FeaturesDescription2D;
+using namespace CDFF::DFN::FundamentalMatrixComputation;
+using namespace CDFF::DFN::CamerasTransformEstimation;
 using namespace Converters;
-using namespace Common;
 using namespace FrameWrapper;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace CorrespondenceMap2DWrapper;
@@ -97,19 +92,6 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 			};
 		State state;
 
-		Stubs::CacheHandler<FrameConstPtr, cv::Mat>* stubFrameCache;
-		Mocks::FrameToMatConverter* mockFrameConverter;
-		Stubs::CacheHandler<cv::Mat, FrameConstPtr>* stubInverseFrameCache;
-		Mocks::MatToFrameConverter* mockInverseFrameConverter;
-		Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>* stubMatToVectorCache;
-		Mocks::MatToVisualPointFeatureVector2DConverter* mockMatToVectorConverter;
-		Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>* stubVectorToMatCache;
-		Mocks::VisualPointFeatureVector2DToMatConverter* mockVectorToMatConverter;
-		Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>* stubEssentialPoseCache;
-		Mocks::MatToPose3DConverter* mockEssentialPoseConverter;
-		Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>* stubTriangulationPoseCache;
-		Mocks::Pose3DToMatConverter* mockTriangulationPoseConverter;
-
 		ImageUndistortion* leftUndistortion;
 		ImageUndistortion* rightUndistortion;
 		HarrisDetector2D* harris;
@@ -125,15 +107,15 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 
 		FrameConstPtr leftImage;
 		FrameConstPtr rightImage;
-		FrameConstPtr undistortedLeftImage;
-		FrameConstPtr undistortedRightImage;
-		VisualPointFeatureVector2DConstPtr leftKeypointsVector;
-		VisualPointFeatureVector2DConstPtr rightKeypointsVector;
-		VisualPointFeatureVector2DConstPtr leftFeaturesVector;
-		VisualPointFeatureVector2DConstPtr rightFeaturesVector;
-		CorrespondenceMap2DConstPtr correspondenceMap;
-		Matrix3dConstPtr fundamentalMatrix;
-		Pose3DConstPtr secondCameraPose;
+		FramePtr undistortedLeftImage;
+		FramePtr undistortedRightImage;
+		VisualPointFeatureVector2DPtr leftKeypointsVector;
+		VisualPointFeatureVector2DPtr rightKeypointsVector;
+		VisualPointFeatureVector2DPtr leftFeaturesVector;
+		VisualPointFeatureVector2DPtr rightFeaturesVector;
+		CorrespondenceMap2DPtr correspondenceMap;
+		Matrix3dPtr fundamentalMatrix;
+		Pose3DPtr secondCameraPose;
 
 		void SetupMocksAndStubs();
 		void SetupParameters();
@@ -221,29 +203,7 @@ StereoReconstructionTestInterface::~StereoReconstructionTestInterface()
 
 void StereoReconstructionTestInterface::SetupMocksAndStubs()
 	{
-	stubFrameCache = new Stubs::CacheHandler<FrameConstPtr, cv::Mat>();
-	mockFrameConverter = new Mocks::FrameToMatConverter();
-	ConversionCache<FrameConstPtr, cv::Mat, FrameToMatConverter>::Instance(stubFrameCache, mockFrameConverter);
 
-	stubInverseFrameCache = new Stubs::CacheHandler<cv::Mat, FrameConstPtr>();
-	mockInverseFrameConverter = new Mocks::MatToFrameConverter();
-	ConversionCache<cv::Mat, FrameConstPtr, MatToFrameConverter>::Instance(stubInverseFrameCache, mockInverseFrameConverter);
-
-	stubMatToVectorCache = new Stubs::CacheHandler<cv::Mat, VisualPointFeatureVector2DConstPtr>();
-	mockMatToVectorConverter = new Mocks::MatToVisualPointFeatureVector2DConverter();
-	ConversionCache<cv::Mat, VisualPointFeatureVector2DConstPtr, MatToVisualPointFeatureVector2DConverter>::Instance(stubMatToVectorCache, mockMatToVectorConverter);
-
-	stubVectorToMatCache = new Stubs::CacheHandler<VisualPointFeatureVector2DConstPtr, cv::Mat>();
-	mockVectorToMatConverter = new Mocks::VisualPointFeatureVector2DToMatConverter();
-	ConversionCache<VisualPointFeatureVector2DConstPtr, cv::Mat, VisualPointFeatureVector2DToMatConverter>::Instance(stubVectorToMatCache, mockVectorToMatConverter);
-
-	stubEssentialPoseCache = new Stubs::CacheHandler<cv::Mat, Pose3DConstPtr>();
-	mockEssentialPoseConverter = new Mocks::MatToPose3DConverter();
-	ConversionCache<cv::Mat, Pose3DConstPtr, MatToPose3DConverter>::Instance(stubEssentialPoseCache, mockEssentialPoseConverter);
-
-	stubTriangulationPoseCache = new Stubs::CacheHandler<Pose3DConstPtr, cv::Mat>();
-	mockTriangulationPoseConverter = new Mocks::Pose3DToMatConverter();
-	ConversionCache<Pose3DConstPtr, cv::Mat, Pose3DToMatConverter>::Instance(stubTriangulationPoseCache, mockTriangulationPoseConverter);
 	}
 
 void StereoReconstructionTestInterface::SetupParameters()
@@ -332,7 +292,8 @@ void StereoReconstructionTestInterface::SetupParameters()
 
 void StereoReconstructionTestInterface::DisplayResult()
 	{
-	PointCloudWrapper::PointCloudConstPtr pointCloud = triangulation->pointCloudOutput();
+	PointCloudWrapper::PointCloudPtr pointCloud = NewPointCloud();
+	Copy(triangulation->pointcloudOutput(), *pointCloud);
 
 	PRINT_TO_LOG("The processing took (seconds): ", GetTotalProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
@@ -499,65 +460,72 @@ void StereoReconstructionTestInterface::PrepareUndistortionLeft()
 	{
 	MatToFrameConverter converter;
 	leftImage = converter.Convert(leftCvImage);
-	leftUndistortion->imageInput(leftImage);
+	leftUndistortion->imageInput(*leftImage);
 	}
 
 void StereoReconstructionTestInterface::PrepareUndistortionRight()
 	{
 	MatToFrameConverter converter;
 	rightImage = converter.Convert(rightCvImage);
-	rightUndistortion->imageInput(rightImage);
+	rightUndistortion->imageInput(*rightImage);
 	}
 
 void StereoReconstructionTestInterface::PrepareHarrisLeft()
 	{
-	undistortedLeftImage = leftUndistortion->filteredImageOutput();
+	undistortedLeftImage = NewFrame();
+	Copy( leftUndistortion->imageOutput(), *undistortedLeftImage);
 
-	harris->imageInput(undistortedLeftImage);
+	harris->frameInput(*undistortedLeftImage);
 	}
 
 void StereoReconstructionTestInterface::PrepareHarrisRight()
 	{
-	undistortedRightImage = rightUndistortion->filteredImageOutput();
-	leftKeypointsVector = harris->featuresSetOutput();
+	undistortedRightImage = NewFrame();
+	Copy( rightUndistortion->imageOutput(), *undistortedRightImage);
+	leftKeypointsVector = NewVisualPointFeatureVector2D();
+	Copy( harris->featuresOutput(), *leftKeypointsVector);
 	PRINT_TO_LOG("Number of features points from left image: ", GetNumberOfPoints(*leftKeypointsVector));
 
-	harris->imageInput(undistortedRightImage);
+	harris->frameInput(*undistortedRightImage);
 	}
 
 void StereoReconstructionTestInterface::PrepareOrbLeft()
 	{
-	rightKeypointsVector = harris->featuresSetOutput();
+	rightKeypointsVector = NewVisualPointFeatureVector2D();
+	Copy( harris->featuresOutput(), *rightKeypointsVector);
 	PRINT_TO_LOG("Number of features points from left image: ", GetNumberOfPoints(*rightKeypointsVector));
 
-	orb->imageInput(undistortedLeftImage);
-	orb->featuresSetInput(leftKeypointsVector);
+	orb->frameInput(*undistortedLeftImage);
+	orb->featuresInput(*leftKeypointsVector);
 	}
 
 void StereoReconstructionTestInterface::PrepareOrbRight()
 	{
-	leftFeaturesVector = orb->featuresSetWithDescriptorsOutput();
+	leftFeaturesVector = NewVisualPointFeatureVector2D();
+	Copy(orb->featuresOutput(), *leftFeaturesVector);
 
-	orb->imageInput(undistortedRightImage);
-	orb->featuresSetInput(rightKeypointsVector);
+	orb->frameInput(*undistortedRightImage);
+	orb->featuresInput(*rightKeypointsVector);
 	}
 
 void StereoReconstructionTestInterface::PrepareFlann()
 	{
-	rightFeaturesVector = orb->featuresSetWithDescriptorsOutput();
+	rightFeaturesVector = NewVisualPointFeatureVector2D();
+	Copy( orb->featuresOutput(), *rightFeaturesVector);
 	VisualizeFeatures(leftFeaturesVector, rightFeaturesVector);
 
-	flann->sourceFeaturesVectorInput(leftFeaturesVector);
-	flann->sinkFeaturesVectorInput(rightFeaturesVector);
+	flann->sourceFeaturesInput(*leftFeaturesVector);
+	flann->sinkFeaturesInput(*rightFeaturesVector);
 	}
 
 void StereoReconstructionTestInterface::PrepareRansac()
 	{
-	correspondenceMap = flann->correspondenceMapOutput();
+	correspondenceMap = NewCorrespondenceMap2D();
+	Copy( flann->matchesOutput(), *correspondenceMap);
 	VisualizeCorrespondences(correspondenceMap);
 	PRINT_TO_LOG("Number of correspondences from flann matcher: ", GetNumberOfCorrespondences(*correspondenceMap));
 
-	ransac->correspondenceMapInput(correspondenceMap);
+	ransac->matchesInput(*correspondenceMap);
 	}
 
 void StereoReconstructionTestInterface::PrepareEssential()
@@ -565,16 +533,18 @@ void StereoReconstructionTestInterface::PrepareEssential()
 	bool success = ransac->successOutput();
 	ASSERT(success, "Fundamental Matrix Ransac failed: unable to find a fundamental matrix");
 
-	fundamentalMatrix = ransac->fundamentalMatrixOutput();
+	fundamentalMatrix = NewMatrix3d();
+	Copy( ransac->fundamentalMatrixOutput(), *fundamentalMatrix);
 	PRINT_TO_LOG("Fundamental matrix Ransac found transform: ", "");
 	
-	essential->fundamentalMatrixInput(fundamentalMatrix);
-	essential->correspondenceMapInput(correspondenceMap);	
+	essential->fundamentalMatrixInput(*fundamentalMatrix);
+	essential->matchesInput(*correspondenceMap);	
 	}
 
 void StereoReconstructionTestInterface::PrepareTriangulation()
 	{
-	secondCameraPose = essential->transformOutput();
+	secondCameraPose = NewPose3D();
+	Copy( essential->transformOutput(), *secondCameraPose);
 	bool success = essential->successOutput();
 	ASSERT(success, "Essential Matrix Decomposition failed: unable to find a valid transform");
 
@@ -584,8 +554,8 @@ void StereoReconstructionTestInterface::PrepareTriangulation()
 	std::string transformString = transformStream.str();
 	PRINT_TO_LOG("Computed Transform is:", transformString);
 
-	triangulation->poseInput(secondCameraPose);
-	triangulation->correspondenceMapInput(correspondenceMap);
+	triangulation->poseInput(*secondCameraPose);
+	triangulation->matchesInput(*correspondenceMap);
 	}
 
 

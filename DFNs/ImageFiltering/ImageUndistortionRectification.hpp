@@ -7,21 +7,25 @@
  * @{
  */
 
-#ifndef IMAGEUNDISTORTIONRECTIFICATION_HPP
-#define IMAGEUNDISTORTIONRECTIFICATION_HPP
+#ifndef IMAGEFILTERING_IMAGEUNDISTORTIONRECTIFICATION_HPP
+#define IMAGEFILTERING_IMAGEUNDISTORTIONRECTIFICATION_HPP
 
 #include "ImageFilteringInterface.hpp"
 
-#include <Frame.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Types/CPP/Frame.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace ImageFiltering
 {
 	/**
 	 * Undistort and rectify a 2D image (two-in-one filter provided by OpenCV).
@@ -184,7 +188,9 @@ namespace dfn_ci
 			void ComputeUndistortionRectificationMap();
 	};
 }
+}
+}
 
-#endif // IMAGEUNDISTORTIONRECTIFICATION_HPP
+#endif // IMAGEFILTERING_IMAGEUNDISTORTIONRECTIFICATION_HPP
 
 /** @} */

@@ -5,7 +5,9 @@
 
 #include "Transform3DEstimationInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 Transform3DEstimationInterface::Transform3DEstimationInterface()
@@ -31,6 +33,12 @@ bool Transform3DEstimationInterface::successOutput() const
     return outSuccess;
 }
 
+float Transform3DEstimationInterface::errorOutput() const
+{
+    return outError;
+}
+
+}
 }
 
 /** @} */

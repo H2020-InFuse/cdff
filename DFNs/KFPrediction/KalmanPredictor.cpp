@@ -17,7 +17,11 @@
 
 using namespace Helpers;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace KFPrediction
 {
 
 KalmanPredictor::KalmanPredictor()
@@ -94,11 +98,11 @@ void KalmanPredictor::process()
 
 const KalmanPredictor::KalmanPredictorOptionsSet KalmanPredictor::DEFAULT_PARAMETERS =
 {
-	.kalmanParameters =
+	//.kalmanParameters =
 	{
-		.stdOrientation =1000.0,
-		.stdTranslation=1000.0,
-		.initialCovariance= 10000
+		/*.stdOrientation =*/ 1000.0,
+		/*.stdTranslation =*/ 1000.0,
+		/*.initialCovariance =*/ 10000
 	}
 };
 
@@ -190,6 +194,8 @@ void KalmanPredictor::ValidateInputs(cv::Mat pose)
 	ASSERT(pose.rows == 6 && pose.cols ==1, "Kalman Predictor: Predictor input is 6-d column vector");
 }
 
+}
+}
 }
 
 /** @} */

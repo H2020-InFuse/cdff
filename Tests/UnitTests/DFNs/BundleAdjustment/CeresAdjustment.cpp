@@ -28,10 +28,10 @@
  */
 #include <catch.hpp>
 #include <BundleAdjustment/CeresAdjustment.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <Eigen/Dense>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::BundleAdjustment;
 using namespace Converters;
 using namespace CorrespondenceMap2DWrapper;
 using namespace PoseWrapper;

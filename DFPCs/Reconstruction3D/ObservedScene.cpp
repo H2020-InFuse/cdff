@@ -28,11 +28,16 @@
  */
 #include "ObservedScene.hpp"
 #include "Errors/Assert.hpp"
-#include <Transform3DToEigenTransformConverter.hpp>
+#include <Converters/Transform3DToEigenTransformConverter.hpp>
 #include <pcl/filters/voxel_grid.h>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 
-namespace dfpc_ci {
+namespace CDFF
+{
+namespace DFPC
+{
+namespace Reconstruction3D
+{
 
 using namespace FrameWrapper;
 using namespace PoseWrapper;
@@ -218,5 +223,7 @@ pcl::PointXYZ ObservedScene::TransformPoint(pcl::PointXYZ point, AffineTransform
 	return transformedPoint;
 	}
 
+}
+}
 }
 /** @} */

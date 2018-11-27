@@ -27,12 +27,12 @@
  * --------------------------------------------------------------------------
  */
 #include "GuiTestReconstruction3D.hpp"
-#include <Visualizers/OpencvVisualizer.hpp>
-#include <Visualizers/PclVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
+#include <Visualizers/PCLVisualizer.hpp>
 #include <Reconstruction3D/ReconstructionFromMotion.hpp>
 #include <Errors/Assert.hpp>
 
-using namespace dfpc_ci;
+using namespace CDFF::DFPC::Reconstruction3D;
 
 const std::string CONFIGURATION_FILE_PATH = "../../tests/ConfigurationFiles/DFPCs/Reconstruction3D/DfpcReconstructionFromMotion_conf02.yaml";
 const std::string IMAGE_FILES_FOLDER = "../../tests/Data/Images/";

@@ -33,6 +33,8 @@
 #include <fstream>
 #include <stdio.h>
 
+using namespace CDFF::DFN;
+
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions
@@ -42,7 +44,12 @@
 DFNsIntegrationTestInterface::DFNsIntegrationTestInterface(int buttonWidth, int buttonHeight) 
 	: mainInterface("Control Panel", buttonWidth, buttonHeight)
 	{
-	mainInterface.AddButton("Process", DFNsIntegrationTestInterface::ProcessCallback, this);
+	ButtonsInterface::ButtonStyle process_button_style;
+	process_button_style.backgroundColor = cv::Scalar(96, 174, 39); // Green - Nephritis
+	process_button_style.textColor = cv::Scalar(255, 255, 255);     // White
+
+	ButtonsInterface::ButtonClickedCallback callback = std::bind(&DFNsIntegrationTestInterface::ProcessCallback, this);
+	mainInterface.AddButton("Process", callback, process_button_style);
 	}
 
 DFNsIntegrationTestInterface::~DFNsIntegrationTestInterface()
@@ -176,11 +183,6 @@ void DFNsIntegrationTestInterface::CleanProcessingTime()
 	{
 	totalProcessingTime = 0;
 	processingTime.clear();
-	}
-
-void DFNsIntegrationTestInterface::ProcessCallback(void* referenceToClass)
-	{
-	((DFNsIntegrationTestInterface*)referenceToClass)->ProcessCallback();
 	}
 
 std::string DFNsIntegrationTestInterface::GetDfnFilePath(unsigned dfnIndex)

@@ -1,0 +1,11 @@
+- Name: GeneralParameters
+  MaximumSamplingDensity: 1000
+  UseIncrementalMode: true
+  UseDistanceFilter: true
+- Name: SurfaceNormalPrefilter
+  NumberOfNeighbours: 10
+  ApproximationEpsilon: 5
+  KeepNormals: false
+  KeepDensities: true
+  KeepEigenValues: false
+  KeepEigenVectors: false

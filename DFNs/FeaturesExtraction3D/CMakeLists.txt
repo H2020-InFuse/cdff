@@ -9,5 +9,23 @@ add_library(
 )
 target_link_libraries(
     harris_detector_3d
-    feature_extraction_3d cdff_types yaml-cpp cdff_helpers converters_opencv
+    feature_extraction_3d cdff_types yaml-cpp cdff_helpers cdff_converters ${PCL_FEATURES_LIBRARIES}
+)
+
+add_library(
+    iss_detector_3d
+    IssDetector3D.cpp
+)
+target_link_libraries(
+    iss_detector_3d
+    feature_extraction_3d cdff_types yaml-cpp cdff_helpers cdff_converters ${PCL_FEATURES_LIBRARIES}
+)
+
+add_library(
+    corner_detector_3d
+    CornerDetector3D.cpp
+)
+target_link_libraries(
+    corner_detector_3d
+    feature_extraction_3d cdff_types yaml-cpp cdff_helpers cdff_converters ${PCL_FEATURES_LIBRARIES}
 )

@@ -1,56 +1,36 @@
-/* --------------------------------------------------------------------------
-*
-* (C) Copyright …
-*
-* --------------------------------------------------------------------------
-*/
-
-/*!
- * @file Map.hpp
- * @date 26/02/2018
+/**
  * @author Alessandro Bianco
  */
 
-/*!
- * @addtogroup DFNs
- * 
- * @brief This a general interface for accessing a map database, a future implementation should link to the DPM.
- *  
- * The map offers method for storing the history of camera images at differen poses and for assembling point clouds constructed at those poses.
- * It also provides a method for iterating through the history by proceeding backward in time.
- *
+/**
+ * @addtogroup DFPCs
  * @{
  */
 
-#ifndef MAP_HPP
-#define MAP_HPP
+#ifndef POINTCLOUDMODELLOCALISATION_MAP_HPP
+#define POINTCLOUDMODELLOCALISATION_MAP_HPP
 
-/* --------------------------------------------------------------------------
- *
- * Includes
- *
- * --------------------------------------------------------------------------
- */
-#include <PointCloud.hpp>
-#include <Pose.hpp>
-#include <BaseTypes.hpp>
-#include <Frame.hpp>
+#include <Types/CPP/PointCloud.hpp>
+#include <Types/CPP/Pose.hpp>
+#include <Types/CPP/BaseTypes.hpp>
+#include <Types/CPP/Frame.hpp>
 
-namespace dfpc_ci {
-
-/* --------------------------------------------------------------------------
- *
- * Class definition
- *
- * --------------------------------------------------------------------------
- */
-    class Map
-    {
-	/* --------------------------------------------------------------------
-	 * Public
-	 * --------------------------------------------------------------------
+namespace CDFF
+{
+namespace DFPC
+{
+namespace PointCloudModelLocalisation
+{
+	/**
+	 * This a general interface for accessing a map database, a future implementation should link to the DPM.
+	 *
+	 * The map offers method for storing the history of camera images at differen poses and for assembling point clouds constructed at those poses.
+	 * It also provides a method for iterating through the history by proceeding backward in time.
 	 */
-        public:
+	class Map
+	{
+	public:
+
 		Map() { };
 		~Map() { };
 
@@ -96,22 +76,11 @@ namespace dfpc_ci {
 		* @param radius, the reference distance from the current camera pose, if radius is negative all points are selected.
 		*/
 		virtual PointCloudWrapper::PointCloudConstPtr GetPartialScene(float radius) = 0;
-
-	/* --------------------------------------------------------------------
-	 * Protected
-	 * --------------------------------------------------------------------
-	 */
-        protected:
-		
-
-	/* --------------------------------------------------------------------
-	 * Private
-	 * --------------------------------------------------------------------
-	 */	
-	private:
-
-    };
+	};
 }
-#endif
-/* Map.hpp */
+}
+}
+
+#endif // POINTCLOUDMODELLOCALISATION_MAP_HPP
+
 /** @} */

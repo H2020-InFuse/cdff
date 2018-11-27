@@ -9,7 +9,7 @@ add_library(
 )
 target_link_libraries(
     disparity_mapping
-    stereoReconstruction cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core converters_opencv cdff_opencv_visualizer pcl_common pcl_filters
+    stereoReconstruction cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core cdff_converters cdff_visualizers_opencv pcl_common pcl_filters
 )
 
 add_library(
@@ -18,7 +18,7 @@ add_library(
 )
 target_link_libraries(
     hirschmuller_disparity_mapping
-    stereoReconstruction cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core converters_opencv cdff_opencv_visualizer pcl_common pcl_filters
+    stereoReconstruction cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core cdff_converters cdff_visualizers_opencv pcl_common pcl_filters
 )
 
 add_library(
@@ -27,5 +27,5 @@ add_library(
 )
 target_link_libraries(
     scanline_optimization
-    stereoReconstruction cdff_types yaml-cpp cdff_helpers converters_opencv cdff_pcl_visualizer pcl_common pcl_filters
+    stereoReconstruction cdff_types yaml-cpp cdff_helpers cdff_converters cdff_visualizers_pcl pcl_common pcl_filters ${PCL_STEREO_LIBRARIES}
 )

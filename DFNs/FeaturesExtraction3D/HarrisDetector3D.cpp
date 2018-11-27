@@ -9,8 +9,8 @@
 
 #include "HarrisDetector3D.hpp"
 
-#include <PointCloudToPclPointCloudConverter.hpp>
-#include <MatToVisualPointFeatureVector3DConverter.hpp>
+#include <Converters/PointCloudToPclPointCloudConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector3DConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
@@ -21,7 +21,11 @@ using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesExtraction3D
 {
 
 HarrisDetector3D::HarrisDetector3D()
@@ -53,6 +57,7 @@ void HarrisDetector3D::process()
 	// Handle empty pointcloud
 	if (GetNumberOfPoints(inPointcloud) == 0)
 	{
+		ClearPoints(outFeatures);
 		return;
 	}
 
@@ -122,14 +127,14 @@ HarrisDetector3D::HarrisMethod HarrisDetector3D::HarrisMethodHelper::Convert(con
 
 const HarrisDetector3D::HarryOptionsSet HarrisDetector3D::DEFAULT_PARAMETERS
 {
-	.nonMaxSuppression = true,
-	.radius = 0.01,
-	.searchRadius = 0.01,
-	.detectionThreshold = 0,
-	.enableRefinement = false,
-	.numberOfThreads = 0,
-	.method = pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS,
-	.outputFormat = POSITIONS_OUTPUT,
+	/*.nonMaxSuppression =*/ true,
+	/*.radius =*/ 0.01,
+	/*.searchRadius =*/ 0.01,
+	/*.detectionThreshold =*/ 0,
+	/*.enableRefinement =*/ false,
+	/*.numberOfThreads =*/ 0,
+	/*.method =*/ pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS,
+	/*.outputFormat =*/ POSITIONS_OUTPUT,
 };
 
 pcl::PointIndicesConstPtr HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
@@ -157,7 +162,7 @@ VisualPointFeatureVector3DConstPtr HarrisDetector3D::Convert(const pcl::PointClo
 {
 	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
 	ClearPoints(*featuresVector);
-	for (unsigned pointIndex = 0; pointIndex < indicesList->indices.size(); pointIndex++)
+	for (unsigned pointIndex = 0; pointIndex < indicesList->indices.size() && pointIndex < MAX_FEATURE_3D_POINTS; pointIndex++)
 	{
 		if (parameters.outputFormat == POSITIONS_OUTPUT)
 		{
@@ -181,7 +186,7 @@ void HarrisDetector3D::ValidateParameters()
 
 void HarrisDetector3D::ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
 {
-	for (unsigned pointIndex; pointIndex < pointCloud->points.size(); pointIndex++)
+	for (size_t pointIndex = 0; pointIndex < pointCloud->points.size(); pointIndex++)
 	{
 		pcl::PointXYZ point = pointCloud->points.at(pointIndex);
 		if (point.x != point.x || point.y != point.y || point.z != point.z)
@@ -191,6 +196,8 @@ void HarrisDetector3D::ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr p
 	}
 }
 
+}
+}
 }
 
 /** @} */

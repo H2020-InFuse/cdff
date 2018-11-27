@@ -18,5 +18,8 @@ output_ports:
       doc: boolean flag indicating successful matrix computation. Fundamental
            matrix computation may fail if the matches are not good enough; in
            that case, the returned matrix is meaningless.
+    - name: inlierMatches
+      type: asn1SccCorrespondenceMap2D
+      doc: "keypoints matches whose reprojection error is below a given threshold."
 implementations:
     - FundamentalMatrixRansac

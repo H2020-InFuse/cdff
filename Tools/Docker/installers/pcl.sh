@@ -3,6 +3,24 @@
 # xma@spaceapplications.com, romain.michalec@strath.ac.uk
 # This file is required by ../fetch_compile_install_dependencies.sh
 
+# * Compiled Boost libraries used by the PCL (sources: https://github.com/
+#   PointCloudLibrary/pcl/blob/master/cmake/pcl_find_boost.cmake and http://
+#   www.pointclouds.org/documentation/tutorials/building_pcl.php):
+#
+#   + Required: Date_Time Filesystem Iostreams System Thread
+#   + Required if WITH_OPENNI2: Chrono
+#   + Optional: MPI Serialization
+#
+#   TODO: OpenNI2 support by the PCL (it is an optional dependency of pcl_io)
+#   is unlikely to be necessary for us
+#
+#   TODO: Message-Parsing Interface disabled but check that we are not using a
+#   part of the PCL that could make use of it
+#
+# * Boost header-only libraries required by the PCL:
+#
+#   + Undocumented, but at least SmartPtr
+
 function install4infuse_pcl {
 if [[ ! -d "${INSTALL_DIR}/include/pcl-1.8" ]]; then
 
@@ -19,6 +37,9 @@ if [[ ! -d "${INSTALL_DIR}/include/pcl-1.8" ]]; then
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_MODULE_PATH="${INSTALL_DIR}/share/cmake-3.11.4/Modules" \
     -D CMAKE_PREFIX_PATH=../../install \
+    -D HAVE_SSE4_2_EXTENSIONS=NO \
+    -D HAVE_SSE4_1_EXTENSIONS=NO \
+    -D WITH_CUDA=OFF \
     -D CMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
     ../
 

@@ -9,7 +9,7 @@
 
 #include "HirschmullerDisparityMapping.hpp"
 
-#include <Visualizers/OpencvVisualizer.hpp>
+#include <Visualizers/OpenCVVisualizer.hpp>
 #include <Errors/Assert.hpp>
 
 #include <opencv2/calib3d.hpp>
@@ -22,7 +22,11 @@
 
 using namespace PointCloudWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace StereoReconstruction
 {
 
 HirschmullerDisparityMapping::HirschmullerDisparityMapping()
@@ -100,49 +104,49 @@ const float HirschmullerDisparityMapping::EPSILON = 0.0001;
 
 const HirschmullerDisparityMapping::HirschmullerDisparityMappingOptionsSet HirschmullerDisparityMapping::DEFAULT_PARAMETERS =
 {
-	.reconstructionSpace =
+	//.reconstructionSpace =
 	{
-		.limitX = 20,
-		.limitY = 20,
-		.limitZ = 10
+		/*.limitX =*/ 20,
+		/*.limitY =*/ 20,
+		/*.limitZ =*/ 10
 	},
-	.prefilter =
+	//.prefilter =
 	{
-		.maximum = 31
+		/*.maximum =*/ 31
 	},
-	.disparities =
+	//.disparities =
 	{
-		.minimum = 0,
-		.numberOfIntervals = 64,
-		.useMaximumDifference = false,
-		.maximumDifference = -1,
-		.speckleRange = 0,
-		.speckleWindow = 0,
-		.smoothnessParameter1 = 0,
-		.smoothnessParameter2 = 0
+		/*.minimum =*/ 0,
+		/*.numberOfIntervals =*/ 64,
+		/*.useMaximumDifference =*/ false,
+		/*.maximumDifference =*/ -1,
+		/*.speckleRange =*/ 0,
+		/*.speckleWindow =*/ 0,
+		/*.smoothnessParameter1 =*/ 0,
+		/*.smoothnessParameter2 =*/ 0
 	},
-	.blocksMatching =
+	//.blocksMatching =
 	{
-		.blockSize = 21,
-		.uniquenessRatio = 15
+		/*.blockSize =*/ 21,
+		/*.uniquenessRatio =*/ 15
 	},
-	.disparityToDepthMap =
+	//.disparityToDepthMap =
 	{
 		1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0, 0, 1,
 		0, 0, -1, 0
 	},
-	.pointCloudSamplingDensity = 1,
-	.voxelGridLeafSize = 0,
-	.useFullScaleTwoPassAlgorithm = false,
-	.useDisparityToDepthMap = false,
-	.stereoCameraParameters =
+	/*.pointCloudSamplingDensity =*/ 1,
+	/*.voxelGridLeafSize =*/ 0,
+	/*.useFullScaleTwoPassAlgorithm =*/ false,
+	/*.useDisparityToDepthMap =*/ false,
+	//.stereoCameraParameters =
 	{
-		.leftFocalLength = 1,
-		.leftPrinciplePointX = 0,
-		.leftPrinciplePointY = 0,
-		.baseline = 1
+		/*.leftFocalLength =*/ 1,
+		/*.leftPrinciplePointX =*/ 0,
+		/*.leftPrinciplePointY =*/ 0,
+		/*.baseline =*/ 1
 	}
 };
 
@@ -164,8 +168,22 @@ cv::Mat HirschmullerDisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::M
 		);
 
 	cv::Mat greyLeftImage, greyRightImage;
-	cv::cvtColor(leftImage, greyLeftImage, CV_BGR2GRAY);
-	cv::cvtColor(rightImage, greyRightImage, CV_BGR2GRAY);
+    if(leftImage.channels() == 3)
+	{
+		cv::cvtColor(leftImage, greyLeftImage, CV_BGR2GRAY);
+	}
+	else  // grayscale
+	{
+		greyLeftImage = leftImage;
+	}
+    if(rightImage.channels() == 3)
+	{
+		cv::cvtColor(rightImage, greyRightImage, CV_BGR2GRAY);
+	}
+	else  // grayscale
+	{
+		greyRightImage = rightImage;
+	}
 
 	cv::Mat disparity;
 	stereo->compute(greyLeftImage, greyRightImage, disparity);
@@ -287,7 +305,7 @@ cv::Mat HirschmullerDisparityMapping::ComputePointCloudFromDisparity(cv::Mat dis
 	float baseline = parameters.stereoCameraParameters.baseline;
 	float focalLength = parameters.stereoCameraParameters.leftFocalLength;
 
-	float depthScale = baseline * focalLength * 16;
+	float depthScale = baseline * focalLength;
 	cv::Mat pointCloud(disparity.rows, disparity.cols, CV_32FC3, cv::Scalar(0,0,0));
 	for (unsigned row = 0; row < disparity.rows; row++)
 	{
@@ -332,6 +350,8 @@ void HirschmullerDisparityMapping::ValidateParameters()
 	ASSERT(parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
 }
 
+}
+}
 }
 
 /** @} */

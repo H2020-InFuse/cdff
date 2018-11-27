@@ -8,8 +8,8 @@
  */
 
 #include "OrbDescriptor.hpp"
-#include <FrameToMatConverter.hpp>
-#include <MatToVisualPointFeatureVector2DConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToVisualPointFeatureVector2DConverter.hpp>
 #include <Errors/Assert.hpp>
 #include <stdlib.h>
 #include <fstream>
@@ -18,7 +18,11 @@ using namespace Converters;
 using namespace VisualPointFeatureVector2DWrapper;
 using namespace FrameWrapper;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace FeaturesDescription2D
 {
 
 OrbDescriptor::OrbDescriptor()
@@ -66,15 +70,15 @@ void OrbDescriptor::process()
 
 const OrbDescriptor::OrbOptionsSet OrbDescriptor::DEFAULT_PARAMETERS =
 {
-	.edgeThreshold = 31,
-	.fastThreshold = 20,
-	.firstLevel = 0,
-	.maxFeaturesNumber = 500,
-	.levelsNumber = 8,
-	.patchSize = 31,
-	.scaleFactor = 1.2,
-	.scoreType = 0,
-	.sizeOfBrightnessTestSet = 2
+	/*.edgeThreshold =*/ 31,
+	/*.fastThreshold =*/ 20,
+	/*.firstLevel =*/ 0,
+	/*.maxFeaturesNumber =*/ 500,
+	/*.levelsNumber =*/ 8,
+	/*.patchSize =*/ 31,
+	/*.scaleFactor =*/ 1.2,
+	/*.scoreType =*/ 0,
+	/*.sizeOfBrightnessTestSet =*/ 2
 };
 
 cv::Mat OrbDescriptor::ComputeOrbFeatures(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector)
@@ -173,6 +177,8 @@ int OrbDescriptor::ConvertToScoreType(std::string scoreType)
 	ASSERT(false, "Orb Detector Descriptor Configuration Error: Score type should be either HarrisScore or FastScore (1, or 2)");
 }
 
+}
+}
 }
 
 /** @} */

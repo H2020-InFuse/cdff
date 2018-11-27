@@ -13,10 +13,10 @@
 
 /*!
  * @addtogroup DFNsTest
- * 
+ *
  * Performance Test for the DFN Scanline Optimization.
- * 
- * 
+ *
+ *
  * @{
  */
 
@@ -29,7 +29,8 @@
 #include "StereoReconstruction.hpp"
 #include <StereoReconstruction/ScanlineOptimization.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN;
+using namespace CDFF::DFN::StereoReconstruction;
 
 const std::string USAGE =
 	"This method takes up to eight optional parameters: \n \
@@ -56,7 +57,7 @@ int main(int argc, char** argv)
 
 	StereoReconstructionInterface* reconstructor = new ScanlineOptimization();
 	StereoReconstructionTestInterface interface("../tests/ConfigurationFiles/DFNs/StereoReconstruction", configurationFileName, "ScanlineOptimization.txt", reconstructor);
-	
+
 	if (argc >= 5)
 		{
 		std::string useReferenceDisparity = argv[4];

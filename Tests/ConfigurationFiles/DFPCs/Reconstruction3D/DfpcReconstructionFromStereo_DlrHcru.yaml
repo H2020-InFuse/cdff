@@ -2,7 +2,9 @@
   Parameters:
   - Name: GeneralParameters
     PointCloudMapResolution: 0.01
-- Name: featureExtractor
+    Baseline: 0.09290672099999999
+    SearchRadius: 80
+- Name: featuresExtractor
   Type: FeaturesExtraction2D
   Implementation: OrbDetectorDescriptor
   Parameters:
@@ -35,6 +37,7 @@
   - Name: GeneralParameters
     OutlierThreshold: 1 
     Confidence: 0.90
+    MaximumSymmetricEpipolarDistance: 0.005
 - Name: cameraTransformEstimator
   Type: CamerasTransformEstimation
   Implementation: EssentialMatrixDecomposition
@@ -96,6 +99,41 @@
     LeftPrinciplePointY: 383.36
     Baseline: 0.09290672099999999
   - Name: ReconstructionSpace
-    LimitX: 35
-    LimitY: 35
-    LimitZ: 35
+    LimitX: 3.5
+    LimitY: 3.5
+    LimitZ: 3.5
+- Name: perspectiveNPointSolver
+  Type: PerspectiveNPointSolving
+  Implementation: IterativePnpSolver
+  Parameters:
+  - Name: CameraMatrix
+    FocalLengthX: 868.664
+    FocalLengthY: 868.505
+    PrinciplePointX: 519.775
+    PrinciplePointY: 383.36
+  - Name: Distortion
+    K1: 0
+    K2: 0
+    P1: 0
+    P2: 0
+    K3: 0
+    K4: 0
+    K5: 0
+    K6: 0
+- Name: reconstructor3dfrom2dmatches
+  Type: PointCloudReconstruction2DTo3D
+  Implementation: Triangulation
+  Parameters:
+  - Name: FirstCameraMatrix
+    FocalLengthX: 868.664
+    FocalLengthY: 868.505
+    PrinciplePointX: 519.775
+    PrinciplePointY: 383.36
+  - Name: SecondCameraMatrix
+    FocalLengthX: 867.226
+    FocalLengthY: 867.128
+    PrinciplePointX: 519.111
+    PrinciplePointY: 390.755
+  - Name: GeneralParameters
+    OutputInvalidPoints: true
+    MaximumReprojectionError: 6.5

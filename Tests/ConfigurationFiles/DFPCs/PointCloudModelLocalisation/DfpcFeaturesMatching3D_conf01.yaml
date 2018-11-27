@@ -6,7 +6,7 @@
     Radius: 0.01
     SearchRadius: 0.01
     NonMaxSuppression: true
-    DetectionThreshold: 0.001
+    DetectionThreshold: 0.009
     EnableRefinement: false
     NumberOfThreads: 0
     HarrisMethod: Harris
@@ -16,7 +16,7 @@
   Implementation: ShotDescriptor3D
   Parameters:
   - Name: GeneralParameters
-    LocalReferenceFrameEstimationRadius: 0.10
+    LocalReferenceFrameEstimationRadius: 0.1
     SearchRadius: 0.1
     OutputFormat: Positions
     EnableNormalsEstimation: true
@@ -26,12 +26,10 @@
     NeighboursSetSize: 0
 - Name: featuresMatcher3d
   Type: FeaturesMatching3D
-  Implementation: Ransac3D
+  Implementation: Icp3D
   Parameters:
   - Name: GeneralParameters
-    SimilarityThreshold: 0.91
-    InlierFraction: 0.73
-    CorrespondenceRandomness: 25
-    NumberOfSamples: 3
-    MaximumIterations: 95000
-    MaxCorrespondenceDistance: 0.020
+    MaxCorrespondenceDistance: 0.08
+    MaximumIterations: 200
+    TransformationEpsilon: 1e-8
+    EuclideanFitnessEpsilon: 1.0

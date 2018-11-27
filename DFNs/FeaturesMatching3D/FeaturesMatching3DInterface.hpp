@@ -3,14 +3,16 @@
  * @{
  */
 
-#ifndef FEATURESMATCHING3D_INTERFACE_HPP
-#define FEATURESMATCHING3D_INTERFACE_HPP
+#ifndef FEATURESMATCHING3D_FEATURESMATCHING3DINTERFACE_HPP
+#define FEATURESMATCHING3D_FEATURESMATCHING3DINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <VisualPointFeatureVector3D.h>
-#include <Pose.h>
+#include <Types/C/VisualPointFeatureVector3D.h>
+#include <Types/C/Pose.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that matches 3D keypoints
@@ -61,7 +63,8 @@ namespace dfn_ci
             bool outSuccess;
     };
 }
+}
 
-#endif // FEATURESMATCHING3D_INTERFACE_HPP
+#endif // FEATURESMATCHING3D_FEATURESMATCHING3DINTERFACE_HPP
 
 /** @} */
