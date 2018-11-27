@@ -42,13 +42,19 @@ if [[ ! -d "${INSTALL_DIR}/include/nabo" ]]; then
     # Patch
     patch -p0 < "${DIR}/patches/nabo-1.0.6+git20180418-fix_eigen_lookup_and_disable_extras.patch"
 
-    # Build
+    # Build (defaults as follow)
+    #   CMAKE_BUILD_TYPE       Release
+    #   SHARED_LIBS            OFF
+    #   CMAKE_PREFIX_PATH      empty
+    #   USE_OPEN_MP            ON
+    #   USE_OPEN_CL            OFF
+    #   CMAKE_INSTALL_PREFIX   /usr/local
     mkdir build
     cd build
 
     cmake \
         -D CMAKE_BUILD_TYPE=Release \
-        -D SHARED_LIBS=ON \
+        -D SHARED_LIBS=OFF \
         -D CMAKE_PREFIX_PATH="${INSTALL_DIR}" \
         -D USE_OPEN_MP=OFF \
         -D USE_OPEN_CL=OFF \
