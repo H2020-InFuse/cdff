@@ -57,7 +57,7 @@ There are two ways you can build the CDFF (Core and Support components):
 
     In that case, you must have installed the **dependencies** of the CDFF yourself on your computer, and the dependencies of these dependencies, and the necessary build tools. To do so, you can use your distribution's software package manager and/or compile from source. The dependencies you compile from source do not need to be installed in your system's local hierarchy (`/usr/local/`): you may want to install them there, or you may prefer to put them in a dedicated directory next to the CDFF's source (`External/install/`), which is the **recommended** location for now as it makes uninstalling them easy.
 
-    Downloading the first-level dependencies is easy using the included `fetch_compile_install_dependencies.sh` script. You must first install a handful of recurse dependencies through the package manager.
+    Downloading the first-level dependencies is easy using the included `get-cdff-dependencies.sh` script. You must first install a handful of recurse dependencies through the package manager.
 
     ```shell
     $ sudo apt install build-essential cmake wget curl \
@@ -66,7 +66,7 @@ There are two ways you can build the CDFF (Core and Support components):
                        libavcodec-dev libavformat-dev libswscale-dev libjpeg-dev \
                        libpng++-dev libjasper-dev libtiff5-dev libv4l-dev freeglut3-dev \
                        libxt-dev #  for VTK
-    $ /path/to/CDFF/External/fetch_compile_install_dependencies.sh
+    $ /path/to/CDFF/External/get-cdff-dependencies.sh
     ```
 
     This might take up to an hour. If you choose this route remember to pass `-D USE_BUNDLED_DEPENDENCIES=ON` to CMake when building.

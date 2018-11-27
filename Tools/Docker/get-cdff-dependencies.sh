@@ -25,7 +25,7 @@ else
 fi
 
 # Print usage
-function show_help {
+function print_help {
   cat <<EOF
 Usage: ${BASH_SOURCE[0]} [OPTION]...
 
@@ -41,7 +41,7 @@ Configuration:
            Required by CDFF::CentralDPM
            Default:
              Disabled
-  -c       Print the current configuration
+  -c       Print the selected configuration
 
 Directories:
   -b DIR   Prefix for build directories
@@ -57,7 +57,7 @@ EOF
 }
 
 # Print selected configuration
-function show_configuration {
+function print_config {
   printf "Dependencies that will be built and installed:"
   for dependency in "${dependencies[@]}"; do
     if [[ ${installers[${dependency}]} ]] ;  then
@@ -119,15 +119,8 @@ function run_installers {
   done
 }
 
-function install_function {
-  if (command -v checkinstall); then
-   sudo checkinstall -y --pakdir "${PKG_DIR}" --nodoc --pkgname="${1}" --pkgversion="${2}"
-  else
-   make --jobs=${CPUS} install
-  fi
-}
-
-function fetchsource_function {
+# A wrapper around "wget"
+function cdff_wget {
   echo "Downloading ${1}"
   mkdir -p "${SOURCE_DIR}/${1}"
   cd "${SOURCE_DIR}/${1}"
@@ -140,7 +133,8 @@ function fetchsource_function {
   echo "Downloading ${1}: done"
 }
 
-function fetchgit_function {
+# A wrapper around "git clone"
+function cdff_gitclone {
   echo "Cloning ${1}'s code repository"
   # Uncomment the lines prefixed with #+# to install from local sources already
   # available in ${SOURCE_DIR}/${1} instead of first cloning sources in there;
@@ -160,7 +154,17 @@ function fetchgit_function {
   echo "Cloning ${1}'s code repository: done"
 }
 
-function clean_function {
+# A wrapper around "make install", or "checkinstall" if installed
+function cdff_makeinstall {
+  if (command -v checkinstall); then
+   sudo checkinstall -y --pakdir "${PKG_DIR}" --nodoc --pkgname="${1}" --pkgversion="${2}"
+  else
+   make --jobs=${CPUS} install
+  fi
+}
+
+# A wrapper around "rm -rf"
+function cdff_makedistclean {
   echo "Removing ${1} source and build directories"
   cd "${SOURCE_DIR}"
   rm -rf "${SOURCE_DIR:?}/${1}"
@@ -168,7 +172,8 @@ function clean_function {
   echo "Removing ${1} source and build directories: done"
 }
 
-function build_all_function {
+# Select all the dependencies for installation by run_installers
+function select_all_dependencies {
   dependencies=(boost yaml-cpp eigen cloudcompare-core ceres nabo \
     pointmatcher flann qhull opencv vtk pcl edres-wrapper)
   if [[ "${ENVIRE_FULL}" = true ]]; then
@@ -217,11 +222,11 @@ OPTIND=1         # Reset in case getopts has been used previously in the shell.
 while getopts ":b:i:p:s:c:e" opt; do
     case "$opt" in
     h|\?)
-        show_help
+        print_help
         exit 0
         ;;
     c)
-        show_configuration
+        print_config
         exit 0
         ;;
     b)
@@ -260,11 +265,11 @@ if [[ ($OPTIND -eq 1) || ( ($OPTIND -eq 2) && (${ENVIRE_FULL} = true) ) ]]; then
   fi
 
   # Default when no -s argument is provided: build everything
-  build_all_function
+  select_all_dependencies
 fi
 shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 
-# Print selected configuration and run the selected installers
-show_configuration
+# Print selected configuration and run the installers for the selected dependencies
+print_config
 run_installers

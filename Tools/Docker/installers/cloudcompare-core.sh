@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # romain.michalec@strath.ac.uk
-# This file is required by ../fetch_compile_install_dependencies.sh
+# This file is required by ../get-cdff-dependencies.sh
 
 # ## CloudCompare core algorithms (CCLib) 2.9.1+git20181115 ===================
 #
@@ -44,7 +44,7 @@ function install4infuse_cloudcompare-core {
 if [[ ! -d "${INSTALL_DIR}/include/cloudcompare-core" ]]; then
 
     # Download source code and change to resulting directory
-    fetchgit_function cloudcompare master https://github.com/CloudCompare/CloudCompare.git e1b281c2b229f8aa7dd961853cf93e130e1cfa5c
+    cdff_gitclone cloudcompare master https://github.com/CloudCompare/CloudCompare.git e1b281c2b229f8aa7dd961853cf93e130e1cfa5c
     cd "${SOURCE_DIR}/cloudcompare"
 
     # Patch
@@ -66,10 +66,10 @@ if [[ ! -d "${INSTALL_DIR}/include/cloudcompare-core" ]]; then
     make --jobs=${CPUS}
 
     # Install
-    install_function libcloudcompare-core 2.9.1+git20181115+cdff
+    cdff_makeinstall libcloudcompare-core 2.9.1+git20181115+cdff
 
     # Remove source and build directories
-    clean_function cloudcompare
+    cdff_makedistclean cloudcompare
 
 fi
 }

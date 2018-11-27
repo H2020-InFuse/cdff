@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # romain.michalec@strath.ac.uk
-# This file is required by ../fetch_compile_install_dependencies.sh
+# This file is required by ../get-cdff-dependencies.sh
 
 # ## libpointmatcher 1.3.0+git20181105 ========================================
 #
@@ -47,13 +47,22 @@ function install4infuse_pointmatcher {
 if [[ ! -d "${INSTALL_DIR}/include/pointmatcher" ]]; then
 
     # Download source code and change to resulting directory
-    fetchgit_function pointmatcher master https://github.com/ethz-asl/libpointmatcher.git 591241e360e5c7ce7b4b35b9e99f88b1db521e8b
+    cdff_gitclone pointmatcher master https://github.com/ethz-asl/libpointmatcher.git 591241e360e5c7ce7b4b35b9e99f88b1db521e8b
     cd "${SOURCE_DIR}/pointmatcher"
 
     # Patch
     patch -p0 < "${DIR}/patches/pointmatcher-1.3.0+git20181105-fix_eigen_lookup.patch"
 
-    # Build
+    # Build (defaults as follow)
+    #   CMAKE_BUILD_TYPE       Release
+    #   SHARED_LIBS            ON
+    #   CMAKE_MODULE_PATH      empty
+    #   CMAKE_PREFIX_PATH      empty
+    #   USE_SYSTEM_YAML_CPP    OFF
+    #   GENERATE_API_DOC       OFF
+    #   USE_OPEN_MP            OFF
+    #   USE_OPEN_CL            OFF
+    #   CMAKE_INSTALL_PREFIX   /usr/local
     mkdir build
     cd build
 
@@ -72,10 +81,10 @@ if [[ ! -d "${INSTALL_DIR}/include/pointmatcher" ]]; then
     make --jobs=${CPUS}
 
     # Install
-    install_function libpointmatcher 1.3.0+git20181105+cdff
+    cdff_makeinstall libpointmatcher 1.3.0+git20181105+cdff
 
     # Remove source and build directories
-    clean_function pointmatcher
+    cdff_makedistclean pointmatcher
 
 fi
 }
