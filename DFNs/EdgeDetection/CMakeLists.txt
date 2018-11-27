@@ -9,7 +9,7 @@ add_library(
 )
 target_link_libraries(
     canny_detector
-    edge_detection cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core opencv_imgcodecs converters_opencv
+    edge_detection cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core opencv_imgcodecs cdff_converters
 )
 
 add_library(
@@ -18,5 +18,5 @@ add_library(
 )
 target_link_libraries(
     sobel_derivative
-    edge_detection cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core opencv_imgcodecs converters_opencv
+    edge_detection cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core opencv_imgcodecs cdff_converters
 )
