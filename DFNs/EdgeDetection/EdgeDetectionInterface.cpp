@@ -5,7 +5,9 @@
 
 #include "EdgeDetectionInterface.hpp"
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
 
 EdgeDetectionInterface::EdgeDetectionInterface()
@@ -36,6 +38,7 @@ const asn1SccFrame& EdgeDetectionInterface::sobelGradientYOutput() const
     return outSobelGradientY;
 }
 
+}
 }
 
 /** @} */

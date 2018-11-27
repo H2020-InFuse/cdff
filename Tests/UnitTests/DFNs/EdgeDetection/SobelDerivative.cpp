@@ -13,13 +13,13 @@
 
 #include <catch.hpp>
 #include <EdgeDetection/SobelDerivative.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-using namespace dfn_ci;
+using namespace CDFF::DFN::EdgeDetection;
 using namespace FrameWrapper;
 using namespace Converters;
 

@@ -12,17 +12,21 @@
 
 #include "EdgeDetectionInterface.hpp"
 #include <Helpers/ParametersListHelper.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <opencv2/core/core.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace EdgeDetection
 {
 	/**
-	 * Compute 2D image gradients, using the Sobel (Scharr?) operator provided
-	 * by OpenCV.
+	 * Compute 2D image gradients, this DFN uses standard Sobel operator for detection kernels of dimension NOT equal to 3; this DFN uses the optimized Scharr variant for 
+	 * detection kernels of dimension equal to 3 (Scharr optimization performs better than standard Sobel if and only if the kernel dimension is 3).
 	 *
 	 * @param scale
 	 *        optional scale factor for the calculated derivatives
@@ -107,6 +111,8 @@ namespace dfn_ci
 
 			void Configure(const YAML::Node& configurationNode);
 	};
+}
+}
 }
 
 #endif // SOBELDERIVATIVE_HPP

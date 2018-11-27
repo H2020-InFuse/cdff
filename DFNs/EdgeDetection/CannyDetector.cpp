@@ -8,7 +8,7 @@
  */
 
 #include "CannyDetector.hpp"
-#include <Frame.hpp>
+#include <Types/CPP/Frame.hpp>
 #include <Errors/Assert.hpp>
 
 #include <opencv2/imgproc/imgproc.hpp>
@@ -18,7 +18,11 @@ using namespace FrameWrapper;
 using namespace Converters;
 using namespace Helpers;
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace EdgeDetection
 {
 
 CannyDetector::CannyDetector()
@@ -96,6 +100,8 @@ void CannyDetector::ValidateInput(cv::Mat inputImage)
 		"CannyDetector: error: input image cannot be empty");
 }
 
+}
+}
 }
 
 /** @} */

@@ -12,13 +12,17 @@
 
 #include "EdgeDetectionInterface.hpp"
 #include <Helpers/ParametersListHelper.hpp>
-#include <FrameToMatConverter.hpp>
-#include <MatToFrameConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 
 #include <opencv2/core/core.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
+{
+namespace EdgeDetection
 {
 	/**
 	 * Detect edges in a 2D image, using the Canny edge detector provided by
@@ -68,6 +72,8 @@ namespace dfn_ci
 
 			void Configure(const YAML::Node& configurationNode);
 	};
+}
+}
 }
 
 #endif // CANNYDETECTOR_HPP

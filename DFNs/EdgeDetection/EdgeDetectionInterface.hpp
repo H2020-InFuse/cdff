@@ -7,9 +7,11 @@
 #define EDGEDETECTION_INTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Frame.h>
+#include <Types/C/Frame.h>
 
-namespace dfn_ci
+namespace CDFF
+{
+namespace DFN
 {
     /**
      * DFN that applies an edge detection filter to a 2D image
@@ -50,6 +52,7 @@ namespace dfn_ci
             asn1SccFrame outSobelGradientX;
             asn1SccFrame outSobelGradientY;
     };
+}
 }
 
 #endif // EDGEDETECTION_INTERFACE_HPP
