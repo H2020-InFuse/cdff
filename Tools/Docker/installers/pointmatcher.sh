@@ -3,7 +3,7 @@
 # romain.michalec@strath.ac.uk
 # This file is required by ../get-cdff-dependencies.sh
 
-# ## libpointmatcher 1.3.0+git20181030 ========================================
+# ## libpointmatcher 1.3.0+git20181105 ========================================
 #
 # Repository      https://github.com/ethz-asl/libpointmatcher
 # Release notes   https://github.com/ethz-asl/libpointmatcher/releases
@@ -13,7 +13,7 @@
 #
 # ### Dependencies ------------------------------------------------------------
 #
-# libpointmatcher has the following dependencies, as of v1.3.0+git20181030:
+# libpointmatcher has the following dependencies, as of v1.3.0+git20181105:
 #
 # * Required:
 #   + Eigen 3+
@@ -47,11 +47,11 @@ function install4infuse_pointmatcher {
 if [[ ! -d "${INSTALL_DIR}/include/pointmatcher" ]]; then
 
     # Download source code and change to resulting directory
-    cdff_gitclone pointmatcher master https://github.com/ethz-asl/libpointmatcher.git fdec1377eb3e16919cbf156e3bf7d92f803d8405
+    cdff_gitclone pointmatcher master https://github.com/ethz-asl/libpointmatcher.git 591241e360e5c7ce7b4b35b9e99f88b1db521e8b
     cd "${SOURCE_DIR}/pointmatcher"
 
     # Patch
-    patch -p0 < "${DIR}/patches/pointmatcher-1.3.0+git20181030-fix_eigen_lookup.patch"
+    patch -p0 < "${DIR}/patches/pointmatcher-1.3.0+git20181105-fix_eigen_lookup.patch"
 
     # Build (defaults as follow)
     #   CMAKE_BUILD_TYPE       Release
@@ -81,7 +81,7 @@ if [[ ! -d "${INSTALL_DIR}/include/pointmatcher" ]]; then
     make --jobs=${CPUS}
 
     # Install
-    cdff_makeinstall libpointmatcher 1.3.0+git20181030+cdff
+    cdff_makeinstall libpointmatcher 1.3.0+git20181105+cdff
 
     # Remove source and build directories
     cdff_makedistclean pointmatcher

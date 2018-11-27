@@ -54,7 +54,7 @@ if [[ ! -d "${INSTALL_DIR}/include/nabo" ]]; then
 
     cmake \
         -D CMAKE_BUILD_TYPE=Release \
-        -D SHARED_LIBS=OFF \
+        -D SHARED_LIBS=ON \
         -D CMAKE_PREFIX_PATH="${INSTALL_DIR}" \
         -D USE_OPEN_MP=OFF \
         -D USE_OPEN_CL=OFF \
