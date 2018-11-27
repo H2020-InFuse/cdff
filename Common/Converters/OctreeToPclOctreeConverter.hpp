@@ -25,7 +25,8 @@
 
 
 #include <Eigen/Core>
-#include <Voxelization/Octree.hpp>
+#include <Types/C/Octree.h>
+#include <pcl/octree/octree_search.h>
 
 namespace Converters
 {
