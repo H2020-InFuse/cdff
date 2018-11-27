@@ -47,7 +47,7 @@ function install4infuse_pointmatcher {
 if [[ ! -d "${INSTALL_DIR}/include/pointmatcher" ]]; then
 
     # Download source code and change to resulting directory
-    fetchgit_function pointmatcher master https://github.com/ethz-asl/libpointmatcher.git fdec1377eb3e16919cbf156e3bf7d92f803d8405
+    cdff_gitclone pointmatcher master https://github.com/ethz-asl/libpointmatcher.git fdec1377eb3e16919cbf156e3bf7d92f803d8405
     cd "${SOURCE_DIR}/pointmatcher"
 
     # Patch
@@ -81,10 +81,10 @@ if [[ ! -d "${INSTALL_DIR}/include/pointmatcher" ]]; then
     make --jobs=${CPUS}
 
     # Install
-    install_function libpointmatcher 1.3.0+git20181030+cdff
+    cdff_makeinstall libpointmatcher 1.3.0+git20181030+cdff
 
     # Remove source and build directories
-    clean_function pointmatcher
+    cdff_makedistclean pointmatcher
 
 fi
 }

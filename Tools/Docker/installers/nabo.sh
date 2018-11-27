@@ -36,7 +36,7 @@ function install4infuse_nabo {
 if [[ ! -d "${INSTALL_DIR}/include/nabo" ]]; then
 
     # Download source code and change to resulting directory
-    fetchgit_function nabo master https://github.com/ethz-asl/libnabo.git 3b15ebca87bcb242cd3a919929cc301953552197
+    cdff_gitclone nabo master https://github.com/ethz-asl/libnabo.git 3b15ebca87bcb242cd3a919929cc301953552197
     cd "${SOURCE_DIR}/nabo"
 
     # Patch
@@ -64,10 +64,10 @@ if [[ ! -d "${INSTALL_DIR}/include/nabo" ]]; then
     make --jobs=${CPUS}
 
     # Install
-    install_function libnabo 1.0.6+git20180418+cdff
+    cdff_makeinstall libnabo 1.0.6+git20180418+cdff
 
     # Remove source and build directories
-    clean_function nabo
+    cdff_makedistclean nabo
 
 fi
 }

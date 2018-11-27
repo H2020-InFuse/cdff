@@ -68,6 +68,6 @@ if [[ ! -d "${INSTALL_DIR}/include/DLRtracker_core" ]]; then
   ln -s libDLRtracker_core.so.1 "${INSTALL_DIR}/lib/DLRtracker_core/libDLRtracker_core.so"
 
   # Remove extracted library
-  clean_function DLRTracker-core
+  cdff_makedistclean DLRTracker-core
 fi
 }

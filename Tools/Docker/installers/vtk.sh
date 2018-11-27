@@ -6,7 +6,7 @@
 
 function install4infuse_vtk {
 if [[ ! -n $(find $PKG_DIR -name 'vtk*') ]]; then
-    fetchgit_function vtk v8.1.0 https://github.com/Kitware/vtk.git
+    cdff_gitclone vtk v8.1.0 https://github.com/Kitware/vtk.git
     cmake \
         -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
@@ -16,7 +16,7 @@ if [[ ! -n $(find $PKG_DIR -name 'vtk*') ]]; then
         $SOURCE_DIR/vtk
 
     make --jobs=${CPUS}
-    install_function vtk 8.1.0
-    clean_function vtk
+    cdff_makeinstall vtk 8.1.0
+    cdff_makedistclean vtk
 fi
 }
