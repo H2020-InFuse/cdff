@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # xma@spaceapplications.com, romain.michalec@strath.ac.uk
-# This file is required by ../fetch_compile_install_dependencies.sh
+# This file is required by ../get-cdff-dependencies.sh
 
 # ## Boost 1.66.0 =============================================================
 #

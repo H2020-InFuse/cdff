@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #xma@spaceapplications.com
-#This file is needed by ../fetch_compile_install_dependencies.sh
+#This file is needed by ../get-cdff-dependencies.sh
 # Version 1.1
 
 function install4infuse_yaml-cpp {
