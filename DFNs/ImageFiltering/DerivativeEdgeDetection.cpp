@@ -91,11 +91,11 @@ DerivativeEdgeDetection::BorderMode DerivativeEdgeDetection::BorderModeHelper::C
 	{
 		return REFLECT;
 	}
-	else if (outputFormat == "border_default" || outputFormat == "3")
+	else if (outputFormat == "BorderDefault" || outputFormat == "3")
 	{
 		return BORDER_DEFAULT;
 	}
-	ASSERT(false, "Edge Derivative Detection: error: unhandled border mode");
+	ASSERT(false, "Edge Derivative Detection: error: unhandled border mode, this parameter takes values in  {Constant, Wrap, Reflect, BorderDefault}");
 	return CONSTANT;
 }
 
@@ -122,7 +122,7 @@ DerivativeEdgeDetection::DepthMode DerivativeEdgeDetection::DepthModeHelper::Con
 	{
 		return FLOAT64;
 	}
-	ASSERT(false, "Edge Derivative Detection: error: unhandled depth mode for 8-bit source image");
+	ASSERT(false, "Edge Derivative Detection: error: unhandled depth mode, this parameter takes values in  {Source, Signed16, Float32, Float64}");
 	return SIGNED16;
 }
 

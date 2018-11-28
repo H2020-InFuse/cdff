@@ -27,8 +27,6 @@ set(unittest_sources UnitTests.cpp
     DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
-    #DFNs/EdgeDetection/CannyDetector.cpp
-    #DFNs/EdgeDetection/SobelDerivative.cpp
     DFNs/ImageFiltering/DerivativeEdgeDetection.cpp
     DFNs/ImageFiltering/CannyEdgeDetection.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp

@@ -25,18 +25,23 @@ namespace DFN
 namespace ImageFiltering
 {
 	/**
-	 * Compute 2D image gradients, this DFN uses standard Sobel operator for detection kernels of dimension NOT equal to 3; this DFN uses the optimized Scharr variant for 
-	 * detection kernels of dimension equal to 3 (Scharr optimization performs better than standard Sobel if and only if the kernel dimension is 3).
+	 * Compute 2D image gradients, this DFN uses either the Sobel or the Scharr operators.
 	 *
-	 * @param scale
-	 *        optional scale factor for the calculated derivatives
-	 * @param delta
-	 *        optional delta value that is added to the calculated derivatives
+	 * @param convolutionParameters.scale
+	 *        optional scale factor for the calculated derivatives;
+	 * @param convolutionParameters.delta
+	 *        optional delta value that is added to the calculated derivatives;
+	 * @param convolutionParameters.kernelType
+	 *	  the kernel type used in the convolution, this parameter takes values in {Sobel, Scharr};
+	 * @param convolutionParameters.kernelSize
+	 *	  the size of the kernel, Scharr is supported only for kernel size equal to 3;
 	 * @param borderMode
 	 *        how interpolation is performed at the border of the image:
-	 *        Constant, Wrap, or Reflect
+	 *        this parameter takes values in  {Constant, Wrap, Reflect, BorderDefault};
 	 * @param depthMode
-	 *        output image depth
+	 *        output image depth, this parameter takes values in  {Source, Signed16, Float32, Float64};
+	 * @param derivativeDirection
+	 *	  whether the operator should be applied along the x or y axis; this parameter takes values in {Horizontal, Vertical}.
 	 */
 	class DerivativeEdgeDetection : public ImageFilteringInterface
 	{
