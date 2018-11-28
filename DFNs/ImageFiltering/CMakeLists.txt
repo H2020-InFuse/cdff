@@ -21,6 +21,15 @@ target_link_libraries(
     image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core cdff_converters opencv_calib3d
 )
 
+add_library(
+    sobel_derivative
+    SobelDerivative.cpp
+)
+target_link_libraries(
+    sobel_derivative
+    image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core cdff_converters opencv_calib3d
+)
+
 add_library(cdff_dfn_background_subtraction BackgroundExtraction.cpp)
 target_link_libraries(cdff_dfn_background_subtraction cdff_validators image_filtering cdff_helpers)
 

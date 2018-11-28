@@ -28,7 +28,8 @@ set(unittest_sources UnitTests.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/EdgeDetection/CannyDetector.cpp
-    DFNs/EdgeDetection/SobelDerivative.cpp
+    #DFNs/EdgeDetection/SobelDerivative.cpp
+    DFNs/ImageFiltering/SobelDerivative.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp

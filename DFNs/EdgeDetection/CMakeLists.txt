@@ -12,11 +12,11 @@ target_link_libraries(
     edge_detection cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core opencv_imgcodecs cdff_converters
 )
 
-add_library(
-    sobel_derivative
-    SobelDerivative.cpp
-)
-target_link_libraries(
-    sobel_derivative
-    edge_detection cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core opencv_imgcodecs cdff_converters
-)
+#add_library(
+#    sobel_derivative
+#    SobelDerivative.cpp
+#)
+#target_link_libraries(
+#    sobel_derivative
+#    edge_detection cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core opencv_imgcodecs cdff_converters
+#)
