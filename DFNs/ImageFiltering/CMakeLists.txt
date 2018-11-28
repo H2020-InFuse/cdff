@@ -22,11 +22,11 @@ target_link_libraries(
 )
 
 add_library(
-    edge_derivative_detection
-    EdgeDerivativeDetection.cpp
+    derivative_edge_detection
+    DerivativeEdgeDetection.cpp
 )
 target_link_libraries(
-    edge_derivative_detection
+    derivative_edge_detection
     image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core cdff_converters opencv_calib3d
 )
 
@@ -40,6 +40,6 @@ target_link_libraries(cdff_dfn_normal_vector_extraction
 add_library(cdff_dfn_kmeans KMeansClustering.cpp)
 target_link_libraries(cdff_dfn_kmeans image_filtering cdff_helpers cdff_validators)
 
-add_library(cdff_dfn_edge_detection EdgeDetection.cpp)
-target_link_libraries(cdff_dfn_edge_detection
+add_library(cdff_dfn_canny_edge_detection CannyEdgeDetection.cpp)
+target_link_libraries(cdff_dfn_canny_edge_detection
         cdff_validators image_filtering cdff_helpers opencv_core yaml-cpp)

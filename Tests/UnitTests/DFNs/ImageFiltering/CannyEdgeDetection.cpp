@@ -3,7 +3,7 @@
  */
 
 /**
- * Unit tests for the DFN EdgeDerivativeDetection
+ * Unit tests for the DFN CannyEdgeDetection
  */
 
 /**
@@ -12,7 +12,7 @@
  */
 
 #include <catch.hpp>
-#include <ImageFiltering/EdgeDerivativeDetection.hpp>
+#include <ImageFiltering/CannyEdgeDetection.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 
 #include <opencv2/core/core.hpp>
@@ -23,7 +23,7 @@ using namespace CDFF::DFN::ImageFiltering;
 using namespace FrameWrapper;
 using namespace Converters;
 
-TEST_CASE( "Call to process (Sobel derivatives)", "[process]" )
+TEST_CASE( "Call to process (Canny)", "[process]" )
 {
 	// Prepare input data
 	cv::Mat rgb = cv::imread("../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
@@ -34,33 +34,33 @@ TEST_CASE( "Call to process (Sobel derivatives)", "[process]" )
 	const Frame* input = MatToFrameConverter().Convert(gray);
 
 	// Instantiate DFN
-	EdgeDerivativeDetection* sobelGradient = new EdgeDerivativeDetection;
+	CannyEdgeDetection* edgeDetection = new CannyEdgeDetection;
 
 	// Send input data to DFN
-	sobelGradient->imageInput(*input);
+	edgeDetection->imageInput(*input);
 
 	// Run DFN
-	sobelGradient->process();
+	edgeDetection->process();
 
 	// Query output data from DFN
-	const Frame& outputX = sobelGradient->imageOutput();
+	const Frame& outputX = edgeDetection->imageOutput();
 
 	// Cleanup
-	delete sobelGradient;
+	delete edgeDetection;
 	delete input;
 }
 
-TEST_CASE( "Call to configure (Sobel derivatives) ", "[configure]" )
+TEST_CASE( "Call to configure (Canny) ", "[configure]" )
 {
 	// Instantiate DFN
-	EdgeDerivativeDetection* sobelGradient = new EdgeDerivativeDetection;
+	CannyEdgeDetection* edgeDetection = new CannyEdgeDetection;
 
 	// Setup DFN
-	sobelGradient->setConfigurationFile("../tests/ConfigurationFiles/DFNs/ImageFiltering/EdgeDerivativeDetection_Conf.yaml");
-	sobelGradient->configure();
+	edgeDetection->setConfigurationFile("../tests/ConfigurationFiles/DFNs/ImageFiltering/CannyEdgeDetection_Conf.yaml");
+	edgeDetection->configure();
 
 	// Cleanup
-	delete sobelGradient;
+	delete edgeDetection;
 }
 
 /** @} */

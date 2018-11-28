@@ -7,7 +7,7 @@
  * @{
  */
 
-#include "EdgeDerivativeDetection.hpp"
+#include "DerivativeEdgeDetection.hpp"
 #include <Types/CPP/Frame.hpp>
 #include <Errors/Assert.hpp>
 
@@ -25,7 +25,7 @@ namespace DFN
 namespace ImageFiltering
 {
 
-EdgeDerivativeDetection::EdgeDerivativeDetection()
+DerivativeEdgeDetection::DerivativeEdgeDetection()
 {
 	parametersHelper.AddParameter<float>("GeneralParameters", "ConstantBorderValue", parameters.constantBorderValue, DEFAULT_PARAMETERS.constantBorderValue);
 	parametersHelper.AddParameter<BorderMode, BorderModeHelper>("GeneralParameters", "BorderMode", parameters.borderMode, DEFAULT_PARAMETERS.borderMode);
@@ -39,17 +39,17 @@ EdgeDerivativeDetection::EdgeDerivativeDetection()
 	configurationFilePath = "";
 }
 
-EdgeDerivativeDetection::~EdgeDerivativeDetection()
+DerivativeEdgeDetection::~DerivativeEdgeDetection()
 {
 }
 
-void EdgeDerivativeDetection::configure()
+void DerivativeEdgeDetection::configure()
 {
 	parametersHelper.ReadFile(configurationFilePath);
 	ValidateParameters();
 }
 
-void EdgeDerivativeDetection::process()
+void DerivativeEdgeDetection::process()
 {
 	// Read data from input port
 	cv::Mat inputImage = frameToMat.Convert(&inImage);
@@ -72,12 +72,12 @@ void EdgeDerivativeDetection::process()
 	delete temporary;
 }
 
-EdgeDerivativeDetection::BorderModeHelper::BorderModeHelper(const std::string& parameterName, BorderMode& boundVariable, const BorderMode& defaultValue)
+DerivativeEdgeDetection::BorderModeHelper::BorderModeHelper(const std::string& parameterName, BorderMode& boundVariable, const BorderMode& defaultValue)
 	: ParameterHelper(parameterName, boundVariable, defaultValue)
 {
 }
 
-EdgeDerivativeDetection::BorderMode EdgeDerivativeDetection::BorderModeHelper::Convert(const std::string& outputFormat)
+DerivativeEdgeDetection::BorderMode DerivativeEdgeDetection::BorderModeHelper::Convert(const std::string& outputFormat)
 {
 	if (outputFormat == "Constant" || outputFormat == "0")
 	{
@@ -99,12 +99,12 @@ EdgeDerivativeDetection::BorderMode EdgeDerivativeDetection::BorderModeHelper::C
 	return CONSTANT;
 }
 
-EdgeDerivativeDetection::DepthModeHelper::DepthModeHelper(const std::string& parameterName, DepthMode& depthVariable, const DepthMode& defaultValue)
+DerivativeEdgeDetection::DepthModeHelper::DepthModeHelper(const std::string& parameterName, DepthMode& depthVariable, const DepthMode& defaultValue)
 	: ParameterHelper(parameterName, depthVariable, defaultValue)
 {
 }
 
-EdgeDerivativeDetection::DepthMode EdgeDerivativeDetection::DepthModeHelper::Convert(const std::string& outputFormat)
+DerivativeEdgeDetection::DepthMode DerivativeEdgeDetection::DepthModeHelper::Convert(const std::string& outputFormat)
 {
 	if (outputFormat == "Source" || outputFormat == "0")
 	{
@@ -126,12 +126,12 @@ EdgeDerivativeDetection::DepthMode EdgeDerivativeDetection::DepthModeHelper::Con
 	return SIGNED16;
 }
 
-EdgeDerivativeDetection::KernelTypeHelper::KernelTypeHelper(const std::string& parameterName, KernelType& typeVariable, const KernelType& defaultValue)
+DerivativeEdgeDetection::KernelTypeHelper::KernelTypeHelper(const std::string& parameterName, KernelType& typeVariable, const KernelType& defaultValue)
 	: ParameterHelper(parameterName, typeVariable, defaultValue)
 {
 }
 
-EdgeDerivativeDetection::KernelType EdgeDerivativeDetection::KernelTypeHelper::Convert(const std::string& kernelType)
+DerivativeEdgeDetection::KernelType DerivativeEdgeDetection::KernelTypeHelper::Convert(const std::string& kernelType)
 {
 	if (kernelType == "Sobel" || kernelType == "0")
 	{
@@ -145,12 +145,12 @@ EdgeDerivativeDetection::KernelType EdgeDerivativeDetection::KernelTypeHelper::C
 	return SOBEL;
 }
 
-EdgeDerivativeDetection::DerivativeDirectionHelper::DerivativeDirectionHelper(const std::string& parameterName, DerivativeDirection& directionVariable, const DerivativeDirection& defaultValue)
+DerivativeEdgeDetection::DerivativeDirectionHelper::DerivativeDirectionHelper(const std::string& parameterName, DerivativeDirection& directionVariable, const DerivativeDirection& defaultValue)
 	: ParameterHelper(parameterName, directionVariable, defaultValue)
 {
 }
 
-EdgeDerivativeDetection::DerivativeDirection EdgeDerivativeDetection::DerivativeDirectionHelper::Convert(const std::string& direction)
+DerivativeEdgeDetection::DerivativeDirection DerivativeEdgeDetection::DerivativeDirectionHelper::Convert(const std::string& direction)
 {
 	if (direction == "Horizontal" || direction == "0" || direction == "horizontal")
 	{
@@ -164,7 +164,7 @@ EdgeDerivativeDetection::DerivativeDirection EdgeDerivativeDetection::Derivative
 	return HORIZONTAL;
 }
 
-const EdgeDerivativeDetection::EdgeDerivativeDetectionOptionsSet EdgeDerivativeDetection::DEFAULT_PARAMETERS =
+const DerivativeEdgeDetection::DerivativeEdgeDetectionOptionsSet DerivativeEdgeDetection::DEFAULT_PARAMETERS =
 {
 	/*.constantBorderValue =*/ 0,
 	/*.borderMode =*/ CONSTANT,
@@ -179,7 +179,7 @@ const EdgeDerivativeDetection::EdgeDerivativeDetectionOptionsSet EdgeDerivativeD
 	/*.derivativeDirection =*/ HORIZONTAL
 };
 
-cv::Mat EdgeDerivativeDetection::ComputeHorizontalDerivative(cv::Mat inputImage)
+cv::Mat DerivativeEdgeDetection::ComputeHorizontalDerivative(cv::Mat inputImage)
 {
 	int borderMode = ConvertBorderModeToCvBorderMode(parameters.borderMode);
 	int depthMode = ConvertDepthModeToCvDepthMode(parameters.depthMode);
@@ -202,7 +202,7 @@ cv::Mat EdgeDerivativeDetection::ComputeHorizontalDerivative(cv::Mat inputImage)
 	return abs_gradientX;
 }
 
-cv::Mat EdgeDerivativeDetection::ComputeVerticalDerivative(cv::Mat inputImage)
+cv::Mat DerivativeEdgeDetection::ComputeVerticalDerivative(cv::Mat inputImage)
 {
 	int borderMode = ConvertBorderModeToCvBorderMode(parameters.borderMode);
 	int depthMode = ConvertDepthModeToCvDepthMode(parameters.depthMode);
@@ -226,7 +226,7 @@ cv::Mat EdgeDerivativeDetection::ComputeVerticalDerivative(cv::Mat inputImage)
 	return abs_gradientY;
 }
 
-int EdgeDerivativeDetection::ConvertBorderModeToCvBorderMode(BorderMode borderMode)
+int DerivativeEdgeDetection::ConvertBorderModeToCvBorderMode(BorderMode borderMode)
 {
 	switch (borderMode)
 	{
@@ -243,7 +243,7 @@ int EdgeDerivativeDetection::ConvertBorderModeToCvBorderMode(BorderMode borderMo
 	}
 }
 
-int EdgeDerivativeDetection::ConvertDepthModeToCvDepthMode(DepthMode depthMode)
+int DerivativeEdgeDetection::ConvertDepthModeToCvDepthMode(DepthMode depthMode)
 {
 	switch (depthMode)
 	{
@@ -262,7 +262,7 @@ int EdgeDerivativeDetection::ConvertDepthModeToCvDepthMode(DepthMode depthMode)
 	}
 }
 
-void EdgeDerivativeDetection::ValidateParameters()
+void DerivativeEdgeDetection::ValidateParameters()
 {
 	ASSERT(parameters.convolutionParameters.scale > 0 ,
 		"Edge Derivative Detection configuration error: scale must be strictly positive");
@@ -270,7 +270,7 @@ void EdgeDerivativeDetection::ValidateParameters()
 		"Edge Derivative Detection error: Scharr kernel type is supported only for kernel size equal to 3");
 }
 
-void EdgeDerivativeDetection::ValidateInput(cv::Mat inputImage)
+void DerivativeEdgeDetection::ValidateInput(cv::Mat inputImage)
 {
 	ASSERT(inputImage.type() == CV_8UC1 || inputImage.type() == CV_8UC3,
 		"Edge Derivative Detection: error: input image must be of type CV_8UC1 or CV_8UC1");

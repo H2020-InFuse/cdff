@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef EDGEDERIVATIVEDETECTION_HPP
-#define EDGEDERIVATIVEDETECTION_HPP
+#ifndef DERIVATIVEEDGEDETECTION_HPP
+#define DERIVATIVEEDGEDETECTION_HPP
 
 #include "ImageFilteringInterface.hpp"
 #include <Helpers/ParametersListHelper.hpp>
@@ -38,12 +38,12 @@ namespace ImageFiltering
 	 * @param depthMode
 	 *        output image depth
 	 */
-	class EdgeDerivativeDetection : public ImageFilteringInterface
+	class DerivativeEdgeDetection : public ImageFilteringInterface
 	{
 		public:
 
-			EdgeDerivativeDetection();
-			virtual ~EdgeDerivativeDetection();
+			DerivativeEdgeDetection();
+			virtual ~DerivativeEdgeDetection();
 
 			virtual void configure();
 			virtual void process();
@@ -115,7 +115,7 @@ namespace ImageFiltering
 					DerivativeDirection Convert(const std::string& value);
 			};
 
-			struct EdgeDerivativeDetectionOptionsSet
+			struct DerivativeEdgeDetectionOptionsSet
 			{
 				float constantBorderValue;
 				BorderMode borderMode;
@@ -125,8 +125,8 @@ namespace ImageFiltering
 			};
 
 			Helpers::ParametersListHelper parametersHelper;
-			EdgeDerivativeDetectionOptionsSet parameters;
-			static const EdgeDerivativeDetectionOptionsSet DEFAULT_PARAMETERS;
+			DerivativeEdgeDetectionOptionsSet parameters;
+			static const DerivativeEdgeDetectionOptionsSet DEFAULT_PARAMETERS;
 
 			Converters::FrameToMatConverter frameToMat;
 			Converters::MatToFrameConverter matToFrame;
@@ -146,6 +146,6 @@ namespace ImageFiltering
 }
 }
 
-#endif // EDGEDERIVATIVEDETECTION_HPP
+#endif // DERIVATIVEEDGEDETECTION_HPP
 
 /** @} */

@@ -2,7 +2,7 @@
 // Created by tch on 06.07.18.
 //
 
-#include "EdgeDetection.hpp"
+#include "CannyEdgeDetection.hpp"
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
@@ -21,26 +21,26 @@ namespace CDFF
     {
         namespace ImageFiltering {
 
-            const EdgeDetection::Parameters EdgeDetection::DefaultParameters = {};
+            const CannyEdgeDetection::Parameters CannyEdgeDetection::DefaultParameters = {};
 
-            EdgeDetection::EdgeDetection() {
+            CannyEdgeDetection::CannyEdgeDetection() {
                 parametersHelper.AddParameter(
-                        "EdgeDetection", "NoiseReductionKernelSize",
+                        "CannyEdgeDetection", "NoiseReductionKernelSize",
                         parameters.NoiseReductionKernelSize, DefaultParameters.NoiseReductionKernelSize);
                 parametersHelper.AddParameter(
-                        "EdgeDetection", "CannyLowThreshold",
+                        "CannyEdgeDetection", "CannyLowThreshold",
                         parameters.CannyLowThreshold, DefaultParameters.CannyLowThreshold);
                 parametersHelper.AddParameter(
-                        "EdgeDetection", "CannyHighThreshold",
+                        "CannyEdgeDetection", "CannyHighThreshold",
                         parameters.CannyHighThreshold, DefaultParameters.CannyHighThreshold);
             }
 
-            void EdgeDetection::configure() {
+            void CannyEdgeDetection::configure() {
                 parametersHelper.ReadFile(configurationFilePath);
                 ValidateParameters();
             }
 
-            void EdgeDetection::process() {
+            void CannyEdgeDetection::process() {
                 ValidateInputs(inImage);
                 cv::Mat inputImage = Converters::FrameToMatConverter().Convert(&inImage);
 
@@ -59,13 +59,13 @@ namespace CDFF
             }
 
 
-            void EdgeDetection::ValidateParameters() {
+            void CannyEdgeDetection::ValidateParameters() {
                 Validators::Number::IsOdd(parameters.NoiseReductionKernelSize);
                 Validators::Number::IsGreaterThan(parameters.NoiseReductionKernelSize, 1);
                 Validators::Number::IsGreaterThan(parameters.CannyHighThreshold, parameters.CannyLowThreshold);
             }
 
-            void EdgeDetection::ValidateInputs(FrameWrapper::Frame const &frame) {
+            void CannyEdgeDetection::ValidateInputs(FrameWrapper::Frame const &frame) {
                 Validators::Frame::NotEmpty(frame);
                 Validators::Frame::HasFormatIn(frame, {
                         FrameWrapper::FrameMode::asn1Sccmode_GRAY,

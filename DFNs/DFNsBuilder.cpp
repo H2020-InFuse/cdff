@@ -26,7 +26,8 @@
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
-#include <ImageFiltering/EdgeDetection.hpp>
+#include <ImageFiltering/CannyEdgeDetection.hpp>
+#include <ImageFiltering/DerivativeEdgeDetection.hpp>
 #include <ImageFiltering/BackgroundExtraction.hpp>
 #include <ImageFiltering/NormalVectorExtraction.hpp>
 #include <ImageFiltering/KMeansClustering.hpp>
@@ -279,9 +280,13 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(std::string dfnImplem
 	{
 		return new ImageFiltering::ImageUndistortionRectification;
 	}
-    else if (dfnImplementation == "EdgeDetection")
+    else if (dfnImplementation == "CannyEdgeDetection")
     {
-        return new ImageFiltering::EdgeDetection;
+        return new ImageFiltering::CannyEdgeDetection;
+    }
+    else if (dfnImplementation == "DerivativeEdgeDetection")
+    {
+        return new ImageFiltering::DerivativeEdgeDetection;
     }
     else if (dfnImplementation == "BackgroundExtraction")
     {
