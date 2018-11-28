@@ -22,11 +22,11 @@ target_link_libraries(
 )
 
 add_library(
-    sobel_derivative
-    SobelDerivative.cpp
+    edge_derivative_detection
+    EdgeDerivativeDetection.cpp
 )
 target_link_libraries(
-    sobel_derivative
+    edge_derivative_detection
     image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core cdff_converters opencv_calib3d
 )
 

@@ -7,8 +7,8 @@
  * @{
  */
 
-#ifndef SOBELDERIVATIVE_HPP
-#define SOBELDERIVATIVE_HPP
+#ifndef EDGEDERIVATIVEDETECTION_HPP
+#define EDGEDERIVATIVEDETECTION_HPP
 
 #include "ImageFilteringInterface.hpp"
 #include <Helpers/ParametersListHelper.hpp>
@@ -22,7 +22,7 @@ namespace CDFF
 {
 namespace DFN
 {
-namespace EdgeDetection
+namespace ImageFiltering
 {
 	/**
 	 * Compute 2D image gradients, this DFN uses standard Sobel operator for detection kernels of dimension NOT equal to 3; this DFN uses the optimized Scharr variant for 
@@ -38,12 +38,12 @@ namespace EdgeDetection
 	 * @param depthMode
 	 *        output image depth
 	 */
-	class SobelDerivative : public ImageFilteringInterface
+	class EdgeDerivativeDetection : public ImageFilteringInterface
 	{
 		public:
 
-			SobelDerivative();
-			virtual ~SobelDerivative();
+			EdgeDerivativeDetection();
+			virtual ~EdgeDerivativeDetection();
 
 			virtual void configure();
 			virtual void process();
@@ -81,10 +81,24 @@ namespace EdgeDetection
 					DepthMode Convert(const std::string& value);
 			};
 
-			struct SobelParameters
+			enum KernelType
+			{
+				SOBEL,
+				SCHARR
+			};
+			class KernelTypeHelper : public Helpers::ParameterHelper<KernelType, std::string>
+			{
+				public:
+					KernelTypeHelper(const std::string& parameterName, KernelType& depthVariable, const KernelType& defaultValue);
+				private:
+					KernelType Convert(const std::string& value);
+			};
+
+			struct ConvolutionParameters
 			{
 				double scale;
 				double delta;
+				KernelType kernelType;
 				int kernelSize;
 			};
 
@@ -101,27 +115,30 @@ namespace EdgeDetection
 					DerivativeDirection Convert(const std::string& value);
 			};
 
-			struct SobelDerivativeOptionsSet
+			struct EdgeDerivativeDetectionOptionsSet
 			{
 				float constantBorderValue;
 				BorderMode borderMode;
 				DepthMode depthMode;
-				SobelParameters sobelParameters;
+				ConvolutionParameters convolutionParameters;
 				DerivativeDirection derivativeDirection;
 			};
 
 			Helpers::ParametersListHelper parametersHelper;
-			SobelDerivativeOptionsSet parameters;
-			static const SobelDerivativeOptionsSet DEFAULT_PARAMETERS;
+			EdgeDerivativeDetectionOptionsSet parameters;
+			static const EdgeDerivativeDetectionOptionsSet DEFAULT_PARAMETERS;
 
 			Converters::FrameToMatConverter frameToMat;
 			Converters::MatToFrameConverter matToFrame;
 
-			cv::Mat sobelx(cv::Mat inputImage);
-			cv::Mat sobely(cv::Mat inputImage);
+			cv::Mat ComputeHorizontalDerivative(cv::Mat inputImage);
+			cv::Mat ComputeVerticalDerivative(cv::Mat inputImage);
 
 			void ValidateParameters();
 			void ValidateInput(cv::Mat inputImage);
+
+			int ConvertBorderModeToCvBorderMode(BorderMode borderMode);
+			int ConvertDepthModeToCvDepthMode(DepthMode depthMode);
 
 			void Configure(const YAML::Node& configurationNode);
 	};
@@ -129,6 +146,6 @@ namespace EdgeDetection
 }
 }
 
-#endif // SOBELDERIVATIVE_HPP
+#endif // EDGEDERIVATIVEDETECTION_HPP
 
 /** @} */

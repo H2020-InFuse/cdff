@@ -3,7 +3,7 @@
  */
 
 /**
- * Unit tests for the DFN SobelDerivative
+ * Unit tests for the DFN EdgeDerivativeDetection
  */
 
 /**
@@ -12,14 +12,14 @@
  */
 
 #include <catch.hpp>
-#include <ImageFiltering/SobelDerivative.hpp>
+#include <ImageFiltering/EdgeDerivativeDetection.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-using namespace CDFF::DFN::EdgeDetection;
+using namespace CDFF::DFN::ImageFiltering;
 using namespace FrameWrapper;
 using namespace Converters;
 
@@ -34,7 +34,7 @@ TEST_CASE( "Call to process (Sobel derivatives)", "[process]" )
 	const Frame* input = MatToFrameConverter().Convert(gray);
 
 	// Instantiate DFN
-	SobelDerivative* sobelGradient = new SobelDerivative;
+	EdgeDerivativeDetection* sobelGradient = new EdgeDerivativeDetection;
 
 	// Send input data to DFN
 	sobelGradient->imageInput(*input);
@@ -53,10 +53,10 @@ TEST_CASE( "Call to process (Sobel derivatives)", "[process]" )
 TEST_CASE( "Call to configure (Sobel derivatives) ", "[configure]" )
 {
 	// Instantiate DFN
-	SobelDerivative* sobelGradient = new SobelDerivative;
+	EdgeDerivativeDetection* sobelGradient = new EdgeDerivativeDetection;
 
 	// Setup DFN
-	sobelGradient->setConfigurationFile("../tests/ConfigurationFiles/DFNs/ImageFiltering/SobelDerivative_Conf.yaml");
+	sobelGradient->setConfigurationFile("../tests/ConfigurationFiles/DFNs/ImageFiltering/EdgeDerivativeDetection_Conf.yaml");
 	sobelGradient->configure();
 
 	// Cleanup

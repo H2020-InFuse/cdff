@@ -2,8 +2,9 @@
   ConstantBorderValue: 0
   BorderMode: Constant
   DepthMode: Signed16
-- Name: SobelParameters
+- Name: ConvolutionParameters
   Scale: 1.0
   Delta: 0.0
+  KernelType: Scharr
   KernelSize: 3
   DerivativeDirection: Vertical

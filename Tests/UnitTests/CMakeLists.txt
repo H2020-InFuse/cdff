@@ -29,7 +29,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/EdgeDetection/CannyDetector.cpp
     #DFNs/EdgeDetection/SobelDerivative.cpp
-    DFNs/ImageFiltering/SobelDerivative.cpp
+    DFNs/ImageFiltering/EdgeDerivativeDetection.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
@@ -145,7 +145,7 @@ set(unittest_libraries catch
     registration_icp_cc
     registration_icp_matcher
     shot_descriptor_3d
-    sobel_derivative
+    edge_derivative_detection
     statistical_outlier_removal
     svd_decomposition
     synthetic_generators
