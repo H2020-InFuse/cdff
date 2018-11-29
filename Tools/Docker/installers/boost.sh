@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # xma@spaceapplications.com, romain.michalec@strath.ac.uk
-# This file is required by ../fetch_compile_install_dependencies.sh
+# This file is required by ../get-cdff-dependencies.sh
 
 # ## Boost 1.66.0 =============================================================
 #
@@ -89,7 +89,7 @@ fi
 if [[ ${boost_ok} = false ]]; then
 
   # Download source code, extract, and change to resulting directory
-  fetchsource_function boost boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/
+  cdff_wget boost boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/
 
   # Build and install
   mkdir build
@@ -105,7 +105,7 @@ if [[ ${boost_ok} = false ]]; then
   wget https://gitlab.kitware.com/cmake/cmake/raw/v3.11.4/Modules/FindBoost.cmake
 
   # Remove source and build directories
-  clean_function boost
+  cdff_makedistclean boost
 
 fi
 }

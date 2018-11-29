@@ -111,13 +111,13 @@ set_target_properties(kmeans_gui_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./test
 
 add_executable(
     edge_detection_gui_test
-    DFNs/ImageFiltering/EdgeDetection.cpp
+    DFNs/ImageFiltering/CannyEdgeDetection.cpp
     DFNs/DFNTestInterface.cpp
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 target_link_libraries(
     edge_detection_gui_test
-    cdff_dfn_edge_detection
+    cdff_dfn_canny_edge_detection
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${GRAPHICALTEST_CDFF_LIBRARIES}
 )

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #xma@spaceapplications.com
-#This file is needed by ../fetch_compile_install_dependencies.sh
+#This file is needed by ../get-cdff-dependencies.sh
 # Version 1.0
 
 function install4infuse_opencv {
 if [[ ! -n $(find $PKG_DIR -name 'opencv*') ]]; then
-	fetchgit_function opencv 3.4.0 https://github.com/opencv/opencv.git
+	cdff_gitclone opencv 3.4.0 https://github.com/opencv/opencv.git
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
 	    -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
@@ -15,7 +15,7 @@ if [[ ! -n $(find $PKG_DIR -name 'opencv*') ]]; then
 	    $SOURCE_DIR/opencv
 
 	make --jobs=${CPUS}
-	install_function opencv 3.4.0
-	clean_function opencv
+	cdff_makeinstall opencv 3.4.0
+	cdff_makedistclean opencv
 fi
 }

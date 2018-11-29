@@ -23,10 +23,10 @@
 #ifndef PCL_OCTREE_TO_OCTREE_CONVERTER_HPP
 #define PCL_OCTREE_TO_OCTREE_CONVERTER_HPP
 
-
 #include <Eigen/Core>
 #include <Types/CPP/BaseTypes.hpp>
-#include <Voxelization/Octree.hpp>
+#include <Types/C/Octree.h>
+#include <pcl/octree/octree_search.h>
 
 namespace Converters
 {

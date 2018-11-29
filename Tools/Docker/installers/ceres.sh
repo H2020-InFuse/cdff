@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # romain.michalec@strath.ac.uk
-# This file is required by ../fetch_compile_install_dependencies.sh
+# This file is required by ../get-cdff-dependencies.sh
 
 # ## Ceres 1.14.0 =============================================================
 #
@@ -41,7 +41,7 @@ function install4infuse_ceres {
 if [[ ! -d "${INSTALL_DIR}/include/ceres" ]]; then
 
   # Download source code, extract, and change to resulting directory
-  fetchsource_function ceres ceres-solver-1.14.0.tar.gz http://ceres-solver.org/
+  cdff_wget ceres ceres-solver-1.14.0.tar.gz http://ceres-solver.org/
 
   # Build
   mkdir build
@@ -58,9 +58,9 @@ if [[ ! -d "${INSTALL_DIR}/include/ceres" ]]; then
   make --jobs=${CPUS}
 
   # Install
-  install_function ceres 1.14.0
+  cdff_makeinstall ceres 1.14.0
 
   # Remove source and build directories
-  clean_function ceres
+  cdff_makedistclean ceres
 fi
 }

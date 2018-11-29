@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # romain.michalec@strath.ac.uk
-# This file is required by ../fetch_compile_install_dependencies.sh
+# This file is required by ../get-cdff-dependencies.sh
 
 # ## libnabo 1.0.6+git20180418 ================================================
 #
@@ -36,13 +36,19 @@ function install4infuse_nabo {
 if [[ ! -d "${INSTALL_DIR}/include/nabo" ]]; then
 
     # Download source code and change to resulting directory
-    fetchgit_function nabo master https://github.com/ethz-asl/libnabo.git 3b15ebca87bcb242cd3a919929cc301953552197
+    cdff_gitclone nabo master https://github.com/ethz-asl/libnabo.git 3b15ebca87bcb242cd3a919929cc301953552197
     cd "${SOURCE_DIR}/nabo"
 
     # Patch
     patch -p0 < "${DIR}/patches/nabo-1.0.6+git20180418-fix_eigen_lookup_and_disable_extras.patch"
 
-    # Build
+    # Build (defaults as follow)
+    #   CMAKE_BUILD_TYPE       Release
+    #   SHARED_LIBS            OFF
+    #   CMAKE_PREFIX_PATH      empty
+    #   USE_OPEN_MP            ON
+    #   USE_OPEN_CL            OFF
+    #   CMAKE_INSTALL_PREFIX   /usr/local
     mkdir build
     cd build
 
@@ -58,10 +64,10 @@ if [[ ! -d "${INSTALL_DIR}/include/nabo" ]]; then
     make --jobs=${CPUS}
 
     # Install
-    install_function libnabo 1.0.6+git20180418+cdff
+    cdff_makeinstall libnabo 1.0.6+git20180418+cdff
 
     # Remove source and build directories
-    clean_function nabo
+    cdff_makedistclean nabo
 
 fi
 }

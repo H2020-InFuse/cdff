@@ -1,0 +1,4 @@
+- Name: CannyEdgeDetection
+  NoiseReductionKernelSize: 5
+  CannyLowThreshold: 80
+  CannyEdgeDetection: 100

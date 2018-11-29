@@ -2,8 +2,8 @@
 // Created by tch on 06.07.18.
 //
 
-#ifndef CDFF_EDGEDETECTION_H
-#define CDFF_EDGEDETECTION_H
+#ifndef CDFF_CANNYEDGEDETECTION_H
+#define CDFF_CANNYEDGEDETECTION_H
 
 #include "ImageFilteringInterface.hpp"
 
@@ -37,9 +37,9 @@ namespace CDFF
          * thresholds. They are content-dependent and best tuned manually for each
          * different scene.
          */
-            class EdgeDetection : public ImageFilteringInterface {
+            class CannyEdgeDetection : public ImageFilteringInterface {
 
-                /// Set of parameters for the EdgeDetection DFN
+                /// Set of parameters for the CannyEdgeDetection DFN
                 struct Parameters {
                     /// The size of the gaussian blur kernel used to denoise the input.
                     /// Should be an odd number. Usually between 3 and 7.
@@ -55,7 +55,7 @@ namespace CDFF
             public:
                 static const Parameters DefaultParameters;
 
-                EdgeDetection();
+                CannyEdgeDetection();
 
                 void configure() override;
 
@@ -73,4 +73,4 @@ namespace CDFF
         }
     }
 }
-#endif //CDFF_EDGEDETECTION_H
+#endif //CDFF_CANNYEDGEDETECTION_H
