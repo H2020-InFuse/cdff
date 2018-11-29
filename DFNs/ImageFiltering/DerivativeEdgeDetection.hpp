@@ -136,8 +136,7 @@ namespace ImageFiltering
 			Converters::FrameToMatConverter frameToMat;
 			Converters::MatToFrameConverter matToFrame;
 
-			cv::Mat ComputeHorizontalDerivative(cv::Mat inputImage);
-			cv::Mat ComputeVerticalDerivative(cv::Mat inputImage);
+			cv::Mat ComputeDerivative(cv::Mat inputImage);
 
 			void ValidateParameters();
 			void ValidateInput(cv::Mat inputImage);

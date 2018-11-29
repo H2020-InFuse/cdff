@@ -56,15 +56,7 @@ void DerivativeEdgeDetection::process()
 	ValidateInput(inputImage);
 
 	// Process data
-	cv::Mat gradient;
-	if (parameters.derivativeDirection == HORIZONTAL)
-		{
-		gradient = ComputeHorizontalDerivative(inputImage);
-		}
-	else
-		{
-		gradient = ComputeVerticalDerivative(inputImage);
-		}
+	cv::Mat gradient = ComputeDerivative(inputImage);
 
 	// Write data to output ports
 	const Frame* temporary = matToFrame.Convert(gradient);
@@ -179,7 +171,7 @@ const DerivativeEdgeDetection::DerivativeEdgeDetectionOptionsSet DerivativeEdgeD
 	/*.derivativeDirection =*/ HORIZONTAL
 };
 
-cv::Mat DerivativeEdgeDetection::ComputeHorizontalDerivative(cv::Mat inputImage)
+cv::Mat DerivativeEdgeDetection::ComputeDerivative(cv::Mat inputImage)
 {
 	int borderMode = ConvertBorderModeToCvBorderMode(parameters.borderMode);
 	int depthMode = ConvertDepthModeToCvDepthMode(parameters.depthMode);
@@ -188,43 +180,23 @@ cv::Mat DerivativeEdgeDetection::ComputeHorizontalDerivative(cv::Mat inputImage)
 	double delta = parameters.convolutionParameters.delta;
 	int kernelSize =  parameters.convolutionParameters.kernelSize;
 
-	cv::Mat gradientX, abs_gradientX;
+	int horizontalDerivativeOrder = (parameters.derivativeDirection == HORIZONTAL ? 1 : 0);
+	int verticalDerivativeOrder = (parameters.derivativeDirection == HORIZONTAL ? 0 : 1);
+
+	cv::Mat gradient, absoluteGradient;
 	if(parameters.convolutionParameters.kernelType == SCHARR)
 		{
-		cv::Scharr(inputImage, gradientX, depthMode, 1, 0, scale, delta, borderMode);
+		cv::Scharr(inputImage, gradient, depthMode, horizontalDerivativeOrder, verticalDerivativeOrder, scale, delta, borderMode);
 		}
 	else
 		{
-		cv::Sobel(inputImage, gradientX, depthMode, 1, 0, kernelSize, scale, delta, borderMode);
+		cv::Sobel(inputImage, gradient, depthMode, horizontalDerivativeOrder, verticalDerivativeOrder, kernelSize, scale, delta, borderMode);
 		}
-	cv::convertScaleAbs(gradientX, abs_gradientX);
+	cv::convertScaleAbs(gradient, absoluteGradient);
 
-	return abs_gradientX;
+	return absoluteGradient;
 }
 
-cv::Mat DerivativeEdgeDetection::ComputeVerticalDerivative(cv::Mat inputImage)
-{
-	int borderMode = ConvertBorderModeToCvBorderMode(parameters.borderMode);
-	int depthMode = ConvertDepthModeToCvDepthMode(parameters.depthMode);
-
-	double scale = parameters.convolutionParameters.scale;
-	double delta = parameters.convolutionParameters.delta;
-	int kernelSize =  parameters.convolutionParameters.kernelSize;
-
-	cv::Mat gradientY, abs_gradientY;
-	
-	if(parameters.convolutionParameters.kernelType == SCHARR)
-		{
-		cv::Scharr(inputImage, gradientY, depthMode, 0, 1, scale, delta, borderMode);
-		}
-	else
-		{
-		cv::Sobel(inputImage, gradientY, depthMode, 0, 1, kernelSize, scale, delta, borderMode);
-		}	
-	cv::convertScaleAbs(gradientY, abs_gradientY);
-
-	return abs_gradientY;
-}
 
 int DerivativeEdgeDetection::ConvertBorderModeToCvBorderMode(BorderMode borderMode)
 {

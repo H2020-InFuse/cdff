@@ -144,7 +144,7 @@ set(unittest_libraries catch
     registration_icp_cc
     registration_icp_matcher
     shot_descriptor_3d
-    derivative_edge_detection
+    cdff_dfn_derivative_edge_detection
     statistical_outlier_removal
     svd_decomposition
     synthetic_generators

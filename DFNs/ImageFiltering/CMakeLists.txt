@@ -22,11 +22,11 @@ target_link_libraries(
 )
 
 add_library(
-    derivative_edge_detection
+    cdff_dfn_derivative_edge_detection
     DerivativeEdgeDetection.cpp
 )
 target_link_libraries(
-    derivative_edge_detection
+    cdff_dfn_derivative_edge_detection
     image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core cdff_converters opencv_calib3d
 )
 
