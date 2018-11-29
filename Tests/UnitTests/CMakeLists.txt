@@ -77,7 +77,6 @@ set(unittest_sources UnitTests.cpp
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
 set(unittest_libraries catch
-    canny_detector
     adjustment_from_stereo
     best_descriptor_match
     cartesian_system_transform
