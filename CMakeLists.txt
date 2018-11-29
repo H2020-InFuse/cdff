@@ -395,6 +395,8 @@ endforeach()
 
 ## Setup CDFF uninstallation ---------------------------------------------------
 
+# Add an uninstall target, see documentation in cmake_uninstall.cmake[.in]
+
 configure_file(
   "${CMAKE_SOURCE_DIR}/Tools/CMake/cmake_uninstall.cmake.in"
   "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
