@@ -1,0 +1,8 @@
+- Name: GeneralParameters
+  ConstantBorderValue: 0
+  BorderMode: Constant
+  DepthMode: Signed16
+- Name: SobelParameters
+  Scale: 1.0
+  Delta: 0.0
+  KernelSize: 3

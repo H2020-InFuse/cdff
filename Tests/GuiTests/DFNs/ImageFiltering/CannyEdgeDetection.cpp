@@ -8,17 +8,17 @@
 #include <Types/CPP/Frame.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 #include <Converters/FrameToMatConverter.hpp>
-#include <ImageFiltering/EdgeDetection.hpp>
+#include <ImageFiltering/CannyEdgeDetection.hpp>
 #include <GuiTests/DFNs/DFNTestInterface.hpp>
 
 using namespace CDFF::DFN::ImageFiltering;
 using namespace FrameWrapper;
 
-class EdgeDetectionTest: public DFNTestInterface
+class CannyEdgeDetectionTest: public DFNTestInterface
 {
 public:
-    EdgeDetectionTest();
-    ~EdgeDetectionTest() override = default;
+    CannyEdgeDetectionTest();
+    ~CannyEdgeDetectionTest() override = default;
 
 private:
 
@@ -27,15 +27,15 @@ private:
 
     // State Variables
     cv::Mat srcImage;
-    std::unique_ptr<EdgeDetection> edge_detection_impl;
+    std::unique_ptr<CannyEdgeDetection> edge_detection_impl;
     const std::string outputWindowName = "Edge Detection";
 };
 
 
-EdgeDetectionTest::EdgeDetectionTest()
+CannyEdgeDetectionTest::CannyEdgeDetectionTest()
     : DFNTestInterface("Edge Detection", 100, 40)
 {
-    edge_detection_impl.reset(new EdgeDetection());
+    edge_detection_impl.reset(new CannyEdgeDetection());
     SetDFN(edge_detection_impl.get());
 
     srcImage = cv::imread("../../tests/Data/Images/LabChairLeft.png", cv::IMREAD_COLOR);
@@ -46,17 +46,17 @@ EdgeDetectionTest::EdgeDetectionTest()
 }
 
 
-void EdgeDetectionTest::SetupParameters()
+void CannyEdgeDetectionTest::SetupParameters()
 {
-    AddParameter("EdgeDetection", "NoiseReductionKernelSize",
-        EdgeDetection::DefaultParameters.NoiseReductionKernelSize, 13);
-    AddParameter("EdgeDetection", "CannyLowThreshold",
-        EdgeDetection::DefaultParameters.CannyLowThreshold, 150.0, 1);
-    AddParameter("EdgeDetection", "CannyHighThreshold",
-        EdgeDetection::DefaultParameters.CannyHighThreshold, 450.0, 1);
+    AddParameter("CannyEdgeDetection", "NoiseReductionKernelSize",
+        CannyEdgeDetection::DefaultParameters.NoiseReductionKernelSize, 13);
+    AddParameter("CannyEdgeDetection", "CannyLowThreshold",
+        CannyEdgeDetection::DefaultParameters.CannyLowThreshold, 150.0, 1);
+    AddParameter("CannyEdgeDetection", "CannyHighThreshold",
+        CannyEdgeDetection::DefaultParameters.CannyHighThreshold, 450.0, 1);
 }
 
-void EdgeDetectionTest::DisplayResult()
+void CannyEdgeDetectionTest::DisplayResult()
 {
     const FrameWrapper::Frame& edge_image = edge_detection_impl->imageOutput();
     cv::Mat processed_frame = Converters::FrameToMatConverter().Convert(&edge_image);
@@ -86,6 +86,6 @@ void EdgeDetectionTest::DisplayResult()
 
 int main(int argc, char** argv)
 {
-    EdgeDetectionTest testImpl;
+    CannyEdgeDetectionTest testImpl;
     testImpl.Run();
 }

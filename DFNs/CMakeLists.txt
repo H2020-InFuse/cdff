@@ -35,8 +35,9 @@ target_link_libraries(
   image_undistortion_rectification
   cdff_dfn_background_subtraction
   cdff_dfn_kmeans
-  cdff_dfn_edge_detection
+  cdff_dfn_canny_edge_detection
   cdff_dfn_normal_vector_extraction
+  cdff_dfn_derivative_edge_detection
   disparity_mapping
   hirschmuller_disparity_mapping
   scanline_optimization

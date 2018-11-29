@@ -27,6 +27,8 @@ set(unittest_sources UnitTests.cpp
     DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
+    DFNs/ImageFiltering/DerivativeEdgeDetection.cpp
+    DFNs/ImageFiltering/CannyEdgeDetection.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
@@ -141,6 +143,7 @@ set(unittest_libraries catch
     registration_icp_cc
     registration_icp_matcher
     shot_descriptor_3d
+    cdff_dfn_derivative_edge_detection
     statistical_outlier_removal
     svd_decomposition
     synthetic_generators
@@ -150,6 +153,7 @@ set(unittest_libraries catch
     triangulation
     voxel_binning
     matcher_assembly
+    cdff_dfn_canny_edge_detection
 )
 
 # Make the Catch executable that runs the unit tests
