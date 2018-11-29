@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # romain.michalec@strath.ac.uk
-# This file is required by ../fetch_compile_install_dependencies.sh
+# This file is required by ../get-cdff-dependencies.sh
 
 # ## DLRTracker-core 1.0.0 ====================================================
 #
@@ -68,6 +68,6 @@ if [[ ! -d "${INSTALL_DIR}/include/DLRtracker_core" ]]; then
   ln -s libDLRtracker_core.so.1 "${INSTALL_DIR}/lib/DLRtracker_core/libDLRtracker_core.so"
 
   # Remove extracted library
-  clean_function DLRTracker-core
+  cdff_makedistclean DLRTracker-core
 fi
 }

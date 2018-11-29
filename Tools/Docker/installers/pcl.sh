@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # xma@spaceapplications.com, romain.michalec@strath.ac.uk
-# This file is required by ../fetch_compile_install_dependencies.sh
+# This file is required by ../get-cdff-dependencies.sh
 
 # * Compiled Boost libraries used by the PCL (sources: https://github.com/
 #   PointCloudLibrary/pcl/blob/master/cmake/pcl_find_boost.cmake and http://
@@ -25,7 +25,7 @@ function install4infuse_pcl {
 if [[ ! -d "${INSTALL_DIR}/include/pcl-1.8" ]]; then
 
   # Download source code and change to resulting directory
-  fetchgit_function pcl pcl-1.8.1 https://github.com/PointCloudLibrary/pcl.git
+  cdff_gitclone pcl pcl-1.8.1 https://github.com/PointCloudLibrary/pcl.git
   cd "${SOURCE_DIR}/pcl"
 
   # Build: compiling the PCL is memory-intensive, so run less jobs (commands)
@@ -48,9 +48,9 @@ if [[ ! -d "${INSTALL_DIR}/include/pcl-1.8" ]]; then
   make --jobs=${JOBS}
 
   # Install
-  install_function pcl 1.8.1
+  cdff_makeinstall pcl 1.8.1
 
   # Remove source and build directories
-  clean_function pcl
+  cdff_makedistclean pcl
 fi
 }

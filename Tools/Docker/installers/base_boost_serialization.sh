@@ -2,7 +2,7 @@
 
 function install4infuse_base_boost_serialization {
 if [[ ! -n $(find $PKG_DIR -name 'base_boost_serialization*') ]]; then
-	fetchgit_function base_boost_serialization master https://github.com/envire/base-boost_serialization.git d35b751223b352cc6d99ffd6c455fd62121bf9b6
+	cdff_gitclone base_boost_serialization master https://github.com/envire/base-boost_serialization.git d35b751223b352cc6d99ffd6c455fd62121bf9b6
 
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
@@ -12,7 +12,7 @@ if [[ ! -n $(find $PKG_DIR -name 'base_boost_serialization*') ]]; then
 	    $SOURCE_DIR/base_boost_serialization
 
 	make --jobs=${CPUS}
-	install_function base_boost_serialization master
-	clean_function base_boost_serialization
+	cdff_makeinstall base_boost_serialization master
+	cdff_makedistclean base_boost_serialization
 fi
 }

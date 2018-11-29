@@ -2,7 +2,7 @@
 
 function install4infuse_base_numeric {
 if [[ ! -n $(find $PKG_DIR -name 'base_numeric*') ]]; then
-	fetchgit_function base_numeric master https://github.com/envire/base-numeric.git f4e12bf3b9e10b3f5bb56ac58f7478bd2590b990
+	cdff_gitclone base_numeric master https://github.com/envire/base-numeric.git f4e12bf3b9e10b3f5bb56ac58f7478bd2590b990
 
 
 	cmake \
@@ -11,7 +11,7 @@ if [[ ! -n $(find $PKG_DIR -name 'base_numeric*') ]]; then
 	    $SOURCE_DIR/base_numeric
 
 	make --jobs=${CPUS}
-	install_function base_numeric master
-	clean_function base_numeric
+	cdff_makeinstall base_numeric master
+	cdff_makedistclean base_numeric
 fi
 }

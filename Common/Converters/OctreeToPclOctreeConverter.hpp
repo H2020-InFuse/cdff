@@ -23,7 +23,6 @@
 #ifndef OCTREE_TO_PCL_OCTREE_CONVERTER_HPP
 #define OCTREE_TO_PCL_OCTREE_CONVERTER_HPP
 
-
 #include <Eigen/Core>
 #include <Types/C/Octree.h>
 #include <pcl/octree/octree_search.h>
