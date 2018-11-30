@@ -113,7 +113,7 @@ add_executable(
 )
 target_link_libraries(
 	image_undistortion_rectification_performance_test
-	cdff_helpers cdff_logger cdff_types image_undistortion_rectification performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl
+	cdff_helpers cdff_logger cdff_types cdff_dfn_image_filtering performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl
 )
 
 add_executable(
@@ -123,5 +123,5 @@ add_executable(
 )
 target_link_libraries(
 	image_undistortion_performance_test
-	cdff_helpers cdff_logger cdff_types image_undistortion performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl opencv_imgcodecs
+	cdff_helpers cdff_logger cdff_types cdff_dfn_image_filtering performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl opencv_imgcodecs
 )

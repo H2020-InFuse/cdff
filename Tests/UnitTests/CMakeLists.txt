@@ -101,7 +101,6 @@ set(unittest_libraries catch
     corner_detector_3d
     hu_invariants
     icp_3d
-    image_undistortion
     iterative_pnp_solver
     kalman_corrector
     kalman_predictor
@@ -138,8 +137,8 @@ set(unittest_libraries catch
     ransac_3d
 #[=[reconstruction_from_stereo]=]
     cdff_dfn_registration_3d
+    cdff_dfn_image_filtering
     shot_descriptor_3d
-    cdff_dfn_derivative_edge_detection
     statistical_outlier_removal
     svd_decomposition
     synthetic_generators
@@ -149,7 +148,6 @@ set(unittest_libraries catch
     triangulation
     voxel_binning
     matcher_assembly
-    cdff_dfn_canny_edge_detection
     cdff_dfn_stereo_reconstruction
 )
 

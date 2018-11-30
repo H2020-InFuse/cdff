@@ -76,7 +76,7 @@ add_executable(
 set_target_properties(ImageUndistortionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     ImageUndistortionGuiTest
-    image_undistortion
+    cdff_dfn_image_filtering
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -90,7 +90,7 @@ add_executable(
 set_target_properties(ImageUndistortionRectificationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     ImageUndistortionRectificationGuiTest
-    image_undistortion_rectification
+    cdff_dfn_image_filtering
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -103,7 +103,7 @@ add_executable(kmeans_gui_test
 )
 target_link_libraries(
         kmeans_gui_test
-        cdff_dfn_kmeans
+        cdff_dfn_image_filtering
         ${GRAPHICALTEST_CDFF_LIBRARIES}
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -117,7 +117,7 @@ add_executable(
 )
 target_link_libraries(
     edge_detection_gui_test
-    cdff_dfn_canny_edge_detection
+    cdff_dfn_image_filtering
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${GRAPHICALTEST_CDFF_LIBRARIES}
 )
@@ -131,7 +131,7 @@ add_executable(
 )
 target_link_libraries(
     normal_vector_extraction_gui_test
-    cdff_dfn_normal_vector_extraction
+    cdff_dfn_image_filtering
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -500,7 +500,7 @@ set_target_properties(StereoReconstruction PROPERTIES RUNTIME_OUTPUT_DIRECTORY .
 target_compile_definitions(StereoReconstruction PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     StereoReconstruction
-    image_undistortion orb_detector_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
+    cdff_dfn_image_filtering orb_detector_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
@@ -517,7 +517,7 @@ set_target_properties(StereoReconstruction2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_compile_definitions(StereoReconstruction2 PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     StereoReconstruction2
-    image_undistortion harris_detector_2d orb_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
+    cdff_dfn_image_filtering harris_detector_2d orb_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus

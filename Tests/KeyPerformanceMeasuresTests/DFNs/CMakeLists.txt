@@ -88,7 +88,7 @@ add_executable(
 )
 target_link_libraries(
 	linearity_image_undistortion
-	cdff_helpers cdff_logger cdff_types cdff_converters image_undistortion image_filtering opencv_core opencv_imgproc opencv_highgui
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_image_filtering opencv_core opencv_imgproc opencv_highgui
 )
 
 add_executable(

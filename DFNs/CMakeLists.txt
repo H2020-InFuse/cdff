@@ -31,13 +31,7 @@ target_link_libraries(
   ransac_3d icp_3d
   best_descriptor_match
   harris_detector_2d
-  image_undistortion
-  image_undistortion_rectification
-  cdff_dfn_background_subtraction
-  cdff_dfn_kmeans
-  cdff_dfn_canny_edge_detection
-  cdff_dfn_normal_vector_extraction
-  cdff_dfn_derivative_edge_detection
+  cdff_dfn_image_filtering
   cdff_dfn_stereo_reconstruction
   orb_detector_descriptor
   flann_matcher
