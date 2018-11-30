@@ -38,9 +38,7 @@ target_link_libraries(
   cdff_dfn_canny_edge_detection
   cdff_dfn_normal_vector_extraction
   cdff_dfn_derivative_edge_detection
-  disparity_mapping
-  hirschmuller_disparity_mapping
-  scanline_optimization
+  cdff_dfn_stereo_reconstruction
   orb_detector_descriptor
   flann_matcher
   iterative_pnp_solver
@@ -49,9 +47,7 @@ target_link_libraries(
   iss_detector_3d
   corner_detector_3d
   kalman_predictor
-  registration_icp_3d
-  registration_icp_cc
-  registration_icp_matcher
+  cdff_dfn_registration_3d
   ceres_adjustment
   svd_decomposition
   transform_3d_estimation_least_squares_minimization

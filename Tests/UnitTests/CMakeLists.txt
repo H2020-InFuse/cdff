@@ -91,7 +91,6 @@ set(unittest_libraries catch
     dfpc_configurator
     dfpc_haptic_scanning
     dfpc_implementation_features_matching_3d
-    disparity_mapping
     essential_matrix_decomposition
     estimation_from_stereo
     flann_matcher
@@ -100,7 +99,6 @@ set(unittest_libraries catch
     harris_detector_3d
     iss_detector_3d
     corner_detector_3d
-    hirschmuller_disparity_mapping
     hu_invariants
     icp_3d
     image_undistortion
@@ -139,9 +137,7 @@ set(unittest_libraries catch
     pcl_visualization
     ransac_3d
 #[=[reconstruction_from_stereo]=]
-    registration_icp_3d
-    registration_icp_cc
-    registration_icp_matcher
+    cdff_dfn_registration_3d
     shot_descriptor_3d
     cdff_dfn_derivative_edge_detection
     statistical_outlier_removal
@@ -154,6 +150,7 @@ set(unittest_libraries catch
     voxel_binning
     matcher_assembly
     cdff_dfn_canny_edge_detection
+    cdff_dfn_stereo_reconstruction
 )
 
 # Make the Catch executable that runs the unit tests

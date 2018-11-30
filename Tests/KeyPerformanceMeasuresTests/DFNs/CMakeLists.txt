@@ -6,7 +6,7 @@ add_executable(
 target_compile_definitions(registration_3d_icp_test PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	registration_3d_icp_test
-	cdff_helpers cdff_logger cdff_types cdff_converters registration_3d registration_icp_3d opencv_core opencv_imgproc opencv_highgui pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_registration_3d opencv_core opencv_imgproc opencv_highgui pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
 )
 
 add_executable(
@@ -17,7 +17,7 @@ add_executable(
 target_compile_definitions(registration_3d_icp_cc_test PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	registration_3d_icp_cc_test
-	cdff_helpers cdff_logger cdff_types cdff_converters registration_3d registration_icp_cc opencv_core opencv_imgproc opencv_highgui pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_registration_3d opencv_core opencv_imgproc opencv_highgui pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
 )
 
 add_executable(
@@ -27,7 +27,7 @@ add_executable(
 )
 target_link_libraries(
 	registration_3d_icp_matcher_test
-	cdff_helpers cdff_logger cdff_types cdff_converters registration_3d registration_icp_matcher opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_registration_3d opencv_core opencv_imgproc opencv_highgui boost_system pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters boost_system
 )
 
 add_executable(
@@ -99,7 +99,7 @@ add_executable(
 target_compile_definitions(quality_hirschmuller PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	quality_hirschmuller
-	cdff_helpers cdff_logger cdff_types cdff_converters stereoReconstruction hirschmuller_disparity_mapping pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters opencv_core opencv_imgproc opencv_highgui
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_stereo_reconstruction pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters opencv_core opencv_imgproc opencv_highgui cdff_visualizers_opencv cdff_visualizers_pcl
 )
 
 add_executable(
@@ -110,7 +110,7 @@ add_executable(
 target_compile_definitions(quality_scanline PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	quality_scanline
-	cdff_helpers cdff_logger cdff_types cdff_converters stereoReconstruction scanline_optimization pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters opencv_core opencv_imgproc opencv_highgui
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_stereo_reconstruction pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters opencv_core opencv_imgproc opencv_highgui cdff_visualizers_opencv cdff_visualizers_pcl
 )
 
 add_executable(

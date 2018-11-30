@@ -196,7 +196,7 @@ set_target_properties(Registration3DIcpGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTO
 target_compile_definitions(Registration3DIcpGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Registration3DIcpGuiTest
-    registration_icp_3d
+    cdff_dfn_registration_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree
@@ -213,7 +213,7 @@ set_target_properties(Registration3DIcpCCGuiTest PROPERTIES RUNTIME_OUTPUT_DIREC
 target_compile_definitions(Registration3DIcpCCGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Registration3DIcpCCGuiTest
-    registration_icp_cc
+    cdff_dfn_registration_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree
@@ -298,7 +298,7 @@ set_target_properties(DisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTOR
 target_compile_definitions(DisparityMappingGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     DisparityMappingGuiTest
-    disparity_mapping
+    cdff_dfn_stereo_reconstruction
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
@@ -314,7 +314,7 @@ set_target_properties(HirschmullerDisparityMappingGuiTest PROPERTIES RUNTIME_OUT
 target_compile_definitions(HirschmullerDisparityMappingGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     HirschmullerDisparityMappingGuiTest
-    hirschmuller_disparity_mapping
+    cdff_dfn_stereo_reconstruction
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
@@ -330,7 +330,7 @@ set_target_properties(ScanlineOptimizationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRE
 target_compile_definitions(ScanlineOptimizationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ScanlineOptimizationGuiTest
-    scanline_optimization
+    cdff_dfn_stereo_reconstruction
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_visualization

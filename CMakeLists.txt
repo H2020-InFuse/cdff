@@ -39,7 +39,10 @@ set(BUNDLED_DEPENDENCIES_PREFIX External/install CACHE PATH
 # scope than the top-level CMakeLists file, perhaps with target_compile_
 # definitions() or set_source_files_properties()?
 
+set(TEST_ENABLED true)
+if(TEST_ENABLED)
 add_definitions(-DTESTING)
+endif()
 
 # Generate tests for CTest. Each test defined with the CMake command add_test()
 # will be registered as a CTest test. Run these tests with ctest(1). The enable_
@@ -280,6 +283,10 @@ endif()
 
 ## Don't look for FLANN, QHull, yaml-cpp, CloudCompare-core --------------------
 
+set(CLOUDCOMPARE_FOUND true)
+set(CLOUDCOMPARE_INCLUDE_DIRS "")
+set(CLOUDCOMPARE_LIBRARIES "cloudcompare_core")
+
 # There aren't any CMake find modules nor any package configuration files for
 # those libraries, so just add the main include directory and use the libraries
 # as e.g. #include <flann/stuff.hpp>
@@ -321,6 +328,7 @@ find_package_mode(OpenCV)
 # TODO: rework this section
 
 find_package(libpointmatcher 1.3.0 REQUIRED)
+set(POINTMATCHER_FOUND true)
 
 # Usage:
 # target_include_directories(<target> SYSTEM PRIVATE|PUBLIC ${POINTMATCHER_INCLUDE_DIRS})

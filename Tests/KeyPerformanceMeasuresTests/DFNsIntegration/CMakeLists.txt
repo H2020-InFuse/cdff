@@ -6,7 +6,7 @@ add_executable(
 target_compile_definitions(harris_icp_cc PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	harris_icp_cc
-	cdff_helpers cdff_logger cdff_types cdff_converters harris_detector_3d registration_3d registration_icp_cc opencv_core opencv_imgproc opencv_highgui pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
+	cdff_helpers cdff_logger cdff_types cdff_converters harris_detector_3d cdff_dfn_registration_3d opencv_core opencv_imgproc opencv_highgui pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
 )
 
 add_executable(
