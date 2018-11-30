@@ -105,8 +105,7 @@ set(unittest_libraries catch
     kalman_corrector
     kalman_predictor
 #[=[mock]=] # no longer used by any DFN unit test
-    neighbour_point_average
-    neighbour_single_point_average
+    cdff_dfn_point_cloud_assembly
     opencv_core
     opencv_highgui
     opencv_imgcodecs
@@ -146,8 +145,6 @@ set(unittest_libraries catch
     transform_3d_estimation_ceres
     transform_3d_estimation_least_squares_minimization
     triangulation
-    voxel_binning
-    matcher_assembly
     cdff_dfn_stereo_reconstruction
 )
 

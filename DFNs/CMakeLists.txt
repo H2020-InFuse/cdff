@@ -72,10 +72,7 @@ target_link_libraries(
   pcl_stereo
   convolution_filter
   threshold_force
-  neighbour_point_average
-  neighbour_single_point_average
-  voxel_binning
-  matcher_assembly
+  cdff_dfn_point_cloud_assembly
   cartesian_system_transform
   statistical_outlier_removal
 )
