@@ -124,18 +124,11 @@ set(unittest_libraries catch
     pcl_io_ply
     pcl_kdtree
     pcl_keypoints
-    pcl_ml
     pcl_octree
-    pcl_outofcore
-    pcl_people
-    pcl_recognition
     pcl_registration
     pcl_sample_consensus
     pcl_search
     pcl_segmentation
-    pcl_stereo
-    pcl_surface
-    pcl_tracking
     pcl_visualization
     ransac_3d
 #[=[reconstruction_from_stereo]=]
