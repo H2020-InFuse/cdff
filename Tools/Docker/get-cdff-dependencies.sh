@@ -35,8 +35,7 @@ Options:
   -d, --dependency LIB   Install LIB
                          Repeat as needed: -d LIB1 -d LIB2 ...
                          Default: boost yaml-cpp eigen cloudcompare-core ceres
-                           flann nabo pointmatcher qhull opencv vtk pcl
-                           edres-wrapper
+                           flann nabo pointmatcher opencv vtk pcl edres-wrapper
   -e, --envire           Install EnviRe and its dependencies
                          Required by CDFF::CentralDPM
                          Default: no
@@ -188,7 +187,7 @@ done
 # If no -d option was provided, mark everything but EnviRe for installation
 if [[ -z "${dependencies[*]}" ]]; then
   dependencies=(boost yaml-cpp eigen cloudcompare-core ceres nabo \
-    pointmatcher flann qhull opencv vtk pcl edres-wrapper)
+    pointmatcher flann opencv vtk pcl edres-wrapper)
 fi
 
 # If the -e option was provided, mark EnviRe for installation
