@@ -65,21 +65,13 @@ target_link_libraries(
   pcl_filters
   pcl_visualization
   pcl_io
-  pcl_ml
   pcl_io_ply
   pcl_octree
-  pcl_outofcore
   pcl_kdtree
-  pcl_tracking
-  pcl_stereo
-  pcl_recognition
   pcl_registration
-  pcl_people
   pcl_keypoints
-  pcl_surface
   pcl_segmentation
   pcl_sample_consensus
-  pcl_stereo
   convolution_filter
   threshold_force
   neighbour_point_average
