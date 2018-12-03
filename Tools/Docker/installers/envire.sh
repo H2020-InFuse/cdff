@@ -3,7 +3,8 @@
 function install4infuse_envire_envire_core {
 if [[ ! -n $(find $PKG_DIR -name 'envire_envire_core*') ]]; then
 	cdff_gitclone envire_envire_core master https://github.com/envire/envire-envire_core.git d5d4b27105f2641e25bbc2ee7696b74b7eaafd40
-
+	mkdir build
+	cd build
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
 	    -D CMAKE_MODULE_PATH="${INSTALL_DIR}/share/cmake-3.11.4/Modules" \

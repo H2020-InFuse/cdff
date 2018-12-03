@@ -6,6 +6,8 @@
 function install4infuse_qhull {
 if [[ ! -n $(find $PKG_DIR -name 'qhull*') ]]; then
     cdff_gitclone qhull master https://github.com/qhull/qhull.git
+	mkdir build
+	cd build
     cmake \
         -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \

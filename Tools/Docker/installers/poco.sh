@@ -3,6 +3,8 @@
 function install4infuse_poco {
 if [[ ! -n $(find $PKG_DIR -name 'poco*') ]]; then
 	cdff_gitclone poco poco-1.9.0-release https://github.com/pocoproject/poco
+	mkdir build
+	cd build
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
 	    -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \
