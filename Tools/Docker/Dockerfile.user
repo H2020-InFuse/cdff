@@ -32,7 +32,6 @@ RUN apt-get update && apt-get install --yes --quiet libgoogle-glog-dev libatlas-
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i /usr/local -d nabo
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i /usr/local -d pointmatcher
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i /usr/local -d flann
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i /usr/local -d qhull
 RUN apt-get update && apt-get install --yes --quiet \
       libavcodec-dev libavformat-dev libswscale-dev \
       libjpeg-dev libpng++-dev libdc1394-22-dev libjasper-dev libtiff5-dev \
@@ -47,7 +46,7 @@ RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i /usr/local -d edres-wrapp
 ## Download, build, and install EnviRe and its dependencies
 
 RUN apt-get update && apt-get install --yes --quiet pkg-config libtinyxml-dev libgoogle-glog-dev && \
-    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i /usr/local -d base_cmake -d base_logging -d sisl -d base_types -d base_numeric -d base_boost_serialization -d console_bridge -d poco -d poco_vendor -d class_loader -d tools_plugin_manager -d envire_envire_core
+    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i /usr/local -d none -e
 
 ## Download and install the dependencies of CDFF-dev
 
