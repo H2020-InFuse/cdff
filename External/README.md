@@ -11,8 +11,6 @@ The CDFF currently requires the following libraries (**direct dependencies**):
   Only a couple Boost.* libraries are currently required, see [`boost.sh`](/Tools/Docker/installers/boost.sh) for a list
 * Eigen 3.3.4
 * FLANN 1.9.1
-* QHull (master branch)  
-  It's only used in `pcl_surface` and is an optional dependency, can we make do without it or do we need its features?
 * VTK 8.1.0  
   It's only required by `pcl_visualization` for 3D point cloud rendering and visualization, and we don't need that module on our target systems, so what can we do about it?
 * PCL 1.8.1
@@ -34,7 +32,8 @@ These libraries in turn have their own dependencies (the CDFF's **recurse depend
 
 * PCL
   - A few Boost.* libraries, see [`boost.sh`](/Tools/Docker/installers/boost.sh) for the list
-  - Eigen, FLANN, QHull, VTK
+  - Eigen, FLANN, VTK
+  - QHull is an optional dependency of `pcl_surface` and `pcl_surface` isn't currently used by the CDFF
 
 * OpenCV
   - FFmpeg development packages are required for video IO to work (`apt: libavcodec-dev libavformat-dev libswscale-dev`)
