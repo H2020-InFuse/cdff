@@ -8,6 +8,8 @@ if [[ ! -n $(find $PKG_DIR -name 'yaml-cpp*') ]]; then
 
 	cdff_gitclone yaml-cpp release-0.5.3 https://github.com/jbeder/yaml-cpp.git
 
+	mkdir build
+	cd build
 	cmake \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D BUILD_SHARED_LIBS=ON \

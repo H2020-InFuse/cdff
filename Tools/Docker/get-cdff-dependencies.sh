@@ -9,10 +9,9 @@ set -e
 # Uses GNU readlink from GNU coreutils
 DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
-# Canonical paths to the build and installation directories (-m because
+# Canonical paths to the source and installation directories (-m because
 # External/ doesn't exist yet when using this script to build a Docker image)
 SOURCE_DIR="$(readlink -m "${DIR}/../../External/source")"
-BUILD_DIR="$(readlink -m "${DIR}/../../External/build")"
 INSTALL_DIR="$(readlink -m "${DIR}/../../External/install")"
 PKG_DIR="$(readlink -m "${DIR}/../../External/package")"
 
@@ -83,11 +82,10 @@ function find_installers {
 # Run all requested installers who have an install function
 function run_installers {
   mkdir -p "${SOURCE_DIR}"
-  mkdir -p "${BUILD_DIR}"
   mkdir -p "${INSTALL_DIR}"
   mkdir -p "${PKG_DIR}"
 
-  cd "${BUILD_DIR}"
+  cd "${SOURCE_DIR}"
   for dependency in "${dependencies[@]}"; do
     printf "#\n# Running installer for %s\n#\n" ${dependency}
     eval ${installers[${dependency}]}
@@ -134,8 +132,7 @@ function cdff_gitclone {
   #+# else
   #+#   echo "Directory ${SOURCE_DIR}/${1} already exists, we will work with that one."
   #+# fi
-  mkdir -p "${BUILD_DIR}/${1}"
-  cd "${BUILD_DIR}/${1}"
+  cd "${SOURCE_DIR}/${1}"
   echo "Cloning ${1}'s code repository: done"
 }
 
@@ -150,11 +147,9 @@ function cdff_makeinstall {
 
 # A wrapper around "rm -rf"
 function cdff_makedistclean {
-  echo "Removing ${1} source and build directories"
-  cd "${SOURCE_DIR}"
+  echo "Removing ${1} source directory and build subdirectory"
   rm -rf "${SOURCE_DIR:?}/${1}"
-  rm -rf "${BUILD_DIR:?}/${1}"
-  echo "Removing ${1} source and build directories: done"
+  echo "Removing ${1} source directory and build subdirectory: done"
 }
 
 ## Main installer #############################################################
@@ -180,9 +175,9 @@ while true; do
     -d | --dependency) dependencies+=("${2}"); shift 2 ;;
     -e | --envire) envire=yes; shift ;;
 
-    -s | --sources) SOURCE_DIR="${2}"; shift 2 ;;
-    -i | --install) INSTALL_DIR="${2}"; shift 2 ;;
-    -p | --package) PKG_DIR="${2}"; shift 2 ;;
+    -s | --sources) SOURCE_DIR="$(readlink -f "${2}")"; shift 2 ;;
+    -i | --install) INSTALL_DIR="$(readlink -f "${2}")"; shift 2 ;;
+    -p | --package) PKG_DIR="$(readlink -f "${2}")"; shift 2 ;;
 
     --) shift; break ;;
     *)  echo "${0}: internal error!" >&2; exit 1 ;;
@@ -228,10 +223,9 @@ done
 # Print what will be installed, and where
 echo "Found installers for: " "${!installers[@]}"
 echo "Dependencies selected for installation: " "${dependencies[@]}"
-echo "Prefix for source directories: ${SOURCE_DIR}"
-echo "Prefix for build directories : ${BUILD_DIR}"
-echo "Installation prefix:           ${INSTALL_DIR}"
-echo "Output directory for packages: ${PKG_DIR}"
+echo "Where sources will be downloaded: ${SOURCE_DIR}"
+echo "Installation prefix:              ${INSTALL_DIR}"
+echo "Output directory for packages:    ${PKG_DIR}"
 
 # Install
 if [[ "${dependencies[*]}" ]]; then
