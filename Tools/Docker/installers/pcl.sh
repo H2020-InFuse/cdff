@@ -46,7 +46,6 @@ if [[ ! -d "${INSTALL_DIR}/include/pcl-1.8" ]]; then
     -D WITH_QHULL=OFF \
     -D WITH_QT=OFF \
     -D BUILD_outofcore=OFF \
-    -D BUILD_ml=OFF \
     -D BUILD_people=OFF \
     -D BUILD_examples=OFF \
     -D BUILD_global_tests=OFF \
