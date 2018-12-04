@@ -40,6 +40,16 @@ if [[ ! -d "${INSTALL_DIR}/include/pcl-1.8" ]]; then
     -D HAVE_SSE4_2_EXTENSIONS=NO \
     -D HAVE_SSE4_1_EXTENSIONS=NO \
     -D WITH_CUDA=OFF \
+    -D WITH_LIBUSB=OFF \
+    -D WITH_OPENNI=OFF \
+    -D WITH_OPENNI2=OFF \
+    -D WITH_QHULL=OFF \
+    -D WITH_QT=OFF \
+    -D BUILD_outofcore=OFF \
+    -D BUILD_ml=OFF \
+    -D BUILD_people=OFF \
+    -D BUILD_examples=OFF \
+    -D BUILD_global_tests=OFF \
     -D CMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
     ../
 

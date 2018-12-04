@@ -35,9 +35,10 @@ Options:
   -d, --dependency LIB   Install LIB
                          Repeat as needed: -d LIB1 -d LIB2 ...
                          Default: boost yaml-cpp eigen cloudcompare-core ceres
-                           flann nabo pointmatcher qhull opencv vtk pcl
-                           edres-wrapper
-  -e, --envire           Install EnviRe and its dependencies
+                           flann nabo pointmatcher opencv vtk pcl edres-wrapper
+  -e, --envire           Install EnviRe and its dependencies (to only install
+                         EnviRe and its dependencies without the default libs,
+                         use -d none in addition to this option)
                          Required by CDFF::CentralDPM
                          Default: no
   -s, --sources DIR      Where to download the sources of the requested LIBs
@@ -158,8 +159,8 @@ function cdff_makedistclean {
 # getopt-parse.bash)
 # Uses GNU getopt from util-linux, not the shell builtin getopts, nor the
 # original getopt utility from the 1980s
-SHORT=h,d:,e,i:,p:
-LONG=help,dependency:,envire,install:,package:
+SHORT=h,d:,e,s:,i:,p:
+LONG=help,dependency:,envire,sources:,install:,package:
 PARSED=$(getopt --options ${SHORT} --longoptions ${LONG} --name "${0}" -- "${@}")
 if [[ ${?} != 0 ]]; then
   echo "${0}: returning getopt error code" >&2
@@ -185,14 +186,14 @@ while true; do
   esac
 done
 
-# If no -d option was provided, mark everything but EnviRe for installation
+# If no dependency was requested, mark everything but EnviRe for installation
 if [[ -z "${dependencies[*]}" ]]; then
   dependencies=(boost yaml-cpp eigen cloudcompare-core ceres nabo \
-    pointmatcher flann qhull opencv vtk pcl edres-wrapper)
+    pointmatcher flann opencv vtk pcl edres-wrapper)
 fi
 
-# If the -e option was provided, mark EnviRe for installation
-if [[ ${envire} = yes ]]; then
+# If EnviRe was requested, mark it for installation
+if [[ "${envire}" = yes ]]; then
   dependencies+=(base_cmake base_logging sisl base_types base_numeric \
     base_boost_serialization console_bridge poco poco_vendor class_loader \
     tools_plugin_manager envire_envire_core)
