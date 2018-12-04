@@ -6,7 +6,7 @@
   CI_FILE: Dockerfile.ci
   USER_FILE: Dockerfile.user
   
-stages:
+ stages:
   - docker
   - autogeneration
   - build
@@ -57,7 +57,7 @@ stages:
    only:
     - master
 
-autogeneration:
+ autogeneration:
   image: '${CI_IMAGE_TAG}:latest'
   stage : autogeneration
   script:
@@ -68,7 +68,7 @@ autogeneration:
       - Common/Types/C/
     expire_in: 4 weeks
 
-build-cdff:
+ build-cdff:
   image: '${CI_IMAGE_TAG}:latest'
   stage: build
   script:
@@ -85,14 +85,14 @@ build-cdff:
       - build/
     expire_in: 4 weeks
 
-unit_tests:
+ unit_tests:
   image: '${CI_IMAGE_TAG}:latest'
   stage: test
   script:
       - cd build/Tests/UnitTests
       - ./cdff-unit-tests
 
-deploy_staging:
+ deploy_staging:
   image: '${CI_IMAGE_TAG}:latest'
   stage: deploy
   script:
