@@ -24,7 +24,6 @@
     - latest_tag_ci=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-ci' https://hook.io/datastore/get | tr -d '"')
     - echo latest_tag_ci $latest_tag_ci , tag_ci  $tag_ci
     - dockerize(){ if [[ ! $latest_tag_ci < $tag_ci ]]; then return 1; else return 0; fi } 
-    - dockerize(){ (git whatchanged HEAD^! | grep $CI_FILE > /dev/null) }
     - dockerize || (echo "no need to build new docker image" && exit 0)
     - dockerize && docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
     - dockerize && docker build -t $CI_IMAGE_TAG':'$tag_ci -f ./$CI_FILE .
