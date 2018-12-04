@@ -18,7 +18,8 @@
     - docker:dind
    image: nexus.spaceapplications.com/repository/infuse/docker-builder
    stage: docker
-   script:   
+   script:
+    - cd Tools/Docker   
     - tag_ci=$(grep "LABEL version=" $CI_FILE | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
     - latest_tag_ci=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-ci' https://hook.io/datastore/get | tr -d '"')
     - echo latest_tag_ci $latest_tag_ci , tag_ci  $tag_ci
@@ -32,16 +33,14 @@
     - dockerize && docker push $CI_IMAGE_TAG':'latest
     - dockerize && curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-ci&value='$tag_ci https://hook.io/datastore/set
     - exit 0
-   only:
-    - master
-    
 
  generate-docker-user:
    services:
     - docker:dind
    image: nexus.spaceapplications.com/repository/infuse/docker-builder
    stage: docker
-   script:  
+   script: 
+    - cd Tools/Docker   
     - tag_user=$(grep "LABEL version=" $USER_FILE | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
     - latest_tag_user=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-user' https://hook.io/datastore/get | tr -d '"')
     - echo latest_tag_user $latest_tag_user , tag_user  $tag_user
@@ -54,8 +53,6 @@
     - dockerize && docker push $USER_IMAGE_TAG':'latest
     - dockerize && curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-user&value='$tag_user https://hook.io/datastore/set 
     - exit 0
-   only:
-    - master
 
  autogeneration:
   image: '${CI_IMAGE_TAG}:latest'
