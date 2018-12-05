@@ -5,8 +5,8 @@ cppcheck --version
 
 mkdir cppcheck
 
-cppcheck --language=c++ --suppressions-list=CppCheckSuppressions.txt --force --enable=all --std=c++11 --project=compile_commands.json --xml --xml-version=2 2> cppcheck/cppcheck.xml
-cppcheck --language=c++ --suppressions-list=CppCheckSuppressions.txt --force --enable=all --std=c++11 --project=compile_commands.json 2> cppcheck/cppcheck_all.log
+cppcheck --language=c++ --suppressions-list=./CppCheckSuppressions.txt --force --enable=all --std=c++11 --project=compile_commands.json --xml --xml-version=2 2> cppcheck/cppcheck.xml
+cppcheck --language=c++ --suppressions-list=./CppCheckSuppressions.txt --force --enable=all --std=c++11 --project=compile_commands.json 2> cppcheck/cppcheck_all.log
 
 cat cppcheck/cppcheck_all.log | grep "(error)"          > cppcheck/cppcheck_error.log
 cat cppcheck/cppcheck_all.log | grep "(warning)"        > cppcheck/cppcheck_warning.log
