@@ -67,7 +67,7 @@
     expire_in: 4 weeks
 
 
- .build-cdff_template:&build-cdff
+ .build-cdff_template: &build-cdff
     image: '${CI_IMAGE_TAG}:latest'
     script:
         - "pwd"
