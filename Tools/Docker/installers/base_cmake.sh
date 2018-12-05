@@ -3,6 +3,8 @@
 function install4infuse_base_cmake {
 if [[ ! -n $(find $PKG_DIR -name 'base_cmake*') ]]; then
 	cdff_gitclone base_cmake master https://github.com/rock-core/base-cmake a1703a0b30dcc0380a5be147ea2ee1ca89fa25b3
+	mkdir build
+	cd build
 	cmake \
 	    -D CMAKE_BUILD_TYPE=RELEASE \
 	    -D CMAKE_INSTALL_PREFIX=$INSTALL_DIR \

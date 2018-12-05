@@ -267,7 +267,7 @@ target_link_libraries(
     ransac_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
     yaml-cpp ${VTK_LIBRARIES}
 )
 
@@ -503,7 +503,7 @@ target_link_libraries(
     image_undistortion orb_detector_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
     yaml-cpp ${VTK_LIBRARIES}
 )
 
@@ -520,6 +520,6 @@ target_link_libraries(
     image_undistortion harris_detector_2d orb_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
     yaml-cpp ${VTK_LIBRARIES}
 )
