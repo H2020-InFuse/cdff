@@ -50,28 +50,17 @@ EdgeModelContourMatching::EdgeModelContourMatching()
 
 	imageOutputColor = NULL;
 
-	#ifdef _DO_BIG_ALLOCATION
-		           //Uchar,   UcharPtr, Double,  Float,   Int, IntPtr,  Short)	
-		doBigMalloc(102400000, 1200000, 12000000, 200000, 5600000, 1400000, 3200000); 
-		
-	#endif
-		
+		    //Uchar,   UcharPtr, Double,  Float,   Int, IntPtr,  Short)	
+	doBigMalloc(102400000, 1200000, 12000000, 200000, 5600000, 1400000, 3200000); 
+			
 	configurationFilePath = "";
 	}
 
 EdgeModelContourMatching::~EdgeModelContourMatching()
 	{
-
-	 #ifdef _DO_BIG_ALLOCATION
-		doBigFree();
 	
-	 #endif
-
-
-	#ifdef _USE_OPENCV_DISPLAY
-	  destroyAllWindows();
-	#endif
-	
+	doBigFree();
+		
 	}
 
 void EdgeModelContourMatching::allocateImageMemory()
@@ -171,8 +160,6 @@ void EdgeModelContourMatching::run()
 	if(c==27)
 	 exit(EXIT_SUCCESS);
 #endif
-
-
 
 	}
 
