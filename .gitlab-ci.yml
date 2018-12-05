@@ -86,7 +86,7 @@
       - build/
     expire_in: 4 weeks
 
- static_analysis:
+ .static_analysis:
   <<: *build-cdff
   stage: test
   before_script:
@@ -97,6 +97,21 @@
   artifacts:
     paths:
       - CPPCheck-report.txt
+    expire_in: 4 weeks
+
+ cppcheck_analysis:
+  stage: test
+  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:latest'
+  before_script:
+      - "pwd"
+      - "mkdir build"
+      - "cd build" 
+      - "cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+  script:
+      - Tools/CPPCheck/analysis-cppcheck.sh
+  artifacts:
+    paths:
+      - cppcheck/
     expire_in: 4 weeks
 
  .unit_tests:
