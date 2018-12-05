@@ -108,6 +108,7 @@
       - "cd build" 
       - "cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .." 
   script:
+      - chmod +x ../Tools/CPPCheck/analysis-cppcheck.sh
       - ../Tools/CPPCheck/analysis-cppcheck.sh
   artifacts:
     paths:
