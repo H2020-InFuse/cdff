@@ -1,0 +1,8 @@
+FROM alpine:latest
+
+ENV CPPCHECK_VERSION=1.85
+
+RUN apk update && \
+    apk add --no-cache -t .required_apks wget make g++ pcre-dev cmake cppcheck 
+    
+CMD ["/bin/sh"]
