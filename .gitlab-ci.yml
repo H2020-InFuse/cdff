@@ -103,13 +103,14 @@
   stage: test
   image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:latest'
   before_script:
-      - "pwd"
-      - "mkdir build"
-      - "cd build" 
-      - "cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .." 
+      - pwd
+      - mkdir build
+      - cd build
+      - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
   script:
-      - chmod +x ../Tools/CPPCheck/analysis-cppcheck.sh
-      - ../Tools/CPPCheck/analysis-cppcheck.sh
+      - cp ../Tools/CPPCheck/* .
+      - chmod +x ./analysis-cppcheck.sh
+      - ./analysis-cppcheck.sh
   artifacts:
     paths:
       - cppcheck/
