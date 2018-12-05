@@ -66,22 +66,39 @@
       - Common/Types/C/
     expire_in: 4 weeks
 
+
+ .build-cdff_template:&build-cdff
+    image: '${CI_IMAGE_TAG}:latest'
+    script:
+        - "pwd"
+        - "mkdir build"
+        - "cd build"
+        - "cmake -DCMAKE_INSTALL_PREFIX=./ .."
+        - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
+        - "JOBS=$((CPUS/2))"
+        - "JOBS=$((JOBS > 0 ? JOBS : 1))"
+        - "make --jobs=${JOBS} --output-sync=target"
+
  build-cdff:
-  image: '${CI_IMAGE_TAG}:latest'
+  <<: *build-cdff
   stage: build
-  script:
-      - "pwd"
-      - "mkdir build"
-      - "cd build"
-      - "cmake -DCMAKE_INSTALL_PREFIX=./ .."
-      - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
-      - "JOBS=$((CPUS/2))"
-      - "JOBS=$((JOBS > 0 ? JOBS : 1))"
-      - "make --jobs=${JOBS} --output-sync=target"
   artifacts:
     paths:
       - build/
     expire_in: 4 weeks
+
+ static_analysis:
+  <<: *build-cdff
+  stage: test
+  before_script:
+      - patch -p0 < Tools/CPPCheck/CMakeLists.patch"
+  after_script:
+      - echo should convert CPPCheck-report.txt and publish to coverage pages
+  artifacts:
+    paths:
+      - CPPCheck-report.txt
+    expire_in: 4 weeks
+
 
  unit_tests:
   image: '${CI_IMAGE_TAG}:latest'
@@ -89,6 +106,9 @@
   script:
       - cd build/Tests/UnitTests
       - ./cdff-unit-tests
+
+
+
 
  deploy_staging:
   image: '${CI_IMAGE_TAG}:latest'
