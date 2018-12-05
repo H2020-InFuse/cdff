@@ -55,7 +55,7 @@
     - dockerize && curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-user&value='$tag_user https://hook.io/datastore/set 
     - exit 0
 
- autogeneration:
+ .autogeneration:
   image: '${CI_IMAGE_TAG}:latest'
   stage : autogeneration
   script:
@@ -90,7 +90,7 @@
   <<: *build-cdff
   stage: test
   before_script:
-      - apt install cppcheck
+      - apt install -y cppcheck
       - patch -p0 < Tools/CPPCheck/CMakeLists.patch"
   after_script:
       - echo should convert CPPCheck-report.txt and publish to coverage pages
