@@ -91,7 +91,7 @@
   stage: test
   before_script:
       - apt install -y cppcheck
-      - patch -p0 < Tools/CPPCheck/CMakeLists.patch"
+      - patch -p0 < Tools/CPPCheck/CMakeLists.patch
   after_script:
       - echo should convert CPPCheck-report.txt and publish to coverage pages
   artifacts:
