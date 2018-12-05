@@ -74,10 +74,11 @@ function find_installers {
 
   declare -g -A installers
   installer_prefix=install4infuse_
-  while read -r -d " " fct_name; do
+  fct_names=($(declare -F | grep -o "${installer_prefix}.*"))
+  for fct_name in ${fct_names[*]}; do
     dependency=${fct_name#${installer_prefix}}
     installers[${dependency}]=${fct_name}
-  done <<< $(declare -F | grep -o "${installer_prefix}.*$")
+  done
 }
 
 # Run all requested installers who have an install function
