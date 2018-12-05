@@ -26,6 +26,7 @@
     - dockerize(){ if [[ ! $latest_tag_ci < $tag_ci ]]; then return 1; else return 0; fi } 
     - dockerize || (echo "no need to build new docker image" && exit 0)
     - dockerize && docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
+    - dockerize && docker pull $CI_IMAGE_TAG':'$latest_tag_ci
     - dockerize && docker build -t $CI_IMAGE_TAG':'$tag_ci -f ./$CI_FILE .
     - dockerize && docker push $CI_IMAGE_TAG':'$tag_ci
     - dockerize && docker tag $CI_IMAGE_TAG':'$tag_ci $CI_IMAGE_TAG':'latest
@@ -46,6 +47,7 @@
     - dockerize(){ if [[ ! $latest_tag_user < $tag_user ]]; then return 1; else return 0; fi } 
     - dockerize || (echo 'no need to build new docker image ' && exit 0)
     - dockerize && docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
+    - dockerize && docker pull $USER_IMAGE_TAG':'$latest_tag_user
     - dockerize && docker build -t $USER_IMAGE_TAG':'$tag_user -f $USER_FILE .
     - dockerize && docker push $USER_IMAGE_TAG':'$tag_user
     - dockerize && docker tag $USER_IMAGE_TAG':'$tag_user $USER_IMAGE_TAG':'latest

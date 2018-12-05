@@ -74,8 +74,8 @@ function find_installers {
 
   declare -g -A installers
   installer_prefix=install4infuse_
-  all_installers=$(declare -F | grep -o "${installer_prefix}.*$")
-  for fct_name in $all_installers 
+  all_fct_names=$(declare -F | grep -o "${installer_prefix}.*$")
+  for fct_name in $all_fct_names 
     do
     dependency=${fct_name#${installer_prefix}}
     installers[${dependency}]=${fct_name}
@@ -219,7 +219,9 @@ find_installers
 # Unmark dependencies which don't have an installer
 for i in "${!dependencies[@]}"; do
   if [[ -z ${installers[${dependencies[i]}]} ]]; then
-    unset dependencies[i]
+    echo 'ERROR: found no installer for: ' ${dependencies[i]}
+    echo "Found installers for: " "${!installers[@]}"
+    exit 1
   fi
 done
 
