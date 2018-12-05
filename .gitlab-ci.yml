@@ -66,7 +66,6 @@
       - Common/Types/C/
     expire_in: 4 weeks
 
-
  .build-cdff_template: &build-cdff
     image: '${CI_IMAGE_TAG}:latest'
     script:
@@ -79,7 +78,7 @@
         - "JOBS=$((JOBS > 0 ? JOBS : 1))"
         - "make --jobs=${JOBS} --output-sync=target"
 
- build-cdff:
+ .build-cdff:
   <<: *build-cdff
   stage: build
   artifacts:
@@ -100,16 +99,12 @@
       - CPPCheck-report.txt
     expire_in: 4 weeks
 
-
- unit_tests:
+ .unit_tests:
   image: '${CI_IMAGE_TAG}:latest'
   stage: test
   script:
       - cd build/Tests/UnitTests
       - ./cdff-unit-tests
-
-
-
 
  deploy_staging:
   image: '${CI_IMAGE_TAG}:latest'
