@@ -141,9 +141,9 @@ void IcpCC::ComputeTransform(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* 
 	}
 }
 
-	CCLib::PointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
+CCLib::PointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
 {
-	CCLib::PointCloud* ccCloud = new CCLib::PointCloud;
+	CCLib::PointCloud* ccCloud = new CCLib::PointCloud();
 	ccCloud->reserve( GetNumberOfPoints(*cloud) );
 
 	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(*cloud); pointIndex++)
