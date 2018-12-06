@@ -1,8 +1,17 @@
-FROM alpine:latest
+# Used for cpp check on top of CI.
+
+FROM nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
 
 ENV CPPCHECK_VERSION=1.85
 
-RUN apk update && \
-    apk add --no-cache -t .required_apks wget make g++ pcre-dev cmake cppcheck 
-    
-CMD ["/bin/sh"]
+RUN apt update && apt install -y libpcre3-dev
+
+RUN wget -q --no-check-certificate -O /tmp/cppcheck-${CPPCHECK_VERSION}.tar.gz https://github.com/danmar/cppcheck/archive/${CPPCHECK_VERSION}.tar.gz && \
+    tar -zxf /tmp/cppcheck-${CPPCHECK_VERSION}.tar.gz -C /tmp && \
+    cd /tmp/cppcheck-${CPPCHECK_VERSION}  && \
+    make CFGDIR=/usr/share/cppcheck/ HAVE_RULES=yes CXXFLAGS="-O2 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-function" && \
+    make install CFGDIR=/usr/share/cppcheck/ && \ 
+    rm -rf /tmp/cppcheck
+
+LABEL MAINTAINER="Xavier Martinez <xsmarty@gmail.com>"
+
