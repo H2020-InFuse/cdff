@@ -297,7 +297,7 @@ void SelectionTester::ComputeMatchesFromPose()
 	Eigen::Translation<float, 3> translation(GetXPosition(*sourcePoseInSink), GetYPosition(*sourcePoseInSink), GetZPosition(*sourcePoseInSink));
 	AffineTransform affineTransform = rotation * translation;
 
-	float totalDistance;
+	float totalDistance = 0;
 	CorrespondenceMap3DPtr newOutputCorrespondenceMap = NewCorrespondenceMap3D();
 	for(int sourcePointIndex = 0; sourcePointIndex < GetNumberOfPoints(*inputSourceKeypointsVector); sourcePointIndex++)
 		{
