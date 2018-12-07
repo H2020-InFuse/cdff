@@ -195,7 +195,6 @@ pcl::PointIndicesConstPtr CornerDetector3D::DetectCorners(pcl::PointCloud<pcl::P
 			}
 		pointsCloudList.push_back(newCloud);
 		}
-	Visualizers::PclVisualizer::Enable();
 	DEBUG_SHOW_POINT_CLOUDS(pointsCloudList);
 
 	return corners;
