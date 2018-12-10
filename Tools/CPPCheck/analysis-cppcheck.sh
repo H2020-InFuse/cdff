@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eax
 
 if [ $# -eq 0 ]; then
     echo "No compilation database provided.
