@@ -20,12 +20,14 @@ if [ -f /proc/cpuinfo ]; then
 else
   CPUS=1
 fi
+JOBS=$((CPUS/2))
+JOBS=$((JOBS > 0 ? JOBS : 1))
 
 mkdir -p cppcheck
 
 compile_database="$1"
 
-cppcheck --dump --language=c++ -j $CPUS --suppressions-list=${DIR}/cppcheck_ignores.txt --force --enable=all --std=c++11 --project=$compile_database --xml --xml-version=2 2> cppcheck/cppcheck.xml
+cppcheck --language=c++ -j $JOBS --suppressions-list=${DIR}/cppcheck_ignores.txt --force --enable=all --std=c++11 --project=$compile_database --xml --xml-version=2 2> cppcheck/cppcheck.xml
 cppcheck-htmlreport --file=cppcheck/cppcheck.xml --report-dir=cppcheck/public
 
 #count errors and put them in a separate file.

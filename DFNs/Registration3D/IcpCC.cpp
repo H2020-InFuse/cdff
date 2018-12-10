@@ -152,9 +152,14 @@ CCLib::PointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
 		ccCloud->addPoint(newPoint);
 	}
 
-	unsigned fieldIndex = ccCloud->addScalarField("RegistrationDistances");
-	ASSERT(fieldIndex >= 0, "IcpCC error, it was not possible to add RegistrationDistances scalar field. Not enough memory?");
-	ccCloud->setCurrentScalarField(fieldIndex);
+	int fieldIndex = ccCloud->addScalarField("RegistrationDistances");
+
+	if (fieldIndex ==-1) {
+        ASSERT(true, "IcpCC error, it was not possible to add RegistrationDistances scalar field. Not enough memory?");
+	}
+	else {
+        ccCloud->setCurrentScalarField(fieldIndex);
+    }
 	return ccCloud;
 }
 
