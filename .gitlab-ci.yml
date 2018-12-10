@@ -8,7 +8,7 @@
   
  stages:
   - docker
-  - autogeneration
+  - asngeneration
   - build
   - test
   - deploy
@@ -55,9 +55,9 @@
     - dockerize && curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-user&value='$tag_user https://hook.io/datastore/set 
     - exit 0
 
- autogeneration:
+ asngeneration:
   image: '${CI_IMAGE_TAG}:latest'
-  stage : autogeneration
+  stage : asngeneration
   script:
       - cd Tools/ASN.1
       - ./GeneratorScript.sh
@@ -66,22 +66,66 @@
       - Common/Types/C/
     expire_in: 4 weeks
 
+ .build-cdff_template: &build-cdff
+    image: '${CI_IMAGE_TAG}:latest'
+    script:
+        - "pwd"
+        - "mkdir build"
+        - "cd build"
+        - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
+        - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
+        - "JOBS=$((CPUS/2))"
+        - "JOBS=$((JOBS > 0 ? JOBS : 1))"
+        - "make --jobs=${JOBS} --output-sync=target"
+
  build-cdff:
-  image: '${CI_IMAGE_TAG}:latest'
+  <<: *build-cdff
   stage: build
-  script:
-      - "pwd"
-      - "mkdir build"
-      - "cd build"
-      - "cmake -DCMAKE_INSTALL_PREFIX=./ .."
-      - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
-      - "JOBS=$((CPUS/2))"
-      - "JOBS=$((JOBS > 0 ? JOBS : 1))"
-      - "make --jobs=${JOBS} --output-sync=target"
+  dependencies:
+      - asngeneration
   artifacts:
     paths:
       - build/
     expire_in: 4 weeks
+
+ full_static_analysis:
+  stage: test
+  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:1.85'
+  script:
+      - chmod +x Tools/CPPCheck/full-cppcheck.sh
+      - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
+  only:
+      - master
+  artifacts:
+    paths:
+      - cppcheck/
+    expire_in: 4 weeks
+
+ partial_static_analysis:
+  stage: test
+  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:1.85'
+  script:
+      - chmod +x Tools/CPPCheck/partial-cppcheck.sh
+      - Tools/CPPCheck/partial-cppcheck.sh
+  artifacts:
+    paths:
+      - cppcheck/
+    expire_in: 4 weeks
+
+ pages:
+    stage: deploy
+    when: always
+    dependencies:
+        - full_static_analysis
+    script:
+      - mkdir .public
+      - cp -r cppcheck/public/* .public
+      - mv .public public
+    artifacts:
+      paths:
+        - public
+    only:
+      - master
 
  unit_tests:
   image: '${CI_IMAGE_TAG}:latest'
