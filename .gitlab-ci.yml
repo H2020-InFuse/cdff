@@ -88,12 +88,25 @@
       - build/
     expire_in: 4 weeks
 
- cppcheck_analysis:
+ full_static_analysis:
   stage: test
   image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:1.85'
   script:
-      - chmod +x Tools/CPPCheck/analysis-cppcheck.sh
-      - Tools/CPPCheck/analysis-cppcheck.sh build/compile_commands.json
+      - chmod +x Tools/CPPCheck/full-cppcheck.sh
+      - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
+  only:
+      - master
+  artifacts:
+    paths:
+      - cppcheck/
+    expire_in: 4 weeks
+
+ partial_static_analysis:
+  stage: test
+  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:1.85'
+  script:
+      - chmod +x Tools/CPPCheck/partial-cppcheck.sh
+      - Tools/CPPCheck/partial-cppcheck.sh
   artifacts:
     paths:
       - cppcheck/
@@ -103,7 +116,7 @@
     stage: deploy
     when: always
     dependencies:
-        - cppcheck_analysis
+        - full_static_analysis
     script:
       - mkdir .public
       - cp -r cppcheck/public/* .public
