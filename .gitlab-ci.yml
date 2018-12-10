@@ -8,7 +8,7 @@
   
  stages:
   - docker
-  - autogeneration
+  - asngeneration
   - build
   - test
   - deploy
@@ -55,9 +55,9 @@
     - dockerize && curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-user&value='$tag_user https://hook.io/datastore/set 
     - exit 0
 
- .autogeneration:
+ .asngeneration:
   image: '${CI_IMAGE_TAG}:latest'
-  stage : autogeneration
+  stage : asngeneration
   script:
       - cd Tools/ASN.1
       - ./GeneratorScript.sh
@@ -72,7 +72,7 @@
         - "pwd"
         - "mkdir build"
         - "cd build"
-        - "cmake -DCMAKE_INSTALL_PREFIX=./ .."
+        - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
         - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
         - "JOBS=$((CPUS/2))"
         - "JOBS=$((JOBS > 0 ? JOBS : 1))"
@@ -81,6 +81,8 @@
  .build-cdff:
   <<: *build-cdff
   stage: build
+  dependencies:
+      - asngeneration
   artifacts:
     paths:
       - build/
@@ -101,20 +103,29 @@
 
  cppcheck_analysis:
   stage: test
-  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:latest'
-  before_script:
-      - pwd
-      - mkdir build
-      - cd build
-      - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:1.86'
   script:
-      - cp ../Tools/CPPCheck/* .
-      - chmod +x ./analysis-cppcheck.sh
-      - ./analysis-cppcheck.sh
+      - chmod +x Tools/CPPCheck/analysis-cppcheck.sh
+      - Tools/CPPCheck/analysis-cppcheck.sh build/compile_commands.json
   artifacts:
     paths:
       - cppcheck/
     expire_in: 4 weeks
+
+  pages:
+    stage: deploy
+    when: always
+    dependencies:
+        - cppcheck_analysis
+    script:
+      - mkdir .public
+      - cp -r cppcheck/public/* .public
+      - mv .public public
+    artifacts:
+      paths:
+        - public
+    only:
+      - master
 
  .unit_tests:
   image: '${CI_IMAGE_TAG}:latest'

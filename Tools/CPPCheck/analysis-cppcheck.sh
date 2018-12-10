@@ -1,26 +1,40 @@
 #!/bin/bash
-set -x
+set -e
+
+if [ $# -eq 0 ]; then
+    echo "No compilation database provided.
+    run  cmake with -D CMAKE_EXPORT_COMPILE_COMMANDS=ON to create a database file named compile_commands.json.
+    Then : #analysis-cppcheck.sh compile_commands.json"
+    exit 1
+fi
+
+# Canonical path to the directory containing this script
+# Uses GNU readlink from GNU coreutils
+DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 cppcheck --version
 
-mkdir cppcheck
+# How many processors?
+if [ -f /proc/cpuinfo ]; then
+  CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)
+else
+  CPUS=1
+fi
 
-cppcheck --language=c++ --suppressions-list=./CppCheckSuppressions.txt --force --enable=all --std=c++11 --project=compile_commands.json --xml --xml-version=2 2> cppcheck/cppcheck.xml
-cppcheck --language=c++ --suppressions-list=./CppCheckSuppressions.txt --force --enable=all --std=c++11 --project=compile_commands.json 2> cppcheck/cppcheck_all.log
+mkdir -p cppcheck
 
-cat cppcheck/cppcheck_all.log | grep "(error)"          > cppcheck/cppcheck_error.log
-cat cppcheck/cppcheck_all.log | grep "(warning)"        > cppcheck/cppcheck_warning.log
-cat cppcheck/cppcheck_all.log | grep "(performance)"    > cppcheck/cppcheck_performance.log
-cat cppcheck/cppcheck_all.log | grep "(style)"          > cppcheck/cppcheck_style.log
-cat cppcheck/cppcheck_all.log | grep "(portability)"    > cppcheck/cppcheck_portability.log
-cat cppcheck/cppcheck_all.log | grep "(information)"    > cppcheck/cppcheck_information.log
-cat cppcheck/cppcheck_all.log | grep "(unusedFunction)" > cppcheck/cppcheck_unusedFunction.log
-cat cppcheck/cppcheck_all.log | grep "(missingInclude)" > cppcheck/cppcheck_missingInclude.log
+compile_database="$1"
+
+cppcheck --dump --language=c++ -j $CPUS --suppressions-list=${DIR}/cppcheck_ignores.txt --force --enable=all --std=c++11 --project=$compile_database --xml --xml-version=2 2> cppcheck/cppcheck.xml
+cppcheck-htmlreport --file=cppcheck/cppcheck.xml --report-dir=cppcheck/public
+
+#count errors and put them in a separate file.
+sed -n -e '/severity="error"/,/[</]error[>]/ p' cppcheck/cppcheck.xml > cppcheck/cppcheck_error.log
 
 COUNT=$(wc -l < cppcheck/cppcheck_error.log )
 
 if [ $COUNT -gt 0 ]; then
-	echo "Error count is $COUNT! cppcheck run failed :-(.";
+	echo "Error count is $(($COUNT/3))! cppcheck run failed :-(.";
 	echo ""
 	echo "Errors list:"
 	cat cppcheck/cppcheck_error.log
