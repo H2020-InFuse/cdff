@@ -90,7 +90,7 @@
 
  cppcheck_analysis:
   stage: test
-  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:1.86'
+  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:1.85'
   script:
       - chmod +x Tools/CPPCheck/analysis-cppcheck.sh
       - Tools/CPPCheck/analysis-cppcheck.sh build/compile_commands.json
