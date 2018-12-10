@@ -55,7 +55,7 @@
     - dockerize && curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-user&value='$tag_user https://hook.io/datastore/set 
     - exit 0
 
- .asngeneration:
+ asngeneration:
   image: '${CI_IMAGE_TAG}:latest'
   stage : asngeneration
   script:
@@ -78,7 +78,7 @@
         - "JOBS=$((JOBS > 0 ? JOBS : 1))"
         - "make --jobs=${JOBS} --output-sync=target"
 
- .build-cdff:
+ build-cdff:
   <<: *build-cdff
   stage: build
   dependencies:
@@ -86,19 +86,6 @@
   artifacts:
     paths:
       - build/
-    expire_in: 4 weeks
-
- .static_analysis:
-  <<: *build-cdff
-  stage: test
-  before_script:
-      - apt install -y cppcheck
-      - patch -p0 < Tools/CPPCheck/CMakeLists.patch
-  after_script:
-      - echo should convert CPPCheck-report.txt and publish to coverage pages
-  artifacts:
-    paths:
-      - CPPCheck-report.txt
     expire_in: 4 weeks
 
  cppcheck_analysis:
@@ -112,7 +99,7 @@
       - cppcheck/
     expire_in: 4 weeks
 
-  pages:
+ pages:
     stage: deploy
     when: always
     dependencies:
@@ -127,7 +114,7 @@
     only:
       - master
 
- .unit_tests:
+ unit_tests:
   image: '${CI_IMAGE_TAG}:latest'
   stage: test
   script:
