@@ -112,7 +112,7 @@
       - cppcheck/
     expire_in: 4 weeks
 
-  pages:
+ pages:
     stage: deploy
     when: always
     dependencies:
