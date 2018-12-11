@@ -1,13 +1,22 @@
-add_library(
-    feature_matching_2d
-    FeaturesMatching2DInterface.cpp
-)
+set(FEATUES_MATCHING_2D_SOURCES "FeaturesMatching2DInterface.cpp")
+set(FEATUES_MATCHING_2D_INCLUDE_DIRS "")
+set(FEATUES_MATCHING_2D_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(OpenCV_FOUND)
+	set(FEATUES_MATCHING_2D_SOURCES ${FEATUES_MATCHING_2D_SOURCES} "FlannMatcher.cpp")
+	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
+	set(FEATUES_MATCHING_2D_DEPENDENCIES ${FEATUES_MATCHING_2D_DEPENDENCIES} ${OpenCV_LIBS})
+endif()
 
 add_library(
-    flann_matcher
-    FlannMatcher.cpp
+    cdff_dfn_features_matching_2d
+    ${FEATUES_MATCHING_2D_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_features_matching_2d
+    SYSTEM PRIVATE ${FEATUES_MATCHING_2D_INCLUDE_DIRS}
 )
 target_link_libraries(
-    flann_matcher
-    feature_matching_2d cdff_types cdff_helpers yaml-cpp opencv_features2d opencv_flann opencv_core cdff_converters
+    cdff_dfn_features_matching_2d
+    ${FEATUES_MATCHING_2D_DEPENDENCIES}
 )

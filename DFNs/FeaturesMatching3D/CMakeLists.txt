@@ -1,31 +1,22 @@
-add_library(
-    feature_matching_3d
-    FeaturesMatching3DInterface.cpp
-)
+set(FEATURES_MATCHING_3D_SOURCES "FeaturesMatching3DInterface.cpp" "BestDescriptorMatch.cpp")
+set(FEATURES_MATCHING_3D_INCLUDE_DIRS "")
+set(FEATURES_MATCHING_3D_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(PCL_FOUND)
+	set(FEATURES_MATCHING_3D_SOURCES ${FEATURES_MATCHING_3D_SOURCES} "Ransac3D.cpp" "Icp3D.cpp")
+	set(FEATURES_MATCHING_3D_INCLUDE_DIRS ${FEATURES_MATCHING_3D_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
+	set(FEATURES_MATCHING_3D_DEPENDENCIES ${FEATURES_MATCHING_3D_DEPENDENCIES}  ${PCL_COMMON_LIBRARIES} ${PCL_FEATURES_LIBRARIES} ${PCL_KDTREE_LIBRARIES} ${PCL_SEARCH_LIBRARIES})
+endif()
 
 add_library(
-    ransac_3d
-    Ransac3D.cpp
+    cdff_dfn_features_matching_3d
+    ${FEATURES_MATCHING_3D_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_features_matching_3d
+    SYSTEM PRIVATE ${FEATURES_MATCHING_3D_INCLUDE_DIRS}
 )
 target_link_libraries(
-    ransac_3d
-    feature_matching_3d cdff_types yaml-cpp flann_cpp cdff_helpers
-)
-
-add_library(
-    icp_3d
-    Icp3D.cpp
-)
-target_link_libraries(
-    icp_3d
-    feature_matching_3d cdff_types yaml-cpp cdff_helpers
-)
-
-add_library(
-    best_descriptor_match
-    BestDescriptorMatch.cpp
-)
-target_link_libraries(
-    best_descriptor_match
-    feature_matching_3d cdff_types yaml-cpp cdff_helpers
+    cdff_dfn_features_matching_3d
+    ${FEATURES_MATCHING_3D_DEPENDENCIES}
 )

@@ -1,31 +1,32 @@
-add_library(
-    stereoReconstruction
-    StereoReconstructionInterface.cpp
-)
+set(STEREO_RECONSTRUCTION_SOURCES "StereoReconstructionInterface.cpp")
+set(STEREO_RECONSTRUCTION_INCLUDE_DIRS "")
+set(STEREO_RECONSTRUCTION_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(PCL_FOUND)
+	set(STEREO_RECONSTRUCTION_SOURCES ${STEREO_RECONSTRUCTION_SOURCES} "ScanlineOptimization.cpp")
+	set(STEREO_RECONSTRUCTION_INCLUDE_DIRS ${STEREO_RECONSTRUCTION_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
+	set(STEREO_RECONSTRUCTION_DEPENDENCIES ${STEREO_RECONSTRUCTION_DEPENDENCIES} ${PCL_COMMON_LIBRARIES} ${PCL_FEATURES_LIBRARIES} ${PCL_STEREO_LIBRARIES})
+endif()
+
+if(OpenCV_FOUND)
+	set(STEREO_RECONSTRUCTION_SOURCES ${STEREO_RECONSTRUCTION_SOURCES} "DisparityMapping.cpp" "HirschmullerDisparityMapping.cpp")
+	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
+	set(STEREO_RECONSTRUCTION_DEPENDENCIES ${STEREO_RECONSTRUCTION_DEPENDENCIES} ${OpenCV_LIBS})
+endif()
+
+if(TEST_ENABLED)
+	set(STEREO_RECONSTRUCTION_DEPENDENCIES ${STEREO_RECONSTRUCTION_DEPENDENCIES} "cdff_visualizers_opencv")
+endif()
 
 add_library(
-    disparity_mapping
-    DisparityMapping.cpp
+    cdff_dfn_stereo_reconstruction
+    ${STEREO_RECONSTRUCTION_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_stereo_reconstruction
+    SYSTEM PRIVATE ${STEREO_RECONSTRUCTION_INCLUDE_DIRS}
 )
 target_link_libraries(
-    disparity_mapping
-    stereoReconstruction cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core cdff_converters cdff_visualizers_opencv pcl_common pcl_filters
-)
-
-add_library(
-    hirschmuller_disparity_mapping
-    HirschmullerDisparityMapping.cpp
-)
-target_link_libraries(
-    hirschmuller_disparity_mapping
-    stereoReconstruction cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core cdff_converters cdff_visualizers_opencv pcl_common pcl_filters
-)
-
-add_library(
-    scanline_optimization
-    ScanlineOptimization.cpp
-)
-target_link_libraries(
-    scanline_optimization
-    stereoReconstruction cdff_types yaml-cpp cdff_helpers cdff_converters cdff_visualizers_pcl pcl_common pcl_filters ${PCL_STEREO_LIBRARIES}
+    cdff_dfn_stereo_reconstruction
+    ${STEREO_RECONSTRUCTION_DEPENDENCIES}
 )
