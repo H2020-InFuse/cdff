@@ -281,7 +281,7 @@ else()
 
 endif()
 
-## Don't look for FLANN, QHull, yaml-cpp, CloudCompare-core --------------------
+## Don't look for FLANN, yaml-cpp, CloudCompare-core ---------------------------
 
 set(CLOUDCOMPARE_FOUND true)
 set(CLOUDCOMPARE_INCLUDE_DIRS "")

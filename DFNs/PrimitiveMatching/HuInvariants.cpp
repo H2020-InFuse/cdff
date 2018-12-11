@@ -245,9 +245,9 @@ void HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<cv::Poin
         auto matching_info_it = m_matching_info.begin();
         while( matching_info_it != m_matching_info.end() )
         {
-            if(std::find(std::begin(primitives), std::end(primitives), matching_info_it->primitive) != primitives.end())
+            if(std::find(std::begin(primitives), std::end(primitives), matching_info_it->primitive) != std::end(primitives))
             {
-                m_matching_info.erase(matching_info_it);
+                matching_info_it= m_matching_info.erase(matching_info_it);
             }
             else
             {
