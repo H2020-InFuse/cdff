@@ -1,22 +1,28 @@
-add_library(
-    transform_3d_estimation
-    Transform3DEstimationInterface.cpp
-)
+set(TRANSFORM_3D_ESTIMATION_SOURCES "Transform3DEstimationInterface.cpp")
+set(TRANSFORM_3D_ESTIMATION_INCLUDE_DIRS "")
+set(TRANSFORM_3D_ESTIMATION_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(OpenCV_FOUND)
+	set(TRANSFORM_3D_ESTIMATION_SOURCES ${TRANSFORM_3D_ESTIMATION_SOURCES} "LeastSquaresMinimization.cpp")
+	set(TRANSFORM_3D_ESTIMATION_INCLUDE_DIRS ${TRANSFORM_3D_ESTIMATION_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
+	set(TRANSFORM_3D_ESTIMATION_DEPENDENCIES ${TRANSFORM_3D_ESTIMATION_DEPENDENCIES} ${OpenCV_LIBRARIES})
+endif()
+
+if(CERES_FOUND)
+	set(TRANSFORM_3D_ESTIMATION_SOURCES ${TRANSFORM_3D_ESTIMATION_SOURCES} "CeresEstimation.cpp")
+	set(TRANSFORM_3D_ESTIMATION_INCLUDE_DIRS ${TRANSFORM_3D_ESTIMATION_INCLUDE_DIRS} ${CERES_INCLUDE_DIRS})
+	set(TRANSFORM_3D_ESTIMATION_DEPENDENCIES ${TRANSFORM_3D_ESTIMATION_DEPENDENCIES} ${CERES_LIBRARIES})
+endif()
 
 add_library(
-    transform_3d_estimation_least_squares_minimization
-    LeastSquaresMinimization.cpp
+    cdff_dfn_transform_3d_estimation
+    ${TRANSFORM_3D_ESTIMATION_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_transform_3d_estimation
+    SYSTEM PRIVATE ${TRANSFORM_3D_ESTIMATION_INCLUDE_DIRS}
 )
 target_link_libraries(
-    transform_3d_estimation_least_squares_minimization
-    transform_3d_estimation cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core cdff_converters
-)
-
-add_library(
-    transform_3d_estimation_ceres
-    CeresEstimation.cpp
-)
-target_link_libraries(
-    transform_3d_estimation_ceres
-    transform_3d_estimation cdff_types yaml-cpp opencv_calib3d cdff_helpers opencv_core cdff_converters ${CERES_LIBRARIES}
+    cdff_dfn_transform_3d_estimation
+    ${TRANSFORM_3D_ESTIMATION_DEPENDENCIES}
 )

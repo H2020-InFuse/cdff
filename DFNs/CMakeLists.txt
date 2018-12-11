@@ -24,55 +24,30 @@ target_link_libraries(
   cdff_helpers
   cdff_logger
   cdff_types
-  essential_matrix_decomposition
-  fundamental_matrix_ransac
-  orb_descriptor
-  shot_descriptor_3d
-  ransac_3d icp_3d
-  best_descriptor_match
-  harris_detector_2d
+  cdff_dfn_cameras_transform_estimation
+  cdff_dfn_fundamental_matrix_computation
+  cdff_dfn_features_description_2d
   cdff_dfn_image_filtering
   cdff_dfn_stereo_reconstruction
-  orb_detector_descriptor
-  flann_matcher
-  iterative_pnp_solver
-  triangulation
-  harris_detector_3d
-  iss_detector_3d
-  corner_detector_3d
-  kalman_predictor
+  cdff_dfn_features_extraction_2d
+  cdff_dfn_features_matching_2d
+  cdff_dfn_perspective_n_point_solving
+  cdff_dfn_point_cloud_reconstruction_2d_to_3d
+  cdff_dfn_kf_prediction
+  cdff_dfn_kf_correction
   cdff_dfn_registration_3d
-  ceres_adjustment
-  svd_decomposition
-  transform_3d_estimation_least_squares_minimization
-  transform_3d_estimation_ceres
-  hu_invariants
-  octree
+  cdff_dfn_transform_3d_estimation
+  cdff_dfn_primitive_matching
+  cdff_dfn_voxelization
   cdff_converters
-  pcl_common
-  pcl_features
-  pcl_search
-  pcl_filters
-  pcl_visualization
-  pcl_io
-  pcl_ml
-  pcl_io_ply
-  pcl_octree
-  pcl_outofcore
-  pcl_kdtree
-  pcl_tracking
-  pcl_stereo
-  pcl_recognition
-  pcl_registration
-  pcl_people
-  pcl_keypoints
-  pcl_surface
-  pcl_segmentation
-  pcl_sample_consensus
-  pcl_stereo
-  convolution_filter
-  threshold_force
+  cdff_dfn_depth_filtering
+  cdff_dfn_force_mesh_generator
   cdff_dfn_point_cloud_assembly
-  cartesian_system_transform
-  statistical_outlier_removal
+  cdff_dfn_point_cloud_transform
+  cdff_dfn_point_cloud_filtering
+  cdff_dfn_stereo_reconstruction
+  cdff_dfn_features_extraction_3d
+  cdff_dfn_features_description_3d
+  cdff_dfn_features_matching_3d
+  cdff_dfn_bundle_adjustment
 )

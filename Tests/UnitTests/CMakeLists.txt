@@ -78,74 +78,40 @@ set(unittest_sources UnitTests.cpp
 # list the necessary ones.
 set(unittest_libraries catch
     adjustment_from_stereo
-    best_descriptor_match
-    cartesian_system_transform
-    cloudcompare_core
+    estimation_from_stereo
+    cdff_dfn_point_cloud_transform
     cdff_converters
     cdff_dfn_dfnexecutors
     cdff_helpers
     cdff_logger
     cdff_types
-    ceres_adjustment
-    convolution_filter
+    cdff_dfn_depth_filtering
     dfpc_configurator
     dfpc_haptic_scanning
     dfpc_implementation_features_matching_3d
-    essential_matrix_decomposition
-    estimation_from_stereo
-    flann_matcher
-    fundamental_matrix_ransac
-    harris_detector_2d
-    harris_detector_3d
-    iss_detector_3d
-    corner_detector_3d
-    hu_invariants
-    icp_3d
-    iterative_pnp_solver
-    kalman_corrector
-    kalman_predictor
-#[=[mock]=] # no longer used by any DFN unit test
+    cdff_dfn_cameras_transform_estimation
+    cdff_dfn_features_matching_2d
+    cdff_dfn_fundamental_matrix_computation
+    cdff_dfn_primitive_matching
+    cdff_dfn_perspective_n_point_solving
+    cdff_dfn_kf_correction
+    cdff_dfn_kf_prediction
     cdff_dfn_point_cloud_assembly
-    opencv_core
-    opencv_highgui
-    opencv_imgcodecs
-    opencv_imgproc
-    opencv_video
-    orb_descriptor
-    orb_detector_descriptor
-    pcl_common
-    pcl_features
-    pcl_filters
-    pcl_io
-    pcl_io_ply
-    pcl_kdtree
-    pcl_keypoints
-    pcl_ml
-    pcl_octree
-    pcl_outofcore
-    pcl_people
-    pcl_recognition
-    pcl_registration
-    pcl_sample_consensus
-    pcl_search
-    pcl_segmentation
-    pcl_stereo
-    pcl_surface
-    pcl_tracking
-    pcl_visualization
-    ransac_3d
-#[=[reconstruction_from_stereo]=]
+    cdff_dfn_features_description_2d
+    cdff_dfn_features_extraction_2d
     cdff_dfn_registration_3d
     cdff_dfn_image_filtering
-    shot_descriptor_3d
-    statistical_outlier_removal
-    svd_decomposition
-    synthetic_generators
-    threshold_force
-    transform_3d_estimation_ceres
-    transform_3d_estimation_least_squares_minimization
-    triangulation
+    cdff_dfn_point_cloud_filtering
+    cdff_dfn_force_mesh_generator
+    cdff_dfn_transform_3d_estimation
+    cdff_dfn_point_cloud_reconstruction_2d_to_3d
     cdff_dfn_stereo_reconstruction
+    cdff_dfn_features_extraction_3d
+    cdff_dfn_features_description_3d
+    cdff_dfn_features_matching_3d
+    cdff_dfn_bundle_adjustment
+    cdff_dfn_voxelization
+    synthetic_generators
 )
 
 # Make the Catch executable that runs the unit tests

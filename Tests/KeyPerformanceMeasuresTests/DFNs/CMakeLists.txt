@@ -37,7 +37,7 @@ add_executable(
 )
 target_link_libraries(
 	position_test_svd
-	cdff_helpers cdff_logger cdff_types cdff_converters svd_decomposition feature_extraction_2d opencv_core opencv_imgproc opencv_highgui
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_bundle_adjustment cdff_dfn_features_extraction_2d opencv_core opencv_imgproc opencv_highgui
 )
 
 add_executable(
@@ -47,7 +47,7 @@ add_executable(
 )
 target_link_libraries(
 	validity_harris_detector_2d
-	cdff_helpers cdff_logger cdff_types cdff_converters harris_detector_2d feature_extraction_2d opencv_core opencv_imgproc opencv_highgui
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_extraction_2d opencv_core opencv_imgproc opencv_highgui
 )
 
 add_executable(
@@ -57,7 +57,7 @@ add_executable(
 )
 target_link_libraries(
 	validity_orb_detector_2d
-	cdff_helpers cdff_logger cdff_types cdff_converters orb_detector_descriptor feature_extraction_2d opencv_core opencv_imgproc opencv_highgui
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_extraction_2d opencv_core opencv_imgproc opencv_highgui
 )
 
 add_executable(
@@ -68,7 +68,7 @@ add_executable(
 target_compile_definitions(regularity_harris_detector_3d PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	regularity_harris_detector_3d
-	cdff_helpers cdff_logger cdff_types cdff_converters harris_detector_3d feature_extraction_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_extraction_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
 )
 
 add_executable(
@@ -78,7 +78,7 @@ add_executable(
 )
 target_link_libraries(
 	fundamental_matrix_ransac_test
-	cdff_helpers cdff_logger cdff_types cdff_converters fundamental_matrix_computation fundamental_matrix_ransac opencv_core opencv_imgproc opencv_highgui
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_fundamental_matrix_computation opencv_core opencv_imgproc opencv_highgui
 )
 
 add_executable(
@@ -120,5 +120,5 @@ add_executable(
 )
 target_link_libraries(
 	position_test_ceres
-	cdff_helpers cdff_logger cdff_types cdff_converters ceres_adjustment feature_extraction_2d opencv_core opencv_imgproc opencv_highgui ${CERES_LIBRARIES}
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_bundle_adjustment cdff_dfn_features_extraction_2d opencv_core opencv_imgproc opencv_highgui ${CERES_LIBRARIES}
 )

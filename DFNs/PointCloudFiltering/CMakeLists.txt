@@ -1,13 +1,22 @@
-add_library(
-    point_cloud_filtering
-    PointCloudFilteringInterface.cpp
-)
+set(POINT_CLOUD_FILTERING_SOURCES "PointCloudFilteringInterface.cpp")
+set(POINT_CLOUD_FILTERING_INCLUDE_DIRS "")
+set(POINT_CLOUD_FILTERING_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(PCL_FOUND)
+	set(POINT_CLOUD_FILTERING_SOURCES ${POINT_CLOUD_FILTERING_SOURCES} "StatisticalOutlierRemoval.cpp")
+	set(POINT_CLOUD_FILTERING_INCLUDE_DIRS ${POINT_CLOUD_FILTERING_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
+	set(POINT_CLOUD_FILTERING_DEPENDENCIES ${POINT_CLOUD_FILTERING_DEPENDENCIES}  ${PCL_COMMON_LIBRARIES} ${PCL_FEATURES_LIBRARIES} ${PCL_KDTREE_LIBRARIES} ${PCL_SEARCH_LIBRARIES})
+endif()
 
 add_library(
-    statistical_outlier_removal
-    StatisticalOutlierRemoval.cpp
+    cdff_dfn_point_cloud_filtering
+    ${POINT_CLOUD_FILTERING_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_point_cloud_filtering
+    SYSTEM PRIVATE ${POINT_CLOUD_FILTERING_INCLUDE_DIRS}
 )
 target_link_libraries(
-    statistical_outlier_removal
-    point_cloud_filtering cdff_types yaml-cpp cdff_helpers cdff_converters
+    cdff_dfn_point_cloud_filtering
+    ${POINT_CLOUD_FILTERING_DEPENDENCIES}
 )

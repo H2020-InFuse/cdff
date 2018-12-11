@@ -14,7 +14,7 @@ add_executable(
 set_target_properties(HarrisDetector2DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     HarrisDetector2DGuiTest
-    harris_detector_2d
+    cdff_dfn_features_extraction_2d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -28,7 +28,7 @@ add_executable(
 set_target_properties(OrbDetectorDescriptorGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     OrbDetectorDescriptorGuiTest
-    orb_detector_descriptor
+    cdff_dfn_features_extraction_2d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -45,7 +45,7 @@ add_executable(
 set_target_properties(DepthFilteringGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
         DepthFilteringGuiTest
-        convolution_filter
+        cdff_dfn_depth_filtering
         ${GRAPHICALTEST_CDFF_LIBRARIES}
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -62,7 +62,7 @@ add_executable(
 set_target_properties(FlannMatcherGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     FlannMatcherGuiTest
-    flann_matcher
+    cdff_dfn_features_matching_2d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -147,7 +147,7 @@ set_target_properties(HarrisDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTOR
 target_compile_definitions(HarrisDetector3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     HarrisDetector3DGuiTest
-    harris_detector_3d
+    cdff_dfn_features_extraction_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
@@ -163,7 +163,7 @@ set_target_properties(IssDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY .
 target_compile_definitions(IssDetector3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     IssDetector3DGuiTest
-    iss_detector_3d
+    cdff_dfn_features_extraction_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
@@ -179,7 +179,7 @@ set_target_properties(CornerDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTOR
 target_compile_definitions(CornerDetector3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     CornerDetector3DGuiTest
-    corner_detector_3d
+    cdff_dfn_features_extraction_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
@@ -230,7 +230,7 @@ set_target_properties(ShotDescriptor3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTOR
 target_compile_definitions(ShotDescriptor3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ShotDescriptor3DGuiTest
-    shot_descriptor_3d
+    cdff_dfn_features_description_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_keypoints
@@ -247,7 +247,7 @@ set_target_properties(Icp3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_compile_definitions(Icp3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Icp3DGuiTest
-    icp_3d
+    cdff_dfn_features_matching_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
@@ -264,7 +264,7 @@ set_target_properties(Ransac3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./test
 target_compile_definitions(Ransac3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Ransac3DGuiTest
-    ransac_3d
+    cdff_dfn_features_matching_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
@@ -281,7 +281,7 @@ set_target_properties(TriangulationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY .
 target_compile_definitions(TriangulationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     TriangulationGuiTest
-    triangulation
+    cdff_dfn_point_cloud_reconstruction_2d_to_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_visualization
@@ -346,7 +346,7 @@ add_executable(
 set_target_properties(HuInvariantsGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
         HuInvariantsGuiTest
-        hu_invariants
+        cdff_dfn_primitive_matching
         ${GRAPHICALTEST_CDFF_LIBRARIES}
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -500,7 +500,7 @@ set_target_properties(StereoReconstruction PROPERTIES RUNTIME_OUTPUT_DIRECTORY .
 target_compile_definitions(StereoReconstruction PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     StereoReconstruction
-    cdff_dfn_image_filtering orb_detector_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
+    cdff_dfn_image_filtering cdff_dfn_features_extraction_2d cdff_dfn_point_cloud_reconstruction_2d_to_3d cdff_dfn_features_matching_2d cdff_dfn_fundamental_matrix_computation cdff_dfn_cameras_transform_estimation cdff_dfn_features_matching_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
@@ -517,7 +517,7 @@ set_target_properties(StereoReconstruction2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_compile_definitions(StereoReconstruction2 PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     StereoReconstruction2
-    cdff_dfn_image_filtering harris_detector_2d orb_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
+    cdff_dfn_image_filtering cdff_dfn_features_extraction_2d cdff_dfn_features_description_2d cdff_dfn_point_cloud_reconstruction_2d_to_3d cdff_dfn_features_matching_2d cdff_dfn_fundamental_matrix_computation cdff_dfn_cameras_transform_estimation cdff_dfn_features_matching_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus

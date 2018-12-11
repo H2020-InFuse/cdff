@@ -1,13 +1,22 @@
-add_library(
-    kf_correction
-    KFCorrectionInterface.cpp
-)
+set(KF_CORRECTION_SOURCES "KFCorrectionInterface.cpp")
+set(KF_CORRECTION_INCLUDE_DIRS "")
+set(KF_CORRECTION_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(OpenCV_FOUND)
+	set(KF_CORRECTION_SOURCES ${KF_CORRECTION_SOURCES} "KalmanCorrector.cpp")
+	set(KF_CORRECTION_INCLUDE_DIRS ${KF_CORRECTION_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
+	set(KF_CORRECTION_DEPENDENCIES ${KF_CORRECTION_DEPENDENCIES} ${OpenCV_LIBRARIES})
+endif()
 
 add_library(
-    kalman_corrector
-    KalmanCorrector.cpp
+    cdff_dfn_kf_correction
+    ${KF_CORRECTION_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_kf_correction
+    SYSTEM PRIVATE ${KF_CORRECTION_INCLUDE_DIRS}
 )
 target_link_libraries(
-   kalman_corrector
-   kf_correction cdff_types yaml-cpp cdff_helpers opencv_video
+    cdff_dfn_kf_correction
+    ${KF_CORRECTION_DEPENDENCIES}
 )
