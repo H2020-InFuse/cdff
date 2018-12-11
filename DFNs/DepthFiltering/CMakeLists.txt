@@ -4,8 +4,8 @@ set(DEPTH_FILTERING_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_co
 
 if(OpenCV_FOUND)
 	set(DEPTH_FILTERING_SOURCES ${DEPTH_FILTERING_SOURCES} "ConvolutionFilter.cpp")
-	set(DEPTH_FILTERING_INCLUDE_DIRS ${DEPTH_FILTERING_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
-	set(DEPTH_FILTERING_DEPENDENCIES ${DEPTH_FILTERING_DEPENDENCIES} ${OpenCV_LIBRARIES})
+	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
+	set(DEPTH_FILTERING_DEPENDENCIES ${DEPTH_FILTERING_DEPENDENCIES} ${OpenCV_LIBS})
 endif()
 
 add_library(

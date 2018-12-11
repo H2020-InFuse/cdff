@@ -5,8 +5,8 @@ set(IMAGE_FILTERING_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_co
 if(OpenCV_FOUND)
 	set(IMAGE_FILTERING_SOURCES ${IMAGE_FILTERING_SOURCES} "ImageUndistortion.cpp" "ImageUndistortionRectification.cpp" "DerivativeEdgeDetection.cpp" "CannyEdgeDetection.cpp"
 		"BackgroundExtraction.cpp" "NormalVectorExtraction.cpp" "KMeansClustering.cpp")
-	set(IMAGE_FILTERING_INCLUDE_DIRS ${IMAGE_FILTERING_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
-	set(IMAGE_FILTERING_DEPENDENCIES ${IMAGE_FILTERING_DEPENDENCIES} ${OpenCV_LIBRARIES} cdff_validators)
+	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
+	set(IMAGE_FILTERING_DEPENDENCIES ${IMAGE_FILTERING_DEPENDENCIES} ${OpenCV_LIBS} cdff_validators)
 endif()
 
 add_library(

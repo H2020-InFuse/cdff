@@ -4,8 +4,8 @@ set(KF_PREDICTION_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_conv
 
 if(OpenCV_FOUND)
 	set(KF_PREDICTION_SOURCES ${KF_PREDICTION_SOURCES} "KalmanPredictor.cpp")
-	set(KF_PREDICTION_INCLUDE_DIRS ${KF_PREDICTION_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
-	set(KF_PREDICTION_DEPENDENCIES ${KF_PREDICTION_DEPENDENCIES} ${OpenCV_LIBRARIES})
+	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
+	set(KF_PREDICTION_DEPENDENCIES ${KF_PREDICTION_DEPENDENCIES} ${OpenCV_LIBS})
 endif()
 
 add_library(

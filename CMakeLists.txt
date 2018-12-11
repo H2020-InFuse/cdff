@@ -39,7 +39,7 @@ set(BUNDLED_DEPENDENCIES_PREFIX External/install CACHE PATH
 # scope than the top-level CMakeLists file, perhaps with target_compile_
 # definitions() or set_source_files_properties()?
 
-set(TEST_ENABLED true)
+option(TEST_ENABLED "Compile test code in DFNs and DFPCs" ON)
 if(TEST_ENABLED)
 add_definitions(-DTESTING)
 endif()
