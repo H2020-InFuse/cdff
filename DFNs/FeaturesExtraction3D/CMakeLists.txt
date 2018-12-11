@@ -1,31 +1,22 @@
-add_library(
-    feature_extraction_3d
-    FeaturesExtraction3DInterface.cpp
-)
+set(FEATURES_EXTRACTION_3D_SOURCES "FeaturesExtraction3DInterface.cpp")
+set(FEATURES_EXTRACTION_3D_INCLUDE_DIRS "")
+set(FEATURES_EXTRACTION_3D_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(PCL_FOUND)
+	set(FEATURES_EXTRACTION_3D_SOURCES ${FEATURES_EXTRACTION_3D_SOURCES} "CornerDetector3D.cpp" "IssDetector3D.cpp" "HarrisDetector3D.cpp")
+	set(FEATURES_EXTRACTION_3D_INCLUDE_DIRS ${FEATURES_EXTRACTION_3D_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
+	set(FEATURES_EXTRACTION_3D_DEPENDENCIES ${FEATURES_EXTRACTION_3D_DEPENDENCIES}  ${PCL_COMMON_LIBRARIES} ${PCL_FEATURES_LIBRARIES} ${PCL_KDTREE_LIBRARIES} ${PCL_SEARCH_LIBRARIES} ${PCL_SEGMENTATION_LIBRARIES})
+endif()
 
 add_library(
-    harris_detector_3d
-    HarrisDetector3D.cpp
+    cdff_dfn_features_extraction_3d
+    ${FEATURES_EXTRACTION_3D_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_features_extraction_3d
+    SYSTEM PRIVATE ${FEATURES_EXTRACTION_3D_INCLUDE_DIRS}
 )
 target_link_libraries(
-    harris_detector_3d
-    feature_extraction_3d cdff_types yaml-cpp cdff_helpers cdff_converters ${PCL_FEATURES_LIBRARIES}
-)
-
-add_library(
-    iss_detector_3d
-    IssDetector3D.cpp
-)
-target_link_libraries(
-    iss_detector_3d
-    feature_extraction_3d cdff_types yaml-cpp cdff_helpers cdff_converters ${PCL_FEATURES_LIBRARIES}
-)
-
-add_library(
-    corner_detector_3d
-    CornerDetector3D.cpp
-)
-target_link_libraries(
-    corner_detector_3d
-    feature_extraction_3d cdff_types yaml-cpp cdff_helpers cdff_converters ${PCL_FEATURES_LIBRARIES}
+    cdff_dfn_features_extraction_3d
+    ${FEATURES_EXTRACTION_3D_DEPENDENCIES}
 )

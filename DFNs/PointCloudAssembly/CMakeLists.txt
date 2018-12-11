@@ -1,44 +1,28 @@
-add_library(
-    point_cloud_assembly
-    PointCloudAssemblyInterface.cpp
-)
+set(POINT_CLOUD_ASSEMBLY_SOURCES "PointCloudAssemblyInterface.cpp")
+set(POINT_CLOUD_ASSEMBLY_INCLUDE_DIRS "")
+set(POINT_CLOUD_ASSEMBLY_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(PCL_FOUND)
+	set(POINT_CLOUD_ASSEMBLY_SOURCES ${POINT_CLOUD_ASSEMBLY_SOURCES} "NeighbourPointAverage.cpp" "NeighbourSinglePointAverage.cpp" "VoxelBinning.cpp")
+	set(POINT_CLOUD_ASSEMBLY_INCLUDE_DIRS ${POINT_CLOUD_ASSEMBLY_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
+	set(POINT_CLOUD_ASSEMBLY_DEPENDENCIES ${POINT_CLOUD_ASSEMBLY_DEPENDENCIES} ${PCL_COMMON_LIBRARIES} ${PCL_KDTREE_LIBRARIES} ${PCL_SEARCH_LIBRARIES})
+endif()
+
+if(POINTMATCHER_FOUND)
+	set(POINT_CLOUD_ASSEMBLY_SOURCES ${POINT_CLOUD_ASSEMBLY_SOURCES} "MatcherAssembly.cpp")
+	set(POINT_CLOUD_ASSEMBLY_INCLUDE_DIRS ${POINT_CLOUD_ASSEMBLY_INCLUDE_DIRS} ${POINTMATCHER_INCLUDE_DIRS})
+	set(POINT_CLOUD_ASSEMBLY_DEPENDENCIES ${POINT_CLOUD_ASSEMBLY_DEPENDENCIES} ${POINTMATCHER_LIBRARIES})
+endif()
 
 add_library(
-    neighbour_point_average
-    NeighbourPointAverage.cpp
-)
-target_link_libraries(
-    neighbour_point_average
-    point_cloud_assembly cdff_types yaml-cpp cdff_helpers cdff_converters
-)
-
-add_library(
-    neighbour_single_point_average
-    NeighbourSinglePointAverage.cpp
-)
-target_link_libraries(
-    neighbour_single_point_average
-    point_cloud_assembly cdff_types yaml-cpp cdff_helpers cdff_converters
-)
-
-add_library(
-    voxel_binning
-    VoxelBinning.cpp
-)
-target_link_libraries(
-    voxel_binning
-    point_cloud_assembly cdff_types yaml-cpp cdff_helpers cdff_converters
-)
-
-add_library(
-    matcher_assembly
-    MatcherAssembly.cpp
+    cdff_dfn_point_cloud_assembly
+    ${POINT_CLOUD_ASSEMBLY_SOURCES}
 )
 target_include_directories(
-    matcher_assembly
-    SYSTEM PRIVATE ${POINTMATCHER_INCLUDE_DIRS}
+    cdff_dfn_point_cloud_assembly
+    SYSTEM PRIVATE ${POINT_CLOUD_ASSEMBLY_INCLUDE_DIRS}
 )
 target_link_libraries(
-    matcher_assembly
-    point_cloud_assembly cdff_types yaml-cpp cdff_helpers cdff_converters ${POINTMATCHER_LIBRARIES}
+    cdff_dfn_point_cloud_assembly
+    ${POINT_CLOUD_ASSEMBLY_DEPENDENCIES}
 )
