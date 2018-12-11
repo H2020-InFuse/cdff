@@ -32,14 +32,3 @@ or
 docker# Tools/CPPCheck/partial-cppcheck.sh
 
 ```
-
-
-    echo "No compilation database provided.
-    run  cmake with -D CMAKE_EXPORT_COMPILE_COMMANDS=ON to create a database file named compile_commands.json.
-    Then : #analysis-cppcheck.sh compile_commands.json"
-
-partial-cppcheck can and should be triggered by every user before push.
-
-to test :
-
-sudo docker run -it --volume=/home/xma/dev/CDFF:/home/xma/dev/CDFF nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
