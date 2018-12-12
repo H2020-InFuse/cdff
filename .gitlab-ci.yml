@@ -1,5 +1,6 @@
  variables:
-   REGISTRY_PREFIX=nexus.spaceapplications.com/
+   REGISTRY_PREFIX: nexus.spaceapplications.com/
+
  stages:
   - setup
   - generation
