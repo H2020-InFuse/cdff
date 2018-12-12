@@ -13,7 +13,7 @@
    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
 
  generate:cdff-ci:
-  >>: *connect
+  <<: *connect
   services:
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder:latest
