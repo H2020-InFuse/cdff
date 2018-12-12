@@ -5,7 +5,7 @@
 # will produce nexus.spaceapplications.com/repository/infuse/cdff-ci:latest and '...'cdff-ci:LABEL
 
 
-if [ $# < 2 ]; then
+if [ $# -lt 2 ]; then
     echo "incorrect parameters: Usage docker-builder.sh [dockerfile] [imagename] [optional=environnement variables]"
     exit 1
 fi
@@ -37,8 +37,5 @@ if [[ ! $latest_tag < $current_tag ]]; then
     docker push $IMAGE_TAG':'latest
     curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$IMAGE_NAME'&value='$current_tag https://hook.io/datastore/set
  else 
- echo Image $IMAGE_TAG':'$latest_tag already available on the server."
-fi 
-
- 
- 
+ echo Image $IMAGE_TAG':'$latest_tag already available on the server.
+fi
