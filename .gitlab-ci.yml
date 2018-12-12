@@ -27,7 +27,7 @@
   script: Tools/ASN.1/GeneratorScript.sh
   artifacts:
    paths: Common/Types/C/
-    expire_in: 4 weeks
+   expire_in: 4 weeks
 
 .build:configure: &configure
   before_script:
