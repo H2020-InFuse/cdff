@@ -53,8 +53,8 @@ class FlannMatcherTestInterface : public DFNTestInterface
 		cv::Mat cvImage;
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 	};
 
 FlannMatcherTestInterface::FlannMatcherTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)

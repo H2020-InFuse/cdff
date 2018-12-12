@@ -79,8 +79,8 @@ namespace Reconstruction3D
         public:
 		SparseRegistrationFromStereo();
 		~SparseRegistrationFromStereo();
-		void run();
-		void setup();
+		void run() override;
+		void setup() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

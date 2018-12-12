@@ -42,8 +42,8 @@ class DisparityMappingTestInterface : public DFNTestInterface
 		cv::Mat cvRightImage;
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 };
 
 DisparityMappingTestInterface::DisparityMappingTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)

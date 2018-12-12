@@ -118,9 +118,9 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		Pose3D InterpolatePose(unsigned beforePoseIndex, unsigned afterPoseIndex, double imageTime);
 		void SetupMocksAndStubs();
 
-		bool SetNextInputs();
-		void ExecuteDfns();
-		MeasuresMap ExtractMeasures();
+		bool SetNextInputs() override;
+		void ExecuteDfns() override;
+		MeasuresMap ExtractMeasures() override;
 
 		float ComputeMixedOrderPixelIndex();
 

@@ -102,9 +102,9 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 		void LoadSceneCloud();
 		void LoadModelCloud(int long inputId);
 
-		bool SetNextInputs();
-		void ExecuteDfns();
-		MeasuresMap ExtractMeasures();
+		bool SetNextInputs() override;
+		void ExecuteDfns() override;
+		MeasuresMap ExtractMeasures() override;
 
 		int long inputId;
 		std::string inputCloudFile;

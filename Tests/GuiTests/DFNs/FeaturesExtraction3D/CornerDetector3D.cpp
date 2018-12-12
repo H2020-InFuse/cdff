@@ -45,8 +45,8 @@ class CornerDetector3DTestInterface : public DFNTestInterface
 
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 };
 
 CornerDetector3DTestInterface::CornerDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile)

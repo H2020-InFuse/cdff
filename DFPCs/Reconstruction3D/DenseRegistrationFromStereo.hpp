@@ -88,8 +88,8 @@ namespace Reconstruction3D
         public:
 		DenseRegistrationFromStereo();
 		~DenseRegistrationFromStereo();
-		void run();
-		void setup();
+		void run() override;
+		void setup() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

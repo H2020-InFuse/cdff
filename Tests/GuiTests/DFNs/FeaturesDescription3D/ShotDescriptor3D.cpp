@@ -51,8 +51,8 @@ class ShotDescriptor3DTestInterface : public DFNTestInterface
 
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 
 		pcl::PointCloud<pcl::PointXYZRGB>::Ptr PrepareOutputCloud(VisualPointFeatureVector3DConstPtr features);
 

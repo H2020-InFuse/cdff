@@ -71,8 +71,8 @@ namespace FeaturesDescription3D
 			ShotDescriptor3D();
 			virtual ~ShotDescriptor3D();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 

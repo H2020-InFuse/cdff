@@ -61,8 +61,8 @@ class HuInvariantsTestInterface : public DFNTestInterface
 		FrameConstPtr inputImage;
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 };
 
 const std::string HuInvariantsTestInterface::DEFAULT_IMAGE_FILE_PATH = "../../tests/Data/Images/primitive_matching/test_images/robot.jpg";

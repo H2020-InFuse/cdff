@@ -57,8 +57,8 @@ class ImageUndistortionTestInterface : public DFNTestInterface
 		FrameConstPtr inputImage;
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 };
 
 ImageUndistortionTestInterface::ImageUndistortionTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)

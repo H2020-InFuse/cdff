@@ -79,8 +79,8 @@ namespace Registration3D
 			IcpMatcher();
 			virtual ~IcpMatcher();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 

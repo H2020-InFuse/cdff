@@ -67,9 +67,9 @@ class OrbDetectorDescriptorFlannMatcher : public PerformanceTestInterface
 		OrbDetectorDescriptor* orb;
 		FlannMatcher* flann;
 
-		bool SetNextInputs();
-		void ExecuteDfns();
-		MeasuresMap ExtractMeasures();
+		bool SetNextInputs() override;
+		void ExecuteDfns() override;
+		MeasuresMap ExtractMeasures() override;
 	};
 
 OrbDetectorDescriptorFlannMatcher::OrbDetectorDescriptorFlannMatcher(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, 

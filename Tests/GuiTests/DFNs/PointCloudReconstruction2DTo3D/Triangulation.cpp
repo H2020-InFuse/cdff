@@ -38,8 +38,8 @@ class TriangulationTestInterface : public DFNTestInterface
 	private:
 		Triangulation *triangulation;
 		std::string outputWindowName;
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 	};
 
 TriangulationTestInterface::TriangulationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)

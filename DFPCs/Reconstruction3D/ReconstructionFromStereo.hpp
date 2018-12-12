@@ -81,8 +81,8 @@ namespace Reconstruction3D
         public:
 		ReconstructionFromStereo();
 		~ReconstructionFromStereo();
-		void run();
-		void setup();
+		void run() override;
+		void setup() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

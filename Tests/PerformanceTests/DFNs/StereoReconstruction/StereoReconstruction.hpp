@@ -86,8 +86,8 @@ class StereoReconstructionTestInterface : public PerformanceTestInterface
 		void ReadImagesList(bool useReferenceDisparity);
 		void SetReferenceDisparity(std::string referenceDisparityFilePath);
 
-		bool SetNextInputs();
-		MeasuresMap ExtractMeasures();
+		bool SetNextInputs() override;
+		MeasuresMap ExtractMeasures() override;
 
 		void ComputeValidDisparityColumns(const cv::Mat& normalizedDisparity, unsigned& firstValidColumn, unsigned& numberOfValidColumns);
 		bool IsBadDisparity(const cv::Mat& normalizedDisparity, unsigned firstValidColumn);

@@ -76,8 +76,8 @@ class ImageFilteringTestInterface : public PerformanceTestInterface
 		CDFF::DFN::ImageFilteringInterface* filter;
 		void ReadImageFileNamesList();
 
-		bool SetNextInputs();
-		MeasuresMap ExtractMeasures();
+		bool SetNextInputs() override;
+		MeasuresMap ExtractMeasures() override;
 	};
 
 #endif

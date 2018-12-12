@@ -65,8 +65,8 @@ class ImageUndistortionRectificationTestInterface : public DFNTestInterface
 		CameraPosition cameraPosition;
 		bool saveResultToFile;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 };
 
 ImageUndistortionRectificationTestInterface::ImageUndistortionRectificationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)

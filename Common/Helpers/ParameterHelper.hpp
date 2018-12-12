@@ -54,7 +54,7 @@ class ParameterHelper : public ParameterHelperInterface
 		ParameterHelper(const std::string& parameterName, UsageType& boundVariable, const UsageType& defaultValue);
 		~ParameterHelper();
 
-		void Read(const YAML::Node& configurationNode);
+		void Read(const YAML::Node& configurationNode) override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

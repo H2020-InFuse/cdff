@@ -45,8 +45,8 @@ class IssDetector3DTestInterface : public DFNTestInterface
 
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 };
 
 IssDetector3DTestInterface::IssDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile)

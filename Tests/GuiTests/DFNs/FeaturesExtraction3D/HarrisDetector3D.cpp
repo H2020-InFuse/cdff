@@ -45,8 +45,8 @@ class HarrisDetector3DTestInterface : public DFNTestInterface
 
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 };
 
 HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile)

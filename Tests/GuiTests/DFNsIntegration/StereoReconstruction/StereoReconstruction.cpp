@@ -114,13 +114,13 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		Matrix3dPtr fundamentalMatrix;
 		Pose3DPtr secondCameraPose;
 
-		void SetupMocksAndStubs();
-		void SetupParameters();
-		void DisplayResult();
+		void SetupMocksAndStubs() override;
+		void SetupParameters() override;
+		void DisplayResult() override;
 
-		void ResetProcess();
-		bool IsProcessCompleted();
-		void UpdateState();
+		void ResetProcess() override;
+		bool IsProcessCompleted() override;
+		void UpdateState() override;
 		DFNCommonInterface* PrepareNextDfn();
 
 		void PrepareUndistortionLeft();

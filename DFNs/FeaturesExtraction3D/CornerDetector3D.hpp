@@ -59,8 +59,8 @@ namespace FeaturesExtraction3D
 			CornerDetector3D();
 			virtual ~CornerDetector3D();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 

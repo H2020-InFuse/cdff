@@ -74,9 +74,7 @@ void GuiTestReconstructionAndLocalisation::Run(CDFF::DFPC::ReconstructionAndIden
 		reconstructorAndIdentifier.rightImageInput(*rightImage);
 		reconstructorAndIdentifier.run();
 		PRINT_TO_LOG("run", "after");
-		const PointCloud& pointCloud = reconstructorAndIdentifier.pointCloudOutput();
-		const Pose3D& pose = reconstructorAndIdentifier.poseOutput();
-		bool success = reconstructorAndIdentifier.successOutput();
+		reconstructorAndIdentifier.pointCloudOutput();
 		PRINT_TO_LOG("run", "load");
 		delete(leftImage);
 		delete(rightImage);

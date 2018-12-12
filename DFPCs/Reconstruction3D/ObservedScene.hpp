@@ -59,15 +59,15 @@ namespace Reconstruction3D
         public:
 		ObservedScene();
 		~ObservedScene();
-		void AddFrames(FrameWrapper::FrameConstPtr leftFrame, FrameWrapper::FrameConstPtr rightFrame);
-		FrameWrapper::FrameConstPtr GetNextReferenceLeftFrame();
-		FrameWrapper::FrameConstPtr GetNextReferenceRightFrame();
+		void AddFrames(FrameWrapper::FrameConstPtr leftFrame, FrameWrapper::FrameConstPtr rightFrame) override;
+		FrameWrapper::FrameConstPtr GetNextReferenceLeftFrame() override;
+		FrameWrapper::FrameConstPtr GetNextReferenceRightFrame() override;
 
-		void AddFramePoseInReference(PoseWrapper::Pose3DConstPtr poseInReference);
-		PoseWrapper::Pose3DConstPtr GetCurrentFramePoseInOrigin();
-		void AddPointCloudInLastReference(PointCloudWrapper::PointCloudConstPtr pointCloudInReference);
-		PointCloudWrapper::PointCloudConstPtr GetPartialScene(BaseTypesWrapper::Point3D origin, float radius);
-		PointCloudWrapper::PointCloudConstPtr GetPartialScene(float radius);
+		void AddFramePoseInReference(PoseWrapper::Pose3DConstPtr poseInReference) override;
+		PoseWrapper::Pose3DConstPtr GetCurrentFramePoseInOrigin() override;
+		void AddPointCloudInLastReference(PointCloudWrapper::PointCloudConstPtr pointCloudInReference) override;
+		PointCloudWrapper::PointCloudConstPtr GetPartialScene(BaseTypesWrapper::Point3D origin, float radius) override;
+		PointCloudWrapper::PointCloudConstPtr GetPartialScene(float radius) override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

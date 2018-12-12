@@ -38,9 +38,9 @@ namespace PointCloudModelLocalisation
 	public:
 		FeaturesMatching3D();
 		~FeaturesMatching3D();
-		void run();
-		void setup();
-		void modelInput(const asn1SccPointcloud& data);
+		void run() override;
+		void setup() override;
+		void modelInput(const asn1SccPointcloud& data) override;
 
 	private:
 		DfpcConfigurator configurator;

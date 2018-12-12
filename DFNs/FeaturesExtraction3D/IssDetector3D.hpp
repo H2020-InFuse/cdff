@@ -59,8 +59,8 @@ namespace FeaturesExtraction3D
 			IssDetector3D();
 			virtual ~IssDetector3D();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 

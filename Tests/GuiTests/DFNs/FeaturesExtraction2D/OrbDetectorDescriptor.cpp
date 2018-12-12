@@ -61,8 +61,8 @@ class OrbDetectorDescriptorTestInterface : public DFNTestInterface
 		FrameConstPtr inputImage;
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 
 		void GetComponentRange(const VisualPointFeatureVector2D& featuresVector, int componentIndex, float& min, float& max);
 	};

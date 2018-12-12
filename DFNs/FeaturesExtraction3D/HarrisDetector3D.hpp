@@ -57,8 +57,8 @@ namespace FeaturesExtraction3D
 			HarrisDetector3D();
 			virtual ~HarrisDetector3D();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 

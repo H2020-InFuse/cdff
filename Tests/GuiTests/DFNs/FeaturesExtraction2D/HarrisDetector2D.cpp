@@ -45,8 +45,8 @@ class HarrisDetector2DTestInterface : public DFNTestInterface
 		FrameConstPtr inputImage;
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 	};
 
 const std::string HarrisDetector2DTestInterface::DEFAULT_IMAGE_FILE_PATH = "../../tests/Data/Images/DevonIslandLeft.ppm";

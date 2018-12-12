@@ -92,8 +92,8 @@ class PerformanceTestInterface : public PerformanceTestBase
 	 * --------------------------------------------------------------------
 	 */
 	private:	
-		void Configure();
-		void Process();
+		void Configure() override;
+		void Process() override;
 
 		/*
 		* @brief This method has to set the inputs of the DFN, it returns true if and only if an input is actually set.

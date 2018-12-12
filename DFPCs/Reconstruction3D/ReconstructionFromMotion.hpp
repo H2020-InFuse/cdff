@@ -76,8 +76,8 @@ namespace Reconstruction3D
         public:
 		explicit ReconstructionFromMotion(Map* map = NULL);
 		~ReconstructionFromMotion();
-		void run();
-		void setup();
+		void run() override;
+		void setup() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected
