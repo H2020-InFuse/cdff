@@ -19,7 +19,8 @@
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder:latest
   stage: setup
-  script: Tools/Docker/docker-builder.sh Dockerfile.ci cdff-ci
+  script:
+   - Tools/Docker/docker-builder.sh Dockerfile.ci cdff-ci
 
  generate:cdff-user:
   <<: *connect
@@ -27,13 +28,15 @@
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
   stage: setup
-  script: Tools/Docker/docker-builder.sh Dockerfile.user cdff-user
+  script:
+   - Tools/Docker/docker-builder.sh Dockerfile.user cdff-user
   when: manual
 
  generate:asn:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage : generation
-  script: Tools/ASN.1/GeneratorScript.sh
+  script:
+    - Tools/ASN.1/GeneratorScript.sh
   artifacts:
    paths: 
     - Common/Types/C/
@@ -56,7 +59,8 @@
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage: build
-  dependencies: generate:asn
+  dependencies:
+   - generate:asn
   artifacts:
    paths: 
     - build/
@@ -67,14 +71,16 @@
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-user:latest
   stage: build
-  dependencies: generate:asn
+  dependencies:
+   - generate:asn
   when: manual
 
  analyse:cppcheck:full:
   <<: *configure
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
-  script: Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
+  script:
+    - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
   only: master
   artifacts:
    paths: 
@@ -84,8 +90,10 @@
  analyse:cppcheck:partial:
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
-  except: master
-  script: Tools/CPPCheck/partial-cppcheck.sh
+  except:
+   - master
+  script:
+   - Tools/CPPCheck/partial-cppcheck.sh
   artifacts:
    paths: 
     - cppcheck/
@@ -94,7 +102,8 @@
  pages:
   stage: deploy
   when: always
-  dependencies: analyse:cppcheck:full
+  dependencies:
+   - analyse:cppcheck:full
   script:
    - mkdir .public
    - cp -r cppcheck/public/* .public
