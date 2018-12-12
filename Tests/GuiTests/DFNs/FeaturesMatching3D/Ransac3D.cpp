@@ -38,7 +38,7 @@ using namespace SupportTypes;
 class Ransac3DTestInterface : public DFNTestInterface
 	{
 	public:
-		Ransac3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		Ransac3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~Ransac3DTestInterface();
 
 		static void SegmentationFaultHandler(int signal);
@@ -69,7 +69,7 @@ class Ransac3DTestInterface : public DFNTestInterface
 		void VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud);
 	};
 
-Ransac3DTestInterface::Ransac3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
+Ransac3DTestInterface::Ransac3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 	{
 	ransac = new Ransac3D();

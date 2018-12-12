@@ -69,6 +69,8 @@ namespace PrimitiveMatching
 //=====================================================================================================================
 HuInvariants::HuInvariants()
 {
+    parameters = DEFAULT_PARAMETERS;
+
     parametersHelper.AddParameter<int>("GeneralParameters", "MinimumArea", parameters.minimumArea, DEFAULT_PARAMETERS.minimumArea);
     parametersHelper.AddParameter<std::string>("GeneralParameters", "TemplatesFolder", parameters.templatesFolder, DEFAULT_PARAMETERS.templatesFolder);
     parametersHelper.AddParameter<double>("GeneralParameters", "MaximumSimilarityRatio", parameters.maximumSimilarityRatio, DEFAULT_PARAMETERS.maximumSimilarityRatio);

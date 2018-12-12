@@ -33,7 +33,7 @@ class CornerDetector3DTestInterface : public DFNTestInterface
 {
 	public:
 
-		CornerDetector3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string inputFile = DEFAULT_INPUT_FILE);
+		CornerDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile = DEFAULT_INPUT_FILE);
 		~CornerDetector3DTestInterface();
 
 	private:
@@ -49,7 +49,7 @@ class CornerDetector3DTestInterface : public DFNTestInterface
 		void DisplayResult();
 };
 
-CornerDetector3DTestInterface::CornerDetector3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string inputFile)
+CornerDetector3DTestInterface::CornerDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 {
 	cornerDetector = new CornerDetector3D;

@@ -69,8 +69,11 @@ AdjustmentFromStereo::AdjustmentFromStereo() :
 	LEFT_FEATURE_CATEGORY ( "orb_left" ),
 	RIGHT_FEATURE_CATEGORY ( "orb_right" ),
 	STEREO_CLOUD_CATEGORY( "stereo_cloud" ),
-	TRIANGULATION_CLOUD_CATEGORY( "triangulation_cloud" )
+	TRIANGULATION_CLOUD_CATEGORY( "triangulation_cloud" ),
+	cleanCorrespondenceMap( NewCorrespondenceMap2D() )
 	{
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfAdjustedStereoPairs", parameters.numberOfAdjustedStereoPairs, DEFAULT_PARAMETERS.numberOfAdjustedStereoPairs);
@@ -95,7 +98,6 @@ AdjustmentFromStereo::AdjustmentFromStereo() :
 	bundleHistory = NULL;
 	correspondencesRecorder = NULL;
 
-	cleanCorrespondenceMap = NewCorrespondenceMap2D();
 	triangulatedKeypointCloud = NewPointCloud();
 
 	estimatedCameraPoses = NULL;

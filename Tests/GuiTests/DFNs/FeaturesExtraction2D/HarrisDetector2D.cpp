@@ -33,7 +33,7 @@ using namespace FrameWrapper;
 class HarrisDetector2DTestInterface : public DFNTestInterface
 	{
 	public:
-		HarrisDetector2DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath = DEFAULT_IMAGE_FILE_PATH);
+		HarrisDetector2DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath = DEFAULT_IMAGE_FILE_PATH);
 		~HarrisDetector2DTestInterface();
 	protected:
 
@@ -51,7 +51,7 @@ class HarrisDetector2DTestInterface : public DFNTestInterface
 
 const std::string HarrisDetector2DTestInterface::DEFAULT_IMAGE_FILE_PATH = "../../tests/Data/Images/DevonIslandLeft.ppm";
 
-HarrisDetector2DTestInterface::HarrisDetector2DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath)
+HarrisDetector2DTestInterface::HarrisDetector2DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
 	{
 	harris = new HarrisDetector2D();

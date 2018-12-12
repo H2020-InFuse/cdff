@@ -32,7 +32,7 @@ using namespace PointCloudWrapper;
 class TriangulationTestInterface : public DFNTestInterface
 {
 	public:
-		TriangulationTestInterface(std::string DFNName, int buttonWidth, int buttonHeight);
+		TriangulationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~TriangulationTestInterface();
 
 	private:
@@ -42,8 +42,8 @@ class TriangulationTestInterface : public DFNTestInterface
 		void DisplayResult();
 	};
 
-TriangulationTestInterface::TriangulationTestInterface(std::string DFNName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(DFNName, buttonWidth, buttonHeight)
+TriangulationTestInterface::TriangulationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
+	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 {
 	triangulation = new Triangulation();
 	SetDFN(triangulation);

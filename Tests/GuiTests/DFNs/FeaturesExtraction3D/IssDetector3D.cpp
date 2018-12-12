@@ -33,7 +33,7 @@ class IssDetector3DTestInterface : public DFNTestInterface
 {
 	public:
 
-		IssDetector3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string inputFile = DEFAULT_INPUT_FILE);
+		IssDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile = DEFAULT_INPUT_FILE);
 		~IssDetector3DTestInterface();
 
 	private:
@@ -49,7 +49,7 @@ class IssDetector3DTestInterface : public DFNTestInterface
 		void DisplayResult();
 };
 
-IssDetector3DTestInterface::IssDetector3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string inputFile)
+IssDetector3DTestInterface::IssDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 {
 	iss = new IssDetector3D;

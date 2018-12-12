@@ -44,9 +44,9 @@ ParametersListHelper::ParametersListHelper()
 
 ParametersListHelper::~ParametersListHelper()
 	{
-	for(std::vector<ParametersGroup>::iterator groupIterator = groupsList.begin(); groupIterator != groupsList.end(); groupIterator++)
+	for(std::vector<ParametersGroup>::iterator groupIterator = groupsList.begin(); groupIterator != groupsList.end(); ++groupIterator)
 		{
-		for(std::vector<ParameterHelperInterface*>::iterator helperIterator = groupIterator->parametersList.begin(); helperIterator != groupIterator->parametersList.end(); helperIterator++)
+		for(std::vector<ParameterHelperInterface*>::iterator helperIterator = groupIterator->parametersList.begin(); helperIterator != groupIterator->parametersList.end(); ++helperIterator)
 			{
 			delete(*helperIterator);
 			}
@@ -94,9 +94,9 @@ void ParametersListHelper::ReadGroup(const YAML::Node& configurationNode)
 		}
 	}
 
-ParametersListHelper::ParametersGroup* ParametersListHelper::GetGroup(std::string groupName)
+ParametersListHelper::ParametersGroup* ParametersListHelper::GetGroup(const std::string& groupName)
 	{
-	for(std::vector<ParametersGroup>::iterator iterator = groupsList.begin(); iterator != groupsList.end(); iterator++)
+	for(std::vector<ParametersGroup>::iterator iterator = groupsList.begin(); iterator != groupsList.end(); ++iterator)
 		{	
 		if (iterator->groupName == groupName)
 			{
@@ -106,7 +106,7 @@ ParametersListHelper::ParametersGroup* ParametersListHelper::GetGroup(std::strin
 	return NULL;
 	}
 
-ParameterHelperInterface* ParametersListHelper::GetHelper(std::string groupName, std::string parameterName)
+ParameterHelperInterface* ParametersListHelper::GetHelper(const std::string& groupName, const std::string& parameterName)
 	{
 	ParametersGroup* matchedGroup = GetGroup(groupName);
 	if (matchedGroup == NULL)
@@ -114,7 +114,7 @@ ParameterHelperInterface* ParametersListHelper::GetHelper(std::string groupName,
 		return NULL;
 		}
 	
-	for(std::vector<ParameterHelperInterface*>::iterator iterator = matchedGroup->parametersList.begin(); iterator != matchedGroup->parametersList.end(); iterator++)
+	for(std::vector<ParameterHelperInterface*>::iterator iterator = matchedGroup->parametersList.begin(); iterator != matchedGroup->parametersList.end(); ++iterator)
 		{	
 		if ( (*iterator)->HasName(groupName))
 			{
@@ -145,9 +145,9 @@ std::string ParametersListHelper::Print()
 	{
 	std::stringstream stream;
 	
-	for(std::vector<ParametersGroup>::iterator groupIterator = groupsList.begin(); groupIterator != groupsList.end(); groupIterator++)
+	for(std::vector<ParametersGroup>::iterator groupIterator = groupsList.begin(); groupIterator != groupsList.end(); ++groupIterator)
 		{
-		for(std::vector<ParameterHelperInterface*>::iterator helperIterator = groupIterator->parametersList.begin(); helperIterator != groupIterator->parametersList.end(); helperIterator++)
+		for(std::vector<ParameterHelperInterface*>::iterator helperIterator = groupIterator->parametersList.begin(); helperIterator != groupIterator->parametersList.end(); ++helperIterator)
 			{
 			stream << groupIterator->groupName <<": "<<(*helperIterator)->GetName()<<std::endl;
 			}

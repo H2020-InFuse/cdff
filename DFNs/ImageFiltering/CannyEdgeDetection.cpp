@@ -24,6 +24,7 @@ namespace CDFF
             const CannyEdgeDetection::Parameters CannyEdgeDetection::DefaultParameters = {};
 
             CannyEdgeDetection::CannyEdgeDetection() {
+		parameters = DefaultParameters;
                 parametersHelper.AddParameter(
                         "CannyEdgeDetection", "NoiseReductionKernelSize",
                         parameters.NoiseReductionKernelSize, DefaultParameters.NoiseReductionKernelSize);

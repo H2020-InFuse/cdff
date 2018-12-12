@@ -71,6 +71,8 @@ DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 	#define ADD_PARAMETER_WITH_HELPER(type, helperType, groupName, parameterName, parameterVariable) \
 		parametersHelper.AddParameter<type, helperType>(groupName, parameterName, parameters.parameterVariable, DEFAULT_PARAMETERS.parameterVariable);
 
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "MatchToReconstructedCloud", parameters.matchToReconstructedCloud, DEFAULT_PARAMETERS.matchToReconstructedCloud);
@@ -432,13 +434,13 @@ void DenseRegistrationFromStereo::UpdatePointCloudOnDistanceCovered(PointCloudWr
 
 void DenseRegistrationFromStereo::UpdatePointCloudOnMaximumOverlapping(PointCloudWrapper::PointCloudConstPtr inputCloud)
 	{
-	static bool firstCloud = true;
 	if (!outSuccess)
 		{
 		bundleHistory->RemoveEntry(0);
 		}
 	else
 		{
+		static bool firstCloud = true;
 		float overlappingRatio = 0;
 		if (!firstCloud)
 			{

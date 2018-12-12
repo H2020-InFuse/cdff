@@ -33,6 +33,8 @@ namespace FeaturesMatching3D
 
 Icp3D::Icp3D()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<double>(
 		"GeneralParameters", "MaxCorrespondenceDistance",
 		parameters.maxCorrespondenceDistance, DEFAULT_PARAMETERS.maxCorrespondenceDistance);

@@ -31,6 +31,8 @@ namespace Registration3D
 
 IcpCC::IcpCC()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<ConvergenceType, ConvergenceTypeHelper>("GeneralParameters", "ConvergenceType", parameters.convergenceType, DEFAULT_PARAMETERS.convergenceType);
 	parametersHelper.AddParameter<double>("GeneralParameters", "MinimumErrorReduction", parameters.minimumErrorReduction, DEFAULT_PARAMETERS.minimumErrorReduction);
 	parametersHelper.AddParameter<int>("GeneralParameters", "MaximumNumberOfIterations", parameters.maximumNumberOfIterations, DEFAULT_PARAMETERS.maximumNumberOfIterations);

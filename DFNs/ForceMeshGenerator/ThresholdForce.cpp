@@ -25,6 +25,8 @@ namespace ForceMeshGenerator
 //=====================================================================================================================
 ThresholdForce::ThresholdForce()
 {
+    parameters = DEFAULT_PARAMETERS;
+
     parametersHelper.AddParameter<double>("GeneralParameters", "Threshold", parameters.threshold, DEFAULT_PARAMETERS.threshold);
 	configurationFilePath = "";
 }

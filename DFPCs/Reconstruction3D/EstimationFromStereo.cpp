@@ -73,6 +73,8 @@ EstimationFromStereo::EstimationFromStereo() :
 	STEREO_CLOUD_CATEGORY( "stereo_cloud" ),
 	TRIANGULATION_CLOUD_CATEGORY( "triangulation_cloud" )
 	{
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfAdjustedStereoPairs", parameters.numberOfAdjustedStereoPairs, DEFAULT_PARAMETERS.numberOfAdjustedStereoPairs);
@@ -90,6 +92,7 @@ EstimationFromStereo::EstimationFromStereo() :
 	featuresMatcher2d = NULL;
 	reconstructor3dfrom2dmatches = NULL;
 	transformEstimator = NULL;
+	fundamentalMatrixComputer = NULL;
 
 	bundleHistory = NULL;
 	correspondencesRecorder = NULL;

@@ -171,7 +171,7 @@ void PclVisualizer::ShowPoses(std::vector<PoseWrapper::Pose3D> poseList)
 	viewer.addCoordinateSystem(0.1);
 
 	int index = 0;
-	for (std::vector<PoseWrapper::Pose3D>::iterator pose = poseList.begin(); pose != poseList.end(); pose++)
+	for (std::vector<PoseWrapper::Pose3D>::iterator pose = poseList.begin(); pose != poseList.end(); ++pose)
 	{
 		double x = GetXPosition(*pose);
 		double y = GetYPosition(*pose);

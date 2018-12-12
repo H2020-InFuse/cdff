@@ -55,6 +55,7 @@ namespace CDFF {
 
 
             BackgroundExtraction::BackgroundExtraction() {
+		parameters = DefaultParameters;
                 parametersHelper.AddParameter("Background Extraction", "ForegroundLabel",
                                               parameters.foregroundLabel, DefaultParameters.foregroundLabel);
                 parametersHelper.AddParameter("Background Extraction", "BackgroundLabel",

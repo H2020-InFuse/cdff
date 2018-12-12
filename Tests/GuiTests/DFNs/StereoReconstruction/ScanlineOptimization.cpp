@@ -31,7 +31,7 @@ using namespace PointCloudWrapper;
 class DisparityMappingTestInterface : public DFNTestInterface
 {
 	public:
-		DisparityMappingTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		DisparityMappingTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~DisparityMappingTestInterface();
 
 	private:
@@ -45,7 +45,7 @@ class DisparityMappingTestInterface : public DFNTestInterface
 		void DisplayResult();
 };
 
-DisparityMappingTestInterface::DisparityMappingTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
+DisparityMappingTestInterface::DisparityMappingTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 {
 	disparityMapping = new ScanlineOptimization;
@@ -72,35 +72,6 @@ DisparityMappingTestInterface::~DisparityMappingTestInterface()
 
 void DisparityMappingTestInterface::SetupParameters()
 {
-		struct CameraParameters
-		{
-			float principlePointX;
-			float principlePointY;
-			float focalLength;
-			float baseline;
-		};
-
-		struct MatchingOptionsSet
-		{
-			int numberOfDisparities;
-			int horizontalOffset;
-			int ratioFilter;
-			int peakFilter;
-			bool usePreprocessing;
-			bool useLeftRightConsistencyCheck;
-			int leftRightConsistencyThreshold;
-		};
-
-		struct ScanlineOptimizationOptionsSet
-		{
-			int costAggregationRadius;
-			int spatialBandwidth;
-			int colorBandwidth;
-			int strongSmoothnessPenalty;
-			int weakSmoothnessPenalty;
-			MatchingOptionsSet matchingOptionsSet;
-			CameraParameters cameraParameters;
-		};
 
 	AddParameter("GeneralParameters", "CostAggregationRadius", 5, 255);
 	AddParameter("GeneralParameters", "SpatialBandwidth", 25, 255);

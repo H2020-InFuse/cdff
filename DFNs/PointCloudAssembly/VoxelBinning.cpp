@@ -34,6 +34,8 @@ namespace PointCloudAssembly
 
 VoxelBinning::VoxelBinning()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "VoxelResolution", parameters.voxelResolution, DEFAULT_PARAMETERS.voxelResolution);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseIncrementalMode", parameters.useIncrementalMode, DEFAULT_PARAMETERS.useIncrementalMode);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDistanceFilter", parameters.useDistanceFilter, DEFAULT_PARAMETERS.useDistanceFilter);

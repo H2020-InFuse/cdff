@@ -30,6 +30,8 @@ namespace FeaturesExtraction3D
 
 HarrisDetector3D::HarrisDetector3D()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<bool>("GeneralParameters", "NonMaxSuppression", parameters.nonMaxSuppression, DEFAULT_PARAMETERS.nonMaxSuppression);
 	parametersHelper.AddParameter<float>("GeneralParameters", "Radius", parameters.radius, DEFAULT_PARAMETERS.radius);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);

@@ -76,7 +76,7 @@ void ButtonsInterface::AddButton(
 	buttonList.push_back(button);
 }
 
-void ButtonsInterface::AddButton(std::string const &label, ButtonsInterface::ButtonClickedCallback callback)
+void ButtonsInterface::AddButton(std::string const &label, const ButtonsInterface::ButtonClickedCallback& callback)
 {
 	AddButton(label, callback, {});
 }
@@ -89,7 +89,7 @@ void ButtonsInterface::AddButton(std::string const &label, ButtonsInterface::But
  */
 void ButtonsInterface::OnMouseCallback(int event, int x, int y, int z, void* data)
 	{
-	((ButtonsInterface*)data)->OnMouseCallback(event, x, y, z);
+	(static_cast<ButtonsInterface*>(data))->OnMouseCallback(event, x, y, z);
 	}
 
 void ButtonsInterface::OnMouseCallback(int event, int x, int y, int z)

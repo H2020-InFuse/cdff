@@ -33,6 +33,8 @@ namespace Transform3DEstimation
 
 CeresEstimation::CeresEstimation()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "MaximumAllowedError", parameters.maximumAllowedError, DEFAULT_PARAMETERS.maximumAllowedError);
 	parametersHelper.AddParameter<float>("GeneralParameters", "MaximumAllowedDeterminantError", parameters.maximumAllowedDeterminantError, DEFAULT_PARAMETERS.maximumAllowedDeterminantError);
 

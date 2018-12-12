@@ -69,6 +69,8 @@ ReconstructionFromStereo::ReconstructionFromStereo() :
 	STEREO_CLOUD_CATEGORY( "stereo_cloud" ),
 	TRIANGULATION_CLOUD_CATEGORY( "triangulation_cloud" )
 	{
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<float>("GeneralParameters", "Baseline", parameters.baseline, DEFAULT_PARAMETERS.baseline);
@@ -306,7 +308,6 @@ bool ReconstructionFromStereo::ComputeCameraMovement(Pose3DConstPtr& previousPos
 	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 		{
 		BaseTypesWrapper::Point2D currentSource = GetSource(*currentCorrespondenceMap, pointIndex);
-		BaseTypesWrapper::Point2D currentSink = GetSink(*currentCorrespondenceMap, pointIndex);
 		for(int correspondenceIndex = 0; correspondenceIndex < numberOfPastCorrespondences; correspondenceIndex++)
 			{
 			BaseTypesWrapper::Point2D currentMatchedSource = GetSource(*pastCorrespondenceMap, correspondenceIndex);

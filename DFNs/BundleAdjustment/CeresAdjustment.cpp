@@ -31,6 +31,8 @@ namespace BundleAdjustment
 
 CeresAdjustment::CeresAdjustment()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("LeftCameraMatrix", "FocalLengthX", parameters.leftCameraMatrix.focalLengthX, DEFAULT_PARAMETERS.leftCameraMatrix.focalLengthX);
 	parametersHelper.AddParameter<float>("LeftCameraMatrix", "FocalLengthY", parameters.leftCameraMatrix.focalLengthY, DEFAULT_PARAMETERS.leftCameraMatrix.focalLengthY);
 	parametersHelper.AddParameter<float>("LeftCameraMatrix", "PrincipalPointX", parameters.leftCameraMatrix.principalPointX, DEFAULT_PARAMETERS.leftCameraMatrix.principalPointX);
@@ -45,6 +47,7 @@ CeresAdjustment::CeresAdjustment()
 	parametersHelper.AddParameter<double>("GeneralParameters", "SquaredPixelErrorTolerance", parameters.squaredPixelErrorTolerance, DEFAULT_PARAMETERS.squaredPixelErrorTolerance);
 
 	configurationFilePath = "";
+	initialPoseEstimationIsAvailable = false;
 }
 
 CeresAdjustment::~CeresAdjustment()
@@ -100,11 +103,11 @@ const CeresAdjustment::CeresAdjustmentOptionsSet CeresAdjustment::DEFAULT_PARAME
 	/*.squaredPixelErrorTolerance =*/ 1e-4
 };
 
-CeresAdjustment::StereoImagePointCostFunctor::StereoImagePointCostFunctor(cv::Mat leftCameraMatrix, cv::Mat rightCameraMatrix, cv::Mat pointMeasuresMatrix, float baseline)
+CeresAdjustment::StereoImagePointCostFunctor::StereoImagePointCostFunctor(cv::Mat leftCameraMatrix, cv::Mat rightCameraMatrix, cv::Mat pointMeasuresMatrix, float baseline) :
+	leftCameraMatrix(leftCameraMatrix), 
+	rightCameraMatrix(rightCameraMatrix), 
+	pointMeasuresMatrix(pointMeasuresMatrix)
 	{
-	this->leftCameraMatrix = leftCameraMatrix;
-	this->rightCameraMatrix = rightCameraMatrix;
-	this->pointMeasuresMatrix = pointMeasuresMatrix;
 	this->baseline = baseline;
 	}
 

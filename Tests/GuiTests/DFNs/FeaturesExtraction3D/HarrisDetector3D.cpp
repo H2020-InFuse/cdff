@@ -33,7 +33,7 @@ class HarrisDetector3DTestInterface : public DFNTestInterface
 {
 	public:
 
-		HarrisDetector3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string inputFile = DEFAULT_INPUT_FILE);
+		HarrisDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile = DEFAULT_INPUT_FILE);
 		~HarrisDetector3DTestInterface();
 
 	private:
@@ -49,7 +49,7 @@ class HarrisDetector3DTestInterface : public DFNTestInterface
 		void DisplayResult();
 };
 
-HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string inputFile)
+HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 {
 	harris = new HarrisDetector3D;

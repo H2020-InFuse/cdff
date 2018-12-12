@@ -47,7 +47,7 @@ using namespace PointCloudWrapper;
 class Icp3DTestInterface : public DFNTestInterface
 	{
 	public:
-		Icp3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		Icp3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~Icp3DTestInterface();
 
 		static void SegmentationFaultHandler(int signal);
@@ -74,7 +74,7 @@ class Icp3DTestInterface : public DFNTestInterface
 		void VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud);
 	};
 
-Icp3DTestInterface::Icp3DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
+Icp3DTestInterface::Icp3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 	{
 	icp = new Icp3D();

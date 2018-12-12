@@ -30,6 +30,8 @@ namespace FeaturesExtraction3D
 
 IssDetector3D::IssDetector3D()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<double>("GeneralParameters", "SalientRadius", parameters.salientRadius, DEFAULT_PARAMETERS.salientRadius);
 	parametersHelper.AddParameter<double>("GeneralParameters", "NonMaximaSupressionRadius", parameters.nonMaximaSupressionRadius, DEFAULT_PARAMETERS.nonMaximaSupressionRadius);
 	parametersHelper.AddParameter<double>("GeneralParameters", "NormalRadius", parameters.normalRadius, DEFAULT_PARAMETERS.normalRadius);

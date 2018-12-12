@@ -44,7 +44,7 @@ using namespace CorrespondenceMap2DWrapper;
 class FlannMatcherTestInterface : public DFNTestInterface
 	{
 	public:
-		FlannMatcherTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		FlannMatcherTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~FlannMatcherTestInterface();
 
 	private:
@@ -57,7 +57,7 @@ class FlannMatcherTestInterface : public DFNTestInterface
 		void DisplayResult();
 	};
 
-FlannMatcherTestInterface::FlannMatcherTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
+FlannMatcherTestInterface::FlannMatcherTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 	{
 	flann = new FlannMatcher();

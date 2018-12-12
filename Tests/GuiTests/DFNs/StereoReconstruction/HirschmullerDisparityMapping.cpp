@@ -32,7 +32,7 @@ using namespace PointCloudWrapper;
 class DisparityMappingTestInterface : public DFNTestInterface
 {
 	public:
-		DisparityMappingTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		DisparityMappingTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~DisparityMappingTestInterface();
 
 	private:
@@ -46,7 +46,7 @@ class DisparityMappingTestInterface : public DFNTestInterface
 		void DisplayResult();
 };
 
-DisparityMappingTestInterface::DisparityMappingTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
+DisparityMappingTestInterface::DisparityMappingTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
 {
 	disparityMapping = new HirschmullerDisparityMapping;

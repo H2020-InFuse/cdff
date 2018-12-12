@@ -31,6 +31,8 @@ namespace PointCloudAssembly
 
 NeighbourSinglePointAverage::NeighbourSinglePointAverage()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "MaxNeighbourDistance", parameters.maxNeighbourDistance, DEFAULT_PARAMETERS.maxNeighbourDistance);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "IgnoreUnmatchedPointsOnFirstCloud", parameters.ignoreUnmatchedPointsOnFirstCloud, DEFAULT_PARAMETERS.ignoreUnmatchedPointsOnFirstCloud);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "IgnoreUnmatchedPointsOnSecondCloud", parameters.ignoreUnmatchedPointsOnSecondCloud, DEFAULT_PARAMETERS.ignoreUnmatchedPointsOnSecondCloud);

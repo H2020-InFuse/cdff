@@ -28,6 +28,8 @@ namespace ImageFiltering
 
 ImageUndistortionRectification::ImageUndistortionRectification()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "ConstantBorderValue", parameters.constantBorderValue, DEFAULT_PARAMETERS.constantBorderValue);
 	parametersHelper.AddParameter<std::string>("GeneralParameters", "TransformMapsFilePath", parameters.transformMapsFilePath, DEFAULT_PARAMETERS.transformMapsFilePath);
 	parametersHelper.AddParameter<InterpolationMethod, InterpolationMethodHelper>("GeneralParameters", "InterpolationMethod", parameters.interpolationMethod, DEFAULT_PARAMETERS.interpolationMethod);

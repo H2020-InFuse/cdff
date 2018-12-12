@@ -139,7 +139,6 @@ void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32
 		}
 	ASSERT( pointIndexOrderedList.at(elementsToRemove-1) < pointCloud.data.points.nCount, errorMessage);
 	BaseTypesWrapper::T_UInt32 firstIndex = pointIndexOrderedList.at(0);
-	ASSERT(firstIndex >= 0, errorMessage);
 
 	//Removing elements 
 	BaseTypesWrapper::T_UInt32 nextIndexToRemove = 1;

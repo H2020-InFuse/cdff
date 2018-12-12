@@ -62,6 +62,8 @@ using namespace PointCloudWrapper;
  */
 RegistrationFromStereo::RegistrationFromStereo()
 	{
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "MatchToReconstructedCloud", parameters.matchToReconstructedCloud, DEFAULT_PARAMETERS.matchToReconstructedCloud);
@@ -81,6 +83,7 @@ RegistrationFromStereo::RegistrationFromStereo()
 	cloudTransformer = NULL;
 	cloudFilter = NULL;
 	reconstructor3d = NULL;
+	registrator3d = NULL;
 
 	bundleHistory = new BundleHistory(2);
 

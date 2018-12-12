@@ -47,7 +47,7 @@ using namespace FrameWrapper;
 class ImageUndistortionRectificationTestInterface : public DFNTestInterface
 {
 	public:
-		ImageUndistortionRectificationTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		ImageUndistortionRectificationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~ImageUndistortionRectificationTestInterface();
 
 	private:
@@ -69,7 +69,7 @@ class ImageUndistortionRectificationTestInterface : public DFNTestInterface
 		void DisplayResult();
 };
 
-ImageUndistortionRectificationTestInterface::ImageUndistortionRectificationTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
+ImageUndistortionRectificationTestInterface::ImageUndistortionRectificationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
 {
 	cameraPosition = LEFT_CAMERA;

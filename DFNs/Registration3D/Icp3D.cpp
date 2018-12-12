@@ -30,6 +30,8 @@ namespace Registration3D
 
 Icp3D::Icp3D()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<double>("GeneralParameters", "MaxCorrespondenceDistance", parameters.maxCorrespondenceDistance, DEFAULT_PARAMETERS.maxCorrespondenceDistance);
 	parametersHelper.AddParameter<int>("GeneralParameters", "MaximumIterations", parameters.maximumIterations, DEFAULT_PARAMETERS.maximumIterations);
 	parametersHelper.AddParameter<double>("GeneralParameters", "TransformationEpsilon", parameters.transformationEpsilon, DEFAULT_PARAMETERS.transformationEpsilon);

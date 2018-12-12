@@ -27,6 +27,8 @@ namespace CDFF {
             const KMeansClustering::Parameters KMeansClustering::DefaultParameters = {};
 
             KMeansClustering::KMeansClustering() {
+		_parameters = DefaultParameters;
+
                 _parametersHelper.AddParameter("KMeansClustering", "num_centers",
                                                _parameters.num_centers, DefaultParameters.num_centers);
                 _parametersHelper.AddParameter<double>("KMeansClustering", "tolerance", _parameters.tolerance,

@@ -69,7 +69,7 @@ using namespace BaseTypesWrapper;
 class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 	{
 	public:
-		StereoReconstructionTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		StereoReconstructionTestInterface(const std::string& integrationName, int buttonWidth, int buttonHeight);
 		~StereoReconstructionTestInterface();
 	protected:
 
@@ -135,7 +135,7 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		void VisualizeFeatures(VisualPointFeatureVector2DConstPtr leftFeaturesVector, VisualPointFeatureVector2DConstPtr rightFeaturesVector);
 	};
 
-StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string integrationName, int buttonWidth, int buttonHeight)
+StereoReconstructionTestInterface::StereoReconstructionTestInterface(const std::string& integrationName, int buttonWidth, int buttonHeight)
 	: DFNsIntegrationTestInterface(buttonWidth, buttonHeight)
 	{
 	//ExtractCalibrationParametersOneCamera();

@@ -46,7 +46,7 @@ using namespace FrameWrapper;
 class OrbDetectorDescriptorTestInterface : public DFNTestInterface
 	{
 	public:
-		OrbDetectorDescriptorTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath = DEFAULT_IMAGE_FILE_PATH);
+		OrbDetectorDescriptorTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath = DEFAULT_IMAGE_FILE_PATH);
 		~OrbDetectorDescriptorTestInterface();
 	protected:
 
@@ -70,7 +70,7 @@ class OrbDetectorDescriptorTestInterface : public DFNTestInterface
 const std::string OrbDetectorDescriptorTestInterface::DEFAULT_IMAGE_FILE_PATH = "../../tests/Data/Images/DevonIslandLeft.ppm";
 const int OrbDetectorDescriptorTestInterface::ORB_DESCRIPTOR_SIZE = 32;
 
-OrbDetectorDescriptorTestInterface::OrbDetectorDescriptorTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath)
+OrbDetectorDescriptorTestInterface::OrbDetectorDescriptorTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
 	{
 	orb = new OrbDetectorDescriptor();

@@ -94,7 +94,7 @@ class ButtonsInterface
 		*/
 		void AddButton(
 			std::string const &label,
-            ButtonClickedCallback callback
+            	const ButtonClickedCallback& callback
 		);
 
 	/* --------------------------------------------------------------------

@@ -41,10 +41,10 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-GuiTestReconstruction3D::GuiTestReconstruction3D(std::string configurationFilePath, std::string imageFilesFolder, std::string imagesListFileName, ImageFilesType imageFilesType)
+GuiTestReconstruction3D::GuiTestReconstruction3D(const std::string& configurationFilePath, const std::string& imageFilesFolder, const std::string& imagesListFileName, ImageFilesType imageFilesType) :
+	configurationFilePath(configurationFilePath),
+	imageFilesFolder(imageFilesFolder)
 	{
-	this->configurationFilePath = configurationFilePath;
-	this->imageFilesFolder = imageFilesFolder;
 	this->imageFilesType = imageFilesType;
 
 	LoadImagesList(imagesListFileName);
@@ -68,9 +68,7 @@ void GuiTestReconstruction3D::Run(CDFF::DFPC::Reconstruction3DInterface& reconst
 		reconstructor3d.rightImageInput(*rightImage);
 		reconstructor3d.run();
 		PRINT_TO_LOG("run", "after");
-		const PointCloud& pointCloud = reconstructor3d.pointCloudOutput();
-		const Pose3D& pose = reconstructor3d.poseOutput();
-		bool success = reconstructor3d.successOutput();
+		reconstructor3d.pointCloudOutput();
 		PRINT_TO_LOG("run", "load");
 		delete(leftImage);
 		delete(rightImage);
@@ -83,7 +81,7 @@ void GuiTestReconstruction3D::Run(CDFF::DFPC::Reconstruction3DInterface& reconst
  *
  * --------------------------------------------------------------------------
  */
-void GuiTestReconstruction3D::LoadImagesList(std::string imagesListFileName)
+void GuiTestReconstruction3D::LoadImagesList(const std::string& imagesListFileName)
 	{
 	std::stringstream imagesListFilePath;
 	imagesListFilePath << imageFilesFolder << "/" << imagesListFileName;

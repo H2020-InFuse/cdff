@@ -47,7 +47,7 @@ using namespace FrameWrapper;
 class ImageUndistortionTestInterface : public DFNTestInterface
 {
 	public:
-		ImageUndistortionTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		ImageUndistortionTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~ImageUndistortionTestInterface();
 
 	private:
@@ -61,7 +61,7 @@ class ImageUndistortionTestInterface : public DFNTestInterface
 		void DisplayResult();
 };
 
-ImageUndistortionTestInterface::ImageUndistortionTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
+ImageUndistortionTestInterface::ImageUndistortionTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
 {
 	undistort = new ImageUndistortion();
