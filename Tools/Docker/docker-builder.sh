@@ -4,6 +4,7 @@
 # eg Usage docker-builder.sh Dockerfile.ci cdff-ci
 # will produce nexus.spaceapplications.com/repository/infuse/cdff-ci:latest and '...'cdff-ci:LABEL
 
+set -e
 
 if [ $# -lt 2 ]; then
     echo "incorrect parameters: Usage docker-builder.sh [dockerfile] [imagename] [optional=environnement variables]"
@@ -28,7 +29,7 @@ current_tag=$(grep "LABEL version=" $DOCKER_FILE | perl -pe '($_)=/([0-9]+([.][0
 latest_tag=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$IMAGE_NAME https://hook.io/datastore/get | tr -d '"')
 echo latest_tag $latest_tag , current_tag  $current_tag
 
-if [[ ! $latest_tag < $current_tag ]]; then 
+if [[ ! $current_tag < $latest_tag ]]; then
     docker pull $IMAGE_TAG':'$latest_tag
     docker build -t $IMAGE_TAG':'$current_tag -f $DOCKER_FILE $ENV_VAR .
     docker push $IMAGE_TAG':'$current_tag
