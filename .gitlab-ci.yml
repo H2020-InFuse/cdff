@@ -21,7 +21,7 @@
   script: Tools/Docker/docker-builder.sh Dockerfile.ci cdff-ci
 
  generate:cdff-user:
-  >>: *connect
+  <<: *connect
   services:
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
