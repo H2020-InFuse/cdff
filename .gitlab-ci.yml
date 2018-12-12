@@ -9,7 +9,7 @@
   - test
   - deploy
 
-.docker:connect: &connect
+ .docker:connect: &connect
   before_script:
    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
 
@@ -39,7 +39,7 @@
     - Common/Types/C/
    expire_in: 4 weeks
 
-.build:configure: &configure
+ .build:configure: &configure
   before_script:
    - "mkdir -p build && cd build"
    - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
@@ -47,7 +47,7 @@
    - "JOBS=$((CPUS/2))"
    - "JOBS=$((JOBS > 0 ? JOBS : 1))"
 
-.build:make: &make
+ .build:make: &make
   script:
    - "make --jobs=${JOBS} --output-sync=target"
 
