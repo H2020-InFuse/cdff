@@ -48,9 +48,9 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-CorrectLocalizationTester::CorrectLocalizationTester(const std::string& configurationFile, CDFF::DFN::Registration3DInterface* dfn)
+CorrectLocalizationTester::CorrectLocalizationTester(const std::string& configurationFile, CDFF::DFN::Registration3DInterface* dfn) :
+	configurationFile(configurationFile)
 	{
-	this->configurationFile = configurationFile;
 	this->dfn = dfn;
 	ConfigureDfn();
 

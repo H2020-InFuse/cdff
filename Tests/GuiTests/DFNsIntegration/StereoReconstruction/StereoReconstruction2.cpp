@@ -182,6 +182,7 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(const std::
 	doubleImage(cv::Rect(startColumnRight, startRow, extractCols, extractRows) ).copyTo(rightCvImage);
 
 	outputWindowName = integrationName;
+	state = END;
 	}
 
 StereoReconstructionTestInterface::~StereoReconstructionTestInterface()

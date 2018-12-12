@@ -50,7 +50,7 @@ class MatToVisualPointFeatureVector3DConverter : public Mock, public Converters:
 	 */
 	public:
 		virtual ~MatToVisualPointFeatureVector3DConverter();
-		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const cv::Mat& featuresMatrix);
+		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const cv::Mat& featuresMatrix) override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

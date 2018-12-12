@@ -119,7 +119,7 @@ namespace Reconstruction3D
 			public:
 				CloudUpdateTypeHelper(const std::string& parameterName, CloudUpdateType& boundVariable, const CloudUpdateType& defaultValue);
 			private:
-				CloudUpdateType Convert(const std::string& value);
+				CloudUpdateType Convert(const std::string& value) override;
 			};
 
 		struct RegistrationFromStereoOptionsSet

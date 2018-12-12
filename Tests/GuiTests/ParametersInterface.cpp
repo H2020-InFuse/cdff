@@ -41,9 +41,10 @@
  *
  * --------------------------------------------------------------------------
  */
-ParametersInterface::ParametersInterface(const std::string& applicationName)
+ParametersInterface::ParametersInterface(const std::string& applicationName) :
+	applicationName(applicationName)
 	{
-	this->applicationName = applicationName;
+
 	}
 
 ParametersInterface::~ParametersInterface()
@@ -51,7 +52,7 @@ ParametersInterface::~ParametersInterface()
 
 	}
 
-void ParametersInterface::AddParameter(const std::string& groupName, std::string name, int defaultValue, int maxValue)
+void ParametersInterface::AddParameter(const std::string& groupName, const std::string& name, int defaultValue, int maxValue)
 	{
 	ASSERT(defaultValue >= 0 && defaultValue <= maxValue, "Parameter interface error: default value not in range [0, maxValue]");
 
@@ -65,7 +66,7 @@ void ParametersInterface::AddParameter(const std::string& groupName, std::string
 	AddParameter(groupName, newParameter);
 	}
 
-void ParametersInterface::AddParameter(const std::string& groupName, std::string name, double defaultValue, double maxValue, double resolution)
+void ParametersInterface::AddParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double resolution)
 	{
 	ASSERT(defaultValue >= 0 && defaultValue <= maxValue, "Parameter interface error: default value not in range [0, maxValue]");
 	ASSERT( std::abs(resolution) >= std::numeric_limits<double>::epsilon(), "Parameter interface error: resolution of real value higher than maximum machine resolution");
@@ -81,7 +82,7 @@ void ParametersInterface::AddParameter(const std::string& groupName, std::string
 	AddParameter(groupName, newParameter);
 	}
 
-void ParametersInterface::AddSignedParameter(const std::string& groupName, std::string name, double defaultValue, double maxValue, double resolution)
+void ParametersInterface::AddSignedParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double resolution)
 	{
 	ASSERT(defaultValue >= -maxValue && defaultValue <= maxValue, "Parameter interface error: default value not in range [-maxValue, maxValue]");
 	ASSERT( std::abs(resolution) >= std::numeric_limits<double>::epsilon(), "Parameter interface error: resolution of real value higher than maximum machine resolution");
@@ -100,7 +101,7 @@ void ParametersInterface::AddSignedParameter(const std::string& groupName, std::
 
 void ParametersInterface::CreateTrackbars()
 	{
-	for(std::map<std::string, std::vector<Parameter> >::iterator mapEntry = parameterGroupsMap.begin(); mapEntry != parameterGroupsMap.end(); mapEntry++)
+	for(std::map<std::string, std::vector<Parameter> >::iterator mapEntry = parameterGroupsMap.begin(); mapEntry != parameterGroupsMap.end(); ++mapEntry)
 		{
 		std::string groupName = mapEntry->first;
 		std::vector<Parameter>& parametersList = mapEntry->second;
@@ -108,7 +109,7 @@ void ParametersInterface::CreateTrackbars()
 		interfaceName << applicationName<<" "<<groupName;
 
 		cv::namedWindow(interfaceName.str(), CV_WINDOW_NORMAL);
-		for(std::vector<Parameter>::iterator parameter = parametersList.begin(); parameter != parametersList.end(); parameter++)
+		for(std::vector<Parameter>::iterator parameter = parametersList.begin(); parameter != parametersList.end(); ++parameter)
 			{
 			cv::createTrackbar(parameter->name, interfaceName.str(), &(parameter->value), parameter->maxValue, NULL);
 			}
@@ -120,14 +121,14 @@ void ParametersInterface::SaveToYaml(const std::string& filePath)
 	std::ofstream yamlFile( filePath.c_str() );
 
 	std::string carryString = "";
-	for(std::map<std::string, std::vector<Parameter> >::iterator mapEntry = parameterGroupsMap.begin(); mapEntry != parameterGroupsMap.end(); mapEntry++)
+	for(std::map<std::string, std::vector<Parameter> >::iterator mapEntry = parameterGroupsMap.begin(); mapEntry != parameterGroupsMap.end(); ++mapEntry)
 		{
 		std::string groupName = mapEntry->first;
 		std::vector<Parameter>& parametersList = mapEntry->second;
 		yamlFile<<carryString;
 		yamlFile<<"-  Name: "<<groupName;
 
-		for(std::vector<Parameter>::iterator parameter = parametersList.begin(); parameter != parametersList.end(); parameter++)
+		for(std::vector<Parameter>::iterator parameter = parametersList.begin(); parameter != parametersList.end(); ++parameter)
 			{
 			yamlFile<<std::endl;
 			yamlFile<<"   "<<parameter->name<<": ";

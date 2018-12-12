@@ -190,10 +190,10 @@ void CeresEstimation::InitializeTransforms(std::vector<Transform3d>& transformLi
 		cv::Mat coefficientMatrix, valueMatrix;
 		bool success = CreateLinearSystem(map, coefficientMatrix, valueMatrix);
 
-		float error = 0;
 		cv::Mat solution;
 		if (success)
 			{
+			float error = 0;
 			solution = SolveLinearSystem(coefficientMatrix, valueMatrix, error);
 			}
 		for(int componentIndex = 0; componentIndex < 12; componentIndex++)
@@ -231,7 +231,7 @@ float CeresEstimation::SolveEstimation(const CorrespondenceMap3DWrapper::Corresp
 					{
 					Point3D secondSourcePoint = GetSource(secondMap, secondCorrespondenceIndex);
 					Point3D secondSinkPoint = GetSink(secondMap, secondCorrespondenceIndex);
-					if (sinkPoint.x == secondSourcePoint.x && sinkPoint.y == secondSourcePoint.y && sinkPoint.y == secondSourcePoint.y)
+					if (sinkPoint.x == secondSourcePoint.x && sinkPoint.y == secondSourcePoint.y)
 						{
 						ceres::CostFunction* transform3DCostFunctor = Transform3DCostFunctor::Create ( sourcePoint, secondSinkPoint, 2);
 						transformEstimation.AddResidualBlock( transform3DCostFunctor, NULL, transformList.at(mapIndex), transformList.at(secondMapIndex) );

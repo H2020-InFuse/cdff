@@ -20,14 +20,14 @@ void Execute(VoxelizationInterface* dfn, FrameWrapper::FrameConstPtr inputFrame,
 }
 
 //=====================================================================================================================
-void Execute(VoxelizationInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, const asn1SccOctree * outputOctree)
+void Execute(VoxelizationInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, asn1SccOctree const * outputOctree)
 {
     ASSERT(outputOctree != NULL, "VoxelizationExecutor, Calling NO instance creation Executor with a NULL pointer");
     Execute(dfn, *inputFrame, outputOctree);
 }
 
 //=====================================================================================================================
-void Execute(VoxelizationInterface* dfn, const FrameWrapper::Frame& inputFrame, const asn1SccOctree * outputOctree)
+void Execute(VoxelizationInterface* dfn, const FrameWrapper::Frame& inputFrame, asn1SccOctree const * outputOctree)
 {
     ASSERT( dfn!= NULL, "VoxelizationExecutor, input dfn is null");
     ASSERT( outputOctree == NULL, "VoxelizationExecutor, Calling instance creation executor with a non-NULL pointer");

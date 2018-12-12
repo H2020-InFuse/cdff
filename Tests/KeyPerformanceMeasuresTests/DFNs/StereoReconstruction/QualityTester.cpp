@@ -51,6 +51,7 @@ using namespace FrameWrapper;
  */
 QualityTester::QualityTester()
 	{
+	dfn = NULL;
 	inputLeftFrame = NULL;
 	inputRightFrame = NULL;
 	outputPointCloud = NULL;
@@ -79,7 +80,7 @@ void QualityTester::SetDfn(const std::string& configurationFilePath, CDFF::DFN::
 	dfnWasLoaded = true;
 	}
 
-void QualityTester::SetInputFilesPaths(const std::string& inputLeftImageFilePath, std::string inputRightImageFilePath)
+void QualityTester::SetInputFilesPaths(const std::string& inputLeftImageFilePath, const std::string& inputRightImageFilePath)
 	{
 	this->inputLeftImageFilePath = inputLeftImageFilePath;
 	this->inputRightImageFilePath = inputRightImageFilePath;

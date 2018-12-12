@@ -87,7 +87,7 @@ namespace FeaturesDescription3D
 				public:
 					OutputFormatHelper(const std::string& parameterName, OutputFormat& boundVariable, const OutputFormat& defaultValue);
 				private:
-					OutputFormat Convert(const std::string& value);
+					OutputFormat Convert(const std::string& value) override;
 			};
 
 			struct BaseOptionsSet

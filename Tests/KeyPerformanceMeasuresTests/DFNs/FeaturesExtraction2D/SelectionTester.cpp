@@ -49,9 +49,9 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-SelectionTester::SelectionTester(const std::string& configurationFilePath, CDFF::DFN::FeaturesExtraction2DInterface* dfn)
+SelectionTester::SelectionTester(const std::string& configurationFilePath, CDFF::DFN::FeaturesExtraction2DInterface* dfn) :
+	configurationFilePath(configurationFilePath)
 	{
-	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;
 
 	inputFrame = NULL;

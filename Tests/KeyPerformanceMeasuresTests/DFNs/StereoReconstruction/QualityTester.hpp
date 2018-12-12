@@ -65,7 +65,7 @@ class QualityTester
 		~QualityTester();
 
 		void SetDfn(const std::string& configurationFilePath, CDFF::DFN::StereoReconstructionInterface* dfn);
-		void SetInputFilesPaths(const std::string& inputLeftImageFilePath, std::string inputRightImageFilePath);
+		void SetInputFilesPaths(const std::string& inputLeftImageFilePath, const std::string& inputRightImageFilePath);
 		void SetOutputFilePath(const std::string& outputPointCloudFilePath);
 		void SetOutliersFilePath(const std::string& outliersReferenceFilePath);
 		void SetMeasuresFilePath(const std::string& measuresReferenceFilePath);

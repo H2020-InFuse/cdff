@@ -214,8 +214,6 @@ std::vector<BaseTypesWrapper::T_UInt32> MultipleCorrespondences2DRecorder::Compu
 	std::vector<BaseTypesWrapper::T_UInt32> chain;
 	chain.push_back(correspondenceIndex);
 
-	const CorrespondenceMap2D& firstMap = GetCorrespondenceMap(*filteredCorrespondenceMapSequence, 0);
-
 	int mapIndex = 0;
 	int lastAddedMapBySink = 0;
 	int lastAddedIndexBySink = correspondenceIndex;

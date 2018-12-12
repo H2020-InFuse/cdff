@@ -50,6 +50,7 @@ using namespace FrameWrapper;
  */
 LinearityTester::LinearityTester()
 	{
+	dfn = NULL;
 	inputFrame = NULL;
 	outputFrame = NULL;
 

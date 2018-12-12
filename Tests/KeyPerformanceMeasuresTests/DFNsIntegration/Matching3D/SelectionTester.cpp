@@ -52,11 +52,10 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-SelectionTester::SelectionTester()
+SelectionTester::SelectionTester() :
+	featuresDescriptorConfigurationFilePath(""),
+	featuresMatcherConfigurationFilePath("")
 	{
-	featuresDescriptorConfigurationFilePath = "";
-	featuresMatcherConfigurationFilePath = "";
-
 	inputSourceCloud = NULL;
 	inputSinkCloud = NULL;
 	inputSourceKeypointsVector = NULL;
@@ -74,6 +73,8 @@ SelectionTester::SelectionTester()
 	inputCloudsWereLoaded = false;
 	inputKeypointsWereLoaded = false;
 	precisionReferenceWasLoaded = false;
+
+	matcherSuccess = false;
 	}
 
 SelectionTester::~SelectionTester()

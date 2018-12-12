@@ -49,12 +49,11 @@ using namespace CorrespondenceMap2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-ReconstructionTester::ReconstructionTester()
+ReconstructionTester::ReconstructionTester() :
+	fundamentalMatrixEstimatorFilePath(""),
+	poseEstimatorConfigurationFilePath(""),
+	reconstructorConfigurationFilePath("")
 	{
-	fundamentalMatrixEstimatorFilePath = "";
-	poseEstimatorConfigurationFilePath = "";
-	reconstructorConfigurationFilePath = "";
-
 	inputCorrespondenceMap = NULL;
 	fundamentalMatrix = NULL;
 	cameraTransform = NULL;
@@ -66,6 +65,10 @@ ReconstructionTester::ReconstructionTester()
 	dfnsWereLoaded = false;
 	inputCorrespondencesWereLoaded = false;
 	dfnsWereExecuted = false;
+
+	fundamentalMatrixSuccess = false;
+	poseEstimatorWasSuccessful = false;
+	fundamentalMatrixEstimator = NULL;
 	}
 
 ReconstructionTester::~ReconstructionTester()

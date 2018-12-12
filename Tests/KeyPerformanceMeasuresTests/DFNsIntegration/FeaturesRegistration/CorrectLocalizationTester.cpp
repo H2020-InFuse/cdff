@@ -50,11 +50,11 @@ using namespace VisualPointFeatureVector3DWrapper;
  * --------------------------------------------------------------------------
  */
 CorrectLocalizationTester::CorrectLocalizationTester(const std::string& configurationFile, Registration3DInterface* dfn, const std::string& extractorConfigurationFile, 
-	FeaturesExtraction3DInterface* extractor)
+	FeaturesExtraction3DInterface* extractor) :
+	configurationFile(configurationFile),
+	extractorConfigurationFile(extractorConfigurationFile)
 	{
-	this->configurationFile = configurationFile;
 	this->dfn = dfn;
-	this->extractorConfigurationFile = extractorConfigurationFile;
 	this->extractor = extractor;
 	ConfigureDfns();
 

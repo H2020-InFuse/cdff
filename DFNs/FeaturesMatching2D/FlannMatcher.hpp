@@ -94,7 +94,7 @@ namespace FeaturesMatching2D
 				public:
 					CenterInitializationMethodHelper(const std::string& parameterName, CenterInitializationMethod& boundVariable, const CenterInitializationMethod& defaultValue);
 				private:
-					CenterInitializationMethod Convert(const std::string& value);
+					CenterInitializationMethod Convert(const std::string& value) override;
 			};
 
 			enum MatcherMethod
@@ -112,7 +112,7 @@ namespace FeaturesMatching2D
 				public:
 					MatcherMethodHelper(const std::string& parameterName, MatcherMethod& boundVariable, const MatcherMethod& defaultValue);
 				private:
-					MatcherMethod Convert(const std::string& value);
+					MatcherMethod Convert(const std::string& value) override;
 			};
 
 			struct GeneralOptionsSet

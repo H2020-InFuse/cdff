@@ -29,7 +29,9 @@ namespace DFN
 namespace PointCloudAssembly
 {
 
-NeighbourPointAverage::NeighbourPointAverage()
+NeighbourPointAverage::NeighbourPointAverage() :
+	storedCloud(NULL),
+	assembledCloud( boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> )) )
 {
         parameters = DEFAULT_PARAMETERS;
 
@@ -38,8 +40,6 @@ NeighbourPointAverage::NeighbourPointAverage()
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDistanceFilter", parameters.useDistanceFilter, DEFAULT_PARAMETERS.useDistanceFilter);
 
 	configurationFilePath = "";
-	storedCloud = NULL;
-	assembledCloud = boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> ));
 
 	SetPosition(inViewCenter, 0, 0, 0);
 	inViewRadius = 100;
@@ -154,7 +154,7 @@ void NeighbourPointAverage::ComputeReplacementPoints()
 void NeighbourPointAverage::AssemblePointCloud()
 	{
 	assembledCloud->points.resize(0);
-	for(std::map<int, pcl::PointXYZ>::iterator replacementIterator = firstReplacementMap.begin(); replacementIterator != firstReplacementMap.end(); replacementIterator++)
+	for(std::map<int, pcl::PointXYZ>::iterator replacementIterator = firstReplacementMap.begin(); replacementIterator != firstReplacementMap.end(); ++replacementIterator)
 		{
 		const pcl::PointXYZ& replacement = replacementIterator->second;
 		assembledCloud->points.push_back( pcl::PointXYZ(replacement) );

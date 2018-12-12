@@ -47,15 +47,16 @@ using namespace CorrespondenceMap2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-FundamentalMatrixTester::FundamentalMatrixTester(const std::string& configurationFilePath, CDFF::DFN::FundamentalMatrixComputationInterface* dfn)
+FundamentalMatrixTester::FundamentalMatrixTester(const std::string& configurationFilePath, CDFF::DFN::FundamentalMatrixComputationInterface* dfn) :
+	configurationFilePath(configurationFilePath)
 	{
-	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;
 
 	inputCorrespondenceMap = NULL;
 	outputFundamentalMatrix = NULL;
 
 	inputCorrespondencesWereLoaded = false;
+	outputComputationSuccess = false;
 
 	ConfigureDfn();
 	}

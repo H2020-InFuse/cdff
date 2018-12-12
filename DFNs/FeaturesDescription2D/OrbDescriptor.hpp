@@ -78,9 +78,9 @@ namespace FeaturesDescription2D
 			std::vector<cv::KeyPoint> Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& featuresVector);
 
 			void ValidateParameters();
-			void ValidateInputs(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector);
+			void ValidateInputs(cv::Mat inputImage, const std::vector<cv::KeyPoint>& keypointsVector);
 
-			static int ConvertToScoreType(std::string scoreType);
+			static int ConvertToScoreType(const std::string& scoreType);
 	};
 }
 }

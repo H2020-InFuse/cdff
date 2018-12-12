@@ -97,7 +97,7 @@ namespace ImageFiltering
 				public:
 					CameraConfigurationModeHelper(const std::string& parameterName, CameraConfigurationMode& boundVariable, const CameraConfigurationMode& defaultValue);
 				private:
-					CameraConfigurationMode Convert(const std::string& value);
+					CameraConfigurationMode Convert(const std::string& value) override;
 			};
 
 			enum InterpolationMethod
@@ -112,7 +112,7 @@ namespace ImageFiltering
 				public:
 					InterpolationMethodHelper(const std::string& parameterName, InterpolationMethod& boundVariable, const InterpolationMethod& defaultValue);
 				private:
-					InterpolationMethod Convert(const std::string& value);
+					InterpolationMethod Convert(const std::string& value) override;
 			};
 
 			enum BorderMode
@@ -126,7 +126,7 @@ namespace ImageFiltering
 				public:
 					BorderModeHelper(const std::string& parameterName, BorderMode& boundVariable, const BorderMode& defaultValue);
 				private:
-					BorderMode Convert(const std::string& value);
+					BorderMode Convert(const std::string& value) override;
 			};
 
 			struct CameraMatrix

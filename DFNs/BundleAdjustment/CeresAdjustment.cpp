@@ -48,6 +48,7 @@ CeresAdjustment::CeresAdjustment()
 
 	configurationFilePath = "";
 	initialPoseEstimationIsAvailable = false;
+	initialPointEstimationIsAvailable = false;
 }
 
 CeresAdjustment::~CeresAdjustment()

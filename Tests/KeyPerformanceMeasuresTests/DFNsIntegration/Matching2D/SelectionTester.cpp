@@ -49,11 +49,10 @@ using namespace CorrespondenceMap2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-SelectionTester::SelectionTester()
+SelectionTester::SelectionTester() :
+	featuresDescriptorConfigurationFilePath(""),
+	featuresMatcherConfigurationFilePath("")
 	{
-	featuresDescriptorConfigurationFilePath = "";
-	featuresMatcherConfigurationFilePath = "";
-
 	inputSourceFrame = NULL;
 	inputSinkFrame = NULL;
 	inputSourceKeypointsVector = NULL;

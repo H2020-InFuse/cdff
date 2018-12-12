@@ -30,8 +30,8 @@ namespace Executors
 */
 
 void Execute(VoxelizationInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, asn1SccOctree & outputOctree);
-void Execute(VoxelizationInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, const asn1SccOctree * outputOctree);
-void Execute(VoxelizationInterface* dfn, const FrameWrapper::Frame& inputFrame, const asn1SccOctree * outputOctree);
+void Execute(VoxelizationInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, asn1SccOctree const* outputOctree);
+void Execute(VoxelizationInterface* dfn, const FrameWrapper::Frame& inputFrame, asn1SccOctree const * outputOctree);
 void Execute(VoxelizationInterface* dfn, const FrameWrapper::Frame& inputFrame, asn1SccOctree& outputOctree);
 
 }

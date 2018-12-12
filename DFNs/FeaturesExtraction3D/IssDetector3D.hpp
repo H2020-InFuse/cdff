@@ -74,7 +74,7 @@ namespace FeaturesExtraction3D
 				public:
 					OutputFormatHelper(const std::string& parameterName, OutputFormat& boundVariable, const OutputFormat& defaultValue);
 				private:
-					OutputFormat Convert(const std::string& value);
+					OutputFormat Convert(const std::string& value) override;
 			};
 
 			//There is one more parameters in PCL documentation, borderRadius, but that is for organized clouds.

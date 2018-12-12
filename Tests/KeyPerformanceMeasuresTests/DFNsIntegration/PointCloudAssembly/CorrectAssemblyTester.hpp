@@ -102,7 +102,7 @@ class CorrectAssemblyTester
 		PointCloudWrapper::PointCloudConstPtr LoadPointCloud(std::string pointCloudFilePath);
 		void ConfigureDfns();
 
-		template <class Type> void DeleteIfNotNull(Type* pointer)
+		template <class Type> void DeleteIfNotNull(Type* &pointer)
 			{
 			if (pointer != NULL)
 				{

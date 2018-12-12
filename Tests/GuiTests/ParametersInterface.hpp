@@ -60,9 +60,9 @@ class ParametersInterface
 		ParametersInterface() = delete;
 		explicit ParametersInterface(const std::string& applicationName);
 		~ParametersInterface();
-		void AddParameter(const std::string& groupName, std::string name, int defaultValue, int maxValue);
-		void AddParameter(const std::string& groupName, std::string name, double defaultValue, double maxValue, double resolution);
-		void AddSignedParameter(const std::string& groupName, std::string name, double defaultValue, double maxValue, double resolution);
+		void AddParameter(const std::string& groupName, const std::string& name, int defaultValue, int maxValue);
+		void AddParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double resolution);
+		void AddSignedParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double resolution);
 		void CreateTrackbars();
 		void SaveToYaml(const std::string& filePath);
 

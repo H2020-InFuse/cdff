@@ -49,7 +49,7 @@ You should provide at least three parameters: \n \
 Optionally you can add as fourth parameter a regularity float number between 0 and 1 \n \n \
 Example Usage: ./regularity_harris_detector_3d ../tests/ConfigurationFiles/DFNs/HarrisDetector3D_DevonIsland.yaml ../tests/Data/PointClouds/DevonIslandRoad.ply EveryPair \n \n"; 
 
-RegularityTester::AverageSeparationType FromString(std::string averageSeparationTypeString)
+RegularityTester::AverageSeparationType FromString(const std::string& averageSeparationTypeString)
 	{
 	if (averageSeparationTypeString == "EveryPair")
 		{

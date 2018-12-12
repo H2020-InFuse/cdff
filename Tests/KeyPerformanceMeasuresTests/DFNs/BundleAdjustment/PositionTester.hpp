@@ -59,7 +59,7 @@ class PositionTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		PositionTester(std::string configurationFilePath, CDFF::DFN::BundleAdjustmentInterface* dfn);
+		PositionTester(const std::string& configurationFilePath, CDFF::DFN::BundleAdjustmentInterface* dfn);
 		~PositionTester();
 
 		void SetFilesPaths(const std::string& inputCorrespondenceFilePath, const std::string& positionReferenceFilePath);

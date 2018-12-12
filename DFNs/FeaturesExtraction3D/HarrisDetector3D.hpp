@@ -72,7 +72,7 @@ namespace FeaturesExtraction3D
 				public:
 					OutputFormatHelper(const std::string& parameterName, OutputFormat& boundVariable, const OutputFormat& defaultValue);
 				private:
-					OutputFormat Convert(const std::string& value);
+					OutputFormat Convert(const std::string& value) override;
 			};
 
 			typedef pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::ResponseMethod HarrisMethod;
@@ -81,7 +81,7 @@ namespace FeaturesExtraction3D
 				public:
 					HarrisMethodHelper(const std::string& parameterName, HarrisMethod& boundVariable, const HarrisMethod& defaultValue);
 				private:
-					HarrisMethod Convert(const std::string& value);
+					HarrisMethod Convert(const std::string& value) override;
 			};
 
 			struct HarryOptionsSet

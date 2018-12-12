@@ -48,9 +48,9 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-PositionTester::PositionTester(std::string configurationFilePath, CDFF::DFN::BundleAdjustmentInterface* dfn)
+PositionTester::PositionTester(const std::string& configurationFilePath, CDFF::DFN::BundleAdjustmentInterface* dfn) :
+	configurationFilePath(configurationFilePath)
 	{
-	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;
 
 	inputCorrespondenceMapsSequence = NULL;
