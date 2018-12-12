@@ -1,3 +1,5 @@
+ variables:
+   REGISTRY_PREFIX=nexus.spaceapplications.com/
  stages:
   - setup
   - generation
@@ -6,7 +8,12 @@
   - test
   - deploy
 
+.docker:connect: &connect
+  before_script:
+   - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
+
  generate:cdff-ci:
+  >>: *connect
   services:
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder:latest
@@ -14,6 +21,7 @@
   script: Tools/Docker/docker-builder.sh Dockerfile.ci cdff-ci
 
  generate:cdff-user:
+  >>: *connect
   services:
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
@@ -61,7 +69,7 @@
   dependencies: generate:asn
   when: manual
 
- test:cppcheck:full:
+ analyse:cppcheck:full:
   <<: *configure
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
