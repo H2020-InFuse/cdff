@@ -81,7 +81,8 @@
   image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
   script:
     - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
-  only: master
+  only:
+   - master
   artifacts:
    paths: 
     - cppcheck/
