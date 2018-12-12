@@ -92,7 +92,7 @@ CorrectLocalizationTester::~CorrectLocalizationTester()
 	DELETE_IF_NOT_NULL(outputModelPoseInScene);
 	}
 
-void CorrectLocalizationTester::SetInputClouds(std::string sceneCloudFilePath, std::string modelCloudFilePath, std::string groundTruthPoseFilePath)
+void CorrectLocalizationTester::SetInputClouds(const std::string& sceneCloudFilePath, const std::string& modelCloudFilePath, const std::string& groundTruthPoseFilePath)
 	{
 	this->sceneCloudFilePath = sceneCloudFilePath;
 	this->modelCloudFilePath = modelCloudFilePath;
@@ -102,7 +102,7 @@ void CorrectLocalizationTester::SetInputClouds(std::string sceneCloudFilePath, s
 	LoadGroudTruthPose();
 	}
 
-void CorrectLocalizationTester::SetConfigurationFiles(std::string extractorConfigurationFile, std::string descriptorConfigurationFile, std::string matcherConfigurationFile)
+void CorrectLocalizationTester::SetConfigurationFiles(const std::string& extractorConfigurationFile, const std::string& descriptorConfigurationFile, const std::string& matcherConfigurationFile)
 	{
 	this->extractorConfigurationFile = extractorConfigurationFile;
 	this->descriptorConfigurationFile = descriptorConfigurationFile;

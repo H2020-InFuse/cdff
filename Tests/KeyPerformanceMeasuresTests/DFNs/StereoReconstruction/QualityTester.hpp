@@ -64,17 +64,17 @@ class QualityTester
 		QualityTester();
 		~QualityTester();
 
-		void SetDfn(std::string configurationFilePath, CDFF::DFN::StereoReconstructionInterface* dfn);
-		void SetInputFilesPaths(std::string inputLeftImageFilePath, std::string inputRightImageFilePath);
-		void SetOutputFilePath(std::string outputPointCloudFilePath);
-		void SetOutliersFilePath(std::string outliersReferenceFilePath);
-		void SetMeasuresFilePath(std::string measuresReferenceFilePath);
+		void SetDfn(const std::string& configurationFilePath, CDFF::DFN::StereoReconstructionInterface* dfn);
+		void SetInputFilesPaths(const std::string& inputLeftImageFilePath, std::string inputRightImageFilePath);
+		void SetOutputFilePath(const std::string& outputPointCloudFilePath);
+		void SetOutliersFilePath(const std::string& outliersReferenceFilePath);
+		void SetMeasuresFilePath(const std::string& measuresReferenceFilePath);
 		void ExecuteDfn();
 		bool IsOutliersQualitySufficient(float outliersPercentageThreshold);
 		bool IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage);
 		bool IsDimensionsQualitySufficient(float shapeSimilarityPercentange, float dimensionalErrorPercentage, float componentSizeThresholdPercentage);
 
-		void SaveOutputPointCloud(std::string outputPointCloudFilePath);
+		void SaveOutputPointCloud(const std::string& outputPointCloudFilePath);
 
 	/* --------------------------------------------------------------------
 	 * Protected

@@ -37,10 +37,11 @@
  *
  * --------------------------------------------------------------------------
  */
-PerformanceTestInterface::PerformanceTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName) :
+PerformanceTestInterface::PerformanceTestInterface(const std::string& folderPath, const std::string& baseConfigurationFileName, const std::string& performanceMeasuresFileName) :
 	PerformanceTestBase(folderPath, std::vector<std::string>({baseConfigurationFileName}), performanceMeasuresFileName)
 	{
 	ASSERT(temporaryConfigurationFilePathsList.size() == 1, "Initialization did not work as expected, wrong number");
+	dfn = NULL;
 	}
 
 PerformanceTestInterface::~PerformanceTestInterface()

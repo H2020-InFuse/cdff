@@ -49,7 +49,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-SelectionTester::SelectionTester(std::string configurationFilePath, CDFF::DFN::FeaturesExtraction2DInterface* dfn)
+SelectionTester::SelectionTester(const std::string& configurationFilePath, CDFF::DFN::FeaturesExtraction2DInterface* dfn)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;
@@ -70,7 +70,7 @@ SelectionTester::~SelectionTester()
 	DELETE_IF_NOT_NULL(outputFeaturesVector);
 	}
 
-void SelectionTester::SetFilesPaths(std::string inputImageFilePath, std::string numberReferenceFilePath, std::string precisionReferenceFilePath)
+void SelectionTester::SetFilesPaths(const std::string& inputImageFilePath, const std::string& numberReferenceFilePath, const std::string& precisionReferenceFilePath)
 	{
 	this->inputImageFilePath = inputImageFilePath;
 	this->numberReferenceFilePath = numberReferenceFilePath;
@@ -139,7 +139,7 @@ void SelectionTester::LoadInputImage()
 	inputFrame = frameConverter.Convert(cvImage);
 	}
 
-void SelectionTester::LoadReferenceFeatures(std::string& filePath, cv::Mat& keypointsMatrix)
+void SelectionTester::LoadReferenceFeatures(const std::string& filePath, cv::Mat& keypointsMatrix)
 	{
 	cv::FileStorage opencvFile(filePath, cv::FileStorage::READ);
 	opencvFile["KeypointsMatrix"] >> keypointsMatrix;

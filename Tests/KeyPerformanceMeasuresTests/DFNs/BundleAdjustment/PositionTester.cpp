@@ -71,7 +71,7 @@ PositionTester::~PositionTester()
 	delete(outputPosesSequence);
 	}
 
-void PositionTester::SetFilesPaths(std::string inputCorrespondenceFilePath, std::string positionReferenceFilePath)
+void PositionTester::SetFilesPaths(const std::string& inputCorrespondenceFilePath, const std::string& positionReferenceFilePath)
 	{
 	this->inputCorrespondenceFilePath = inputCorrespondenceFilePath;
 	this->positionReferenceFilePath = positionReferenceFilePath;

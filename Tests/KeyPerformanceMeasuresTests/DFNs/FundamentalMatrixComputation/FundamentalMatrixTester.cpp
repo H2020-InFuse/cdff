@@ -47,7 +47,7 @@ using namespace CorrespondenceMap2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-FundamentalMatrixTester::FundamentalMatrixTester(std::string configurationFilePath, CDFF::DFN::FundamentalMatrixComputationInterface* dfn)
+FundamentalMatrixTester::FundamentalMatrixTester(const std::string& configurationFilePath, CDFF::DFN::FundamentalMatrixComputationInterface* dfn)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;
@@ -66,7 +66,7 @@ FundamentalMatrixTester::~FundamentalMatrixTester()
 	DELETE_IF_NOT_NULL(outputFundamentalMatrix);
 	}
 
-void FundamentalMatrixTester::SetInputFilePath(std::string inputCorrespondenceFilePath)
+void FundamentalMatrixTester::SetInputFilePath(const std::string& inputCorrespondenceFilePath)
 	{
 	this->inputCorrespondenceFilePath = inputCorrespondenceFilePath;
 

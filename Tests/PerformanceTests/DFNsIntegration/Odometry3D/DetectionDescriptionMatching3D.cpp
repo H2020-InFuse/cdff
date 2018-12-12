@@ -45,8 +45,8 @@ using namespace SupportTypes;
  *
  * --------------------------------------------------------------------------
  */
-DetectionDescriptionMatching3DTestInterface::DetectionDescriptionMatching3DTestInterface(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, 
-	std::string performanceMeasuresFileName, DFNsSet dfnsSet) : PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName)
+DetectionDescriptionMatching3DTestInterface::DetectionDescriptionMatching3DTestInterface(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, 
+	const std::string& performanceMeasuresFileName, DFNsSet dfnsSet) : PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName)
 	{
 	extractor = dfnsSet.extractor;
 	AddDfn(dfnsSet.extractor);
@@ -93,7 +93,7 @@ DetectionDescriptionMatching3DTestInterface::~DetectionDescriptionMatching3DTest
 	delete(modelPoseInScene);
 	}
 
-void DetectionDescriptionMatching3DTestInterface::SetInputCloud(std::string inputCloudFile, float voxelGridFilterSize)
+void DetectionDescriptionMatching3DTestInterface::SetInputCloud(const std::string& inputCloudFile, float voxelGridFilterSize)
 	{
 	this->inputCloudFile = inputCloudFile;
 	this->voxelGridFilterSize = voxelGridFilterSize;

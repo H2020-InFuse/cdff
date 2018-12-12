@@ -63,17 +63,17 @@ class ReconstructionExecutor
 		ReconstructionExecutor();
 		~ReconstructionExecutor();
 
-		void SetDfpc(std::string configurationFilePath, CDFF::DFPC::Reconstruction3DInterface* dfpc);
-		void SetInputFilesPaths(std::string inputImagesFolder, std::string inputImagesListFileName);
-		void SetOutputFilePath(std::string outputPointCloudFilePath);
-		void SetOutliersFilePath(std::string outliersReferenceFilePath);
-		void SetMeasuresFilePath(std::string measuresReferenceFilePath);
-		void ExecuteDfpc(std::string transformFilePath = "");
+		void SetDfpc(const std::string& configurationFilePath, CDFF::DFPC::Reconstruction3DInterface* dfpc);
+		void SetInputFilesPaths(const std::string& inputImagesFolder, const std::string& inputImagesListFileName);
+		void SetOutputFilePath(const std::string& outputPointCloudFilePath);
+		void SetOutliersFilePath(const std::string& outliersReferenceFilePath);
+		void SetMeasuresFilePath(const std::string& measuresReferenceFilePath);
+		void ExecuteDfpc(const std::string& transformFilePath = "");
 		bool IsOutliersQualitySufficient(float outliersPercentageThreshold);
 		bool IsCameraDistanceQualitySufficient(float cameraOperationDistance, float cameraDistanceErrorPercentage);
 		bool IsDimensionsQualitySufficient(float shapeSimilarityPercentange, float dimensionalErrorPercentage, float componentSizeThresholdPercentage);
 
-		void SaveOutputPointCloud(std::string outputPointCloudFilePath);
+		void SaveOutputPointCloud(const std::string& outputPointCloudFilePath);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -126,7 +126,7 @@ class ReconstructionExecutor
 		bool dfpcExecuted;
 		bool dfpcWasLoaded;
 
-		void LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame);
+		void LoadInputImage(const std::string& filePath, FrameWrapper::FrameConstPtr& frame);
 		void LoadInputImagesList();
 		void LoadOutputPointCloud();
 		void LoadOutliersReference();
@@ -140,7 +140,7 @@ class ReconstructionExecutor
 		float ComputeLineAbsoluteError(const Line& line);
 		float ComputeObjectShapeSimilarity(int objectIndex);
 
-		void SaveTransform(std::string transformFilePath);
+		void SaveTransform(const std::string& transformFilePath);
 	};
 
 #endif

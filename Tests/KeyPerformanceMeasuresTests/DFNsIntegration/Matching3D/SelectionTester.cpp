@@ -100,7 +100,7 @@ void SelectionTester::SetDfns(CDFF::DFN::FeaturesDescription3DInterface* descrip
 		}
 	}
 
-void SelectionTester::SetConfigurationFilePaths(std::string featuresDescriptorConfigurationFilePath, std::string featuresMatcherConfigurationFilePath)
+void SelectionTester::SetConfigurationFilePaths(const std::string& featuresDescriptorConfigurationFilePath, const std::string& featuresMatcherConfigurationFilePath)
 	{
 	this->featuresDescriptorConfigurationFilePath = featuresDescriptorConfigurationFilePath;
 	this->featuresMatcherConfigurationFilePath = featuresMatcherConfigurationFilePath;
@@ -111,7 +111,7 @@ void SelectionTester::SetConfigurationFilePaths(std::string featuresDescriptorCo
 		}
 	}
 
-void SelectionTester::SetInputFilesPaths(std::string sourceCloudFilePath, std::string sinkCloudFilePath, std::string correspondencesFilePath)
+void SelectionTester::SetInputFilesPaths(const std::string& sourceCloudFilePath, const std::string& sinkCloudFilePath, const std::string& correspondencesFilePath)
 	{
 	this->sourceCloudFilePath = sourceCloudFilePath;
 	this->sinkCloudFilePath = sinkCloudFilePath;

@@ -63,7 +63,7 @@ LinearityTester::~LinearityTester()
 	DELETE_IF_NOT_NULL(outputFrame);
 	}
 
-void LinearityTester::SetDfn(std::string configurationFilePath, CDFF::DFN::ImageFilteringInterface* dfn)
+void LinearityTester::SetDfn(const std::string& configurationFilePath, CDFF::DFN::ImageFilteringInterface* dfn)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;
@@ -72,7 +72,7 @@ void LinearityTester::SetDfn(std::string configurationFilePath, CDFF::DFN::Image
 	dfnWasSet = true;
 	}
 
-void LinearityTester::SetFilesPaths(std::string inputImageFilePath, std::string outputImageFilePath)
+void LinearityTester::SetFilesPaths(const std::string& inputImageFilePath, const std::string& outputImageFilePath)
 	{
 	this->inputImageFilePath = inputImageFilePath;
 	this->outputImageFilePath = outputImageFilePath;
@@ -99,7 +99,7 @@ void LinearityTester::ExecuteDfn()
 	outputFrame = newOutputFrame;
 	}
 
-bool LinearityTester::IsResultLinear(std::string referenceLinesFilePath, float relativeDistortionDifference)
+bool LinearityTester::IsResultLinear(const std::string& referenceLinesFilePath, float relativeDistortionDifference)
 	{
 	this->referenceLinesFilePath = referenceLinesFilePath;
 	LoadReferenceLines();

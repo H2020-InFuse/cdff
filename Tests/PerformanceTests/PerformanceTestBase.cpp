@@ -48,7 +48,7 @@
  *
  * --------------------------------------------------------------------------
  */
-PerformanceTestBase::PerformanceTestBase(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName)
+PerformanceTestBase::PerformanceTestBase(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, const std::string& performanceMeasuresFileName)
 	{
 	configurationFilesNumber = baseConfigurationFileNamesList.size();
 	for(unsigned configurationFileIndex = 0; configurationFileIndex < configurationFilesNumber; configurationFileIndex++)
@@ -68,6 +68,9 @@ PerformanceTestBase::PerformanceTestBase(std::string folderPath, std::vector<std
 	aggregatorsResultsFilePath = aggregatorsResultsFileStream.str();
 
 	ReadPerformanceConfigurationFiles();
+
+	firstRunOnInput = false;
+	firstMeasureTimeForCurrentInput = false;
 	}
 
 PerformanceTestBase::~PerformanceTestBase()
@@ -109,7 +112,7 @@ void PerformanceTestBase::Run()
 	SaveAggregatorsResults();
 	}
 
-void PerformanceTestBase::AddAggregator(std::string measure, Aggregator* aggregator, AggregationType aggregatorType)
+void PerformanceTestBase::AddAggregator(const std::string& measure, Aggregator* aggregator, AggregationType aggregatorType)
 	{
 	AggregatorEntry entry;
 	entry.measure = measure;
@@ -158,7 +161,7 @@ void PerformanceTestBase::ReadPerformanceConfigurationFiles()
 		for(unsigned groupIndex = 0; groupIndex < configuration.size(); groupIndex++)
 			{
 			YAML::Node group = configuration[groupIndex];
-			for(YAML::const_iterator iterator = group.begin(); iterator != group.end(); iterator++)
+			for(YAML::const_iterator iterator = group.begin(); iterator != group.end(); ++iterator)
 				{
 				std::string parameterName = iterator->first.as<std::string>();
 				std::vector<std::string> parameterValuesList = SplitString( iterator->second.as<std::string>() );
@@ -271,7 +274,7 @@ void PerformanceTestBase::SaveMeasures(MeasuresMap measuresMap)
 			measuresFile << changingParametersList.at(parameterIndex).groupName <<".";
 			measuresFile << changingParametersList.at(parameterIndex).name << " ";
 			}
-		for(MeasuresMap::iterator iterator = measuresMap.begin(); iterator != measuresMap.end(); iterator++)
+		for(MeasuresMap::iterator iterator = measuresMap.begin(); iterator != measuresMap.end(); ++iterator)
 			{
 			measuresFile << iterator->first <<" ";
 			}
@@ -285,7 +288,7 @@ void PerformanceTestBase::SaveMeasures(MeasuresMap measuresMap)
 		unsigned currentOption = changingParametersList.at(parameterIndex).currentOption;
 		measuresFile << changingParametersList.at(parameterIndex).optionsList.at(currentOption) << " ";
 		}
-	for(MeasuresMap::iterator iterator = measuresMap.begin(); iterator != measuresMap.end(); iterator++)
+	for(MeasuresMap::iterator iterator = measuresMap.begin(); iterator != measuresMap.end(); ++iterator)
 		{
 		measuresFile << iterator->second <<" ";
 		}
@@ -435,7 +438,7 @@ void PerformanceTestBase::SaveParametersAndValueInAggregatorFile(std::ofstream& 
 	/* Print an header only before the first row */
 	if (index == 0)
 		{
-		for(std::vector<Parameter>::iterator parameter = changingParametersList.begin(); parameter != changingParametersList.end(); parameter++)
+		for(std::vector<Parameter>::iterator parameter = changingParametersList.begin(); parameter != changingParametersList.end(); ++parameter)
 			{
 			file << parameter->name << " ";
 			}
@@ -443,7 +446,7 @@ void PerformanceTestBase::SaveParametersAndValueInAggregatorFile(std::ofstream& 
 		}
 
 	unsigned residualIndex = index;
-	for(std::vector<Parameter>::iterator parameter = changingParametersList.begin(); parameter != changingParametersList.end(); parameter++)
+	for(std::vector<Parameter>::iterator parameter = changingParametersList.begin(); parameter != changingParametersList.end(); ++parameter)
 		{
 		unsigned optionIndex = residualIndex % parameter->optionsNumber;
 		file << parameter->optionsList.at(optionIndex) << " ";

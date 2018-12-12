@@ -50,7 +50,7 @@ using namespace CorrespondenceMap2DWrapper;
 class OrbDetectorDescriptorFlannMatcher : public PerformanceTestInterface
 	{
 	public:
-		OrbDetectorDescriptorFlannMatcher(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName);
+		OrbDetectorDescriptorFlannMatcher(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, const std::string& performanceMeasuresFileName);
 		~OrbDetectorDescriptorFlannMatcher();
 	protected:
 
@@ -72,7 +72,8 @@ class OrbDetectorDescriptorFlannMatcher : public PerformanceTestInterface
 		MeasuresMap ExtractMeasures();
 	};
 
-OrbDetectorDescriptorFlannMatcher::OrbDetectorDescriptorFlannMatcher(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName)
+OrbDetectorDescriptorFlannMatcher::OrbDetectorDescriptorFlannMatcher(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, 
+	const std::string& performanceMeasuresFileName)
 	: PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName)
 	{
 	orb = new OrbDetectorDescriptor();
@@ -168,8 +169,6 @@ void OrbDetectorDescriptorFlannMatcher::ExecuteDfns()
 
 OrbDetectorDescriptorFlannMatcher::MeasuresMap OrbDetectorDescriptorFlannMatcher::ExtractMeasures()
 	{
-	static unsigned testId = 0;
-	testId++;
 	MeasuresMap measuresMap;
 
 	float outOfLineCost = 0;

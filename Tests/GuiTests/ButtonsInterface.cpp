@@ -98,15 +98,20 @@ void ButtonsInterface::OnMouseCallback(int event, int x, int y, int z)
 		{
 		return;
 		}
-	for(const auto& button: buttonList)
+	std::vector<Button>::iterator button = std::find_if(
+		buttonList.begin(), 
+		buttonList.end(), 
+		[x, y](Button b){ return ButtonSelected(b, x, y); } 
+		);
+	if (button != buttonList.end())
 		{
-		if (   x >= button.topLeftCorner.x && x <= button.bottomRightCorner.x
-			&& y >= button.topLeftCorner.y && y <= button.bottomRightCorner.y)
-			{
-			button.callback();
-			return;
-			}
+		button->callback();
 		}
+	}
+
+bool ButtonsInterface::ButtonSelected(const Button& button, int x, int y)
+	{
+	return (x >= button.topLeftCorner.x && x <= button.bottomRightCorner.x && y >= button.topLeftCorner.y && y <= button.bottomRightCorner.y);
 	}
 
 

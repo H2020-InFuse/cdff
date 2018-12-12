@@ -65,7 +65,7 @@ class PerformanceTestInterface : public PerformanceTestBase
 		* @param performanceMeasuresFileName, the name of the output file;
 		*
 		*/
-		PerformanceTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName);
+		PerformanceTestInterface(const std::string& folderPath, const std::string& baseConfigurationFileName, const std::string& performanceMeasuresFileName);
 
 		/*
 		* @brief The destructor does nothing.

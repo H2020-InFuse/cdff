@@ -40,7 +40,7 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName,
+StereoReconstructionTestInterface::StereoReconstructionTestInterface(const std::string& folderPath, const std::string& baseConfigurationFileName, const std::string& performanceMeasuresFileName,
 	StereoReconstructionInterface* reconstructor) : PerformanceTestInterface(folderPath, baseConfigurationFileName, performanceMeasuresFileName)
 	{
 	this->reconstructor = reconstructor;
@@ -69,7 +69,7 @@ StereoReconstructionTestInterface::~StereoReconstructionTestInterface()
 
 	}
 
-void StereoReconstructionTestInterface::SetImageFilesPath(std::string baseFolderPath, std::string imagesListFileName, bool useReferenceDisparity)
+void StereoReconstructionTestInterface::SetImageFilesPath(const std::string& baseFolderPath, const std::string& imagesListFileName, bool useReferenceDisparity)
 	{
 	this->baseFolderPath = baseFolderPath;
 	this->imagesListFileName = imagesListFileName;
@@ -78,14 +78,14 @@ void StereoReconstructionTestInterface::SetImageFilesPath(std::string baseFolder
 	ASSERT( !useReferenceDisparity || disparityImagesNameList.size() == leftImagesNameList.size(), "Reference disparity required, but no disparity files in ImagesList");
 	}
 
-void StereoReconstructionTestInterface::SetDisparityOutputFile(std::string outputDisparityFileBaseName, std::string outputCloudFileExtension)
+void StereoReconstructionTestInterface::SetDisparityOutputFile(const std::string& outputDisparityFileBaseName, const std::string& outputCloudFileExtension)
 	{
 	saveOutputDisparity = true;
 	this->outputDisparityFileBaseName = outputDisparityFileBaseName;
 	this->outputCloudFileExtension = outputCloudFileExtension;
 	}
 
-void StereoReconstructionTestInterface::SetCloudOutputFile(std::string outputCloudFileBaseName, std::string outputCloudFileExtension)
+void StereoReconstructionTestInterface::SetCloudOutputFile(const std::string& outputCloudFileBaseName, const std::string& outputCloudFileExtension)
 	{
 	saveOutputCloud = true;
 	this->outputCloudFileBaseName = outputCloudFileBaseName;

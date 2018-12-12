@@ -89,7 +89,8 @@ void ReconstructionTester::SetDfns(FundamentalMatrixComputationInterface* fundam
 		}
 	}
 
-void ReconstructionTester::SetConfigurationFilePaths(std::string fundamentalMatrixEstimatorFilePath, std::string poseEstimatorConfigurationFilePath, std::string reconstructorConfigurationFilePath)
+void ReconstructionTester::SetConfigurationFilePaths(const std::string& fundamentalMatrixEstimatorFilePath, const std::string& poseEstimatorConfigurationFilePath, 
+	const std::string& reconstructorConfigurationFilePath)
 	{
 	this->fundamentalMatrixEstimatorFilePath = fundamentalMatrixEstimatorFilePath;
 	this->poseEstimatorConfigurationFilePath = poseEstimatorConfigurationFilePath;
@@ -101,7 +102,7 @@ void ReconstructionTester::SetConfigurationFilePaths(std::string fundamentalMatr
 		}
 	}
 
-void ReconstructionTester::SetInputFilePath(std::string inputCorrespodencesFilePath)
+void ReconstructionTester::SetInputFilePath(const std::string& inputCorrespodencesFilePath)
 	{
 	this->inputCorrespodencesFilePath = inputCorrespodencesFilePath;
 

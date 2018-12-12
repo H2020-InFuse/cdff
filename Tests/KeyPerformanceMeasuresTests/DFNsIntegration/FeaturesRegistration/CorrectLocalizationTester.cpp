@@ -49,7 +49,8 @@ using namespace VisualPointFeatureVector3DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-CorrectLocalizationTester::CorrectLocalizationTester(std::string configurationFile, Registration3DInterface* dfn, std::string extractorConfigurationFile, FeaturesExtraction3DInterface* extractor)
+CorrectLocalizationTester::CorrectLocalizationTester(const std::string& configurationFile, Registration3DInterface* dfn, const std::string& extractorConfigurationFile, 
+	FeaturesExtraction3DInterface* extractor)
 	{
 	this->configurationFile = configurationFile;
 	this->dfn = dfn;
@@ -79,7 +80,7 @@ CorrectLocalizationTester::~CorrectLocalizationTester()
 	DELETE_IF_NOT_NULL(inputGuessModelPoseInScene);
 	}
 
-void CorrectLocalizationTester::SetInputClouds(std::string sceneCloudFilePath, std::string modelCloudFilePath, std::string groundTruthPoseFilePath)
+void CorrectLocalizationTester::SetInputClouds(const std::string& sceneCloudFilePath, const std::string& modelCloudFilePath, const std::string& groundTruthPoseFilePath)
 	{
 	this->sceneCloudFilePath = sceneCloudFilePath;
 	this->modelCloudFilePath = modelCloudFilePath;
@@ -89,7 +90,7 @@ void CorrectLocalizationTester::SetInputClouds(std::string sceneCloudFilePath, s
 	LoadGroudTruthPose();
 	}
 
-void CorrectLocalizationTester::SetGuessModelPoseInScene(std::string guessPoseFilePath)
+void CorrectLocalizationTester::SetGuessModelPoseInScene(const std::string& guessPoseFilePath)
 	{
 	this->guessPoseFilePath = guessPoseFilePath;
 

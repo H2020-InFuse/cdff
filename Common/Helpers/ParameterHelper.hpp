@@ -78,9 +78,8 @@ class ParameterHelper : public ParameterHelperInterface
 
 template <typename UsageType, typename YamlType>
 ParameterHelper<UsageType, YamlType>::ParameterHelper(const std::string& parameterName, UsageType& boundVariable, const UsageType& defaultValue) :
-	ParameterHelperInterface(parameterName), value(boundVariable)
+	ParameterHelperInterface(parameterName), defaultValue(defaultValue), value(boundVariable)
 	{
-	this->defaultValue = defaultValue;
 	value = this->defaultValue;
 	}
 
@@ -97,7 +96,7 @@ void ParameterHelper<UsageType, YamlType>::Read(const YAML::Node& configurationN
 		{
 		value = Convert( configurationNode[parameterName].template as<YamlType>() );
 		}
-	catch (YAML::Exception exception)
+	catch (const YAML::Exception& exception)
 		{
 		std::stringstream stream;
 		stream << "Parameter "<< parameterName <<" is absent or has wrong type. Type must be " << UsageTypeToString() <<". Default value will be used: "<< defaultValue;

@@ -61,10 +61,10 @@ class LinearityTester
 		LinearityTester();
 		~LinearityTester();
 
-		void SetDfn(std::string configurationFilePath, CDFF::DFN::ImageFilteringInterface* dfn);
-		void SetFilesPaths(std::string inputImageFilePath, std::string outputImageFilePath);
+		void SetDfn(const std::string& configurationFilePath, CDFF::DFN::ImageFilteringInterface* dfn);
+		void SetFilesPaths(const std::string& inputImageFilePath, const std::string& outputImageFilePath);
 		void ExecuteDfn();
-		bool IsResultLinear(std::string referenceLinesFilePath, float relativeDistortionDifference);
+		bool IsResultLinear(const std::string& referenceLinesFilePath, float relativeDistortionDifference);
 		void SaveOutputImage();
 
 	/* --------------------------------------------------------------------

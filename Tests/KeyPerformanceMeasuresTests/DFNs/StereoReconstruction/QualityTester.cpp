@@ -70,7 +70,7 @@ QualityTester::~QualityTester()
 	DELETE_IF_NOT_NULL(outputPointCloud);
 	}
 
-void QualityTester::SetDfn(std::string configurationFilePath, CDFF::DFN::StereoReconstructionInterface* dfn)
+void QualityTester::SetDfn(const std::string& configurationFilePath, CDFF::DFN::StereoReconstructionInterface* dfn)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfn = dfn;
@@ -79,7 +79,7 @@ void QualityTester::SetDfn(std::string configurationFilePath, CDFF::DFN::StereoR
 	dfnWasLoaded = true;
 	}
 
-void QualityTester::SetInputFilesPaths(std::string inputLeftImageFilePath, std::string inputRightImageFilePath)
+void QualityTester::SetInputFilesPaths(const std::string& inputLeftImageFilePath, std::string inputRightImageFilePath)
 	{
 	this->inputLeftImageFilePath = inputLeftImageFilePath;
 	this->inputRightImageFilePath = inputRightImageFilePath;
@@ -89,7 +89,7 @@ void QualityTester::SetInputFilesPaths(std::string inputLeftImageFilePath, std::
 	inputImagesWereLoaded = true;
 	}
 
-void QualityTester::SetOutputFilePath(std::string outputPointCloudFilePath)
+void QualityTester::SetOutputFilePath(const std::string& outputPointCloudFilePath)
 	{
 	this->outputPointCloudFilePath = outputPointCloudFilePath;
 
@@ -102,7 +102,7 @@ void QualityTester::SetOutputFilePath(std::string outputPointCloudFilePath)
 	outputPointCloudWasLoaded = true;
 	}
 
-void QualityTester::SetOutliersFilePath(std::string outliersReferenceFilePath)
+void QualityTester::SetOutliersFilePath(const std::string& outliersReferenceFilePath)
 	{
 	this->outliersReferenceFilePath = outliersReferenceFilePath;
 
@@ -110,7 +110,7 @@ void QualityTester::SetOutliersFilePath(std::string outliersReferenceFilePath)
 	outliersReferenceWasLoaded = true;
 	}
 
-void QualityTester::SetMeasuresFilePath(std::string measuresReferenceFilePath)
+void QualityTester::SetMeasuresFilePath(const std::string& measuresReferenceFilePath)
 	{
 	this->measuresReferenceFilePath = measuresReferenceFilePath;
 
@@ -194,7 +194,7 @@ bool QualityTester::IsDimensionsQualitySufficient(float shapeSimilarityPercentan
 	return (validShape && validDimensions);
 	}
 
-void QualityTester::SaveOutputPointCloud(std::string outputPointCloudFilePath)
+void QualityTester::SaveOutputPointCloud(const std::string& outputPointCloudFilePath)
 	{
 	ASSERT(dfnExecuted, "Cannot save output cloud if DFN was not executed before");
 

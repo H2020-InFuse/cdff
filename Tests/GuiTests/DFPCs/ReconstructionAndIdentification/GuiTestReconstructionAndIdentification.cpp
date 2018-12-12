@@ -42,12 +42,13 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-GuiTestReconstructionAndLocalisation::GuiTestReconstructionAndLocalisation(std::string configurationFilePath, std::string imageFilesFolder, std::string imagesListFileName, ImageFilesType imageFilesType, std::string modelFilePath)
+GuiTestReconstructionAndLocalisation::GuiTestReconstructionAndLocalisation(const std::string& configurationFilePath, const std::string& imageFilesFolder, const std::string& imagesListFileName, 
+	ImageFilesType imageFilesType, const std::string& modelFilePath) :
+	configurationFilePath(configurationFilePath),
+	imageFilesFolder(imageFilesFolder),
+	modelFilePath(modelFilePath)
 	{
-	this->configurationFilePath = configurationFilePath;
-	this->imageFilesFolder = imageFilesFolder;
 	this->imageFilesType = imageFilesType;
-	this->modelFilePath = modelFilePath;
 
 	LoadImagesList(imagesListFileName);
 	}
@@ -90,7 +91,7 @@ void GuiTestReconstructionAndLocalisation::Run(CDFF::DFPC::ReconstructionAndIden
  *
  * --------------------------------------------------------------------------
  */
-void GuiTestReconstructionAndLocalisation::LoadImagesList(std::string imagesListFileName)
+void GuiTestReconstructionAndLocalisation::LoadImagesList(const std::string& imagesListFileName)
 	{
 	std::stringstream imagesListFilePath;
 	imagesListFilePath << imageFilesFolder << "/" << imagesListFileName;
@@ -168,7 +169,7 @@ bool GuiTestReconstructionAndLocalisation::LoadNextImages(FrameConstPtr& leftIma
 	return true;
 	}
 
-PointCloudConstPtr GuiTestReconstructionAndLocalisation::LoadPointCloud(std::string file)
+PointCloudConstPtr GuiTestReconstructionAndLocalisation::LoadPointCloud(const std::string& file)
 	{
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud(new pcl::PointCloud<pcl::PointXYZ>() );
 	pcl::io::loadPLYFile(file, *pclCloud);

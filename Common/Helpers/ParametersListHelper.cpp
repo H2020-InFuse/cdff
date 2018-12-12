@@ -106,24 +106,6 @@ ParametersListHelper::ParametersGroup* ParametersListHelper::GetGroup(const std:
 	return NULL;
 	}
 
-ParameterHelperInterface* ParametersListHelper::GetHelper(const std::string& groupName, const std::string& parameterName)
-	{
-	ParametersGroup* matchedGroup = GetGroup(groupName);
-	if (matchedGroup == NULL)
-		{
-		return NULL;
-		}
-	
-	for(std::vector<ParameterHelperInterface*>::iterator iterator = matchedGroup->parametersList.begin(); iterator != matchedGroup->parametersList.end(); ++iterator)
-		{	
-		if ( (*iterator)->HasName(groupName))
-			{
-			return (*iterator);
-			}
-		}
-	return NULL;
-	}
-
 void ParametersListHelper::AddParameterHelper(const std::string& groupName, ParameterHelperInterface* helper)
 	{
 	ParametersGroup* matchedGroup = GetGroup(groupName);

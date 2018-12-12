@@ -62,10 +62,10 @@ using namespace MatrixWrapper;
 class OrbFlannRansacDecomposition : public PerformanceTestInterface
 	{
 	public:
-		OrbFlannRansacDecomposition(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName);
+		OrbFlannRansacDecomposition(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, const std::string& performanceMeasuresFileName);
 		~OrbFlannRansacDecomposition();
 
-		void SetInputFiles(std::string imageFileNamesFolder, std::string imagesFileContainer, std::string posesFileContainer);
+		void SetInputFiles(const std::string& imageFileNamesFolder, const std::string& imagesFileContainer, const std::string& posesFileContainer);
 		void LoadInputFiles();
 		void SetImageLimit(unsigned imageLimit);
 	protected:
@@ -135,7 +135,7 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		static int SinkCompare(const SingleCorrespondence& correspondence1, const SingleCorrespondence& correspondence2);
 	};
 
-OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName)
+OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, const std::string& performanceMeasuresFileName)
 	: PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName)
 	{
 	orb = new OrbDetectorDescriptor();
@@ -174,6 +174,14 @@ OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(std::string folderPath,
 	imageFileNamesFolder = "../tests/Data/Images";
 	imagesFileContainer = "../tests/Data/Images/imagesList.txt";
 	posesFileContainer = "../tests/Data/Images/posesList.txt";
+
+	initialX = 0;
+	initialY = 0;
+	initialZ = 0;
+	initialRoll = 0;
+	initialPitch = 0;
+	initialYaw = 0;
+	imageLimit = 0;
 	}
 
 OrbFlannRansacDecomposition::~OrbFlannRansacDecomposition()
@@ -208,7 +216,7 @@ OrbFlannRansacDecomposition::~OrbFlannRansacDecomposition()
 		}
 	}
 
-void OrbFlannRansacDecomposition::SetInputFiles(std::string imageFileNamesFolder, std::string imagesFileContainer, std::string posesFileContainer)
+void OrbFlannRansacDecomposition::SetInputFiles(const std::string& imageFileNamesFolder, const std::string& imagesFileContainer, const std::string& posesFileContainer)
 	{
 	this->imageFileNamesFolder = imageFileNamesFolder;
 	this->imagesFileContainer = imagesFileContainer;
@@ -377,7 +385,6 @@ bool OrbFlannRansacDecomposition::SetNextInputs()
 	nextFileStream << imageFileNamesFolder << "/" << imageFileNamesList.at(inputId);
 	successiveFileStream << imageFileNamesFolder << "/" << imageFileNamesList.at(inputId+1);
 
-	std::string string = nextFileStream.str();
 	cvLeftImage = cv::imread(nextFileStream.str(), cv::IMREAD_COLOR);
 	cvRightImage = cv::imread(successiveFileStream.str(), cv::IMREAD_COLOR);
 	ASSERT( cvLeftImage.size() == cvRightImage.size(), "Performance Test Error: input images do not have same size");
@@ -551,8 +558,8 @@ float OrbFlannRansacDecomposition::ComputeMixedOrderPixelIndex()
 
 int OrbFlannRansacDecomposition::SourceCompare(const void* c1, const void* c2)
 	{
-	SingleCorrespondence* correspondence1 = (SingleCorrespondence*)c1;
-	SingleCorrespondence* correspondence2 = (SingleCorrespondence*)c2;
+	const SingleCorrespondence* correspondence1 = static_cast<const SingleCorrespondence*>(c1);
+	const SingleCorrespondence* correspondence2 = static_cast<const SingleCorrespondence*>(c2);
 
 	return OrbFlannRansacDecomposition::SourceCompare( *correspondence1, *correspondence2);
 	}

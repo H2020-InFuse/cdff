@@ -266,7 +266,7 @@ int mainEvaluateDimensions(int argc, char** argv)
 	float dimensionalErrorThreshold = 0.10;
 	float componentSizeThreshold = 0.10;
 
-	ASSERT(argc >= 4 || argc <= 7, USAGE);
+	ASSERT(argc >= 4 && argc <= 7, USAGE);
 	outputPointCloudFilePath = argv[2];
 	outliersMeasuresFilePath = argv[3];
 	if (argc == 5)

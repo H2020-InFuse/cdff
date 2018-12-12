@@ -71,6 +71,9 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 	public:
 		StereoReconstructionTestInterface(const std::string& integrationName, int buttonWidth, int buttonHeight);
 		~StereoReconstructionTestInterface();
+
+		static void ExtractCalibrationParameters();
+		static void ExtractCalibrationParametersOneCamera();
 	protected:
 
 	private:
@@ -129,8 +132,6 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		void PrepareEssential();
 		void PrepareTriangulation();
 
-		void ExtractCalibrationParameters();
-		void ExtractCalibrationParametersOneCamera();
 		void VisualizeCorrespondences(CorrespondenceMap2DConstPtr correspondenceMap);
 		void VisualizeFeatures(VisualPointFeatureVector2DConstPtr leftFeaturesVector, VisualPointFeatureVector2DConstPtr rightFeaturesVector);
 	};
@@ -138,9 +139,6 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 StereoReconstructionTestInterface::StereoReconstructionTestInterface(const std::string& integrationName, int buttonWidth, int buttonHeight)
 	: DFNsIntegrationTestInterface(buttonWidth, buttonHeight)
 	{
-	//ExtractCalibrationParametersOneCamera();
-	//ExtractCalibrationParameters();
-
 	leftUndistortion = new ImageUndistortion();
 	AddDFN(leftUndistortion, "leftUndistortion");
 
@@ -859,8 +857,16 @@ void StereoReconstructionTestInterface::VisualizeFeatures(VisualPointFeatureVect
 
 int main(int argc, char** argv)
 	{
-	StereoReconstructionTestInterface interface("Stereo Reconstruction", 100, 40);
-	interface.Run();
+	if (argc > 1)
+		{
+		StereoReconstructionTestInterface::ExtractCalibrationParametersOneCamera();
+		StereoReconstructionTestInterface::ExtractCalibrationParameters();
+		}
+	else
+		{
+		StereoReconstructionTestInterface interface("Stereo Reconstruction", 100, 40);
+		interface.Run();
+		}
 	};
 
 /** @} */

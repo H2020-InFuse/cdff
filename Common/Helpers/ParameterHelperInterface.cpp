@@ -36,9 +36,10 @@ namespace Helpers
  *
  * --------------------------------------------------------------------------
  */
-ParameterHelperInterface::ParameterHelperInterface(const std::string& parameterName)
+ParameterHelperInterface::ParameterHelperInterface(const std::string& parameterName) :
+	parameterName(parameterName)
 	{
-	this->parameterName = parameterName;
+
 	}
 
 ParameterHelperInterface::~ParameterHelperInterface()

@@ -47,7 +47,8 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-CorrectAssemblyTester::CorrectAssemblyTester(std::string configurationFile, PointCloudAssemblyInterface* assemblyDfn, std::string transformerConfigurationFile, PointCloudTransformInterface* transformDfn)
+CorrectAssemblyTester::CorrectAssemblyTester(const std::string& configurationFile, PointCloudAssemblyInterface* assemblyDfn, const std::string& transformerConfigurationFile, 
+	PointCloudTransformInterface* transformDfn)
 	{
 	this->transformerConfigurationFile = transformerConfigurationFile;
 	this->configurationFile = configurationFile;
@@ -66,7 +67,7 @@ CorrectAssemblyTester::~CorrectAssemblyTester()
 
 	}
 
-void CorrectAssemblyTester::SetFiles(std::string dataFolderPath, std::string inputPointCloudListFile, std::string outputPointCloudFile)
+void CorrectAssemblyTester::SetFiles(const std::string& dataFolderPath, const std::string& inputPointCloudListFile, const std::string& outputPointCloudFile)
 	{
 	this->dataFolderPath = dataFolderPath;
 	this->inputPointCloudListFile = inputPointCloudListFile;

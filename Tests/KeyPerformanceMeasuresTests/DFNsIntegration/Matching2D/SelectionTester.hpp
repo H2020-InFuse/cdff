@@ -67,8 +67,8 @@ class SelectionTester
 		~SelectionTester();
 
 		void SetDfns(CDFF::DFN::FeaturesDescription2DInterface* descriptor, CDFF::DFN::FeaturesMatching2DInterface* matcher);
-		void SetConfigurationFilePaths(std::string featuresDescriptorConfigurationFilePath, std::string featuresMatcherConfigurationFilePath);
-		void SetInputFilesPaths(std::string sourceImageFilePath, std::string sinkImageFilePath, std::string correspondencesImageFilePath);
+		void SetConfigurationFilePaths(const std::string& featuresDescriptorConfigurationFilePath, const std::string& featuresMatcherConfigurationFilePath);
+		void SetInputFilesPaths(const std::string& sourceImageFilePath, const std::string& sinkImageFilePath, const std::string& correspondencesImageFilePath);
 		void ExecuteDfns();
 		bool AreCorrespondencesValid(float percentageThreshold);
 

@@ -58,11 +58,11 @@ class CorrectAssemblyTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		CorrectAssemblyTester(std::string configurationFile, CDFF::DFN::PointCloudAssemblyInterface* assemblyDfn, std::string transformerConfigurationFile, 
+		CorrectAssemblyTester(const std::string& configurationFile, CDFF::DFN::PointCloudAssemblyInterface* assemblyDfn, const std::string& transformerConfigurationFile, 
 			CDFF::DFN::PointCloudTransformInterface* transformDfn);
 		~CorrectAssemblyTester();
 
-		void SetFiles(std::string dataFolderPath, std::string inputPointCloudListFile, std::string outputPointCloudFile);
+		void SetFiles(const std::string& dataFolderPath, const std::string& inputPointCloudListFile, const std::string& outputPointCloudFile);
 
 		void ExecuteDfns();
 		void SaveOutput();

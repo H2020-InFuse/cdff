@@ -46,11 +46,12 @@ class ImageFilteringTestInterface : public PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		ImageFilteringTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, CDFF::DFN::ImageFilteringInterface* filter);
+		ImageFilteringTestInterface(const std::string& folderPath, const std::string& baseConfigurationFileName, const std::string& performanceMeasuresFileName, 
+			CDFF::DFN::ImageFilteringInterface* filter);
 		~ImageFilteringTestInterface();
 
-		void SetImageFilePath(std::string baseImageFolder, std::string imagesListFileName);
-		void SetOutputFile(std::string imagesOutputFileBaseName, std::string imagesOutputExtension);
+		void SetImageFilePath(const std::string& baseImageFolder, const std::string& imagesListFileName);
+		void SetOutputFile(const std::string& imagesOutputFileBaseName, const std::string& imagesOutputExtension);
 	
 	/* --------------------------------------------------------------------
 	 * Protected
