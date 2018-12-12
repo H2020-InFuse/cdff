@@ -1,143 +1,147 @@
- variables:
-  REGISTRY_PREFIX: nexus.spaceapplications.com/
-  INFUSE_REGISTRY_PREFIX: repository/infuse/
-  CI_IMAGE_TAG: ${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}cdff-ci
-  USER_IMAGE_TAG: ${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}cdff-user
-  CI_FILE: Dockerfile.ci
-  USER_FILE: Dockerfile.user
-  
  stages:
-  - docker
-  - asngeneration
+  - setup
+  - generation
+  - analyse
   - build
   - test
   - deploy
 
- generate-docker-ci:
-   services:
-    - docker:dind
-   image: nexus.spaceapplications.com/repository/infuse/docker-builder
-   stage: docker
-   script:
-    - cd Tools/Docker   
-    - tag_ci=$(grep "LABEL version=" $CI_FILE | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
-    - latest_tag_ci=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-ci' https://hook.io/datastore/get | tr -d '"')
-    - echo latest_tag_ci $latest_tag_ci , tag_ci  $tag_ci
-    - dockerize(){ if [[ ! $latest_tag_ci < $tag_ci ]]; then return 1; else return 0; fi } 
-    - dockerize || (echo "no need to build new docker image" && exit 0)
-    - dockerize && docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
-    - dockerize && docker pull $CI_IMAGE_TAG':'$latest_tag_ci
-    - dockerize && docker build -t $CI_IMAGE_TAG':'$tag_ci -f ./$CI_FILE .
-    - dockerize && docker push $CI_IMAGE_TAG':'$tag_ci
-    - dockerize && docker tag $CI_IMAGE_TAG':'$tag_ci $CI_IMAGE_TAG':'latest
-    - dockerize && docker push $CI_IMAGE_TAG':'latest
-    - dockerize && curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-ci&value='$tag_ci https://hook.io/datastore/set
-    - exit 0
+ generate:cdff-ci:
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder:latest
+  stage: setup
+  script: Tools/Docker/docker-builder.sh Dockerfile.ci cdff-ci
 
- generate-docker-user:
-   services:
-    - docker:dind
-   image: nexus.spaceapplications.com/repository/infuse/docker-builder
-   stage: docker
-   script: 
-    - cd Tools/Docker   
-    - tag_user=$(grep "LABEL version=" $USER_FILE | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
-    - latest_tag_user=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-user' https://hook.io/datastore/get | tr -d '"')
-    - echo latest_tag_user $latest_tag_user , tag_user  $tag_user
-    - dockerize(){ if [[ ! $latest_tag_user < $tag_user ]]; then return 1; else return 0; fi } 
-    - dockerize || (echo 'no need to build new docker image ' && exit 0)
-    - dockerize && docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
-    - dockerize && docker pull $USER_IMAGE_TAG':'$latest_tag_user
-    - dockerize && docker build -t $USER_IMAGE_TAG':'$tag_user -f $USER_FILE .
-    - dockerize && docker push $USER_IMAGE_TAG':'$tag_user
-    - dockerize && docker tag $USER_IMAGE_TAG':'$tag_user $USER_IMAGE_TAG':'latest
-    - dockerize && docker push $USER_IMAGE_TAG':'latest
-    - dockerize && curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-user&value='$tag_user https://hook.io/datastore/set 
-    - exit 0
+ generate:cdff-user:
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: setup
+  script: Tools/Docker/docker-builder.sh Dockerfile.user cdff-user
+  when: manual
 
- asngeneration:
-  image: '${CI_IMAGE_TAG}:latest'
-  stage : asngeneration
-  script:
-      - cd Tools/ASN.1
-      - ./GeneratorScript.sh
+ generate:asn:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
+  stage : generation
+  script: Tools/ASN.1/GeneratorScript.sh
   artifacts:
-    paths:
-      - Common/Types/C/
+   paths: Common/Types/C/
     expire_in: 4 weeks
 
- .build-cdff_template: &build-cdff
-    image: '${CI_IMAGE_TAG}:latest'
-    script:
-        - "pwd"
-        - "mkdir build"
-        - "cd build"
-        - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
-        - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
-        - "JOBS=$((CPUS/2))"
-        - "JOBS=$((JOBS > 0 ? JOBS : 1))"
-        - "make --jobs=${JOBS} --output-sync=target"
+.build:configure: &configure
+  before_script:
+   - "mkdir -p build && cd build"
+   - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
+   - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
+   - "JOBS=$((CPUS/2))"
+   - "JOBS=$((JOBS > 0 ? JOBS : 1))"
 
- build-cdff:
-  <<: *build-cdff
+.build:make: &make
+  script:
+   - "make --jobs=${JOBS} --output-sync=target"
+
+ build:ci:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage: build
-  dependencies:
-      - asngeneration
+  dependencies: generate:asn
   artifacts:
-    paths:
-      - build/
-    expire_in: 4 weeks
+   paths: build/
+   expire_in: 4 weeks
 
- full_static_analysis:
-  stage: test
-  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:1.85'
-  script:
-      - chmod +x Tools/CPPCheck/full-cppcheck.sh
-      - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
-  only:
-      - master
-  artifacts:
-    paths:
-      - cppcheck/
-    expire_in: 4 weeks
+ build:user:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-user:latest
+  stage: build
+  dependencies: generate:asn
+  when: manual
 
- partial_static_analysis:
-  stage: test
-  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:1.85'
-  script:
-      - chmod +x Tools/CPPCheck/partial-cppcheck.sh
-      - Tools/CPPCheck/partial-cppcheck.sh
+ test:cppcheck:full:
+  <<: *configure
+  stage: analyse
+  image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
+  script: Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
+  only: master
   artifacts:
-    paths:
-      - cppcheck/
-    expire_in: 4 weeks
+   paths: cppcheck/
+   expire_in: 4 weeks
+
+ analyse:cppcheck:partial:
+  stage: analyse
+  image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
+  except: master
+  script: Tools/CPPCheck/partial-cppcheck.sh
+  artifacts:
+   paths: cppcheck/
+   expire_in: 4 weeks
 
  pages:
-    stage: deploy
-    when: always
-    dependencies:
-        - full_static_analysis
-    script:
-      - mkdir .public
-      - cp -r cppcheck/public/* .public
-      - mv .public public
-    artifacts:
-      paths:
-        - public
-    only:
-      - master
-
- unit_tests:
-  image: '${CI_IMAGE_TAG}:latest'
-  stage: test
+  stage: deploy
+  when: always
+  dependencies: analyse:cppcheck:full
   script:
-      - cd build/Tests/UnitTests
-      - ./cdff-unit-tests
+   - mkdir .public
+   - cp -r cppcheck/public/* .public
+   - mv .public public
+  artifacts:
+   paths:
+    - public
+   only:
+    - master
 
- deploy_staging:
-  image: '${CI_IMAGE_TAG}:latest'
+ test:unit-tests:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
+  stage: test
+  dependencies:
+   - build:ci:system
+  script:
+   - build/Tests/UnitTests/cdff-unit-tests
+
+ test:dependencies:local:
+  image: ubuntu:latest
   stage: deploy
   script:
-      - echo "Deploy to staging server"
+   - External/get-cdff-dependencies.sh -e
+   - mkdir -p build && cd build
+   - cmake -D USE_BUNDLED_DEPENDENCIES=ON ..
+   - make
   only:
-      - master
+   - manual
+
+ test:dependencies:system:
+   image: ubuntu:latest
+   stage: deploy
+   script:
+    - External/get-cdff-dependencies.sh -e -i /usr/local
+    - mkdir -p build && cd build
+    - cmake -D USE_BUNDLED_DEPENDENCIES=ON ..
+    - make
+   only:
+    - manual
+
+ deploy:development:
+  image: ubuntu:latest
+  stage: deploy
+  script:
+   - echo "Deploy as development"
+  only:
+   - master
+
+ deploy:release:
+  image: ubuntu:latest
+  stage: deploy
+  script:
+   - echo "Deploy as release"
+  only:
+   - master
+
+ deploy:flight:
+  image: ubuntu:latest
+  stage: deploy
+  script:
+   - echo "Deploy as flight"
+  only:
+   - master
