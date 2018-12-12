@@ -20,7 +20,8 @@
   image: nexus.spaceapplications.com/repository/infuse/docker-builder:latest
   stage: setup
   script:
-   - Tools/Docker/docker-builder.sh Dockerfile.ci cdff-ci
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.ci cdff-ci
 
  generate:cdff-user:
   <<: *connect
@@ -29,7 +30,8 @@
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
   stage: setup
   script:
-   - Tools/Docker/docker-builder.sh Dockerfile.user cdff-user
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.user cdff-user
   when: manual
 
  generate:asn:
