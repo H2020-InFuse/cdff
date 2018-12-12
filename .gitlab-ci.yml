@@ -112,8 +112,8 @@
   artifacts:
    paths:
     - public
-   only:
-    - master
+  only:
+   - master
 
  test:unit-tests:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
