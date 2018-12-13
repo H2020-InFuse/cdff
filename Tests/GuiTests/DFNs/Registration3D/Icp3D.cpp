@@ -53,7 +53,7 @@ class Icp3DTestInterface : public DFNTestInterface
 		static void SegmentationFaultHandler(int signal);
 
 	private:
-		Icp3D* icp;
+		Icp3D icp;
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclSourceCloud;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclSinkCloud;
@@ -74,24 +74,23 @@ class Icp3DTestInterface : public DFNTestInterface
 		void VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud);
 	};
 
-Icp3DTestInterface::Icp3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
+Icp3DTestInterface::Icp3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
+	icp()
 	{
-	icp = new Icp3D();
-	SetDFN(icp);
+	SetDFN(&icp);
 
 	LoadInputClouds();
 	PrepareInputs();
 
-	icp->sourceCloudInput(*inputSourceCloud);
-	icp->sinkCloudInput(*inputSinkCloud);
+	icp.sourceCloudInput(*inputSourceCloud);
+	icp.sinkCloudInput(*inputSinkCloud);
 
 	outputWindowName = "ICP 3D Result";
 	}
 
 Icp3DTestInterface::~Icp3DTestInterface()
 	{
-	delete(icp);
 	delete(inputSourceCloud);
 	delete(inputSinkCloud);
 	}
@@ -165,7 +164,7 @@ void Icp3DTestInterface::SetupParameters()
 
 void Icp3DTestInterface::DisplayResult()
 	{
-	const Transform3D& outputTransform = icp->transformOutput();
+	const Transform3D& outputTransform = icp.transformOutput();
 	Transform3DPtr transform = NewPose3D();
 	Copy(outputTransform, *transform);
 
@@ -221,8 +220,9 @@ void Icp3DTestInterface::VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPt
 int main(int argc, char** argv)
 	{
 	signal(SIGSEGV, Icp3DTestInterface::SegmentationFaultHandler);
-	Icp3DTestInterface interface("Icp3D", 100, 40);
-	interface.Run();
+	Icp3DTestInterface* interface = new Icp3DTestInterface("Icp3D", 100, 40);
+	interface->Run();
+	delete(interface);
 	}
 
 /** @} */

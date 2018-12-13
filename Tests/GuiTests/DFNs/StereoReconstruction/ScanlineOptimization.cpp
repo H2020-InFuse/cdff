@@ -35,7 +35,7 @@ class DisparityMappingTestInterface : public DFNTestInterface
 		~DisparityMappingTestInterface();
 
 	private:
-		ScanlineOptimization* disparityMapping;
+		ScanlineOptimization disparityMapping;
 
 		cv::Mat cvLeftImage;
 		cv::Mat cvRightImage;
@@ -45,11 +45,11 @@ class DisparityMappingTestInterface : public DFNTestInterface
 		void DisplayResult() override;
 };
 
-DisparityMappingTestInterface::DisparityMappingTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
+DisparityMappingTestInterface::DisparityMappingTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
+	disparityMapping()
 {
-	disparityMapping = new ScanlineOptimization;
-	SetDFN(disparityMapping);
+	SetDFN(&disparityMapping);
 
 	cvLeftImage = cv::imread("../../tests/Data/Images/RectifiedChair40Left.png", cv::IMREAD_COLOR);
 	cvRightImage = cv::imread("../../tests/Data/Images/RectifiedChair40Right.png", cv::IMREAD_COLOR);
@@ -58,8 +58,8 @@ DisparityMappingTestInterface::DisparityMappingTestInterface(const std::string& 
 	const Frame* left = matToFrame.Convert(cvLeftImage);
 	const Frame* right = matToFrame.Convert(cvRightImage);
 
-	disparityMapping->leftInput(*left);
-	disparityMapping->rightInput(*right);
+	disparityMapping.leftInput(*left);
+	disparityMapping.rightInput(*right);
 
 	outputWindowName = "Disparity Mapping Result";
 	Visualizers::PclVisualizer::Enable();
@@ -67,7 +67,7 @@ DisparityMappingTestInterface::DisparityMappingTestInterface(const std::string& 
 
 DisparityMappingTestInterface::~DisparityMappingTestInterface()
 {
-	delete disparityMapping;
+
 }
 
 void DisparityMappingTestInterface::SetupParameters()
@@ -100,7 +100,7 @@ void DisparityMappingTestInterface::SetupParameters()
 
 void DisparityMappingTestInterface::DisplayResult()
 {
-	const PointCloud& pointcloud = disparityMapping->pointcloudOutput();
+	const PointCloud& pointcloud = disparityMapping.pointcloudOutput();
 
 	PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
 	PRINT_TO_LOG("Virtual memory used (kB): ", GetTotalVirtualMemoryUsedKB());
@@ -112,8 +112,9 @@ void DisparityMappingTestInterface::DisplayResult()
 
 int main(int argc, char** argv)
 {
-	DisparityMappingTestInterface interface("DisparityMapping", 100, 40);
-	interface.Run();
+	DisparityMappingTestInterface* interface = new DisparityMappingTestInterface("DisparityMapping", 100, 40);
+	interface->Run();
+	delete(interface);
 };
 
 /** @} */

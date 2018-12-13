@@ -44,7 +44,7 @@ class Ransac3DTestInterface : public DFNTestInterface
 		static void SegmentationFaultHandler(int signal);
 
 	private:
-		Ransac3D* ransac;
+		Ransac3D ransac;
 
 		typedef pcl::FPFHSignature33 FeatureT;
 		typedef pcl::FPFHEstimationOMP<pcl::PointXYZ,pcl::Normal,FeatureT> FeatureEstimationT;
@@ -69,25 +69,24 @@ class Ransac3DTestInterface : public DFNTestInterface
 		void VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud);
 	};
 
-Ransac3DTestInterface::Ransac3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
+Ransac3DTestInterface::Ransac3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
+	ransac()
 	{
-	ransac = new Ransac3D();
-	SetDFN(ransac);
+	SetDFN(&ransac);
 
 	LoadInputClouds();
 	ComputeFeatures();
 	PrepareInputs();
 
-	ransac->sourceFeaturesInput(*inputSourceFeaturesVector);
-	ransac->sinkFeaturesInput(*inputSinkFeaturesVector);
+	ransac.sourceFeaturesInput(*inputSourceFeaturesVector);
+	ransac.sinkFeaturesInput(*inputSinkFeaturesVector);
 
 	outputWindowName = "Ransac 3D Result";
 	}
 
 Ransac3DTestInterface::~Ransac3DTestInterface()
 	{
-	delete(ransac);
 	delete(inputSourceFeaturesVector);
 	delete(inputSinkFeaturesVector);
 	}
@@ -210,7 +209,7 @@ void Ransac3DTestInterface::SetupParameters()
 
 void Ransac3DTestInterface::DisplayResult()
 	{
-	const Transform3D& transform = ransac->transformOutput();
+	const Transform3D& transform = ransac.transformOutput();
 	PrintInformation(&transform);
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud = PrepareOutputCloud(&transform);
 	VisualizeClouds(correspondenceCloud);
@@ -270,8 +269,9 @@ void Ransac3DTestInterface::VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::Cons
 int main(int argc, char** argv)
 	{
 	signal(SIGSEGV, Ransac3DTestInterface::SegmentationFaultHandler);
-	Ransac3DTestInterface interface("Ransac3D", 100, 40);
-	interface.Run();
+	Ransac3DTestInterface* interface = new Ransac3DTestInterface("Ransac3D", 100, 40);
+	interface->Run();
+	delete(interface);
 	}
 
 /** @} */

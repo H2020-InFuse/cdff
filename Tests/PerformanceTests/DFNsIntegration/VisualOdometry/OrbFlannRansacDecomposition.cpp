@@ -92,16 +92,16 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		bool decompositionSuccess;
 		Pose3DConstPtr pose;
 
-		OrbDetectorDescriptor* orb;
-		FlannMatcher* flann;
-		FundamentalMatrixRansac* ransac;
-		EssentialMatrixDecomposition* decomposition;
+		OrbDetectorDescriptor orb;
+		FlannMatcher flann;
+		FundamentalMatrixRansac ransac;
+		EssentialMatrixDecomposition decomposition;
 
-		Aggregator* groundPositionDistanceAggregator;
-		Aggregator* groundOrientationDistanceAggregator;
-		Aggregator* leftKeypointsAggregator;
-		Aggregator* rightKeypointsAggregator;
-		Aggregator* correspondencesAggregator;
+		Aggregator groundPositionDistanceAggregator;
+		Aggregator groundOrientationDistanceAggregator;
+		Aggregator leftKeypointsAggregator;
+		Aggregator rightKeypointsAggregator;
+		Aggregator correspondencesAggregator;
 		std::vector<std::string> imageFileNamesList;
 		std::vector<Pose3D> posesList;
 		std::vector<double> imageTimesList;
@@ -135,29 +135,29 @@ class OrbFlannRansacDecomposition : public PerformanceTestInterface
 		static int SinkCompare(const SingleCorrespondence& correspondence1, const SingleCorrespondence& correspondence2);
 	};
 
-OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, const std::string& performanceMeasuresFileName)
-	: PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName)
+OrbFlannRansacDecomposition::OrbFlannRansacDecomposition(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, const std::string& performanceMeasuresFileName) :
+	PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName), 
+	orb(),
+	flann(),
+	ransac(),
+	decomposition(),
+	groundPositionDistanceAggregator( Aggregator::AVERAGE ),
+	groundOrientationDistanceAggregator( Aggregator::AVERAGE ),
+	leftKeypointsAggregator(Aggregator::AVERAGE ),
+	rightKeypointsAggregator(Aggregator::AVERAGE ),
+	correspondencesAggregator(Aggregator::AVERAGE )
 	{
-	orb = new OrbDetectorDescriptor();
-	flann = new FlannMatcher();
-	ransac = new FundamentalMatrixRansac();
-	decomposition = new EssentialMatrixDecomposition();
-	AddDfn(orb);
-	AddDfn(flann);
-	AddDfn(ransac);
-	AddDfn(decomposition);
+	AddDfn(&orb);
+	AddDfn(&flann);
+	AddDfn(&ransac);
+	AddDfn(&decomposition);
 
-	groundPositionDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("PositionDistance", groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
-	groundOrientationDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("AngleDistace", groundOrientationDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	AddAggregator("PositionDistance", &groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	AddAggregator("AngleDistace", &groundOrientationDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
 
-	leftKeypointsAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("NumberOfLeftKeypoints", leftKeypointsAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
-	rightKeypointsAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("NumberOfRightKeypoints", rightKeypointsAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
-	correspondencesAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("NumberOfCorrespondences", correspondencesAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	AddAggregator("NumberOfLeftKeypoints", &leftKeypointsAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	AddAggregator("NumberOfRightKeypoints", &rightKeypointsAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	AddAggregator("NumberOfCorrespondences", &correspondencesAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
 
 	leftFrame = NULL;
 	rightFrame = NULL;
@@ -410,42 +410,42 @@ void OrbFlannRansacDecomposition::ExecuteDfns()
 		{
 		delete(leftFeaturesVector);
 		}
-	orb->frameInput(*leftFrame);
-	orb->process();
+	orb.frameInput(*leftFrame);
+	orb.process();
 	VisualPointFeatureVector2DPtr newLeftFeaturesVector = NewVisualPointFeatureVector2D();
-	Copy( orb->featuresOutput(), *newLeftFeaturesVector);
+	Copy( orb.featuresOutput(), *newLeftFeaturesVector);
 	leftFeaturesVector = newLeftFeaturesVector;
 
 	if (rightFeaturesVector != NULL)
 		{
 		delete(rightFeaturesVector);
 		}
-	orb->frameInput(*rightFrame);
-	orb->process();
+	orb.frameInput(*rightFrame);
+	orb.process();
 	VisualPointFeatureVector2DPtr newRightFeaturesVector = NewVisualPointFeatureVector2D();
-	Copy( orb->featuresOutput(), *newRightFeaturesVector);
+	Copy( orb.featuresOutput(), *newRightFeaturesVector);
 	rightFeaturesVector = newRightFeaturesVector;
 
 	if (correspondenceMap != NULL)
 		{
 		delete(correspondenceMap);
 		}
-	flann->sinkFeaturesInput( *leftFeaturesVector );
-	flann->sourceFeaturesInput( *rightFeaturesVector );
-	flann->process();
+	flann.sinkFeaturesInput( *leftFeaturesVector );
+	flann.sourceFeaturesInput( *rightFeaturesVector );
+	flann.process();
 	CorrespondenceMap2DPtr newCorrespondenceMap = NewCorrespondenceMap2D();
-	Copy( flann->matchesOutput(), *newCorrespondenceMap);
+	Copy( flann.matchesOutput(), *newCorrespondenceMap);
 	correspondenceMap = newCorrespondenceMap;
 
 	if (fundamentalMatrix != NULL)
 		{
 		delete(fundamentalMatrix);
 		}
-	ransac->matchesInput(*correspondenceMap);
-	ransac->process();
+	ransac.matchesInput(*correspondenceMap);
+	ransac.process();
 	Matrix3dPtr newFundamentalMatrix = NewMatrix3d();
-	ransacSuccess = ransac->successOutput();
-	Copy( ransac->fundamentalMatrixOutput(), *newFundamentalMatrix);
+	ransacSuccess = ransac.successOutput();
+	Copy( ransac.fundamentalMatrixOutput(), *newFundamentalMatrix);
 	fundamentalMatrix = newFundamentalMatrix;
 
 	if (pose != NULL)
@@ -454,12 +454,12 @@ void OrbFlannRansacDecomposition::ExecuteDfns()
 		}
 	if (ransacSuccess)
 		{
-		decomposition->fundamentalMatrixInput(*fundamentalMatrix);
-		decomposition->matchesInput(*correspondenceMap);
-		decomposition->process();
-		decompositionSuccess = decomposition->successOutput();
+		decomposition.fundamentalMatrixInput(*fundamentalMatrix);
+		decomposition.matchesInput(*correspondenceMap);
+		decomposition.process();
+		decompositionSuccess = decomposition.successOutput();
 		Pose3DPtr newPose = NewPose3D();
-		Copy( decomposition->transformOutput(), *newPose);
+		Copy( decomposition.transformOutput(), *newPose);
 		pose = newPose;
 		}
 	else
@@ -634,7 +634,7 @@ int main(int argc, char** argv)
 		"FundamentalMatrixRansac_PerformanceTest_1.yaml",
 		essentialMatrixConfigurationFile
 		};
-	OrbFlannRansacDecomposition interface("../tests/ConfigurationFiles/DFNsIntegration/VisualOdometry", baseConfigurationFiles, "Orb_Flann_Ransac_Decomposition.txt");
+	OrbFlannRansacDecomposition* interface = new OrbFlannRansacDecomposition("../tests/ConfigurationFiles/DFNsIntegration/VisualOdometry", baseConfigurationFiles, "Orb_Flann_Ransac_Decomposition.txt");
 
 	if (argc >= 5)
 		{
@@ -644,18 +644,19 @@ int main(int argc, char** argv)
 		std::stringstream imagesFileContainer, posesFileContainer;
 		imagesFileContainer << imageFileNamesFolder << "/" << imagesFileName;
 		posesFileContainer << imageFileNamesFolder << "/" << posesFileName;		
-		interface.SetInputFiles(imageFileNamesFolder, imagesFileContainer.str(), posesFileContainer.str());
+		interface->SetInputFiles(imageFileNamesFolder, imagesFileContainer.str(), posesFileContainer.str());
 		}
 	
-	interface.LoadInputFiles();
+	interface->LoadInputFiles();
 
 	if (argc >= 6)
 		{
 		unsigned imageLimit = std::stoi(argv[5]);
-		interface.SetImageLimit(imageLimit);
+		interface->SetImageLimit(imageLimit);
 		}
 
-	interface.Run();
+	interface->Run();
+	delete(interface);
 	};
 
 /** @} */

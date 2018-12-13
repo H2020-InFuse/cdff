@@ -44,7 +44,7 @@ class Icp3DTestInterface : public DFNTestInterface
 		static void SegmentationFaultHandler(int signal);
 
 	private:
-		Icp3D* icp;
+		Icp3D icp;
 
 		typedef pcl::FPFHSignature33 FeatureT;
 		typedef pcl::FPFHEstimationOMP<pcl::PointXYZ,pcl::Normal,FeatureT> FeatureEstimationT;
@@ -69,25 +69,24 @@ class Icp3DTestInterface : public DFNTestInterface
 		void VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud);
 	};
 
-Icp3DTestInterface::Icp3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
+Icp3DTestInterface::Icp3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
+	icp()
 	{
-	icp = new Icp3D();
-	SetDFN(icp);
+	SetDFN(&icp);
 
 	LoadInputClouds();
 	ComputeFeatures();
 	PrepareInputs();
 
-	icp->sourceFeaturesInput(*inputSourceFeaturesVector);
-	icp->sinkFeaturesInput(*inputSinkFeaturesVector);
+	icp.sourceFeaturesInput(*inputSourceFeaturesVector);
+	icp.sinkFeaturesInput(*inputSinkFeaturesVector);
 
 	outputWindowName = "ICP 3D Result";
 	}
 
 Icp3DTestInterface::~Icp3DTestInterface()
 	{
-	delete icp;
 	delete inputSourceFeaturesVector;
 	delete inputSinkFeaturesVector;
 	}
@@ -208,7 +207,7 @@ void Icp3DTestInterface::SetupParameters()
 
 void Icp3DTestInterface::DisplayResult()
 	{
-	const Transform3D& transform = icp->transformOutput();
+	const Transform3D& transform = icp.transformOutput();
 	PrintInformation(&transform);
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud = PrepareOutputCloud(&transform);
 	VisualizeClouds(correspondenceCloud);
@@ -268,8 +267,9 @@ void Icp3DTestInterface::VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPt
 int main(int argc, char** argv)
 	{
 	signal(SIGSEGV, Icp3DTestInterface::SegmentationFaultHandler);
-	Icp3DTestInterface interface("Icp3D", 100, 40);
-	interface.Run();
+	Icp3DTestInterface* interface = new Icp3DTestInterface("Icp3D", 100, 40);
+	interface->Run();
+	delete (interface);
 	}
 
 /** @} */

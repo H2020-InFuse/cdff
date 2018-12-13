@@ -38,7 +38,7 @@ class CornerDetector3DTestInterface : public DFNTestInterface
 
 	private:
 
-		CornerDetector3D* cornerDetector;
+		CornerDetector3D cornerDetector;
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud;
 		PointCloudConstPtr inputCloud;
@@ -49,11 +49,11 @@ class CornerDetector3DTestInterface : public DFNTestInterface
 		void DisplayResult() override;
 };
 
-CornerDetector3DTestInterface::CornerDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
+CornerDetector3DTestInterface::CornerDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
+	cornerDetector(cornerDetector)
 {
-	cornerDetector = new CornerDetector3D;
-	SetDFN(cornerDetector);
+	SetDFN(&cornerDetector);
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
@@ -67,14 +67,13 @@ CornerDetector3DTestInterface::CornerDetector3DTestInterface(const std::string& 
 		}
 	}
 	inputCloud = PclPointCloudToPointCloudConverter().Convert(pclCloud);
-	cornerDetector->pointcloudInput(*inputCloud);
+	cornerDetector.pointcloudInput(*inputCloud);
 
 	outputWindowName = "Harris Detector 3D Result";
 }
 
 CornerDetector3DTestInterface::~CornerDetector3DTestInterface()
 {
-	delete cornerDetector;
 	delete inputCloud;
 }
 
@@ -94,7 +93,7 @@ void CornerDetector3DTestInterface::SetupParameters()
 
 void CornerDetector3DTestInterface::DisplayResult()
 {
-	const VisualPointFeatureVector3D& features = cornerDetector->featuresOutput();
+	const VisualPointFeatureVector3D& features = cornerDetector.featuresOutput();
 
 	PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
 	PRINT_TO_LOG("Virtual memory used (kb): ", GetTotalVirtualMemoryUsedKB());
@@ -109,8 +108,9 @@ int main(int argc, char **argv)
 	ASSERT(argc <= 2, USAGE);
 	std::string inputFile = (argc == 1) ? DEFAULT_INPUT_FILE : argv[1];
 
-	CornerDetector3DTestInterface interface("CornerDetector3D", 100, 40, inputFile);
-	interface.Run();
+	CornerDetector3DTestInterface* interface = new CornerDetector3DTestInterface("CornerDetector3D", 100, 40, inputFile);
+	interface->Run();
+	delete(interface);
 };
 
 /** @} */

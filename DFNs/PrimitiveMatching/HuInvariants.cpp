@@ -161,11 +161,6 @@ std::vector< std::string > HuInvariants::Match(const cv::Mat& inputImage)
 	[](PrimitiveMatchingInfo info){ return info.primitive; }
 	);
 
-   /* for( auto info: m_matching_info )
-    {
-        primitives_ordered_by_matching_probability.push_back(info.primitive);
-    }*/
-
     return primitives_ordered_by_matching_probability;
 }
 

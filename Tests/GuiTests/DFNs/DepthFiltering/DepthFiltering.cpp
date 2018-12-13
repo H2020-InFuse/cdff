@@ -48,7 +48,7 @@ public:
     ~DepthFilteringTestInterface();
 
 private:
-    CDFF::DFN::DepthFiltering::ConvolutionFilter *filter;
+    CDFF::DFN::DepthFiltering::ConvolutionFilter filter;
     cv::Mat cvImage;
     FrameWrapper::FrameConstPtr inputImage;
     std::string outputWindowName;
@@ -57,23 +57,23 @@ private:
     void DisplayResult() override;
 };
 
-DepthFilteringTestInterface::DepthFilteringTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
-        : DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
+DepthFilteringTestInterface::DepthFilteringTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+        DFNTestInterface(dfnName, buttonWidth, buttonHeight), 
+	inputImage(),
+	filter()
 {
-    filter = new CDFF::DFN::DepthFiltering::ConvolutionFilter();
-    SetDFN(filter);
+    SetDFN(&filter);
 
     cv::Mat image = cv::imread("../../tests/Data/Images/depth_img.jpg", cv::IMREAD_GRAYSCALE);
     inputImage = Converters::MatToFrameConverter().Convert(image);
 
-    filter->frameInput(*inputImage);
+    filter.frameInput(*inputImage);
     outputWindowName = "Depth Filtering Result";
 }
 
 DepthFilteringTestInterface::~DepthFilteringTestInterface()
 {
     delete(inputImage);
-    delete(filter);
 }
 
 void DepthFilteringTestInterface::SetupParameters()
@@ -83,7 +83,7 @@ void DepthFilteringTestInterface::SetupParameters()
 
 void DepthFilteringTestInterface::DisplayResult()
 {
-    const FrameWrapper::Frame& filtered_image = filter->frameOutput();
+    const FrameWrapper::Frame& filtered_image = filter.frameOutput();
     cv::Mat filtered_cv_image = Converters::FrameToMatConverter().Convert(&filtered_image);
 
     cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
@@ -94,8 +94,9 @@ void DepthFilteringTestInterface::DisplayResult()
 
 int main(int argc, char** argv)
 {
-    DepthFilteringTestInterface interface("DepthFiltering", 100, 40);
-    interface.Run();
+    DepthFilteringTestInterface* interface = new DepthFilteringTestInterface("DepthFiltering", 100, 40);
+    interface->Run();
+    delete(interface);
 };
 
 /** @} */

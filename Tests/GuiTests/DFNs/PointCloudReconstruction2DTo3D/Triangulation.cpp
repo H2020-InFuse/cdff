@@ -36,17 +36,17 @@ class TriangulationTestInterface : public DFNTestInterface
 		~TriangulationTestInterface();
 
 	private:
-		Triangulation *triangulation;
+		Triangulation triangulation;
 		std::string outputWindowName;
 		void SetupParameters() override;
 		void DisplayResult() override;
 	};
 
-TriangulationTestInterface::TriangulationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
+TriangulationTestInterface::TriangulationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
+	triangulation()
 {
-	triangulation = new Triangulation();
-	SetDFN(triangulation);
+	SetDFN(&triangulation);
 
 	cv::Mat identityProjection(3, 4, CV_32FC1, cv::Scalar(0));
 	identityProjection.at<float>(0,0) = 1;
@@ -119,19 +119,19 @@ TriangulationTestInterface::TriangulationTestInterface(const std::string& dfnNam
 		sink.y = sinkPoint.at<float>(1,0) / sinkPoint.at<float>(2,0);
 		AddCorrespondence(correspondenceMap, source, sink, 1);
 	}
-	triangulation->matchesInput(correspondenceMap);
+	triangulation.matchesInput(correspondenceMap);
 
 	Pose3D pose;
 	SetPosition(pose, 1, 0, 0);
 	SetOrientation(pose, 0, 0, 0, 1);
-	triangulation->poseInput(pose);
+	triangulation.poseInput(pose);
 
 	outputWindowName = "Triangulation 2D to 3D Result";
 }
 
 TriangulationTestInterface::~TriangulationTestInterface()
 {
-	delete triangulation;
+
 }
 
 void TriangulationTestInterface::SetupParameters()
@@ -140,7 +140,7 @@ void TriangulationTestInterface::SetupParameters()
 
 void TriangulationTestInterface::DisplayResult()
 {
-	const PointCloud& pointCloud = triangulation->pointcloudOutput();
+	const PointCloud& pointCloud = triangulation.pointcloudOutput();
 
 	PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
 	PRINT_TO_LOG("Virtual memory used (kb): ", GetTotalVirtualMemoryUsedKB());
@@ -176,8 +176,9 @@ void TriangulationTestInterface::DisplayResult()
 
 int main(int argc, char **argv)
 {
-	TriangulationTestInterface interface("Triangulation 2D to 3D", 100, 40);
-	interface.Run();
+	TriangulationTestInterface* interface = new TriangulationTestInterface("Triangulation 2D to 3D", 100, 40);
+	interface->Run();
+	delete(interface);
 };
 
 /** @} */

@@ -46,7 +46,10 @@ using namespace SupportTypes;
  * --------------------------------------------------------------------------
  */
 DetectionDescriptionMatching3DTestInterface::DetectionDescriptionMatching3DTestInterface(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, 
-	const std::string& performanceMeasuresFileName, DFNsSet dfnsSet) : PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName)
+	const std::string& performanceMeasuresFileName, DFNsSet dfnsSet) : 
+	PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName),
+	groundPositionDistanceAggregator( Aggregator::AVERAGE ),
+	groundOrientationDistanceAggregator( Aggregator::AVERAGE )
 	{
 	extractor = dfnsSet.extractor;
 	AddDfn(dfnsSet.extractor);
@@ -55,10 +58,8 @@ DetectionDescriptionMatching3DTestInterface::DetectionDescriptionMatching3DTestI
 	matcher = dfnsSet.matcher;
 	AddDfn(dfnsSet.matcher);
 
-	groundPositionDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("PositionDistance", groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
-	groundOrientationDistanceAggregator = new Aggregator( Aggregator::AVERAGE );
-	AddAggregator("AngleDistance", groundOrientationDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	AddAggregator("PositionDistance", &groundPositionDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
+	AddAggregator("AngleDistance", &groundOrientationDistanceAggregator, FIXED_PARAMETERS_VARIABLE_INPUTS);
 
 	scenePointCloud = NULL;
 	modelPointCloud = NULL;

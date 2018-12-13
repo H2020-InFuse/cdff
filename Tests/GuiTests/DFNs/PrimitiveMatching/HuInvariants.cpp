@@ -55,7 +55,7 @@ class HuInvariantsTestInterface : public DFNTestInterface
 		static const std::string DEFAULT_IMAGE_FILE_PATH;
 		static const int ORB_DESCRIPTOR_SIZE;
 
-		HuInvariants* huInvariants;
+		HuInvariants huInvariants;
 
 		cv::Mat cvImage;
 		FrameConstPtr inputImage;
@@ -67,11 +67,12 @@ class HuInvariantsTestInterface : public DFNTestInterface
 
 const std::string HuInvariantsTestInterface::DEFAULT_IMAGE_FILE_PATH = "../../tests/Data/Images/primitive_matching/test_images/robot.jpg";
 
-HuInvariantsTestInterface::HuInvariantsTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
+HuInvariantsTestInterface::HuInvariantsTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight), 
+	inputImage(),
+	huInvariants()
 {
-	huInvariants = new HuInvariants();
-	SetDFN(huInvariants);
+	SetDFN(&huInvariants);
 
     MatToFrameConverter converter;
 	if (imageFilePath == DEFAULT_IMAGE_FILE_PATH)
@@ -89,18 +90,17 @@ HuInvariantsTestInterface::HuInvariantsTestInterface(const std::string& dfnName,
     cv::erode(cvImage, cvImage, element);
 
 	inputImage = converter.Convert(cvImage);
-	huInvariants->imageInput(*inputImage);
+	huInvariants.imageInput(*inputImage);
 
 	std::vector<std::string> string_array{"rectangle", "circle"};
 	asn1SccStringSequence primitive_array = StdVectorOfStringsToStringSequenceConverter().Convert(string_array);
 
-	huInvariants->primitivesInput(primitive_array);
+	huInvariants.primitivesInput(primitive_array);
 	outputWindowName = "Hu Invariants Result";
 }
 
 HuInvariantsTestInterface::~HuInvariantsTestInterface()
 {
-	delete(huInvariants);
 	delete(inputImage);
 }
 
@@ -112,14 +112,14 @@ void HuInvariantsTestInterface::SetupParameters()
 
 void HuInvariantsTestInterface::DisplayResult()
 {
-    std::vector<std::string> ordered_primitives = Converters::StringSequenceToStdVectorOfStringsConverter().Convert(huInvariants->primitivesOutput());
+    std::vector<std::string> ordered_primitives = Converters::StringSequenceToStdVectorOfStringsConverter().Convert(huInvariants.primitivesOutput());
 
     PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
     PRINT_TO_LOG("Virtual memory used (kb): ", GetTotalVirtualMemoryUsedKB());
     PRINT_TO_LOG("Primitive matched with best similarity ratio: ", ordered_primitives[0]);
 
 
-    const Frame& frame_with_contour = huInvariants->imageOutput();
+    const Frame& frame_with_contour = huInvariants.imageOutput();
     cv::Mat image_with_contour = FrameToMatConverter().Convert(&frame_with_contour);
 
     cv::namedWindow("ORIGINAL IMAGE", CV_WINDOW_NORMAL);

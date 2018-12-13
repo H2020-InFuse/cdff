@@ -64,8 +64,8 @@ class OrbDetectorDescriptorFlannMatcher : public PerformanceTestInterface
 		VisualPointFeatureVector2DConstPtr rightFeaturesVector;
 		CorrespondenceMap2DConstPtr correspondenceMap;
 
-		OrbDetectorDescriptor* orb;
-		FlannMatcher* flann;
+		OrbDetectorDescriptor orb;
+		FlannMatcher flann;
 
 		bool SetNextInputs() override;
 		void ExecuteDfns() override;
@@ -73,13 +73,13 @@ class OrbDetectorDescriptorFlannMatcher : public PerformanceTestInterface
 	};
 
 OrbDetectorDescriptorFlannMatcher::OrbDetectorDescriptorFlannMatcher(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, 
-	const std::string& performanceMeasuresFileName)
-	: PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName)
+	const std::string& performanceMeasuresFileName) :
+	PerformanceTestInterface(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName),
+	orb(),
+	flann()
 	{
-	orb = new OrbDetectorDescriptor();
-	flann = new FlannMatcher();
-	AddDfn(orb);
-	AddDfn(flann);
+	AddDfn(&orb);
+	AddDfn(&flann);
 
 	leftFrame = NULL;
 	rightFrame = NULL;
@@ -139,31 +139,31 @@ void OrbDetectorDescriptorFlannMatcher::ExecuteDfns()
 		{
 		delete(leftFeaturesVector);
 		}
-	orb->frameInput(*leftFrame);
-	orb->process();
+	orb.frameInput(*leftFrame);
+	orb.process();
 	VisualPointFeatureVector2DPtr newLeftFeaturesVector = NewVisualPointFeatureVector2D();
-	Copy( orb->featuresOutput(), *newLeftFeaturesVector);
+	Copy( orb.featuresOutput(), *newLeftFeaturesVector);
 	leftFeaturesVector = newLeftFeaturesVector;
 
 	if (rightFeaturesVector != NULL)
 		{
 		delete(rightFeaturesVector);
 		}
-	orb->frameInput(*rightFrame);
-	orb->process();
+	orb.frameInput(*rightFrame);
+	orb.process();
 	VisualPointFeatureVector2DPtr newRightFeaturesVector = NewVisualPointFeatureVector2D();
-	Copy( orb->featuresOutput(), *newRightFeaturesVector);
+	Copy( orb.featuresOutput(), *newRightFeaturesVector);
 	rightFeaturesVector = newRightFeaturesVector;
 
 	if (correspondenceMap != NULL)
 		{
 		delete(correspondenceMap);
 		}
-	flann->sinkFeaturesInput( *leftFeaturesVector );
-	flann->sourceFeaturesInput( *rightFeaturesVector );
-	flann->process();
+	flann.sinkFeaturesInput( *leftFeaturesVector );
+	flann.sourceFeaturesInput( *rightFeaturesVector );
+	flann.process();
 	CorrespondenceMap2DPtr newCorrespondenceMap = NewCorrespondenceMap2D();
-	Copy( flann->matchesOutput(), *newCorrespondenceMap);
+	Copy( flann.matchesOutput(), *newCorrespondenceMap);
 	correspondenceMap = newCorrespondenceMap;
 	}
 
@@ -193,8 +193,13 @@ int main(int argc, char** argv)
 		"OrbExtractorDescriptor_PerformanceTest_1.yaml",
 		"FlannMatcher_PerformanceTest_1.yaml"
 		};
-	OrbDetectorDescriptorFlannMatcher interface("../tests/ConfigurationFiles/DFNsIntegration/FeaturesExtractionDescriptionMatching", baseConfigurationFiles, "OrbExtractorDescriptor_FlannMatcher.txt");
-	interface.Run();
+	OrbDetectorDescriptorFlannMatcher* interface = new OrbDetectorDescriptorFlannMatcher(
+		"../tests/ConfigurationFiles/DFNsIntegration/FeaturesExtractionDescriptionMatching", 
+		baseConfigurationFiles, 
+		"OrbExtractorDescriptor_FlannMatcher.txt"
+		);
+	interface->Run();
+	delete(interface);
 	};
 
 /** @} */

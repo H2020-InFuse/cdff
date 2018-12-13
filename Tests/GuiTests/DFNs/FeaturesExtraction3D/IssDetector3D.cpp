@@ -38,7 +38,7 @@ class IssDetector3DTestInterface : public DFNTestInterface
 
 	private:
 
-		IssDetector3D* iss;
+		IssDetector3D iss;
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud;
 		PointCloudConstPtr inputCloud;
@@ -49,11 +49,11 @@ class IssDetector3DTestInterface : public DFNTestInterface
 		void DisplayResult() override;
 };
 
-IssDetector3DTestInterface::IssDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
+IssDetector3DTestInterface::IssDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
+	iss()
 {
-	iss = new IssDetector3D;
-	SetDFN(iss);
+	SetDFN(&iss);
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
@@ -67,14 +67,13 @@ IssDetector3DTestInterface::IssDetector3DTestInterface(const std::string& dfnNam
 		}
 	}
 	inputCloud = PclPointCloudToPointCloudConverter().Convert(pclCloud);
-	iss->pointcloudInput(*inputCloud);
+	iss.pointcloudInput(*inputCloud);
 
 	outputWindowName = "Iss Detector 3D Result";
 }
 
 IssDetector3DTestInterface::~IssDetector3DTestInterface()
 {
-	delete iss;
 	delete inputCloud;
 }
 
@@ -93,7 +92,7 @@ void IssDetector3DTestInterface::SetupParameters()
 
 void IssDetector3DTestInterface::DisplayResult()
 {
-	const VisualPointFeatureVector3D& features = iss->featuresOutput();
+	const VisualPointFeatureVector3D& features = iss.featuresOutput();
 
 	PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
 	PRINT_TO_LOG("Virtual memory used (kb): ", GetTotalVirtualMemoryUsedKB());
@@ -108,8 +107,9 @@ int main(int argc, char **argv)
 	ASSERT(argc <= 2, USAGE);
 	std::string inputFile = (argc == 1) ? DEFAULT_INPUT_FILE : argv[1];
 
-	IssDetector3DTestInterface interface("IssDetector3D", 100, 40, inputFile);
-	interface.Run();
+	IssDetector3DTestInterface* interface = new IssDetector3DTestInterface("IssDetector3D", 100, 40, inputFile);
+	interface->Run();
+	delete(interface);
 };
 
 /** @} */

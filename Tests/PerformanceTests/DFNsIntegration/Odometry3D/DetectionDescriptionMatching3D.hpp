@@ -95,8 +95,8 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 		CDFF::DFN::FeaturesDescription3DInterface* descriptor;
 		CDFF::DFN::FeaturesMatching3DInterface* matcher;
 
-		Aggregator* groundPositionDistanceAggregator;
-		Aggregator* groundOrientationDistanceAggregator;
+		Aggregator groundPositionDistanceAggregator;
+		Aggregator groundOrientationDistanceAggregator;
 
 		void LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string cloudFile);
 		void LoadSceneCloud();

@@ -37,7 +37,7 @@ class ShotDescriptor3DTestInterface : public DFNTestInterface
 
 		static const unsigned SHOT_DESCRIPTOR_SIZE;
 
-		ShotDescriptor3D* shot;
+		ShotDescriptor3D shot;
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud;
 		PointCloudConstPtr inputCloud;
@@ -63,13 +63,13 @@ const unsigned ShotDescriptor3DTestInterface::SHOT_DESCRIPTOR_SIZE = 352;
 
 ShotDescriptor3DTestInterface::ShotDescriptor3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
 	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
-	shot(new ShotDescriptor3D())
+	shot()
 {
-	SetDFN(shot);
+	SetDFN(&shot);
 
 	pclCloud = PreparePointCloudInput();
 	inputCloud = PclPointCloudToPointCloudConverter().Convert(pclCloud);
-	shot->pointcloudInput(*inputCloud);
+	shot.pointcloudInput(*inputCloud);
 
 	VisualPointFeatureVector3DPtr features = NewVisualPointFeatureVector3D();
 	ClearPoints(*features);
@@ -78,18 +78,17 @@ ShotDescriptor3DTestInterface::ShotDescriptor3DTestInterface(const std::string& 
 		AddPoint(*features, index);
 	}
 	inputFeatures = features;
-	shot->featuresInput(*inputFeatures);
+	shot.featuresInput(*inputFeatures);
 
 	pclNormals = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
 	inputNormals = PclNormalsCloudToPointCloudConverter().Convert(pclNormals);
-	shot->normalsInput(*inputNormals);
+	shot.normalsInput(*inputNormals);
 
 	outputWindowName = "SHOT Descriptor 3D Result";
 }
 
 ShotDescriptor3DTestInterface::~ShotDescriptor3DTestInterface()
 {
-	delete shot;
 	delete inputCloud;
 	delete inputFeatures;
 	delete inputNormals;
@@ -132,7 +131,7 @@ void ShotDescriptor3DTestInterface::SetupParameters()
 
 void ShotDescriptor3DTestInterface::DisplayResult()
 {
-	const VisualPointFeatureVector3D& features = shot->featuresOutput();
+	const VisualPointFeatureVector3D& features = shot.featuresOutput();
 
 	PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
 	PRINT_TO_LOG("Virtual memory used (Kb): ", GetTotalVirtualMemoryUsedKB());
@@ -211,8 +210,9 @@ void ShotDescriptor3DTestInterface::GetComponentRange(VisualPointFeatureVector3D
 
 int main(int argc, char **argv)
 {
-	ShotDescriptor3DTestInterface interface("ShotDescriptor3D", 100, 40);
-	interface.Run();
+	ShotDescriptor3DTestInterface* interface = new ShotDescriptor3DTestInterface("ShotDescriptor3D", 100, 40);
+	interface->Run();
+	delete(interface);
 };
 
 /** @} */
