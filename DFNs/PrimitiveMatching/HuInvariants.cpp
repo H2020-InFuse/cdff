@@ -271,16 +271,15 @@ std::map<std::string, std::vector<cv::Point> > HuInvariants::getTemplatesToMatch
     int size = m_template_files.size();
     for( unsigned int index = 0; index < size; index ++ )
     {
-	std::string template_file = m_template_files[index];
+	std::string template_file_name = ::extractFileName(m_template_files[index]);
 	bool primitiveFound = std::any_of(
 	    primitive_names.begin(),
 	    primitive_names.end(),
-	    [template_file](std::string primitive) { return (::extractFileName(template_file) == primitive); }
+	    [template_file_name](std::string primitive) { return (template_file_name == primitive); }
 	    );
 	if(primitiveFound)
             {
                 template_contours_to_match.insert(std::make_pair(m_template_files[index], m_template_contours[index]));
-                break;
             }
     }
 
