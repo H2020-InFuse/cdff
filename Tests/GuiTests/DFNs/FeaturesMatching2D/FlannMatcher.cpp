@@ -44,24 +44,24 @@ using namespace CorrespondenceMap2DWrapper;
 class FlannMatcherTestInterface : public DFNTestInterface
 	{
 	public:
-		FlannMatcherTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		FlannMatcherTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~FlannMatcherTestInterface();
 
 	private:
-		FlannMatcher* flann;
+		FlannMatcher flann;
 
 		cv::Mat cvImage;
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 	};
 
-FlannMatcherTestInterface::FlannMatcherTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
+FlannMatcherTestInterface::FlannMatcherTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
+	flann()
 	{
-	flann = new FlannMatcher();
-	SetDFN(flann);
+	SetDFN(&flann);
 
 	cvImage = cv::imread("../../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
 
@@ -93,14 +93,14 @@ FlannMatcherTestInterface::FlannMatcherTestInterface(std::string dfnName, int bu
 			}
 		}
 
-	flann->sourceFeaturesInput(*featuresVector);
-	flann->sinkFeaturesInput(*featuresVector);
+	flann.sourceFeaturesInput(*featuresVector);
+	flann.sinkFeaturesInput(*featuresVector);
 	outputWindowName = "Flann Matcher Result";
 	}
 
 FlannMatcherTestInterface::~FlannMatcherTestInterface()
 	{
-	delete(flann);
+
 	}
 
 void FlannMatcherTestInterface::SetupParameters()
@@ -115,7 +115,7 @@ void FlannMatcherTestInterface::SetupParameters()
 
 void FlannMatcherTestInterface::DisplayResult()
 	{
-	const CorrespondenceMap2D& correspondenceMap = flann->matchesOutput();
+	const CorrespondenceMap2D& correspondenceMap = flann.matchesOutput();
 	PRINT_TO_LOG("The processing took (seconds): ", GetLastProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
 
@@ -151,8 +151,9 @@ void FlannMatcherTestInterface::DisplayResult()
 
 int main(int argc, char** argv)
 	{
-	FlannMatcherTestInterface interface("Flann Matcher", 100, 40);
-	interface.Run();
+	FlannMatcherTestInterface* interface = new FlannMatcherTestInterface("Flann Matcher", 100, 40);
+	interface->Run();
+	delete(interface);
 	};
 
 /** @} */

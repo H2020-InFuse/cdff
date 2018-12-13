@@ -22,8 +22,8 @@ namespace DFPC
             VisualOdometry_LAAS();
             virtual ~VisualOdometry_LAAS();
 
-            virtual void setup();
-            virtual void run();
+            virtual void setup() override;
+            virtual void run() override;
 
     };
 }

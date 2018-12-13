@@ -71,8 +71,8 @@ using namespace BaseTypesWrapper;
 class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 	{
 	public:
-		StereoReconstructionTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
-		~StereoReconstructionTestInterface();
+		StereoReconstructionTestInterface(const std::string& integrationName, int buttonWidth, int buttonHeight);
+		virtual ~StereoReconstructionTestInterface();
 	protected:
 
 	private:
@@ -92,14 +92,14 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 			};
 		State state;
 
-		ImageUndistortion* leftUndistortion;
-		ImageUndistortion* rightUndistortion;
-		HarrisDetector2D* harris;
-		OrbDescriptor* orb;
-		FlannMatcher* flann;	
-		FundamentalMatrixRansac* ransac;
-		EssentialMatrixDecomposition* essential;	
-		Triangulation* triangulation;
+		ImageUndistortion leftUndistortion;
+		ImageUndistortion rightUndistortion;
+		HarrisDetector2D harris;
+		OrbDescriptor orb;
+		FlannMatcher flann;	
+		FundamentalMatrixRansac ransac;
+		EssentialMatrixDecomposition essential;	
+		Triangulation triangulation;
 
 		std::string outputWindowName;
 		cv::Mat leftCvImage;
@@ -117,13 +117,13 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		Matrix3dPtr fundamentalMatrix;
 		Pose3DPtr secondCameraPose;
 
-		void SetupMocksAndStubs();
-		void SetupParameters();
-		void DisplayResult();
+		void SetupMocksAndStubs() override;
+		void SetupParameters() override;
+		void DisplayResult() override;
 
-		void ResetProcess();
-		bool IsProcessCompleted();
-		void UpdateState();
+		void ResetProcess() override;
+		bool IsProcessCompleted() override;
+		void UpdateState() override;
 		DFNCommonInterface* PrepareNextDfn();
 
 		void PrepareUndistortionLeft();
@@ -137,41 +137,29 @@ class StereoReconstructionTestInterface : public DFNsIntegrationTestInterface
 		void PrepareEssential();
 		void PrepareTriangulation();
 
-		void ExtractCalibrationParameters();
-		void ExtractCalibrationParametersOneCamera();
 		void VisualizeCorrespondences(CorrespondenceMap2DConstPtr correspondenceMap);
 		void VisualizeFeatures(VisualPointFeatureVector2DConstPtr leftFeaturesVector, VisualPointFeatureVector2DConstPtr rightFeaturesVector);
 	};
 
-StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string integrationName, int buttonWidth, int buttonHeight)
-	: DFNsIntegrationTestInterface(buttonWidth, buttonHeight)
+StereoReconstructionTestInterface::StereoReconstructionTestInterface(const std::string& integrationName, int buttonWidth, int buttonHeight) :
+	DFNsIntegrationTestInterface(buttonWidth, buttonHeight),
+	leftUndistortion(),
+	rightUndistortion(),
+	harris(),
+	orb(),
+	flann(),
+	ransac(),
+	essential(),
+	triangulation()
 	{
-	//ExtractCalibrationParametersOneCamera();
-	//ExtractCalibrationParameters();
-
-	leftUndistortion = new ImageUndistortion();
-	AddDFN(leftUndistortion, "leftUndistortion");
-
-	rightUndistortion = new ImageUndistortion();
-	AddDFN(rightUndistortion, "rightUndistortion");
-
-	harris = new HarrisDetector2D();
-	AddDFN(harris, "harris");
-	
-	orb = new OrbDescriptor();
-	AddDFN(orb, "orb");
-
-	flann = new FlannMatcher();
-	AddDFN(flann, "flann");
-		
-	ransac = new FundamentalMatrixRansac();
-	AddDFN(ransac, "ransac");
-
-	essential = new EssentialMatrixDecomposition();
-	AddDFN(essential, "essential");
-	
-	triangulation = new Triangulation();
-	AddDFN(triangulation, "triangulation");
+	AddDFN(&leftUndistortion, "leftUndistortion");
+	AddDFN(&rightUndistortion, "rightUndistortion");
+	AddDFN(&harris, "harris");
+	AddDFN(&orb, "orb");
+	AddDFN(&flann, "flann");
+	AddDFN(&ransac, "ransac");
+	AddDFN(&essential, "essential");
+	AddDFN(&triangulation, "triangulation");
 
 	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/stuff.jpg", cv::IMREAD_COLOR);
 	ASSERT(doubleImage.rows > 0 && doubleImage.cols > 0, "Test Error: failed to load image correctly");
@@ -187,18 +175,12 @@ StereoReconstructionTestInterface::StereoReconstructionTestInterface(std::string
 	doubleImage(cv::Rect(startColumnRight, startRow, extractCols, extractRows) ).copyTo(rightCvImage);
 
 	outputWindowName = integrationName;
+	state = END;
 	}
 
 StereoReconstructionTestInterface::~StereoReconstructionTestInterface()
 	{
-	delete(leftUndistortion);
-	delete(rightUndistortion);
-	delete(harris);
-	delete(orb);
-	delete(flann);
-	delete(ransac);
-	delete(essential);
-	delete(triangulation);
+
 	}
 
 void StereoReconstructionTestInterface::SetupMocksAndStubs()
@@ -208,92 +190,92 @@ void StereoReconstructionTestInterface::SetupMocksAndStubs()
 
 void StereoReconstructionTestInterface::SetupParameters()
 	{
-	AddParameter(leftUndistortion, "CameraMatrix", "FocalLengthX", 1408.899186439272, 1500, 1e-5);
-	AddParameter(leftUndistortion, "CameraMatrix", "FocalLengthY", 1403.116708010621, 1500, 1e-5);
-	AddParameter(leftUndistortion, "CameraMatrix", "PrinciplePointX", 1053.351342078365, 1500, 1e-5);
-	AddParameter(leftUndistortion, "CameraMatrix", "PrinciplePointY", 588.8342842821718, 1500, 1e-5);
+	AddParameter(&leftUndistortion, "CameraMatrix", "FocalLengthX", 1408.899186439272, 1500, 1e-5);
+	AddParameter(&leftUndistortion, "CameraMatrix", "FocalLengthY", 1403.116708010621, 1500, 1e-5);
+	AddParameter(&leftUndistortion, "CameraMatrix", "PrinciplePointX", 1053.351342078365, 1500, 1e-5);
+	AddParameter(&leftUndistortion, "CameraMatrix", "PrinciplePointY", 588.8342842821718, 1500, 1e-5);
 
-	AddSignedParameter(leftUndistortion, "Distortion", "K1", 0.8010323519594021, 10, 1e-8);
-	AddSignedParameter(leftUndistortion, "Distortion", "K2", 104.7894482598434, 110, 1e-6);
-	AddSignedParameter(leftUndistortion, "Distortion", "K3", -70.73535010082334, 110, 1e-6);
-	AddSignedParameter(leftUndistortion, "Distortion", "K4", 0.8556124926892613, 10, 1e-8);
-	AddSignedParameter(leftUndistortion, "Distortion", "K5", 105.9684960970509, 110, 1e-6);
-	AddSignedParameter(leftUndistortion, "Distortion", "K6", -60.88515255428263, 110, 1e-6);
-	AddSignedParameter(leftUndistortion, "Distortion", "P1", -6.223427196342877e-05, 10, 1e-8);
-	AddSignedParameter(leftUndistortion, "Distortion", "P2", -0.002209798328517273, 10, 1e-8);
-	AddParameter(leftUndistortion, "Distortion", "UseK3", 1, 1);
-	AddParameter(leftUndistortion, "Distortion", "UseK4ToK6", 1, 1);
+	AddSignedParameter(&leftUndistortion, "Distortion", "K1", 0.8010323519594021, 10, 1e-8);
+	AddSignedParameter(&leftUndistortion, "Distortion", "K2", 104.7894482598434, 110, 1e-6);
+	AddSignedParameter(&leftUndistortion, "Distortion", "K3", -70.73535010082334, 110, 1e-6);
+	AddSignedParameter(&leftUndistortion, "Distortion", "K4", 0.8556124926892613, 10, 1e-8);
+	AddSignedParameter(&leftUndistortion, "Distortion", "K5", 105.9684960970509, 110, 1e-6);
+	AddSignedParameter(&leftUndistortion, "Distortion", "K6", -60.88515255428263, 110, 1e-6);
+	AddSignedParameter(&leftUndistortion, "Distortion", "P1", -6.223427196342877e-05, 10, 1e-8);
+	AddSignedParameter(&leftUndistortion, "Distortion", "P2", -0.002209798328517273, 10, 1e-8);
+	AddParameter(&leftUndistortion, "Distortion", "UseK3", 1, 1);
+	AddParameter(&leftUndistortion, "Distortion", "UseK4ToK6", 1, 1);
 
-	AddParameter(rightUndistortion, "CameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 1e-5);
-	AddParameter(rightUndistortion, "CameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 1e-5);
-	AddParameter(rightUndistortion, "CameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 1e-5);
-	AddParameter(rightUndistortion, "CameraMatrix", "PrinciplePointY", 592.5031927882591, 1500, 1e-5);
+	AddParameter(&rightUndistortion, "CameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 1e-5);
+	AddParameter(&rightUndistortion, "CameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 1e-5);
+	AddParameter(&rightUndistortion, "CameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 1e-5);
+	AddParameter(&rightUndistortion, "CameraMatrix", "PrinciplePointY", 592.5031927882591, 1500, 1e-5);
 
-	AddSignedParameter(rightUndistortion, "Distortion", "K1", -5.700997352957169, 10, 1e-8);
-	AddSignedParameter(rightUndistortion, "Distortion", "K2", 9.016454056014156, 10, 1e-8);
-	AddSignedParameter(rightUndistortion, "Distortion", "K3", -2.465929585147688, 10, 1e-8);
-	AddSignedParameter(rightUndistortion, "Distortion", "K4", -5.560701053165053, 10, 1e-8);
-	AddSignedParameter(rightUndistortion, "Distortion", "K5", 8.264481221246962, 10, 1e-8);
-	AddSignedParameter(rightUndistortion, "Distortion", "K6", -1.458304668407831, 10, 1e-8);
-	AddSignedParameter(rightUndistortion, "Distortion", "P1", 0.001056515495810514, 10, 1e-8);
-	AddSignedParameter(rightUndistortion, "Distortion", "P2", 0.002542555946247054, 10, 1e-8);
-	AddParameter(rightUndistortion, "Distortion", "UseK3", 1, 1);
-	AddParameter(rightUndistortion, "Distortion", "UseK4ToK6", 1, 1);
+	AddSignedParameter(&rightUndistortion, "Distortion", "K1", -5.700997352957169, 10, 1e-8);
+	AddSignedParameter(&rightUndistortion, "Distortion", "K2", 9.016454056014156, 10, 1e-8);
+	AddSignedParameter(&rightUndistortion, "Distortion", "K3", -2.465929585147688, 10, 1e-8);
+	AddSignedParameter(&rightUndistortion, "Distortion", "K4", -5.560701053165053, 10, 1e-8);
+	AddSignedParameter(&rightUndistortion, "Distortion", "K5", 8.264481221246962, 10, 1e-8);
+	AddSignedParameter(&rightUndistortion, "Distortion", "K6", -1.458304668407831, 10, 1e-8);
+	AddSignedParameter(&rightUndistortion, "Distortion", "P1", 0.001056515495810514, 10, 1e-8);
+	AddSignedParameter(&rightUndistortion, "Distortion", "P2", 0.002542555946247054, 10, 1e-8);
+	AddParameter(&rightUndistortion, "Distortion", "UseK3", 1, 1);
+	AddParameter(&rightUndistortion, "Distortion", "UseK4ToK6", 1, 1);
 
-	AddParameter(harris, "GeneralParameters", "ApertureSize", 5, 7);
-	AddParameter(harris, "GeneralParameters", "BlockSize", 2, 50);
-	AddParameter(harris, "GeneralParameters", "ParameterK", 0.04, 1.00, 0.01);
-	AddParameter(harris, "GeneralParameters", "DetectionThreshold", 200, 255);
-	AddParameter(harris, "GeneralParameters", "UseGaussianBlur", 1, 1);
-	AddParameter(harris, "GaussianBlur", "KernelWidth", 3, 99);
-	AddParameter(harris, "GaussianBlur", "KernelHeight", 3, 99);
-	AddParameter(harris, "GaussianBlur", "WidthStandardDeviation", 0.00, 1.00, 0.01);
-	AddParameter(harris, "GaussianBlur", "HeightStandardDeviation", 0.00, 1.00, 0.01);
+	AddParameter(&harris, "GeneralParameters", "ApertureSize", 5, 7);
+	AddParameter(&harris, "GeneralParameters", "BlockSize", 2, 50);
+	AddParameter(&harris, "GeneralParameters", "ParameterK", 0.04, 1.00, 0.01);
+	AddParameter(&harris, "GeneralParameters", "DetectionThreshold", 200, 255);
+	AddParameter(&harris, "GeneralParameters", "UseGaussianBlur", 1, 1);
+	AddParameter(&harris, "GaussianBlur", "KernelWidth", 3, 99);
+	AddParameter(&harris, "GaussianBlur", "KernelHeight", 3, 99);
+	AddParameter(&harris, "GaussianBlur", "WidthStandardDeviation", 0.00, 1.00, 0.01);
+	AddParameter(&harris, "GaussianBlur", "HeightStandardDeviation", 0.00, 1.00, 0.01);
 
-	AddParameter(orb, "GeneralParameters", "EdgeThreshold", 31, 100);
-	AddParameter(orb, "GeneralParameters", "FastThreshold", 20, 100);
-	AddParameter(orb, "GeneralParameters", "FirstLevel", 0, 2);
-	AddParameter(orb, "GeneralParameters", "MaxFeaturesNumber", 500, 1000, 10);
-	AddParameter(orb, "GeneralParameters", "LevelsNumber", 8, 20);
-	AddParameter(orb, "GeneralParameters", "PatchSize", 31, 100);
-	AddParameter(orb, "GeneralParameters", "ScaleFactor", 1.2, 10, 0.1);
-	AddParameter(orb, "GeneralParameters", "ScoreType", 0, 2);
-	AddParameter(orb ,"GeneralParameters", "SizeOfBrightnessTestSet", 2, 4);
+	AddParameter(&orb, "GeneralParameters", "EdgeThreshold", 31, 100);
+	AddParameter(&orb, "GeneralParameters", "FastThreshold", 20, 100);
+	AddParameter(&orb, "GeneralParameters", "FirstLevel", 0, 2);
+	AddParameter(&orb, "GeneralParameters", "MaxFeaturesNumber", 500, 1000, 10);
+	AddParameter(&orb, "GeneralParameters", "LevelsNumber", 8, 20);
+	AddParameter(&orb, "GeneralParameters", "PatchSize", 31, 100);
+	AddParameter(&orb, "GeneralParameters", "ScaleFactor", 1.2, 10, 0.1);
+	AddParameter(&orb, "GeneralParameters", "ScoreType", 0, 2);
+	AddParameter(&orb ,"GeneralParameters", "SizeOfBrightnessTestSet", 2, 4);
 
-	AddParameter(flann, "GeneralParameters", "DistanceThreshold", 0.02, 1.00, 0.01);
-	AddParameter(flann, "GeneralParameters", "MatcherMethod", 4, 6);
-	AddParameter(flann, "GeneralParameters", "AcceptanceRatio", 0.75, 1, 0.01);
-	AddParameter(flann, "LocalitySensitiveHashingParameters", "TableNumber", 6, 20);
-	AddParameter(flann, "LocalitySensitiveHashingParameters", "KeySize", 12, 20);
-	AddParameter(flann, "LocalitySensitiveHashingParameters", "MultiProbeLevel", 1, 20);
+	AddParameter(&flann, "GeneralParameters", "DistanceThreshold", 0.02, 1.00, 0.01);
+	AddParameter(&flann, "GeneralParameters", "MatcherMethod", 4, 6);
+	AddParameter(&flann, "GeneralParameters", "AcceptanceRatio", 0.75, 1, 0.01);
+	AddParameter(&flann, "LocalitySensitiveHashingParameters", "TableNumber", 6, 20);
+	AddParameter(&flann, "LocalitySensitiveHashingParameters", "KeySize", 12, 20);
+	AddParameter(&flann, "LocalitySensitiveHashingParameters", "MultiProbeLevel", 1, 20);
 
-	AddParameter(ransac, "GeneralParameters", "OutlierThreshold", 1, 100);
-	AddParameter(ransac, "GeneralParameters", "Confidence", 0.9, 1, 0.01);
+	AddParameter(&ransac, "GeneralParameters", "OutlierThreshold", 1, 100);
+	AddParameter(&ransac, "GeneralParameters", "Confidence", 0.9, 1, 0.01);
 
-	AddParameter(essential, "GeneralParameters", "NumberOfTestPoints", 20, 100);
-	AddParameter(essential, "FirstCameraMatrix", "FocalLengthX", 1408.899186439272, 1500, 1e-5);
-	AddParameter(essential, "FirstCameraMatrix", "FocalLengthY", 1403.116708010621, 1500, 1e-5);
-	AddParameter(essential, "FirstCameraMatrix", "PrinciplePointX", 1053.351342078365, 1500, 1e-5);
-	AddParameter(essential, "FirstCameraMatrix", "PrinciplePointY", 588.8342842821718, 1500, 1e-5);
-	AddParameter(essential, "SecondCameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 1e-5);
-	AddParameter(essential, "SecondCameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 1e-5);
-	AddParameter(essential, "SecondCameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 1e-5);
-	AddParameter(essential, "SecondCameraMatrix", "PrinciplePointY", 592.5031927882591, 1500, 1e-5);
+	AddParameter(&essential, "GeneralParameters", "NumberOfTestPoints", 20, 100);
+	AddParameter(&essential, "FirstCameraMatrix", "FocalLengthX", 1408.899186439272, 1500, 1e-5);
+	AddParameter(&essential, "FirstCameraMatrix", "FocalLengthY", 1403.116708010621, 1500, 1e-5);
+	AddParameter(&essential, "FirstCameraMatrix", "PrinciplePointX", 1053.351342078365, 1500, 1e-5);
+	AddParameter(&essential, "FirstCameraMatrix", "PrinciplePointY", 588.8342842821718, 1500, 1e-5);
+	AddParameter(&essential, "SecondCameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 1e-5);
+	AddParameter(&essential, "SecondCameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 1e-5);
+	AddParameter(&essential, "SecondCameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 1e-5);
+	AddParameter(&essential, "SecondCameraMatrix", "PrinciplePointY", 592.5031927882591, 1500, 1e-5);
 
-	AddParameter(triangulation, "FirstCameraMatrix", "FocalLengthX", 1408.899186439272, 1500, 1e-5);
-	AddParameter(triangulation, "FirstCameraMatrix", "FocalLengthY", 1403.116708010621, 1500, 1e-5);
-	AddParameter(triangulation, "FirstCameraMatrix", "PrinciplePointX", 1053.351342078365, 1500, 1e-5);
-	AddParameter(triangulation, "FirstCameraMatrix", "PrinciplePointY", 588.8342842821718, 1500, 1e-5);
-	AddParameter(triangulation, "SecondCameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 1e-5);
-	AddParameter(triangulation, "SecondCameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 1e-5);
-	AddParameter(triangulation, "SecondCameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 1e-5);
-	AddParameter(triangulation, "SecondCameraMatrix", "PrinciplePointY", 592.5031927882591, 1500, 1e-5);
+	AddParameter(&triangulation, "FirstCameraMatrix", "FocalLengthX", 1408.899186439272, 1500, 1e-5);
+	AddParameter(&triangulation, "FirstCameraMatrix", "FocalLengthY", 1403.116708010621, 1500, 1e-5);
+	AddParameter(&triangulation, "FirstCameraMatrix", "PrinciplePointX", 1053.351342078365, 1500, 1e-5);
+	AddParameter(&triangulation, "FirstCameraMatrix", "PrinciplePointY", 588.8342842821718, 1500, 1e-5);
+	AddParameter(&triangulation, "SecondCameraMatrix", "FocalLengthX", 1415.631284126374, 1500, 1e-5);
+	AddParameter(&triangulation, "SecondCameraMatrix", "FocalLengthY", 1408.026118461406, 1500, 1e-5);
+	AddParameter(&triangulation, "SecondCameraMatrix", "PrinciplePointX", 1013.347852589407, 1500, 1e-5);
+	AddParameter(&triangulation, "SecondCameraMatrix", "PrinciplePointY", 592.5031927882591, 1500, 1e-5);
 	}
 
 void StereoReconstructionTestInterface::DisplayResult()
 	{
 	PointCloudWrapper::PointCloudPtr pointCloud = NewPointCloud();
-	Copy(triangulation->pointcloudOutput(), *pointCloud);
+	Copy(triangulation.pointcloudOutput(), *pointCloud);
 
 	PRINT_TO_LOG("The processing took (seconds): ", GetTotalProcessingTimeSeconds() );
 	PRINT_TO_LOG("Virtual Memory used (Kb): ", GetTotalVirtualMemoryUsedKB() );
@@ -395,62 +377,62 @@ DFNCommonInterface* StereoReconstructionTestInterface::PrepareNextDfn()
 	if (state == START)
 		{
 		PrepareUndistortionLeft();
-		return leftUndistortion;
+		return &leftUndistortion;
 		}
 	else if (state == UNDISTORT_LEFT_IMAGE_DONE)
 		{
 		PRINT_TO_LOG("Step Undistort Left processing time (seconds): ", GetLastProcessingTimeSeconds(0) );
 		PrepareUndistortionRight();
-		return rightUndistortion;
+		return &rightUndistortion;
 		}
 	else if (state == UNDISTORT_RIGHT_IMAGE_DONE)
 		{
 		PRINT_TO_LOG("Step Undistort Right processing time (seconds): ", GetLastProcessingTimeSeconds(0) );
 		PrepareHarrisLeft();
-		return harris;
+		return &harris;
 		}
 	else if (state == HARRIS_LEFT_IMAGE_DONE)
 		{
 		PRINT_TO_LOG("Step Harris Left processing time (seconds): ", GetLastProcessingTimeSeconds(0) );
 		PrepareHarrisRight();
-		return harris;
+		return &harris;
 		}
 	else if (state == HARRIS_RIGHT_IMAGE_DONE)
 		{
 		PRINT_TO_LOG("Step Harris Right processing time (seconds): ", GetLastProcessingTimeSeconds(0) );
 		PrepareOrbLeft();
-		return orb;
+		return &orb;
 		}
 	else if (state == ORB_LEFT_IMAGE_DONE)
 		{
 		PRINT_TO_LOG("Step Orb Left processing time (seconds): ", GetLastProcessingTimeSeconds(0) );
 		PrepareOrbRight();
-		return orb;
+		return &orb;
 		}
 	else if (state == ORB_RIGHT_IMAGE_DONE)
 		{
 		PRINT_TO_LOG("Step Orb Right processing time (seconds): ", GetLastProcessingTimeSeconds(1) );
 		PrepareFlann();
-		return flann;
+		return &flann;
 		}
 	else if (state == MATCHING_DONE)
 		{
 		PRINT_TO_LOG("Step Flann processing time (seconds): ", GetLastProcessingTimeSeconds(2) );
 		PrepareRansac();
-		return ransac;
+		return &ransac;
 		}
 	else if (state == FUNDAMENTAL_DONE)
 		{
 		PRINT_TO_LOG("Step Ransac processing time (seconds): ", GetLastProcessingTimeSeconds(2) );
 		PrepareEssential();
-		return essential;
+		return &essential;
 		}
 	else if (state == POSE_DONE)
 		{
 		PRINT_TO_LOG("Step Essential processing time (seconds): ", GetLastProcessingTimeSeconds(3) );
 		PrepareTriangulation();
 		state = END;
-		return triangulation;
+		return &triangulation;
 		}
 	ASSERT(false, "Unhandled State!");
 	return 0;
@@ -460,92 +442,92 @@ void StereoReconstructionTestInterface::PrepareUndistortionLeft()
 	{
 	MatToFrameConverter converter;
 	leftImage = converter.Convert(leftCvImage);
-	leftUndistortion->imageInput(*leftImage);
+	leftUndistortion.imageInput(*leftImage);
 	}
 
 void StereoReconstructionTestInterface::PrepareUndistortionRight()
 	{
 	MatToFrameConverter converter;
 	rightImage = converter.Convert(rightCvImage);
-	rightUndistortion->imageInput(*rightImage);
+	rightUndistortion.imageInput(*rightImage);
 	}
 
 void StereoReconstructionTestInterface::PrepareHarrisLeft()
 	{
 	undistortedLeftImage = NewFrame();
-	Copy( leftUndistortion->imageOutput(), *undistortedLeftImage);
+	Copy( leftUndistortion.imageOutput(), *undistortedLeftImage);
 
-	harris->frameInput(*undistortedLeftImage);
+	harris.frameInput(*undistortedLeftImage);
 	}
 
 void StereoReconstructionTestInterface::PrepareHarrisRight()
 	{
 	undistortedRightImage = NewFrame();
-	Copy( rightUndistortion->imageOutput(), *undistortedRightImage);
+	Copy( rightUndistortion.imageOutput(), *undistortedRightImage);
 	leftKeypointsVector = NewVisualPointFeatureVector2D();
-	Copy( harris->featuresOutput(), *leftKeypointsVector);
+	Copy( harris.featuresOutput(), *leftKeypointsVector);
 	PRINT_TO_LOG("Number of features points from left image: ", GetNumberOfPoints(*leftKeypointsVector));
 
-	harris->frameInput(*undistortedRightImage);
+	harris.frameInput(*undistortedRightImage);
 	}
 
 void StereoReconstructionTestInterface::PrepareOrbLeft()
 	{
 	rightKeypointsVector = NewVisualPointFeatureVector2D();
-	Copy( harris->featuresOutput(), *rightKeypointsVector);
+	Copy( harris.featuresOutput(), *rightKeypointsVector);
 	PRINT_TO_LOG("Number of features points from left image: ", GetNumberOfPoints(*rightKeypointsVector));
 
-	orb->frameInput(*undistortedLeftImage);
-	orb->featuresInput(*leftKeypointsVector);
+	orb.frameInput(*undistortedLeftImage);
+	orb.featuresInput(*leftKeypointsVector);
 	}
 
 void StereoReconstructionTestInterface::PrepareOrbRight()
 	{
 	leftFeaturesVector = NewVisualPointFeatureVector2D();
-	Copy(orb->featuresOutput(), *leftFeaturesVector);
+	Copy(orb.featuresOutput(), *leftFeaturesVector);
 
-	orb->frameInput(*undistortedRightImage);
-	orb->featuresInput(*rightKeypointsVector);
+	orb.frameInput(*undistortedRightImage);
+	orb.featuresInput(*rightKeypointsVector);
 	}
 
 void StereoReconstructionTestInterface::PrepareFlann()
 	{
 	rightFeaturesVector = NewVisualPointFeatureVector2D();
-	Copy( orb->featuresOutput(), *rightFeaturesVector);
+	Copy( orb.featuresOutput(), *rightFeaturesVector);
 	VisualizeFeatures(leftFeaturesVector, rightFeaturesVector);
 
-	flann->sourceFeaturesInput(*leftFeaturesVector);
-	flann->sinkFeaturesInput(*rightFeaturesVector);
+	flann.sourceFeaturesInput(*leftFeaturesVector);
+	flann.sinkFeaturesInput(*rightFeaturesVector);
 	}
 
 void StereoReconstructionTestInterface::PrepareRansac()
 	{
 	correspondenceMap = NewCorrespondenceMap2D();
-	Copy( flann->matchesOutput(), *correspondenceMap);
+	Copy( flann.matchesOutput(), *correspondenceMap);
 	VisualizeCorrespondences(correspondenceMap);
 	PRINT_TO_LOG("Number of correspondences from flann matcher: ", GetNumberOfCorrespondences(*correspondenceMap));
 
-	ransac->matchesInput(*correspondenceMap);
+	ransac.matchesInput(*correspondenceMap);
 	}
 
 void StereoReconstructionTestInterface::PrepareEssential()
 	{
-	bool success = ransac->successOutput();
+	bool success = ransac.successOutput();
 	ASSERT(success, "Fundamental Matrix Ransac failed: unable to find a fundamental matrix");
 
 	fundamentalMatrix = NewMatrix3d();
-	Copy( ransac->fundamentalMatrixOutput(), *fundamentalMatrix);
+	Copy( ransac.fundamentalMatrixOutput(), *fundamentalMatrix);
 	PRINT_TO_LOG("Fundamental matrix Ransac found transform: ", "");
 	
-	essential->fundamentalMatrixInput(*fundamentalMatrix);
-	essential->matchesInput(*correspondenceMap);	
+	essential.fundamentalMatrixInput(*fundamentalMatrix);
+	essential.matchesInput(*correspondenceMap);	
 	}
 
 void StereoReconstructionTestInterface::PrepareTriangulation()
 	{
 	secondCameraPose = NewPose3D();
-	Copy( essential->transformOutput(), *secondCameraPose);
-	bool success = essential->successOutput();
+	Copy( essential.transformOutput(), *secondCameraPose);
+	bool success = essential.successOutput();
 	ASSERT(success, "Essential Matrix Decomposition failed: unable to find a valid transform");
 
 	std::stringstream transformStream;
@@ -554,268 +536,8 @@ void StereoReconstructionTestInterface::PrepareTriangulation()
 	std::string transformString = transformStream.str();
 	PRINT_TO_LOG("Computed Transform is:", transformString);
 
-	triangulation->poseInput(*secondCameraPose);
-	triangulation->matchesInput(*correspondenceMap);
-	}
-
-
-/*
-This is the output of the following method:
-	cv::Mat rotationTranslationMatrix(3, 4, CV_32FC1, cv::Scalar(0));
-	rotationTranslationMatrix.at<float>(0,0) = 0.453266151496562; 
-	rotationTranslationMatrix.at<float>(0,1) = -0.4189590134265467;
-	rotationTranslationMatrix.at<float>(0,2) = 0.7867802367727283;
- 	rotationTranslationMatrix.at<float>(1,0) = -0.03139148385142432;
-	rotationTranslationMatrix.at<float>(1,1) = 0.8746086689785711; 
-	rotationTranslationMatrix.at<float>(1,2) = 0.4838122062217302;
- 	rotationTranslationMatrix.at<float>(2,0) = -0.8908223002648179;
-	rotationTranslationMatrix.at<float>(2,1) = -0.2439938958584555;
-	rotationTranslationMatrix.at<float>(2,2) = 0.3832787603490593;
-	rotationTranslationMatrix.at<float>(0,3) = -2.042263939854534;
-	rotationTranslationMatrix.at<float>(1,3) = -1.342189200820332;
-	rotationTranslationMatrix.at<float>(2,3) = 0.7502406403804528;
-
-	cv::Mat leftCameraMatrixS(3, 3, CV_32FC1, cv::Scalar(0));
-	leftCameraMatrix.at<float>(0, 0) = 9245.469388977166;
-	leftCameraMatrix.at<float>(1, 1) = 20554.77101321935;
-	leftCameraMatrix.at<float>(0, 2) = -1010.674087871778;
-	leftCameraMatrix.at<float>(1, 2) = -2562.301106695449;
-	leftCameraMatrix.at<float>(2, 2) = 1.0;
-
-	cv::Mat rightCameraMatrixS(3, 3, CV_32FC1, cv::Scalar(0));
-	rightCameraMatrix.at<float>(0, 0) = 947.2017949977272;
-	rightCameraMatrix.at<float>(1, 1) = 1657.602441223055;
-	rightCameraMatrix.at<float>(0, 2) = 3026.416358478908;
-	rightCameraMatrix.at<float>(1, 2) = 257.3840612345921;
-	rightCameraMatrix.at<float>(2, 2) = 1.0;
-*/
-void StereoReconstructionTestInterface::ExtractCalibrationParameters()
-	{
-	static const unsigned ROW_NUMBER = 7;
-	static const unsigned COLUMN_NUMBER = 11;
-	static const float SQUARE_EDGE_LENGTH = 0.02;
-
- 	std::vector<std::vector<cv::Point2f> > leftCornersList(11);
- 	std::vector<std::vector<cv::Point2f> > rightCornersList(11);
-
-	cv::Size imageSize;
-	for(unsigned imageId=1; imageId<=11; imageId++)
-		{
-		std::stringstream filePath;
-		filePath<<"../../tests/Data/Images/chessboard"<<imageId<<".jpg";
-		cv::Mat stereoImage = cv::imread(filePath.str(), cv::IMREAD_COLOR);
-		cv::Mat leftImage = stereoImage( cv::Rect(0, 0, stereoImage.cols/2, stereoImage.rows) );
-		cv::Mat rightImage = stereoImage( cv::Rect(stereoImage.cols/2, 0, stereoImage.cols/2, stereoImage.rows) );
-		ASSERT(leftImage.rows == rightImage.rows && leftImage.cols == rightImage.cols, "Error, left and right image should have same size");
-		
-		if (imageId == 1)
-			{
-			imageSize = leftImage.size();
-			}
-		else
-			{
-			ASSERT(imageSize == leftImage.size(), "Images in the set do not have same size");
-			}
-
-		bool leftFlag = cv::findChessboardCorners(leftImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), leftCornersList[imageId-1]);
-		bool rightFlag = cv::findChessboardCorners(rightImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), rightCornersList[imageId-1]);
-		ASSERT(leftFlag && rightFlag, "Camera calibration failed");
-
-		//cv::Mat img = leftImage.clone();
-		//cv::drawChessboardCorners(img, cv::Size(7, 11), leftCornersList[imageId-1], leftFlag);
-		//cv::imshow("img", img);
-		//cv::waitKey(0);
-		}
-
-	std::vector< std::vector<cv::Point3f> > objectPoints(11);
-	for(unsigned column=0; column<COLUMN_NUMBER; column++) 
-		{
-		for(unsigned row=0; row<ROW_NUMBER; row++)
-			{
-			for(unsigned imageId = 1; imageId<=11; imageId++)
-				{
-				cv::Point3f point((float)column*SQUARE_EDGE_LENGTH, (float)row*SQUARE_EDGE_LENGTH, 0);
-				objectPoints[imageId-1].push_back( point );
-				}
-			}
-		}
-
-	cv::Mat leftCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
-	cv::Mat rightCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
-
-	cv::Mat leftDistortionCoefficients, rightDistortionCoefficients;
-	cv::Mat rotationMatrix, translationMatrix, essentialMatrix, fundamentalMatrix;
-
-	cv::stereoCalibrate
-		(
-		objectPoints,
-		leftCornersList,
-		rightCornersList,
-		leftCameraMatrix,
-		leftDistortionCoefficients,
-		rightCameraMatrix,
-		rightDistortionCoefficients,
-		imageSize,
-		rotationMatrix,
-		translationMatrix,
-		essentialMatrix,
-		fundamentalMatrix,
-		CV_CALIB_RATIONAL_MODEL,
-		cv::TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, 1e-5)
-		);
-	PRINT_TO_LOG("Calibration complete", "");
-
-	PRINT_TO_LOG("Left calibration: ", leftCameraMatrix);
-	PRINT_TO_LOG("Right calibration: ", rightCameraMatrix);
-	PRINT_TO_LOG("Left distortion: ", leftDistortionCoefficients);
-	PRINT_TO_LOG("Right distortion: ", rightDistortionCoefficients);
-	PRINT_TO_LOG("Translation: ", translationMatrix);
-	PRINT_TO_LOG("Rotation: ", rotationMatrix);
-
-	cv::Mat rototranslationMatrix(3, 4, CV_64FC1, cv::Scalar(0));
-	rototranslationMatrix.at<double>(0,0) = rotationMatrix.at<double>(0,0);
-	rototranslationMatrix.at<double>(0,1) = rotationMatrix.at<double>(0,1);
-	rototranslationMatrix.at<double>(0,2) = rotationMatrix.at<double>(0,2);
-	rototranslationMatrix.at<double>(1,0) = rotationMatrix.at<double>(1,0);
-	rototranslationMatrix.at<double>(1,1) = rotationMatrix.at<double>(1,1);
-	rototranslationMatrix.at<double>(1,2) = rotationMatrix.at<double>(1,2);
-	rototranslationMatrix.at<double>(2,0) = rotationMatrix.at<double>(2,0);
-	rototranslationMatrix.at<double>(2,1) = rotationMatrix.at<double>(1,1);
-	rototranslationMatrix.at<double>(2,2) = rotationMatrix.at<double>(2,1);
-	rototranslationMatrix.at<double>(0,3) = translationMatrix.at<double>(0);
-	rototranslationMatrix.at<double>(1,3) = translationMatrix.at<double>(1);
-	rototranslationMatrix.at<double>(2,3) = translationMatrix.at<double>(2);
-
-	cv::Mat leftProjectionMatrix = leftCameraMatrix*rototranslationMatrix;
-	cv::Mat rightProjectionMatrix = rightCameraMatrix*rototranslationMatrix;
-	PRINT_TO_LOG("Left Projection Matrix", leftProjectionMatrix);
-	PRINT_TO_LOG("Right Projection Matrix", rightProjectionMatrix);	
-
-	cv::Mat leftRectificationMatrix, rightRectificationMatrix, leftRectifiedProjectionMatrix, rightRectifiedProjectionMatrix, disparityToDepthMatrix;
-	cv::stereoRectify
-		(
-		leftCameraMatrix,
-		leftDistortionCoefficients,
-		rightCameraMatrix,
-		rightDistortionCoefficients,
-		imageSize,
-		rotationMatrix,
-		translationMatrix,
-		leftRectificationMatrix,
-		rightRectificationMatrix,
-		leftRectifiedProjectionMatrix,
-		rightRectifiedProjectionMatrix,
-		disparityToDepthMatrix
-		);
-
-	PRINT_TO_LOG("Rectified Left Projection Matrix", leftRectifiedProjectionMatrix);
-	PRINT_TO_LOG("Rectified Right Projection Matrix", rightRectifiedProjectionMatrix);	
-	}
-
-
-/* This is the output of the following method:
-	cv::Mat leftCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
-	leftCameraMatrix.at<float>(0, 0) = 1408.899186439272;
-	leftCameraMatrix.at<float>(1, 1) = 1403.116708010621;
-	leftCameraMatrix.at<float>(0, 2) = 1053.351342078365;
-	leftCameraMatrix.at<float>(1, 2) = 588.8342842821718;
-	leftCameraMatrix.at<float>(2, 2) = 1.0;
-
-	cv::Mat rightCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
-	rightCameraMatrix.at<float>(0, 0) = 1415.631284126374;
-	rightCameraMatrix.at<float>(1, 1) = 1408.026118461406;
-	rightCameraMatrix.at<float>(0, 2) = 1013.347852589407;
-	rightCameraMatrix.at<float>(1, 2) = 592.5031927882591;
-	rightCameraMatrix.at<float>(2, 2) = 1.0;
-
-Left distortion:  [0.8010323519594021, 104.7894482598434, -6.223427196342877e-05, -0.002209798328517273, -70.73535010082334, 0.8556124926892613, 105.9684960970509, -60.88515255428263, 0, 0, 0, 0, 0, 0]
-Right distortion:  [-5.700997352957169, 9.016454056014156, 0.001056515495810514, 0.002542555946247054, -2.465929585147688, -5.560701053165053, 8.264481221246962, -1.458304668407831, 0, 0, 0, 0, 0, 0]
-
-*/
-void StereoReconstructionTestInterface::ExtractCalibrationParametersOneCamera()
-	{
-	static const unsigned ROW_NUMBER = 7;
-	static const unsigned COLUMN_NUMBER = 11;
-	static const float SQUARE_EDGE_LENGTH = 0.02;
-
- 	std::vector<std::vector<cv::Point2f> > leftCornersList(11);
- 	std::vector<std::vector<cv::Point2f> > rightCornersList(11);
-
-	cv::Size imageSize;
-	for(unsigned imageId=1; imageId<=11; imageId++)
-		{
-		std::stringstream filePath;
-		filePath<<"../../tests/Data/Images/chessboard"<<imageId<<".jpg";
-		cv::Mat stereoImage = cv::imread(filePath.str(), cv::IMREAD_COLOR);
-		cv::Mat leftImage = stereoImage( cv::Rect(0, 0, stereoImage.cols/2, stereoImage.rows) );
-		cv::Mat rightImage = stereoImage( cv::Rect(stereoImage.cols/2, 0, stereoImage.cols/2, stereoImage.rows) );
-		ASSERT(leftImage.rows == rightImage.rows && leftImage.cols == rightImage.cols, "Error, left and right image should have same size");
-		
-		if (imageId == 1)
-			{
-			imageSize = leftImage.size();
-			}
-		else
-			{
-			ASSERT(imageSize == leftImage.size(), "Images in the set do not have same size");
-			}
-
-		bool leftFlag = cv::findChessboardCorners(leftImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), leftCornersList[imageId-1]);
-		bool rightFlag = cv::findChessboardCorners(rightImage, cv::Size(ROW_NUMBER, COLUMN_NUMBER), rightCornersList[imageId-1]);
-		ASSERT(leftFlag && rightFlag, "Camera calibration failed");
-		}
-
-	std::vector< std::vector<cv::Point3f> > objectPoints(11);
-	for(unsigned column=0; column<COLUMN_NUMBER; column++) 
-		{
-		for(unsigned row=0; row<ROW_NUMBER; row++)
-			{
-			for(unsigned imageId = 1; imageId<=11; imageId++)
-				{
-				cv::Point3f point((float)column*SQUARE_EDGE_LENGTH, (float)row*SQUARE_EDGE_LENGTH, 0);
-				objectPoints[imageId-1].push_back( point );
-				}
-			}
-		}
-
-	cv::Mat leftCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
-	cv::Mat rightCameraMatrix = cv::Mat::eye(3, 3, CV_64FC1);
-
-	cv::Mat leftDistortionCoefficients, rightDistortionCoefficients;
-	cv::Mat leftRotationMatrix, leftTranslationMatrix, rightRotationMatrix, rightTranslationMatrix;
-
-	cv::calibrateCamera
-		(
-		objectPoints,
-		leftCornersList,
-		imageSize,
-		leftCameraMatrix,
-		leftDistortionCoefficients,
-		leftRotationMatrix,
-		leftTranslationMatrix,
-		CV_CALIB_RATIONAL_MODEL,
-		cv::TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, 1e-5)
-		);
-	cv::calibrateCamera
-		(
-		objectPoints,
-		rightCornersList,
-		imageSize,
-		rightCameraMatrix,
-		rightDistortionCoefficients,
-		rightRotationMatrix,
-		rightTranslationMatrix,
-		CV_CALIB_RATIONAL_MODEL,
-		cv::TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, 1e-5)
-		);
-	PRINT_TO_LOG("Calibration complete", "");
-
-	PRINT_TO_LOG("Left calibration: ", leftCameraMatrix);
-	PRINT_TO_LOG("Right calibration: ", rightCameraMatrix);
-	PRINT_TO_LOG("Left distortion: ", leftDistortionCoefficients);
-	PRINT_TO_LOG("Right distortion: ", rightDistortionCoefficients);
-	PRINT_TO_LOG("Translation: ", leftTranslationMatrix);
-	PRINT_TO_LOG("Rotation: ", leftRotationMatrix);
+	triangulation.poseInput(*secondCameraPose);
+	triangulation.matchesInput(*correspondenceMap);
 	}
 
 void StereoReconstructionTestInterface::VisualizeCorrespondences(CorrespondenceMap2DConstPtr correspondenceMap)
@@ -883,8 +605,9 @@ void StereoReconstructionTestInterface::VisualizeFeatures(VisualPointFeatureVect
 
 int main(int argc, char** argv)
 	{
-	StereoReconstructionTestInterface interface("Stereo Reconstruction", 100, 40);
-	interface.Run();
+	StereoReconstructionTestInterface* interface = new StereoReconstructionTestInterface("Stereo Reconstruction", 100, 40);
+	interface->Run();
+	delete(interface);
 	};
 
 /** @} */

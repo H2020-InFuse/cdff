@@ -41,7 +41,7 @@ using namespace CDFF::DFN;
  *
  * --------------------------------------------------------------------------
  */
-DFNTestInterface::DFNTestInterface(std::string dfnName, int buttonWidth, int buttonHeight) 
+DFNTestInterface::DFNTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) 
 	: mainInterface(dfnName + ": Control Panel", buttonWidth, buttonHeight)
 	, parametersInterface(dfnName)
 	{

@@ -64,7 +64,7 @@ class PerformanceTestBase
 		* @param performanceMeasuresFileName, the name of the output file;
 		*
 		*/
-		PerformanceTestBase(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName);
+		PerformanceTestBase(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, const std::string& performanceMeasuresFileName);
 
 		/*
 		* @brief The destructor does nothing.
@@ -98,7 +98,7 @@ class PerformanceTestBase
 		*	(VARIABLE_PARAMETERS_FIXED_INPUTS), or whether the mesaures with the same parameters are aggregated (FIXED_PARAMETERS_VARIABLE_INPUTS);
 		*
 		*/
-		void AddAggregator(std::string measure, Aggregator* aggregator, AggregationType aggregatorType);		
+		void AddAggregator(const std::string& measure, Aggregator* aggregator, AggregationType aggregatorType);		
 
 	/* --------------------------------------------------------------------
 	 * Protected

@@ -10,7 +10,9 @@ namespace CDFF
 namespace DFN
 {
 
-VoxelizationInterface::VoxelizationInterface()
+VoxelizationInterface::VoxelizationInterface() :
+inDepth(),
+outOctree()
 {
 }
 

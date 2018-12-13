@@ -29,9 +29,9 @@ namespace ReconstructionAndIdentification
 	public:
 		RegistrationAndMatching();
 		~RegistrationAndMatching();
-		void run();
-		void setup();
-		void modelInput(const asn1SccPointcloud& data);
+		void run() override;
+		void setup() override;
+		void modelInput(const asn1SccPointcloud& data) override;
 
 	private:
 		bool modelFeaturesAvailable;

@@ -31,6 +31,8 @@ namespace PointCloudAssembly
 
 MatcherAssembly::MatcherAssembly()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "MaximumSamplingDensity", parameters.maximumSamplingDensity, DEFAULT_PARAMETERS.maximumSamplingDensity);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseIncrementalMode", parameters.useIncrementalMode, DEFAULT_PARAMETERS.useIncrementalMode);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDistanceFilter", parameters.useDistanceFilter, DEFAULT_PARAMETERS.useDistanceFilter);

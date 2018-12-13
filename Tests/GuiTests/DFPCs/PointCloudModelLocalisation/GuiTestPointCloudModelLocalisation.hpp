@@ -59,7 +59,7 @@ class GuiTestPointCloudModelLocalisation
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		GuiTestPointCloudModelLocalisation(std::string configurationFilePath, std::string sceneFilePath, std::string modelFilePath);
+		GuiTestPointCloudModelLocalisation(const std::string& configurationFilePath, const std::string& sceneFilePath, const std::string& modelFilePath);
 		~GuiTestPointCloudModelLocalisation();
 
 		void Run(CDFF::DFPC::PointCloudModelLocalisationInterface* detector3d);

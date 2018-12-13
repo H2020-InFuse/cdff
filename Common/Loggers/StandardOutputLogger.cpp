@@ -48,7 +48,7 @@ StandardOutputLogger::~StandardOutputLogger()
 void StandardOutputLogger::Print()
 	{
 	static const std::string RESET_COLOR_CODE = "\033[0m";
-	for(std::vector<std::string>::iterator logEntry = logEntriesVector.begin(); logEntry != logEntriesVector.end(); logEntry++)
+	for(std::vector<std::string>::iterator logEntry = logEntriesVector.begin(); logEntry != logEntriesVector.end(); ++logEntry)
 		{
 		int logEntryIndex = logEntry - logEntriesVector.begin();
 		std::string colorCode = MessageTypeToColorCode( logEntriesTypeVector.at(logEntryIndex) );

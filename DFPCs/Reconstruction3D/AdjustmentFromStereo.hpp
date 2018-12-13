@@ -92,8 +92,8 @@ namespace Reconstruction3D
         public:
 		AdjustmentFromStereo();
 		~AdjustmentFromStereo();
-		void run();
-		void setup();
+		void run() override;
+		void setup() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -142,10 +142,6 @@ namespace Reconstruction3D
 		CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;
 		CDFF::DFN::PerspectiveNPointSolvingInterface* perspectiveNPointSolver;
 		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
-
-		#ifdef TESTING
-		std::ofstream logFile;
-		#endif
 
 		//Helpers
 		BundleHistory* bundleHistory;

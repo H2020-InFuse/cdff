@@ -10,7 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-PrimitiveMatchingInterface::PrimitiveMatchingInterface()
+PrimitiveMatchingInterface::PrimitiveMatchingInterface() :
+inImage(),
+inPrimitives(),
+outImage(),
+outPrimitives()
 {
 }
 

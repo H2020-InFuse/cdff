@@ -79,8 +79,8 @@ namespace Reconstruction3D
         public:
 		SparseRegistrationFromStereo();
 		~SparseRegistrationFromStereo();
-		void run();
-		void setup();
+		void run() override;
+		void setup() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -117,11 +117,6 @@ namespace Reconstruction3D
 		CDFF::DFN::PointCloudAssemblyInterface* cloudAssembler;
 		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
 		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
-
-		#ifdef TESTING
-		std::ofstream logFile;
-		void WriteOutputToLogFile();
-		#endif
 
 		//Helpers
 		BundleHistory* bundleHistory;

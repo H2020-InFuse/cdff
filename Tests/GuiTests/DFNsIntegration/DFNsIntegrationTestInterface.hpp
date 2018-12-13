@@ -50,7 +50,7 @@ class DFNsIntegrationTestInterface
 	 */
 	public:
 		DFNsIntegrationTestInterface(int buttonWidth, int buttonHeight);
-		~DFNsIntegrationTestInterface();
+		virtual ~DFNsIntegrationTestInterface();
 
 		void Run();
 		void AddDFN(CDFF::DFN::DFNCommonInterface* dfn, std::string dfnName);

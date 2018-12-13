@@ -51,8 +51,8 @@ namespace Transform3DEstimation
 			CeresEstimation();
 			virtual ~CeresEstimation();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 

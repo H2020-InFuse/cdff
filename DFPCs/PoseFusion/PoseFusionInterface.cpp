@@ -10,7 +10,11 @@ namespace CDFF
 namespace DFPC
 {
 
-PoseFusionInterface::PoseFusionInterface()
+PoseFusionInterface::PoseFusionInterface() :
+inWheelOdometry(),
+inVisualOdometry(),
+outEstimatedCurrentPose(),
+outEstimatedPastPoses()
 {
 }
 

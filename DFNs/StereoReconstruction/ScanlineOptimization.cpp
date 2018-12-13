@@ -30,6 +30,8 @@ namespace StereoReconstruction
 
 ScanlineOptimization::ScanlineOptimization()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<int>("GeneralParameters", "CostAggregationRadius", parameters.costAggregationRadius, DEFAULT_PARAMETERS.costAggregationRadius);
 	parametersHelper.AddParameter<int>("GeneralParameters", "SpatialBandwidth", parameters.spatialBandwidth, DEFAULT_PARAMETERS.spatialBandwidth);
 	parametersHelper.AddParameter<int>("GeneralParameters", "ColorBandwidth", parameters.colorBandwidth, DEFAULT_PARAMETERS.colorBandwidth);

@@ -48,7 +48,7 @@ class VisualPointFeatureVector3DToPclPointCloudConverter : public Mock, public C
 	 */
 	public:
 		virtual ~VisualPointFeatureVector3DToPclPointCloudConverter();
-		const Converters::SupportTypes::PointCloudWithFeatures Convert(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& featureVector);
+		const Converters::SupportTypes::PointCloudWithFeatures Convert(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& featureVector) override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

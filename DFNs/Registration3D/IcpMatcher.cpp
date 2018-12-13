@@ -37,6 +37,8 @@ IcpMatcher::IcpMatcher()
 	#define ADD_PARAMETER_WITH_HELPER(type, helperType, groupName, parameterName, parameterVariable) \
 		parametersHelper.AddParameter<type, helperType>(groupName, parameterName, parameters.parameterVariable, DEFAULT_PARAMETERS.parameterVariable);
 
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDefault", parameters.useDefault, DEFAULT_PARAMETERS.useDefault);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "FixRotationByNormalization", parameters.fixRotationByNormalization, DEFAULT_PARAMETERS.fixRotationByNormalization);
 

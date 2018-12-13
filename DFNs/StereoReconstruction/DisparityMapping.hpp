@@ -92,8 +92,8 @@ namespace StereoReconstruction
 			DisparityMapping();
 			virtual ~DisparityMapping();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 
@@ -109,7 +109,7 @@ namespace StereoReconstruction
 				public:
 					PrefilterTypeHelper(const std::string& parameterName, PrefilterType& boundVariable, const PrefilterType& defaultValue);
 				private:
-					PrefilterType Convert(const std::string& value);
+					PrefilterType Convert(const std::string& value) override;
 			};
 
 			struct ReconstructionSpace

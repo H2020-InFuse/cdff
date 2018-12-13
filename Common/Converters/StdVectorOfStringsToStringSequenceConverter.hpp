@@ -35,7 +35,7 @@ namespace Converters
     class StdVectorOfStringsToStringSequenceConverter
 	{
         public:
-            virtual const asn1SccStringSequence Convert(const std::vector<std::string> stringVector);
+            virtual const asn1SccStringSequence Convert(const std::vector<std::string>& stringVector);
 	};
 }
 

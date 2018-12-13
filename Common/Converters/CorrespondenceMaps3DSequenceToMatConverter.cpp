@@ -112,7 +112,7 @@ std::vector<CorrespondenceMaps3DSequenceToMatConverter::CloudPoint> Corresponden
 		int separationMapIndex; //before this index, all the maps treat pointToExplore.cloud as sink, after that index they treat pointToExplore.cloud as source.
 		std::vector<int> mapsToExplore = ComputeMapsToExplore(numberOfClouds, pointToExplore.cloud, separationMapIndex);
 
-		for(std::vector<int>::iterator mapIndex = mapsToExplore.begin(); mapIndex != mapsToExplore.end(); mapIndex++)
+		for(std::vector<int>::iterator mapIndex = mapsToExplore.begin(); mapIndex != mapsToExplore.end(); ++mapIndex)
 			{
 			const CorrespondenceMap3D& correspondenceMap = GetCorrespondenceMap(correspondenceMapsSequence, *mapIndex);
 			for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(correspondenceMap); correspondenceIndex++)
@@ -146,7 +146,7 @@ std::vector<CorrespondenceMaps3DSequenceToMatConverter::CloudPoint> Corresponden
 	return chain;
 	}
 
-void CorrespondenceMaps3DSequenceToMatConverter::AddChainToMeasurementMatrix(const std::vector<CloudPoint> chain, cv::Mat& measurementMatrix)
+void CorrespondenceMaps3DSequenceToMatConverter::AddChainToMeasurementMatrix(const std::vector<CloudPoint>& chain, cv::Mat& measurementMatrix)
 	{
 	cv::Mat chainMatrix(2*chain.size(), 1, CV_32FC1);
 	for(int cloudIndex = 0; cloudIndex < chain.size(); cloudIndex++)

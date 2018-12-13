@@ -67,10 +67,11 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 			CDFF::DFN::FeaturesMatching3DInterface* matcher;
 			};
 
-		DetectionDescriptionMatching3DTestInterface(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName, DFNsSet dfnsSet);
+		DetectionDescriptionMatching3DTestInterface(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, 
+			const std::string& performanceMeasuresFileName, DFNsSet dfnsSet);
 		~DetectionDescriptionMatching3DTestInterface();
 
-		void SetInputCloud(std::string inputCloudFile, float voxelGridFilterSize);
+		void SetInputCloud(const std::string& inputCloudFile, float voxelGridFilterSize);
 		void SetModelsCloud(std::string groundTruthTransformFilePath, std::vector<std::string> modelsCloudFilesList);
 		void SetGroundTruth(float positionX, float positionY, float positionZ, float orientationX, float orientationY, float orientationZ, float orientationW);
 	protected:
@@ -94,16 +95,16 @@ class DetectionDescriptionMatching3DTestInterface : public PerformanceTestInterf
 		CDFF::DFN::FeaturesDescription3DInterface* descriptor;
 		CDFF::DFN::FeaturesMatching3DInterface* matcher;
 
-		Aggregator* groundPositionDistanceAggregator;
-		Aggregator* groundOrientationDistanceAggregator;
+		Aggregator groundPositionDistanceAggregator;
+		Aggregator groundOrientationDistanceAggregator;
 
 		void LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string cloudFile);
 		void LoadSceneCloud();
 		void LoadModelCloud(int long inputId);
 
-		bool SetNextInputs();
-		void ExecuteDfns();
-		MeasuresMap ExtractMeasures();
+		bool SetNextInputs() override;
+		void ExecuteDfns() override;
+		MeasuresMap ExtractMeasures() override;
 
 		int long inputId;
 		std::string inputCloudFile;

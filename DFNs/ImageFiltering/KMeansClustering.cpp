@@ -27,6 +27,8 @@ namespace CDFF {
             const KMeansClustering::Parameters KMeansClustering::DefaultParameters = {};
 
             KMeansClustering::KMeansClustering() {
+		_parameters = DefaultParameters;
+
                 _parametersHelper.AddParameter("KMeansClustering", "num_centers",
                                                _parameters.num_centers, DefaultParameters.num_centers);
                 _parametersHelper.AddParameter<double>("KMeansClustering", "tolerance", _parameters.tolerance,
@@ -169,7 +171,6 @@ namespace CDFF {
             std::vector<float> KMeansClustering::PickCentroids(
                     const cv::Mat &srcImage, size_t num_points
             ) const {
-                std::random_device rd;
                 std::default_random_engine random_engine;
                 std::uniform_int_distribution<int> centroid_picker(0, static_cast<int>(srcImage.total()));
 

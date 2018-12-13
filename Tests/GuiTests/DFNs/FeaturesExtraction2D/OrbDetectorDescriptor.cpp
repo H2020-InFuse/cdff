@@ -46,7 +46,7 @@ using namespace FrameWrapper;
 class OrbDetectorDescriptorTestInterface : public DFNTestInterface
 	{
 	public:
-		OrbDetectorDescriptorTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath = DEFAULT_IMAGE_FILE_PATH);
+		OrbDetectorDescriptorTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath = DEFAULT_IMAGE_FILE_PATH);
 		~OrbDetectorDescriptorTestInterface();
 	protected:
 
@@ -54,15 +54,15 @@ class OrbDetectorDescriptorTestInterface : public DFNTestInterface
 		static const std::string DEFAULT_IMAGE_FILE_PATH;
 		static const int ORB_DESCRIPTOR_SIZE;
 
-		OrbDetectorDescriptor* orb;
+		OrbDetectorDescriptor orb;
 
 		bool saveFeaturesToFile;
 		cv::Mat cvImage;
 		FrameConstPtr inputImage;
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 
 		void GetComponentRange(const VisualPointFeatureVector2D& featuresVector, int componentIndex, float& min, float& max);
 	};
@@ -70,11 +70,12 @@ class OrbDetectorDescriptorTestInterface : public DFNTestInterface
 const std::string OrbDetectorDescriptorTestInterface::DEFAULT_IMAGE_FILE_PATH = "../../tests/Data/Images/DevonIslandLeft.ppm";
 const int OrbDetectorDescriptorTestInterface::ORB_DESCRIPTOR_SIZE = 32;
 
-OrbDetectorDescriptorTestInterface::OrbDetectorDescriptorTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
+OrbDetectorDescriptorTestInterface::OrbDetectorDescriptorTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight), 
+	inputImage(),
+	orb()
 	{
-	orb = new OrbDetectorDescriptor();
-	SetDFN(orb);
+	SetDFN(&orb);
 	saveFeaturesToFile = true;
 
 	MatToFrameConverter converter;
@@ -88,13 +89,12 @@ OrbDetectorDescriptorTestInterface::OrbDetectorDescriptorTestInterface(std::stri
 		cvImage = cv::imread(imageFilePath, cv::IMREAD_COLOR);
 		}
 	inputImage = converter.Convert(cvImage);
-	orb->frameInput(*inputImage);
+	orb.frameInput(*inputImage);
 	outputWindowName = "Orb Detector Descriptor Result";
 	}
 
 OrbDetectorDescriptorTestInterface::~OrbDetectorDescriptorTestInterface()
 	{
-	delete(orb);
 	delete(inputImage);
 	}
 
@@ -117,7 +117,7 @@ void OrbDetectorDescriptorTestInterface::DisplayResult()
 	const int featureIndexForGreenColor = 4;
 	const int featureIndexForBlueColor = 5;
 
-	const VisualPointFeatureVector2D& featuresVector = orb->featuresOutput();
+	const VisualPointFeatureVector2D& featuresVector = orb.featuresOutput();
 	PRINT_TO_LOG("Number of features", GetNumberOfPoints(featuresVector) );
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
 	cv::Mat outputImage = cvImage.clone();

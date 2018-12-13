@@ -92,8 +92,8 @@ namespace Reconstruction3D
         public:
 		EstimationFromStereo();
 		~EstimationFromStereo();
-		void run();
-		void setup();
+		void run() override;
+		void setup() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -129,10 +129,6 @@ namespace Reconstruction3D
 		const std::string RIGHT_FEATURE_CATEGORY;
 		const std::string STEREO_CLOUD_CATEGORY;
 		const std::string TRIANGULATION_CLOUD_CATEGORY;
-
-		#ifdef TESTING
-		std::ofstream logFile;
-		#endif
 
 		//DFN Interfaces
 		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;

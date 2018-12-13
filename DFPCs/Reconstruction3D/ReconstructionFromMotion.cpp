@@ -70,6 +70,7 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
 		{
 		this->map = map;
 		}
+	parameters = DEFAULT_PARAMETERS;
 
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "PositionX", parameters.rightToLeftCameraPose.positionX, DEFAULT_PARAMETERS.rightToLeftCameraPose.positionX);
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "PositionY", parameters.rightToLeftCameraPose.positionY, DEFAULT_PARAMETERS.rightToLeftCameraPose.positionY);
@@ -85,6 +86,7 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
 
 	currentLeftImage = NewFrame();
 	currentRightImage = NewFrame();
+	pastLeftImage = NULL;
 	filteredCurrentLeftImage = NULL;
 	filteredPastLeftImage = NewFrame();
 	filteredCurrentRightImage = NULL;

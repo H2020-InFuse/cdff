@@ -23,6 +23,8 @@ namespace KFCorrection
 
 KalmanCorrector::KalmanCorrector() : KF(12, 6, 0)
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>(
 		"KalmanParameters", "MeasurementNoiseStandardDeviationOrientation",
 		parameters.kalmanParameters.stdOrientation, DEFAULT_PARAMETERS.kalmanParameters.stdOrientation);

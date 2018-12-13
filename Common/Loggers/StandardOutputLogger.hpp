@@ -50,7 +50,7 @@ class StandardOutputLogger : public Logger
 		StandardOutputLogger();
 		~StandardOutputLogger();
 
-		void Print();
+		void Print() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

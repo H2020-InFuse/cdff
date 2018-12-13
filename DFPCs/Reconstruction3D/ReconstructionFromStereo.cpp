@@ -69,6 +69,8 @@ ReconstructionFromStereo::ReconstructionFromStereo() :
 	STEREO_CLOUD_CATEGORY( "stereo_cloud" ),
 	TRIANGULATION_CLOUD_CATEGORY( "triangulation_cloud" )
 	{
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<float>("GeneralParameters", "Baseline", parameters.baseline, DEFAULT_PARAMETERS.baseline);
@@ -92,10 +94,6 @@ ReconstructionFromStereo::ReconstructionFromStereo() :
 
 	configurationFilePath = "";
 	firstInput = true;
-	#ifdef TESTING
-	logFile.open("/InFuse/myLog.txt");
-	logFile.close();
-	#endif
 	}
 
 ReconstructionFromStereo::~ReconstructionFromStereo()
@@ -112,9 +110,6 @@ ReconstructionFromStereo::~ReconstructionFromStereo()
 
 void ReconstructionFromStereo::run() 
 	{
-	#ifdef TESTING
-	logFile.open("/InFuse/myLog.txt", std::ios::app);
-	#endif
 	DEBUG_PRINT_TO_LOG("Structure from stereo start", "");
 
 	bundleHistory->AddImages(inLeftImage, inRightImage);
@@ -158,11 +153,6 @@ void ReconstructionFromStereo::run()
 		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 		DeleteIfNotNull(outputPointCloud);
 		}
-
-	#ifdef TESTING
-	logFile << std::endl;
-	logFile.close();
-	#endif
 	}
 
 void ReconstructionFromStereo::setup()
@@ -226,10 +216,6 @@ void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftI
 	bundleHistory->AddFeatures(*featureVector, LEFT_FEATURE_CATEGORY);
 	PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
-	#ifdef TESTING
-	logFile << GetNumberOfPoints(*keypointVector) << " " << GetNumberOfPoints(*featureVector) << " ";
-	#endif
-
 	keypointVector = NULL;
 	featureVector = NULL;
 	Executors::Execute(featuresExtractor, filteredRightImage, keypointVector);
@@ -237,19 +223,11 @@ void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftI
 	bundleHistory->AddFeatures(*featureVector, RIGHT_FEATURE_CATEGORY);
 	DEBUG_PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
-	#ifdef TESTING
-	logFile << GetNumberOfPoints(*keypointVector) << " " << GetNumberOfPoints(*featureVector) << " ";
-	#endif
-
 	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
 	VisualPointFeatureVector2DConstPtr rightFeatureVector = bundleHistory->GetFeatures(0, RIGHT_FEATURE_CATEGORY);
 	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = NULL;
 	Executors::Execute(featuresMatcher, leftFeatureVector, rightFeatureVector,leftRightCorrespondenceMap);
 	DEBUG_PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
-
-	#ifdef TESTING
-	logFile << GetNumberOfCorrespondences(*leftRightCorrespondenceMap) << " ";
-	#endif
 
 	MatrixWrapper::Matrix3dConstPtr fundamentalMatrix = NULL;
 	bool success = false;
@@ -267,14 +245,10 @@ void ReconstructionFromStereo::ComputeCurrentMatches(FrameConstPtr filteredLeftI
 		Executors::Execute(reconstructor3dfrom2dmatches, leftRightCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
 		CleanUnmatchedFeatures(leftRightCorrespondenceMap, triangulatedKeypointCloud);
 		}
-	//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
 	DEBUG_PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
 	DEBUG_PRINT_TO_LOG("Clean Matches Number", GetNumberOfCorrespondences(*cleanCorrespondenceMap) );
 	bundleHistory->AddPointCloud(*triangulatedKeypointCloud, TRIANGULATION_CLOUD_CATEGORY);
 	bundleHistory->AddMatches(*cleanCorrespondenceMap);
-	#ifdef TESTING
-	logFile << GetNumberOfPoints(*triangulatedKeypointCloud) << " " << GetNumberOfCorrespondences(*cleanCorrespondenceMap) << " ";
-	#endif
 	}
 
 bool ReconstructionFromStereo::ComputeCameraMovement(Pose3DConstPtr& previousPoseToPose)
@@ -284,10 +258,6 @@ bool ReconstructionFromStereo::ComputeCameraMovement(Pose3DConstPtr& previousPos
 	CorrespondenceMap2DConstPtr pastLeftCorrespondenceMap = NULL;
 	Executors::Execute(featuresMatcher, leftFeatureVector, pastLeftFeatureVector, pastLeftCorrespondenceMap);
 	DEBUG_PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*pastLeftCorrespondenceMap) );
-
-	#ifdef TESTING
-	logFile << GetNumberOfCorrespondences(*pastLeftCorrespondenceMap) << " ";
-	#endif
 
 	MatrixWrapper::Matrix3dConstPtr pastLeftFundamentalMatrix = NULL;
 	bool pastSuccess = false;
@@ -306,7 +276,6 @@ bool ReconstructionFromStereo::ComputeCameraMovement(Pose3DConstPtr& previousPos
 	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 		{
 		BaseTypesWrapper::Point2D currentSource = GetSource(*currentCorrespondenceMap, pointIndex);
-		BaseTypesWrapper::Point2D currentSink = GetSink(*currentCorrespondenceMap, pointIndex);
 		for(int correspondenceIndex = 0; correspondenceIndex < numberOfPastCorrespondences; correspondenceIndex++)
 			{
 			BaseTypesWrapper::Point2D currentMatchedSource = GetSource(*pastCorrespondenceMap, correspondenceIndex);

@@ -46,8 +46,8 @@ namespace PointCloudAssembly
 			NeighbourPointAverage();
 			virtual ~NeighbourPointAverage();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 			struct NeighbourPointAverageOptionsSet

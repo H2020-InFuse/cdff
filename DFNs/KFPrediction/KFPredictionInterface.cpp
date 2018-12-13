@@ -10,7 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-KFPredictionInterface::KFPredictionInterface()
+KFPredictionInterface::KFPredictionInterface() :
+inPreviousState(),
+inCurrentTime(),
+outPredictedState(),
+outPredictedStateCovariance()
 {
 }
 

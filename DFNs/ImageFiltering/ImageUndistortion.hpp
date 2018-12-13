@@ -43,8 +43,8 @@ namespace ImageFiltering
 			ImageUndistortion();
 			virtual ~ImageUndistortion();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 	private:
 

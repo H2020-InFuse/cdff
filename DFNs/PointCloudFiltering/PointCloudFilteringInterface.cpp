@@ -10,7 +10,9 @@ namespace CDFF
 namespace DFN
 {
 
-PointCloudFilteringInterface::PointCloudFilteringInterface()
+PointCloudFilteringInterface::PointCloudFilteringInterface() :
+inPointCloud(),
+outFilteredPointCloud()
 {
 }
 

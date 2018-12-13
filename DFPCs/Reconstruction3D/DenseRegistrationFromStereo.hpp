@@ -88,8 +88,8 @@ namespace Reconstruction3D
         public:
 		DenseRegistrationFromStereo();
 		~DenseRegistrationFromStereo();
-		void run();
-		void setup();
+		void run() override;
+		void setup() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -119,7 +119,7 @@ namespace Reconstruction3D
 			public:
 				CloudUpdateTypeHelper(const std::string& parameterName, CloudUpdateType& boundVariable, const CloudUpdateType& defaultValue);
 			private:
-				CloudUpdateType Convert(const std::string& value);
+				CloudUpdateType Convert(const std::string& value) override;
 			};
 
 		struct RegistrationFromStereoOptionsSet
@@ -153,11 +153,6 @@ namespace Reconstruction3D
 		CDFF::DFN::PointCloudAssemblyInterface* cloudAssembler;
 		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
 		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
-
-		#ifdef TESTING
-		std::ofstream logFile;
-		void WriteOutputToLogFile();
-		#endif
 
 		//Helpers
 		BundleHistory* bundleHistory;

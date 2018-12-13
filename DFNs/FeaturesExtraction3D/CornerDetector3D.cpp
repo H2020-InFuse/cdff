@@ -35,6 +35,8 @@ namespace FeaturesExtraction3D
 
 CornerDetector3D::CornerDetector3D()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfNeighboursNormalEstimation", parameters.numberOfNeighboursNormalEstimation, DEFAULT_PARAMETERS.numberOfNeighboursNormalEstimation);
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfNeighboursRegionGrowing", parameters.numberOfNeighboursRegionGrowing, DEFAULT_PARAMETERS.numberOfNeighboursRegionGrowing);
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfNeightbourBorderSelection", parameters.numberOfNeightbourBorderSelection, DEFAULT_PARAMETERS.numberOfNeightbourBorderSelection);

@@ -76,7 +76,7 @@ void ButtonsInterface::AddButton(
 	buttonList.push_back(button);
 }
 
-void ButtonsInterface::AddButton(std::string const &label, ButtonsInterface::ButtonClickedCallback callback)
+void ButtonsInterface::AddButton(std::string const &label, const ButtonsInterface::ButtonClickedCallback& callback)
 {
 	AddButton(label, callback, {});
 }
@@ -89,7 +89,7 @@ void ButtonsInterface::AddButton(std::string const &label, ButtonsInterface::But
  */
 void ButtonsInterface::OnMouseCallback(int event, int x, int y, int z, void* data)
 	{
-	((ButtonsInterface*)data)->OnMouseCallback(event, x, y, z);
+	(static_cast<ButtonsInterface*>(data))->OnMouseCallback(event, x, y, z);
 	}
 
 void ButtonsInterface::OnMouseCallback(int event, int x, int y, int z)
@@ -98,15 +98,20 @@ void ButtonsInterface::OnMouseCallback(int event, int x, int y, int z)
 		{
 		return;
 		}
-	for(const auto& button: buttonList)
+	std::vector<Button>::iterator button = std::find_if(
+		buttonList.begin(), 
+		buttonList.end(), 
+		[x, y](Button b){ return ButtonSelected(b, x, y); } 
+		);
+	if (button != buttonList.end())
 		{
-		if (   x >= button.topLeftCorner.x && x <= button.bottomRightCorner.x
-			&& y >= button.topLeftCorner.y && y <= button.bottomRightCorner.y)
-			{
-			button.callback();
-			return;
-			}
+		button->callback();
 		}
+	}
+
+bool ButtonsInterface::ButtonSelected(const Button& button, int x, int y)
+	{
+	return (x >= button.topLeftCorner.x && x <= button.bottomRightCorner.x && y >= button.topLeftCorner.y && y <= button.bottomRightCorner.y);
 	}
 
 

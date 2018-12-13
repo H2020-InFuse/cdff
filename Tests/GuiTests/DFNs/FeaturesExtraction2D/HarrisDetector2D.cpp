@@ -33,40 +33,40 @@ using namespace FrameWrapper;
 class HarrisDetector2DTestInterface : public DFNTestInterface
 	{
 	public:
-		HarrisDetector2DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath = DEFAULT_IMAGE_FILE_PATH);
+		HarrisDetector2DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath = DEFAULT_IMAGE_FILE_PATH);
 		~HarrisDetector2DTestInterface();
 	protected:
 
 	private:
 		static const std::string DEFAULT_IMAGE_FILE_PATH;
-		HarrisDetector2D* harris;
+		HarrisDetector2D harris;
 
 		cv::Mat cvImage;
 		FrameConstPtr inputImage;
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 	};
 
 const std::string HarrisDetector2DTestInterface::DEFAULT_IMAGE_FILE_PATH = "../../tests/Data/Images/DevonIslandLeft.ppm";
 
-HarrisDetector2DTestInterface::HarrisDetector2DTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
+HarrisDetector2DTestInterface::HarrisDetector2DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight), 
+	inputImage(),
+	harris()
 	{
-	harris = new HarrisDetector2D();
-	SetDFN(harris);
+	SetDFN(&harris);
 
 	cvImage = cv::imread(imageFilePath, cv::IMREAD_COLOR);
 	inputImage = MatToFrameConverter().Convert(cvImage);
 
-	harris->frameInput(*inputImage);
+	harris.frameInput(*inputImage);
 	outputWindowName = "Harris Detector 2D Result";
 	}
 
 HarrisDetector2DTestInterface::~HarrisDetector2DTestInterface()
 	{
-	delete(harris);
 	delete(inputImage);
 	}
 
@@ -85,7 +85,7 @@ void HarrisDetector2DTestInterface::SetupParameters()
 
 void HarrisDetector2DTestInterface::DisplayResult()
 	{
-	const VisualPointFeatureVector2D& featuresVector = harris->featuresOutput();
+	const VisualPointFeatureVector2D& featuresVector = harris.featuresOutput();
 
 	PRINT_TO_LOG("Number of detected features: ", GetNumberOfPoints( featuresVector ) );
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);

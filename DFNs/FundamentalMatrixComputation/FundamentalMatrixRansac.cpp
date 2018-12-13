@@ -30,6 +30,8 @@ namespace FundamentalMatrixComputation
 
 FundamentalMatrixRansac::FundamentalMatrixRansac()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<double>("GeneralParameters", "OutlierThreshold", parameters.outlierThreshold, DEFAULT_PARAMETERS.outlierThreshold);
 	parametersHelper.AddParameter<double>("GeneralParameters", "Confidence", parameters.confidence, DEFAULT_PARAMETERS.confidence);
 	parametersHelper.AddParameter<double>("GeneralParameters", "MaximumSymmetricEpipolarDistance", parameters.maximumSymmetricEpipolarDistance, DEFAULT_PARAMETERS.maximumSymmetricEpipolarDistance);

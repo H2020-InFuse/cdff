@@ -54,6 +54,7 @@ ObservedScene::ObservedScene() :
 	scene( pcl::PointCloud<pcl::PointXYZ>::Ptr( new pcl::PointCloud<pcl::PointXYZ>() ) )
 	{
 	this->resolution = DEFAULT_RESOLUTION;
+	referenceFrameId = 0;
 	}
 
 ObservedScene::~ObservedScene()
@@ -165,8 +166,8 @@ PointCloudWrapper::PointCloudConstPtr ObservedScene::GetPartialScene(float radiu
 	
 	Point3D origin;
 	origin.x = currentPosition.x();
-	origin.x = currentPosition.y();
-	origin.x = currentPosition.z();
+	origin.y = currentPosition.y();
+	origin.z = currentPosition.z();
 
 	return GetPartialScene(origin, radius);
 	}

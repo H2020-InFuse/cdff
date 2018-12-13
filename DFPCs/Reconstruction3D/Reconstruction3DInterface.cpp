@@ -10,7 +10,12 @@ namespace CDFF
 namespace DFPC
 {
 
-Reconstruction3DInterface::Reconstruction3DInterface()
+Reconstruction3DInterface::Reconstruction3DInterface() :
+inLeftImage(),
+inRightImage(),
+outPointCloud(),
+outPose(),
+outSuccess()
 {
 }
 

@@ -23,6 +23,8 @@ namespace PointCloudReconstruction2DTo3D
 
 Triangulation::Triangulation()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<double>("FirstCameraMatrix", "FocalLengthX",
 		parameters.firstCameraMatrix.focalLengthX, DEFAULT_PARAMETERS.firstCameraMatrix.focalLengthX);
 	parametersHelper.AddParameter<double>("FirstCameraMatrix", "FocalLengthY",

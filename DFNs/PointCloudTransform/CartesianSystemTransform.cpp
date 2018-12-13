@@ -32,6 +32,8 @@ namespace PointCloudTransform
 
 CartesianSystemTransform::CartesianSystemTransform()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<bool>("GeneralParameters", "Placeholder", parameters.placeholder, DEFAULT_PARAMETERS.placeholder);
 
 	configurationFilePath = "";
