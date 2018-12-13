@@ -154,10 +154,17 @@ std::vector< std::string > HuInvariants::Match(const cv::Mat& inputImage)
     matchTemplatesAndImage(input_image_contours);
 
     std::vector<std::string> primitives_ordered_by_matching_probability;
-    for( auto info: m_matching_info )
+    std::transform(
+	m_matching_info.begin(), 
+	m_matching_info.end(), 
+	std::back_inserter(primitives_ordered_by_matching_probability), 
+	[](PrimitiveMatchingInfo info){ return info.primitive; }
+	);
+
+   /* for( auto info: m_matching_info )
     {
         primitives_ordered_by_matching_probability.push_back(info.primitive);
-    }
+    }*/
 
     return primitives_ordered_by_matching_probability;
 }
@@ -269,14 +276,17 @@ std::map<std::string, std::vector<cv::Point> > HuInvariants::getTemplatesToMatch
     int size = m_template_files.size();
     for( unsigned int index = 0; index < size; index ++ )
     {
-        for( auto primitive : primitive_names )
-        {
-            if( ::extractFileName(m_template_files[index]) == primitive )
+	std::string template_file = m_template_files[index];
+	bool primitiveFound = std::any_of(
+	    primitive_names.begin(),
+	    primitive_names.end(),
+	    [template_file](std::string primitive) { return (::extractFileName(template_file) == primitive); }
+	    );
+	if(primitiveFound)
             {
                 template_contours_to_match.insert(std::make_pair(m_template_files[index], m_template_contours[index]));
                 break;
             }
-        }
     }
 
     return template_contours_to_match;
