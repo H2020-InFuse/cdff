@@ -143,10 +143,6 @@ namespace Reconstruction3D
 		CDFF::DFN::PerspectiveNPointSolvingInterface* perspectiveNPointSolver;
 		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
 
-		#ifdef TESTING
-		std::ofstream logFile;
-		#endif
-
 		//Helpers
 		BundleHistory* bundleHistory;
 		MultipleCorrespondences2DRecorder* correspondencesRecorder;

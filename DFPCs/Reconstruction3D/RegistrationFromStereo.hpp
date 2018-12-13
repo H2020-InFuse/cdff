@@ -123,11 +123,6 @@ namespace Reconstruction3D
 		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
 		CDFF::DFN::Registration3DInterface* registrator3d;
 
-		#ifdef TESTING
-		std::ofstream logFile;
-		void WriteOutputToLogFile();
-		#endif
-
 		//Helpers
 		BundleHistory* bundleHistory;
 

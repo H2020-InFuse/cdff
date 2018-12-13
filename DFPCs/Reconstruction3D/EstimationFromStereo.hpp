@@ -130,10 +130,6 @@ namespace Reconstruction3D
 		const std::string STEREO_CLOUD_CATEGORY;
 		const std::string TRIANGULATION_CLOUD_CATEGORY;
 
-		#ifdef TESTING
-		std::ofstream logFile;
-		#endif
-
 		//DFN Interfaces
 		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
 		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;

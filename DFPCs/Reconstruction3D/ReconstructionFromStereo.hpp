@@ -126,10 +126,6 @@ namespace Reconstruction3D
 		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
 		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
 
-		#ifdef TESTING
-		std::ofstream logFile;
-		#endif
-
 		//Data Helpers
 		PointCloudWrapper::PointCloudPtr perspectiveCloud;
 		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr perspectiveVector;

@@ -118,11 +118,6 @@ namespace Reconstruction3D
 		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
 		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
 
-		#ifdef TESTING
-		std::ofstream logFile;
-		void WriteOutputToLogFile();
-		#endif
-
 		//Helpers
 		BundleHistory* bundleHistory;
 		PointCloudWrapper::PointCloudPtr featureCloud;
