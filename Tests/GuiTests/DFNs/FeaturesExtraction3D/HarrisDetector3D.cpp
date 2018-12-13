@@ -51,7 +51,7 @@ class HarrisDetector3DTestInterface : public DFNTestInterface
 
 HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile) :
 	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
-	harris(harris)
+	harris()
 {
 	SetDFN(&harris);
 

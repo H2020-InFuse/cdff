@@ -51,7 +51,7 @@ class CornerDetector3DTestInterface : public DFNTestInterface
 
 CornerDetector3DTestInterface::CornerDetector3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string inputFile) :
 	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
-	cornerDetector(cornerDetector)
+	cornerDetector()
 {
 	SetDFN(&cornerDetector);
 
