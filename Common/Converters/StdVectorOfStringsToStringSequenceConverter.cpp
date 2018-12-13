@@ -30,7 +30,7 @@
 namespace Converters
 {
 
-const asn1SccStringSequence StdVectorOfStringsToStringSequenceConverter::Convert(const std::vector<std::string> stringVector)
+const asn1SccStringSequence StdVectorOfStringsToStringSequenceConverter::Convert(const std::vector<std::string>& stringVector)
 {
     asn1SccStringSequence stringSequence;
     stringSequence.nCount = stringVector.size();

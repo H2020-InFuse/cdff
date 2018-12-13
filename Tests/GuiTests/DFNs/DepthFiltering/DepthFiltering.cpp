@@ -44,7 +44,7 @@
 class DepthFilteringTestInterface : public DFNTestInterface
 {
 public:
-    DepthFilteringTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+    DepthFilteringTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
     ~DepthFilteringTestInterface();
 
 private:
@@ -53,11 +53,11 @@ private:
     FrameWrapper::FrameConstPtr inputImage;
     std::string outputWindowName;
 
-    void SetupParameters();
-    void DisplayResult();
+    void SetupParameters() override;
+    void DisplayResult() override;
 };
 
-DepthFilteringTestInterface::DepthFilteringTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
+DepthFilteringTestInterface::DepthFilteringTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
         : DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
 {
     filter = new CDFF::DFN::DepthFiltering::ConvolutionFilter();

@@ -12,7 +12,10 @@ namespace DFPC
 {
 
 //=====================================================================================================================
-HapticScanningInterface::HapticScanningInterface()
+HapticScanningInterface::HapticScanningInterface() :
+inArmBasePose(),
+inArmEndEffectorPose(),
+inArmEndEffectorWrench()
 {
     asn1SccPointcloud_Initialize(&outPointCloud);
 }

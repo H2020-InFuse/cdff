@@ -100,7 +100,7 @@ class PerformanceTestInterface : public PerformanceTestBase
 		* The idea is that inputs will be provided one at a time, when all inputs have already been provided the method should return false;
 		*
 		*/
-		virtual bool SetNextInputs() = 0;
+		virtual bool SetNextInputs() override = 0;
 		
 		/*
 		* @brief This method computes a measure of the performance of the DFN as a map from Measure Name (String) to value of the measure (float).

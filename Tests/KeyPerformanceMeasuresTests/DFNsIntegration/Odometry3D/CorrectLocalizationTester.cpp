@@ -55,11 +55,12 @@ using namespace SupportTypes;
 CorrectLocalizationTester::CorrectLocalizationTester() :
 	extractorConfigurationFile(""),
 	descriptorConfigurationFile(""),
-	matcherConfigurationFile("")
+	matcherConfigurationFile(""),
+	modelCloudFilePath(""),
+	sceneCloudFilePath(""),
+	beginTime(clock()),
+	endTime(beginTime)
 	{
-	modelCloudFilePath = "";
-	sceneCloudFilePath = "";
-
 	extractor = NULL;
 	descriptor = NULL;
 	matcher = NULL;
@@ -77,9 +78,7 @@ CorrectLocalizationTester::CorrectLocalizationTester() :
 	dfnsWereConfigured = false;
 	inputsWereLoaded = false;
 	groundTruthWasLoaded = false;
-
-	beginTime = clock();
-	endTime = beginTime;	
+	
 	processingTime = 0;
 	}
 

@@ -67,8 +67,8 @@ class IcpCCTestInterface : public DFNTestInterface
 		void LoadInputClouds();
 		void PrepareInputs();
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 
 		void PrintInformation(Transform3DConstPtr transform);
 		pcl::PointCloud<pcl::PointXYZ>::ConstPtr PrepareOutputCloud(Transform3DConstPtr transform);

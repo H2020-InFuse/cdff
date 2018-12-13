@@ -33,7 +33,7 @@ void ForceMeshGeneratorInterface::armEndEffectorPoseInput(const asn1SccPose &pos
 }
 
 //=====================================================================================================================
-void ForceMeshGeneratorInterface::armEndEffectorWrenchInput(const asn1SccWrench wrench)
+void ForceMeshGeneratorInterface::armEndEffectorWrenchInput(const asn1SccWrench& wrench)
 {
     inArmEndEffectorWrench = wrench;
 }

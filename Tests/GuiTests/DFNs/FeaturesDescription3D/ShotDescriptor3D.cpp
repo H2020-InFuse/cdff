@@ -61,10 +61,10 @@ class ShotDescriptor3DTestInterface : public DFNTestInterface
 
 const unsigned ShotDescriptor3DTestInterface::SHOT_DESCRIPTOR_SIZE = 352;
 
-ShotDescriptor3DTestInterface::ShotDescriptor3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
+ShotDescriptor3DTestInterface::ShotDescriptor3DTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
+	shot(new ShotDescriptor3D())
 {
-	shot = new ShotDescriptor3D;
 	SetDFN(shot);
 
 	pclCloud = PreparePointCloudInput();

@@ -60,7 +60,7 @@ namespace CDFF {
 
                 Vec3f() = default;
 
-                Vec3f(float s) : x(s), y(s), z(s) {}
+                explicit Vec3f(float s) : x(s), y(s), z(s) {}
 
                 Vec3f(float x, float y, float z) : x(x), y(y), z(z) {}
 

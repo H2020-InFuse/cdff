@@ -134,8 +134,6 @@ namespace CDFF {
                        "BackgroundExtraction: Frame too small to properly initialize classifier");
 
                 // pick points from the neighbourhood at random until we fill the model
-                std::random_device rand;
-                std::default_random_engine random_engine(rand());
                 std::uniform_int_distribution<int32_t> rand_int(-half_window, +half_window);
 
                 const cv::Size imsize = frame.size();

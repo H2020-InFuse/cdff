@@ -11,6 +11,7 @@ namespace DFN
 {
 
 FundamentalMatrixComputationInterface::FundamentalMatrixComputationInterface() :
+inMatches(),
 outFundamentalMatrix(),
 outSuccess(),
 outInlierMatches()

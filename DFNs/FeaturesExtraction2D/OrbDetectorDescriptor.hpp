@@ -79,7 +79,7 @@ namespace FeaturesExtraction2D
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat inputImage);
 
-			static int ConvertToScoreType(std::string scoreType);
+			static int ConvertToScoreType(const std::string& scoreType);
 	};
 }
 }

@@ -47,7 +47,7 @@ using namespace FrameWrapper;
 class HuInvariantsTestInterface : public DFNTestInterface
 {
 	public:
-		HuInvariantsTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath = DEFAULT_IMAGE_FILE_PATH);
+		HuInvariantsTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath = DEFAULT_IMAGE_FILE_PATH);
 		~HuInvariantsTestInterface();
 	protected:
 
@@ -67,7 +67,7 @@ class HuInvariantsTestInterface : public DFNTestInterface
 
 const std::string HuInvariantsTestInterface::DEFAULT_IMAGE_FILE_PATH = "../../tests/Data/Images/primitive_matching/test_images/robot.jpg";
 
-HuInvariantsTestInterface::HuInvariantsTestInterface(std::string dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath)
+HuInvariantsTestInterface::HuInvariantsTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight, std::string imageFilePath)
 	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
 {
 	huInvariants = new HuInvariants();

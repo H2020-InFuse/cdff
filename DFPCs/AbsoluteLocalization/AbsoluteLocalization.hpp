@@ -22,8 +22,8 @@ namespace DFPC
             AbsoluteLocalization();
             virtual ~AbsoluteLocalization();
 
-            virtual void setup();
-            virtual void run();
+            virtual void setup() override;
+            virtual void run() override;
 
     };
 }

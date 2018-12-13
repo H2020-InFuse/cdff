@@ -140,7 +140,7 @@ void OrbDetectorDescriptor::ValidateInputs(cv::Mat inputImage)
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "OrbDetectorDescriptor error: input image is empty");
 }
 
-int OrbDetectorDescriptor::ConvertToScoreType(std::string scoreType)
+int OrbDetectorDescriptor::ConvertToScoreType(const std::string& scoreType)
 {
 	if (scoreType == "HarrisScore" || scoreType == "0")
 	{

@@ -22,8 +22,8 @@ namespace DFPC
             VisualOdometry_MAG();
             virtual ~VisualOdometry_MAG();
 
-            virtual void setup();
-            virtual void run();
+            virtual void setup() override;
+            virtual void run() override;
 
     };
 }

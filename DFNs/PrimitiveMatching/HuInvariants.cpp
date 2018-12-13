@@ -217,7 +217,7 @@ void HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<cv::Poin
         m_matching_info.clear();
 
         std::map<std::string, std::vector<cv::Point>>::iterator it;
-        for ( it = templates.begin(); it != templates.end(); it++ )
+        for ( it = templates.begin(); it != templates.end(); ++it )
         {
             auto template_contour = it->second;
             auto template_name = it->first;
