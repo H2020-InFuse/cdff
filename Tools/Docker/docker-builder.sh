@@ -34,7 +34,7 @@ function docker_tag_exists() {
 }
 
 if [[ ! $current_tag < $latest_tag ]]; then
-    docker pull $IMAGE_TAG':'$latest_tag || exit 0
+    docker pull $IMAGE_TAG':'$latest_tag || true
     docker build -t $IMAGE_TAG':'$current_tag -f $DOCKER_FILE $ENV_VAR .
     docker push $IMAGE_TAG':'$current_tag
     docker tag $IMAGE_TAG':'$current_tag $IMAGE_TAG':'latest
