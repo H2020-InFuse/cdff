@@ -22,6 +22,9 @@
   script:
    - cd Tools/Docker/
    - ./docker-builder.sh Dockerfile.ci cdff-ci
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.ci
 
  generate:cdff-user:
   <<: *connect
@@ -32,7 +35,9 @@
   script:
    - cd Tools/Docker/
    - ./docker-builder.sh Dockerfile.user cdff-user
-  when: manual
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.user
 
  generate:asn:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
@@ -61,6 +66,7 @@
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage: build
+  allow_failure: true
   dependencies:
    - generate:asn
   artifacts:
@@ -73,6 +79,7 @@
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-user:latest
   stage: build
+  allow_failure: true
   dependencies:
    - generate:asn
   when: manual
