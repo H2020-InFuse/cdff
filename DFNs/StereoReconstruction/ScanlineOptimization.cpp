@@ -10,7 +10,6 @@
 #include "ScanlineOptimization.hpp"
 
 #include <Converters/PclPointCloudToPointCloudConverter.hpp>
-#include <Visualizers/PCLVisualizer.hpp>
 #include <Errors/Assert.hpp>
 
 #include <pcl/filters/voxel_grid.h>
@@ -144,8 +143,6 @@ ScanlineOptimization::PclPointCloudPtr ScanlineOptimization::ComputePointCloud(P
 
 	PclImagePtr visualMap(new PclImage);
 	stereo.getVisualMap(visualMap);
-	SAVE_DISPARITY_MATRIX(visualMap);
-	DEBUG_SHOW_PCL_IMAGE(visualMap);
 
 	PclPointCloudPtr pointCloud(new PclPointCloud);
 	stereo.getPointCloud

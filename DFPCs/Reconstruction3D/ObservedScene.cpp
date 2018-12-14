@@ -30,7 +30,6 @@
 #include "Errors/Assert.hpp"
 #include <Converters/Transform3DToEigenTransformConverter.hpp>
 #include <pcl/filters/voxel_grid.h>
-#include <Visualizers/PCLVisualizer.hpp>
 
 namespace CDFF
 {
@@ -127,8 +126,6 @@ void ObservedScene::AddPointCloudInLastReference(PointCloudConstPtr pointCloudIn
 	grid.setInputCloud(scene);
 	grid.setLeafSize(resolution, resolution, resolution);
 	grid.filter(*scene);
-
-	DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(scene, 500);
 	}
 
 PointCloudConstPtr ObservedScene::GetPartialScene(Point3D origin, float radius)

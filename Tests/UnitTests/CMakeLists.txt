@@ -77,18 +77,13 @@ set(unittest_sources UnitTests.cpp
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
 set(unittest_libraries catch
-    adjustment_from_stereo
-    estimation_from_stereo
-    cdff_dfn_point_cloud_transform
     cdff_converters
-    cdff_dfn_dfnexecutors
     cdff_helpers
     cdff_logger
     cdff_types
+    cdff_dfn_dfnexecutors
+    cdff_dfn_point_cloud_transform
     cdff_dfn_depth_filtering
-    dfpc_configurator
-    dfpc_haptic_scanning
-    dfpc_implementation_features_matching_3d
     cdff_dfn_cameras_transform_estimation
     cdff_dfn_features_matching_2d
     cdff_dfn_fundamental_matrix_computation
@@ -112,6 +107,10 @@ set(unittest_libraries catch
     cdff_dfn_bundle_adjustment
     cdff_dfn_voxelization
     synthetic_generators
+    cdff_dfpc_configurator
+    cdff_dfpc_reconstruction_3d
+    cdff_dfpc_point_cloud_model_localisation
+    cdff_dfpc_haptic_scanning
 )
 
 # Make the Catch executable that runs the unit tests
