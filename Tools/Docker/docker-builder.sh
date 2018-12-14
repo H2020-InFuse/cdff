@@ -29,8 +29,12 @@ current_tag=$(grep "LABEL version=" $DOCKER_FILE | perl -pe '($_)=/([0-9]+([.][0
 latest_tag=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$IMAGE_NAME https://hook.io/datastore/get | tr -d '"')
 echo latest_tag $latest_tag , current_tag  $current_tag
 
+function docker_tag_exists() {
+    curl --silent -f -lSL https://index.docker.io/v1/repositories/$1/tags/$2 > /dev/null
+}
+
 if [[ ! $current_tag < $latest_tag ]]; then
-    [ -z "$latest_tag" ] || docker pull $IMAGE_TAG':'$latest_tag
+    docker pull $IMAGE_TAG':'$latest_tag || exit 0
     docker build -t $IMAGE_TAG':'$current_tag -f $DOCKER_FILE $ENV_VAR .
     docker push $IMAGE_TAG':'$current_tag
     docker tag $IMAGE_TAG':'$current_tag $IMAGE_TAG':'latest
