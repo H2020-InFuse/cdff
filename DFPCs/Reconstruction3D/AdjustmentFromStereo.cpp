@@ -28,8 +28,6 @@
  */
 #include "AdjustmentFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpenCVVisualizer.hpp>
-#include <Visualizers/PCLVisualizer.hpp>
 #include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
 #include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
@@ -172,7 +170,6 @@ void AdjustmentFromStereo::run()
 		DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
 
-		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 		DeleteIfNotNull(outputPointCloud);
 		}
 
@@ -252,10 +249,6 @@ void AdjustmentFromStereo::InstantiateDFNs()
 		}
 	}
 
-/**
-* The method filters the left and right images, and uses them for the computation of a point cloud.
-*
-**/
 void AdjustmentFromStereo::ComputeStereoPointCloud(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage)
 	{
 	PointCloudConstPtr imageCloud = NULL;
@@ -264,10 +257,7 @@ void AdjustmentFromStereo::ComputeStereoPointCloud(FrameWrapper::FrameConstPtr f
 	bundleHistory->AddPointCloud(*imageCloud, STEREO_CLOUD_CATEGORY);
 
 	DEBUG_PRINT_TO_LOG("Stereo points number", GetNumberOfPoints(*imageCloud));
-	//DEBUG_SHOW_POINT_CLOUD(imageCloud);
 	}
-
-#define MINIMUM(a, b) ( a < b ? a : b )
 
 void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage)
 	{
@@ -309,7 +299,6 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 			Executors::Execute(reconstructor3dfrom2dmatches, leftRightCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
 			CleanUnmatchedFeatures(leftRightCorrespondenceMap, triangulatedKeypointCloud);
 			}
-		//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
 		DEBUG_PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
 		bundleHistory->AddPointCloud(*triangulatedKeypointCloud, TRIANGULATION_CLOUD_CATEGORY);
 		bundleHistory->AddMatches(*cleanCorrespondenceMap);
@@ -472,7 +461,6 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 		DEBUG_PRINT_TO_LOG("Number of inlier correspondences", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
 		if (success)
 			{
-			//Executors::Execute(cameraTransformEstimator, fundamentalMatrix, inlierCorrespondenceMap, pose, success);
 			EstimatePose(pastCorrespondenceMap, inlierCorrespondenceMap, pastTriangulatedCloud, pose, success);
 			}
 		if (success)

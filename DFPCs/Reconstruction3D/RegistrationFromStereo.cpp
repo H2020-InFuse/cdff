@@ -28,8 +28,6 @@
  */
 #include "RegistrationFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpenCVVisualizer.hpp>
-#include <Visualizers/PCLVisualizer.hpp>
 
 #include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
 #include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
@@ -93,13 +91,6 @@ RegistrationFromStereo::~RegistrationFromStereo()
 	DeleteIfNotNull(bundleHistory);
 	}
 
-/**
-* The process method is split into three steps 
-* (i) computation of the point cloud from the stereo pair;
-* (ii) computation of the camera pose by 3d matching of the point cloud with the a partial scene of the original map ceneters at the camera previous pose;
-* (iii) the point cloud rover map is updated with the newly computed point cloud.
-*
-**/
 void RegistrationFromStereo::run() 
 	{
 	DEBUG_PRINT_TO_LOG("Registration from stereo start", "");
@@ -303,7 +294,6 @@ void RegistrationFromStereo::UpdatePointCloud(PointCloudConstPtr imageCloud, Vis
 	DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 	DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(outPointCloud));
 
-	DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 	if (!parameters.useAssemblerDfn)
 		{
 		DeleteIfNotNull(outputPointCloud);
@@ -315,7 +305,6 @@ void RegistrationFromStereo::ComputeVisualFeatures(PointCloudConstPtr inputCloud
 	ASSERT(outputFeatures == NULL, "RegistrationFromStereo error! ComputeVisualFeatures was called while outputFeatures is not NULL. OutputFeatures will be overwritten, look for memory leaks.");
 	VisualPointFeatureVector3DConstPtr keypointVector = NULL;
 	Executors::Execute(featuresExtractor3d, inputCloud, keypointVector);
-	DEBUG_SHOW_3D_VISUAL_FEATURES(inputCloud, keypointVector);
 
 	Executors::Execute(optionalFeaturesDescriptor3d, inputCloud, keypointVector, outputFeatures);
 	DEBUG_PRINT_TO_LOG("Described Features:", GetNumberOfPoints(*outputFeatures));
