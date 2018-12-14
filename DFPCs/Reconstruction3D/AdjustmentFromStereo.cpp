@@ -28,8 +28,6 @@
  */
 #include "AdjustmentFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpenCVVisualizer.hpp>
-#include <Visualizers/PCLVisualizer.hpp>
 #include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
 #include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
@@ -172,7 +170,6 @@ void AdjustmentFromStereo::run()
 		DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
 
-		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 		DeleteIfNotNull(outputPointCloud);
 		}
 
@@ -264,7 +261,6 @@ void AdjustmentFromStereo::ComputeStereoPointCloud(FrameWrapper::FrameConstPtr f
 	bundleHistory->AddPointCloud(*imageCloud, STEREO_CLOUD_CATEGORY);
 
 	DEBUG_PRINT_TO_LOG("Stereo points number", GetNumberOfPoints(*imageCloud));
-	//DEBUG_SHOW_POINT_CLOUD(imageCloud);
 	}
 
 #define MINIMUM(a, b) ( a < b ? a : b )
@@ -309,7 +305,6 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 			Executors::Execute(reconstructor3dfrom2dmatches, leftRightCorrespondenceMap, &rightToLeftCameraPose, triangulatedKeypointCloud);
 			CleanUnmatchedFeatures(leftRightCorrespondenceMap, triangulatedKeypointCloud);
 			}
-		//DEBUG_SHOW_2D_CORRESPONDENCES(filteredLeftImage, filteredRightImage, leftRightCorrespondenceMap);
 		DEBUG_PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
 		bundleHistory->AddPointCloud(*triangulatedKeypointCloud, TRIANGULATION_CLOUD_CATEGORY);
 		bundleHistory->AddMatches(*cleanCorrespondenceMap);

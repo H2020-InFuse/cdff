@@ -164,6 +164,22 @@ namespace Reconstruction3D
 		bool ComputeFundamentalMatrix();
 		bool ComputePastToCurrentTransform();
 		void ComputeStereoPointCloud();
+
+		/*
+		* Inline Methods
+		*
+		*/
+
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
+
     };
 }
 }

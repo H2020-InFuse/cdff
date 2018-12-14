@@ -28,16 +28,6 @@
  */
 #include "ReconstructionFromMotion.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpenCVVisualizer.hpp>
-#include <Visualizers/PCLVisualizer.hpp>
-
-#define DELETE_PREVIOUS(object) \
-	{ \
-	if (object != NULL) \
-		{ \
-		delete(object); \
-		} \
-	} \
 
 namespace CDFF
 {
@@ -120,19 +110,19 @@ ReconstructionFromMotion::~ReconstructionFromMotion()
 	{
 	if (leftFilter != NULL)
 		{
-		DELETE_PREVIOUS(filteredCurrentLeftImage);
+		DeleteIfNotNull(filteredCurrentLeftImage);
 		}
 	if (rightFilter != NULL)
 		{
-		DELETE_PREVIOUS(filteredCurrentRightImage);
+		DeleteIfNotNull(filteredCurrentRightImage);
 		}
 	delete(filteredPastLeftImage);
 
 	if (optionalFeaturesDescriptor != NULL)
 		{
-		DELETE_PREVIOUS(currentLeftFeaturesVector);
-		DELETE_PREVIOUS(pastLeftFeaturesVector);
-		DELETE_PREVIOUS(currentRightFeaturesVector);
+		DeleteIfNotNull(currentLeftFeaturesVector);
+		DeleteIfNotNull(pastLeftFeaturesVector);
+		DeleteIfNotNull(currentRightFeaturesVector);
 		}
 
 	delete(currentLeftImage);
@@ -295,7 +285,6 @@ void ReconstructionFromMotion::UpdateScene()
 	Copy(*outputPose, outPose);
 	Copy(*outputPointCloud, outPointCloud);
 	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*outputPointCloud));
-	DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 	}
 
 void ReconstructionFromMotion::AssignDfnsAlias()
@@ -456,7 +445,6 @@ void ReconstructionFromMotion::MatchCurrentAndPastFeatures()
 	featuresMatcher->process();
 	Copy( featuresMatcher->matchesOutput(), *pastToCurrentCorrespondenceMap);	
 	DEBUG_PRINT_TO_LOG("Correspondences", GetNumberOfCorrespondences(*pastToCurrentCorrespondenceMap) );
-	DEBUG_SHOW_2D_CORRESPONDENCES(filteredCurrentLeftImage, filteredPastLeftImage, pastToCurrentCorrespondenceMap);
 	}
 
 void ReconstructionFromMotion::MatchLeftAndRightFeatures()
@@ -466,7 +454,6 @@ void ReconstructionFromMotion::MatchLeftAndRightFeatures()
 	featuresMatcher->process();
 	Copy( featuresMatcher->matchesOutput(), *leftRightCorrespondenceMap);	
 	DEBUG_PRINT_TO_LOG("Left Right Correspondences", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
-	DEBUG_SHOW_2D_CORRESPONDENCES(filteredCurrentRightImage, filteredCurrentLeftImage, leftRightCorrespondenceMap);
 	}
 
 bool ReconstructionFromMotion::ComputeFundamentalMatrix()
@@ -509,7 +496,6 @@ void ReconstructionFromMotion::ComputeStereoPointCloud()
 	reconstructor3D->process();
 	Copy( reconstructor3D->pointcloudOutput(), *pointCloud);
 	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*pointCloud));
-	DEBUG_SHOW_POINT_CLOUD(pointCloud);
 	}
 
 }

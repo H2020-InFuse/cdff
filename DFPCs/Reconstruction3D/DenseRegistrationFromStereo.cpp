@@ -28,8 +28,6 @@
  */
 #include "DenseRegistrationFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpenCVVisualizer.hpp>
-#include <Visualizers/PCLVisualizer.hpp>
 
 #include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
 #include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
@@ -408,7 +406,6 @@ void DenseRegistrationFromStereo::MergePointCloud(PointCloudConstPtr imageCloud)
 	DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 	DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(outPointCloud));
 
-	DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 	if (!parameters.useAssemblerDfn)
 		{
 		DeleteIfNotNull(outputPointCloud);

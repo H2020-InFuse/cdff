@@ -28,8 +28,6 @@
  */
 #include "SparseRegistrationFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpenCVVisualizer.hpp>
-#include <Visualizers/PCLVisualizer.hpp>
 
 #include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
 #include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
@@ -114,7 +112,6 @@ void SparseRegistrationFromStereo::run()
 
 	VisualPointFeatureVector3DConstPtr keypointVector = NULL;
 	Executors::Execute(featuresExtractor3d, imageCloud, keypointVector);
-	DEBUG_SHOW_3D_VISUAL_FEATURES(imageCloud, keypointVector);
 
 	if (!parameters.matchToReconstructedCloud)
 		{
@@ -276,7 +273,6 @@ void SparseRegistrationFromStereo::UpdatePointCloud(PointCloudConstPtr imageClou
 	DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 	DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(outPointCloud));
 
-	DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 	if (!parameters.useAssemblerDfn)
 		{
 		DeleteIfNotNull(outputPointCloud);
