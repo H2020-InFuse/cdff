@@ -467,10 +467,6 @@ bool ReconstructionFromMotion::ComputeFundamentalMatrix()
 	Copy( fundamentalMatrixComputer->fundamentalMatrixOutput(), *fundamentalMatrix);	
 	bool fundamentalMatrixSuccess =  fundamentalMatrixComputer->successOutput();
 	DEBUG_PRINT_TO_LOG("Fundamental Matrix", fundamentalMatrixSuccess);
-	if(fundamentalMatrixSuccess)
-		{
-		DEBUG_SHOW_MATRIX(fundamentalMatrix);
-		}
 	return fundamentalMatrixSuccess;
 	}
 
@@ -482,10 +478,6 @@ bool ReconstructionFromMotion::ComputePastToCurrentTransform()
 	Copy( cameraTransformEstimator->transformOutput(), *pastToCurrentCameraTransform);
 	bool essentialMatrixSuccess = cameraTransformEstimator->successOutput();
 	DEBUG_PRINT_TO_LOG("Essential Matrix", essentialMatrixSuccess);
-	if(essentialMatrixSuccess)
-		{
-		DEBUG_SHOW_POSE(pastToCurrentCameraTransform);
-		}
 	return essentialMatrixSuccess;
 	}
 
