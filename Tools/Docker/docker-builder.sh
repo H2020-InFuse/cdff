@@ -30,7 +30,7 @@ latest_tag=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key=
 echo latest_tag $latest_tag , current_tag  $current_tag
 
 if [[ ! $current_tag < $latest_tag ]]; then
-    docker pull $IMAGE_TAG':'$latest_tag
+    [ -z "$latest_tag" ] || docker pull $IMAGE_TAG':'$latest_tag
     docker build -t $IMAGE_TAG':'$current_tag -f $DOCKER_FILE $ENV_VAR .
     docker push $IMAGE_TAG':'$current_tag
     docker tag $IMAGE_TAG':'$current_tag $IMAGE_TAG':'latest
