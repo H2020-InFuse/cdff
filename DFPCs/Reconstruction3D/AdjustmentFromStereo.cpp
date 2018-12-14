@@ -249,10 +249,6 @@ void AdjustmentFromStereo::InstantiateDFNs()
 		}
 	}
 
-/**
-* The method filters the left and right images, and uses them for the computation of a point cloud.
-*
-**/
 void AdjustmentFromStereo::ComputeStereoPointCloud(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage)
 	{
 	PointCloudConstPtr imageCloud = NULL;
@@ -262,8 +258,6 @@ void AdjustmentFromStereo::ComputeStereoPointCloud(FrameWrapper::FrameConstPtr f
 
 	DEBUG_PRINT_TO_LOG("Stereo points number", GetNumberOfPoints(*imageCloud));
 	}
-
-#define MINIMUM(a, b) ( a < b ? a : b )
 
 void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage)
 	{
@@ -467,7 +461,6 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 		DEBUG_PRINT_TO_LOG("Number of inlier correspondences", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
 		if (success)
 			{
-			//Executors::Execute(cameraTransformEstimator, fundamentalMatrix, inlierCorrespondenceMap, pose, success);
 			EstimatePose(pastCorrespondenceMap, inlierCorrespondenceMap, pastTriangulatedCloud, pose, success);
 			}
 		if (success)

@@ -108,13 +108,6 @@ DenseRegistrationFromStereo::~DenseRegistrationFromStereo()
 	delete( EMPTY_FEATURE_VECTOR );
 	}
 
-/**
-* The process method is split into three steps 
-* (i) computation of the point cloud from the stereo pair;
-* (ii) computation of the camera pose by 3d matching of the point cloud with the a partial scene of the original map ceneters at the camera previous pose;
-* (iii) the point cloud rover map is updated with the newly computed point cloud.
-*
-**/
 void DenseRegistrationFromStereo::run() 
 	{
 	DEBUG_PRINT_TO_LOG("Registration from stereo start", "");

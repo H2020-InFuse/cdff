@@ -139,14 +139,6 @@ ReconstructionFromMotion::~ReconstructionFromMotion()
 	delete(rightToLeftCameraPose);
 	}
 
-/**
-* The process method is split into three steps 
-* (i) computation of the camera transform between the current camera pose and the pose of the camera at an appropriate past time instant, the appropriate time instant is the most recent one that allows
-* a computation of the transform, if there exists one
-* (ii) if a camera transform is computed, then a point cloud is computed from the left and right images of the stereo camera
-* (iii) the point cloud rover map is updated with the newly computed point cloud.
-*
-**/
 void ReconstructionFromMotion::run() 
 	{
 	DEBUG_PRINT_TO_LOG("Structure from motion start", "");
@@ -208,15 +200,6 @@ void ReconstructionFromMotion::ConfigureExtraParameters()
 	map->SetPointCloudMapResolution(parameters.pointCloudMapResolution);
 	}
 
-/**
-* The ComputeCloudInSight Method performs the following operation
-*
-* (i) Filtering, features extraction and computation of features descriptor applied to the current left camera image;
-* (ii) Search of an appropriate past image, this is a linear search on all the past images starting with the most recent one;
-*      (ii a) for each past image, there is a filtering, features extraction and computation of features descriptor applied to the past left camera image;
-*      (ii b) features matching, computation of the fundamental matrix and extimation of the transform between present and past pose are performed on the base of the extracted features
-*      (ii d) the search stops when a transform is successfully estimated or there are no more past images
-**/
 bool ReconstructionFromMotion::ComputeCameraMovement()
 	{ 
 	Copy(inLeftImage, *currentLeftImage);
@@ -246,15 +229,6 @@ bool ReconstructionFromMotion::ComputeCameraMovement()
 	return success;
 	}
 
-/**
-* The ComputePointCloud Method works under the assumption that the left image features were already extracted.
-*
-* The method filters executes the following operations: 
-* (i) Filtering, features extraction and computation of features descriptor applied to the current right  camera image;
-* (ii) Computation of a correspondence map between left and right features;
-* (iii) computation of a point cloud from the correspondence map.
-*
-**/
 void ReconstructionFromMotion::ComputePointCloud()
 	{
 	ASSERT(currentLeftFeaturesVector != NULL, "ReconstructionFromMotion error, ComputePointCloud() called before left feature vector was computed");
@@ -265,15 +239,6 @@ void ReconstructionFromMotion::ComputePointCloud()
 	ComputeStereoPointCloud();
 	}
 
-
-/**
-* The UpdateScene Method performs the following operation
-*
-* (i) The computed transform between the current and the past images is provided to the Map object, which updates the current pose of the camera;
-* (ii) The computed point cloud is provided to the Map object, which updates the whole point cloud map, by adding more cloud points using the current camera location as a reference
-* (iii) A part of the point cloud is extracted as output of the DFPC, this part contains the points withing a given searchRadius from the current camera pose, when the search radius is -1
-*       all cloud points are taken.
-**/
 void ReconstructionFromMotion::UpdateScene()
 	{
 	map->AddFramePoseInReference(pastToCurrentCameraTransform);
