@@ -130,7 +130,8 @@
   dependencies:
    - build:ci:system
   script:
-   - build/Tests/UnitTests/cdff-unit-tests
+   - cd build/Tests/UnitTests
+   - ./cdff-unit-tests
 
  test:dependencies:local:
   image: ubuntu:latest
