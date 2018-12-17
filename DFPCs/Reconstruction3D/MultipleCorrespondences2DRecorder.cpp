@@ -29,6 +29,7 @@ MultipleCorrespondences2DRecorder::MultipleCorrespondences2DRecorder(int maximum
 	addingNewSequence = false;
 	oneCorrespondenceWasAddedSinceLastDiscard = false;
 	useFilter = filterPointsThatDoNotAppearInAllMatches;
+	expectedMapsToAdd = 0;
 
 	if (useFilter)
 		{
@@ -212,10 +213,6 @@ std::vector<BaseTypesWrapper::T_UInt32> MultipleCorrespondences2DRecorder::Compu
 	{
 	std::vector<BaseTypesWrapper::T_UInt32> chain;
 	chain.push_back(correspondenceIndex);
-
-	const CorrespondenceMap2D& firstMap = GetCorrespondenceMap(*filteredCorrespondenceMapSequence, 0);
-	BaseTypesWrapper::Point2D sourcePoint = GetSource(firstMap, correspondenceIndex);
-	BaseTypesWrapper::Point2D sinkPoint = GetSink(firstMap, correspondenceIndex);
 
 	int mapIndex = 0;
 	int lastAddedMapBySink = 0;

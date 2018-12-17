@@ -123,7 +123,7 @@ void DfpcConfigurator::ConstructDFNs(YAML::Node configuration)
 		}
 	}
 
-void DfpcConfigurator::SplitConfigurationFile(YAML::Node configuration, std::string folderPath)
+void DfpcConfigurator::SplitConfigurationFile(YAML::Node configuration, const std::string& folderPath)
 	{
 	for(unsigned dfnIndex = 0; dfnIndex < configuration.size(); dfnIndex++)
 		{
@@ -132,7 +132,6 @@ void DfpcConfigurator::SplitConfigurationFile(YAML::Node configuration, std::str
 
 		std::stringstream nodeFileStream;
 		nodeFileStream << folderPath << "/" << (dfnName == "DFNsChain" ? "" : "DFN_") << dfnName << ".yaml";
-		std::string string = nodeFileStream.str();
 
 		YAML::Node parametersNode = dfnNode["Parameters"];
 
@@ -165,7 +164,7 @@ std::string DfpcConfigurator::ComputeConfigurationFolderPath(std::string configu
 		
 void DfpcConfigurator::ConfigureDfns()
 	{
-	for(std::map<std::string, DFNCommonInterface*>::iterator dfnsIterator = dfnsSet.begin(); dfnsIterator != dfnsSet.end(); dfnsIterator++)
+	for(std::map<std::string, DFNCommonInterface*>::iterator dfnsIterator = dfnsSet.begin(); dfnsIterator != dfnsSet.end(); ++dfnsIterator)
 		{
 		std::string dfnName = dfnsIterator->first;
 		DFNCommonInterface* dfn = dfnsIterator->second;
@@ -177,7 +176,7 @@ void DfpcConfigurator::ConfigureDfns()
 
 void DfpcConfigurator::DestroyDfns()
 	{
-	for(std::map<std::string, DFNCommonInterface*>::iterator dfnsIterator = dfnsSet.begin(); dfnsIterator != dfnsSet.end(); dfnsIterator++)
+	for(std::map<std::string, DFNCommonInterface*>::iterator dfnsIterator = dfnsSet.begin(); dfnsIterator != dfnsSet.end(); ++dfnsIterator)
 		{
 		DFNCommonInterface* dfn = dfnsIterator->second;
 		delete(dfn);

@@ -59,8 +59,8 @@ namespace FeaturesMatching3D
 			Ransac3D();
 			virtual ~Ransac3D();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 

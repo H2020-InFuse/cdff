@@ -40,7 +40,7 @@ const std::string IMAGE_FILES_FOLDER = "../../tests/Data/Images/";
 const std::string IMAGES_LIST_FILE_NAME = "imagesListStereo.txt";
 const std::string IMAGE_FILES_TYPE = "stereocamera_oneimage";
 
-GuiTestReconstruction3D::ImageFilesType StringToImageFilesType(std::string string)
+GuiTestReconstruction3D::ImageFilesType StringToImageFilesType(const std::string& string)
 	{
 	if (string == "monocamera" || string == "mono" || string == "camera" || string == "singlecamera" || string == "Monocamera" || string == "Mono" || string == "Camera")
 		{
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 	if (argc >= 7)
 		{
 		std::string enableSaving = argv[6];
-		if (enableSaving == "True" || enableSaving == "True" || enableSaving == "true")
+		if (enableSaving == "True" || enableSaving == "TRUE" || enableSaving == "true")
 			{
 			Visualizers::PclVisualizer::EnableSaving();
 			}		

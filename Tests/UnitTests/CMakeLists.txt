@@ -78,12 +78,7 @@ set(unittest_sources UnitTests.cpp
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
 set(unittest_libraries catch
-    adjustment_from_stereo
-    best_descriptor_match
-    cartesian_system_transform
-    cloudcompare_core
     cdff_converters
-    cdff_dfn_dfnexecutors
     cdff_helpers
     cdff_logger
     cdff_types
@@ -141,14 +136,36 @@ set(unittest_libraries catch
     cdff_dfn_derivative_edge_detection
     statistical_outlier_removal
     svd_decomposition
+    cdff_dfn_dfnexecutors
+    cdff_dfn_point_cloud_transform
+    cdff_dfn_depth_filtering
+    cdff_dfn_cameras_transform_estimation
+    cdff_dfn_features_matching_2d
+    cdff_dfn_fundamental_matrix_computation
+    cdff_dfn_primitive_matching
+    cdff_dfn_perspective_n_point_solving
+    cdff_dfn_kf_correction
+    cdff_dfn_kf_prediction
+    cdff_dfn_point_cloud_assembly
+    cdff_dfn_features_description_2d
+    cdff_dfn_features_extraction_2d
+    cdff_dfn_registration_3d
+    cdff_dfn_image_filtering
+    cdff_dfn_point_cloud_filtering
+    cdff_dfn_force_mesh_generator
+    cdff_dfn_transform_3d_estimation
+    cdff_dfn_point_cloud_reconstruction_2d_to_3d
+    cdff_dfn_stereo_reconstruction
+    cdff_dfn_features_extraction_3d
+    cdff_dfn_features_description_3d
+    cdff_dfn_features_matching_3d
+    cdff_dfn_bundle_adjustment
+    cdff_dfn_voxelization
     synthetic_generators
-    threshold_force
-    transform_3d_estimation_ceres
-    transform_3d_estimation_least_squares_minimization
-    triangulation
-    voxel_binning
-    matcher_assembly
-    cdff_dfn_canny_edge_detection
+    cdff_dfpc_configurator
+    cdff_dfpc_reconstruction_3d
+    cdff_dfpc_point_cloud_model_localisation
+    cdff_dfpc_haptic_scanning
 )
 
 # Make the Catch executable that runs the unit tests

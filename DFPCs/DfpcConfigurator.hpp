@@ -75,7 +75,7 @@ namespace DFPC
 
 	private:
 		void ConstructDFNs(YAML::Node configuration);
-		void SplitConfigurationFile(YAML::Node configuration,  std::string folderPath);
+		void SplitConfigurationFile(YAML::Node configuration,  const std::string& folderPath);
 		std::string ComputeConfigurationFolderPath(std::string configurationFilePath);
 		void ConfigureDfns();
 		void DestroyDfns();

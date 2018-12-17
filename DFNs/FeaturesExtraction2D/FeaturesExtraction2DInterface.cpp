@@ -10,7 +10,9 @@ namespace CDFF
 namespace DFN
 {
 
-FeaturesExtraction2DInterface::FeaturesExtraction2DInterface()
+FeaturesExtraction2DInterface::FeaturesExtraction2DInterface() :
+inFrame(),
+outFeatures()
 {
 }
 

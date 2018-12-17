@@ -34,7 +34,9 @@ namespace Voxelization
 //=====================================================================================================================
 Octree::Octree()
 {
-	parametersHelper.AddParameter<double>("GeneralParameters", "MinDistance", parameters.minDistance, DEFAULT_PARAMETERS.minDistance);
+    parameters = DEFAULT_PARAMETERS;
+
+    parametersHelper.AddParameter<double>("GeneralParameters", "MinDistance", parameters.minDistance, DEFAULT_PARAMETERS.minDistance);
     parametersHelper.AddParameter<double>("GeneralParameters", "MaxDistance", parameters.maxDistance, DEFAULT_PARAMETERS.maxDistance);
     parametersHelper.AddParameter<double>("GeneralParameters", "Resolution", parameters.resolution, DEFAULT_PARAMETERS.resolution);
 	configurationFilePath = "";

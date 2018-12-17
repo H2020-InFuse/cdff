@@ -112,7 +112,7 @@ std::vector<CorrespondenceMaps2DSequenceToMatConverter::ImagePoint> Corresponden
 		int separationMapIndex; //before this index, all the maps treat pointToExplore.image as sink, after that index they treat pointToExplore.image as source.
 		std::vector<int> mapsToExplore = ComputeMapsToExplore(numberOfImages, pointToExplore.image, separationMapIndex);
 
-		for(std::vector<int>::iterator mapIndex = mapsToExplore.begin(); mapIndex != mapsToExplore.end(); mapIndex++)
+		for(std::vector<int>::iterator mapIndex = mapsToExplore.begin(); mapIndex != mapsToExplore.end(); ++mapIndex)
 			{
 			const CorrespondenceMap2D& correspondenceMap = GetCorrespondenceMap(correspondenceMapsSequence, *mapIndex);
 			for(int correspondenceIndex = 0; correspondenceIndex < GetNumberOfCorrespondences(correspondenceMap); correspondenceIndex++)
@@ -146,7 +146,7 @@ std::vector<CorrespondenceMaps2DSequenceToMatConverter::ImagePoint> Corresponden
 	return chain;
 	}
 
-void CorrespondenceMaps2DSequenceToMatConverter::AddChainToMeasurementMatrix(const std::vector<ImagePoint> chain, cv::Mat& measurementMatrix)
+void CorrespondenceMaps2DSequenceToMatConverter::AddChainToMeasurementMatrix(const std::vector<ImagePoint>& chain, cv::Mat& measurementMatrix)
 	{
 	cv::Mat chainMatrix(2*chain.size(), 1, CV_32FC1);
 	for(int imageIndex = 0; imageIndex < chain.size(); imageIndex++)

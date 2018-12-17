@@ -74,10 +74,10 @@ namespace Reconstruction3D
 	 * --------------------------------------------------------------------
 	 */
         public:
-		ReconstructionFromMotion(Map* map = NULL);
+		explicit ReconstructionFromMotion(Map* map = NULL);
 		~ReconstructionFromMotion();
-		void run();
-		void setup();
+		void run() override;
+		void setup() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -164,6 +164,22 @@ namespace Reconstruction3D
 		bool ComputeFundamentalMatrix();
 		bool ComputePastToCurrentTransform();
 		void ComputeStereoPointCloud();
+
+		/*
+		* Inline Methods
+		*
+		*/
+
+		template <typename Type>
+		void DeleteIfNotNull(Type* &pointer)
+			{
+			if (pointer != NULL) 
+				{
+				delete(pointer);
+				pointer = NULL;
+				}
+			}
+
     };
 }
 }

@@ -23,8 +23,8 @@ namespace DFPC
             HapticScanning();
             virtual ~HapticScanning();
 
-            virtual void setup();
-            virtual void run();
+            virtual void setup() override;
+            virtual void run() override; 
 
         private:
             DfpcConfigurator configurator;

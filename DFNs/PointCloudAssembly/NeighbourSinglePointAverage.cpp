@@ -29,8 +29,12 @@ namespace DFN
 namespace PointCloudAssembly
 {
 
-NeighbourSinglePointAverage::NeighbourSinglePointAverage()
+NeighbourSinglePointAverage::NeighbourSinglePointAverage() :
+	storedCloud(NULL),
+	assembledCloud( boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> )) )
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "MaxNeighbourDistance", parameters.maxNeighbourDistance, DEFAULT_PARAMETERS.maxNeighbourDistance);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "IgnoreUnmatchedPointsOnFirstCloud", parameters.ignoreUnmatchedPointsOnFirstCloud, DEFAULT_PARAMETERS.ignoreUnmatchedPointsOnFirstCloud);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "IgnoreUnmatchedPointsOnSecondCloud", parameters.ignoreUnmatchedPointsOnSecondCloud, DEFAULT_PARAMETERS.ignoreUnmatchedPointsOnSecondCloud);
@@ -38,8 +42,6 @@ NeighbourSinglePointAverage::NeighbourSinglePointAverage()
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDistanceFilter", parameters.useDistanceFilter, DEFAULT_PARAMETERS.useDistanceFilter);
 
 	configurationFilePath = "";
-	storedCloud = NULL;
-	assembledCloud = boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> ));
 
 	SetPosition(inViewCenter, 0, 0, 0);
 	inViewRadius = 100;
@@ -146,7 +148,7 @@ void NeighbourSinglePointAverage::ComputeReplacementPoints()
 void NeighbourSinglePointAverage::AssemblePointCloud()
 	{
 	assembledCloud->points.resize(0);
-	for(std::map<int, pcl::PointXYZ>::iterator replacementIterator = firstReplacementMap.begin(); replacementIterator != firstReplacementMap.end(); replacementIterator++)
+	for(std::map<int, pcl::PointXYZ>::iterator replacementIterator = firstReplacementMap.begin(); replacementIterator != firstReplacementMap.end(); ++replacementIterator)
 		{
 		const pcl::PointXYZ& replacement = replacementIterator->second;
 		assembledCloud->points.push_back( pcl::PointXYZ(replacement) );

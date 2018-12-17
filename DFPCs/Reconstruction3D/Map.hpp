@@ -56,7 +56,7 @@ namespace Reconstruction3D
 	 * --------------------------------------------------------------------
 	 */
         public:
-		Map() { };
+		Map() { resolution = 0.001; };
 		virtual ~Map() { };
 
 		/*

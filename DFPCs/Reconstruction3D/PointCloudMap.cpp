@@ -29,7 +29,6 @@
 #include "PointCloudMap.hpp"
 #include "Errors/Assert.hpp"
 #include <pcl/filters/voxel_grid.h>
-#include <Visualizers/PCLVisualizer.hpp>
 
 namespace CDFF
 {
@@ -55,6 +54,7 @@ PointCloudMap::PointCloudMap() :
 	resolution = DEFAULT_RESOLUTION;
 	SetPosition(poseOfLatestPointCloud, 0, 0, 0);
 	SetOrientation(poseOfLatestPointCloud, 0, 0, 0, 1);
+	descriptorLength = 0;
 	}
 
 PointCloudMap::~PointCloudMap()
@@ -78,7 +78,6 @@ void PointCloudMap::AddPointCloud(PointCloudConstPtr pointCloudInput, VisualPoin
 	AddFeatureCloud(pointCloudFeaturesVector, affineTransform);
 	AddPointCloud(pointCloudInput, affineTransform);
 
-	DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(pointCloud, 500);
 	Copy(*cloudPoseInMap, poseOfLatestPointCloud);
 	}
 

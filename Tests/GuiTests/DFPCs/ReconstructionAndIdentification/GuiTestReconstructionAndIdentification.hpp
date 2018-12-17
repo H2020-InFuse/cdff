@@ -70,8 +70,8 @@ class GuiTestReconstructionAndLocalisation
 			STEREO_CAMERA_TWO_FILES
 			};
 
-		GuiTestReconstructionAndLocalisation(std::string configurationFilePath, std::string imageFilesFolder, std::string imagesListFileName, ImageFilesType imageFilesType,
-			std::string modelFilePath);
+		GuiTestReconstructionAndLocalisation(const std::string& configurationFilePath, const std::string& imageFilesFolder, const std::string& imagesListFileName, ImageFilesType imageFilesType,
+			const std::string& modelFilePath);
 		~GuiTestReconstructionAndLocalisation();
 
 		void Run(CDFF::DFPC::ReconstructionAndIdentificationInterface& reconstructorAndIdentifier);
@@ -98,9 +98,9 @@ class GuiTestReconstructionAndLocalisation
 		Converters::MatToFrameConverter frameConverter;
 		Converters::PclPointCloudToPointCloudConverter pointCloudConverter;
 
-		void LoadImagesList(std::string imagesListFileName);
+		void LoadImagesList(const std::string& imagesListFileName);
 		bool LoadNextImages(FrameWrapper::FrameConstPtr& leftImage, FrameWrapper::FrameConstPtr& rightImage);
-		PointCloudWrapper::PointCloudConstPtr LoadPointCloud(std::string file);
+		PointCloudWrapper::PointCloudConstPtr LoadPointCloud(const std::string& file);
 
 	};
 

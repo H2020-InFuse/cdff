@@ -32,15 +32,17 @@ namespace DFN
 namespace PointCloudAssembly
 {
 
-VoxelBinning::VoxelBinning()
+VoxelBinning::VoxelBinning() :
+storedCloud(NULL),
+assembledCloud( boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> )) )
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "VoxelResolution", parameters.voxelResolution, DEFAULT_PARAMETERS.voxelResolution);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseIncrementalMode", parameters.useIncrementalMode, DEFAULT_PARAMETERS.useIncrementalMode);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "UseDistanceFilter", parameters.useDistanceFilter, DEFAULT_PARAMETERS.useDistanceFilter);
 
 	configurationFilePath = "";
-	storedCloud = NULL;
-	assembledCloud = boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> ));
 
 	SetPosition(inViewCenter, 0, 0, 0);
 	inViewRadius = 100;

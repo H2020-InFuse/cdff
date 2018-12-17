@@ -10,7 +10,12 @@ namespace CDFF
 namespace DFN
 {
 
-PointCloudAssemblyInterface::PointCloudAssemblyInterface()
+PointCloudAssemblyInterface::PointCloudAssemblyInterface() :
+inFirstPointCloud(),
+inSecondPointCloud(),
+inViewCenter(),
+inViewRadius(),
+outAssembledPointCloud()
 {
 }
 

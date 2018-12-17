@@ -52,11 +52,10 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-SelectionTester::SelectionTester()
+SelectionTester::SelectionTester() :
+	featuresDescriptorConfigurationFilePath(""),
+	featuresMatcherConfigurationFilePath("")
 	{
-	featuresDescriptorConfigurationFilePath = "";
-	featuresMatcherConfigurationFilePath = "";
-
 	inputSourceCloud = NULL;
 	inputSinkCloud = NULL;
 	inputSourceKeypointsVector = NULL;
@@ -74,6 +73,8 @@ SelectionTester::SelectionTester()
 	inputCloudsWereLoaded = false;
 	inputKeypointsWereLoaded = false;
 	precisionReferenceWasLoaded = false;
+
+	matcherSuccess = false;
 	}
 
 SelectionTester::~SelectionTester()
@@ -100,7 +101,7 @@ void SelectionTester::SetDfns(CDFF::DFN::FeaturesDescription3DInterface* descrip
 		}
 	}
 
-void SelectionTester::SetConfigurationFilePaths(std::string featuresDescriptorConfigurationFilePath, std::string featuresMatcherConfigurationFilePath)
+void SelectionTester::SetConfigurationFilePaths(const std::string& featuresDescriptorConfigurationFilePath, const std::string& featuresMatcherConfigurationFilePath)
 	{
 	this->featuresDescriptorConfigurationFilePath = featuresDescriptorConfigurationFilePath;
 	this->featuresMatcherConfigurationFilePath = featuresMatcherConfigurationFilePath;
@@ -111,7 +112,7 @@ void SelectionTester::SetConfigurationFilePaths(std::string featuresDescriptorCo
 		}
 	}
 
-void SelectionTester::SetInputFilesPaths(std::string sourceCloudFilePath, std::string sinkCloudFilePath, std::string correspondencesFilePath)
+void SelectionTester::SetInputFilesPaths(const std::string& sourceCloudFilePath, const std::string& sinkCloudFilePath, const std::string& correspondencesFilePath)
 	{
 	this->sourceCloudFilePath = sourceCloudFilePath;
 	this->sinkCloudFilePath = sinkCloudFilePath;
@@ -297,7 +298,7 @@ void SelectionTester::ComputeMatchesFromPose()
 	Eigen::Translation<float, 3> translation(GetXPosition(*sourcePoseInSink), GetYPosition(*sourcePoseInSink), GetZPosition(*sourcePoseInSink));
 	AffineTransform affineTransform = rotation * translation;
 
-	float totalDistance;
+	float totalDistance = 0;
 	CorrespondenceMap3DPtr newOutputCorrespondenceMap = NewCorrespondenceMap3D();
 	for(int sourcePointIndex = 0; sourcePointIndex < GetNumberOfPoints(*inputSourceKeypointsVector); sourcePointIndex++)
 		{

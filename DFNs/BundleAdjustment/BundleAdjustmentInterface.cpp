@@ -10,7 +10,13 @@ namespace CDFF
 namespace DFN
 {
 
-BundleAdjustmentInterface::BundleAdjustmentInterface()
+BundleAdjustmentInterface::BundleAdjustmentInterface() :
+inCorrespondenceMapsSequence(),
+inGuessedPosesSequence(),
+inGuessedPointCloud(),
+outPosesSequence(),
+outSuccess(),
+outError()
 {
 }
 

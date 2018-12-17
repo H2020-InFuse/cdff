@@ -49,8 +49,8 @@ namespace FeaturesDescription2D
 			OrbDescriptor();
 			virtual ~OrbDescriptor();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 
@@ -78,9 +78,9 @@ namespace FeaturesDescription2D
 			std::vector<cv::KeyPoint> Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& featuresVector);
 
 			void ValidateParameters();
-			void ValidateInputs(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector);
+			void ValidateInputs(cv::Mat inputImage, const std::vector<cv::KeyPoint>& keypointsVector);
 
-			static int ConvertToScoreType(std::string scoreType);
+			static int ConvertToScoreType(const std::string& scoreType);
 	};
 }
 }

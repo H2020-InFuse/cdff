@@ -40,7 +40,8 @@ using namespace FrameWrapper;
  *
  * --------------------------------------------------------------------------
  */
-ImageFilteringTestInterface::ImageFilteringTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, ImageFilteringInterface* filter)
+ImageFilteringTestInterface::ImageFilteringTestInterface(const std::string& folderPath, const std::string& baseConfigurationFileName, const std::string& performanceMeasuresFileName, 
+	ImageFilteringInterface* filter)
 	: PerformanceTestInterface(folderPath, baseConfigurationFileName, performanceMeasuresFileName)
 	{
 	ASSERT(filter != NULL, "The filter was not correctly defined");
@@ -62,14 +63,14 @@ ImageFilteringTestInterface::~ImageFilteringTestInterface()
 	{
 	}
 
-void ImageFilteringTestInterface::SetImageFilePath(std::string baseImageFolder, std::string imagesListFileName)
+void ImageFilteringTestInterface::SetImageFilePath(const std::string& baseImageFolder, const std::string& imagesListFileName)
 	{
 	this->baseImageFolder = baseImageFolder;
 	this->imagesListFileName = imagesListFileName;
 	ReadImageFileNamesList();
 	}
 
-void ImageFilteringTestInterface::SetOutputFile(std::string imagesOutputFileBaseName, std::string imagesOutputExtension)
+void ImageFilteringTestInterface::SetOutputFile(const std::string& imagesOutputFileBaseName, const std::string& imagesOutputExtension)
 	{
 	saveOutput = true;
 	this->imagesOutputFileBaseName = imagesOutputFileBaseName;

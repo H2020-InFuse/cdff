@@ -1,45 +1,23 @@
-add_library(
-    image_filtering
-    ImageFilteringInterface.cpp
-)
+set(IMAGE_FILTERING_SOURCES "ImageFilteringInterface.cpp")
+set(IMAGE_FILTERING_INCLUDE_DIRS "")
+set(IMAGE_FILTERING_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(OpenCV_FOUND)
+	set(IMAGE_FILTERING_SOURCES ${IMAGE_FILTERING_SOURCES} "ImageUndistortion.cpp" "ImageUndistortionRectification.cpp" "DerivativeEdgeDetection.cpp" "CannyEdgeDetection.cpp"
+		"BackgroundExtraction.cpp" "NormalVectorExtraction.cpp" "KMeansClustering.cpp")
+	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
+	set(IMAGE_FILTERING_DEPENDENCIES ${IMAGE_FILTERING_DEPENDENCIES} ${OpenCV_LIBS} cdff_validators)
+endif()
 
 add_library(
-    image_undistortion
-    ImageUndistortion.cpp
+    cdff_dfn_image_filtering
+    ${IMAGE_FILTERING_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_image_filtering
+    SYSTEM PRIVATE ${IMAGE_FILTERING_INCLUDE_DIRS}
 )
 target_link_libraries(
-    image_undistortion
-    image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core cdff_converters
+    cdff_dfn_image_filtering
+    ${IMAGE_FILTERING_DEPENDENCIES}
 )
-
-add_library(
-    image_undistortion_rectification
-    ImageUndistortionRectification.cpp
-)
-target_link_libraries(
-    image_undistortion_rectification
-    image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core cdff_converters opencv_calib3d
-)
-
-add_library(
-    cdff_dfn_derivative_edge_detection
-    DerivativeEdgeDetection.cpp
-)
-target_link_libraries(
-    cdff_dfn_derivative_edge_detection
-    image_filtering yaml-cpp cdff_helpers opencv_imgproc opencv_core cdff_converters opencv_calib3d
-)
-
-add_library(cdff_dfn_background_subtraction BackgroundExtraction.cpp)
-target_link_libraries(cdff_dfn_background_subtraction cdff_validators image_filtering cdff_helpers)
-
-add_library(cdff_dfn_normal_vector_extraction NormalVectorExtraction.cpp)
-target_link_libraries(cdff_dfn_normal_vector_extraction
-        cdff_validators image_filtering cdff_helpers yaml-cpp)
-
-add_library(cdff_dfn_kmeans KMeansClustering.cpp)
-target_link_libraries(cdff_dfn_kmeans image_filtering cdff_helpers cdff_validators)
-
-add_library(cdff_dfn_canny_edge_detection CannyEdgeDetection.cpp)
-target_link_libraries(cdff_dfn_canny_edge_detection
-        cdff_validators image_filtering cdff_helpers opencv_core yaml-cpp)

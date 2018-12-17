@@ -1,8 +1,16 @@
-add_library(
-    dem_building
-    DEMBuildingInterface.cpp
-)
+set(DEM_BUILDING_SOURCES "DEMBuildingInterface.cpp")
+set(DEM_BUILDING_INCLUDE_DIRS "")
+set(DEM_BUILDING_DEPENDENCIES "")
 
+add_library(
+    cdff_dfpc_dem_building
+    ${DEM_BUILDING_SOURCES}
+    )
+target_include_directories(
+    cdff_dfpc_dem_building
+    SYSTEM PRIVATE ${DEM_BUILDING_INCLUDE_DIRS}
+    )
 target_link_libraries(
-    dem_building
-)
+    cdff_dfpc_dem_building
+    ${DEM_BUILDING_DEPENDENCIES}
+    )

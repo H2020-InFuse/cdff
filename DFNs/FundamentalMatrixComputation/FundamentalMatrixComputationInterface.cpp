@@ -10,7 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-FundamentalMatrixComputationInterface::FundamentalMatrixComputationInterface()
+FundamentalMatrixComputationInterface::FundamentalMatrixComputationInterface() :
+inMatches(),
+outFundamentalMatrix(),
+outSuccess(),
+outInlierMatches()
 {
 }
 

@@ -27,6 +27,8 @@ namespace FeaturesExtraction2D
 
 OrbDetectorDescriptor::OrbDetectorDescriptor()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<int>("GeneralParameters", "EdgeThreshold", parameters.edgeThreshold, DEFAULT_PARAMETERS.edgeThreshold);
 	parametersHelper.AddParameter<int>("GeneralParameters", "FastThreshold", parameters.fastThreshold, DEFAULT_PARAMETERS.fastThreshold);
 	parametersHelper.AddParameter<int>("GeneralParameters", "FirstLevel", parameters.firstLevel, DEFAULT_PARAMETERS.firstLevel);
@@ -138,7 +140,7 @@ void OrbDetectorDescriptor::ValidateInputs(cv::Mat inputImage)
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "OrbDetectorDescriptor error: input image is empty");
 }
 
-int OrbDetectorDescriptor::ConvertToScoreType(std::string scoreType)
+int OrbDetectorDescriptor::ConvertToScoreType(const std::string& scoreType)
 {
 	if (scoreType == "HarrisScore" || scoreType == "0")
 	{

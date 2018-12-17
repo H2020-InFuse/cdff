@@ -61,10 +61,10 @@ class SelectionTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		SelectionTester(std::string configurationFilePath, CDFF::DFN::FeaturesExtraction2DInterface* dfn);
+		SelectionTester(const std::string& configurationFilePath, CDFF::DFN::FeaturesExtraction2DInterface* dfn);
 		~SelectionTester();
 
-		void SetFilesPaths(std::string inputImageFilePath, std::string numberReferenceFilePath, std::string precisionReferenceFilePath);
+		void SetFilesPaths(const std::string& inputImageFilePath, const std::string& numberReferenceFilePath, const std::string& precisionReferenceFilePath);
 		void ExecuteDfn();
 		bool IsSelectionValid(float numberPercentageThreshold, unsigned pixelOutlierThreshold, float outliersPercentageThreshold);
 
@@ -97,7 +97,7 @@ class SelectionTester
 		bool precisionReferenceWasLoaded;
 
 		void LoadInputImage();
-		void LoadReferenceFeatures(std::string& filePath, cv::Mat& keypointsMatrix);
+		void LoadReferenceFeatures(const std::string& filePath, cv::Mat& keypointsMatrix);
 		void ConfigureDfn();
 
 		bool ValidateNumberOfKeypoints(float numberPercentageThreshold);

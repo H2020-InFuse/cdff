@@ -1,9 +1,9 @@
 add_library(
-    dfpc_configurator
+    cdff_dfpc_configurator
     DfpcConfigurator.cpp
 )
 target_link_libraries(
-	dfpc_configurator
+	cdff_dfpc_configurator
 	cdff_helpers cdff_logger cdff_types dfns_builder
 )
 

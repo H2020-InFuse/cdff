@@ -17,7 +17,6 @@
 #include <pcl/search/search.h>
 #include <pcl/search/kdtree.h>
 #include <pcl/segmentation/region_growing.h>
-#include <Visualizers/PCLVisualizer.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -35,6 +34,8 @@ namespace FeaturesExtraction3D
 
 CornerDetector3D::CornerDetector3D()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfNeighboursNormalEstimation", parameters.numberOfNeighboursNormalEstimation, DEFAULT_PARAMETERS.numberOfNeighboursNormalEstimation);
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfNeighboursRegionGrowing", parameters.numberOfNeighboursRegionGrowing, DEFAULT_PARAMETERS.numberOfNeighboursRegionGrowing);
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfNeightbourBorderSelection", parameters.numberOfNeightbourBorderSelection, DEFAULT_PARAMETERS.numberOfNeightbourBorderSelection);
@@ -195,8 +196,6 @@ pcl::PointIndicesConstPtr CornerDetector3D::DetectCorners(pcl::PointCloud<pcl::P
 			}
 		pointsCloudList.push_back(newCloud);
 		}
-	Visualizers::PclVisualizer::Enable();
-	DEBUG_SHOW_POINT_CLOUDS(pointsCloudList);
 
 	return corners;
 }

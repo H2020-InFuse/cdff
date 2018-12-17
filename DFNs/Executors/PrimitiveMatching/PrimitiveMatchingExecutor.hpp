@@ -25,8 +25,8 @@ namespace Executors
 *
 */
 
-void Execute(PrimitiveMatchingInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, const asn1SccStringSequence& inputPrimitiveArray, asn1SccStringSequence outputPrimitiveArray);
-void Execute(PrimitiveMatchingInterface* dfn, const FrameWrapper::Frame& inputFrame, const asn1SccStringSequence& inputPrimitiveArray, asn1SccStringSequence outputPrimitiveArray);
+void Execute(PrimitiveMatchingInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, const asn1SccStringSequence& inputPrimitiveArray, asn1SccStringSequence& outputPrimitiveArray);
+void Execute(PrimitiveMatchingInterface* dfn, const FrameWrapper::Frame& inputFrame, const asn1SccStringSequence& inputPrimitiveArray, asn1SccStringSequence& outputPrimitiveArray);
 
 }
 }

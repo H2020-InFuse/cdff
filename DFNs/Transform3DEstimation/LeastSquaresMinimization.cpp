@@ -33,6 +33,8 @@ namespace Transform3DEstimation
 
 LeastSquaresMinimization::LeastSquaresMinimization()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "MaximumAllowedError", parameters.maximumAllowedError, DEFAULT_PARAMETERS.maximumAllowedError);
 
 	configurationFilePath = "";

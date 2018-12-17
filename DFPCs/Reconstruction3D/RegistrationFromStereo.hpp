@@ -81,8 +81,8 @@ namespace Reconstruction3D
         public:
 		RegistrationFromStereo();
 		~RegistrationFromStereo();
-		void run();
-		void setup();
+		void run() override;
+		void setup() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -122,11 +122,6 @@ namespace Reconstruction3D
 		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
 		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
 		CDFF::DFN::Registration3DInterface* registrator3d;
-
-		#ifdef TESTING
-		std::ofstream logFile;
-		void WriteOutputToLogFile();
-		#endif
 
 		//Helpers
 		BundleHistory* bundleHistory;

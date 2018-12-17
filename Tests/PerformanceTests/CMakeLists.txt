@@ -39,7 +39,7 @@ add_executable(
 )
 target_link_libraries(
 	orb_detector_descriptor_flann_matcher_performance_test
-	cdff_helpers cdff_logger cdff_types orb_detector_descriptor flann_matcher performance_integration_test_interface cdff_visualizers_opencv cdff_visualizers_pcl
+	cdff_helpers cdff_logger cdff_types cdff_dfn_features_extraction_2d cdff_dfn_features_matching_2d performance_integration_test_interface cdff_visualizers_opencv cdff_visualizers_pcl
 )
 
 add_executable(
@@ -48,7 +48,7 @@ add_executable(
 )
 target_link_libraries(
 	orb_flann_ransac_decomposition
-	cdff_helpers cdff_logger cdff_types orb_detector_descriptor flann_matcher fundamental_matrix_ransac essential_matrix_decomposition performance_integration_test_interface cdff_visualizers_opencv cdff_visualizers_pcl
+	cdff_helpers cdff_logger cdff_types cdff_dfn_features_extraction_2d cdff_dfn_features_matching_2d cdff_dfn_fundamental_matrix_computation cdff_dfn_cameras_transform_estimation performance_integration_test_interface cdff_visualizers_opencv cdff_visualizers_pcl
 )
 
 add_executable(
@@ -59,7 +59,7 @@ add_executable(
 target_compile_definitions(harris_shot_icp PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	harris_shot_icp
-	cdff_helpers cdff_logger cdff_types harris_detector_3d shot_descriptor_3d icp_3d performance_integration_test_interface cdff_visualizers_opencv cdff_visualizers_pcl cdff_dfn_dfnexecutors
+	cdff_helpers cdff_logger cdff_types cdff_dfn_features_extraction_3d cdff_dfn_features_description_3d cdff_dfn_features_matching_3d performance_integration_test_interface cdff_visualizers_opencv cdff_visualizers_pcl cdff_dfn_dfnexecutors
 )
 
 add_executable(
@@ -70,7 +70,7 @@ add_executable(
 target_compile_definitions(harris_shot_ransac PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	harris_shot_ransac
-	cdff_helpers cdff_logger cdff_types harris_detector_3d shot_descriptor_3d ransac_3d performance_integration_test_interface cdff_visualizers_opencv cdff_visualizers_pcl cdff_dfn_dfnexecutors
+	cdff_helpers cdff_logger cdff_types cdff_dfn_features_extraction_3d cdff_dfn_features_description_3d cdff_dfn_features_matching_3d performance_integration_test_interface cdff_visualizers_opencv cdff_visualizers_pcl cdff_dfn_dfnexecutors
 )
 
 
@@ -92,7 +92,7 @@ add_executable(
 target_compile_definitions(hirschmuller_disparity_mapping_performance_test PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	hirschmuller_disparity_mapping_performance_test
-	cdff_helpers cdff_logger cdff_types hirschmuller_disparity_mapping performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
+	cdff_helpers cdff_logger cdff_types cdff_dfn_stereo_reconstruction performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
 )
 
 add_executable(
@@ -103,7 +103,7 @@ add_executable(
 target_compile_definitions(scanline_optimization_performance_test PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	scanline_optimization_performance_test
-	cdff_helpers cdff_logger cdff_types scanline_optimization performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl opencv_imgcodecs
+	cdff_helpers cdff_logger cdff_types cdff_dfn_stereo_reconstruction performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl opencv_imgcodecs
 )
 
 add_executable(
@@ -113,7 +113,7 @@ add_executable(
 )
 target_link_libraries(
 	image_undistortion_rectification_performance_test
-	cdff_helpers cdff_logger cdff_types image_undistortion_rectification performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl
+	cdff_helpers cdff_logger cdff_types cdff_dfn_image_filtering performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl
 )
 
 add_executable(
@@ -123,5 +123,5 @@ add_executable(
 )
 target_link_libraries(
 	image_undistortion_performance_test
-	cdff_helpers cdff_logger cdff_types image_undistortion performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl opencv_imgcodecs
+	cdff_helpers cdff_logger cdff_types cdff_dfn_image_filtering performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl opencv_imgcodecs
 )

@@ -33,6 +33,8 @@ namespace FeaturesDescription3D
 
 ShotDescriptor3D::ShotDescriptor3D()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>(
 		"GeneralParameters", "LocalReferenceFrameEstimationRadius",
 		parameters.baseOptions.localReferenceFrameEstimationRadius,

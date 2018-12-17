@@ -26,7 +26,8 @@ class BundleHistory
 		typedef std::vector<CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr> CorrespondenceMapList;
 		typedef std::vector<PointCloudWrapper::PointCloudConstPtr> PointCloudList;
 
-		BundleHistory(int size);
+		BundleHistory() = delete;
+		explicit BundleHistory(int size);
 		~BundleHistory();
 
 		void AddImages(const FrameWrapper::Frame& leftImage, const FrameWrapper::Frame& rightImage);
@@ -85,7 +86,7 @@ class BundleHistory
 		template <typename Type>
 		inline void DeleteMapEntry(std::map<std::string, Type>& vectorMap, int index)
 			{
-			for(typename std::map<std::string, Type>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); iterator++)
+			for(typename std::map<std::string, Type>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); ++iterator)
 				{
 				DeleteIfNotNull( iterator->second.at(index) );
 				}
@@ -103,7 +104,7 @@ class BundleHistory
 		template <typename Type>
 		inline void ReplaceIndexByIndexOnMap(std::map<std::string, Type>& vectorMap, int replacedIndex, int replacingIndex)
 			{
-			for(typename std::map<std::string, Type>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); iterator++)
+			for(typename std::map<std::string, Type>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); ++iterator)
 				{
 				iterator->second.at(replacedIndex) = iterator->second.at(replacingIndex);
 				}
@@ -112,7 +113,7 @@ class BundleHistory
 		template <typename Type>
 		inline void ReplaceIndexByNullOnMap(std::map<std::string, Type>& vectorMap, int replacedIndex)
 			{
-			for(typename std::map<std::string, Type>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); iterator++)
+			for(typename std::map<std::string, Type>::iterator iterator = vectorMap.begin(); iterator != vectorMap.end(); ++iterator)
 				{
 				iterator->second.at(replacedIndex) = NULL;
 				}

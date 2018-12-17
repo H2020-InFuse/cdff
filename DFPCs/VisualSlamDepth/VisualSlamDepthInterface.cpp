@@ -10,7 +10,11 @@ namespace CDFF
 namespace DFPC
 {
 
-VisualSlamDepthInterface::VisualSlamDepthInterface()
+VisualSlamDepthInterface::VisualSlamDepthInterface() :
+inDepthImage(),
+inRgbImage(),
+inRoverPose(),
+outEstimatedPose()
 {
 }
 

@@ -34,7 +34,7 @@ namespace DFN
                 DEBUG
             };
 
-            DFNCommonInterface() : outputUpdated(true) {}
+            DFNCommonInterface() : outputUpdated(true), executionTime(0), logLevel(OFF) {}
             virtual ~DFNCommonInterface() {}
             virtual void process() = 0;
             virtual void configure() = 0;

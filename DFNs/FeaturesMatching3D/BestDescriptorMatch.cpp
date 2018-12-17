@@ -36,6 +36,8 @@ namespace FeaturesMatching3D
 
 BestDescriptorMatch::BestDescriptorMatch()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<double>(
 		"GeneralParameters", "MaxCorrespondenceDistance",
 		parameters.maxCorrespondenceDistance, DEFAULT_PARAMETERS.maxCorrespondenceDistance);

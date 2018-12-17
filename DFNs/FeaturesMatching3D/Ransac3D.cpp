@@ -37,6 +37,8 @@ namespace FeaturesMatching3D
 
 Ransac3D::Ransac3D()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>(
 		"GeneralParameters", "SimilarityThreshold",
 		parameters.similarityThreshold, DEFAULT_PARAMETERS.similarityThreshold);

@@ -69,6 +69,8 @@ namespace PrimitiveMatching
 //=====================================================================================================================
 HuInvariants::HuInvariants()
 {
+    parameters = DEFAULT_PARAMETERS;
+
     parametersHelper.AddParameter<int>("GeneralParameters", "MinimumArea", parameters.minimumArea, DEFAULT_PARAMETERS.minimumArea);
     parametersHelper.AddParameter<std::string>("GeneralParameters", "TemplatesFolder", parameters.templatesFolder, DEFAULT_PARAMETERS.templatesFolder);
     parametersHelper.AddParameter<double>("GeneralParameters", "MaximumSimilarityRatio", parameters.maximumSimilarityRatio, DEFAULT_PARAMETERS.maximumSimilarityRatio);
@@ -152,10 +154,12 @@ std::vector< std::string > HuInvariants::Match(const cv::Mat& inputImage)
     matchTemplatesAndImage(input_image_contours);
 
     std::vector<std::string> primitives_ordered_by_matching_probability;
-    for( auto info: m_matching_info )
-    {
-        primitives_ordered_by_matching_probability.push_back(info.primitive);
-    }
+    std::transform(
+	m_matching_info.begin(), 
+	m_matching_info.end(), 
+	std::back_inserter(primitives_ordered_by_matching_probability), 
+	[](PrimitiveMatchingInfo info){ return info.primitive; }
+	);
 
     return primitives_ordered_by_matching_probability;
 }
@@ -215,7 +219,7 @@ void HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<cv::Poin
         m_matching_info.clear();
 
         std::map<std::string, std::vector<cv::Point>>::iterator it;
-        for ( it = templates.begin(); it != templates.end(); it++ )
+        for ( it = templates.begin(); it != templates.end(); ++it )
         {
             auto template_contour = it->second;
             auto template_name = it->first;
@@ -245,9 +249,9 @@ void HuInvariants::matchTemplatesAndImage(const std::vector<std::vector<cv::Poin
         auto matching_info_it = m_matching_info.begin();
         while( matching_info_it != m_matching_info.end() )
         {
-            if(std::find(std::begin(primitives), std::end(primitives), matching_info_it->primitive) != primitives.end())
+            if(std::find(std::begin(primitives), std::end(primitives), matching_info_it->primitive) != std::end(primitives))
             {
-                m_matching_info.erase(matching_info_it);
+                matching_info_it= m_matching_info.erase(matching_info_it);
             }
             else
             {
@@ -267,14 +271,16 @@ std::map<std::string, std::vector<cv::Point> > HuInvariants::getTemplatesToMatch
     int size = m_template_files.size();
     for( unsigned int index = 0; index < size; index ++ )
     {
-        for( auto primitive : primitive_names )
-        {
-            if( ::extractFileName(m_template_files[index]) == primitive )
+	std::string template_file_name = ::extractFileName(m_template_files[index]);
+	bool primitiveFound = std::any_of(
+	    primitive_names.begin(),
+	    primitive_names.end(),
+	    [template_file_name](std::string primitive) { return (template_file_name == primitive); }
+	    );
+	if(primitiveFound)
             {
                 template_contours_to_match.insert(std::make_pair(m_template_files[index], m_template_contours[index]));
-                break;
             }
-        }
     }
 
     return template_contours_to_match;

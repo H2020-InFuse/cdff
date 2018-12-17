@@ -10,7 +10,13 @@ namespace CDFF
 namespace DFN
 {
 
-Registration3DInterface::Registration3DInterface()
+Registration3DInterface::Registration3DInterface() :
+inSourceCloud(),
+inSinkCloud(),
+inTransformGuess(),
+inUseGuess(),
+outTransform(),
+outSuccess()
 {
 }
 

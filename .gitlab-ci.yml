@@ -1,20 +1,63 @@
-image: nexus.spaceapplications.com/repository/infuse/cdff-ci:2.0.3
-
-stages:
-  - platform
-  - autogeneration
+ variables:
+  REGISTRY_PREFIX: nexus.spaceapplications.com/
+  INFUSE_REGISTRY_PREFIX: repository/infuse/
+  CI_IMAGE_TAG: ${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}cdff-ci
+  USER_IMAGE_TAG: ${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}cdff-user
+  CI_FILE: Dockerfile.ci
+  USER_FILE: Dockerfile.user
+  
+ stages:
+  - docker
+  - asngeneration
   - build
   - test
   - deploy
 
-hardware:
-  stage : platform
-  script:
-      - cat /proc/cpuinfo
-      - lscpu
+ generate-docker-ci:
+   services:
+    - docker:dind
+   image: nexus.spaceapplications.com/repository/infuse/docker-builder
+   stage: docker
+   script:
+    - cd Tools/Docker   
+    - tag_ci=$(grep "LABEL version=" $CI_FILE | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+    - latest_tag_ci=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-ci' https://hook.io/datastore/get | tr -d '"')
+    - echo latest_tag_ci $latest_tag_ci , tag_ci  $tag_ci
+    - dockerize(){ if [[ ! $latest_tag_ci < $tag_ci ]]; then return 1; else return 0; fi } 
+    - dockerize || (echo "no need to build new docker image" && exit 0)
+    - dockerize && docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
+    - dockerize && docker pull $CI_IMAGE_TAG':'$latest_tag_ci
+    - dockerize && docker build -t $CI_IMAGE_TAG':'$tag_ci -f ./$CI_FILE .
+    - dockerize && docker push $CI_IMAGE_TAG':'$tag_ci
+    - dockerize && docker tag $CI_IMAGE_TAG':'$tag_ci $CI_IMAGE_TAG':'latest
+    - dockerize && docker push $CI_IMAGE_TAG':'latest
+    - dockerize && curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-ci&value='$tag_ci https://hook.io/datastore/set
+    - exit 0
 
-autogeneration:
-  stage : autogeneration
+ generate-docker-user:
+   services:
+    - docker:dind
+   image: nexus.spaceapplications.com/repository/infuse/docker-builder
+   stage: docker
+   script: 
+    - cd Tools/Docker   
+    - tag_user=$(grep "LABEL version=" $USER_FILE | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+    - latest_tag_user=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-user' https://hook.io/datastore/get | tr -d '"')
+    - echo latest_tag_user $latest_tag_user , tag_user  $tag_user
+    - dockerize(){ if [[ ! $latest_tag_user < $tag_user ]]; then return 1; else return 0; fi } 
+    - dockerize || (echo 'no need to build new docker image ' && exit 0)
+    - dockerize && docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
+    - dockerize && docker pull $USER_IMAGE_TAG':'$latest_tag_user
+    - dockerize && docker build -t $USER_IMAGE_TAG':'$tag_user -f $USER_FILE .
+    - dockerize && docker push $USER_IMAGE_TAG':'$tag_user
+    - dockerize && docker tag $USER_IMAGE_TAG':'$tag_user $USER_IMAGE_TAG':'latest
+    - dockerize && docker push $USER_IMAGE_TAG':'latest
+    - dockerize && curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$CI_PROJECT_NAME'-user&value='$tag_user https://hook.io/datastore/set 
+    - exit 0
+
+ asngeneration:
+  image: '${CI_IMAGE_TAG}:latest'
+  stage : asngeneration
   script:
       - cd Tools/ASN.1
       - ./GeneratorScript.sh
@@ -23,29 +66,76 @@ autogeneration:
       - Common/Types/C/
     expire_in: 4 weeks
 
-build:
+ .build-cdff_template: &build-cdff
+    image: '${CI_IMAGE_TAG}:latest'
+    script:
+        - "pwd"
+        - "mkdir build"
+        - "cd build"
+        - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
+        - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
+        - "JOBS=$((CPUS/2))"
+        - "JOBS=$((JOBS > 0 ? JOBS : 1))"
+        - "make --jobs=${JOBS} --output-sync=target"
+
+ build-cdff:
+  <<: *build-cdff
   stage: build
-  script:
-      - "pwd"
-      - "mkdir build"
-      - "cd build"
-      - "cmake -DCMAKE_INSTALL_PREFIX=./ .."
-      - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
-      - "JOBS=$((CPUS/2))"
-      - "JOBS=$((JOBS > 0 ? JOBS : 1))"
-      - "make --jobs=${JOBS} --output-sync=target"
+  dependencies:
+      - asngeneration
   artifacts:
     paths:
       - build/
     expire_in: 4 weeks
 
-unit tests:
+ full_static_analysis:
+  stage: test
+  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:1.85'
+  script:
+      - chmod +x Tools/CPPCheck/full-cppcheck.sh
+      - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
+  only:
+      - master
+  artifacts:
+    paths:
+      - cppcheck/
+    expire_in: 4 weeks
+
+ partial_static_analysis:
+  stage: test
+  image: '${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}docker-cppcheck:1.85'
+  script:
+      - chmod +x Tools/CPPCheck/partial-cppcheck.sh
+      - Tools/CPPCheck/partial-cppcheck.sh
+  artifacts:
+    paths:
+      - cppcheck/
+    expire_in: 4 weeks
+
+ pages:
+    stage: deploy
+    when: always
+    dependencies:
+        - full_static_analysis
+    script:
+      - mkdir .public
+      - cp -r cppcheck/public/* .public
+      - mv .public public
+    artifacts:
+      paths:
+        - public
+    only:
+      - master
+
+ unit_tests:
+  image: '${CI_IMAGE_TAG}:latest'
   stage: test
   script:
       - cd build/Tests/UnitTests
       - ./cdff-unit-tests
 
-deploy_staging:
+ deploy_staging:
+  image: '${CI_IMAGE_TAG}:latest'
   stage: deploy
   script:
       - echo "Deploy to staging server"

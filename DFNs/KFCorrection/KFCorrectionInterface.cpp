@@ -10,7 +10,12 @@ namespace CDFF
 namespace DFN
 {
 
-KFCorrectionInterface::KFCorrectionInterface()
+KFCorrectionInterface::KFCorrectionInterface() :
+inPredictedState(),
+inMeasurement(),
+inPredictedStateCovariance(),
+outCorrectedState(),
+outStateCovariance()
 {
 }
 

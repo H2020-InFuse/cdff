@@ -1,13 +1,22 @@
-add_library(
-    feature_description_3d
-    FeaturesDescription3DInterface.cpp
-)
+set(FEATURES_DESCRIPTION_3D_SOURCES "FeaturesDescription3DInterface.cpp")
+set(FEATURES_DESCRIPTION_3D_INCLUDE_DIRS "")
+set(FEATURES_DESCRIPTION_3D_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(PCL_FOUND)
+	set(FEATURES_DESCRIPTION_3D_SOURCES ${FEATURES_DESCRIPTION_3D_SOURCES} "ShotDescriptor3D.cpp")
+	set(FEATURES_DESCRIPTION_3D_INCLUDE_DIRS ${FEATURES_DESCRIPTION_3D_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
+	set(FEATURES_DESCRIPTION_3D_DEPENDENCIES ${FEATURES_DESCRIPTION_3D_DEPENDENCIES}  ${PCL_COMMON_LIBRARIES} ${PCL_FEATURES_LIBRARIES} ${PCL_KDTREE_LIBRARIES} ${PCL_SEARCH_LIBRARIES})
+endif()
 
 add_library(
-    shot_descriptor_3d
-    ShotDescriptor3D.cpp
+    cdff_dfn_features_description_3d
+    ${FEATURES_DESCRIPTION_3D_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_features_description_3d
+    SYSTEM PRIVATE ${FEATURES_DESCRIPTION_3D_INCLUDE_DIRS}
 )
 target_link_libraries(
-    shot_descriptor_3d
-    feature_description_3d cdff_types yaml-cpp cdff_helpers cdff_converters
+    cdff_dfn_features_description_3d
+    ${FEATURES_DESCRIPTION_3D_DEPENDENCIES}
 )

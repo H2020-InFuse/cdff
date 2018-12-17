@@ -10,7 +10,10 @@ namespace CDFF
 namespace DFN
 {
 
-PointCloudTransformInterface::PointCloudTransformInterface()
+PointCloudTransformInterface::PointCloudTransformInterface() :
+inPointCloud(),
+inPose(),
+outTransformedPointCloud()
 {
 }
 

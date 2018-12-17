@@ -43,8 +43,8 @@ namespace PointCloudTransform
 			CartesianSystemTransform();
 			virtual ~CartesianSystemTransform();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 			typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;

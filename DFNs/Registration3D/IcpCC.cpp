@@ -31,6 +31,8 @@ namespace Registration3D
 
 IcpCC::IcpCC()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<ConvergenceType, ConvergenceTypeHelper>("GeneralParameters", "ConvergenceType", parameters.convergenceType, DEFAULT_PARAMETERS.convergenceType);
 	parametersHelper.AddParameter<double>("GeneralParameters", "MinimumErrorReduction", parameters.minimumErrorReduction, DEFAULT_PARAMETERS.minimumErrorReduction);
 	parametersHelper.AddParameter<int>("GeneralParameters", "MaximumNumberOfIterations", parameters.maximumNumberOfIterations, DEFAULT_PARAMETERS.maximumNumberOfIterations);
@@ -141,9 +143,9 @@ void IcpCC::ComputeTransform(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* 
 	}
 }
 
-	CCLib::PointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
+CCLib::PointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
 {
-	CCLib::PointCloud* ccCloud = new CCLib::PointCloud;
+	CCLib::PointCloud* ccCloud = new CCLib::PointCloud();
 	ccCloud->reserve( GetNumberOfPoints(*cloud) );
 
 	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(*cloud); pointIndex++)
@@ -152,9 +154,14 @@ void IcpCC::ComputeTransform(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* 
 		ccCloud->addPoint(newPoint);
 	}
 
-	unsigned fieldIndex = ccCloud->addScalarField("RegistrationDistances");
-	ASSERT(fieldIndex >= 0, "IcpCC error, it was not possible to add RegistrationDistances scalar field. Not enough memory?");
-	ccCloud->setCurrentScalarField(fieldIndex);
+	int fieldIndex = ccCloud->addScalarField("RegistrationDistances");
+
+	if (fieldIndex ==-1) {
+        ASSERT(true, "IcpCC error, it was not possible to add RegistrationDistances scalar field. Not enough memory?");
+	}
+	else {
+        ccCloud->setCurrentScalarField(fieldIndex);
+    }
 	return ccCloud;
 }
 

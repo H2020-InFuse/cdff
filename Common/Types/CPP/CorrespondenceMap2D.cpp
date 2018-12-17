@@ -111,7 +111,6 @@ void RemoveCorrespondences(CorrespondenceMap2D& correspondenceMap, std::vector<B
 		}
 	ASSERT( correspondenceIndexOrderedList.at(elementsToRemove-1) < correspondenceMap.nCount, errorMessage);
 	BaseTypesWrapper::T_UInt32 firstIndex = correspondenceIndexOrderedList.at(0);
-	ASSERT(firstIndex >= 0, errorMessage);
 
 	//Removing elements 
 	BaseTypesWrapper::T_UInt32 nextIndexToRemove = 1;

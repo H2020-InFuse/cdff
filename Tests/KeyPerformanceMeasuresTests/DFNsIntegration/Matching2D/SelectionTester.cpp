@@ -49,11 +49,10 @@ using namespace CorrespondenceMap2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-SelectionTester::SelectionTester()
+SelectionTester::SelectionTester() :
+	featuresDescriptorConfigurationFilePath(""),
+	featuresMatcherConfigurationFilePath("")
 	{
-	featuresDescriptorConfigurationFilePath = "";
-	featuresMatcherConfigurationFilePath = "";
-
 	inputSourceFrame = NULL;
 	inputSinkFrame = NULL;
 	inputSourceKeypointsVector = NULL;
@@ -95,7 +94,7 @@ void SelectionTester::SetDfns(CDFF::DFN::FeaturesDescription2DInterface* descrip
 		}
 	}
 
-void SelectionTester::SetConfigurationFilePaths(std::string featuresDescriptorConfigurationFilePath, std::string featuresMatcherConfigurationFilePath)
+void SelectionTester::SetConfigurationFilePaths(const std::string& featuresDescriptorConfigurationFilePath, const std::string& featuresMatcherConfigurationFilePath)
 	{
 	this->featuresDescriptorConfigurationFilePath = featuresDescriptorConfigurationFilePath;
 	this->featuresMatcherConfigurationFilePath = featuresMatcherConfigurationFilePath;
@@ -106,7 +105,7 @@ void SelectionTester::SetConfigurationFilePaths(std::string featuresDescriptorCo
 		}
 	}
 
-void SelectionTester::SetInputFilesPaths(std::string sourceImageFilePath, std::string sinkImageFilePath, std::string correspondencesImageFilePath)
+void SelectionTester::SetInputFilesPaths(const std::string& sourceImageFilePath, const std::string& sinkImageFilePath, const std::string& correspondencesImageFilePath)
 	{
 	this->sourceImageFilePath = sourceImageFilePath;
 	this->sinkImageFilePath = sinkImageFilePath;

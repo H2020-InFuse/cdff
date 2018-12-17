@@ -28,8 +28,6 @@
  */
 #include "SparseRegistrationFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpenCVVisualizer.hpp>
-#include <Visualizers/PCLVisualizer.hpp>
 
 #include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
 #include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
@@ -60,6 +58,8 @@ using namespace PointCloudWrapper;
  */
 SparseRegistrationFromStereo::SparseRegistrationFromStereo()
 	{
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "MatchToReconstructedCloud", parameters.matchToReconstructedCloud, DEFAULT_PARAMETERS.matchToReconstructedCloud);
@@ -78,11 +78,6 @@ SparseRegistrationFromStereo::SparseRegistrationFromStereo()
 
 	bundleHistory = new BundleHistory(2);
 	featureCloud = NewPointCloud();
-
-	#ifdef TESTING
-	logFile.open("/InFuse/myLog.txt");
-	logFile.close();
-	#endif
 	}
 
 SparseRegistrationFromStereo::~SparseRegistrationFromStereo()
@@ -91,18 +86,8 @@ SparseRegistrationFromStereo::~SparseRegistrationFromStereo()
 	DeleteIfNotNull(featureCloud);
 	}
 
-/**
-* The process method is split into three steps 
-* (i) computation of the point cloud from the stereo pair;
-* (ii) computation of the camera pose by 3d matching of the point cloud with the a partial scene of the original map ceneters at the camera previous pose;
-* (iii) the point cloud rover map is updated with the newly computed point cloud.
-*
-**/
 void SparseRegistrationFromStereo::run() 
 	{
-	#ifdef TESTING
-	logFile.open("/InFuse/myLog.txt", std::ios::app);
-	#endif
 	DEBUG_PRINT_TO_LOG("Registration from stereo start", "");
 
 	bundleHistory->AddImages(inLeftImage, inRightImage);
@@ -120,7 +105,6 @@ void SparseRegistrationFromStereo::run()
 
 	VisualPointFeatureVector3DConstPtr keypointVector = NULL;
 	Executors::Execute(featuresExtractor3d, imageCloud, keypointVector);
-	DEBUG_SHOW_3D_VISUAL_FEATURES(imageCloud, keypointVector);
 
 	if (!parameters.matchToReconstructedCloud)
 		{
@@ -128,20 +112,11 @@ void SparseRegistrationFromStereo::run()
 		bundleHistory->AddPointCloud(*featureCloud);
 		}
 
-	#ifdef TESTING
-	logFile << GetNumberOfPoints(*imageCloud) << " ";
-	logFile << GetNumberOfPoints(*keypointVector) << " ";
-	#endif
-
 	UpdatePose(imageCloud, keypointVector);
 
 	if (!outSuccess)
 		{
 		bundleHistory->RemoveEntry(0);
-		#ifdef TESTING
-		logFile << std::endl;
-		logFile.close();
-		#endif
 		return;
 		}
 
@@ -149,11 +124,6 @@ void SparseRegistrationFromStereo::run()
 		{
 		UpdatePointCloud(imageCloud);
 		}
-
-	#ifdef TESTING
-	logFile << std::endl;
-	logFile.close();
-	#endif
 	}
 
 void SparseRegistrationFromStereo::setup()
@@ -219,52 +189,6 @@ void SparseRegistrationFromStereo::ComputeFeatureCloud(VisualPointFeatureVector3
 		}
 	}
 
-#ifdef TESTING
-void SparseRegistrationFromStereo::WriteOutputToLogFile()
-	{
-	logFile << GetNumberOfPoints(outPointCloud) << " ";
-	logFile << GetXPosition(outPose) << " ";
-	logFile << GetYPosition(outPose) << " ";
-	logFile << GetZPosition(outPose) << " ";
-	logFile << GetXOrientation(outPose) << " ";
-	logFile << GetYOrientation(outPose) << " ";
-	logFile << GetZOrientation(outPose) << " ";
-	logFile << GetWOrientation(outPose) << " ";
-
-	if ( GetNumberOfPoints(outPointCloud) > 0)
-		{
-		float minMax[6] = { GetXCoordinate(outPointCloud, 0), GetXCoordinate(outPointCloud, 0), GetYCoordinate(outPointCloud, 0), 
-			GetYCoordinate(outPointCloud, 0), GetZCoordinate(outPointCloud, 0), GetZCoordinate(outPointCloud, 0)};
-		int numberOfPoints = GetNumberOfPoints(outPointCloud);
-		for (int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
-			{
-			bool change[6];
-			change[0] = minMax[0] < GetXCoordinate(outPointCloud, pointIndex);
-			change[1] = minMax[1] > GetXCoordinate(outPointCloud, pointIndex);
-			change[2] = minMax[2] < GetYCoordinate(outPointCloud, pointIndex);
-			change[3] = minMax[3] > GetYCoordinate(outPointCloud, pointIndex);
-			change[4] = minMax[4] < GetZCoordinate(outPointCloud, pointIndex);
-			change[5] = minMax[5] > GetZCoordinate(outPointCloud, pointIndex);
-			minMax[0] = change[0] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[0];
-			minMax[1] = change[1] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[1];
-			minMax[2] = change[2] ? GetYCoordinate(outPointCloud, pointIndex) : minMax[2];
-			minMax[3] = change[3] ? GetYCoordinate(outPointCloud, pointIndex) : minMax[3];
-			minMax[4] = change[4] ? GetZCoordinate(outPointCloud, pointIndex) : minMax[4];
-			minMax[5] = change[5] ? GetZCoordinate(outPointCloud, pointIndex) : minMax[5];
-			}
-		logFile << (minMax[0] - minMax[1]) << " ";
-		logFile << (minMax[2] - minMax[3]) << " ";
-		logFile << (minMax[4] - minMax[5]) << " ";
-		}
-	else	
-		{
-		logFile << 0 << " ";
-		logFile << 0 << " ";
-		logFile << 0 << " ";
-		}
-	}
-#endif
-
 void SparseRegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud, VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr keypointVector)
 	{
 	if (firstInput)
@@ -307,16 +231,6 @@ void SparseRegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud, Vis
 				Copy( pointCloudMap.GetLatestPose(), outPose);
 				}
 			}
-		#ifdef TESTING
-		logFile << outSuccess << " ";
-		logFile << GetXPosition(*poseToPreviousPose) << " ";
-		logFile << GetYPosition(*poseToPreviousPose) << " ";
-		logFile << GetZPosition(*poseToPreviousPose) << " ";
-		logFile << GetXOrientation(*poseToPreviousPose) << " ";
-		logFile << GetYOrientation(*poseToPreviousPose) << " ";
-		logFile << GetZOrientation(*poseToPreviousPose) << " ";
-		logFile << GetWOrientation(*poseToPreviousPose) << " ";
-		#endif
 		}
 	}
 
@@ -352,11 +266,6 @@ void SparseRegistrationFromStereo::UpdatePointCloud(PointCloudConstPtr imageClou
 	DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 	DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(outPointCloud));
 
-	#ifdef TESTING
-	WriteOutputToLogFile();
-	#endif
-
-	DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 	if (!parameters.useAssemblerDfn)
 		{
 		DeleteIfNotNull(outputPointCloud);

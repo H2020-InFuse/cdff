@@ -10,7 +10,9 @@ namespace CDFF
 namespace DFPC
 {
 
-DEMBuildingInterface::DEMBuildingInterface()
+DEMBuildingInterface::DEMBuildingInterface() :
+inLPC(),
+inEstimatedPose() //, outUpdatedMap()
 {
 }
 

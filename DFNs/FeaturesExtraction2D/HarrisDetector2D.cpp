@@ -29,6 +29,8 @@ namespace FeaturesExtraction2D
 
 HarrisDetector2D::HarrisDetector2D()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<int>("GeneralParameters", "ApertureSize", parameters.generalParameters.apertureSize, DEFAULT_PARAMETERS.generalParameters.apertureSize);
 	parametersHelper.AddParameter<int>("GeneralParameters", "BlockSize", parameters.generalParameters.blockSize, DEFAULT_PARAMETERS.generalParameters.blockSize);
 	parametersHelper.AddParameter<float>("GeneralParameters", "ParameterK", parameters.generalParameters.parameterK, DEFAULT_PARAMETERS.generalParameters.parameterK);

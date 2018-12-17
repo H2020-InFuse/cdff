@@ -52,7 +52,7 @@ const CorrespondenceMap2D& GetCorrespondenceMap(const CorrespondenceMaps2DSequen
 void GetCorrespondenceMap(const CorrespondenceMaps2DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 frameIndex, CorrespondenceMap2D& correspondenceMap);
 BaseTypesWrapper::T_UInt32 GetNumberOfCorrespondenceMaps(const CorrespondenceMaps2DSequence& correspondenceMapsSequence);
 void RemoveCorrespondenceMaps(CorrespondenceMaps2DSequence& correspondenceMapsSequence, std::vector<BaseTypesWrapper::T_UInt32> correspondenceMapIndexOrderedList);
-void RemoveCorrespondences(CorrespondenceMaps2DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 mapIndex, std::vector<BaseTypesWrapper::T_UInt32> correspondenceIndexOrderedList);
+void RemoveCorrespondences(CorrespondenceMaps2DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 mapIndex, const std::vector<BaseTypesWrapper::T_UInt32>& correspondenceIndexOrderedList);
 
 BitStream ConvertToBitStream(const CorrespondenceMaps2DSequence& sequence);
 void ConvertFromBitStream(BitStream bitStream, CorrespondenceMaps2DSequence& sequence);
