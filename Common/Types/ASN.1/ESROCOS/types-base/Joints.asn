@@ -12,10 +12,10 @@ Time FROM Time-Types
 JointState FROM JointState-Types;
 
 -- Max. name size
-jointsNameLength T-UInt32 ::= 50
+jointsNameLength T-UInt32 ::= 30
 
 -- Max. number of joints
-jointsElementsMax T-UInt32 ::= 50
+jointsElementsMax T-UInt32 ::= 30
 
 
 ---  Definition JOINTS Starts 
