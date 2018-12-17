@@ -31,9 +31,7 @@
 #include <Types/C/RigidBodyState.h>
 #include <Types/C/Time.h>
 #include <Types/C/Eigen.h>
-#include <Types/CPP/Frame.hpp>
-#include <Converters/FrameToMatConverter.hpp>
-#include <Converters/MatToFrameConverter.hpp>
+#include <Types/C/Frame.h>
 
 namespace CDFF
 {
@@ -60,22 +58,22 @@ namespace DFPC
             * Send value to input port image
             * @param image, a gray image from left camera
             */
-            virtual void imageLeftInput(FrameWrapper::FrameConstPtr data);
+            virtual void imageLeftInput(const asn1SccFrame& data);
   	   /**
             * Send value to input port image
             * @param image, a gray image from right camera
             */
-            virtual void imageRightInput(FrameWrapper::FrameConstPtr data);
+            virtual void imageRightInput(const asn1SccFrame& data);
 	   /**
             * Send value to input port imageTime
             * @param imageTime, an image acquistion time, product of a frame counter and frame rate
             */
-            virtual void imageTimeInput(asn1SccTime data);
+            virtual void imageTimeInput(const asn1SccTime& data);
 	    /**
             * Send value to input port initTime
             * @param initTime, an initial time when tracker is initialized-synchronizes pose initializer and tracker
             */
-	    virtual void initTimeInput(const asn1SccTime data);
+	    virtual void initTimeInput(const asn1SccTime& data);
             /**
             * Send value to input port init
             * @param init, the initialization velocity and pose
@@ -96,21 +94,21 @@ namespace DFPC
             * Receive value from output port pose
             * @param pose, the rigid body state pose, velocity of the target.
             */
-            virtual asn1SccRigidBodyState stateOutput();
+            virtual asn1SccRigidBodyState stateOutput() const ;
 
             /**
             * Receive value from output port success
             * @param success, determines whether the dfpc could localise the target.
             */
-            virtual bool successOutput();
+            virtual bool successOutput() const;
 
 	/* --------------------------------------------------------------------
 	 * Protected
 	 * --------------------------------------------------------------------
 	 */
         protected:
-             FrameWrapper::FrameConstPtr inImageLeft;
-	     FrameWrapper::FrameConstPtr inImageRight;
+             asn1SccFrame inImageLeft;
+	     asn1SccFrame inImageRight;
 	     asn1SccRigidBodyState inInit;
 	     asn1SccTime inImageTime;
 	     asn1SccTime inInitTime;

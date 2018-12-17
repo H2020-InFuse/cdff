@@ -38,7 +38,6 @@ namespace CDFF
 namespace DFPC
 {
 
-
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions
@@ -90,14 +89,14 @@ void EdgeModelContourMatching::run()
 	 {	
 	   if(c == 0)
 	   {
-            cv::Mat inputLeftImage = frameToMat.Convert(inImageLeft); 
+            cv::Mat inputLeftImage = frameToMat.Convert(&inImageLeft); 
 	    ASSERT(inputLeftImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
 	    ASSERT(inputLeftImage.rows > 0 && inputLeftImage.cols > 0," image empty: Tracker input is a gray scale image");	
 	    memcpy(images[c], inputLeftImage.data, DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
 	   }
 	   if(numberOfCameras > 1 && c == 1)
 	   {
-	    cv::Mat inputRightImage = frameToMat.Convert(inImageRight);
+	    cv::Mat inputRightImage = frameToMat.Convert(&inImageRight);
 	    ASSERT(inputRightImage.channels() == 1," unsupported image type: Tracker input is a gray scale image");
 	    ASSERT(inputRightImage.rows > 0 && inputRightImage.cols > 0," unsupported image type: Tracker input is a gray scale image");	
 	    memcpy(images[c], inputRightImage.data,DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char)); 
@@ -106,7 +105,7 @@ void EdgeModelContourMatching::run()
 	
 	double timeImages;
 	//asn1Sccseconds in sec   
-	 timeImages = inImageTime.microseconds*0.000001;	 
+	timeImages = inImageTime.microseconds*0.000001;	 
 
 	double guessT0[16];
 	double velocity0[6];
@@ -120,7 +119,7 @@ void EdgeModelContourMatching::run()
 
 	ConvertAsnStateToState(inInit, rotTrasl, velocity0);
 
-	 TfromAngleAxis(rotTrasl, guessT0);
+	TfromAngleAxis(rotTrasl, guessT0);
 
 	double egomotion[16];
 	ConvertAsnStateToState(inEgoMotion, rotTrasl);
@@ -135,11 +134,11 @@ void EdgeModelContourMatching::run()
 	//output: state estimates- estimatedT, estimatedVelocity
 	if(outSuccess)
 	  AngleAxisFromT(estimatedT, rotTrasl);
-
+		
 	outState = ConvertStateToAsnState(rotTrasl, estimatedVelocity);
 
-	
-#ifdef _USE_OPENCV_DISPLAY
+	// for visualizationun, uncomment the 'DLRTRACKER_USE_OPENCV_DISPLAY' in common.h of the DLRtracker_core library
+#ifdef DLRTRACKER_USE_OPENCV_DISPLAY
 
 	std::string wname;
 	int xres = DLRTracker.getXres(0); 
@@ -184,7 +183,7 @@ void EdgeModelContourMatching::setup()
 	 DLRTracker.getObjectModel().changeLocalFrame(0);
       	 allocateImageMemory();
 	
-	dumpMemoryAlloc();
+	 dumpMemoryAlloc();
 	 
 	}
 	
@@ -194,7 +193,7 @@ bool EdgeModelContourMatching::edgeMatching(unsigned char** images, double timeI
 	double degreesOfFreedom[6] = {1,1,1,1,1,1};
 		
 	status = DLRTracker.poseEstimation(images, timeImages, egomotion, guessT0, velocity0, time0, estimatedT, estimatedVelocity, ErrorCovariance, degreesOfFreedom, useInitialGuess, false, false, false);
-
+	
 	if(status==0)
 	 	success = true;
 	else
@@ -241,8 +240,7 @@ asn1SccRigidBodyState EdgeModelContourMatching::ConvertStateToAsnState(double* p
 	asnState.velocity.arr[0] = velocity[3];
 	asnState.velocity.arr[1] = velocity[4];
  	asnState.velocity.arr[2] = velocity[5];
-		 
-
+	
 	return asnState ;
 
 	}

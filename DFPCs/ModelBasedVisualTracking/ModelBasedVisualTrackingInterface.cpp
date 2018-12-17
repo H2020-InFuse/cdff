@@ -27,14 +27,13 @@
  * --------------------------------------------------------------------------
  */
 #include "ModelBasedVisualTrackingInterface.hpp"
-#include "Errors/Assert.hpp"
 
 namespace CDFF
 {
 namespace DFPC
 {
 
-using namespace FrameWrapper;
+//using namespace FrameWrapper;
 /* --------------------------------------------------------------------------
  *
  * Public Member Functions
@@ -51,24 +50,24 @@ ModelBasedVisualTrackingInterface::~ModelBasedVisualTrackingInterface()
 
 	}
 
-void ModelBasedVisualTrackingInterface::imageLeftInput(FrameWrapper::FrameConstPtr data)
+void ModelBasedVisualTrackingInterface::imageLeftInput(const asn1SccFrame& data)
 	{
     	inImageLeft = data;
 	}
-void ModelBasedVisualTrackingInterface::imageRightInput(FrameWrapper::FrameConstPtr data)
+void ModelBasedVisualTrackingInterface::imageRightInput(const asn1SccFrame& data)
 	{
     	inImageRight = data;
 	}
-void ModelBasedVisualTrackingInterface::imageTimeInput(asn1SccTime data)
+void ModelBasedVisualTrackingInterface::imageTimeInput(const asn1SccTime& data)
 	{
 	inImageTime = data;
 	}
-void ModelBasedVisualTrackingInterface::initTimeInput(const asn1SccTime data)
+void ModelBasedVisualTrackingInterface::initTimeInput(const asn1SccTime& data)
 	{
 	 inInitTime = data;
 	}
 
-void ModelBasedVisualTrackingInterface::initInput(const asn1SccRigidBodyState &data)
+void ModelBasedVisualTrackingInterface::initInput(const asn1SccRigidBodyState& data)
 	{
 	inInit = data;
 	}
@@ -81,12 +80,12 @@ void ModelBasedVisualTrackingInterface::egoMotionInput(const asn1SccRigidBodySta
          inEgoMotion = data;
 	}
 
-asn1SccRigidBodyState ModelBasedVisualTrackingInterface::stateOutput() 
+asn1SccRigidBodyState ModelBasedVisualTrackingInterface::stateOutput() const 
 	{
     	return outState;
 	}
 
-bool ModelBasedVisualTrackingInterface::successOutput()
+bool ModelBasedVisualTrackingInterface::successOutput() const
 	{
 	return outSuccess;
 	}

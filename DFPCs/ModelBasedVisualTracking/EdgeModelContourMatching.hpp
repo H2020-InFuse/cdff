@@ -29,6 +29,8 @@
  * --------------------------------------------------------------------------
  */
 #include <ModelBasedVisualTracking/ModelBasedVisualTrackingInterface.hpp>
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
 #include <DfpcConfigurator.hpp>
 #include <DLRtracker_core/FileParser.h>
 #include <DLRtracker_core/GenericObjectTracker.h>
@@ -83,9 +85,9 @@ namespace DFPC
 		unsigned char* imageOutputColor;
 	        int xResolutionMax;
 		int yResolutionMax;
-
 		DfpcConfigurator configurator;
 		Converters::FrameToMatConverter frameToMat;
+
 		void ConvertAsnStateToState(asn1SccRigidBodyState& poseState, double* pose, double* velocity = NULL);
 		asn1SccRigidBodyState ConvertStateToAsnState(double* pose, double* velocity);
 		void allocateImageMemory();

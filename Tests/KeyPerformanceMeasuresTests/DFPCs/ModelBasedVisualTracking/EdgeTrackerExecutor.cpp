@@ -172,8 +172,8 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	LoadInputImage(leftImageFilePath.str(), inputLeftFrame);
 	LoadInputImage(rightImageFilePath.str(), inputRightFrame);
 
-	dfpc->imageLeftInput(inputLeftFrame); 
-	dfpc->imageRightInput(inputRightFrame);
+	dfpc->imageLeftInput(*inputLeftFrame); 
+	dfpc->imageRightInput(*inputRightFrame);
 		
 	if(logGroundTruthError)
 	{

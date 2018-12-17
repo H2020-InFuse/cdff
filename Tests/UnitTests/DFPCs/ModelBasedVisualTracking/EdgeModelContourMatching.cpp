@@ -108,8 +108,8 @@ TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTra
 	contourMatching->setup();	
 		
 	//Image:
-	contourMatching->imageLeftInput(inputFrameLeft);
-	contourMatching->imageRightInput(inputFrameRight);
+	contourMatching->imageLeftInput(*inputFrameLeft);
+	contourMatching->imageRightInput(*inputFrameRight);
 
 	//time
 	int frameCounter = 1; //just one frame
