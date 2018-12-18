@@ -1,10 +1,11 @@
-ENV INSTALL_CDFF /usr/local
-
 FROM ubuntu:16.04
 
 ## Install basic tools that are not already available in the base image
 
 ARG DEBIAN_FRONTEND=noninteractive
+ARG INSTALL_DIR=/usr/local
+
+ENV INSTALL_CDFF=$INSTALL_DIR
 
 RUN apt-get update && apt-get install --yes --quiet apt-utils && \
     apt-get install --yes --quiet \
@@ -51,6 +52,6 @@ RUN apt-get update && apt-get install --yes --quiet pkg-config libtinyxml-dev li
 
 ## Image information
 
-LABEL version="3.0.1"
+LABEL version="3.0"
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>, Romain Michalec <romain.michalec@strath.ac.uk>"
 LABEL description="Image providing the dependencies of CDFF-core and CDFF-support, compiled from source, and installed in ${INSTALL_CDFF}"

@@ -16,9 +16,9 @@ DOCKER_FILE=$1
 
 #if we passed env variables we pass them along
 ENV_VAR=""
-if test -z "$3"
+if ! test -z "$3"
 then
-   ENV_VAR='-e '$3' '
+   ENV_VAR='--build-arg '$3' '
 fi
 
 REGISTRY_PREFIX=nexus.spaceapplications.com/

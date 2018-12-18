@@ -1,8 +1,10 @@
 FROM ubuntu:16.04
 
 ## Install basic tools that are not already available in the base image
-ENV INSTALL_CDFF /usr/local
 ARG DEBIAN_FRONTEND=noninteractive
+ARG INSTALL_DIR=/usr/local
+
+ENV INSTALL_CDFF=$INSTALL_DIR
 
 RUN apt-get update && apt-get install --yes --quiet apt-utils && \
     apt-get install --yes --quiet \
@@ -84,6 +86,6 @@ CMD ["bash"]
 
 ## Image information
 
-LABEL version="1.0.1"
+LABEL version="1.0"
 LABEL maintainer="Romain Michalec <romain.michalec@strath.ac.uk>"
 LABEL description="A self-contained environment for building and testing CDFF-core and CDFF-support, and for using CDFF-dev"
