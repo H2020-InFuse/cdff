@@ -64,7 +64,7 @@ IMAGE_TAG=${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}${IMAGE_NAME}
 current_tag=$(grep "LABEL version=" $DOCKER_FILE | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
 latest_tag=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$IMAGE_NAME https://hook.io/datastore/get | tr -d '"')
 
-if [ -z "$latest_tag" ]; then
+if [ -z "$latest_tag" ] || [ $latest_tag == 'null' ] ; then
     latest_tag="0.0"
 fi
 
@@ -76,7 +76,7 @@ echo latest_tag $latest_tag
 echo current_tag $current_tag
 vercomp $current_tag $latest_tag
 
-if [[ $op = '>' ]] | [[ $3 == "--force" ]]
+if [[ $op = '>' ]] || [[ $3 == "--force" ]]
     then
         docker pull $IMAGE_TAG':'$latest_tag || true
         docker build -t $IMAGE_TAG':'$current_tag -f $DOCKER_FILE $ENV_VAR .
