@@ -82,60 +82,7 @@ set(unittest_libraries catch
     cdff_helpers
     cdff_logger
     cdff_types
-    ceres_adjustment
-    convolution_filter
-    dfpc_configurator
     cdff_dfpc_implementation_edge_model_contour_matching
-    dfpc_haptic_scanning
-    dfpc_implementation_features_matching_3d
-    disparity_mapping
-    essential_matrix_decomposition
-    estimation_from_stereo
-    flann_matcher
-    fundamental_matrix_ransac
-    harris_detector_2d
-    harris_detector_3d
-    iss_detector_3d
-    corner_detector_3d
-    hirschmuller_disparity_mapping
-    hu_invariants
-    icp_3d
-    image_undistortion
-    iterative_pnp_solver
-    kalman_corrector
-    kalman_predictor
-#[=[mock]=] # no longer used by any DFN unit test
-    neighbour_point_average
-    neighbour_single_point_average
-    opencv_core
-    opencv_highgui
-    opencv_imgcodecs
-    opencv_imgproc
-    opencv_video
-    orb_descriptor
-    orb_detector_descriptor
-    pcl_common
-    pcl_features
-    pcl_filters
-    pcl_io
-    pcl_io_ply
-    pcl_kdtree
-    pcl_keypoints
-    pcl_octree
-    pcl_registration
-    pcl_sample_consensus
-    pcl_search
-    pcl_segmentation
-    pcl_visualization
-    ransac_3d
-#[=[reconstruction_from_stereo]=]
-    registration_icp_3d
-    registration_icp_cc
-    registration_icp_matcher
-    shot_descriptor_3d
-    cdff_dfn_derivative_edge_detection
-    statistical_outlier_removal
-    svd_decomposition
     cdff_dfn_dfnexecutors
     cdff_dfn_point_cloud_transform
     cdff_dfn_depth_filtering
