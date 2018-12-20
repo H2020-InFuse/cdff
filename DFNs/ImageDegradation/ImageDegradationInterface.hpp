@@ -7,7 +7,7 @@
 #define IMAGEDEGRADATION_IMAGEDEGRADATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Frame.h>
+#include <Types/C/Frame.h>
 
 namespace CDFF
 {
