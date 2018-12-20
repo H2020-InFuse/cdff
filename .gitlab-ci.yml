@@ -94,7 +94,7 @@
   script:
     - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
   only:
-   - master
+    - merge_requests
   artifacts:
    paths: 
     - cppcheck/
@@ -153,7 +153,7 @@
    script:
     - External/get-cdff-dependencies.sh -e -i /usr/local
     - mkdir -p build && cd build
-    - cmake -D USE_BUNDLED_DEPENDENCIES=ON ..
+    - cmake ..
     - make
    only:
     - manual
