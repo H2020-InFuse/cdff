@@ -1,0 +1,13 @@
+name: ImagePairDegradation
+doc: DFN that degrade the resolution of an image
+input_ports:
+    - name: originalImagePair
+      type: asn1SccFramePair
+      doc: Full size image pair
+output_ports:
+    - name: degradedImagePair
+      type: asn1SccFramePair
+      doc: Degraded/dowscaled image pair
+implementations:
+    - ImagePairDegradation
+    - ImagePairDegradationEdres
