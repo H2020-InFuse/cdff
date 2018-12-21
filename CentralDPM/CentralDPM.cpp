@@ -6,11 +6,16 @@
 
 #include <Loggers/StandardOutputLogger.hpp>
 
+#include <string>
+#include <stdexcept>
+
 using namespace envire::core;
 namespace CDFF
 {
+namespace Support
+{
 
-    void CentralDPM::storePointcloud(const asn1SccPointcloud& pcl, const asn1SccT_String& pcl_id)
+    void CentralDPM::savePointcloud(const asn1SccPointcloud& pcl, const asn1SccT_String& pcl_id)
     {
         std::string log_prefix = "[CentralDPM::storePointcloud] ";
         StandardOutputLogger* logger = new StandardOutputLogger();
@@ -52,7 +57,7 @@ namespace CDFF
         logger->Print();
     }
 
-    void CentralDPM::storeMap(const asn1SccMap& map, const asn1SccT_String& map_id)
+    void CentralDPM::saveMap(const asn1SccMap& map, const asn1SccT_String& map_id)
     {
         StandardOutputLogger* logger = new StandardOutputLogger();
         std::string log_prefix = "[CentralDPM::storeMap] ";
@@ -99,4 +104,5 @@ namespace CDFF
 
     }
 
+}
 }

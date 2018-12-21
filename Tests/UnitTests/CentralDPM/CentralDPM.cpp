@@ -29,10 +29,10 @@
 #include <catch.hpp>
 #include <CentralDPM.hpp>
 #include <Types/CPP/PointCloud.hpp>
-#include <string.h>
+#include <string>
 
 using namespace PointCloudWrapper;
-using namespace CDFF;
+using namespace CDFF::Support;
 
 void set_name(const std::string & name,  asn1SccT_String & map_id)
 {
@@ -48,7 +48,7 @@ void set_name(const std::string & name,  asn1SccT_String & map_id)
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Start a Central DPM and store a Pointcloud in it with a given name", "[StorePointCloudCentralDPM]" )
+TEST_CASE( "Start a Central DPM and store a Pointcloud in it with a given name", "[SavePointCloudCentralDPM]" )
 {
     //Initialize Inputs
     PointCloudPtr asnPointCloud = NewPointCloud();
@@ -60,7 +60,7 @@ TEST_CASE( "Start a Central DPM and store a Pointcloud in it with a given name",
 
     // Instantiate Central DPM
     CentralDPM* dpm = new CentralDPM(); 
-    dpm->storePointcloud( *asnPointCloud, pointcloud_id);
+    dpm->savePointcloud( *asnPointCloud, pointcloud_id);
 
     // Cleanup
     delete(dpm);
@@ -76,7 +76,7 @@ TEST_CASE( "Start a Central DPM and store a Map in it with a given name", "[Stor
     set_name(map_id_std, map_id);
 
     CentralDPM* dpm = new CentralDPM(); 
-    dpm->storeMap(*asn1Map, map_id);
+    dpm->saveMap(*asn1Map, map_id);
 
     // Cleanup
     delete(dpm);
