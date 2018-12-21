@@ -7,8 +7,8 @@
 #define STEREOMOTIONESTIMATION_STEREOMOTIONESTIMATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Frame.h>
-#include <TransformWithCovariance.h>
+#include <Types/C/Frame.h>
+#include <Types/C/TransformWithCovariance.h>
 
 namespace CDFF
 {
