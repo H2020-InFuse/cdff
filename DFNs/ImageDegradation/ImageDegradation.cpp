@@ -83,7 +83,7 @@ void ImageDegradation::ValidateParameters()
 const ImageDegradation::ImageDegradationParams ImageDegradation::DEFAULT_PARAMETERS = {
     .xratio = 2,
     .yratio = 2,
-    .method = 3,
+    .method = 3
 };
 
 }
