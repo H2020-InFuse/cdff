@@ -15,10 +15,10 @@ namespace ImagePairDegradation
 
 ImagePairDegradationEdres::ImagePairDegradationEdres()
 {
-    parametersHelper.AddParameter<int>("ImageDegradationEdresParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
-    parametersHelper.AddParameter<int>("ImageDegradationEdresParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
-    parametersHelper.AddParameter<int>("ImageDegradationEdresParams", "method", parameters.method, DEFAULT_PARAMETERS.method);
-    parametersHelper.AddParameter<int>("ImageDegradationEdresParams", "outType", parameters.outType, DEFAULT_PARAMETERS.outType);
+    parametersHelper.AddParameter<int>("ImagePairDegradationEdresParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
+    parametersHelper.AddParameter<int>("ImagePairDegradationEdresParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
+    parametersHelper.AddParameter<int>("ImagePairDegradationEdresParams", "method", parameters.method, DEFAULT_PARAMETERS.method);
+    parametersHelper.AddParameter<int>("ImagePairDegradationEdresParams", "outType", parameters.outType, DEFAULT_PARAMETERS.outType);
 
     configurationFilePath = "";
 }

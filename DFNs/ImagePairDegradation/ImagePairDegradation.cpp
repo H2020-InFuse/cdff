@@ -16,9 +16,9 @@ namespace ImagePairDegradation
 
 ImagePairDegradation::ImagePairDegradation()
 {
-    parametersHelper.AddParameter<int>("ImageDegradationParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
-    parametersHelper.AddParameter<int>("ImageDegradationParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
-    parametersHelper.AddParameter<int>("ImageDegradationParams", "method", parameters.method, DEFAULT_PARAMETERS.method);
+    parametersHelper.AddParameter<int>("ImagePairDegradationParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
+    parametersHelper.AddParameter<int>("ImagePairDegradationParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
+    parametersHelper.AddParameter<int>("ImagePairDegradationParams", "method", parameters.method, DEFAULT_PARAMETERS.method);
 
     configurationFilePath = "";
 }
@@ -107,6 +107,19 @@ void ImagePairDegradation::process()
         }
     }
 }
+
+void ImagePairDegradation::ValidateParameters()
+{
+    ASSERT(parameters.xratio >= 1 && parameters.xratio <= 25, "xratio has to be within [1..25]");
+    ASSERT(parameters.yratio >= 1 && parameters.yratio <= 25, "yratio has to be within [1..25]");
+    ASSERT(parameters.method >= 0 || parameters.method <= 5 || parameters.method == 7, "method has to be 0, 1, 2, 3, 4, 5, or 7");
+}
+
+const ImagePairDegradation::ImagePairDegradationParams ImagePairDegradation::DEFAULT_PARAMETERS = {
+    .xratio = 2,
+    .yratio = 2,
+    .method = 0
+};
 
 }
 }
