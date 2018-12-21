@@ -64,8 +64,9 @@ class ReconstructionTester
 
 		void SetDfns(CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixEstimator, 
 				CDFF::DFN::CamerasTransformEstimationInterface* poseEstimator, CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor);
-		void SetConfigurationFilePaths(std::string fundamentalMatrixEstimatorFilePath, std::string poseEstimatorConfigurationFilePath, std::string reconstructorConfigurationFilePath);
-		void SetInputFilePath(std::string inputCorrespodencesFilePath);
+		void SetConfigurationFilePaths(const std::string& fundamentalMatrixEstimatorFilePath, const std::string& poseEstimatorConfigurationFilePath, 
+			const std::string& reconstructorConfigurationFilePath);
+		void SetInputFilePath(const std::string& inputCorrespodencesFilePath);
 		void ExecuteDfns();
 		bool AreTriangulatedPointsValid(float fieldOfViewX, float fieldOfViewY);
 

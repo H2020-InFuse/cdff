@@ -48,7 +48,7 @@ class MatToTransform3DConverter : public Mock, public Converters::MatToTransform
 	 */
 	public:
 		virtual ~MatToTransform3DConverter();
-		const PoseWrapper::Transform3DConstPtr Convert(const cv::Mat transform);
+		const PoseWrapper::Transform3DConstPtr Convert(const cv::Mat transform) override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

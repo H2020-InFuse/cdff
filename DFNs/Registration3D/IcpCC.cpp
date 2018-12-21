@@ -15,6 +15,7 @@
 
 #include <pcl/registration/icp.h>
 #include <yaml-cpp/yaml.h>
+#include <cloudcompare-core/PointCloud.h>
 
 using namespace Converters;
 using namespace PointCloudWrapper;
@@ -30,6 +31,8 @@ namespace Registration3D
 
 IcpCC::IcpCC()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<ConvergenceType, ConvergenceTypeHelper>("GeneralParameters", "ConvergenceType", parameters.convergenceType, DEFAULT_PARAMETERS.convergenceType);
 	parametersHelper.AddParameter<double>("GeneralParameters", "MinimumErrorReduction", parameters.minimumErrorReduction, DEFAULT_PARAMETERS.minimumErrorReduction);
 	parametersHelper.AddParameter<int>("GeneralParameters", "MaximumNumberOfIterations", parameters.maximumNumberOfIterations, DEFAULT_PARAMETERS.maximumNumberOfIterations);
@@ -62,8 +65,8 @@ void IcpCC::process()
 		return;
 	}
 
-	ChunkedPointCloud *inputSourceCloud = Convert(&inSourceCloud);
-	ChunkedPointCloud *inputSinkCloud = Convert(&inSinkCloud);
+	CCLib::PointCloud *inputSourceCloud = Convert(&inSourceCloud);
+	CCLib::PointCloud *inputSinkCloud = Convert(&inSinkCloud);
 
 	// Process data
 	ValidateInputs(inputSourceCloud, inputSinkCloud);
@@ -108,7 +111,7 @@ const IcpCC::IcpOptionsSet IcpCC::DEFAULT_PARAMETERS =
 	/*.maximumNumberOfThreads =*/ 0
 };
 
-void IcpCC::ComputeTransform(ChunkedPointCloud* sourceCloud, ChunkedPointCloud* sinkCloud)
+void IcpCC::ComputeTransform(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud)
 {
 	RegistrationTools::ScaledTransformation scaledTransform;
 	if (inUseGuess)
@@ -140,9 +143,9 @@ void IcpCC::ComputeTransform(ChunkedPointCloud* sourceCloud, ChunkedPointCloud* 
 	}
 }
 
-ChunkedPointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
+CCLib::PointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
 {
-	ChunkedPointCloud* ccCloud = new ChunkedPointCloud;
+	CCLib::PointCloud* ccCloud = new CCLib::PointCloud();
 	ccCloud->reserve( GetNumberOfPoints(*cloud) );
 
 	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(*cloud); pointIndex++)
@@ -151,9 +154,14 @@ ChunkedPointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
 		ccCloud->addPoint(newPoint);
 	}
 
-	unsigned fieldIndex = ccCloud->addScalarField("RegistrationDistances");
-	ASSERT(fieldIndex >= 0, "IcpCC error, it was not possible to add RegistrationDistances scalar field. Not enough memory?");
-	ccCloud->setCurrentScalarField(fieldIndex);
+	int fieldIndex = ccCloud->addScalarField("RegistrationDistances");
+
+	if (fieldIndex ==-1) {
+        ASSERT(true, "IcpCC error, it was not possible to add RegistrationDistances scalar field. Not enough memory?");
+	}
+	else {
+        ccCloud->setCurrentScalarField(fieldIndex);
+    }
 	return ccCloud;
 }
 
@@ -236,13 +244,13 @@ void IcpCC::ValidateParameters()
 	ASSERT(parameters.maximumNumberOfThreads >= 0, "IcpCC Configuration Error, maximumNumberOfThreads has to be greater or equal to zero");
 }
 
-void IcpCC::ValidateInputs(ChunkedPointCloud* sourceCloud, ChunkedPointCloud* sinkCloud)
+void IcpCC::ValidateInputs(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud)
 {
 	ValidateCloud(sourceCloud);
 	ValidateCloud(sinkCloud);
 }
 
-void IcpCC::ValidateCloud(ChunkedPointCloud* cloud)
+void IcpCC::ValidateCloud(CCLib::PointCloud* cloud)
 {
 	for (unsigned pointIndex = 0; pointIndex < cloud->size(); pointIndex++)
 	{

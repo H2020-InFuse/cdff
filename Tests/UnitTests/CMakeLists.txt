@@ -2,7 +2,7 @@ add_definitions(-DTEST_CONFIGURATIONS="${TEST_CONFIGURATIONS}")
 add_definitions(-DTEST_DATA="${TEST_DATA}")
 
 # Path to the directory containing Catch's single-include header (catch.hpp)
-set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/Tests/Catch")
+set(CATCH_INCLUDE_DIR "Catch")
 
 # Define the Catch library
 add_library(catch INTERFACE)
@@ -28,12 +28,16 @@ set(unittest_sources UnitTests.cpp
     DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
+    DFNs/ImageFiltering/DerivativeEdgeDetection.cpp
+    DFNs/ImageFiltering/CannyEdgeDetection.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
     DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
+    DFNs/FeaturesExtraction3D/IssDetector3D.cpp
+    DFNs/FeaturesExtraction3D/CornerDetector3D.cpp
     DFNs/FeaturesMatching2D/FlannMatcher.cpp
     DFNs/FeaturesMatching3D/BestDescriptorMatch.cpp
     DFNs/FeaturesMatching3D/Icp3D.cpp
@@ -46,13 +50,16 @@ set(unittest_sources UnitTests.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
+    DFNs/PointCloudAssembly/NeighbourSinglePointAverage.cpp
     DFNs/PointCloudAssembly/VoxelBinning.cpp
+    #DFNs/PointCloudAssembly/MatcherAssembly.cpp
     DFNs/PointCloudFiltering/StatisticalOutlierRemoval.cpp
     DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
     DFNs/PointCloudTransform/CartesianSystemTransform.cpp
     DFNs/PrimitiveMatching/HuInvariants.cpp
     DFNs/Registration3D/Icp3D.cpp
     DFNs/Registration3D/IcpCC.cpp
+    #DFNs/Registration3D/IcpMatcher.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
@@ -71,77 +78,41 @@ set(unittest_sources UnitTests.cpp
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
 set(unittest_libraries catch
-    adjustment_from_stereo
-    best_descriptor_match
-    cartesian_system_transform
-    cc_core_lib
     cdff_centraldpm
     cdff_converters
-    cdff_dfn_dfnexecutors
     cdff_helpers
     cdff_logger
     cdff_types
-    ceres_adjustment
-    convolution_filter
-    dfpc_configurator
-    dfpc_haptic_scanning
-    dfpc_implementation_features_matching_3d
-    disparity_mapping
-    essential_matrix_decomposition
-    estimation_from_stereo
-    flann_matcher
-    fundamental_matrix_ransac
-    harris_detector_2d
-    harris_detector_3d
-    hirschmuller_disparity_mapping
-    hu_invariants
-    icp_3d
-    image_undistortion
-    iterative_pnp_solver
-    kalman_corrector
-    kalman_predictor
-#[=[mock]=] # no longer used by any DFN unit test
-    neighbour_point_average
-    opencv_core
-    opencv_highgui
-    opencv_imgcodecs
-    opencv_imgproc
-    opencv_video
-    orb_descriptor
-    orb_detector_descriptor
-    pcl_common
-    pcl_features
-    pcl_filters
-    pcl_io
-    pcl_io_ply
-    pcl_kdtree
-    pcl_keypoints
-    pcl_ml
-    pcl_octree
-    pcl_outofcore
-    pcl_people
-    pcl_recognition
-    pcl_registration
-    pcl_sample_consensus
-    pcl_search
-    pcl_segmentation
-    pcl_stereo
-    pcl_surface
-    pcl_tracking
-    pcl_visualization
-    ransac_3d
-#[=[reconstruction_from_stereo]=]
-    registration_icp_3d
-    registration_icp_cc
-    shot_descriptor_3d
-    statistical_outlier_removal
-    svd_decomposition
+    cdff_dfn_dfnexecutors
+    cdff_dfn_point_cloud_transform
+    cdff_dfn_depth_filtering
+    cdff_dfn_cameras_transform_estimation
+    cdff_dfn_features_matching_2d
+    cdff_dfn_fundamental_matrix_computation
+    cdff_dfn_primitive_matching
+    cdff_dfn_perspective_n_point_solving
+    cdff_dfn_kf_correction
+    cdff_dfn_kf_prediction
+    cdff_dfn_point_cloud_assembly
+    cdff_dfn_features_description_2d
+    cdff_dfn_features_extraction_2d
+    cdff_dfn_registration_3d
+    cdff_dfn_image_filtering
+    cdff_dfn_point_cloud_filtering
+    cdff_dfn_force_mesh_generator
+    cdff_dfn_transform_3d_estimation
+    cdff_dfn_point_cloud_reconstruction_2d_to_3d
+    cdff_dfn_stereo_reconstruction
+    cdff_dfn_features_extraction_3d
+    cdff_dfn_features_description_3d
+    cdff_dfn_features_matching_3d
+    cdff_dfn_bundle_adjustment
+    cdff_dfn_voxelization
     synthetic_generators
-    threshold_force
-    transform_3d_estimation_ceres
-    transform_3d_estimation_least_squares_minimization
-    triangulation
-    voxel_binning
+    cdff_dfpc_configurator
+    cdff_dfpc_reconstruction_3d
+    cdff_dfpc_point_cloud_model_localisation
+    cdff_dfpc_haptic_scanning
 )
 
 # Make the Catch executable that runs the unit tests
@@ -156,7 +127,3 @@ target_link_libraries(cdff-unit-tests ${unittest_libraries})
 # corresponding to the current source directory (i.e. corresponding to
 # ${CMAKE_CURRENT_SOURCE_DIR}).
 add_test(NAME unit-tests COMMAND cdff-unit-tests)
-
-target_include_directories(
-    cdff-unit-tests
-    PRIVATE ${CMAKE_SOURCE_DIR}/CentralDPM/src)

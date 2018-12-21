@@ -57,13 +57,14 @@ class ParametersInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:	
-		ParametersInterface(std::string applicationName);
+		ParametersInterface() = delete;
+		explicit ParametersInterface(const std::string& applicationName);
 		~ParametersInterface();
-		void AddParameter(std::string groupName, std::string name, int defaultValue, int maxValue);
-		void AddParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
-		void AddSignedParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
+		void AddParameter(const std::string& groupName, const std::string& name, int defaultValue, int maxValue);
+		void AddParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double resolution);
+		void AddSignedParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double resolution);
 		void CreateTrackbars();
-		void SaveToYaml(std::string filePath);
+		void SaveToYaml(const std::string& filePath);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -99,7 +100,7 @@ class ParametersInterface
 		std::map<std::string, std::vector<Parameter> > parameterGroupsMap;
 		std::string applicationName;
 
-		void AddParameter(std::string groupName, Parameter parameter);
+		void AddParameter(const std::string& groupName, Parameter parameter);
 	};
 
 #endif

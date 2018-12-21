@@ -69,7 +69,7 @@ const ImageWrapper::ImageConstPtr FrameToImageConverter::Convert(const FrameWrap
     {
         depth_bytes = 4;
     }
-    else if((frameDepth == ARRAY3D_64F) || (frameDepth == ARRAY3D_64F))
+    else if((frameDepth == ARRAY3D_64F))
     {
         depth_bytes = 8;
     }

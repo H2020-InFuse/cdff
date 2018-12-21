@@ -37,6 +37,7 @@ namespace PointCloudAssembly
 	 * @param maxNeighbourDistance, maximum distance for a point to be considered neighbour of another point
 	 * @param incrementalMode, when this is false the output is given by the fusion of the two input clouds, when this is true only the first cloud will be used and will be fused with
 	 * the an incrementally constructed stored cloud.
+	 * @param incrementalMode, whether to use the distance filter or not for the point cloud output.
 	 */
 	class NeighbourPointAverage : public PointCloudAssemblyInterface
 	{
@@ -45,8 +46,8 @@ namespace PointCloudAssembly
 			NeighbourPointAverage();
 			virtual ~NeighbourPointAverage();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 			struct NeighbourPointAverageOptionsSet

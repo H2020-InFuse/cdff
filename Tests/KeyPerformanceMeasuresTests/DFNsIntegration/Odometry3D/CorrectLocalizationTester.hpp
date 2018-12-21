@@ -65,11 +65,11 @@ class CorrectLocalizationTester
 		CorrectLocalizationTester();
 		~CorrectLocalizationTester();
 
-		void SetInputClouds(std::string sceneCloudFilePath, std::string modelCloudFilePath, std::string groundTruthPoseFilePath);
-		void SetConfigurationFiles(std::string extractorConfigurationFile, std::string descriptorConfigurationFile, std::string matcherConfigurationFile);
+		void SetInputClouds(const std::string& sceneCloudFilePath, const std::string& modelCloudFilePath, const std::string& groundTruthPoseFilePath);
+		void SetConfigurationFiles(const std::string& extractorConfigurationFile, const std::string& descriptorConfigurationFile, const std::string& matcherConfigurationFile);
 		void SetDfns(CDFF::DFN::FeaturesExtraction3DInterface* extractor, CDFF::DFN::FeaturesDescription3DInterface* descriptor, CDFF::DFN::FeaturesMatching3DInterface* matcher);
 
-		void ExecuteDfns();
+		void ExecuteDfns(bool showClouds = false);
 		bool IsOutputCorrect(float relativeLocationError, float relativeOrientationError, float absoluteLocationError);
 
 	/* --------------------------------------------------------------------
@@ -84,6 +84,8 @@ class CorrectLocalizationTester
 	 * --------------------------------------------------------------------
 	 */
 	private:
+		typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
+
 		std::string extractorConfigurationFile, descriptorConfigurationFile, matcherConfigurationFile;
 		std::string sceneCloudFilePath, modelCloudFilePath, groundTruthPoseFilePath;
 		CDFF::DFN::FeaturesExtraction3DInterface* extractor;
@@ -99,6 +101,9 @@ class CorrectLocalizationTester
 		VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr modelFeaturesVector;
 		PoseWrapper::Pose3DConstPtr outputModelPoseInScene;
 		bool outputMatcherSuccess;
+
+		pcl::PointCloud<pcl::PointXYZ>::Ptr baseScenePclCloud;
+		pcl::PointCloud<pcl::PointXYZ>::Ptr baseModelPclCloud;
 
 		Converters::PclPointCloudToPointCloudConverter pointCloudConverter;
 		bool dfnsWereConfigured;
@@ -118,6 +123,9 @@ class CorrectLocalizationTester
 		float ComputeLocationError();
 		float ComputeOrientationError(float modelSize);
 		float ComputeModelSize();
+
+		void ShowClouds();
+		pcl::PointXYZ TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform);
 	};
 
 #endif

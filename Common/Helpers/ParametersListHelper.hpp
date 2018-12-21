@@ -83,8 +83,7 @@ class ParametersListHelper
 		
 
 		void ReadGroup(const YAML::Node& configurationNode);
-		ParametersGroup* GetGroup(std::string groupName);
-		ParameterHelperInterface* GetHelper(std::string groupName, std::string parameterName);
+		ParametersGroup* GetGroup(const std::string& groupName);
 
 		void AddParameterHelper(const std::string& groupName, ParameterHelperInterface* helper);
 		std::string Print();

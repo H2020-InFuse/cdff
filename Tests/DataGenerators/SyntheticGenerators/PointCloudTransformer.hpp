@@ -62,6 +62,8 @@ namespace DataGenerators {
 		void SavePointCloud(std::string outputFilePath);
 		void ViewPointCloud();
 		void Rescale(float scale);
+		void ShowWithAddedCloud(std::string cloudFilePath, float positionX, float positionY, float positionZ, float rotationX, float rotationY, float rotationZ, float rotationW);
+		void Reduce(int targetNumberOfPoints);
 
 	/* --------------------------------------------------------------------
 	 * Protected

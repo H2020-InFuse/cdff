@@ -39,7 +39,10 @@ set(BUNDLED_DEPENDENCIES_PREFIX External/install CACHE PATH
 # scope than the top-level CMakeLists file, perhaps with target_compile_
 # definitions() or set_source_files_properties()?
 
+option(TEST_ENABLED "Compile test code in DFNs and DFPCs" ON)
+if(TEST_ENABLED)
 add_definitions(-DTESTING)
+endif()
 
 # Generate tests for CTest. Each test defined with the CMake command add_test()
 # will be registered as a CTest test. Run these tests with ctest(1). The enable_
@@ -56,8 +59,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 ## Print basic information -----------------------------------------------------
 
 message(STATUS "Generating makefiles for project: ${PROJECT_NAME}")
-message(STATUS "Top-level source directory: ${PROJECT_SOURCE_DIR}")
-message(STATUS "Top-level build directory:  ${PROJECT_BINARY_DIR}")
+message(STATUS "Top-level source directory: ${CMAKE_SOURCE_DIR}")
+message(STATUS "Top-level build directory:  ${CMAKE_BINARY_DIR}")
 
 ## Work in progress ------------------------------------------------------------
 
@@ -90,7 +93,7 @@ endif()
 if(USE_BUNDLED_DEPENDENCIES)
 
   set(CMAKE_MODULE_PATH
-    "${PROJECT_SOURCE_DIR}/${BUNDLED_DEPENDENCIES_PREFIX}/share/cmake-3.11.4/Modules")
+    "${CMAKE_SOURCE_DIR}/${BUNDLED_DEPENDENCIES_PREFIX}/share/cmake-3.11.4/Modules")
 
 else()
 
@@ -278,7 +281,11 @@ else()
 
 endif()
 
-## Don't look for FLANN, QHull, yaml-cpp ---------------------------------------
+## Don't look for FLANN, yaml-cpp, CloudCompare-core ---------------------------
+
+set(CLOUDCOMPARE_FOUND true)
+set(CLOUDCOMPARE_INCLUDE_DIRS "")
+set(CLOUDCOMPARE_LIBRARIES "cloudcompare_core")
 
 # There aren't any CMake find modules nor any package configuration files for
 # those libraries, so just add the main include directory and use the libraries
@@ -316,6 +323,17 @@ message(STATUS "All requested PCL libraries, and their dependencies: ${PCL_LIBRA
 find_package(OpenCV 3.4.0 REQUIRED)
 find_package_mode(OpenCV)
 
+## Look for libpointmatcher ---------------------------------------------------
+
+# TODO: rework this section
+
+find_package(libpointmatcher 1.3.0 REQUIRED)
+set(POINTMATCHER_FOUND true)
+
+# Usage:
+# target_include_directories(<target> SYSTEM PRIVATE|PUBLIC ${POINTMATCHER_INCLUDE_DIRS})
+# target_link_libraries(<target> PRIVATE|PUBLIC ${POINTMATCHER_LIBRARIES})
+
 ## Look for Edres-Wrapper (optional dependency) --------------------------------
 
 find_package(Edres-Wrapper QUIET)
@@ -324,14 +342,35 @@ if(Edres-Wrapper_FOUND)
 
   find_package_mode(Edres-Wrapper)
   message(STATUS "Found Edres-Wrapper headers in: ${Edres-Wrapper_INCLUDE_DIRS}")
-  message(STATUS "Found Edres-Wrapper compiled libraries in: ${Edres-Wrapper_LIBRARIES}")
+  message(STATUS "Found Edres-Wrapper libraries, and their dependencies: ${Edres-Wrapper_LIBRARIES}")
 
-  set(WITH_EDRES ON CACHE BOOL "Build Edres-dependent parts")
+  option(WITH_EDRES "Build Edres-dependent parts" ON)
   include_directories(SYSTEM ${Edres-Wrapper_INCLUDE_DIRS})
 
 else()
 
-  set(WITH_EDRES OFF CACHE BOOL "Build Edres-dependent parts")
+  message(STATUS "Edres-Wrapper not found: Edres-dependent parts will not be built")
+  option(WITH_EDRES "Build Edres-dependent parts" OFF)
+
+endif()
+
+## Look for DLRTracker-core (optional dependency) ------------------------------
+
+find_package(DLRtracker_core QUIET)
+
+if(DLRTRACKER-CORE_FOUND)
+
+  find_package_mode(DLRtracker_core)
+  message(STATUS "Found DLRTracker-core headers in: ${DLRTRACKER-CORE_INCLUDE_DIRS}")
+  message(STATUS "Found DLRTracker-core libraries, and their dependencies: ${DLRTRACKER-CORE_LIBRARIES}")
+
+  option(WITH_DLRTRACKER "Build DLRTracker-dependent parts" ON)
+  include_directories(SYSTEM ${DLRTRACKER-CORE_INCLUDE_DIRS})
+
+else()
+
+  message(STATUS "DLRTracker-core not found: DLRTracker-dependent parts will not be built")
+  option(WITH_DLRTRACKER "Build DLRTracker-dependent parts" OFF)
 
 endif()
 
@@ -409,8 +448,6 @@ include_directories(
   CentralDPM
   DFNs
   DFPCs
-  Tests
-  CC
 )
 
 # Process all subdirectories containing a CMakeLists file
@@ -419,5 +456,13 @@ add_subdirectory(Common)
 add_subdirectory(CentralDPM)
 add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
-add_subdirectory(Tests)
-add_subdirectory(CC)
+
+# Optionally compile the tests (unit tests, interactive tests, performance
+# tests, etc)
+
+option(BUILD_TESTS "Build the CDFF's tests" ON)
+
+if(BUILD_TESTS)
+  include_directories(Tests)
+  add_subdirectory(Tests)
+endif()

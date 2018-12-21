@@ -17,6 +17,8 @@
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
 #include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
+#include <FeaturesExtraction3D/IssDetector3D.hpp>
+#include <FeaturesExtraction3D/CornerDetector3D.hpp>
 #include <FeaturesMatching2D/FlannMatcher.hpp>
 #include <FeaturesMatching3D/Icp3D.hpp>
 #include <FeaturesMatching3D/Ransac3D.hpp>
@@ -24,7 +26,8 @@
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
-#include <ImageFiltering/EdgeDetection.hpp>
+#include <ImageFiltering/CannyEdgeDetection.hpp>
+#include <ImageFiltering/DerivativeEdgeDetection.hpp>
 #include <ImageFiltering/BackgroundExtraction.hpp>
 #include <ImageFiltering/NormalVectorExtraction.hpp>
 #include <ImageFiltering/KMeansClustering.hpp>
@@ -33,6 +36,7 @@
 #include <PrimitiveMatching/HuInvariants.hpp>
 #include <Registration3D/Icp3D.hpp>
 #include <Registration3D/IcpCC.hpp>
+#include <Registration3D/IcpMatcher.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
@@ -41,7 +45,9 @@
 #include <DepthFiltering/ConvolutionFilter.hpp>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
 #include <PointCloudAssembly/NeighbourPointAverage.hpp>
+#include <PointCloudAssembly/NeighbourSinglePointAverage.hpp>
 #include <PointCloudAssembly/VoxelBinning.hpp>
+#include <PointCloudAssembly/MatcherAssembly.hpp>
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
@@ -53,7 +59,7 @@ namespace CDFF
 namespace DFN
 {
 
-DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnImplementation)
+DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std::string& dfnImplementation)
 {
 	if (dfnType == "BundleAdjustment")
 	{
@@ -150,7 +156,7 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(std::string dfnType, std::string dfnI
 	return NULL;
 }
 
-BundleAdjustmentInterface* DFNsBuilder::CreateBundleAdjustment(std::string dfnImplementation)
+BundleAdjustmentInterface* DFNsBuilder::CreateBundleAdjustment(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "CeresAdjustment")
 	{
@@ -164,7 +170,7 @@ BundleAdjustmentInterface* DFNsBuilder::CreateBundleAdjustment(std::string dfnIm
 	return NULL;
 }
 
-CamerasTransformEstimationInterface* DFNsBuilder::CreateCamerasTransformEstimation(std::string dfnImplementation)
+CamerasTransformEstimationInterface* DFNsBuilder::CreateCamerasTransformEstimation(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "EssentialMatrixDecomposition")
 	{
@@ -174,7 +180,7 @@ CamerasTransformEstimationInterface* DFNsBuilder::CreateCamerasTransformEstimati
 	return NULL;
 }
 
-FeaturesDescription2DInterface* DFNsBuilder::CreateFeaturesDescription2D(std::string dfnImplementation)
+FeaturesDescription2DInterface* DFNsBuilder::CreateFeaturesDescription2D(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "OrbDescriptor")
 	{
@@ -184,7 +190,7 @@ FeaturesDescription2DInterface* DFNsBuilder::CreateFeaturesDescription2D(std::st
 	return NULL;
 }
 
-FeaturesDescription3DInterface* DFNsBuilder::CreateFeaturesDescription3D(std::string dfnImplementation)
+FeaturesDescription3DInterface* DFNsBuilder::CreateFeaturesDescription3D(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "ShotDescriptor3D")
 	{
@@ -194,7 +200,7 @@ FeaturesDescription3DInterface* DFNsBuilder::CreateFeaturesDescription3D(std::st
 	return NULL;
 }
 
-FeaturesExtraction2DInterface* DFNsBuilder::CreateFeaturesExtraction2D(std::string dfnImplementation)
+FeaturesExtraction2DInterface* DFNsBuilder::CreateFeaturesExtraction2D(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "HarrisDetector2D")
 	{
@@ -208,17 +214,25 @@ FeaturesExtraction2DInterface* DFNsBuilder::CreateFeaturesExtraction2D(std::stri
 	return NULL;
 }
 
-FeaturesExtraction3DInterface* DFNsBuilder::CreateFeaturesExtraction3D(std::string dfnImplementation)
+FeaturesExtraction3DInterface* DFNsBuilder::CreateFeaturesExtraction3D(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "HarrisDetector3D")
 	{
 		return new FeaturesExtraction3D::HarrisDetector3D;
 	}
+	if (dfnImplementation == "IssDetector3D")
+	{
+		return new FeaturesExtraction3D::IssDetector3D;
+	}
+	if (dfnImplementation == "CornerDetector3D")
+	{
+		return new FeaturesExtraction3D::CornerDetector3D;
+	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesExtraction3D implementation");
 	return NULL;
 }
 
-FeaturesMatching2DInterface* DFNsBuilder::CreateFeaturesMatching2D(std::string dfnImplementation)
+FeaturesMatching2DInterface* DFNsBuilder::CreateFeaturesMatching2D(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "FlannMatcher")
 	{
@@ -228,7 +242,7 @@ FeaturesMatching2DInterface* DFNsBuilder::CreateFeaturesMatching2D(std::string d
 	return NULL;
 }
 
-FeaturesMatching3DInterface* DFNsBuilder::CreateFeaturesMatching3D(std::string dfnImplementation)
+FeaturesMatching3DInterface* DFNsBuilder::CreateFeaturesMatching3D(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "Icp3D")
 	{
@@ -246,7 +260,7 @@ FeaturesMatching3DInterface* DFNsBuilder::CreateFeaturesMatching3D(std::string d
 	return NULL;
 }
 
-FundamentalMatrixComputationInterface* DFNsBuilder::CreateFundamentalMatrixComputation(std::string dfnImplementation)
+FundamentalMatrixComputationInterface* DFNsBuilder::CreateFundamentalMatrixComputation(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "FundamentalMatrixRansac")
 	{
@@ -256,7 +270,7 @@ FundamentalMatrixComputationInterface* DFNsBuilder::CreateFundamentalMatrixCompu
 	return NULL;
 }
 
-ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(std::string dfnImplementation)
+ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "ImageUndistortion")
 	{
@@ -266,9 +280,13 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(std::string dfnImplem
 	{
 		return new ImageFiltering::ImageUndistortionRectification;
 	}
-    else if (dfnImplementation == "EdgeDetection")
+    else if (dfnImplementation == "CannyEdgeDetection")
     {
-        return new ImageFiltering::EdgeDetection;
+        return new ImageFiltering::CannyEdgeDetection;
+    }
+    else if (dfnImplementation == "DerivativeEdgeDetection")
+    {
+        return new ImageFiltering::DerivativeEdgeDetection;
     }
     else if (dfnImplementation == "BackgroundExtraction")
     {
@@ -285,7 +303,7 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(std::string dfnImplem
 	return NULL;
 }
 
-PerspectiveNPointSolvingInterface* DFNsBuilder::CreatePerspectiveNPointSolving(std::string dfnImplementation)
+PerspectiveNPointSolvingInterface* DFNsBuilder::CreatePerspectiveNPointSolving(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "IterativePnpSolver")
 	{
@@ -295,7 +313,7 @@ PerspectiveNPointSolvingInterface* DFNsBuilder::CreatePerspectiveNPointSolving(s
 	return NULL;
 }
 
-PointCloudReconstruction2DTo3DInterface* DFNsBuilder::CreatePointCloudReconstruction2DTo3D(std::string dfnImplementation)
+PointCloudReconstruction2DTo3DInterface* DFNsBuilder::CreatePointCloudReconstruction2DTo3D(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "Triangulation")
 	{
@@ -305,7 +323,7 @@ PointCloudReconstruction2DTo3DInterface* DFNsBuilder::CreatePointCloudReconstruc
 	return NULL;
 }
 
-PrimitiveMatchingInterface* DFNsBuilder::CreatePrimitiveMatching(std::string dfnImplementation)
+PrimitiveMatchingInterface* DFNsBuilder::CreatePrimitiveMatching(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "HuInvariants")
 	{
@@ -315,7 +333,7 @@ PrimitiveMatchingInterface* DFNsBuilder::CreatePrimitiveMatching(std::string dfn
 	return NULL;
 }
 
-Registration3DInterface* DFNsBuilder::CreateRegistration3D(std::string dfnImplementation)
+Registration3DInterface* DFNsBuilder::CreateRegistration3D(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "Icp3D")
 	{
@@ -325,11 +343,15 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(std::string dfnImplem
 	{
 		return new Registration3D::IcpCC;
 	}
+	else if (dfnImplementation == "IcpMatcher")
+	{
+		return new Registration3D::IcpMatcher;
+	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN Registration3D implementation");
 	return NULL;
 }
 
-StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(std::string dfnImplementation)
+StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "DisparityMapping")
 	{
@@ -347,7 +369,7 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(std::stri
 	return NULL;
 }
 
-Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(std::string dfnImplementation)
+Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "CeresEstimation")
 	{
@@ -361,7 +383,7 @@ Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(std::st
 	return NULL;
 }
 
-DepthFilteringInterface* DFNsBuilder::CreateDepthFiltering(std::string dfnImplementation)
+DepthFilteringInterface* DFNsBuilder::CreateDepthFiltering(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "ConvolutionFilter")
 	{
@@ -371,7 +393,7 @@ DepthFilteringInterface* DFNsBuilder::CreateDepthFiltering(std::string dfnImplem
 	return NULL;
 }
 
-ForceMeshGeneratorInterface* DFNsBuilder::CreateForceMeshGenerator(std::string dfnImplementation)
+ForceMeshGeneratorInterface* DFNsBuilder::CreateForceMeshGenerator(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "ThresholdForce")
 	{
@@ -381,7 +403,7 @@ ForceMeshGeneratorInterface* DFNsBuilder::CreateForceMeshGenerator(std::string d
 	return NULL;
 }
 
-PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(std::string dfnImplementation)
+PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "NeighbourPointAverage")
 	{
@@ -391,11 +413,19 @@ PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(std::string d
 	{
 		return new PointCloudAssembly::VoxelBinning;
 	}
+	else if (dfnImplementation == "MatcherAssembly")
+	{
+		return new PointCloudAssembly::MatcherAssembly;
+	}
+	if (dfnImplementation == "NeighbourSinglePointAverage")
+	{
+		return new PointCloudAssembly::NeighbourSinglePointAverage;
+	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudAssembly implementation");
 	return NULL;
 }
 
-PointCloudTransformInterface* DFNsBuilder::CreatePointCloudTransform(std::string dfnImplementation)
+PointCloudTransformInterface* DFNsBuilder::CreatePointCloudTransform(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "CartesianSystemTransform")
 	{
@@ -405,7 +435,7 @@ PointCloudTransformInterface* DFNsBuilder::CreatePointCloudTransform(std::string
 	return NULL;
 }
 
-VoxelizationInterface* DFNsBuilder::CreateVoxelization(std::string dfnImplementation)
+VoxelizationInterface* DFNsBuilder::CreateVoxelization(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "Octree")
 	{
@@ -415,7 +445,7 @@ VoxelizationInterface* DFNsBuilder::CreateVoxelization(std::string dfnImplementa
 	return NULL;
 }
 
-PointCloudFilteringInterface* DFNsBuilder::CreatePointCloudFiltering(std::string dfnImplementation)
+PointCloudFilteringInterface* DFNsBuilder::CreatePointCloudFiltering(const std::string& dfnImplementation)
 	{
 	if (dfnImplementation == "StatisticalOutlierRemoval")
 	{

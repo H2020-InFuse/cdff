@@ -49,10 +49,10 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-RegularityTester::RegularityTester(std::string configurationFilePath, std::string pointCloudFilePath, AverageSeparationType averageSeparationType, FeaturesExtraction3DInterface* dfn)
+RegularityTester::RegularityTester(const std::string& configurationFilePath, const std::string& pointCloudFilePath, AverageSeparationType averageSeparationType, FeaturesExtraction3DInterface* dfn) :
+	configurationFilePath(configurationFilePath),
+	pointCloudFilePath(pointCloudFilePath)
 	{
-	this->configurationFilePath = configurationFilePath;
-	this->pointCloudFilePath = pointCloudFilePath;
 	this->averageSeparationType = averageSeparationType;
 	this->dfn = dfn;
 

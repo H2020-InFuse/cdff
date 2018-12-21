@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # xma@spaceapplications.com, romain.michalec@strath.ac.uk
-# This file is required by ../fetch_compile_install_dependencies.sh
+# This file is required by ../get-cdff-dependencies.sh
 
 # ## Boost 1.66.0 =============================================================
 #
@@ -41,28 +41,13 @@
 #
 # ### Dependants --------------------------------------------------------------
 #
+# * libpointmatcher
 # * PCL
 # * CDFF
 #
-# Neither we nor the PCL need *all* the Boost.* libraries that require building:
-#
-# * Compiled Boost libraries used by the PCL (sources: https://github.com/
-#   PointCloudLibrary/pcl/blob/master/cmake/pcl_find_boost.cmake and http://
-#   www.pointclouds.org/documentation/tutorials/building_pcl.php):
-#
-#   + Required: Date_Time Filesystem Iostreams System Thread
-#   + Required if WITH_OPENNI2: Chrono
-#   + Optional: MPI Serialization
-#
-#   TODO: OpenNI2 support by the PCL (it is an optional dependency of pcl_io)
-#   is unlikely to be necessary for us
-#
-#   TODO: Message-Parsing Interface disabled but check that we are not using a
-#   part of the PCL that could make use of it
-#
-# * Boost header-only libraries required by the PCL:
-#
-#   + Undocumented, but at least SmartPtr
+# Neither the CDFF nor its dependencies require *all* the Boost.* libraries.
+# The following list are those required by the CDFF. For those required by the
+# dependencies, see their respective installers.
 #
 # * Compiled Boost libraries used by the CDFF:
 #
@@ -72,22 +57,44 @@
 #       base types of EnviRe
 #   + Timer (in topic branches only)
 #     - Used by MAG MiddlewareSupport
+#   + Atomic
+#     - Dependency of Ogre3D, which is a dependency of VISP, used for the model-based tracking DFNs
 #
-# * Boost header-only libraries used by the CDFF:
+# * Header-only Boost libraries used by the CDFF:
 #
 #   + SmartPtr
 #   + String_Algo
 
 function install4infuse_boost {
-if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
+
+# Which compiled Boost libraries should be installed?
+compiled_libraries=(date_time filesystem iostreams system thread chrono serialization timer program_options atomic)
+
+# Check if all desired Boost libraries are present
+if [[ -d "${INSTALL_DIR}/include/boost" ]]; then
+  # Boost headers and header-only Boost libraries are present
+  boost_ok=true
+  for i in "${compiled_libraries[@]}"; do
+    if [[ ! (-f "${INSTALL_DIR}/lib/libboost_${i}.so" || -f "${INSTALL_DIR}/lib/libboost_${i}.a") ]]; then
+      # Missing compiled Boost library: libboost_${i}.(so|a)
+      boost_ok=false
+    fi
+  done
+else
+  # Missing Boost headers and header-only Boost libraries
+  boost_ok=false
+fi
+
+# Install Boost if missing, reinstall it if a desired library is missing
+if [[ ${boost_ok} = false ]]; then
 
   # Download source code, extract, and change to resulting directory
-  fetchsource_function boost boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/
+  cdff_wget boost boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/
 
   # Build and install
   mkdir build
   ./bootstrap.sh \
-    --with-libraries=date_time,filesystem,iostreams,system,thread,chrono,serialization,timer \
+    --with-libraries="$(echo "${compiled_libraries[@]}" | tr " " ,)" \
     --prefix="${INSTALL_DIR}"
   ./b2 --build-dir=build -q -j ${CPUS} link=shared install
 
@@ -98,6 +105,7 @@ if [[ ! -d "${INSTALL_DIR}/include/boost" ]]; then
   wget https://gitlab.kitware.com/cmake/cmake/raw/v3.11.4/Modules/FindBoost.cmake
 
   # Remove source and build directories
-  clean_function boost
+  cdff_makedistclean boost
+
 fi
 }

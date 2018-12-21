@@ -27,6 +27,8 @@ namespace KFPrediction
 KalmanPredictor::KalmanPredictor()
 	: timeOfLastValidCorrection(-1),KF(12,6,0),Tpred(4,4,CV_32F),Test(4,4,CV_32F)
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("KalmanParameters", "StandardDeviationtdOrientation", parameters.kalmanParameters.stdOrientation, DEFAULT_PARAMETERS.kalmanParameters.stdOrientation);
 	parametersHelper.AddParameter<float>("KalmanParameters", "StandardDeviationtdTranslation", parameters.kalmanParameters.stdTranslation, DEFAULT_PARAMETERS.kalmanParameters.stdOrientation);
 	parametersHelper.AddParameter<float>("KalmanParameters", "InitialStateCovariance", parameters.kalmanParameters.initialCovariance, DEFAULT_PARAMETERS.kalmanParameters.initialCovariance);

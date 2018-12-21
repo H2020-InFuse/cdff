@@ -1,22 +1,35 @@
-add_library(
-    registration_3d
-    Registration3DInterface.cpp
-)
+set(REGISTRATION_3D_SOURCES "Registration3DInterface.cpp")
+set(REGISTRATION_3D_INCLUDE_DIRS "")
+set(REGISTRATION_3D_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(PCL_FOUND)
+	set(REGISTRATION_3D_SOURCES ${REGISTRATION_3D_SOURCES} "Icp3D.cpp")
+	set(REGISTRATION_3D_INCLUDE_DIRS ${REGISTRATION_3D_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
+	set(REGISTRATION_3D_DEPENDENCIES ${REGISTRATION_3D_DEPENDENCIES} ${PCL_COMMON_LIBRARIES} ${PCL_FEATURES_LIBRARIES} ${PCL_KDTREE_LIBRARIES} ${PCL_SEARCH_LIBRARIES})
+endif()
+
+if(CLOUDCOMPARE_FOUND)
+	set(REGISTRATION_3D_SOURCES ${REGISTRATION_3D_SOURCES} "IcpCC.cpp")
+	set(REGISTRATION_3D_INCLUDE_DIRS ${REGISTRATION_3D_INCLUDE_DIRS} ${CLOUDCOMPARE_INCLUDE_DIRS})
+	set(REGISTRATION_3D_DEPENDENCIES ${REGISTRATION_3D_DEPENDENCIES} ${CLOUDCOMPARE_LIBRARIES})
+endif()
+
+if(POINTMATCHER_FOUND)
+	set(REGISTRATION_3D_SOURCES ${REGISTRATION_3D_SOURCES} "IcpMatcher.cpp")
+	set(REGISTRATION_3D_INCLUDE_DIRS ${REGISTRATION_3D_INCLUDE_DIRS} ${POINTMATCHER_INCLUDE_DIRS})
+	set(REGISTRATION_3D_DEPENDENCIES ${REGISTRATION_3D_DEPENDENCIES} ${POINTMATCHER_LIBRARIES})
+endif()
 
 add_library(
-    registration_icp_3d
-    Icp3D.cpp
+    cdff_dfn_registration_3d
+    ${REGISTRATION_3D_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_registration_3d
+    SYSTEM PRIVATE ${REGISTRATION_3D_INCLUDE_DIRS}
 )
 target_link_libraries(
-    registration_icp_3d
-    registration_3d cdff_types yaml-cpp cdff_helpers cdff_converters
+    cdff_dfn_registration_3d
+    ${REGISTRATION_3D_DEPENDENCIES}
 )
 
-add_library(
-    registration_icp_cc
-    IcpCC.cpp
-)
-target_link_libraries(
-    registration_icp_cc
-    registration_3d cdff_types yaml-cpp cdff_helpers cdff_converters cc_core_lib
-)

@@ -34,6 +34,8 @@ FlannMatcher::FlannMatcher()
 	#define ADD_PARAMETER_WITH_HELPER(type, helperType, groupName, parameterName, groupVariable, parameterVariable) \
 		parametersHelper.AddParameter<type, helperType>(groupName, parameterName, parameters.groupVariable.parameterVariable, DEFAULT_PARAMETERS.groupVariable.parameterVariable);
 
+	parameters = DEFAULT_PARAMETERS;
+
 	ADD_PARAMETER(float, "GeneralParameters", "DistanceThreshold", generalOptionsSet, distanceThreshold);
 	ADD_PARAMETER_WITH_HELPER(MatcherMethod, MatcherMethodHelper, "GeneralParameters", "MatcherMethod", generalOptionsSet, matcherMethod);
 	ADD_PARAMETER(int, "GeneralParameters", "NumberOfChecks", generalOptionsSet, numberOfChecks);

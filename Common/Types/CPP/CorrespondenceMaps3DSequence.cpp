@@ -73,7 +73,7 @@ void AddCorrespondenceMap(CorrespondenceMaps3DSequence& correspondenceMapsSequen
 
 const CorrespondenceMap3D& GetCorrespondenceMap(const CorrespondenceMaps3DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 correspondenceMapIndex)
 {
-	ASSERT(correspondenceMapIndex >= 0 && correspondenceMapIndex < correspondenceMapsSequence.nCount, "GetCorrespondenceMap error, correspondenceMapIndex out of range");
+	ASSERT(correspondenceMapIndex < correspondenceMapsSequence.nCount, "GetCorrespondenceMap error, correspondenceMapIndex out of range");
 	return correspondenceMapsSequence.arr[correspondenceMapIndex];
 }
 
@@ -104,7 +104,6 @@ void RemoveCorrespondenceMaps(CorrespondenceMaps3DSequence& correspondenceMapsSe
 		}
 	ASSERT( correspondenceMapIndexOrderedList.at(elementsToRemove-1) < correspondenceMapsSequence.nCount, errorMessage);
 	BaseTypesWrapper::T_UInt32 firstIndex = correspondenceMapIndexOrderedList.at(0);
-	ASSERT(firstIndex >= 0, errorMessage); 
 
 	//Removing elements
 	BaseTypesWrapper::T_UInt32 nextIndexToRemove = 1;
@@ -125,9 +124,9 @@ void RemoveCorrespondenceMaps(CorrespondenceMaps3DSequence& correspondenceMapsSe
 	correspondenceMapsSequence.nCount -= elementsToRemove;
 	}
 
-void RemoveCorrespondences(CorrespondenceMaps3DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 mapIndex, std::vector<BaseTypesWrapper::T_UInt32> correspondenceIndexOrderedList)
+void RemoveCorrespondences(CorrespondenceMaps3DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 mapIndex, const std::vector<BaseTypesWrapper::T_UInt32>& correspondenceIndexOrderedList)
 	{
-	ASSERT(mapIndex >= 0 && mapIndex < correspondenceMapsSequence.nCount, "RemoveCorrespondences error, mapIndex out of range");
+	ASSERT(mapIndex < correspondenceMapsSequence.nCount, "RemoveCorrespondences error, mapIndex out of range");
 	RemoveCorrespondences(correspondenceMapsSequence.arr[mapIndex], correspondenceIndexOrderedList);
 	}
 

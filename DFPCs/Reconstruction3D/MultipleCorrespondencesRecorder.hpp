@@ -53,7 +53,8 @@ namespace Reconstruction3D
 class MultipleCorrespondencesRecorder
 	{
 	public:
-		MultipleCorrespondencesRecorder(int maximumNumberOfPoses);
+		MultipleCorrespondencesRecorder() = delete;
+		explicit MultipleCorrespondencesRecorder(int maximumNumberOfPoses);
 		~MultipleCorrespondencesRecorder();
 
 		void InitializeNewSequence();

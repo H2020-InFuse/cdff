@@ -35,6 +35,8 @@ namespace PointCloudFiltering
 
 StatisticalOutlierRemoval::StatisticalOutlierRemoval()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfNearestNeighbours", parameters.numberOfNearestNeighbours, DEFAULT_PARAMETERS.numberOfNearestNeighbours);
 	parametersHelper.AddParameter<double>("GeneralParameters", "StandardDeviationMultiplier", parameters.standardDeviationMultiplier, DEFAULT_PARAMETERS.standardDeviationMultiplier);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "TakeOutliersOnly", parameters.takeOutliersOnly, DEFAULT_PARAMETERS.takeOutliersOnly);

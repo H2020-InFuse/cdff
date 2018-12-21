@@ -47,8 +47,8 @@ namespace PointCloudReconstruction2DTo3D
 			Triangulation();
 			virtual ~Triangulation();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 

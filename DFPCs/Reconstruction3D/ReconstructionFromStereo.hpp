@@ -81,8 +81,8 @@ namespace Reconstruction3D
         public:
 		ReconstructionFromStereo();
 		~ReconstructionFromStereo();
-		void run();
-		void setup();
+		void run() override;
+		void setup() override;
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -125,10 +125,6 @@ namespace Reconstruction3D
 		CDFF::DFN::PerspectiveNPointSolvingInterface* perspectiveNPointSolver;
 		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
 		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3dfrom2dmatches;
-
-		#ifdef TESTING
-		std::ofstream logFile;
-		#endif
 
 		//Data Helpers
 		PointCloudWrapper::PointCloudPtr perspectiveCloud;

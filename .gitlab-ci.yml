@@ -1,53 +1,183 @@
-image: nexus.spaceapplications.com/repository/infuse/cdff-ci:2.0.1
+ variables:
+   REGISTRY_PREFIX: nexus.spaceapplications.com/
 
-stages:
-  - platform
-  - autogeneration
+ stages:
+  - setup
+  - generation
+  - analyse
   - build
   - test
   - deploy
 
-hardware:
-  stage : platform
-  script:
-      - cat /proc/cpuinfo
-      - lscpu
+ .docker:connect: &connect
+  before_script:
+   - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
 
-autogeneration:
-  stage : autogeneration
+ generate:cdff-ci:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder:latest
+  stage: setup
   script:
-      - cd Tools/ASN.1
-      - ./GeneratorScript.sh
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.ci cdff-ci
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.ci
+
+ generate:cdff-user:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: setup
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.user cdff-user
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.user
+
+ generate:asn:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
+  stage : generation
+  script:
+    - Tools/ASN.1/GeneratorScript.sh
   artifacts:
-    paths:
-      - Common/Types/C/
-    expire_in: 4 weeks
+   paths: 
+    - Common/Types/C/
+   expire_in: 4 weeks
 
-build:
+ .build:configure: &configure
+  before_script:
+   - "mkdir -p build && cd build"
+   - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
+   - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
+   - "JOBS=$((CPUS/2))"
+   - "JOBS=$((JOBS > 0 ? JOBS : 1))"
+   - "cd .."
+
+ .build:make: &make
+  script:
+   - "cd build"
+   - "make --jobs=${JOBS} --output-sync=target"
+   - "cd .."
+
+ build:ci:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage: build
-  script:
-      - "pwd"
-      - "mkdir build"
-      - "cd build"
-      - "cmake -DCMAKE_INSTALL_PREFIX=./ .."
-      - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
-      - "JOBS=$((CPUS/2))"
-      - "JOBS=$((JOBS > 0 ? JOBS : 1))"
-      - "make --jobs=${JOBS} --output-sync=target"
+  allow_failure: true
+  dependencies:
+   - generate:asn
   artifacts:
-    paths:
-      - build/
-    expire_in: 4 weeks
+   paths: 
+    - build/
+   expire_in: 4 weeks
 
-unit tests:
-  stage: test
+ build:user:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-user:latest
+  stage: build
+  allow_failure: true
+  dependencies:
+   - generate:asn
+  when: manual
+
+ analyse:cppcheck:full:
+  <<: *configure
+  stage: analyse
+  image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
   script:
-      - cd build/Tests/UnitTests
-      - ./cdff-unit-tests
+    - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
+  only:
+    - merge_requests
+  artifacts:
+   paths: 
+    - cppcheck/
+   expire_in: 4 weeks
 
-deploy_staging:
+ analyse:cppcheck:partial:
+  stage: analyse
+  image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
+  except:
+   - master
+  script:
+   - Tools/CPPCheck/partial-cppcheck.sh
+  artifacts:
+   paths: 
+    - cppcheck/
+   expire_in: 4 weeks
+
+ pages:
+  stage: deploy
+  when: always
+  dependencies:
+   - analyse:cppcheck:full
+  script:
+   - mkdir .public
+   - cp -r cppcheck/public/* .public
+   - mv .public public
+  artifacts:
+   paths:
+    - public
+  only:
+   - master
+
+ test:unit-tests:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
+  stage: test
+  dependencies:
+   - build:ci:system
+  script:
+   - cd build/Tests/UnitTests
+   - ./cdff-unit-tests
+
+ test:dependencies:local:
+  image: ubuntu:latest
   stage: deploy
   script:
-      - echo "Deploy to staging server"
+   - External/get-cdff-dependencies.sh -e
+   - mkdir -p build && cd build
+   - cmake -D USE_BUNDLED_DEPENDENCIES=ON ..
+   - make
   only:
-      - master
+   - manual
+
+ test:dependencies:system:
+   image: ubuntu:latest
+   stage: deploy
+   script:
+    - External/get-cdff-dependencies.sh -e -i /usr/local
+    - mkdir -p build && cd build
+    - cmake ..
+    - make
+   only:
+    - manual
+
+ deploy:development:
+  image: ubuntu:latest
+  stage: deploy
+  script:
+   - echo "Deploy as development"
+  only:
+   - master
+
+ deploy:release:
+  image: ubuntu:latest
+  stage: deploy
+  script:
+   - echo "Deploy as release"
+  only:
+   - master
+
+ deploy:flight:
+  image: ubuntu:latest
+  stage: deploy
+  script:
+   - echo "Deploy as flight"
+  only:
+   - master

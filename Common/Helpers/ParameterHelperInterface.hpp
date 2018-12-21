@@ -49,7 +49,8 @@ class ParameterHelperInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		ParameterHelperInterface(const std::string& parameterName);
+		ParameterHelperInterface() = delete;
+		explicit ParameterHelperInterface(const std::string& parameterName);
 		virtual ~ParameterHelperInterface();
 
 		bool HasName(const std::string& parameterName) const;

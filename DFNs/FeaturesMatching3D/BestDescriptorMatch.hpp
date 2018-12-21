@@ -25,22 +25,13 @@ namespace DFN
 namespace FeaturesMatching3D
 {
 	/**
-	 * 3D feature matching using ICP (provided by PCL): detect and find the
-	 * pose of a 3D model pointcloud in a 3D scene pointcloud.
-	 *
-	 * The best geometric transformation that matches the source (model)
-	 * keypoints to the sink (scene) keypoints is defined as the transformation
-	 * with the largest number of inliers.
+	 * Brute force algorithm for matching points. The best matches are returned as long
+	 * as their distance is below a define threshold. A point appears at most once in one match.
 	 *
 	 * @param maxCorrespondenceDistance
 	 *        largest distance allowed between the transformed point from the
 	 *        model pointcloud and a point from the scene pointcloud before
 	 *        they are no longer considered an acceptable match
-	 * @param maximumIterations
-	 *        maximum number of iterations that the algorithm can run before
-	 *        returning a result
-	 * @param transformationEpsilon
-	 * @param euclideanFitnessEpsilon
 	 */
 	class BestDescriptorMatch : public FeaturesMatching3DInterface
 	{
@@ -49,17 +40,14 @@ namespace FeaturesMatching3D
 			BestDescriptorMatch();
 			virtual ~BestDescriptorMatch();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 
 			struct BestDescriptorMatchOptionsSet
 			{
 				double maxCorrespondenceDistance;
-				int maximumIterations;
-				double transformationEpsilon;
-				double euclideanFitnessEpsilon;
 			};
 
 			Helpers::ParametersListHelper parametersHelper;

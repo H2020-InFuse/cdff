@@ -106,7 +106,7 @@ void Aggregator::Sum(std::vector< double >& sum)
 		{
 		sum.at(channel) = 0;
 		
-		for(std::vector<double>::iterator measure = measuresList.at(channel).begin(); measure != measuresList.at(channel).end(); measure++)
+		for(std::vector<double>::iterator measure = measuresList.at(channel).begin(); measure != measuresList.at(channel).end(); ++measure)
 			{
 			sum.at(channel) = sum.at(channel) + (*measure);
 			}
@@ -119,7 +119,7 @@ void Aggregator::Average(std::vector< double >& average)
 		{
 		average.at(channel) = 0;
 		
-		for(std::vector<double>::iterator measure = measuresList.at(channel).begin(); measure != measuresList.at(channel).end(); measure++)
+		for(std::vector<double>::iterator measure = measuresList.at(channel).begin(); measure != measuresList.at(channel).end(); ++measure)
 			{
 			average.at(channel) = average.at(channel) + (*measure);
 			}

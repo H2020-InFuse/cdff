@@ -36,7 +36,7 @@
  *
  * --------------------------------------------------------------------------
  */
-MainInterface::MainInterface(std::string windowName, int buttonWidth, int buttonHeight) 
+MainInterface::MainInterface(const std::string& windowName, int buttonWidth, int buttonHeight) 
 	: buttonList(windowName, buttonWidth, buttonHeight)
 	{
 	shutdownNow = false;

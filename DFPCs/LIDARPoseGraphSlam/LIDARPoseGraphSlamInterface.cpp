@@ -10,7 +10,10 @@ namespace CDFF
 namespace DFPC
 {
 
-LIDARPoseGraphSlamInterface::LIDARPoseGraphSlamInterface()
+LIDARPoseGraphSlamInterface::LIDARPoseGraphSlamInterface() :
+inLidarPointCloud(),
+inOdometryPose(),
+outPoseEstimate()
 {
 }
 

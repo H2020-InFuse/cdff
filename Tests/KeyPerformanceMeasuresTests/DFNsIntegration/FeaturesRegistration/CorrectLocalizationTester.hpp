@@ -59,11 +59,12 @@ class CorrectLocalizationTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		CorrectLocalizationTester(std::string configurationFile, CDFF::DFN::Registration3DInterface* dfn, std::string extractorConfigurationFile, CDFF::DFN::FeaturesExtraction3DInterface* extractor);
+		CorrectLocalizationTester(const std::string& configurationFile, CDFF::DFN::Registration3DInterface* dfn, const std::string& extractorConfigurationFile, 
+			CDFF::DFN::FeaturesExtraction3DInterface* extractor);
 		~CorrectLocalizationTester();
 
-		void SetInputClouds(std::string sceneCloudFilePath, std::string modelCloudFilePath, std::string groundTruthPoseFilePath);
-		void SetGuessModelPoseInScene(std::string guessPoseFilePath);
+		void SetInputClouds(const std::string& sceneCloudFilePath, const std::string& modelCloudFilePath, const std::string& groundTruthPoseFilePath);
+		void SetGuessModelPoseInScene(const std::string& guessPoseFilePath);
 
 		void ExecuteDfns();
 		bool IsOutputCorrect(float relativeLocationError, float relativeOrientationError, float absoluteLocationError);

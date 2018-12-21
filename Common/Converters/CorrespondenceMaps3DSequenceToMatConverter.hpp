@@ -77,7 +77,7 @@ class CorrespondenceMaps3DSequenceToMatConverter
 		const cv::Mat ComputeMeasurementMatrix(const CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequence& correspondenceMapsSequence);
 		std::vector<CloudPoint> ComputeChainOfMatchingPoints(
 			const CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequence& correspondenceMapsSequence, int numberOfClouds, CloudPoint point1, CloudPoint point2);
-		void AddChainToMeasurementMatrix(const std::vector<CloudPoint> chain, cv::Mat& measurementMatrix);
+		void AddChainToMeasurementMatrix(const std::vector<CloudPoint>& chain, cv::Mat& measurementMatrix);
 		int ComputeNumberOfClouds(const CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequence& correspondenceMapsSequence); 
 
 		bool ThereAreUnexploredPoints(const std::vector<CloudPoint>& chain, int& chainIndexToExplore);

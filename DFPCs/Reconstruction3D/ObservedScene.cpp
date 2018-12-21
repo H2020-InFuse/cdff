@@ -30,7 +30,6 @@
 #include "Errors/Assert.hpp"
 #include <Converters/Transform3DToEigenTransformConverter.hpp>
 #include <pcl/filters/voxel_grid.h>
-#include <Visualizers/PCLVisualizer.hpp>
 
 namespace CDFF
 {
@@ -54,6 +53,7 @@ ObservedScene::ObservedScene() :
 	scene( pcl::PointCloud<pcl::PointXYZ>::Ptr( new pcl::PointCloud<pcl::PointXYZ>() ) )
 	{
 	this->resolution = DEFAULT_RESOLUTION;
+	referenceFrameId = 0;
 	}
 
 ObservedScene::~ObservedScene()
@@ -126,8 +126,6 @@ void ObservedScene::AddPointCloudInLastReference(PointCloudConstPtr pointCloudIn
 	grid.setInputCloud(scene);
 	grid.setLeafSize(resolution, resolution, resolution);
 	grid.filter(*scene);
-
-	DEBUG_SAVE_POINT_CLOUD_WITH_PERIOD(scene, 500);
 	}
 
 PointCloudConstPtr ObservedScene::GetPartialScene(Point3D origin, float radius)
@@ -165,8 +163,8 @@ PointCloudWrapper::PointCloudConstPtr ObservedScene::GetPartialScene(float radiu
 	
 	Point3D origin;
 	origin.x = currentPosition.x();
-	origin.x = currentPosition.y();
-	origin.x = currentPosition.z();
+	origin.y = currentPosition.y();
+	origin.z = currentPosition.z();
 
 	return GetPartialScene(origin, radius);
 	}

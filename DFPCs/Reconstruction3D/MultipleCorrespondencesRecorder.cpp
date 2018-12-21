@@ -28,6 +28,7 @@ MultipleCorrespondencesRecorder::MultipleCorrespondencesRecorder(int maximumNumb
 	numberOfOldPoses = -1;
 	addingNewSequence = false;
 	oneCorrespondenceWasAddedSinceLastDiscard = false;
+	numberOfMapsAddedSinceLastInitialization = 0;
 	}
 
 MultipleCorrespondencesRecorder::~MultipleCorrespondencesRecorder()

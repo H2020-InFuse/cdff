@@ -1,0 +1,12 @@
+- Name: GeneralParameters
+  NumberOfNeighboursNormalEstimation: 50
+  NumberOfNeighboursRegionGrowing: 40
+  NumberOfNeightbourBorderSelection: 15
+  SmoothnessThreshold: 3.6
+  CurvatureThreshold: 0.3
+  MinimumClusterSize: 1
+  MaximumClusterSize: 1000000
+  SearchRadiusBorderSelection: 0.15
+  NumberOfHistogramSlots: 10
+  MaximumNumberOfEmptySlots: 3
+  OutputFormat: Positions

@@ -66,8 +66,8 @@ class SelectionTester
 		~SelectionTester();
 
 		void SetDfns(CDFF::DFN::FeaturesDescription3DInterface* descriptor, CDFF::DFN::FeaturesMatching3DInterface* matcher);
-		void SetConfigurationFilePaths(std::string featuresDescriptorConfigurationFilePath, std::string featuresMatcherConfigurationFilePath);
-		void SetInputFilesPaths(std::string sourceCloudFilePath, std::string sinkCloudFilePath, std::string correspondencesFilePath);
+		void SetConfigurationFilePaths(const std::string& featuresDescriptorConfigurationFilePath, const std::string& featuresMatcherConfigurationFilePath);
+		void SetInputFilesPaths(const std::string& sourceCloudFilePath, const std::string& sinkCloudFilePath, const std::string& correspondencesFilePath);
 		void ExecuteDfns();
 		bool AreCorrespondencesValid(float percentageThreshold);
 

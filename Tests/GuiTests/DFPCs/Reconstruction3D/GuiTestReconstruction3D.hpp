@@ -69,7 +69,7 @@ class GuiTestReconstruction3D
 			STEREO_CAMERA_TWO_FILES
 			};
 
-		GuiTestReconstruction3D(std::string configurationFilePath, std::string imageFilesFolder, std::string imagesListFileName, ImageFilesType imageFilesType);
+		GuiTestReconstruction3D(const std::string& configurationFilePath, const std::string& imageFilesFolder, const std::string& imagesListFileName, ImageFilesType imageFilesType);
 		~GuiTestReconstruction3D();
 
 		void Run(CDFF::DFPC::Reconstruction3DInterface& reconstructor3d);
@@ -94,7 +94,7 @@ class GuiTestReconstruction3D
 
 		Converters::MatToFrameConverter frameConverter;
 
-		void LoadImagesList(std::string imagesListFileName);
+		void LoadImagesList(const std::string& imagesListFileName);
 		bool LoadNextImages(FrameWrapper::FrameConstPtr& leftImage, FrameWrapper::FrameConstPtr& rightImage);
 
 	};

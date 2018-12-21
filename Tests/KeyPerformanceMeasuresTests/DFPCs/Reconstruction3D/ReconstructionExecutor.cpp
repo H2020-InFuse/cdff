@@ -65,6 +65,9 @@ ReconstructionExecutor::ReconstructionExecutor()
 	measuresReferenceWasLoaded = false;
 	dfpcExecuted = false;
 	dfpcWasLoaded = false;
+
+	outputSuccess = false;
+	dfpc = NULL;
 	}
 
 ReconstructionExecutor::~ReconstructionExecutor()
@@ -75,7 +78,7 @@ ReconstructionExecutor::~ReconstructionExecutor()
 	DELETE_IF_NOT_NULL(outputCameraPose);
 	}
 
-void ReconstructionExecutor::SetDfpc(std::string configurationFilePath, CDFF::DFPC::Reconstruction3DInterface* dfpc)
+void ReconstructionExecutor::SetDfpc(const std::string& configurationFilePath, CDFF::DFPC::Reconstruction3DInterface* dfpc)
 	{
 	this->configurationFilePath = configurationFilePath;
 	this->dfpc = dfpc;
@@ -84,7 +87,7 @@ void ReconstructionExecutor::SetDfpc(std::string configurationFilePath, CDFF::DF
 	dfpcWasLoaded = true;
 	}
 
-void ReconstructionExecutor::SetInputFilesPaths(std::string inputImagesFolder, std::string inputImagesListFileName)
+void ReconstructionExecutor::SetInputFilesPaths(const std::string& inputImagesFolder, const std::string& inputImagesListFileName)
 	{
 	this->inputImagesFolder = inputImagesFolder;
 	this->inputImagesListFileName = inputImagesListFileName;
@@ -93,7 +96,7 @@ void ReconstructionExecutor::SetInputFilesPaths(std::string inputImagesFolder, s
 	inputImagesWereLoaded = true;
 	}
 
-void ReconstructionExecutor::SetOutputFilePath(std::string outputPointCloudFilePath)
+void ReconstructionExecutor::SetOutputFilePath(const std::string& outputPointCloudFilePath)
 	{
 	this->outputPointCloudFilePath = outputPointCloudFilePath;
 
@@ -106,7 +109,7 @@ void ReconstructionExecutor::SetOutputFilePath(std::string outputPointCloudFileP
 	outputPointCloudWasLoaded = true;
 	}
 
-void ReconstructionExecutor::SetOutliersFilePath(std::string outliersReferenceFilePath)
+void ReconstructionExecutor::SetOutliersFilePath(const std::string& outliersReferenceFilePath)
 	{
 	this->outliersReferenceFilePath = outliersReferenceFilePath;
 
@@ -114,7 +117,7 @@ void ReconstructionExecutor::SetOutliersFilePath(std::string outliersReferenceFi
 	outliersReferenceWasLoaded = true;
 	}
 
-void ReconstructionExecutor::SetMeasuresFilePath(std::string measuresReferenceFilePath)
+void ReconstructionExecutor::SetMeasuresFilePath(const std::string& measuresReferenceFilePath)
 	{
 	this->measuresReferenceFilePath = measuresReferenceFilePath;
 
@@ -122,7 +125,7 @@ void ReconstructionExecutor::SetMeasuresFilePath(std::string measuresReferenceFi
 	measuresReferenceWasLoaded = true;
 	}
 
-void ReconstructionExecutor::ExecuteDfpc(std::string transformFilePath)
+void ReconstructionExecutor::ExecuteDfpc(const std::string& transformFilePath)
 	{
 	ASSERT(inputImagesWereLoaded && dfpcWasLoaded, "Cannot execute DFPC if input images or the DFPC itself are not loaded");
 	ASSERT(leftImageFileNamesList.size() == rightImageFileNamesList.size(), "Left images list and right images list do not have same dimensions");
@@ -223,7 +226,7 @@ bool ReconstructionExecutor::IsDimensionsQualitySufficient(float shapeSimilarity
 	return (validShape && validDimensions);
 	}
 
-void ReconstructionExecutor::SaveOutputPointCloud(std::string outputPointCloudFilePath)
+void ReconstructionExecutor::SaveOutputPointCloud(const std::string& outputPointCloudFilePath)
 	{
 	ASSERT(dfpcExecuted, "Cannot save output cloud if DFPC was not executed before");
 
@@ -239,7 +242,7 @@ void ReconstructionExecutor::SaveOutputPointCloud(std::string outputPointCloudFi
  *
  * --------------------------------------------------------------------------
  */
-void ReconstructionExecutor::LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame)
+void ReconstructionExecutor::LoadInputImage(const std::string& filePath, FrameWrapper::FrameConstPtr& frame)
 	{
 	cv::Mat cvImage = cv::imread(filePath, CV_LOAD_IMAGE_COLOR);
 	ASSERT(cvImage.cols > 0 && cvImage.rows >0, "Error: Loaded input image is empty");
@@ -317,6 +320,7 @@ void ReconstructionExecutor::ConfigureDfpc()
 
 float ReconstructionExecutor::ComputeCameraDistanceError()
 	{
+	ASSERT(pointsToCameraMatrix.rows > 0, "No measures available in input file");
 	float cameraDistanceError = 0;
 	for(int pointIndex = 0; pointIndex < pointsToCameraMatrix.rows; pointIndex++)
 		{
@@ -425,7 +429,7 @@ float ReconstructionExecutor::ComputeObjectShapeSimilarity(int objectIndex)
 	return (1 - (averageAbsoluteError/dimension));
 	}
 
-void ReconstructionExecutor::SaveTransform(std::string transformFilePath)
+void ReconstructionExecutor::SaveTransform(const std::string& transformFilePath)
 	{
 	if (transformFilePath == "")
 		{

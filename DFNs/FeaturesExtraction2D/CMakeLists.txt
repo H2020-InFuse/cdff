@@ -1,22 +1,22 @@
-add_library(
-    feature_extraction_2d
-    FeaturesExtraction2DInterface.cpp
-)
+set(FEATURES_EXTRACTION_2D_SOURCES "FeaturesExtraction2DInterface.cpp")
+set(FEATURES_EXTRACTION_2D_INCLUDE_DIRS "")
+set(FEATURES_EXTRACTION_2D_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+
+if(OpenCV_FOUND)
+	set(FEATURES_EXTRACTION_2D_SOURCES ${FEATURES_EXTRACTION_2D_SOURCES} "HarrisDetector2D.cpp" "OrbDetectorDescriptor.cpp")
+	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
+	set(FEATURES_EXTRACTION_2D_DEPENDENCIES ${FEATURES_EXTRACTION_2D_DEPENDENCIES} ${OpenCV_LIBS})
+endif()
 
 add_library(
-    harris_detector_2d
-    HarrisDetector2D.cpp
+    cdff_dfn_features_extraction_2d
+    ${FEATURES_EXTRACTION_2D_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_features_extraction_2d
+    SYSTEM PRIVATE ${FEATURES_EXTRACTION_2D_INCLUDE_DIRS}
 )
 target_link_libraries(
-    harris_detector_2d
-    feature_extraction_2d cdff_types yaml-cpp cdff_helpers opencv_core cdff_converters opencv_imgproc cdff_logger
-)
-
-add_library(
-    orb_detector_descriptor
-    OrbDetectorDescriptor.cpp
-)
-target_link_libraries(
-    orb_detector_descriptor
-    feature_extraction_2d cdff_types yaml-cpp opencv_features2d cdff_helpers opencv_core cdff_converters
+    cdff_dfn_features_extraction_2d
+    ${FEATURES_EXTRACTION_2D_DEPENDENCIES}
 )

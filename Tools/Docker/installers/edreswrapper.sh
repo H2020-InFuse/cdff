@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # romain.michalec@strath.ac.uk
-# This file is required by ../fetch_compile_install_dependencies.sh
+# This file is required by ../get-cdff-dependencies.sh
 
 # ## Edres-Wrapper 1.0.0 ======================================================
 #
@@ -29,15 +29,15 @@
 function install4infuse_edres-wrapper {
 if [[ ! -d "${INSTALL_DIR}/include/edres-wrapper" ]]; then
 
-  # Download source code, extract, and change to resulting directory
-  fetchsource_function edres-wrapper edreswrapper-sdk-1.0.0.tar.gz http://web.magellium.fr/~H2020INFUSE/
+  # Download library, extract, and change to resulting directory
+  cdff_wget edres-wrapper edreswrapper-sdk-1.0.0.tar.gz http://web.magellium.fr/~H2020INFUSE/
 
   # Install
   install -m 0644 -D -t "${INSTALL_DIR}/share/edres-wrapper/" Edres-WrapperConfig.cmake
-  install -m 0644 -D -t "${INSTALL_DIR}/include/edres-wrapper/" include/edres-wrapper/*
-  install -m 0644 -D -t "${INSTALL_DIR}/lib/edres-wrapper/" lib/*
+  install -m 0644 -D -t "${INSTALL_DIR}/include/edres-wrapper/" include/edres-wrapper/*.h
+  install -m 0644 -D -t "${INSTALL_DIR}/lib/edres-wrapper/" lib/libedres-wrapper.so
 
-  # Remove source directory
-  clean_function edres-wrapper
+  # Remove extracted library
+  cdff_makedistclean edres-wrapper
 fi
 }

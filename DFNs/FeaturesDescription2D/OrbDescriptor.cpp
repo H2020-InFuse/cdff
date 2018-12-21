@@ -27,6 +27,8 @@ namespace FeaturesDescription2D
 
 OrbDescriptor::OrbDescriptor()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<int>("GeneralParameters", "EdgeThreshold", parameters.edgeThreshold, DEFAULT_PARAMETERS.edgeThreshold);
 	parametersHelper.AddParameter<int>("GeneralParameters", "FastThreshold", parameters.fastThreshold, DEFAULT_PARAMETERS.fastThreshold);
 	parametersHelper.AddParameter<int>("GeneralParameters", "FirstLevel", parameters.firstLevel, DEFAULT_PARAMETERS.firstLevel);
@@ -158,13 +160,13 @@ void OrbDescriptor::ValidateParameters()
 	ASSERT(parameters.sizeOfBrightnessTestSet >= 2 && parameters.sizeOfBrightnessTestSet <= 4, "Orb Detector Descriptor Configuration Error: size of brightness test set should be 2, 3, or 4");
 }
 
-void OrbDescriptor::ValidateInputs(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector)
+void OrbDescriptor::ValidateInputs(cv::Mat inputImage, const std::vector<cv::KeyPoint>& keypointsVector)
 {
 	ASSERT(inputImage.type() == CV_8UC3 || inputImage.type() == CV_8UC1, "OrbDetectorDescriptor error: input image is not of type CV_8UC3 or CV_8UC1");
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "OrbDetectorDescriptor error: input image is empty");
 }
 
-int OrbDescriptor::ConvertToScoreType(std::string scoreType)
+int OrbDescriptor::ConvertToScoreType(const std::string& scoreType)
 {
 	if (scoreType == "HarrisScore" || scoreType == "0")
 		{

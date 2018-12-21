@@ -46,13 +46,13 @@ class StereoReconstructionTestInterface : public PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		StereoReconstructionTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, 
+		StereoReconstructionTestInterface(const std::string& folderPath, const std::string& baseConfigurationFileName, const std::string& performanceMeasuresFileName, 
 			CDFF::DFN::StereoReconstructionInterface* reconstructor);
 		~StereoReconstructionTestInterface();
 
-		void SetImageFilesPath(std::string baseFolderPath, std::string imagesListFileName, bool useReferenceDisparity);
-		void SetDisparityOutputFile(std::string outputDisparityFileBaseName, std::string outputDisparityFileExtension);
-		void SetCloudOutputFile(std::string outputCloudFileBaseName, std::string outputCloudFileExtension);
+		void SetImageFilesPath(const std::string& baseFolderPath, const std::string& imagesListFileName, bool useReferenceDisparity);
+		void SetDisparityOutputFile(const std::string& outputDisparityFileBaseName, const std::string& outputDisparityFileExtension);
+		void SetCloudOutputFile(const std::string& outputCloudFileBaseName, const std::string& outputCloudFileExtension);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -86,8 +86,8 @@ class StereoReconstructionTestInterface : public PerformanceTestInterface
 		void ReadImagesList(bool useReferenceDisparity);
 		void SetReferenceDisparity(std::string referenceDisparityFilePath);
 
-		bool SetNextInputs();
-		MeasuresMap ExtractMeasures();
+		bool SetNextInputs() override;
+		MeasuresMap ExtractMeasures() override;
 
 		void ComputeValidDisparityColumns(const cv::Mat& normalizedDisparity, unsigned& firstValidColumn, unsigned& numberOfValidColumns);
 		bool IsBadDisparity(const cv::Mat& normalizedDisparity, unsigned firstValidColumn);

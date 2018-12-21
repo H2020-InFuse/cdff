@@ -14,7 +14,7 @@ add_executable(
 set_target_properties(HarrisDetector2DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     HarrisDetector2DGuiTest
-    harris_detector_2d
+    cdff_dfn_features_extraction_2d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -28,7 +28,7 @@ add_executable(
 set_target_properties(OrbDetectorDescriptorGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     OrbDetectorDescriptorGuiTest
-    orb_detector_descriptor
+    cdff_dfn_features_extraction_2d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -45,7 +45,7 @@ add_executable(
 set_target_properties(DepthFilteringGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
         DepthFilteringGuiTest
-        convolution_filter
+        cdff_dfn_depth_filtering
         ${GRAPHICALTEST_CDFF_LIBRARIES}
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -62,7 +62,7 @@ add_executable(
 set_target_properties(FlannMatcherGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     FlannMatcherGuiTest
-    flann_matcher
+    cdff_dfn_features_matching_2d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -76,7 +76,7 @@ add_executable(
 set_target_properties(ImageUndistortionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     ImageUndistortionGuiTest
-    image_undistortion
+    cdff_dfn_image_filtering
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -90,7 +90,7 @@ add_executable(
 set_target_properties(ImageUndistortionRectificationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
     ImageUndistortionRectificationGuiTest
-    image_undistortion_rectification
+    cdff_dfn_image_filtering
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -103,7 +103,7 @@ add_executable(kmeans_gui_test
 )
 target_link_libraries(
         kmeans_gui_test
-        cdff_dfn_kmeans
+        cdff_dfn_image_filtering
         ${GRAPHICALTEST_CDFF_LIBRARIES}
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -111,13 +111,13 @@ set_target_properties(kmeans_gui_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./test
 
 add_executable(
     edge_detection_gui_test
-    DFNs/ImageFiltering/EdgeDetection.cpp
+    DFNs/ImageFiltering/CannyEdgeDetection.cpp
     DFNs/DFNTestInterface.cpp
     ${GRAPHICALTEST_GUI_SOURCES}
 )
 target_link_libraries(
     edge_detection_gui_test
-    cdff_dfn_edge_detection
+    cdff_dfn_image_filtering
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${GRAPHICALTEST_CDFF_LIBRARIES}
 )
@@ -131,7 +131,7 @@ add_executable(
 )
 target_link_libraries(
     normal_vector_extraction_gui_test
-    cdff_dfn_normal_vector_extraction
+    cdff_dfn_image_filtering
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -147,10 +147,43 @@ set_target_properties(HarrisDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTOR
 target_compile_definitions(HarrisDetector3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     HarrisDetector3DGuiTest
-    harris_detector_3d
+    cdff_dfn_features_extraction_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
+)
+
+add_executable(
+    IssDetector3DGuiTest
+    DFNs/FeaturesExtraction3D/IssDetector3D.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(IssDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(IssDetector3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+    IssDetector3DGuiTest
+    cdff_dfn_features_extraction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
+)
+
+add_executable(
+    CornerDetector3DGuiTest
+    DFNs/FeaturesExtraction3D/CornerDetector3D.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(CornerDetector3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(CornerDetector3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+    CornerDetector3DGuiTest
+    cdff_dfn_features_extraction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
+    ${PCL_LIBRARIES}
 )
 
 add_executable(
@@ -163,7 +196,7 @@ set_target_properties(Registration3DIcpGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTO
 target_compile_definitions(Registration3DIcpGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Registration3DIcpGuiTest
-    registration_icp_3d
+    cdff_dfn_registration_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree
@@ -180,7 +213,7 @@ set_target_properties(Registration3DIcpCCGuiTest PROPERTIES RUNTIME_OUTPUT_DIREC
 target_compile_definitions(Registration3DIcpCCGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Registration3DIcpCCGuiTest
-    registration_icp_cc
+    cdff_dfn_registration_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree
@@ -197,7 +230,7 @@ set_target_properties(ShotDescriptor3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTOR
 target_compile_definitions(ShotDescriptor3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ShotDescriptor3DGuiTest
-    shot_descriptor_3d
+    cdff_dfn_features_description_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_keypoints
@@ -214,7 +247,7 @@ set_target_properties(Icp3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_compile_definitions(Icp3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Icp3DGuiTest
-    icp_3d
+    cdff_dfn_features_matching_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
@@ -231,10 +264,10 @@ set_target_properties(Ransac3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./test
 target_compile_definitions(Ransac3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     Ransac3DGuiTest
-    ransac_3d
+    cdff_dfn_features_matching_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
     yaml-cpp ${VTK_LIBRARIES}
 )
 
@@ -248,7 +281,7 @@ set_target_properties(TriangulationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY .
 target_compile_definitions(TriangulationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     TriangulationGuiTest
-    triangulation
+    cdff_dfn_point_cloud_reconstruction_2d_to_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_visualization
@@ -265,7 +298,7 @@ set_target_properties(DisparityMappingGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTOR
 target_compile_definitions(DisparityMappingGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     DisparityMappingGuiTest
-    disparity_mapping
+    cdff_dfn_stereo_reconstruction
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
@@ -281,7 +314,7 @@ set_target_properties(HirschmullerDisparityMappingGuiTest PROPERTIES RUNTIME_OUT
 target_compile_definitions(HirschmullerDisparityMappingGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     HirschmullerDisparityMappingGuiTest
-    hirschmuller_disparity_mapping
+    cdff_dfn_stereo_reconstruction
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
@@ -297,7 +330,7 @@ set_target_properties(ScanlineOptimizationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRE
 target_compile_definitions(ScanlineOptimizationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ScanlineOptimizationGuiTest
-    scanline_optimization
+    cdff_dfn_stereo_reconstruction
     ${GRAPHICALTEST_CDFF_LIBRARIES} cdff_visualizers_pcl
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     pcl_common pcl_visualization
@@ -313,7 +346,7 @@ add_executable(
 set_target_properties(HuInvariantsGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
 target_link_libraries(
         HuInvariantsGuiTest
-        hu_invariants
+        cdff_dfn_primitive_matching
         ${GRAPHICALTEST_CDFF_LIBRARIES}
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
@@ -330,10 +363,11 @@ set_target_properties(DenseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTP
 target_compile_definitions(DenseRegistrationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     DenseRegistrationFromStereoGuiTest
-    dense_registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator  cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -345,10 +379,11 @@ set_target_properties(SparseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUT
 target_compile_definitions(SparseRegistrationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     SparseRegistrationFromStereoGuiTest
-    sparse_registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -360,10 +395,11 @@ set_target_properties(AdjustmentFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRE
 target_compile_definitions(AdjustmentFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     AdjustmentFromStereoGuiTest
-    adjustment_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -375,10 +411,11 @@ set_target_properties(ReconstructionFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_
 target_compile_definitions(ReconstructionFromMotionGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ReconstructionFromMotionGuiTest
-    reconstruction_from_motion
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -390,10 +427,11 @@ set_target_properties(ReconstructionFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_
 target_compile_definitions(ReconstructionFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ReconstructionFromStereoGuiTest
-    reconstruction_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -405,10 +443,11 @@ set_target_properties(RegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DI
 target_compile_definitions(RegistrationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     RegistrationFromStereoGuiTest
-    registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator  cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -420,10 +459,11 @@ set_target_properties(EstimationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRE
 target_compile_definitions(EstimationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     EstimationFromStereoGuiTest
-    estimation_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -435,10 +475,11 @@ set_target_properties(FeaturesMatching3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECT
 target_compile_definitions(FeaturesMatching3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     FeaturesMatching3DGuiTest
-    dfpc_implementation_features_matching_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
+    cdff_dfpc_point_cloud_model_localisation
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -450,10 +491,11 @@ set_target_properties(RegistrationAndMatchingGuiTest PROPERTIES RUNTIME_OUTPUT_D
 target_compile_definitions(RegistrationAndMatchingGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     RegistrationAndMatchingGuiTest
-    registration_and_matching
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    cdff_dfpc_reconstruction_and_identification
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 
@@ -467,10 +509,10 @@ set_target_properties(StereoReconstruction PROPERTIES RUNTIME_OUTPUT_DIRECTORY .
 target_compile_definitions(StereoReconstruction PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     StereoReconstruction
-    image_undistortion orb_detector_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
+    cdff_dfn_image_filtering cdff_dfn_features_extraction_2d cdff_dfn_point_cloud_reconstruction_2d_to_3d cdff_dfn_features_matching_2d cdff_dfn_fundamental_matrix_computation cdff_dfn_cameras_transform_estimation cdff_dfn_features_matching_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
     yaml-cpp ${VTK_LIBRARIES}
 )
 
@@ -484,9 +526,9 @@ set_target_properties(StereoReconstruction2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_compile_definitions(StereoReconstruction2 PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     StereoReconstruction2
-    image_undistortion harris_detector_2d orb_descriptor triangulation flann_matcher fundamental_matrix_ransac essential_matrix_decomposition icp_3d
+    cdff_dfn_image_filtering cdff_dfn_features_extraction_2d cdff_dfn_features_description_2d cdff_dfn_point_cloud_reconstruction_2d_to_3d cdff_dfn_features_matching_2d cdff_dfn_fundamental_matrix_computation cdff_dfn_cameras_transform_estimation cdff_dfn_features_matching_3d
     ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_ml pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
+    pcl_common pcl_features pcl_search pcl_filters pcl_visualization pcl_io pcl_io_ply pcl_octree pcl_kdtree pcl_registration pcl_keypoints pcl_sample_consensus
     yaml-cpp ${VTK_LIBRARIES}
 )

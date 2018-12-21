@@ -48,7 +48,7 @@ class PointCloudToPclPointCloudConverter : public Mock, public Converters::Point
 	 */
 	public:
 		virtual ~PointCloudToPclPointCloudConverter();
-		pcl::PointCloud<pcl::PointXYZ>::ConstPtr Convert(const PointCloudWrapper::PointCloudConstPtr& pointCloud);
+		pcl::PointCloud<pcl::PointXYZ>::ConstPtr Convert(const PointCloudWrapper::PointCloudConstPtr& pointCloud) override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

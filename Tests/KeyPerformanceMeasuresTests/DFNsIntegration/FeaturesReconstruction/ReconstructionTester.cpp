@@ -49,12 +49,11 @@ using namespace CorrespondenceMap2DWrapper;
  *
  * --------------------------------------------------------------------------
  */
-ReconstructionTester::ReconstructionTester()
+ReconstructionTester::ReconstructionTester() :
+	fundamentalMatrixEstimatorFilePath(""),
+	poseEstimatorConfigurationFilePath(""),
+	reconstructorConfigurationFilePath("")
 	{
-	fundamentalMatrixEstimatorFilePath = "";
-	poseEstimatorConfigurationFilePath = "";
-	reconstructorConfigurationFilePath = "";
-
 	inputCorrespondenceMap = NULL;
 	fundamentalMatrix = NULL;
 	cameraTransform = NULL;
@@ -66,6 +65,10 @@ ReconstructionTester::ReconstructionTester()
 	dfnsWereLoaded = false;
 	inputCorrespondencesWereLoaded = false;
 	dfnsWereExecuted = false;
+
+	fundamentalMatrixSuccess = false;
+	poseEstimatorWasSuccessful = false;
+	fundamentalMatrixEstimator = NULL;
 	}
 
 ReconstructionTester::~ReconstructionTester()
@@ -89,7 +92,8 @@ void ReconstructionTester::SetDfns(FundamentalMatrixComputationInterface* fundam
 		}
 	}
 
-void ReconstructionTester::SetConfigurationFilePaths(std::string fundamentalMatrixEstimatorFilePath, std::string poseEstimatorConfigurationFilePath, std::string reconstructorConfigurationFilePath)
+void ReconstructionTester::SetConfigurationFilePaths(const std::string& fundamentalMatrixEstimatorFilePath, const std::string& poseEstimatorConfigurationFilePath, 
+	const std::string& reconstructorConfigurationFilePath)
 	{
 	this->fundamentalMatrixEstimatorFilePath = fundamentalMatrixEstimatorFilePath;
 	this->poseEstimatorConfigurationFilePath = poseEstimatorConfigurationFilePath;
@@ -101,7 +105,7 @@ void ReconstructionTester::SetConfigurationFilePaths(std::string fundamentalMatr
 		}
 	}
 
-void ReconstructionTester::SetInputFilePath(std::string inputCorrespodencesFilePath)
+void ReconstructionTester::SetInputFilePath(const std::string& inputCorrespodencesFilePath)
 	{
 	this->inputCorrespodencesFilePath = inputCorrespodencesFilePath;
 

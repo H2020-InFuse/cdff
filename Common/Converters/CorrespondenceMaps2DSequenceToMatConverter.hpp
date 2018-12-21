@@ -76,7 +76,7 @@ class CorrespondenceMaps2DSequenceToMatConverter
 		const cv::Mat ComputeMeasurementMatrix(const CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequence& correspondenceMapsSequence);
 		std::vector<ImagePoint> ComputeChainOfMatchingPoints(
 			const CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequence& correspondenceMapsSequence, int numberOfImages, ImagePoint point1, ImagePoint point2);
-		void AddChainToMeasurementMatrix(const std::vector<ImagePoint> chain, cv::Mat& measurementMatrix);
+		void AddChainToMeasurementMatrix(const std::vector<ImagePoint>& chain, cv::Mat& measurementMatrix);
 		int ComputeNumberOfImages(const CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequence& correspondenceMapsSequence); 
 
 		bool ThereAreUnexploredPoints(const std::vector<ImagePoint>& chain, int& chainIndexToExplore);

@@ -44,8 +44,8 @@ namespace KFPrediction
 			KalmanPredictor();
 			virtual ~KalmanPredictor();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 			float timeOfLastValidCorrection;
 			cv::KalmanFilter KF;

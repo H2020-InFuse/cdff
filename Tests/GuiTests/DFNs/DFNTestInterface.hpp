@@ -46,7 +46,7 @@ class DFNTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		DFNTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		DFNTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		virtual ~DFNTestInterface() = default;
 
 		void Run();

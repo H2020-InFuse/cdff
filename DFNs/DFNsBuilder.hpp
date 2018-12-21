@@ -51,31 +51,31 @@ namespace DFN
 	class DFNsBuilder
 	{
 		public:
-			static DFNCommonInterface* CreateDFN(std::string dfnType, std::string dfnImplementation);
+			static DFNCommonInterface* CreateDFN(const std::string& dfnType, const std::string& dfnImplementation);
 
 		private:
-			static BundleAdjustmentInterface* CreateBundleAdjustment(std::string dfnImplementation);
-			static CamerasTransformEstimationInterface* CreateCamerasTransformEstimation(std::string dfnImplementation);
-			static FeaturesDescription2DInterface* CreateFeaturesDescription2D(std::string dfnImplementation);
-			static FeaturesDescription3DInterface* CreateFeaturesDescription3D(std::string dfnImplementation);
-			static FeaturesExtraction2DInterface* CreateFeaturesExtraction2D(std::string dfnImplementation);
-			static FeaturesExtraction3DInterface* CreateFeaturesExtraction3D(std::string dfnImplementation);
-			static FeaturesMatching2DInterface* CreateFeaturesMatching2D(std::string dfnImplementation);
-			static FeaturesMatching3DInterface* CreateFeaturesMatching3D(std::string dfnImplementation);
-			static FundamentalMatrixComputationInterface* CreateFundamentalMatrixComputation(std::string dfnImplementation);
-			static ImageFilteringInterface* CreateImageFiltering(std::string dfnImplementation);
-			static PerspectiveNPointSolvingInterface* CreatePerspectiveNPointSolving(std::string dfnImplementation);
-			static PointCloudReconstruction2DTo3DInterface* CreatePointCloudReconstruction2DTo3D(std::string dfnImplementation);
-			static PrimitiveMatchingInterface* CreatePrimitiveMatching(std::string dfnImplementation);
-			static Registration3DInterface* CreateRegistration3D(std::string dfnImplementation);
-			static StereoReconstructionInterface* CreateStereoReconstruction(std::string dfnImplementation);
-			static Transform3DEstimationInterface* CreateTransform3DEstimation(std::string dfnImplementation);
-			static DepthFilteringInterface* CreateDepthFiltering(std::string dfnImplementation);
-			static ForceMeshGeneratorInterface* CreateForceMeshGenerator(std::string dfnImplementation);
-			static PointCloudAssemblyInterface* CreatePointCloudAssembly(std::string dfnImplementation);
-			static PointCloudTransformInterface* CreatePointCloudTransform(std::string dfnImplementation);
-			static VoxelizationInterface* CreateVoxelization(std::string dfnImplementation);
-			static PointCloudFilteringInterface* CreatePointCloudFiltering(std::string dfnImplementation);
+			static BundleAdjustmentInterface* CreateBundleAdjustment(const std::string& dfnImplementation);
+			static CamerasTransformEstimationInterface* CreateCamerasTransformEstimation(const std::string& dfnImplementation);
+			static FeaturesDescription2DInterface* CreateFeaturesDescription2D(const std::string& dfnImplementation);
+			static FeaturesDescription3DInterface* CreateFeaturesDescription3D(const std::string& dfnImplementation);
+			static FeaturesExtraction2DInterface* CreateFeaturesExtraction2D(const std::string& dfnImplementation);
+			static FeaturesExtraction3DInterface* CreateFeaturesExtraction3D(const std::string& dfnImplementation);
+			static FeaturesMatching2DInterface* CreateFeaturesMatching2D(const std::string& dfnImplementation);
+			static FeaturesMatching3DInterface* CreateFeaturesMatching3D(const std::string& dfnImplementation);
+			static FundamentalMatrixComputationInterface* CreateFundamentalMatrixComputation(const std::string& dfnImplementation);
+			static ImageFilteringInterface* CreateImageFiltering(const std::string& dfnImplementation);
+			static PerspectiveNPointSolvingInterface* CreatePerspectiveNPointSolving(const std::string& dfnImplementation);
+			static PointCloudReconstruction2DTo3DInterface* CreatePointCloudReconstruction2DTo3D(const std::string& dfnImplementation);
+			static PrimitiveMatchingInterface* CreatePrimitiveMatching(const std::string& dfnImplementation);
+			static Registration3DInterface* CreateRegistration3D(const std::string& dfnImplementation);
+			static StereoReconstructionInterface* CreateStereoReconstruction(const std::string& dfnImplementation);
+			static Transform3DEstimationInterface* CreateTransform3DEstimation(const std::string& dfnImplementation);
+			static DepthFilteringInterface* CreateDepthFiltering(const std::string& dfnImplementation);
+			static ForceMeshGeneratorInterface* CreateForceMeshGenerator(const std::string& dfnImplementation);
+			static PointCloudAssemblyInterface* CreatePointCloudAssembly(const std::string& dfnImplementation);
+			static PointCloudTransformInterface* CreatePointCloudTransform(const std::string& dfnImplementation);
+			static VoxelizationInterface* CreateVoxelization(const std::string& dfnImplementation);
+			static PointCloudFilteringInterface* CreatePointCloudFiltering(const std::string& dfnImplementation);
 	};
 }
 }

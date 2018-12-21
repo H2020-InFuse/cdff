@@ -64,7 +64,8 @@ class RegularityTester
 			CLOSEST_NEIGHBOUR_DISTANCE
 			};
 
-		RegularityTester(std::string configurationFilePath, std::string pointCloudFilePath, AverageSeparationType averageSeparationType, CDFF::DFN::FeaturesExtraction3DInterface* dfn);
+		RegularityTester(const std::string& configurationFilePath, const std::string& pointCloudFilePath, AverageSeparationType averageSeparationType, 
+			CDFF::DFN::FeaturesExtraction3DInterface* dfn);
 		~RegularityTester();
 
 		void ExecuteDfn();

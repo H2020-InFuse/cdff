@@ -37,6 +37,8 @@ namespace FeaturesMatching3D
 
 Ransac3D::Ransac3D()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>(
 		"GeneralParameters", "SimilarityThreshold",
 		parameters.similarityThreshold, DEFAULT_PARAMETERS.similarityThreshold);
@@ -138,11 +140,20 @@ Pose3DConstPtr Ransac3D::ComputeTransform(PointCloudWithFeatures sourceCloud, Po
 	// Setup output
 	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud(new pcl::PointCloud<pcl::PointXYZ>);
 
-	// Run RANSAC
-	ransac->align(*outputCloud);
+	try 
+		{
+		// Run RANSAC
+		ransac->align(*outputCloud);
 
-	// Check convergence
-	outSuccess = ransac->hasConverged();
+		// Check convergence
+		outSuccess = ransac->hasConverged();
+		}
+	catch ( ... )
+		{
+		VERIFY(false, "Ransac failed with exception!");
+		outSuccess = false;
+		}
+
 	if (outSuccess)
 	{
 		Eigen::Matrix4f eigenTransform = ransac->getFinalTransformation();

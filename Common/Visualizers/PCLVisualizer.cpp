@@ -84,6 +84,8 @@ void PclVisualizer::ShowPointCloud(PointCloudConstPtr pointCloud)
 
 void PclVisualizer::ShowVisualFeatures(PointCloudConstPtr pointCloud, VisualPointFeatureVector3DConstPtr featuresVector)
 {
+	static const int IndependentObjectLimit = 50;
+
 	RETURN_IF_DISABLED
 
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pclPointCloud = PointCloudToPclPointCloudConverter().Convert(pointCloud);
@@ -110,11 +112,18 @@ void PclVisualizer::ShowVisualFeatures(PointCloudConstPtr pointCloud, VisualPoin
 		featuresCloud->points.push_back(point);
 	}
 
-	std::vector< pcl::PointCloud<pcl::PointXYZ>::ConstPtr > pointCloudsList;
-	pointCloudsList.push_back(pclPointCloud);
-	pointCloudsList.push_back(featuresCloud);
+	if (featuresCloud->points.size() < IndependentObjectLimit)
+		{
+		ShowPointCloudsAndSpheres(pclPointCloud, featuresCloud);
+		}
+	else
+		{
+		std::vector< pcl::PointCloud<pcl::PointXYZ>::ConstPtr > pointsCloudList;
+		pointsCloudList.push_back(pclPointCloud);
+		pointsCloudList.push_back(featuresCloud);
 
-	ShowPointClouds(pointCloudsList);
+		ShowPointClouds(pointsCloudList);
+		}
 }
 
 void PclVisualizer::ShowImage(pcl::PointCloud<pcl::RGB>::ConstPtr image)
@@ -162,7 +171,7 @@ void PclVisualizer::ShowPoses(std::vector<PoseWrapper::Pose3D> poseList)
 	viewer.addCoordinateSystem(0.1);
 
 	int index = 0;
-	for (std::vector<PoseWrapper::Pose3D>::iterator pose = poseList.begin(); pose != poseList.end(); pose++)
+	for (std::vector<PoseWrapper::Pose3D>::iterator pose = poseList.begin(); pose != poseList.end(); ++pose)
 	{
 		double x = GetXPosition(*pose);
 		double y = GetYPosition(*pose);
@@ -352,6 +361,35 @@ pcl::PointXYZ PclVisualizer::TransformPoint(pcl::PointXYZ point, Transform3DCons
 	transformedPoint.z = eigenTransformedPoint.z();
 	return transformedPoint;
 }
+
+void PclVisualizer::ShowPointCloudsAndSpheres(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sphereCloud)
+	{
+	static const float radius = 0.003;
+	RETURN_IF_DISABLED
+
+	pcl::visualization::PCLVisualizer viewer(WINDOW_NAME);
+	viewer.addCoordinateSystem(0.1);
+
+	Color cloudColor = COLORS_LIST[0];
+	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> pclCloudColor(pointCloud, cloudColor.r, cloudColor.g, cloudColor.b);
+	viewer.addPointCloud(pointCloud, pclCloudColor, "main cloud");
+
+	int numberOfPoints = sphereCloud->points.size();
+	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+		{
+		std::string sphereId = "sphere_" + std::to_string(pointIndex);
+		viewer.addSphere( sphereCloud->points.at(pointIndex), radius, COLORS_LIST[1].r, COLORS_LIST[1].g, COLORS_LIST[1].b, sphereId);
+		}
+
+	while (!viewer.wasStopped())
+	{
+		viewer.spinOnce();
+		pcl_sleep(0.01);
+	}
+
+	viewer.removeAllPointClouds();
+	viewer.close();
+	}
 
 }
 
