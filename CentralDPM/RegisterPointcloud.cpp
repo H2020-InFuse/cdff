@@ -1,8 +1,8 @@
 
 #include <envire_core/plugin/Plugin.hpp>
-#include <asn1/asn1crt.h>
+#include <Types/C/asn1crt.h>
 
-#include <asn1/Pointcloud.h>
+#include <Types/C/Pointcloud.h>
 #include <boost/serialization/binary_object.hpp>
 
 BOOST_SERIALIZATION_SPLIT_FREE(asn1SccPointcloud)
