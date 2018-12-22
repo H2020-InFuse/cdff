@@ -1,8 +1,24 @@
 add_library(
+    envire_asn1
+    RegisterPointcloud.cpp
+    RegisterMap.cpp
+)
+
+target_include_directories(
+    envire_asn1
+    SYSTEM PRIVATE ${ENVIRE_CORE_INCLUDE_DIRS} PluginManager
+)
+
+target_link_libraries(
+    envire_asn1
+    PUBLIC cdff_types
+    PRIVATE ${ENVIRE_CORE_LIBRARIES}
+    PRIVATE class_loader 
+)
+
+add_library(
     cdff_centraldpm
     CentralDPM.cpp
-    RegisterMap.cpp
-    RegisterPointcloud.cpp
 )
 
 target_include_directories(

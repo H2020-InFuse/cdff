@@ -113,6 +113,7 @@ set(unittest_libraries catch
     cdff_dfpc_reconstruction_3d
     cdff_dfpc_point_cloud_model_localisation
     cdff_dfpc_haptic_scanning
+    envire_asn1
 )
 
 # Make the Catch executable that runs the unit tests
