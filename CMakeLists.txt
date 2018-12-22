@@ -93,7 +93,7 @@ endif()
 if(USE_BUNDLED_DEPENDENCIES)
 
   set(CMAKE_MODULE_PATH
-    "${BUNDLED_DEPENDENCIES_PREFIX}/share/cmake-3.11.0-rc4/Modules")
+    "${CMAKE_SOURCE_DIR}/${BUNDLED_DEPENDENCIES_PREFIX}/share/cmake-3.11.4/Modules")
 
 else()
 
@@ -152,7 +152,7 @@ endmacro()
 # CMake will look for the headers and the requested compiled libraries, as well
 # as the compiled libraries they depend on.
 
-find_package(Boost REQUIRED)
+find_package(Boost 1.66.0 REQUIRED)
 
 if(Boost_FOUND)
 
@@ -208,7 +208,7 @@ endif()
 
 # TODO: doc
 
-find_package(Eigen3 REQUIRED)
+find_package(Eigen3 3.3.4 REQUIRED)
 
 if(Eigen3_FOUND)
 
@@ -230,14 +230,13 @@ endif()
 # TODO: remove, use imported target Eigen3::Eigen instead
 include_directories(
   SYSTEM "${_DEPENDENCIES_PREFIX}/include/eigen3"
-  "/usr/include/eigen3"
 )
 
 ## Look for Ceres --------------------------------------------------------------
 
 # TODO: doc
 
-find_package(Ceres REQUIRED COMPONENTS SparseLinearAlgebraLibrary)
+find_package(Ceres 1.14.0 REQUIRED COMPONENTS SparseLinearAlgebraLibrary)
 
 if(Ceres_FOUND)
 
@@ -307,10 +306,10 @@ link_directories(
 
 # TODO: rework this section
 
-find_package(VTK REQUIRED NAMES VTK VTK-8.1 CONFIGS VTKConfig.cmake)
+find_package(VTK 8.1.0 REQUIRED NAMES VTK VTK-8.1 CONFIGS VTKConfig.cmake)
 find_package_mode(VTK)
 
-find_package(PCL REQUIRED NAMES PCL PCL-1.8 CONFIGS PCLConfig.cmake)
+find_package(PCL 1.8.1 REQUIRED NAMES PCL PCL-1.8 CONFIGS PCLConfig.cmake)
 find_package_mode(PCL)
 add_definitions(${PCL_DEFINITIONS})
 include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
@@ -321,7 +320,7 @@ message(STATUS "Found PCL headers, and the headers of its dependencies, in: ${PC
 message(STATUS "Found PCL libraries in: ${PCL_LIBRARY_DIRS}")
 message(STATUS "All requested PCL libraries, and their dependencies: ${PCL_LIBRARIES}")
 
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 3.4.0 REQUIRED)
 find_package_mode(OpenCV)
 
 ## Look for libpointmatcher ---------------------------------------------------
