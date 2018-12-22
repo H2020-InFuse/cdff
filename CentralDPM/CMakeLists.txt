@@ -1,6 +1,8 @@
 add_library(
     cdff_centraldpm
     CentralDPM.cpp
+    RegisterMap.cpp
+    RegisterPointcloud.cpp
 )
 
 target_include_directories(
