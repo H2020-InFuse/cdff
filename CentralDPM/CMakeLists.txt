@@ -14,6 +14,7 @@ target_link_libraries(
     PUBLIC cdff_types
     PRIVATE ${ENVIRE_CORE_LIBRARIES}
     PRIVATE class_loader 
+    PRIVATE plugin_manager
 )
 
 add_library(
@@ -24,11 +25,14 @@ add_library(
 target_include_directories(
   cdff_centraldpm
   SYSTEM PRIVATE ${ENVIRE_CORE_INCLUDE_DIRS}
+  SYSTEM PRIVATE envire_asn1
 )
+
 target_link_libraries(
     cdff_centraldpm
     PUBLIC cdff_types
     PRIVATE cdff_logger
     PRIVATE ${ENVIRE_CORE_LIBRARIES}
     PRIVATE class_loader 
+    PRIVATE envire_asn1
 )
