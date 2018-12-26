@@ -44,6 +44,8 @@ set(unittest_sources UnitTests.cpp
     DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
     DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
+    DFNs/ImagePairDegradation/ImagePairDegradationEdres.cpp
+    DFNs/ImagePairDegradation/ImagePairDegradation.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
@@ -95,6 +97,7 @@ set(unittest_libraries catch
     cdff_dfn_features_description_2d
     cdff_dfn_features_extraction_2d
     cdff_dfn_registration_3d
+    cdff_dfn_image_pair_degradation
     cdff_dfn_image_filtering
     cdff_dfn_point_cloud_filtering
     cdff_dfn_force_mesh_generator
