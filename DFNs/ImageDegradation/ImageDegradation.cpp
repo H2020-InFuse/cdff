@@ -77,7 +77,7 @@ void ImageDegradation::ValidateParameters()
 {
     ASSERT(parameters.xratio >= 1 && parameters.xratio <= 25, "xratio has to be within [1..25]");
     ASSERT(parameters.yratio >= 1 && parameters.yratio <= 25, "yratio has to be within [1..25]");
-    ASSERT(parameters.method >= 0 || parameters.method <= 5 || parameters.method == 7, "method has to be 0, 1, 2, 3, 4, 5, or 7");
+    ASSERT(parameters.method >= 0 || parameters.method <= 5, "method has to be within [0..5]");
 }
 
 const ImageDegradation::ImageDegradationParams ImageDegradation::DEFAULT_PARAMETERS = {
