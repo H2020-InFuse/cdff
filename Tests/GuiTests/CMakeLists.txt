@@ -366,20 +366,22 @@ target_link_libraries(
     ${VTK_LIBRARIES}
 )
 
-add_executable(
-    ImagePairDegradationEdresGuiTest
-    DFNs/ImagePairDegradation/ImagePairDegradationEdres.cpp
-    DFNs/DFNTestInterface.cpp
-    ${GRAPHICALTEST_GUI_SOURCES}
-)
-set_target_properties(ImagePairDegradationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_compile_definitions(ImagePairDegradationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
-target_link_libraries(
-    ImagePairDegradationEdresGuiTest
-    cdff_dfn_image_pair_degradation
-    ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    ${VTK_LIBRARIES}
-)
+if(WITH_EDRES)
+    add_executable(
+        ImagePairDegradationEdresGuiTest
+        DFNs/ImagePairDegradation/ImagePairDegradationEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+    )
+    set_target_properties(ImagePairDegradationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(ImagePairDegradationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        ImagePairDegradationEdresGuiTest
+        cdff_dfn_image_pair_degradation
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+        ${VTK_LIBRARIES}
+    )
+endif()
 
 
 ## Graphical tests for the DFPCs -----------------------------------------------

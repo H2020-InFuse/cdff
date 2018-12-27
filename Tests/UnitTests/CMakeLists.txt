@@ -44,7 +44,6 @@ set(unittest_sources UnitTests.cpp
     DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
     DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
-    DFNs/ImagePairDegradation/ImagePairDegradationEdres.cpp
     DFNs/ImagePairDegradation/ImagePairDegradation.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
@@ -74,6 +73,11 @@ set(unittest_sources UnitTests.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
 )
+
+if(WITH_EDRES)
+    set(unittest_sources ${unittest_sources}
+        DFNs/ImagePairDegradation/ImagePairDegradationEdres.cpp)
+endif()
 
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
