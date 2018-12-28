@@ -101,8 +101,8 @@ set(unittest_libraries catch
     cdff_dfn_features_description_2d
     cdff_dfn_features_extraction_2d
     cdff_dfn_registration_3d
-    cdff_dfn_image_pair_degradation
     cdff_dfn_image_filtering
+    cdff_dfn_image_pair_degradation
     cdff_dfn_point_cloud_filtering
     cdff_dfn_force_mesh_generator
     cdff_dfn_transform_3d_estimation

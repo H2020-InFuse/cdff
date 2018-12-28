@@ -28,6 +28,7 @@ target_link_libraries(
   cdff_dfn_fundamental_matrix_computation
   cdff_dfn_features_description_2d
   cdff_dfn_image_filtering
+  cdff_dfn_image_pair_degradation
   cdff_dfn_stereo_reconstruction
   cdff_dfn_features_extraction_2d
   cdff_dfn_features_matching_2d
