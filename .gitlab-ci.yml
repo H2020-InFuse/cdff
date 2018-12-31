@@ -109,6 +109,7 @@
     - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
   only:
     - merge_requests
+    - master
   artifacts:
    paths: 
     - cppcheck/
