@@ -10,7 +10,10 @@ namespace CDFF
 namespace DFPC
 {
 
-LIDARMapBasedLocalizationInterface::LIDARMapBasedLocalizationInterface()
+LIDARMapBasedLocalizationInterface::LIDARMapBasedLocalizationInterface() :
+inLPC(),
+inOdoPose(),
+outLidarPose()
 {
 }
 

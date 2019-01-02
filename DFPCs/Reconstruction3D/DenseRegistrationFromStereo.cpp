@@ -71,6 +71,8 @@ DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 	#define ADD_PARAMETER_WITH_HELPER(type, helperType, groupName, parameterName, parameterVariable) \
 		parametersHelper.AddParameter<type, helperType>(groupName, parameterName, parameters.parameterVariable, DEFAULT_PARAMETERS.parameterVariable);
 
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<bool>("GeneralParameters", "MatchToReconstructedCloud", parameters.matchToReconstructedCloud, DEFAULT_PARAMETERS.matchToReconstructedCloud);
@@ -100,11 +102,6 @@ DenseRegistrationFromStereo::DenseRegistrationFromStereo() :
 
 	bundleHistory = new BundleHistory(2);
 	outputPoseAtLastMergeSet = false;
-
-	#ifdef TESTING
-	logFile.open("/InFuse/myLog.txt");
-	logFile.close();
-	#endif
 	}
 
 DenseRegistrationFromStereo::~DenseRegistrationFromStereo()
@@ -122,9 +119,6 @@ DenseRegistrationFromStereo::~DenseRegistrationFromStereo()
 **/
 void DenseRegistrationFromStereo::run() 
 	{
-	#ifdef TESTING
-	logFile.open("/InFuse/myLog.txt", std::ios::app);
-	#endif
 	DEBUG_PRINT_TO_LOG("Registration from stereo start", "");
 
 	bundleHistory->AddImages(inLeftImage, inRightImage);
@@ -145,10 +139,6 @@ void DenseRegistrationFromStereo::run()
 		bundleHistory->AddPointCloud(*imageCloud);
 		}
 
-	#ifdef TESTING
-	logFile << GetNumberOfPoints(*imageCloud) << " ";
-	#endif
-
 	UpdatePose(imageCloud);
 	if (parameters.cloudUpdateType == CloudUpdateType::TimePassed)
 		{
@@ -164,11 +154,6 @@ void DenseRegistrationFromStereo::run()
 		}
 
 	SaveOutputCloud();
-
-	#ifdef TESTING
-	logFile << std::endl;
-	logFile.close();
-	#endif
 	}
 
 void DenseRegistrationFromStereo::setup()
@@ -272,52 +257,6 @@ void DenseRegistrationFromStereo::InstantiateDFNs()
 		}
 	}
 
-#ifdef TESTING
-void DenseRegistrationFromStereo::WriteOutputToLogFile()
-	{
-	logFile << GetNumberOfPoints(outPointCloud) << " ";
-	logFile << GetXPosition(outPose) << " ";
-	logFile << GetYPosition(outPose) << " ";
-	logFile << GetZPosition(outPose) << " ";
-	logFile << GetXOrientation(outPose) << " ";
-	logFile << GetYOrientation(outPose) << " ";
-	logFile << GetZOrientation(outPose) << " ";
-	logFile << GetWOrientation(outPose) << " ";
-
-	if ( GetNumberOfPoints(outPointCloud) > 0)
-		{
-		float minMax[6] = { GetXCoordinate(outPointCloud, 0), GetXCoordinate(outPointCloud, 0), GetYCoordinate(outPointCloud, 0), 
-			GetYCoordinate(outPointCloud, 0), GetZCoordinate(outPointCloud, 0), GetZCoordinate(outPointCloud, 0)};
-		int numberOfPoints = GetNumberOfPoints(outPointCloud);
-		for (int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
-			{
-			bool change[6];
-			change[0] = minMax[0] < GetXCoordinate(outPointCloud, pointIndex);
-			change[1] = minMax[1] > GetXCoordinate(outPointCloud, pointIndex);
-			change[2] = minMax[2] < GetYCoordinate(outPointCloud, pointIndex);
-			change[3] = minMax[3] > GetYCoordinate(outPointCloud, pointIndex);
-			change[4] = minMax[4] < GetZCoordinate(outPointCloud, pointIndex);
-			change[5] = minMax[5] > GetZCoordinate(outPointCloud, pointIndex);
-			minMax[0] = change[0] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[0];
-			minMax[1] = change[1] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[1];
-			minMax[2] = change[2] ? GetYCoordinate(outPointCloud, pointIndex) : minMax[2];
-			minMax[3] = change[3] ? GetYCoordinate(outPointCloud, pointIndex) : minMax[3];
-			minMax[4] = change[4] ? GetZCoordinate(outPointCloud, pointIndex) : minMax[4];
-			minMax[5] = change[5] ? GetZCoordinate(outPointCloud, pointIndex) : minMax[5];
-			}
-		logFile << (minMax[0] - minMax[1]) << " ";
-		logFile << (minMax[2] - minMax[3]) << " ";
-		logFile << (minMax[4] - minMax[5]) << " ";
-		}
-	else	
-		{
-		logFile << 0 << " ";
-		logFile << 0 << " ";
-		logFile << 0 << " ";
-		}
-	}
-#endif
-
 void DenseRegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud)
 	{
 	if (firstInput)
@@ -360,16 +299,6 @@ void DenseRegistrationFromStereo::UpdatePose(PointCloudConstPtr imageCloud)
 				Copy( pointCloudMap.GetLatestPose(), outPose);
 				}
 			}
-		#ifdef TESTING
-		logFile << outSuccess << " ";
-		logFile << GetXPosition(*poseToPreviousPose) << " ";
-		logFile << GetYPosition(*poseToPreviousPose) << " ";
-		logFile << GetZPosition(*poseToPreviousPose) << " ";
-		logFile << GetXOrientation(*poseToPreviousPose) << " ";
-		logFile << GetYOrientation(*poseToPreviousPose) << " ";
-		logFile << GetZOrientation(*poseToPreviousPose) << " ";
-		logFile << GetWOrientation(*poseToPreviousPose) << " ";
-		#endif
 		}
 	}
 
@@ -432,13 +361,13 @@ void DenseRegistrationFromStereo::UpdatePointCloudOnDistanceCovered(PointCloudWr
 
 void DenseRegistrationFromStereo::UpdatePointCloudOnMaximumOverlapping(PointCloudWrapper::PointCloudConstPtr inputCloud)
 	{
-	static bool firstCloud = true;
 	if (!outSuccess)
 		{
 		bundleHistory->RemoveEntry(0);
 		}
 	else
 		{
+		static bool firstCloud = true;
 		float overlappingRatio = 0;
 		if (!firstCloud)
 			{
@@ -478,10 +407,6 @@ void DenseRegistrationFromStereo::MergePointCloud(PointCloudConstPtr imageCloud)
 
 	DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 	DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(outPointCloud));
-
-	#ifdef TESTING
-	WriteOutputToLogFile();
-	#endif
 
 	DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 	if (!parameters.useAssemblerDfn)

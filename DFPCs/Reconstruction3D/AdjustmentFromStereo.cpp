@@ -69,8 +69,11 @@ AdjustmentFromStereo::AdjustmentFromStereo() :
 	LEFT_FEATURE_CATEGORY ( "orb_left" ),
 	RIGHT_FEATURE_CATEGORY ( "orb_right" ),
 	STEREO_CLOUD_CATEGORY( "stereo_cloud" ),
-	TRIANGULATION_CLOUD_CATEGORY( "triangulation_cloud" )
+	TRIANGULATION_CLOUD_CATEGORY( "triangulation_cloud" ),
+	cleanCorrespondenceMap( NewCorrespondenceMap2D() )
 	{
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfAdjustedStereoPairs", parameters.numberOfAdjustedStereoPairs, DEFAULT_PARAMETERS.numberOfAdjustedStereoPairs);
@@ -95,7 +98,6 @@ AdjustmentFromStereo::AdjustmentFromStereo() :
 	bundleHistory = NULL;
 	correspondencesRecorder = NULL;
 
-	cleanCorrespondenceMap = NewCorrespondenceMap2D();
 	triangulatedKeypointCloud = NewPointCloud();
 
 	estimatedCameraPoses = NULL;
@@ -103,13 +105,6 @@ AdjustmentFromStereo::AdjustmentFromStereo() :
 	keypointCloud = NULL;
 
 	configurationFilePath = "";
-
-	#ifdef TESTING
-	logFile.open("/InFuse/myLog.txt");
-	logFile << "denseCloud leftKeypoints leftFeatures rightKeypoints rightFeatures correspondences FMFiltersuccess inlierCorrespondences sparseCloud ";
-	logFile << "Correspondences error success validPose X Y Z QX QY QZ QW output X Y Z QX QY QZ QW cloud SpaceX SpaceY SpaceZ" << std::endl;
-	logFile.close();
-	#endif
 	}
 
 AdjustmentFromStereo::~AdjustmentFromStereo()
@@ -129,9 +124,6 @@ AdjustmentFromStereo::~AdjustmentFromStereo()
 
 void AdjustmentFromStereo::run() 
 	{
-	#ifdef TESTING
-	logFile.open("/InFuse/myLog.txt", std::ios::app);
-	#endif
 	DEBUG_PRINT_TO_LOG("Adjustment from stereo start", "");
  
 	bundleHistory->AddImages(inLeftImage, inRightImage);
@@ -159,10 +151,6 @@ void AdjustmentFromStereo::run()
 		{
 		bundleHistory->RemoveEntry(0);
 		correspondencesRecorder->DiscardLatestCorrespondences();
-		#ifdef TESTING
-		logFile << std::endl;
-		logFile.close();
-		#endif
 		return;
 		}
 
@@ -184,57 +172,11 @@ void AdjustmentFromStereo::run()
 		DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
 
-		#ifdef TESTING
-		logFile << "output ";
-		logFile << GetXPosition(outPose) << " " << GetYPosition(outPose) << " " << GetZPosition(outPose) << " ";
-		logFile << GetXOrientation(outPose) << " " << GetYOrientation(outPose) << " " << GetZOrientation(outPose) << " " << GetWOrientation(outPose) << " ";
-		logFile << GetNumberOfPoints(outPointCloud) << " ";
-
-		if (GetNumberOfPoints(outPointCloud) > 0)
-			{
-			double minMax[6] = {
-			        GetXCoordinate(outPointCloud, 0),
-			        GetXCoordinate(outPointCloud, 0),
-			        GetYCoordinate(outPointCloud, 0),
-                    GetYCoordinate(outPointCloud, 0),
-                    GetZCoordinate(outPointCloud, 0),
-                    GetZCoordinate(outPointCloud, 0)
-			};
-			int numberOfPoints = GetNumberOfPoints(outPointCloud);
-			for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
-				{
-				bool change[6];
-				change[0] = minMax[0] < GetXCoordinate(outPointCloud, pointIndex);
-				change[1] = minMax[1] > GetXCoordinate(outPointCloud, pointIndex);
-				change[2] = minMax[2] < GetXCoordinate(outPointCloud, pointIndex);
-				change[3] = minMax[3] > GetXCoordinate(outPointCloud, pointIndex);
-				change[4] = minMax[4] < GetXCoordinate(outPointCloud, pointIndex);
-				change[5] = minMax[5] > GetXCoordinate(outPointCloud, pointIndex);
-				minMax[0] = change[0] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[0];
-				minMax[1] = change[1] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[1];
-				minMax[2] = change[2] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[2];
-				minMax[3] = change[3] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[3];
-				minMax[4] = change[4] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[4];
-				minMax[5] = change[5] ? GetXCoordinate(outPointCloud, pointIndex) : minMax[5];
-				}
-			logFile << (minMax[0] - minMax[1]) << " " << (minMax[2] - minMax[3]) << " " << (minMax[4] - minMax[5]) << " ";
-			}
-		else
-			{
-			logFile << "0 0 0 0 0 0 ";
-			}
-		#endif
-
 		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 		DeleteIfNotNull(outputPointCloud);
 		}
 
 	currentInputNumber++;
-
-	#ifdef TESTING
-	logFile << std::endl;
-	logFile.close();
-	#endif
 	}
 
 void AdjustmentFromStereo::setup()
@@ -320,9 +262,6 @@ void AdjustmentFromStereo::ComputeStereoPointCloud(FrameWrapper::FrameConstPtr f
 	Executors::Execute(reconstructor3d, filteredLeftImage, filteredRightImage, imageCloud);
 
 	bundleHistory->AddPointCloud(*imageCloud, STEREO_CLOUD_CATEGORY);
-	#ifdef TESTING
-	logFile << GetNumberOfPoints(*imageCloud) << " ";
-	#endif
 
 	DEBUG_PRINT_TO_LOG("Stereo points number", GetNumberOfPoints(*imageCloud));
 	//DEBUG_SHOW_POINT_CLOUD(imageCloud);
@@ -339,10 +278,6 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 	bundleHistory->AddFeatures(*featureVector, LEFT_FEATURE_CATEGORY);
 	DEBUG_PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
-	#ifdef TESTING
-	logFile << GetNumberOfPoints(*keypointVector) << " " << GetNumberOfPoints(*featureVector) << " ";
-	#endif
-
 	keypointVector = NULL;
 	featureVector = NULL;
 	Executors::Execute(featuresExtractor2d, filteredRightImage, keypointVector);
@@ -350,29 +285,17 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 	bundleHistory->AddFeatures(*featureVector, RIGHT_FEATURE_CATEGORY);
 	DEBUG_PRINT_TO_LOG("Features Number", GetNumberOfPoints(*featureVector) );
 
-	#ifdef TESTING
-	logFile << GetNumberOfPoints(*keypointVector) << " " << GetNumberOfPoints(*featureVector) << " ";
-	#endif
-
 	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
 	VisualPointFeatureVector2DConstPtr rightFeatureVector = bundleHistory->GetFeatures(0, RIGHT_FEATURE_CATEGORY);
 	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = NULL;
 	Executors::Execute(featuresMatcher2d, leftFeatureVector, rightFeatureVector,leftRightCorrespondenceMap);
 	DEBUG_PRINT_TO_LOG("Correspondences Number", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
 
-	#ifdef TESTING
-	logFile << GetNumberOfCorrespondences(*leftRightCorrespondenceMap) << " ";
-	#endif
-
 	MatrixWrapper::Matrix3dConstPtr fundamentalMatrix = NULL;
 	bool success = false;
 	CorrespondenceMap2DConstPtr inlierCorrespondenceMap = NULL;
 	Executors::Execute(fundamentalMatrixComputer, leftRightCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
 	DEBUG_PRINT_TO_LOG("Inlier Correspondences Number", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
-
-	#ifdef TESTING
-	logFile << success << " " << GetNumberOfCorrespondences(*inlierCorrespondenceMap) << " ";
-	#endif
 
 	if (parameters.useBundleInitialEstimation)
 		{
@@ -390,9 +313,6 @@ void AdjustmentFromStereo::ComputeVisualPointFeatures(FrameWrapper::FrameConstPt
 		DEBUG_PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
 		bundleHistory->AddPointCloud(*triangulatedKeypointCloud, TRIANGULATION_CLOUD_CATEGORY);
 		bundleHistory->AddMatches(*cleanCorrespondenceMap);
-		#ifdef TESTING
-		logFile << GetNumberOfPoints(*triangulatedKeypointCloud) << " " << GetNumberOfCorrespondences(*cleanCorrespondenceMap) << " ";
-		#endif
 		}
 	else
 		{
@@ -431,25 +351,6 @@ void AdjustmentFromStereo::CreateWorkingCorrespondences()
 	CreateWorkingCorrespondences(leftFeatureVector);
 	CreateWorkingCorrespondences(rightFeatureVector);
 	correspondencesRecorder->CompleteNewSequence();
-
-	#ifdef TESTING
-	logFile << "Correspondences ";
-	CorrespondenceMaps2DSequenceConstPtr workingCorrespondenceMapSequence = correspondencesRecorder->GetLatestCorrespondences();
-	logFile << GetNumberOfCorrespondenceMaps(*workingCorrespondenceMapSequence) << " ";
-	for(int i=0; i<GetNumberOfCorrespondenceMaps(*workingCorrespondenceMapSequence); i++)
-		{
-		const CorrespondenceMap2D& map = GetCorrespondenceMap(*workingCorrespondenceMapSequence, i);
-		logFile << GetNumberOfCorrespondences(map) << " ";
-		}
-	#endif
-
-	/*#ifdef TESTING
-	std::vector<CorrespondenceMap2DConstPtr> correspondenceMapList = {leftRightCorrespondenceMap, leftTimeCorrespondenceMap, rightTimeCorrespondenceMap, pastLeftRightCorrespondenceMap};
-	std::vector<FrameConstPtr> imageList = { 
-		bundleHistory->GetLeftImage(0), bundleHistory->GetRightImage(0), bundleHistory->GetLeftImage(backwardSteps), bundleHistory->GetRightImage(backwardSteps) 
-		};
-	DEBUG_SHOW_QUADRUPLE_2D_CORRESPONDENCES( imageList, correspondenceMapList );
-	#endif*/
 	}
 
 void AdjustmentFromStereo::CreateWorkingCorrespondences(VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr featureVector)
@@ -513,10 +414,6 @@ bool AdjustmentFromStereo::ComputeCameraPoses(PoseWrapper::Poses3DSequenceConstP
 
 	DEBUG_PRINT_TO_LOG("Error:", error);
 
-	#ifdef TESTING
-	logFile << "error " << error << " " << success << " ";
-	#endif
-
 	return success;
 	}
 
@@ -553,9 +450,6 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 	SetPosition(zeroPose, 0, 0, 0);
 	SetOrientation(zeroPose, 0, 0, 0, 1);
 	Clear(*estimatedCameraPoses);
-	#ifdef TESTING
-	logFile << "Estimated Poses ";
-	#endif
 	
 	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
 	for(int backwardSteps = 1; backwardSteps < parameters.numberOfAdjustedStereoPairs; backwardSteps++)
@@ -576,9 +470,6 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 		CorrespondenceMap2DConstPtr inlierCorrespondenceMap = NULL;
 		Executors::Execute(fundamentalMatrixComputer, leftCorrespondenceMap, fundamentalMatrix, success, inlierCorrespondenceMap);
 		DEBUG_PRINT_TO_LOG("Number of inlier correspondences", GetNumberOfCorrespondences(*inlierCorrespondenceMap) );
-		#ifdef TESTING
-		logFile << GetNumberOfCorrespondences(*inlierCorrespondenceMap) << " ";
-		#endif
 		if (success)
 			{
 			//Executors::Execute(cameraTransformEstimator, fundamentalMatrix, inlierCorrespondenceMap, pose, success);
@@ -588,18 +479,11 @@ void AdjustmentFromStereo::EstimateCameraPoses()
 			{
 			DEBUG_PRINT_TO_LOG("estimated pose", ToString(*pose));
 			AddPose(*estimatedCameraPoses, *pose);
-			#ifdef TESTING
-			logFile << GetXPosition(*pose) << " " << GetYPosition(*pose) << " " << GetZPosition(*pose) << " ";
-			logFile << GetXOrientation(*pose) << " " << GetYOrientation(*pose) << " " << GetZOrientation(*pose) << " " << GetWOrientation(*pose) << " ";
-			#endif
 			}
 		else
 			{
 			DEBUG_PRINT_TO_LOG("zero pose", ToString(zeroPose));
 			AddPose(*estimatedCameraPoses, zeroPose);
-			#ifdef TESTING
-			logFile << "0 0 0 0 0 0 1 ";
-			#endif
 			}
 		}
 	}

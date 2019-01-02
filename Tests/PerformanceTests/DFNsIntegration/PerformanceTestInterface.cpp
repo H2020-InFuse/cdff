@@ -37,7 +37,7 @@
  *
  * --------------------------------------------------------------------------
  */
-PerformanceTestInterface::PerformanceTestInterface(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName)
+PerformanceTestInterface::PerformanceTestInterface(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, const std::string& performanceMeasuresFileName)
 	: PerformanceTestBase(folderPath, baseConfigurationFileNamesList, performanceMeasuresFileName)
 	{
 

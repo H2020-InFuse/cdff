@@ -79,8 +79,8 @@ namespace Registration3D
 			IcpMatcher();
 			virtual ~IcpMatcher();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 
@@ -95,7 +95,7 @@ namespace Registration3D
 				public:
 					MinimizerTypeHelper(const std::string& parameterName, MinimizerType& boundVariable, const MinimizerType& defaultValue);
 				private:
-					MinimizerType Convert(const std::string& value);
+					MinimizerType Convert(const std::string& value) override;
 				};
 
 			enum ThresholdDimension
@@ -111,7 +111,7 @@ namespace Registration3D
 				public:
 					ThresholdDimensionHelper(const std::string& parameterName, ThresholdDimension& boundVariable, const ThresholdDimension& defaultValue);
 				private:
-					ThresholdDimension Convert(const std::string& value);
+					ThresholdDimension Convert(const std::string& value) override;
 				};
 
 			struct PrefilterUse

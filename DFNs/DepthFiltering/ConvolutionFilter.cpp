@@ -22,6 +22,8 @@ namespace DepthFiltering
 //=====================================================================================================================
 ConvolutionFilter::ConvolutionFilter()
 {
+    parameters = DEFAULT_PARAMETERS;
+
     parametersHelper.AddParameter<int>("GeneralParameters", "KernelSize", parameters.kernelSize, DEFAULT_PARAMETERS.kernelSize);
 	configurationFilePath = "";
 }

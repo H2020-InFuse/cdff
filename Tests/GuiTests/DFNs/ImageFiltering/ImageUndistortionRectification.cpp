@@ -47,7 +47,7 @@ using namespace FrameWrapper;
 class ImageUndistortionRectificationTestInterface : public DFNTestInterface
 {
 	public:
-		ImageUndistortionRectificationTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		ImageUndistortionRectificationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~ImageUndistortionRectificationTestInterface();
 
 	private:
@@ -57,7 +57,7 @@ class ImageUndistortionRectificationTestInterface : public DFNTestInterface
 			RIGHT_CAMERA,
 		};
 
-		ImageUndistortionRectification* undistort;
+		ImageUndistortionRectification undistort;
 
 		cv::Mat cvImage;
 		FrameConstPtr inputImage;
@@ -65,18 +65,19 @@ class ImageUndistortionRectificationTestInterface : public DFNTestInterface
 		CameraPosition cameraPosition;
 		bool saveResultToFile;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 };
 
-ImageUndistortionRectificationTestInterface::ImageUndistortionRectificationTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
+ImageUndistortionRectificationTestInterface::ImageUndistortionRectificationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
+	inputImage(),
+	undistort()
 {
 	cameraPosition = LEFT_CAMERA;
 	saveResultToFile = false;
 
-	undistort = new ImageUndistortionRectification();
-	SetDFN(undistort);
+	SetDFN(&undistort);
 
 	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/chair40.png", cv::IMREAD_COLOR);
 	if (cameraPosition == LEFT_CAMERA)
@@ -89,13 +90,12 @@ ImageUndistortionRectificationTestInterface::ImageUndistortionRectificationTestI
 	}
 	inputImage = MatToFrameConverter().Convert(cvImage);
 
-	undistort->imageInput(*inputImage);
+	undistort.imageInput(*inputImage);
 	outputWindowName = "Image Undistortion Rectification Result";
 }
 
 ImageUndistortionRectificationTestInterface::~ImageUndistortionRectificationTestInterface()
 {
-	delete(undistort);
 	delete(inputImage);
 }
 
@@ -169,7 +169,7 @@ void ImageUndistortionRectificationTestInterface::SetupParameters()
 
 void ImageUndistortionRectificationTestInterface::DisplayResult()
 {
-	const Frame& undistortedImage = undistort->imageOutput();
+	const Frame& undistortedImage = undistort.imageOutput();
 	cv::Mat undistortedCvImage = FrameToMatConverter().Convert(&undistortedImage);
 
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
@@ -194,8 +194,9 @@ void ImageUndistortionRectificationTestInterface::DisplayResult()
 
 int main(int argc, char** argv)
 {
-	ImageUndistortionRectificationTestInterface interface("ImageUndistortionRectification", 100, 40);
-	interface.Run();
+	ImageUndistortionRectificationTestInterface* interface = new ImageUndistortionRectificationTestInterface("ImageUndistortionRectification", 100, 40);
+	interface->Run();
+	delete(interface);
 };
 
 /** @} */

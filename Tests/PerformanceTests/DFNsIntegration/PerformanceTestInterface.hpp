@@ -66,7 +66,7 @@ class PerformanceTestInterface : public PerformanceTestBase
 		* @param performanceMeasuresFileName, the name of the output file;
 		*
 		*/
-		PerformanceTestInterface(std::string folderPath, std::vector<std::string> baseConfigurationFileNamesList, std::string performanceMeasuresFileName);
+		PerformanceTestInterface(const std::string& folderPath, const std::vector<std::string>& baseConfigurationFileNamesList, const std::string& performanceMeasuresFileName);
 
 		/*
 		* @brief The destructor does nothing.
@@ -92,8 +92,8 @@ class PerformanceTestInterface : public PerformanceTestBase
 	 * --------------------------------------------------------------------
 	 */
 	private:	
-		void Configure();
-		void Process();
+		void Configure() override;
+		void Process() override;
 
 		/*
 		* @brief This method has to set the inputs of the DFN, it returns true if and only if an input is actually set.
@@ -101,7 +101,7 @@ class PerformanceTestInterface : public PerformanceTestBase
 		* The idea is that inputs will be provided one at a time, when all inputs have already been provided the method should return false;
 		*
 		*/
-		virtual bool SetNextInputs() = 0;
+		virtual bool SetNextInputs() override = 0;
 
 		/*
 		* @brief This method has to execute the dfns integration logic.

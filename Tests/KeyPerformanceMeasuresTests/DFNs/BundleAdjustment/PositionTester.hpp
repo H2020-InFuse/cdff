@@ -59,10 +59,10 @@ class PositionTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		PositionTester(std::string configurationFilePath, CDFF::DFN::BundleAdjustmentInterface* dfn);
+		PositionTester(const std::string& configurationFilePath, CDFF::DFN::BundleAdjustmentInterface* dfn);
 		~PositionTester();
 
-		void SetFilesPaths(std::string inputCorrespondenceFilePath, std::string positionReferenceFilePath);
+		void SetFilesPaths(const std::string& inputCorrespondenceFilePath, const std::string& positionReferenceFilePath);
 		void ExecuteDfn();
 		bool ArePositionsCloseToReference(float relativeLocationError, float relativeOrientationError, float modelSize);
 

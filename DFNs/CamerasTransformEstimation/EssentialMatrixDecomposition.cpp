@@ -33,6 +33,8 @@ namespace CamerasTransformEstimation
 
 EssentialMatrixDecomposition::EssentialMatrixDecomposition()
 {
+	parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<int>("GeneralParameters", "NumberOfTestPoints", parameters.numberOfTestPoints, DEFAULT_PARAMETERS.numberOfTestPoints);
 	parametersHelper.AddParameter<double>("FirstCameraMatrix", "FocalLengthX", parameters.firstCameraMatrix.focalLengthX, DEFAULT_PARAMETERS.firstCameraMatrix.focalLengthX);
 	parametersHelper.AddParameter<double>("FirstCameraMatrix", "FocalLengthY", parameters.firstCameraMatrix.focalLengthY, DEFAULT_PARAMETERS.firstCameraMatrix.focalLengthY);

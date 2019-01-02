@@ -55,6 +55,7 @@ PointCloudMap::PointCloudMap() :
 	resolution = DEFAULT_RESOLUTION;
 	SetPosition(poseOfLatestPointCloud, 0, 0, 0);
 	SetOrientation(poseOfLatestPointCloud, 0, 0, 0, 1);
+	descriptorLength = 0;
 	}
 
 PointCloudMap::~PointCloudMap()

@@ -47,37 +47,37 @@ using namespace FrameWrapper;
 class ImageUndistortionTestInterface : public DFNTestInterface
 {
 	public:
-		ImageUndistortionTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		ImageUndistortionTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~ImageUndistortionTestInterface();
 
 	private:
-		ImageUndistortion* undistort;
+		ImageUndistortion undistort;
 
 		cv::Mat cvImage;
 		FrameConstPtr inputImage;
 		std::string outputWindowName;
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 };
 
-ImageUndistortionTestInterface::ImageUndistortionTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight), inputImage()
+ImageUndistortionTestInterface::ImageUndistortionTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight), 
+	inputImage(),
+	undistort()
 {
-	undistort = new ImageUndistortion();
-	SetDFN(undistort);
+	SetDFN(&undistort);
 
 	cv::Mat doubleImage = cv::imread("../../tests/Data/Images/SmestechLab.jpg", cv::IMREAD_COLOR);
 	cvImage = doubleImage(cv::Rect(doubleImage.cols/2,0,doubleImage.cols/2, doubleImage.rows));
 	inputImage = MatToFrameConverter().Convert(cvImage);
 
-	undistort->imageInput(*inputImage);
+	undistort.imageInput(*inputImage);
 	outputWindowName = "Image Undistortion Result";
 }
 
 ImageUndistortionTestInterface::~ImageUndistortionTestInterface()
 {
-	delete(undistort);
 	delete(inputImage);
 }
 
@@ -103,7 +103,7 @@ void ImageUndistortionTestInterface::SetupParameters()
 
 void ImageUndistortionTestInterface::DisplayResult()
 {
-	const Frame& undistortedImage = undistort->imageOutput();
+	const Frame& undistortedImage = undistort.imageOutput();
 	cv::Mat undistortedCvImage = FrameToMatConverter().Convert(&undistortedImage);
 
 	cv::namedWindow(outputWindowName, CV_WINDOW_NORMAL);
@@ -114,8 +114,9 @@ void ImageUndistortionTestInterface::DisplayResult()
 
 int main(int argc, char** argv)
 {
-	ImageUndistortionTestInterface interface("ImageUndistortion", 100, 40);
-	interface.Run();
+	ImageUndistortionTestInterface* interface = new ImageUndistortionTestInterface("ImageUndistortion", 100, 40);
+	interface->Run();
+	delete(interface);
 };
 
 /** @} */

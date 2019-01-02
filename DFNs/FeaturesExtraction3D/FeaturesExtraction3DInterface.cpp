@@ -10,7 +10,9 @@ namespace CDFF
 namespace DFN
 {
 
-FeaturesExtraction3DInterface::FeaturesExtraction3DInterface()
+FeaturesExtraction3DInterface::FeaturesExtraction3DInterface() :
+inPointcloud(),
+outFeatures()
 {
 }
 

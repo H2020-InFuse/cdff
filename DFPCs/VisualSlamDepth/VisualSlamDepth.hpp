@@ -22,8 +22,8 @@ namespace DFPC
             VisualSlamDepth();
             virtual ~VisualSlamDepth();
 
-            virtual void setup();
-            virtual void run();
+            virtual void setup() override;
+            virtual void run() override;
 
     };
 }

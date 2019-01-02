@@ -96,7 +96,6 @@ int main(int argc, char** argv)
 	std::string poseEstimatorConfigurationFilePath;
 	std::string reconstructorConfigurationFilePath;
 	std::string inputCorrespodencesFilePath;
-	std::string inputFundamentalMatrixFilePath;
 	float fieldOfViewX, fieldOfViewY;
 
 	ASSERT(argc == 7, USAGE);

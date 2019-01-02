@@ -29,9 +29,11 @@ namespace Executors
 * Methods (ii) and (iv) are creation methods, they copy the output of the DFN in the referenced output variable. Method (ii) takes a pointer, method (iv) takes a reference.
 */
 
+typedef asn1SccOctree const* OctreeConstPtr;
+
 void Execute(VoxelizationInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, asn1SccOctree & outputOctree);
-void Execute(VoxelizationInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, const asn1SccOctree * outputOctree);
-void Execute(VoxelizationInterface* dfn, const FrameWrapper::Frame& inputFrame, const asn1SccOctree * outputOctree);
+void Execute(VoxelizationInterface* dfn, FrameWrapper::FrameConstPtr inputFrame, OctreeConstPtr& outputOctree);
+void Execute(VoxelizationInterface* dfn, const FrameWrapper::Frame& inputFrame, OctreeConstPtr& outputOctree);
 void Execute(VoxelizationInterface* dfn, const FrameWrapper::Frame& inputFrame, asn1SccOctree& outputOctree);
 
 }

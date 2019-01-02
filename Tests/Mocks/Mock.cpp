@@ -38,7 +38,7 @@ namespace Mocks {
  *
  * --------------------------------------------------------------------------
  */
-void Mock::AddBehaviour(std::string functionName, std::string time, void* value)	
+void Mock::AddBehaviour(const std::string& functionName, const std::string& time, void* value)	
 	{
 	AddBehaviour(behavioursMap, functionName, time, value);
 	if (countersMap.find(functionName) != countersMap.end())
@@ -47,21 +47,17 @@ void Mock::AddBehaviour(std::string functionName, std::string time, void* value)
 		}
 	}
 
-void* Mock::GetBehaviour(std::string functionName, unsigned time)
+void* Mock::GetBehaviour(const std::string& functionName, unsigned time)
 	{
 	return GetBehaviour(behavioursMap, functionName, time);
-	if (staticCountersMap.find(functionName) != countersMap.end())
-		{
-		countersMap[functionName] = 0;
-		}
 	}
 
-void Mock::AddStaticBehaviour(std::string functionName, std::string time, void* value)	
+void Mock::AddStaticBehaviour(const std::string& functionName, const std::string& time, void* value)	
 	{
 	AddBehaviour(staticBehavioursMap, functionName, time, value);
 	}
 
-void* Mock::GetStaticBehaviour(std::string functionName, unsigned time)
+void* Mock::GetStaticBehaviour(const std::string& functionName, unsigned time)
 	{
 	return GetBehaviour(staticBehavioursMap, functionName, time);
 	}
@@ -83,7 +79,7 @@ std::map<std::string, std::map<std::string, void*> > Mock::staticBehavioursMap;
  * --------------------------------------------------------------------------
  */
 
-void Mock::AddBehaviour(std::map<std::string, std::map<std::string, void*> >& map, std::string functionName, std::string time, void* value)	
+void Mock::AddBehaviour(std::map<std::string, std::map<std::string, void*> >& map, const std::string& functionName, const std::string& time, void* value)	
 	{
 	std::map<std::string, std::map<std::string, void*> >::iterator functionBehaviourPair = map.find(functionName);
 	if (functionBehaviourPair == map.end())
@@ -103,7 +99,7 @@ void Mock::AddBehaviour(std::map<std::string, std::map<std::string, void*> >& ma
 		}
 	}	
 
-void* Mock::GetBehaviour(std::map<std::string, std::map<std::string, void*> >& map, std::string functionName, unsigned time)
+void* Mock::GetBehaviour(std::map<std::string, std::map<std::string, void*> >& map, const std::string& functionName, unsigned time)
 	{
 	std::map<std::string, std::map<std::string, void*> >::iterator functionBehaviourPair = map.find(functionName);
 	if (functionBehaviourPair == map.end())

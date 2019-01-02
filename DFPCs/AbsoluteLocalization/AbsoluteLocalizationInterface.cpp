@@ -10,7 +10,12 @@ namespace CDFF
 namespace DFPC
 {
 
-AbsoluteLocalizationInterface::AbsoluteLocalizationInterface()
+AbsoluteLocalizationInterface::AbsoluteLocalizationInterface() :
+inLidarPC(),
+inEstimatedPose(),
+inOrthoImage(),
+inOrbitalImage(),
+outFinalPose()
 {
 }
 

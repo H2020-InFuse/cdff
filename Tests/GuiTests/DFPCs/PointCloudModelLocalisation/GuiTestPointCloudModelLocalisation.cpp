@@ -40,11 +40,11 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-GuiTestPointCloudModelLocalisation::GuiTestPointCloudModelLocalisation(std::string configurationFilePath, std::string sceneFilePath, std::string modelFilePath) 
+GuiTestPointCloudModelLocalisation::GuiTestPointCloudModelLocalisation(const std::string& configurationFilePath, const std::string& sceneFilePath, const std::string& modelFilePath) :
+	configurationFilePath(configurationFilePath),
+	sceneFilePath(sceneFilePath),
+	modelFilePath(modelFilePath)
 	{
-	this->configurationFilePath = configurationFilePath;
-	this->sceneFilePath = sceneFilePath;
-	this->modelFilePath = modelFilePath;
 	}
 
 GuiTestPointCloudModelLocalisation::~GuiTestPointCloudModelLocalisation()

@@ -66,8 +66,8 @@ namespace Registration3D
 			IcpCC();
 			virtual ~IcpCC();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 
@@ -81,7 +81,7 @@ namespace Registration3D
 				public:
 					ConvergenceTypeHelper(const std::string& parameterName, ConvergenceType& boundVariable, const ConvergenceType& defaultValue);
 				private:
-					ConvergenceType Convert(const std::string& value);
+					ConvergenceType Convert(const std::string& value) override;
 			};
 
 			struct IcpOptionsSet

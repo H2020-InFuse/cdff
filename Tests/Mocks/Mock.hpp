@@ -55,10 +55,10 @@ class Mock
 	 * --------------------------------------------------------------------
 	 */
 	public:	
-		void AddBehaviour(std::string functionName, std::string time, void* value);
-		void* GetBehaviour(std::string functionName, unsigned time);
-		static void AddStaticBehaviour(std::string functionName, std::string time, void* value);
-		static void* GetStaticBehaviour(std::string functionName, unsigned time);
+		void AddBehaviour(const std::string& functionName, const std::string& time, void* value);
+		void* GetBehaviour(const std::string& functionName, unsigned time);
+		static void AddStaticBehaviour(const std::string& functionName, const std::string& time, void* value);
+		static void* GetStaticBehaviour(const std::string& functionName, unsigned time);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -76,8 +76,8 @@ class Mock
 		static std::map<std::string, std::map<std::string, void*> > staticBehavioursMap;
 
 
-		static void AddBehaviour(std::map<std::string, std::map<std::string, void*> >& map, std::string functionName, std::string time, void* value);	
-		static void* GetBehaviour(std::map<std::string, std::map<std::string, void*> >& map, std::string functionName, unsigned time);
+		static void AddBehaviour(std::map<std::string, std::map<std::string, void*> >& map, const std::string& functionName, const std::string& time, void* value);	
+		static void* GetBehaviour(std::map<std::string, std::map<std::string, void*> >& map, const std::string& functionName, unsigned time);
 	};
 
 

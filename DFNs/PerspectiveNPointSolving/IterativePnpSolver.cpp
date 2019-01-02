@@ -27,6 +27,8 @@ namespace PerspectiveNPointSolving
 
 IterativePnpSolver::IterativePnpSolver()
 {
+        parameters = DEFAULT_PARAMETERS;
+
 	parametersHelper.AddParameter<float>("CameraMatrix", "FocalLengthX", parameters.cameraMatrix.focalLengthX, DEFAULT_PARAMETERS.cameraMatrix.focalLengthX);
 	parametersHelper.AddParameter<float>("CameraMatrix", "FocalLengthY", parameters.cameraMatrix.focalLengthY, DEFAULT_PARAMETERS.cameraMatrix.focalLengthY);
 	parametersHelper.AddParameter<float>("CameraMatrix", "PrinciplePointX", parameters.cameraMatrix.principalPointX, DEFAULT_PARAMETERS.cameraMatrix.principalPointX);

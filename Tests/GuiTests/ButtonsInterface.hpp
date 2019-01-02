@@ -94,7 +94,7 @@ class ButtonsInterface
 		*/
 		void AddButton(
 			std::string const &label,
-            ButtonClickedCallback callback
+            	const ButtonClickedCallback& callback
 		);
 
 	/* --------------------------------------------------------------------
@@ -147,6 +147,7 @@ class ButtonsInterface
 
 		static void OnMouseCallback(int event, int x, int y, int z, void* data);
 		void OnMouseCallback(int event, int x, int y, int z);
+		static bool ButtonSelected(const Button& button, int x, int y);
 	};
 
 #endif

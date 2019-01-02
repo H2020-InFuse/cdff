@@ -10,7 +10,9 @@ namespace CDFF
 namespace DFN
 {
 
-ImageFilteringInterface::ImageFilteringInterface()
+ImageFilteringInterface::ImageFilteringInterface() :
+inImage(),
+outImage()
 {
 }
 

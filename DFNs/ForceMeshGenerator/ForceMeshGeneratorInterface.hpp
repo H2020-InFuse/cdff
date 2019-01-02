@@ -44,7 +44,7 @@ namespace DFN
             * Send value to input port armEndEffectorWrench
             * @param wrench: end-effector force measurements
             */
-            virtual void armEndEffectorWrenchInput(const asn1SccWrench wrench);
+            virtual void armEndEffectorWrenchInput(const asn1SccWrench& wrench);
 
             /**
              * Query value from output port outputPointCloud

@@ -10,7 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-PerspectiveNPointSolvingInterface::PerspectiveNPointSolvingInterface()
+PerspectiveNPointSolvingInterface::PerspectiveNPointSolvingInterface() :
+inPoints(),
+inProjections(),
+outCamera(),
+outSuccess()
 {
 }
 

@@ -10,7 +10,10 @@ namespace CDFF
 namespace DFPC
 {
 
-VisualOdometry_LAASInterface::VisualOdometry_LAASInterface()
+VisualOdometry_LAASInterface::VisualOdometry_LAASInterface() :
+inLeftImage(),
+inRightImage(),
+outEstimatedMotion()
 {
 }
 

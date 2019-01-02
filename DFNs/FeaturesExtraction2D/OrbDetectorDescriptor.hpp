@@ -49,8 +49,8 @@ namespace FeaturesExtraction2D
 			OrbDetectorDescriptor();
 			virtual ~OrbDetectorDescriptor();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 
@@ -79,7 +79,7 @@ namespace FeaturesExtraction2D
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat inputImage);
 
-			static int ConvertToScoreType(std::string scoreType);
+			static int ConvertToScoreType(const std::string& scoreType);
 	};
 }
 }

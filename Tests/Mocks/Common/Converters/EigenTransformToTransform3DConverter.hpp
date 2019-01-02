@@ -48,7 +48,7 @@ class EigenTransformToTransform3DConverter : public Mock, public Converters::Eig
 	 */
 	public:
 		virtual ~EigenTransformToTransform3DConverter();
-		const PoseWrapper::Transform3DConstPtr Convert(const Eigen::Matrix4f& transform);
+		const PoseWrapper::Transform3DConstPtr Convert(const Eigen::Matrix4f& transform) override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

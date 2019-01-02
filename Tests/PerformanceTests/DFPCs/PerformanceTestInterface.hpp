@@ -65,7 +65,7 @@ class PerformanceTestInterface : public PerformanceTestBase
 		* @param performanceMeasuresFileName, the name of the output file;
 		*
 		*/
-		PerformanceTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName);
+		PerformanceTestInterface(const std::string& folderPath, const std::string& baseConfigurationFileName, const std::string& performanceMeasuresFileName);
 
 		/*
 		* @brief The destructor does nothing.
@@ -91,8 +91,8 @@ class PerformanceTestInterface : public PerformanceTestBase
 	 * --------------------------------------------------------------------
 	 */
 	private:	
-		void Configure();
-		void Process();
+		void Configure() override;
+		void Process() override;
 
 		/*
 		* @brief This method has to set the inputs of the DFPC, it returns true if and only if an input is actually set.
@@ -100,7 +100,7 @@ class PerformanceTestInterface : public PerformanceTestBase
 		* The idea is that inputs will be provided one at a time, when all inputs have already been provided the method should return false;
 		*
 		*/
-		virtual bool SetNextInputs() = 0;
+		virtual bool SetNextInputs() override = 0;
 
 		/*
 		* @brief This method executes the DFPC once or multiple times, this is relevant as the DFPC may contain an history and multiple calls with same input yield different results.

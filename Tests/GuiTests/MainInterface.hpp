@@ -54,7 +54,7 @@ class MainInterface
 
 
 	public:
-		MainInterface(std::string windowName, int buttonWidth, int buttonHeight);
+		MainInterface(const std::string& windowName, int buttonWidth, int buttonHeight);
 		~MainInterface() = default;
 
 		void Run();

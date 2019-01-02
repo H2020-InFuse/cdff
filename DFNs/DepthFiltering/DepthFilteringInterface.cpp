@@ -11,7 +11,9 @@ namespace DFN
 {
 
 //=====================================================================================================================
-DepthFilteringInterface::DepthFilteringInterface()
+DepthFilteringInterface::DepthFilteringInterface() :
+inFrame(),
+outFrame()
 {
 }
 

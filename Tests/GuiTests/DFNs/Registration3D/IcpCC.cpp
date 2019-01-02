@@ -47,13 +47,13 @@ using namespace PointCloudWrapper;
 class IcpCCTestInterface : public DFNTestInterface
 	{
 	public:
-		IcpCCTestInterface(std::string dfnName, int buttonWidth, int buttonHeight);
+		IcpCCTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
 		~IcpCCTestInterface();
 
 		static void SegmentationFaultHandler(int signal);
 
 	private:
-		IcpCC* icp;
+		IcpCC icp;
 
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclSourceCloud;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pclSinkCloud;
@@ -67,34 +67,33 @@ class IcpCCTestInterface : public DFNTestInterface
 		void LoadInputClouds();
 		void PrepareInputs();
 
-		void SetupParameters();
-		void DisplayResult();
+		void SetupParameters() override;
+		void DisplayResult() override;
 
 		void PrintInformation(Transform3DConstPtr transform);
 		pcl::PointCloud<pcl::PointXYZ>::ConstPtr PrepareOutputCloud(Transform3DConstPtr transform);
 		void VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPtr correspondenceCloud);
 	};
 
-IcpCCTestInterface::IcpCCTestInterface(std::string dfnName, int buttonWidth, int buttonHeight)
-	: DFNTestInterface(dfnName, buttonWidth, buttonHeight)
+IcpCCTestInterface::IcpCCTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+	DFNTestInterface(dfnName, buttonWidth, buttonHeight),
+	icp()
 	{
-	icp = new IcpCC();
-	SetDFN(icp);
+	SetDFN(&icp);
 
 	LoadInputClouds();
 	PrepareInputs();
 
-	icp->sourceCloudInput(*inputSourceCloud);
-	icp->sinkCloudInput(*inputSinkCloud);
-	icp->useGuessInput(false);
-	icp->transformGuessInput(*transformGuess);
+	icp.sourceCloudInput(*inputSourceCloud);
+	icp.sinkCloudInput(*inputSinkCloud);
+	icp.useGuessInput(false);
+	icp.transformGuessInput(*transformGuess);
 
 	outputWindowName = "ICP 3D Result";
 	}
 
 IcpCCTestInterface::~IcpCCTestInterface()
 	{
-	delete(icp);
 	delete(inputSourceCloud);
 	delete(inputSinkCloud);
 	delete(transformGuess);
@@ -177,14 +176,14 @@ void IcpCCTestInterface::SetupParameters()
 
 void IcpCCTestInterface::DisplayResult()
 	{
-	bool success = icp->successOutput();
+	bool success = icp.successOutput();
 	if (!success)
 		{
 		PRINT_TO_LOG("Icp was not successful", "");
 		return;
 		}
 
-	const Transform3D& outputTransform = icp->transformOutput();
+	const Transform3D& outputTransform = icp.transformOutput();
 	Transform3DPtr transform = NewPose3D();
 	Copy(outputTransform, *transform);
 
@@ -240,8 +239,9 @@ void IcpCCTestInterface::VisualizeClouds(pcl::PointCloud<pcl::PointXYZ>::ConstPt
 int main(int argc, char** argv)
 	{
 	signal(SIGSEGV, IcpCCTestInterface::SegmentationFaultHandler);
-	IcpCCTestInterface interface("IcpCC", 100, 40);
-	interface.Run();
+	IcpCCTestInterface* interface = new IcpCCTestInterface("IcpCC", 100, 40);
+	interface->Run();
+	delete(interface);
 	}
 
 /** @} */

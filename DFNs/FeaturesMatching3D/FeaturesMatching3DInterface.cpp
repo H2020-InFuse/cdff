@@ -10,7 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-FeaturesMatching3DInterface::FeaturesMatching3DInterface()
+FeaturesMatching3DInterface::FeaturesMatching3DInterface() :
+inSourceFeatures(),
+inSinkFeatures(),
+outTransform(),
+outSuccess()
 {
 }
 

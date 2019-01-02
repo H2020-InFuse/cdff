@@ -17,13 +17,13 @@ namespace Executors
 {
 
 //=====================================================================================================================
-void Execute(PrimitiveMatchingInterface* dfn, FrameConstPtr inputFrame, const asn1SccStringSequence& inputPrimitiveSequence, asn1SccStringSequence outputPrimitiveSequence)
+void Execute(PrimitiveMatchingInterface* dfn, FrameConstPtr inputFrame, const asn1SccStringSequence& inputPrimitiveSequence, asn1SccStringSequence& outputPrimitiveSequence)
 {
 	Execute(dfn, *inputFrame, inputPrimitiveSequence, outputPrimitiveSequence);
 }
 
 //=====================================================================================================================
-void Execute(PrimitiveMatchingInterface* dfn, const Frame& inputFrame, const asn1SccStringSequence& inputPrimitiveSequence, asn1SccStringSequence outputPrimitiveSequence)
+void Execute(PrimitiveMatchingInterface* dfn, const Frame& inputFrame, const asn1SccStringSequence& inputPrimitiveSequence, asn1SccStringSequence& outputPrimitiveSequence)
 {
 	ASSERT( dfn!= NULL, "PrimitiveMatchingExecutor, input dfn is null");
 	dfn->imageInput(inputFrame);

@@ -10,7 +10,11 @@ namespace CDFF
 namespace DFPC
 {
 
-VisualOdometry_MAGInterface::VisualOdometry_MAGInterface()
+VisualOdometry_MAGInterface::VisualOdometry_MAGInterface() :
+inLeftImage(),
+inRightImage(),
+inOdoMotion(),
+outEstimateMotion()
 {
 }
 

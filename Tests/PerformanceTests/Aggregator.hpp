@@ -55,11 +55,12 @@ class Aggregator
 			AVERAGE
 			};
 
+		Aggregator() = delete;
 		/*
 		* @brief the constructor requires the type of aggregation that needs to be performed.
 		*
 		*/
-		Aggregator(AggregatorOperation operation);
+		explicit Aggregator(AggregatorOperation operation);
 
 		/*
 		* @brief the method records a measure for future aggregation.

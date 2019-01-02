@@ -57,10 +57,10 @@ class FundamentalMatrixTester
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		FundamentalMatrixTester(std::string configurationFilePath, CDFF::DFN::FundamentalMatrixComputationInterface* dfn);
+		FundamentalMatrixTester(const std::string& configurationFilePath, CDFF::DFN::FundamentalMatrixComputationInterface* dfn);
 		~FundamentalMatrixTester();
 
-		void SetInputFilePath(std::string inputCorrespondenceFilePath);
+		void SetInputFilePath(const std::string& inputCorrespondenceFilePath);
 		void ExecuteDfn();
 		bool IsDfnSuccessful();
 	/* --------------------------------------------------------------------

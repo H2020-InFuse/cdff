@@ -10,7 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-Transform3DEstimationInterface::Transform3DEstimationInterface()
+Transform3DEstimationInterface::Transform3DEstimationInterface() :
+inMatches(),
+outTransforms(),
+outSuccess(),
+outError()
 {
 }
 

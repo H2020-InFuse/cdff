@@ -50,7 +50,7 @@ class VisualPointFeatureVector2DToMatConverter : public Mock, public Converters:
 	 */
 	public:
 		virtual ~VisualPointFeatureVector2DToMatConverter();
-		const cv::Mat Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& featuresVector);
+		const cv::Mat Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DConstPtr& featuresVector) override;
 
 	/* --------------------------------------------------------------------
 	 * Protected

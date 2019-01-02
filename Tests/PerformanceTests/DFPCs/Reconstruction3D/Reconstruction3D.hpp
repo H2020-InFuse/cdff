@@ -91,7 +91,7 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 		bool success;
 
 		void ClearInputs();
-		bool SetNextInputs();
+		bool SetNextInputs() override;
 		void ExecuteDfpc();
 		MeasuresMap ExtractMeasures();
 	};

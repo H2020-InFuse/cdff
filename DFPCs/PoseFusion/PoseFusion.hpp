@@ -22,8 +22,8 @@ namespace DFPC
             PoseFusion();
             virtual ~PoseFusion();
 
-            virtual void setup();
-            virtual void run();
+            virtual void setup() override;
+            virtual void run() override;
 
     };
 }

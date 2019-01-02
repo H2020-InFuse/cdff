@@ -71,8 +71,8 @@ namespace FeaturesDescription3D
 			ShotDescriptor3D();
 			virtual ~ShotDescriptor3D();
 
-			virtual void configure();
-			virtual void process();
+			virtual void configure() override;
+			virtual void process() override;
 
 		private:
 
@@ -87,7 +87,7 @@ namespace FeaturesDescription3D
 				public:
 					OutputFormatHelper(const std::string& parameterName, OutputFormat& boundVariable, const OutputFormat& defaultValue);
 				private:
-					OutputFormat Convert(const std::string& value);
+					OutputFormat Convert(const std::string& value) override;
 			};
 
 			struct BaseOptionsSet
