@@ -1,0 +1,7 @@
+- Name: GeneralParameters
+  mapFile: "../../tests/Data/Images/EdresImages/cam"
+  xratio: 1
+  yratio: 1
+  xshift: 0
+  yshift: 0
+  outType: 5
