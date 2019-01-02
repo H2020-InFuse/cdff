@@ -363,10 +363,11 @@ set_target_properties(DenseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTP
 target_compile_definitions(DenseRegistrationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     DenseRegistrationFromStereoGuiTest
-    dense_registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator  cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -378,10 +379,11 @@ set_target_properties(SparseRegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUT
 target_compile_definitions(SparseRegistrationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     SparseRegistrationFromStereoGuiTest
-    sparse_registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -393,10 +395,11 @@ set_target_properties(AdjustmentFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRE
 target_compile_definitions(AdjustmentFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     AdjustmentFromStereoGuiTest
-    adjustment_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -408,10 +411,11 @@ set_target_properties(ReconstructionFromMotionGuiTest PROPERTIES RUNTIME_OUTPUT_
 target_compile_definitions(ReconstructionFromMotionGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ReconstructionFromMotionGuiTest
-    reconstruction_from_motion
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -423,10 +427,11 @@ set_target_properties(ReconstructionFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_
 target_compile_definitions(ReconstructionFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     ReconstructionFromStereoGuiTest
-    reconstruction_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -438,10 +443,11 @@ set_target_properties(RegistrationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DI
 target_compile_definitions(RegistrationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     RegistrationFromStereoGuiTest
-    registration_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator  cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -453,10 +459,11 @@ set_target_properties(EstimationFromStereoGuiTest PROPERTIES RUNTIME_OUTPUT_DIRE
 target_compile_definitions(EstimationFromStereoGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     EstimationFromStereoGuiTest
-    estimation_from_stereo
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
+    cdff_dfpc_reconstruction_3d
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -468,10 +475,11 @@ set_target_properties(FeaturesMatching3DGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECT
 target_compile_definitions(FeaturesMatching3DGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     FeaturesMatching3DGuiTest
-    dfpc_implementation_features_matching_3d
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator cdff_dfn_dfnexecutors
+    cdff_dfpc_point_cloud_model_localisation
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 add_executable(
@@ -483,10 +491,11 @@ set_target_properties(RegistrationAndMatchingGuiTest PROPERTIES RUNTIME_OUTPUT_D
 target_compile_definitions(RegistrationAndMatchingGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
     RegistrationAndMatchingGuiTest
-    registration_and_matching
-    ${GRAPHICALTEST_CDFF_LIBRARIES} dfpc_configurator mock
+    cdff_dfpc_reconstruction_and_identification
+    ${GRAPHICALTEST_CDFF_LIBRARIES}
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    yaml-cpp ${VTK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    cdff_visualizers_pcl
 )
 
 

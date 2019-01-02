@@ -1,85 +1,60 @@
-add_library(
-    reconstruction_3d
-    Reconstruction3DInterface.cpp
-)
-target_link_libraries(
-    reconstruction_3d
-)
+set(RECONSTRUCTION_3D_SOURCES "Reconstruction3DInterface.cpp")
+set(RECONSTRUCTION_3D_INCLUDE_DIRS "")
+set(RECONSTRUCTION_3D_DEPENDENCIES "cdff_dfpc_configurator")
+
+if(PCL_FOUND)
+	set(RECONSTRUCTION_3D_SOURCES ${RECONSTRUCTION_3D_SOURCES} 
+		"DenseRegistrationFromStereo.cpp" 
+		"BundleHistory.cpp" 
+		"PointCloudMap.cpp"
+		"SparseRegistrationFromStereo.cpp"
+		"ReconstructionFromMotion.cpp"
+		"AdjustmentFromStereo.cpp"
+		"EstimationFromStereo.cpp"
+		"RegistrationFromStereo.cpp"
+		"ReconstructionFromStereo.cpp"
+		"ObservedScene.cpp"
+		"MultipleCorrespondences2DRecorder.cpp"
+		"MultipleCorrespondencesRecorder.cpp"
+		)
+	set(RECONSTRUCTION_3D_INCLUDE_DIRS ${RECONSTRUCTION_3D_INCLUDE_DIRS} 
+		${PCL_INCLUDE_DIRS}
+		)
+	set(RECONSTRUCTION_3D_DEPENDENCIES ${RECONSTRUCTION_3D_DEPENDENCIES}
+		${PCL_COMMON_LIBRARIES} 
+		${PCL_KDTREE_LIBRARIES}
+		"cdff_dfn_dfnexecutors"
+		"cdff_dfn_image_filtering"
+		"cdff_dfn_stereo_reconstruction"
+		"cdff_dfn_features_extraction_2d"
+		"cdff_dfn_features_description_2d"
+		"cdff_dfn_features_matching_2d"
+		"cdff_dfn_bundle_adjustment"
+		"cdff_dfn_fundamental_matrix_computation"
+		"cdff_dfn_perspective_n_point_solving"
+		"cdff_dfn_point_cloud_reconstruction_2d_to_3d"
+		"cdff_dfn_features_extraction_3d"
+		"cdff_dfn_features_description_3d"
+		"cdff_dfn_features_matching_3d"
+		"cdff_dfn_registration_3d"
+		"cdff_dfn_point_cloud_assembly"
+		"cdff_dfn_point_cloud_filtering"
+		"cdff_dfn_point_cloud_transform"
+		"cdff_dfn_transform_3d_estimation"
+		"cdff_dfn_cameras_transform_estimation"
+		)
+endif()
+
 
 add_library(
-    dense_registration_from_stereo
-    DenseRegistrationFromStereo.cpp
-    BundleHistory.cpp
-    PointCloudMap.cpp
-)
+    cdff_dfpc_reconstruction_3d
+    ${RECONSTRUCTION_3D_SOURCES}
+    )
+target_include_directories(
+    cdff_dfpc_reconstruction_3d 
+    SYSTEM PRIVATE ${RECONSTRUCTION_3D_INCLUDE_DIRS}
+    )
 target_link_libraries(
-    dense_registration_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_dfnexecutors
-)
-
-add_library(
-    sparse_registration_from_stereo
-    SparseRegistrationFromStereo.cpp
-    BundleHistory.cpp
-    PointCloudMap.cpp
-)
-target_link_libraries(
-    sparse_registration_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_dfnexecutors cdff_dfn_features_extraction_3d cdff_dfn_features_matching_3d
-)
-
-add_library(
-    adjustment_from_stereo
-    AdjustmentFromStereo.cpp
-    PointCloudMap.cpp
-    BundleHistory.cpp
-    MultipleCorrespondences2DRecorder.cpp
-)
-target_link_libraries(
-    adjustment_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_dfnexecutors cdff_dfn_bundle_adjustment
-)
-
-add_library(
-    reconstruction_from_motion
-    ReconstructionFromMotion.cpp
-    ObservedScene.cpp
-)
-target_link_libraries(
-    reconstruction_from_motion
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator
-)
-
-add_library(
-    reconstruction_from_stereo
-    ReconstructionFromStereo.cpp
-    PointCloudMap.cpp
-    BundleHistory.cpp
-)
-target_link_libraries(
-    reconstruction_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_dfnexecutors cdff_dfn_features_extraction_3d cdff_dfn_features_description_3d cdff_dfn_features_matching_3d
-)
-
-add_library(
-    registration_from_stereo
-    RegistrationFromStereo.cpp
-    PointCloudMap.cpp
-    BundleHistory.cpp
-)
-target_link_libraries(
-    registration_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_dfnexecutors
-)
-
-add_library(
-    estimation_from_stereo
-    EstimationFromStereo.cpp
-    PointCloudMap.cpp
-    BundleHistory.cpp
-    MultipleCorrespondencesRecorder.cpp
-)
-target_link_libraries(
-    estimation_from_stereo
-    reconstruction_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_dfnexecutors 
-)
+    cdff_dfpc_reconstruction_3d
+    ${RECONSTRUCTION_3D_DEPENDENCIES}
+    )

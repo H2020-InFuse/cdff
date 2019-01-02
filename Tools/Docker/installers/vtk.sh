@@ -15,7 +15,6 @@ if [[ ! -n $(find $PKG_DIR -name 'vtk*') ]]; then
         -D BUILD_TESTING=OFF \
         -D BUILD_EXAMPLES=OFF \
         -D BUILD_DOCUMENTATION=OFF \
-        -D VTK_ENABLE_KITS=ON \
         $SOURCE_DIR/vtk
 
     make --jobs=${CPUS}

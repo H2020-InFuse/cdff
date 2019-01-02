@@ -17,7 +17,6 @@
 #include <pcl/search/search.h>
 #include <pcl/search/kdtree.h>
 #include <pcl/segmentation/region_growing.h>
-#include <Visualizers/PCLVisualizer.hpp>
 
 #include <stdlib.h>
 #include <fstream>
@@ -197,7 +196,6 @@ pcl::PointIndicesConstPtr CornerDetector3D::DetectCorners(pcl::PointCloud<pcl::P
 			}
 		pointsCloudList.push_back(newCloud);
 		}
-	DEBUG_SHOW_POINT_CLOUDS(pointsCloudList);
 
 	return corners;
 }

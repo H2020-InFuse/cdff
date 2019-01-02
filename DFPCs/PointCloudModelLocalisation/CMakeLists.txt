@@ -1,16 +1,16 @@
-add_library(
-    point_cloud_model_localisation
-    PointCloudModelLocalisationInterface.cpp
-)
-target_link_libraries(
-    point_cloud_model_localisation
-)
+set(POINT_CLOUD_MODEL_LOCALISATION_SOURCES "PointCloudModelLocalisationInterface.cpp" "FeaturesMatching3D.cpp")
+set(POINT_CLOUD_MODEL_LOCALISATION_INCLUDE_DIRS "")
+set(POINT_CLOUD_MODEL_LOCALISATION_DEPENDENCIES "cdff_dfpc_configurator" "cdff_dfn_dfnexecutors")
 
 add_library(
-    dfpc_implementation_features_matching_3d
-    FeaturesMatching3D.cpp
-)
+    cdff_dfpc_point_cloud_model_localisation
+    ${POINT_CLOUD_MODEL_LOCALISATION_SOURCES}
+    )
+target_include_directories(
+    cdff_dfpc_point_cloud_model_localisation 
+    SYSTEM PRIVATE ${POINT_CLOUD_MODEL_LOCALISATION_INCLUDE_DIRS}
+    )
 target_link_libraries(
-    dfpc_implementation_features_matching_3d
-    point_cloud_model_localisation cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator cdff_dfn_dfnexecutors
-)
+    cdff_dfpc_point_cloud_model_localisation
+    ${POINT_CLOUD_MODEL_LOCALISATION_DEPENDENCIES}
+    )

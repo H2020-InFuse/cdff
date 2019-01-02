@@ -28,8 +28,6 @@
  */
 #include "ReconstructionFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpenCVVisualizer.hpp>
-#include <Visualizers/PCLVisualizer.hpp>
 
 #include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
 #include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
@@ -150,7 +148,6 @@ void ReconstructionFromStereo::run()
 		DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 		DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(*outputPointCloud));
 
-		DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 		DeleteIfNotNull(outputPointCloud);
 		}
 	}

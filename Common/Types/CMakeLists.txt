@@ -82,3 +82,7 @@ add_library(cdff_types
 
 install(TARGETS cdff_types
     DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+target_link_libraries(
+    cdff_types
+    cdff_logger
+)

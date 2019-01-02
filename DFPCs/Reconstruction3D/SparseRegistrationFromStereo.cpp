@@ -28,8 +28,6 @@
  */
 #include "SparseRegistrationFromStereo.hpp"
 #include "Errors/Assert.hpp"
-#include <Visualizers/OpenCVVisualizer.hpp>
-#include <Visualizers/PCLVisualizer.hpp>
 
 #include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
 #include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
@@ -88,13 +86,6 @@ SparseRegistrationFromStereo::~SparseRegistrationFromStereo()
 	DeleteIfNotNull(featureCloud);
 	}
 
-/**
-* The process method is split into three steps 
-* (i) computation of the point cloud from the stereo pair;
-* (ii) computation of the camera pose by 3d matching of the point cloud with the a partial scene of the original map ceneters at the camera previous pose;
-* (iii) the point cloud rover map is updated with the newly computed point cloud.
-*
-**/
 void SparseRegistrationFromStereo::run() 
 	{
 	DEBUG_PRINT_TO_LOG("Registration from stereo start", "");
@@ -114,7 +105,6 @@ void SparseRegistrationFromStereo::run()
 
 	VisualPointFeatureVector3DConstPtr keypointVector = NULL;
 	Executors::Execute(featuresExtractor3d, imageCloud, keypointVector);
-	DEBUG_SHOW_3D_VISUAL_FEATURES(imageCloud, keypointVector);
 
 	if (!parameters.matchToReconstructedCloud)
 		{
@@ -276,7 +266,6 @@ void SparseRegistrationFromStereo::UpdatePointCloud(PointCloudConstPtr imageClou
 	DEBUG_PRINT_TO_LOG("pose", ToString(outPose));
 	DEBUG_PRINT_TO_LOG("points", GetNumberOfPoints(outPointCloud));
 
-	DEBUG_SHOW_POINT_CLOUD(outputPointCloud);
 	if (!parameters.useAssemblerDfn)
 		{
 		DeleteIfNotNull(outputPointCloud);

@@ -1,17 +1,16 @@
+set(REGISTRATION_AND_IDENTIFICATION_SOURCES "ReconstructionAndIdentificationInterface.cpp" "RegistrationAndMatching.cpp")
+set(REGISTRATION_AND_IDENTIFICATION_INCLUDE_DIRS "")
+set(REGISTRATION_AND_IDENTIFICATION_DEPENDENCIES "cdff_dfpc_configurator" "cdff_dfpc_reconstruction_3d" "cdff_dfpc_point_cloud_model_localisation")
 
 add_library(
-    reconstruction_and_identification
-    ReconstructionAndIdentificationInterface.cpp
-)
+    cdff_dfpc_reconstruction_and_identification
+    ${REGISTRATION_AND_IDENTIFICATION_SOURCES}
+    )
+target_include_directories(
+    cdff_dfpc_reconstruction_and_identification
+    SYSTEM PRIVATE ${REGISTRATION_AND_IDENTIFICATION_INCLUDE_DIRS}
+    )
 target_link_libraries(
-	reconstruction_and_identification
-)
-
-add_library(
-    registration_and_matching
-    RegistrationAndMatching.cpp
-)
-target_link_libraries(
-    registration_and_matching
-    reconstruction_and_identification registration_from_stereo dfpc_implementation_features_matching_3d cdff_types yaml-cpp cdff_helpers cdff_visualizers_opencv cdff_visualizers_pcl dfpc_configurator
-)
+    cdff_dfpc_reconstruction_and_identification
+    ${REGISTRATION_AND_IDENTIFICATION_DEPENDENCIES}
+    )
