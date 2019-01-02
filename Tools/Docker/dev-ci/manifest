@@ -1,0 +1,12 @@
+package_sets:
+   - type: git
+     url: https://cdff-dev:cdff-dev@gitlab.spaceapplications.com/InFuse/cdff-package_set.git
+   - github: envire/envire-package_set
+
+layout:
+   - cdff/CDFF
+   - envire/envire_core
+   - envire/envire_urdf
+   - envire/envire_visualizer
+   - infuse/envire_asn1
+   - infuse/ASN_Viz
