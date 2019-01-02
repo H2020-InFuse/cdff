@@ -5,9 +5,6 @@
 
 #include "ImageRectification.hpp"
 #include <Eigen/Core>
-#include <opencv2/core/eigen.hpp>
-//#include "Asn1Tools.h"
-#include <iostream>
 
 namespace CDFF
 {
