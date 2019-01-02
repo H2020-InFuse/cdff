@@ -3,6 +3,7 @@
 
  stages:
   - setup
+  - ci-dependent
   - generation
   - analyse
   - build
@@ -13,7 +14,7 @@
   before_script:
    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
 
- generate:cdff-ci:
+ docker:cdff-ci:
   <<: *connect
   services:
    - docker:dind
@@ -26,7 +27,7 @@
    changes:
     - Tools/Docker/Dockerfile.ci
 
- generate:cdff-user:
+ docker:cdff-user:
   <<: *connect
   services:
    - docker:dind
@@ -38,6 +39,19 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.user
+
+ docker:cdff-dev:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: ci-dependent
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.dev-ci cdff-dev-ci
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.dev-ci
 
  generate:asn:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
@@ -69,7 +83,6 @@
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage: build
-  allow_failure: true
   dependencies:
    - generate:asn
   artifacts:
@@ -95,6 +108,7 @@
     - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
   only:
     - merge_requests
+    - master
   artifacts:
    paths: 
     - cppcheck/
