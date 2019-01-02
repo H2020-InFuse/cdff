@@ -29,6 +29,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/ImageFiltering/DerivativeEdgeDetection.cpp
     DFNs/ImageFiltering/CannyEdgeDetection.cpp
+    DFNs/ImageRectification/ImageRectification.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
@@ -73,6 +74,11 @@ set(unittest_sources UnitTests.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
 )
 
+if(WITH_EDRES)
+    set(unittest_sources ${unittest_sources}
+        DFNs/ImageRectification/ImageRectificationEdres.cpp)
+endif()
+
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
@@ -87,6 +93,7 @@ set(unittest_libraries catch
     cdff_dfn_cameras_transform_estimation
     cdff_dfn_features_matching_2d
     cdff_dfn_fundamental_matrix_computation
+    cdff_dfn_image_rectification
     cdff_dfn_primitive_matching
     cdff_dfn_perspective_n_point_solving
     cdff_dfn_kf_correction
