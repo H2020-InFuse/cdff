@@ -83,7 +83,6 @@
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage: build
-  allow_failure: true
   dependencies:
    - generate:asn
   artifacts:
