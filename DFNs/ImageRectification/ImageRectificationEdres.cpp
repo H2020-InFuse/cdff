@@ -14,7 +14,9 @@ namespace ImageRectification
 
 ImageRectificationEdres::ImageRectificationEdres()
 {
-    _mapFile = "";
+    _mapFile = " ";
+    _rectification = new Edres::Rectification();
+    _initialized = false;
 
     parametersHelper.AddParameter<std::string>("ImageRectificationEdresParams", "mapFile", parameters.mapFile, DEFAULT_PARAMETERS.mapFile);
     parametersHelper.AddParameter<int>("ImageRectificationEdresParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
@@ -28,6 +30,10 @@ ImageRectificationEdres::ImageRectificationEdres()
 
 ImageRectificationEdres::~ImageRectificationEdres()
 {
+    if( _rectification ){
+        delete _rectification;
+        _rectification = nullptr;
+    }
 }
 
 void ImageRectificationEdres::configure()
@@ -43,10 +49,17 @@ void ImageRectificationEdres::process()
     if( _mapFile != parameters.mapFile ){
         _mapFile = parameters.mapFile;
 
-        _correction.init(inOriginalImage.data.cols, inOriginalImage.data.rows, _mapFile);
+        if( !_rectification->init(inOriginalImage.data.cols, inOriginalImage.data.rows, _mapFile)){
+            _initialized = true;
+        }
+        else{
+            _initialized = false;
+        }
     }
 
-    _correction(inOriginalImage, outRectifiedImage, parameters.xratio, parameters.yratio, static_cast<Edres::PixelDepth>(parameters.outType), parameters.xshift, parameters.yshift);
+    if(_initialized){
+        (*_rectification)(inOriginalImage, outRectifiedImage, parameters.xratio, parameters.yratio, static_cast<Edres::PixelDepth>(parameters.outType), parameters.xshift, parameters.yshift);
+    }
 }
 
 void ImageRectificationEdres::ValidateParameters()

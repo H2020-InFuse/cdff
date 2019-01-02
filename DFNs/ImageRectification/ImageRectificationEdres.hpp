@@ -76,8 +76,9 @@ namespace ImageRectification
             void ValidateParameters();
 
         private:
-            Edres::Correction _correction;
+            Edres::Rectification *_rectification;
             std::string _mapFile;
+            bool _initialized;
     };
 }
 }
