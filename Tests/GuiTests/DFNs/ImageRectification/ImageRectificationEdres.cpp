@@ -62,7 +62,6 @@ ImageRectificationEdresTestInterface::ImageRectificationEdresTestInterface(const
     rectification()
 {
     SetDFN(&rectification);
-    rectification.parameters.mapFile = "../../tests/Data/Images/EdresImages/camL";
 
     inputImage = cv::imread("../../tests/Data/Images/EdresImages/NavL.png", cv::IMREAD_GRAYSCALE);
 
@@ -99,12 +98,12 @@ ImageRectificationEdresTestInterface::~ImageRectificationEdresTestInterface()
 
 void ImageRectificationEdresTestInterface::SetupParameters()
 {
-    rectification.setConfigurationFile("../../tests/ConfigurationFiles/DFNs/ImageRectification/ImageRectificationEdres_Conf.yaml");
     AddParameter("ImageRectificationEdresParams", "xratio", 2, 25, 1);
     AddParameter("ImageRectificationEdresParams", "yratio", 2, 25, 1);
     AddParameter("ImageRectificationEdresParams", "xshift", 0, 1000, 1);
     AddParameter("ImageRectificationEdresParams", "yshift", 0, 1000, 1);
     AddParameter("ImageRectificationEdresParams", "outType", 5, 8, 1);
+    AddStringParameter("ImageRectificationEdresParams", "mapFile", "../../tests/Data/Images/EdresImages/camL");
 }
 
 void ImageRectificationEdresTestInterface::DisplayResult()

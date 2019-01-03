@@ -89,6 +89,8 @@ TEST_CASE( "Call to process (ImageRectification)", "[process]" )
 
     // Instantiate DFN
     CDFF::DFN::ImageRectification::ImageRectification* rectification = new CDFF::DFN::ImageRectification::ImageRectification();
+    rectification->parameters.xratio = 2;
+    rectification->parameters.yratio = 2;
 
     // Send input data to DFN
     rectification->originalImageInput(*inputFrame);

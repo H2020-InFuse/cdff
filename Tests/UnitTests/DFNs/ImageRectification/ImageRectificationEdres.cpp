@@ -103,7 +103,7 @@ TEST_CASE( "Call to process (ImageRectificationEdres)", "[process]" )
     // Query output data from DFN
     const asn1SccFrame& output = rectification->rectifiedImageOutput();
 
-//    REQUIRE( output.data.msgVersion == array3D_Version );
+    REQUIRE( output.data.msgVersion == array3D_Version );
     REQUIRE( output.data.rows == static_cast<int>(std::ceil(static_cast<double>(inputFrame->data.rows) / static_cast<double>(rectification->parameters.yratio))) );
     REQUIRE( output.data.cols == static_cast<int>(std::ceil(static_cast<double>(inputFrame->data.cols) / static_cast<double>(rectification->parameters.xratio))) );
     REQUIRE( output.data.channels == 1 );
