@@ -61,7 +61,6 @@ void StereoRectification::process()
             parameters.scaling != _scaling ||
             parameters.fisheye != _fisheye){
 
-        std::cout << "1" << std::endl;
         _sensorIdLeft = std::string(reinterpret_cast<char const *>(inOriginalStereoPair.left.intrinsic.sensorId.arr));
         _sensorIdRight = std::string(reinterpret_cast<char const *>(inOriginalStereoPair.right.intrinsic.sensorId.arr));
         _calibrationFilePath = parameters.calibrationFilePath;
@@ -72,7 +71,6 @@ void StereoRectification::process()
 
         cv::FileStorage fs( _calibrationFilePath + "/" + _sensorIdLeft + std::string("-") + _sensorIdRight + ".yml", cv::FileStorage::READ );
         if( fs.isOpened() ){
-            std::cout << "2" << std::endl;
             cv::Size imageSize;
             cv::Mat1d cameraMatrixL;
             cv::Mat1d cameraMatrixR;
@@ -102,14 +100,12 @@ void StereoRectification::process()
             cv::Mat1d Q;
 
             if(_fisheye){
-                std::cout << "fisheye" << std::endl;
                 cv::fisheye::stereoRectify(cameraMatrixL, distCoeffsL, cameraMatrixR, distCoeffsR, imageSize, R, T, RLeft, RRight, _PLeft, _PRight, Q, CV_CALIB_ZERO_DISPARITY, newSize, _scaling);
 
                 cv::fisheye::initUndistortRectifyMap(cameraMatrixL, distCoeffsL, RLeft, _PLeft, newSize, CV_32F, _lmapx, _lmapy);
                 cv::fisheye::initUndistortRectifyMap(cameraMatrixR, distCoeffsR, RRight, _PRight, newSize, CV_32F, _rmapx, _rmapy);
             }
             else{
-                std::cout << "pinhole" << std::endl;
                 cv::stereoRectify(cameraMatrixL, distCoeffsL, cameraMatrixR, distCoeffsR, imageSize, R, T, RLeft, RRight, _PLeft, _PRight, Q, CV_CALIB_ZERO_DISPARITY, _scaling, newSize);
 
                 cv::initUndistortRectifyMap(cameraMatrixL, distCoeffsL, RLeft, _PLeft, newSize, CV_32F, _lmapx, _lmapy);
