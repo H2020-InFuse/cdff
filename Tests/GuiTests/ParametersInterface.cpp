@@ -98,6 +98,16 @@ void ParametersInterface::AddSignedParameter(const std::string& groupName, const
 	AddParameter(groupName, newParameter);
 	}
 	
+void ParametersInterface::AddStringParameter(const std::string& groupName, const std::string& name, std::string defaultValue)
+{
+    Parameter newParameter;
+    newParameter.name = name;
+    newParameter.type = STRING_TYPE;
+    newParameter.stringValue = defaultValue;
+
+    AddParameter(groupName, newParameter);
+}
+
 
 void ParametersInterface::CreateTrackbars()
 	{
