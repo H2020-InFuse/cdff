@@ -61,6 +61,10 @@ namespace ImageRectification
                  */
                 bool centerPrincipalPoint;
 
+                /**
+                 * @brief Set to true to use the fisheye camera projection model.
+                 * Otherwise the pinhole projection model will be used.
+                 */
                 bool fisheye;
             };
 
