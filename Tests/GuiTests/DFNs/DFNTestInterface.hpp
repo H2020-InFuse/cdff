@@ -55,6 +55,7 @@ class DFNTestInterface
 		void AddParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
 		void AddSignedParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double resolution);
         void AddSignedParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double minValue, double resolution);
+        void AddStringParameter(std::string groupName, std::string name, std::string defaultValue);
 
 		double GetLastProcessingTimeSeconds();
 		int GetTotalVirtualMemoryUsedKB();
