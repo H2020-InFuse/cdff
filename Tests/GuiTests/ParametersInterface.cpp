@@ -106,10 +106,10 @@ void ParametersInterface::AddSignedParameter(const std::string& groupName, const
     Parameter newParameter;
     newParameter.name = name;
     newParameter.type = (resolution <= 1e-7) ? DOUBLE_TYPE : FLOAT_TYPE;
-    newParameter.maxValue = (int) ( (minValue + maxValue) / resolution);
-    newParameter.value = (int) ( (defaultValue + minValue) / resolution);
+    newParameter.maxValue = (int) ( (maxValue - minValue) / resolution);
+    newParameter.value = (int) ( (defaultValue - minValue) / resolution);
     newParameter.resolution = resolution;
-    newParameter.displacement = (int) ( (minValue) / resolution);
+    newParameter.displacement = (int) ( (-minValue) / resolution);
 
     AddParameter(groupName, newParameter);
     }
