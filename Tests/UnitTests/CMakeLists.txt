@@ -61,6 +61,7 @@ set(unittest_sources UnitTests.cpp
     #DFNs/Registration3D/IcpMatcher.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    DFNs/StereoRectification/StereoRectification.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
     DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
     DFNs/Voxelization/Octree.cpp
@@ -72,6 +73,11 @@ set(unittest_sources UnitTests.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
 )
+
+if(WITH_EDRES)
+    set(unittest_sources ${unittest_sources}
+        DFNs/StereoRectification/StereoRectificationEdres.cpp)
+endif()
 
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
@@ -101,6 +107,7 @@ set(unittest_libraries catch
     cdff_dfn_transform_3d_estimation
     cdff_dfn_point_cloud_reconstruction_2d_to_3d
     cdff_dfn_stereo_reconstruction
+    cdff_dfn_stereo_rectification
     cdff_dfn_features_extraction_3d
     cdff_dfn_features_description_3d
     cdff_dfn_features_matching_3d
