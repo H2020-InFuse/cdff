@@ -125,7 +125,8 @@ const ImageRectification::ImageRectificationParams ImageRectification::DEFAULT_P
     .xratio = 1,
     .yratio = 1,
     .scaling = -1,
-    .centerPrincipalPoint = false
+    .centerPrincipalPoint = false,
+    .fisheye = false
 };
 
 }
