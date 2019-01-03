@@ -43,13 +43,14 @@ RUN apt-get update && apt-get install --yes --quiet \
     /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d vtk
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pcl
-RUN apt-get update && apt-get install --yes --quiet libglew-dev && \
-    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pangolin
 
 ## Download, build, and install EnviRe and its dependencies
 
 RUN apt-get update && apt-get install --yes --quiet pkg-config libtinyxml-dev libgoogle-glog-dev && \
     /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d none -e
+
+RUN apt-get update && apt-get install --yes --quiet libglew-dev && \
+    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pangolin
 
 ## Download and install the dependencies of CDFF-dev
 
