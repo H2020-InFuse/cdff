@@ -63,6 +63,7 @@ class ParametersInterface
 		void AddParameter(const std::string& groupName, const std::string& name, int defaultValue, int maxValue);
 		void AddParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double resolution);
 		void AddSignedParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double resolution);
+        void AddStringParameter(const std::string& groupName, const std::string& name, std::string defaultValue);
 		void CreateTrackbars();
 		void SaveToYaml(const std::string& filePath);
 
@@ -84,13 +85,15 @@ class ParametersInterface
 			BOOL_TYPE,
 			INT_TYPE,
 			FLOAT_TYPE,
-			DOUBLE_TYPE
+            DOUBLE_TYPE,
+            STRING_TYPE
 			};
 
 		struct Parameter
 			{
 			std::string name;
 			int value;
+            std::string stringValue;
 			ParameterType type;
 			int maxValue;
 			int displacement;
