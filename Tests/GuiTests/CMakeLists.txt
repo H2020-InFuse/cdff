@@ -351,6 +351,38 @@ target_link_libraries(
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
 
+add_executable(
+    StereoRectificationGuiTest
+    DFNs/StereoRectification/StereoRectification.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(StereoRectificationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(StereoRectificationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+    StereoRectificationGuiTest
+    cdff_dfn_stereo_rectification
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
+)
+
+if(WITH_EDRES)
+    add_executable(
+        StereoRectificationEdresGuiTest
+        DFNs/StereoRectification/StereoRectificationEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+    )
+    set_target_properties(StereoRectificationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(StereoRectificationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        StereoRectificationEdresGuiTest
+        cdff_dfn_stereo_rectification
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+        ${VTK_LIBRARIES}
+    )
+endif()
+
 
 ## Graphical tests for the DFPCs -----------------------------------------------
 
