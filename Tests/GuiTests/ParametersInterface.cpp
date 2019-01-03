@@ -98,6 +98,20 @@ void ParametersInterface::AddSignedParameter(const std::string& groupName, const
 	AddParameter(groupName, newParameter);
 	}
 	
+void ParametersInterface::AddStringParameter(const std::string& groupName, const std::string& name, std::string defaultValue)
+{
+    Parameter newParameter;
+    newParameter.name = name;
+    newParameter.type = STRING_TYPE;
+    newParameter.stringValue = defaultValue;
+    newParameter.value = INT_MIN;
+    newParameter.maxValue = INT_MIN;
+    newParameter.displacement = 0;
+    newParameter.resolution = 0;
+
+    AddParameter(groupName, newParameter);
+}
+
 
 void ParametersInterface::CreateTrackbars()
 	{
@@ -111,10 +125,13 @@ void ParametersInterface::CreateTrackbars()
 		cv::namedWindow(interfaceName.str(), CV_WINDOW_NORMAL);
 		for(std::vector<Parameter>::iterator parameter = parametersList.begin(); parameter != parametersList.end(); ++parameter)
 			{
+            if(parameter->type != STRING_TYPE)
+            {
 			cv::createTrackbar(parameter->name, interfaceName.str(), &(parameter->value), parameter->maxValue, NULL);
 			}
 		}
 	}
+}
 
 void ParametersInterface::SaveToYaml(const std::string& filePath)
 	{
@@ -138,6 +155,7 @@ void ParametersInterface::SaveToYaml(const std::string& filePath)
 				case INT_TYPE: yamlFile << parameter->value - parameter->displacement; break;
 				case FLOAT_TYPE: yamlFile << std::setprecision(7) << (float)(parameter->value - parameter->displacement) * (float)(parameter->resolution); break;
 				case DOUBLE_TYPE: yamlFile << std::setprecision(13) << (double)(parameter->value - parameter->displacement) * (double)(parameter->resolution); break;
+                case STRING_TYPE: yamlFile << "\"" << parameter->stringValue.c_str() << "\""; break;
 				}
 			}
 
