@@ -43,6 +43,8 @@ RUN apt-get update && apt-get install --yes --quiet \
     /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d vtk
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pcl
+RUN apt-get update && apt-get install --yes --quiet libglew-dev && \
+    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pangolin
 
 ## Download, build, and install EnviRe and its dependencies
 
@@ -85,6 +87,6 @@ CMD ["bash"]
 
 ## Image information
 
-LABEL version="1.0.1"
+LABEL version="1.0.2"
 LABEL maintainer="Romain Michalec <romain.michalec@strath.ac.uk>"
 LABEL description="A self-contained environment for building and testing CDFF-core and CDFF-support, and for using CDFF-dev"
