@@ -104,6 +104,10 @@ void ParametersInterface::AddStringParameter(const std::string& groupName, const
     newParameter.name = name;
     newParameter.type = STRING_TYPE;
     newParameter.stringValue = defaultValue;
+    newParameter.value = INT_MIN;
+    newParameter.maxValue = INT_MIN;
+    newParameter.displacement = 0;
+    newParameter.resolution = 0;
 
     AddParameter(groupName, newParameter);
 }
