@@ -84,13 +84,15 @@ class ParametersInterface
 			BOOL_TYPE,
 			INT_TYPE,
 			FLOAT_TYPE,
-			DOUBLE_TYPE
+            DOUBLE_TYPE,
+            STRING_TYPE
 			};
 
 		struct Parameter
 			{
 			std::string name;
 			int value;
+            std::string stringValue;
 			ParameterType type;
 			int maxValue;
 			int displacement;
