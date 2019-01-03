@@ -155,7 +155,7 @@ void ParametersInterface::SaveToYaml(const std::string& filePath)
 				case INT_TYPE: yamlFile << parameter->value - parameter->displacement; break;
 				case FLOAT_TYPE: yamlFile << std::setprecision(7) << (float)(parameter->value - parameter->displacement) * (float)(parameter->resolution); break;
 				case DOUBLE_TYPE: yamlFile << std::setprecision(13) << (double)(parameter->value - parameter->displacement) * (double)(parameter->resolution); break;
-            case STRING_TYPE: yamlFile << "\"" << parameter->stringValue << "\""; break;
+                case STRING_TYPE: yamlFile << "\"" << parameter->stringValue.c_str() << "\""; break;
 				}
 			}
 
