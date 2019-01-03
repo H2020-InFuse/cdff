@@ -97,6 +97,22 @@ void ParametersInterface::AddSignedParameter(const std::string& groupName, const
 
 	AddParameter(groupName, newParameter);
 	}
+
+void ParametersInterface::AddSignedParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double minValue, double resolution)
+    {
+    ASSERT(defaultValue >= minValue && defaultValue <= maxValue, "Parameter interface error: default value not in range [minValue, maxValue]");
+    ASSERT( std::abs(resolution) >= std::numeric_limits<double>::epsilon(), "Parameter interface error: resolution of real value higher than maximum machine resolution");
+
+    Parameter newParameter;
+    newParameter.name = name;
+    newParameter.type = (resolution <= 1e-7) ? DOUBLE_TYPE : FLOAT_TYPE;
+    newParameter.maxValue = (int) ( (minValue + maxValue) / resolution);
+    newParameter.value = (int) ( (defaultValue + minValue) / resolution);
+    newParameter.resolution = resolution;
+    newParameter.displacement = (int) ( (minValue) / resolution);
+
+    AddParameter(groupName, newParameter);
+    }
 	
 
 void ParametersInterface::CreateTrackbars()
