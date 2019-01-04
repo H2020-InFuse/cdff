@@ -27,6 +27,9 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.base
+   variables:
+    - $CI_COMMIT_MESSAGE =~ /build-docker-base/
+    - $CI_COMMIT_MESSAGE =~ /build-docker-all/
 
  docker:cdff-ci:
   <<: *connect
@@ -40,6 +43,9 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.ci
+   variables:
+    - $CI_COMMIT_MESSAGE =~ /build-docker-ci/
+    - $CI_COMMIT_MESSAGE =~ /build-docker-all/
 
  docker:cdff-ci-pangolin:
   <<: *connect
@@ -53,6 +59,9 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.pangolin
+   variables:
+    - $CI_COMMIT_MESSAGE =~ /build-docker-pangolin/
+    - $CI_COMMIT_MESSAGE =~ /build-docker-all/
 
  docker:cdff-dev-ci:
   <<: *connect
@@ -66,6 +75,9 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.dev-ci
+   variables:
+    - $CI_COMMIT_MESSAGE =~ /build-docker-dev-ci/
+    - $CI_COMMIT_MESSAGE =~ /build-docker-all/
 
  docker:cdff-user:
   <<: *connect
@@ -79,6 +91,9 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.user
+   variables:
+    - $CI_COMMIT_MESSAGE =~ /build-docker-user/
+    - $CI_COMMIT_MESSAGE =~ /build-docker-all/
 
  generate:asn:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
