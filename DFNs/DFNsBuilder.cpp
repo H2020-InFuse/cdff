@@ -24,6 +24,8 @@
 #include <FeaturesMatching3D/Ransac3D.hpp>
 #include <FeaturesMatching3D/BestDescriptorMatch.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
+#include <ImageDegradation/ImageDegradation.hpp>
+#include <ImageDegradation/ImageDegradationEdres.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
 #include <ImageFiltering/CannyEdgeDetection.hpp>
@@ -97,6 +99,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreateFundamentalMatrixComputation(dfnImplementation);
 	}
+    else if (dfnType == "ImageDegradation")
+    {
+        return CreateImageDegradation(dfnImplementation);
+    }
 	else if (dfnType == "ImageFiltering")
 	{
 		return CreateImageFiltering(dfnImplementation);
@@ -268,6 +274,20 @@ FundamentalMatrixComputationInterface* DFNsBuilder::CreateFundamentalMatrixCompu
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN FundamentalMatrixComputation implementation");
 	return NULL;
+}
+
+ImageDegradationInterface* DFNsBuilder::CreateImageDegradation(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "ImageDegradation")
+    {
+        return new ImageDegradation::ImageDegradation;
+    }
+    else if (dfnImplementation == "ImageDegradationEdres")
+    {
+        return new ImageDegradation::ImageDegradationEdres;
+    }
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN ImageDegradation implementation");
+    return NULL;
 }
 
 ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(const std::string& dfnImplementation)
