@@ -2,8 +2,9 @@
    REGISTRY_PREFIX: nexus.spaceapplications.com/
 
  stages:
-  - setup
-  - ci-dependent
+  - docker.base
+  - docker.ci
+  - docker.external
   - generation
   - analyse
   - build
@@ -14,12 +15,25 @@
   before_script:
    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
 
+ docker:cdff-base:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.base
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.base cdff-base
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.base
+
  docker:cdff-ci:
   <<: *connect
   services:
    - docker:dind
-  image: nexus.spaceapplications.com/repository/infuse/docker-builder:latest
-  stage: setup
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.ci
   script:
    - cd Tools/Docker/
    - ./docker-builder.sh Dockerfile.ci cdff-ci
@@ -27,25 +41,25 @@
    changes:
     - Tools/Docker/Dockerfile.ci
 
- docker:cdff-user:
+ docker:cdff-ci-pangolin:
   <<: *connect
   services:
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: setup
+  stage: docker.ci
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.user cdff-user
+   - ./docker-builder.sh Dockerfile.pangolin cdff-pangolin
   only:
    changes:
-    - Tools/Docker/Dockerfile.user
+    - Tools/Docker/Dockerfile.pangolin
 
- docker:cdff-dev:
+ docker:cdff-dev-ci:
   <<: *connect
   services:
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: ci-dependent
+  stage: docker.external
   script:
    - cd Tools/Docker/
    - ./docker-builder.sh Dockerfile.dev-ci cdff-dev-ci
@@ -53,18 +67,18 @@
    changes:
     - Tools/Docker/Dockerfile.dev-ci
 
- docker:cdff-ci-pangolin:
+ docker:cdff-user:
   <<: *connect
   services:
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: ci-dependent
+  stage: docker.external
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.ci-pangolin cdff-ci-pangolin
+   - ./docker-builder.sh Dockerfile.user cdff-user
   only:
    changes:
-    - Tools/Docker/Dockerfile.ci-pangolin
+    - Tools/Docker/Dockerfile.user
 
  generate:asn:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
@@ -91,7 +105,7 @@
    - "make --jobs=${JOBS} --output-sync=target"
    - "cd .."
 
- build:ci:system:
+ build:cdff-ci:system:
   <<: *configure
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
@@ -103,10 +117,10 @@
     - build/
    expire_in: 4 weeks
 
- build:cdff-ci-pangolin:system:
+ build:cdff-pangolin:system:
   <<: *configure
   <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-ci-pangolin:latest
+  image: nexus.spaceapplications.com/repository/infuse/cdff-pangolin:latest
   stage: build
   dependencies:
    - generate:asn
