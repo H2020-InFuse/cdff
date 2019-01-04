@@ -18,6 +18,6 @@ RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pangol
 RUN apt-get update && apt-get install --yes --quiet pkg-config libtinyxml-dev libgoogle-glog-dev && \
     /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d none -e
 
-LABEL version="4.0"
+LABEL version="4.0.1"
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="CI + all extra dependencies"
