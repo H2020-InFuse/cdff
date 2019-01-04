@@ -14,6 +14,6 @@ COPY patches/ /tmp/CDFF/Tools/Docker/patches/
 RUN apt-get update && apt-get install --yes --quiet pkg-config libtinyxml-dev libgoogle-glog-dev && \
     /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d none -e
 
-LABEL version="1.0.1"
+LABEL version="1.0"
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="CI + single dependency"
