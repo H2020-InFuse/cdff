@@ -53,6 +53,19 @@
    changes:
     - Tools/Docker/Dockerfile.dev-ci
 
+ docker:cdff-ci-pangolin:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: ci-dependent
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.ci-pangolin cdff-ci-pangolin
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.ci-pangolin
+
  generate:asn:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage : generation
@@ -87,6 +100,18 @@
    - generate:asn
   artifacts:
    paths: 
+    - build/
+   expire_in: 4 weeks
+
+ build:cdff-ci-pangolin:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-ci-pangolin:latest
+  stage: build
+  dependencies:
+   - generate:asn
+  artifacts:
+   paths:
     - build/
    expire_in: 4 weeks
 
