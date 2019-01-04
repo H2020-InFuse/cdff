@@ -184,7 +184,7 @@
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage: test
   dependencies:
-   - build:ci:system
+   - build:cdff-ci:system
   script:
    - cd build/Tests/UnitTests
    - ./cdff-unit-tests
