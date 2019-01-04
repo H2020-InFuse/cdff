@@ -83,6 +83,11 @@ void DFNTestInterface::AddSignedParameter(std::string groupName, std::string nam
 	parametersInterface.AddSignedParameter(groupName, name, defaultValue, maxValue, resolution);
 	}
 
+void DFNTestInterface::AddSignedParameter(std::string groupName, std::string name, double defaultValue, double maxValue, double minValue, double resolution)
+    {
+    parametersInterface.AddSignedParameter(groupName, name, defaultValue, maxValue, minValue, resolution);
+    }
+
 void DFNTestInterface::AddStringParameter(std::string groupName, std::string name, std::string defaultValue)
     {
     parametersInterface.AddStringParameter(groupName, name, defaultValue);
