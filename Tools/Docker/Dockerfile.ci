@@ -11,7 +11,7 @@ COPY get-cdff-dependencies.sh /tmp/CDFF/Tools/Docker/
 COPY installers/ /tmp/CDFF/Tools/Docker/installers/
 COPY patches/ /tmp/CDFF/Tools/Docker/patches/
 
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pangolin
+RUN apt-get update && apt-get install --yes --quiet libglew-dev && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pangolin
 
 ## Download, build, and install EnviRe and its dependencies
 
