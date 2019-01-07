@@ -37,6 +37,7 @@
 #include <Registration3D/Icp3D.hpp>
 #include <Registration3D/IcpCC.hpp>
 #include <Registration3D/IcpMatcher.hpp>
+#include <StereoMotionEstimation/StereoMotionEstimationEdres.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
@@ -349,6 +350,16 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(const std::string& df
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN Registration3D implementation");
 	return NULL;
+}
+
+StereoMotionEstimationInterface* DFNsBuilder::CreateStereoMotionEstimation(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "StereoMotionEstimation")
+    {
+        return new StereoMotionEstimation::StereoMotionEstimationEdres;
+    }
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoMotionEstimation implementation");
+    return NULL;
 }
 
 StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(const std::string& dfnImplementation)
