@@ -1,0 +1,36 @@
+set(STEREO_SLAM_SOURCES "StereoSlamInterface.cpp")
+set(STEREO_SLAM_INCLUDE_DIRS "")
+set(STEREO_SLAM_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers")
+
+# Compile orbslam library first
+IF( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/liborbslam )
+    message("Adding liborbslam directory")
+    ADD_SUBDIRECTORY(liborbslam)
+ENDIF()
+
+if(OpenCV_FOUND)
+	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
+	set(STEREO_SLAM_DEPENDENCIES ${STEREO_SLAM_DEPENDENCIES} ${OpenCV_LIBS})
+
+	# Look for orbslam library
+	FIND_PACKAGE(LIBORBSLAM REQUIRED)
+	if(LIBORBSLAM_FOUND)
+		set(STEREO_SLAM_SOURCES ${STEREO_SLAM_SOURCES} "StereoSlamOrb.cpp")
+		set(STEREO_SLAM_INCLUDE_DIRS ${STEREO_SLAM_INCLUDE_DIRS} ${LIBORBSLAM_INCLUDE_DIRS})
+		set(STEREO_SLAM_DEPENDENCIES ${STEREO_SLAM_DEPENDENCIES} ${LIBORBSLAM_LIBRARIES})
+	endif()
+endif()
+
+add_library(
+    cdff_dfn_stereo_slam
+    ${STEREO_SLAM_SOURCES}
+)
+target_include_directories(
+    cdff_dfn_stereo_slam
+    SYSTEM PRIVATE ${STEREO_SLAM_INCLUDE_DIRS}
+)
+target_link_libraries(
+    cdff_dfn_stereo_slam
+    ${STEREO_SLAM_DEPENDENCIES}
+)
+

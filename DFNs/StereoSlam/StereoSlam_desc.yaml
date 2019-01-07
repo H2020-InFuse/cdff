@@ -1,0 +1,11 @@
+name: StereoSlam
+input_ports:
+    - name: imagePair
+      type: asn1SccFramePair
+      doc: This is the current acquisition
+output_ports:
+    - name: Pose
+      type: asn1SccTransformWithCovariance
+      doc: This is the output transform
+implementations:
+    - StereoSlamOrb

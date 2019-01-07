@@ -105,7 +105,8 @@ set(unittest_libraries catch
     cdff_dfn_features_description_3d
     cdff_dfn_features_matching_3d
     cdff_dfn_bundle_adjustment
-    cdff_dfn_voxelization
+    cdff_dfn_stereo_slam
+    cdff_dfn_voxelization 
     synthetic_generators
     cdff_dfpc_configurator
     cdff_dfpc_reconstruction_3d
