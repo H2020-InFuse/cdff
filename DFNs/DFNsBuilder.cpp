@@ -37,6 +37,8 @@
 #include <Registration3D/Icp3D.hpp>
 #include <Registration3D/IcpCC.hpp>
 #include <Registration3D/IcpMatcher.hpp>
+#include <StereoDegradation/StereoDegradation.hpp>
+#include <StereoDegradation/StereoDegradationEdres.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
@@ -349,6 +351,20 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(const std::string& df
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN Registration3D implementation");
 	return NULL;
+}
+
+StereoDegradationInterface* DFNsBuilder::CreateStereoDegradation(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "StereoDegradation")
+    {
+        return new StereoDegradation::StereoDegradation;
+    }
+    else if (dfnImplementation == "StereoDegradationEdres")
+    {
+        return new StereoDegradation::StereoDegradationEdres;
+    }
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoDegradation implementation");
+    return NULL;
 }
 
 StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(const std::string& dfnImplementation)
