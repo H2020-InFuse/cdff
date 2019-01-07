@@ -1,6 +1,7 @@
 FROM ubuntu:16.04
 
 ## Install basic tools that are not already available in the base image
+
 ARG DEBIAN_FRONTEND=noninteractive
 ARG INSTALL_DIR=/usr/local
 
@@ -38,56 +39,13 @@ RUN apt-get update && apt-get install --yes --quiet \
       libavcodec-dev libavformat-dev libswscale-dev \
       libjpeg-dev libpng++-dev libdc1394-22-dev libjasper-dev libtiff5-dev \
       libv4l-dev \
-      libgtk2.0-dev \
       freeglut3-dev && \
     /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d vtk
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pcl
 
-## Download, build, and install EnviRe and its dependencies
-
-RUN apt-get update && apt-get install --yes --quiet pkg-config libtinyxml-dev libgoogle-glog-dev && \
-    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d none -e
-
-RUN apt-get update && apt-get install --yes --quiet libglew-dev && \
-    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pangolin
-
-## Download and install the dependencies of CDFF-dev
-
-RUN apt-get update && apt-get --yes --quiet install python3 python3-dev python3-pip graphviz curl
-RUN pip3 install --upgrade pip
-RUN pip3 install pyyaml jinja2 cython numpy msgpack-python pydot nose nose2
-
-## Additional software useful to development
-
-RUN apt-get update && apt-get install --yes --quiet \
-      sudo dpkg-dev gdb \
-      bc \
-      ed sed nano vim emacs-nox emacs-goodies-el \
-      info man-db manpages manpages-dev \
-      mlocate \
-      tar zip gzip bzip2 \
-      colordiff tree fdupes \
-      screen byobu tmux \
-      x11-apps x11-common \
-      ubuntu-settings
-      # ubuntu-minimal ubuntu-standard
-
-## Automatically build and install CDFF-dev at container creation time
-## if the user mounts the sources of CDFF and CDFF-dev inside the container
-
-COPY entrypoint.sh cdff-dev.sh /tmp/CDFF/Tools/Docker/
-COPY sudoers.txt /etc/sudoers.d/cdff-dev
-
-RUN chmod 0755 /tmp/CDFF/Tools/Docker/entrypoint.sh && \
-    chmod 0755 /tmp/CDFF/Tools/Docker/cdff-dev.sh && \
-    chmod 0440 /etc/sudoers.d/cdff-dev
-
-ENTRYPOINT ["/tmp/CDFF/Tools/Docker/entrypoint.sh"]
-CMD ["bash"]
-
 ## Image information
 
 LABEL version="1.0"
-LABEL maintainer="Romain Michalec <romain.michalec@strath.ac.uk>"
-LABEL description="A self-contained environment for building and testing CDFF-core and CDFF-support, and for using CDFF-dev"
+LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>, Romain Michalec <romain.michalec@strath.ac.uk>"
+LABEL description="Image providing the dependencies of CDFF-core and CDFF-support, compiled from source, and installed in ${INSTALL_CDFF}"
