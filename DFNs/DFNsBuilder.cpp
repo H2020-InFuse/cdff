@@ -12,6 +12,8 @@
 #include <BundleAdjustment/CeresAdjustment.hpp>
 #include <BundleAdjustment/SvdDecomposition.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
+#include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.hpp>
+#include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
@@ -178,6 +180,20 @@ CamerasTransformEstimationInterface* DFNsBuilder::CreateCamerasTransformEstimati
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN CameraTransformEstimation implementation");
 	return NULL;
+}
+
+DisparityToPointCloudWithIntensityInterface* DFNsBuilder::CreateDisparityToPointCloudWithIntensity(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "DisparityToPointCloudWithIntensity")
+    {
+        return new DisparityToPointCloudWithIntensity::DisparityToPointCloudWithIntensity;
+    }
+    else if (dfnImplementation == "DisparityToPointCloudWithIntensityEdres")
+    {
+        return new DisparityToPointCloudWithIntensity::DisparityToPointCloudWithIntensityEdres;
+    }
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityToPointCloudWithIntensity implementation");
+    return NULL;
 }
 
 FeaturesDescription2DInterface* DFNsBuilder::CreateFeaturesDescription2D(const std::string& dfnImplementation)
