@@ -3,27 +3,27 @@
  * @{
  */
 
-#include "ImagePairDegradationInterface.hpp"
+#include "StereoDegradationInterface.hpp"
 
 namespace CDFF
 {
 namespace DFN
 {
 
-ImagePairDegradationInterface::ImagePairDegradationInterface()
+StereoDegradationInterface::StereoDegradationInterface()
 {
 }
 
-ImagePairDegradationInterface::~ImagePairDegradationInterface()
+StereoDegradationInterface::~StereoDegradationInterface()
 {
 }
 
-void ImagePairDegradationInterface::originalImagePairInput(const asn1SccFramePair& data)
+void StereoDegradationInterface::originalImagePairInput(const asn1SccFramePair& data)
 {
     inOriginalImagePair = data;
 }
 
-const asn1SccFramePair& ImagePairDegradationInterface::degradedImagePairOutput() const
+const asn1SccFramePair& StereoDegradationInterface::degradedImagePairOutput() const
 {
     return outDegradedImagePair;
 }

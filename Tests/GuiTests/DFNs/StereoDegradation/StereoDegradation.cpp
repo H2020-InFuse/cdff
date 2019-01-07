@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file ImagePairDegradation.cpp
+ * @file StereoDegradation.cpp
  * @date 26/12/2018
  * @author Raphaël Viards
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNsTest
  *
- * Test application for the DFN ImagePairDegradation.
+ * Test application for the DFN StereoDegradation.
  *
  *
  * @{
@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
-#include <ImagePairDegradation/ImagePairDegradation.hpp>
+#include <StereoDegradation/StereoDegradation.hpp>
 
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
@@ -39,14 +39,14 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
 
-class ImagePairDegradationTestInterface : public DFNTestInterface
+class StereoDegradationTestInterface : public DFNTestInterface
 {
 public:
-    ImagePairDegradationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
-    ~ImagePairDegradationTestInterface();
+    StereoDegradationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
+    ~StereoDegradationTestInterface();
 
 private:
-    CDFF::DFN::ImagePairDegradation::ImagePairDegradation degradation;
+    CDFF::DFN::StereoDegradation::StereoDegradation degradation;
 
     cv::Mat inputImageLeft;
     cv::Mat inputImageRight;
@@ -56,7 +56,7 @@ private:
     void DisplayResult() override;
 };
 
-ImagePairDegradationTestInterface::ImagePairDegradationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+StereoDegradationTestInterface::StereoDegradationTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
     DFNTestInterface(dfnName, buttonWidth, buttonHeight),
     degradation()
 {
@@ -108,18 +108,18 @@ ImagePairDegradationTestInterface::ImagePairDegradationTestInterface(const std::
     delete(inputFramePair);
 }
 
-ImagePairDegradationTestInterface::~ImagePairDegradationTestInterface()
+StereoDegradationTestInterface::~StereoDegradationTestInterface()
 {
 }
 
-void ImagePairDegradationTestInterface::SetupParameters()
+void StereoDegradationTestInterface::SetupParameters()
 {
-    AddParameter("ImagePairDegradationParams", "xratio", 2, 25, 1);
-    AddParameter("ImagePairDegradationParams", "yratio", 2, 25, 1);
-    AddParameter("ImagePairDegradationParams", "method", 3, 5, 1);
+    AddParameter("StereoDegradationParams", "xratio", 2, 25, 1);
+    AddParameter("StereoDegradationParams", "yratio", 2, 25, 1);
+    AddParameter("StereoDegradationParams", "method", 3, 5, 1);
 }
 
-void ImagePairDegradationTestInterface::DisplayResult()
+void StereoDegradationTestInterface::DisplayResult()
 {
     // Fetch the resulting degraded image
     asn1SccFramePair* res =  new asn1SccFramePair();
@@ -150,7 +150,7 @@ void ImagePairDegradationTestInterface::DisplayResult()
 
 int main(int argc, char** argv)
 {
-    ImagePairDegradationTestInterface* interface = new ImagePairDegradationTestInterface("ImagePairDegradation", 100, 40);
+    StereoDegradationTestInterface* interface = new StereoDegradationTestInterface("StereoDegradation", 100, 40);
     interface->Run();
     delete(interface);
 }

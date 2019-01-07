@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file ImagePairDegradationEdres.cpp
+ * @file StereoDegradationEdres.cpp
  * @date 26/12/2018
  * @author Raphaël Viards
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNsTest
  *
- * Test application for the DFN ImagePairDegradationEdres.
+ * Test application for the DFN StereoDegradationEdres.
  *
  *
  * @{
@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
-#include <ImagePairDegradation/ImagePairDegradationEdres.hpp>
+#include <StereoDegradation/StereoDegradationEdres.hpp>
 
 #include <GuiTests/ParametersInterface.hpp>
 #include <GuiTests/MainInterface.hpp>
@@ -39,14 +39,14 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/core.hpp>
 
-class ImagePairDegradationEdresTestInterface : public DFNTestInterface
+class StereoDegradationEdresTestInterface : public DFNTestInterface
 {
 public:
-    ImagePairDegradationEdresTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
-    ~ImagePairDegradationEdresTestInterface();
+    StereoDegradationEdresTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight);
+    ~StereoDegradationEdresTestInterface();
 
 private:
-    CDFF::DFN::ImagePairDegradation::ImagePairDegradationEdres degradation;
+    CDFF::DFN::StereoDegradation::StereoDegradationEdres degradation;
 
     cv::Mat inputImageLeft;
     cv::Mat inputImageRight;
@@ -56,7 +56,7 @@ private:
     void DisplayResult() override;
 };
 
-ImagePairDegradationEdresTestInterface::ImagePairDegradationEdresTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
+StereoDegradationEdresTestInterface::StereoDegradationEdresTestInterface(const std::string& dfnName, int buttonWidth, int buttonHeight) :
     DFNTestInterface(dfnName, buttonWidth, buttonHeight),
     degradation()
 {
@@ -108,19 +108,19 @@ ImagePairDegradationEdresTestInterface::ImagePairDegradationEdresTestInterface(c
     delete(inputFramePair);
 }
 
-ImagePairDegradationEdresTestInterface::~ImagePairDegradationEdresTestInterface()
+StereoDegradationEdresTestInterface::~StereoDegradationEdresTestInterface()
 {
 }
 
-void ImagePairDegradationEdresTestInterface::SetupParameters()
+void StereoDegradationEdresTestInterface::SetupParameters()
 {
-    AddParameter("ImagePairDegradationEdresParams", "xratio", 2, 25, 1);
-    AddParameter("ImagePairDegradationEdresParams", "yratio", 2, 25, 1);
-    AddParameter("ImagePairDegradationEdresParams", "method", 0, 1, 1);
-    AddParameter("ImagePairDegradationEdresParams", "outType", 5, 8, 1);
+    AddParameter("StereoDegradationEdresParams", "xratio", 2, 25, 1);
+    AddParameter("StereoDegradationEdresParams", "yratio", 2, 25, 1);
+    AddParameter("StereoDegradationEdresParams", "method", 0, 1, 1);
+    AddParameter("StereoDegradationEdresParams", "outType", 5, 8, 1);
 }
 
-void ImagePairDegradationEdresTestInterface::DisplayResult()
+void StereoDegradationEdresTestInterface::DisplayResult()
 {
     // Fetch the resulting degraded image
     asn1SccFramePair* res =  new asn1SccFramePair();
@@ -151,7 +151,7 @@ void ImagePairDegradationEdresTestInterface::DisplayResult()
 
 int main(int argc, char** argv)
 {
-    ImagePairDegradationEdresTestInterface* interface = new ImagePairDegradationEdresTestInterface("ImagePairDegradationEdres", 100, 40);
+    StereoDegradationEdresTestInterface* interface = new StereoDegradationEdresTestInterface("StereoDegradationEdres", 100, 40);
     interface->Run();
     delete(interface);
 }

@@ -352,32 +352,32 @@ target_link_libraries(
 )
 
 add_executable(
-    ImagePairDegradationGuiTest
-    DFNs/ImagePairDegradation/ImagePairDegradation.cpp
+    StereoDegradationGuiTest
+    DFNs/StereoDegradation/StereoDegradation.cpp
     DFNs/DFNTestInterface.cpp
     ${GRAPHICALTEST_GUI_SOURCES}
 )
-set_target_properties(ImagePairDegradationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-target_compile_definitions(ImagePairDegradationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+set_target_properties(StereoDegradationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(StereoDegradationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
-    ImagePairDegradationGuiTest
-    cdff_dfn_image_pair_degradation
+    StereoDegradationGuiTest
+    cdff_dfn_stereo_degradation
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
 )
 
 if(WITH_EDRES)
     add_executable(
-        ImagePairDegradationEdresGuiTest
-        DFNs/ImagePairDegradation/ImagePairDegradationEdres.cpp
+        StereoDegradationEdresGuiTest
+        DFNs/StereoDegradation/StereoDegradationEdres.cpp
         DFNs/DFNTestInterface.cpp
         ${GRAPHICALTEST_GUI_SOURCES}
     )
-    set_target_properties(ImagePairDegradationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-    target_compile_definitions(ImagePairDegradationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    set_target_properties(StereoDegradationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(StereoDegradationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
     target_link_libraries(
-        ImagePairDegradationEdresGuiTest
-        cdff_dfn_image_pair_degradation
+        StereoDegradationEdresGuiTest
+        cdff_dfn_stereo_degradation
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
         ${VTK_LIBRARIES}
     )

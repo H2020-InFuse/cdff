@@ -44,7 +44,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
     DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
-    DFNs/ImagePairDegradation/ImagePairDegradation.cpp
+    DFNs/StereoDegradation/StereoDegradation.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
@@ -76,7 +76,7 @@ set(unittest_sources UnitTests.cpp
 
 if(WITH_EDRES)
     set(unittest_sources ${unittest_sources}
-        DFNs/ImagePairDegradation/ImagePairDegradationEdres.cpp)
+        DFNs/StereoDegradation/StereoDegradationEdres.cpp)
 endif()
 
 # Libraries used by the aforementioned source files. They will be linked in the

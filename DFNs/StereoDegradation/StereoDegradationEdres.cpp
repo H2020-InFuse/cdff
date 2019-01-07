@@ -3,31 +3,31 @@
  * @{
  */
 
-#include "ImagePairDegradationEdres.hpp"
+#include "StereoDegradationEdres.hpp"
 #include "edres-wrapper/EdresRectification.h"
 
 namespace CDFF
 {
 namespace DFN
 {
-namespace ImagePairDegradation
+namespace StereoDegradation
 {
 
-ImagePairDegradationEdres::ImagePairDegradationEdres()
+StereoDegradationEdres::StereoDegradationEdres()
 {
-    parametersHelper.AddParameter<int>("ImagePairDegradationEdresParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
-    parametersHelper.AddParameter<int>("ImagePairDegradationEdresParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
-    parametersHelper.AddParameter<int>("ImagePairDegradationEdresParams", "method", parameters.method, DEFAULT_PARAMETERS.method);
-    parametersHelper.AddParameter<int>("ImagePairDegradationEdresParams", "outType", parameters.outType, DEFAULT_PARAMETERS.outType);
+    parametersHelper.AddParameter<int>("StereoDegradationEdresParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
+    parametersHelper.AddParameter<int>("StereoDegradationEdresParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
+    parametersHelper.AddParameter<int>("StereoDegradationEdresParams", "method", parameters.method, DEFAULT_PARAMETERS.method);
+    parametersHelper.AddParameter<int>("StereoDegradationEdresParams", "outType", parameters.outType, DEFAULT_PARAMETERS.outType);
 
     configurationFilePath = "";
 }
 
-ImagePairDegradationEdres::~ImagePairDegradationEdres()
+StereoDegradationEdres::~StereoDegradationEdres()
 {
 }
 
-void ImagePairDegradationEdres::configure()
+void StereoDegradationEdres::configure()
 {
     if(configurationFilePath != ""){
         parametersHelper.ReadFile(configurationFilePath);
@@ -35,12 +35,12 @@ void ImagePairDegradationEdres::configure()
     ValidateParameters();
 }
 
-void ImagePairDegradationEdres::process()
+void StereoDegradationEdres::process()
 {
     Edres::degradation(inOriginalImagePair, outDegradedImagePair, parameters.xratio, parameters.yratio, static_cast<Edres::DegradationMethod>(parameters.method), static_cast<Edres::PixelDepth>(parameters.outType));
 }
 
-void ImagePairDegradationEdres::ValidateParameters()
+void StereoDegradationEdres::ValidateParameters()
 {
     ASSERT(parameters.xratio >= 1 && parameters.xratio <= 25, "xratio has to be within [1..25]");
     ASSERT(parameters.yratio >= 1 && parameters.yratio <= 25, "yratio has to be within [1..25]");
@@ -48,7 +48,7 @@ void ImagePairDegradationEdres::ValidateParameters()
     ASSERT(parameters.outType >= 5 && parameters.outType <= 8, "outType has to be within [5..8]");
 }
 
-const ImagePairDegradationEdres::ImagePairDegradationEdresParams ImagePairDegradationEdres::DEFAULT_PARAMETERS = {
+const StereoDegradationEdres::StereoDegradationEdresParams StereoDegradationEdres::DEFAULT_PARAMETERS = {
     .xratio = 2,
     .yratio = 2,
     .method = 0,

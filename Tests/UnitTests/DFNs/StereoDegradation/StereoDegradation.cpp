@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file ImagePairDegradationEdres.cpp
+ * @file StereoDegradation.cpp
  * @date 26/12/2018
  * @author Raphaël Viards
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNsTest
  *
- * Unit Test for the DFN ImagePairDegradationEdres.
+ * Unit Test for the DFN StereoDegradation.
  *
  *
  * @{
@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <ImagePairDegradation/ImagePairDegradationEdres.hpp>
+#include <StereoDegradation/StereoDegradation.hpp>
 #include <Types/C/Frame.h>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -37,7 +37,7 @@
  *
  * --------------------------------------------------------------------------
  */
-TEST_CASE( "Call to process (ImagePairDegradationEdres)", "[process]" )
+TEST_CASE( "Call to process (StereoDegradation)", "[process]" )
 {
     // Prepare input data
     cv::Mat inputImageLeft = cv::imread("../tests/Data/Images/MinnieStereo/MinnieRawLeft.png", cv::IMREAD_GRAYSCALE);
@@ -87,7 +87,7 @@ TEST_CASE( "Call to process (ImagePairDegradationEdres)", "[process]" )
     }
 
     // Instantiate DFN
-    CDFF::DFN::ImagePairDegradation::ImagePairDegradationEdres* degradation = new CDFF::DFN::ImagePairDegradation::ImagePairDegradationEdres();
+    CDFF::DFN::StereoDegradation::StereoDegradation* degradation = new CDFF::DFN::StereoDegradation::StereoDegradation();
 
     // Send input data to DFN
     degradation->originalImagePairInput(*inputFramePair);

@@ -3,34 +3,34 @@
  * @{
  */
 
-#ifndef IMAGEPAIRDEGRADATION_IMAGEPAIRDEGRADATION_HPP
-#define IMAGEPAIRDEGRADATION_IMAGEPAIRDEGRADATION_HPP
+#ifndef STEREODEGRADATION_STEREODEGRADATION_HPP
+#define STEREODEGRADATION_STEREODEGRADATION_HPP
 
-#include "ImagePairDegradationInterface.hpp"
+#include "StereoDegradationInterface.hpp"
 #include "Helpers/ParametersListHelper.hpp"
 
 namespace CDFF
 {
 namespace DFN
 {
-namespace ImagePairDegradation
+namespace StereoDegradation
 {
     /**
      * @brief Implementation of the resolution degradation algorithms provided by OpenCV
      * See OpenCV's documentation on cv::resize() for more information
      * https://docs.opencv.org/3.4.0/da/d54/group__imgproc__transform.html#ga47a974309e9102f5f08231edc7e7529d
      */
-    class ImagePairDegradation : public ImagePairDegradationInterface
+    class StereoDegradation : public StereoDegradationInterface
     {
         public:
 
-            ImagePairDegradation();
-            virtual ~ImagePairDegradation();
+            StereoDegradation();
+            virtual ~StereoDegradation();
 
             virtual void configure();
             virtual void process();
 
-            struct ImagePairDegradationParams
+            struct StereoDegradationParams
             {
                 /**
                  * @brief Degradation ratio to be applied over the x-axis
@@ -51,14 +51,14 @@ namespace ImagePairDegradation
             };
 
             Helpers::ParametersListHelper parametersHelper;
-            ImagePairDegradationParams parameters;
-            static const ImagePairDegradationParams DEFAULT_PARAMETERS;
+            StereoDegradationParams parameters;
+            static const StereoDegradationParams DEFAULT_PARAMETERS;
             void ValidateParameters();
     };
 }
 }
 }
 
-#endif // IMAGEPAIRDEGRADATION_IMAGEPAIRDEGRADATION_HPP
+#endif // STEREODEGRADATION_STEREODEGRADATION_HPP
 
 /** @} */

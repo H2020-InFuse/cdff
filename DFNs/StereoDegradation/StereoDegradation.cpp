@@ -3,7 +3,7 @@
  * @{
  */
 
-#include "ImagePairDegradation.hpp"
+#include "StereoDegradation.hpp"
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
@@ -11,23 +11,23 @@ namespace CDFF
 {
 namespace DFN
 {
-namespace ImagePairDegradation
+namespace StereoDegradation
 {
 
-ImagePairDegradation::ImagePairDegradation()
+StereoDegradation::StereoDegradation()
 {
-    parametersHelper.AddParameter<int>("ImagePairDegradationParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
-    parametersHelper.AddParameter<int>("ImagePairDegradationParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
-    parametersHelper.AddParameter<int>("ImagePairDegradationParams", "method", parameters.method, DEFAULT_PARAMETERS.method);
+    parametersHelper.AddParameter<int>("StereoDegradationParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
+    parametersHelper.AddParameter<int>("StereoDegradationParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
+    parametersHelper.AddParameter<int>("StereoDegradationParams", "method", parameters.method, DEFAULT_PARAMETERS.method);
 
     configurationFilePath = "";
 }
 
-ImagePairDegradation::~ImagePairDegradation()
+StereoDegradation::~StereoDegradation()
 {
 }
 
-void ImagePairDegradation::configure()
+void StereoDegradation::configure()
 {
     if(configurationFilePath != ""){
         parametersHelper.ReadFile(configurationFilePath);
@@ -35,7 +35,7 @@ void ImagePairDegradation::configure()
     ValidateParameters();
 }
 
-void ImagePairDegradation::process()
+void StereoDegradation::process()
 {
     cv::Mat inLeft(static_cast<int>(inOriginalImagePair.left.data.rows), static_cast<int>(inOriginalImagePair.left.data.cols), CV_MAKETYPE(static_cast<int>(inOriginalImagePair.left.data.depth), static_cast<int>(inOriginalImagePair.left.data.channels)), inOriginalImagePair.left.data.data.arr, inOriginalImagePair.left.data.rowSize);
     cv::Mat inRight(static_cast<int>(inOriginalImagePair.right.data.rows), static_cast<int>(inOriginalImagePair.right.data.cols), CV_MAKETYPE(static_cast<int>(inOriginalImagePair.right.data.depth), static_cast<int>(inOriginalImagePair.right.data.channels)), inOriginalImagePair.right.data.data.arr, inOriginalImagePair.right.data.rowSize);
@@ -108,14 +108,14 @@ void ImagePairDegradation::process()
     }
 }
 
-void ImagePairDegradation::ValidateParameters()
+void StereoDegradation::ValidateParameters()
 {
     ASSERT(parameters.xratio >= 1 && parameters.xratio <= 25, "xratio has to be within [1..25]");
     ASSERT(parameters.yratio >= 1 && parameters.yratio <= 25, "yratio has to be within [1..25]");
     ASSERT(parameters.method >= 0 || parameters.method <= 5, "method has to be within [0..5]");
 }
 
-const ImagePairDegradation::ImagePairDegradationParams ImagePairDegradation::DEFAULT_PARAMETERS = {
+const StereoDegradation::StereoDegradationParams StereoDegradation::DEFAULT_PARAMETERS = {
     .xratio = 2,
     .yratio = 2,
     .method = 0

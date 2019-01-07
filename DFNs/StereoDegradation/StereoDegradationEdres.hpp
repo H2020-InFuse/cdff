@@ -3,32 +3,32 @@
  * @{
  */
 
-#ifndef IMAGEPAIRDEGRADATION_IMAGEPAIRDEGRADATIONEDRES_HPP
-#define IMAGEPAIRDEGRADATION_IMAGEPAIRDEGRADATIONEDRES_HPP
+#ifndef STEREODEGRADATION_STEREODEGRADATIONEDRES_HPP
+#define STEREODEGRADATION_STEREODEGRADATIONEDRES_HPP
 
-#include "ImagePairDegradationInterface.hpp"
+#include "StereoDegradationInterface.hpp"
 #include "Helpers/ParametersListHelper.hpp"
 
 namespace CDFF
 {
 namespace DFN
 {
-namespace ImagePairDegradation
+namespace StereoDegradation
 {
     /**
      * @brief Implementation of the resolution degradation algorithms provided by EDRES library
      */
-    class ImagePairDegradationEdres : public ImagePairDegradationInterface
+    class StereoDegradationEdres : public StereoDegradationInterface
     {
         public:
 
-            ImagePairDegradationEdres();
-            virtual ~ImagePairDegradationEdres();
+            StereoDegradationEdres();
+            virtual ~StereoDegradationEdres();
 
             virtual void configure();
             virtual void process();
 
-            struct ImagePairDegradationEdresParams
+            struct StereoDegradationEdresParams
             {
                 /**
                  * @brief Degradation ratio to be applied over the x-axis
@@ -58,14 +58,14 @@ namespace ImagePairDegradation
             };
 
             Helpers::ParametersListHelper parametersHelper;
-            ImagePairDegradationEdresParams parameters;
-            static const ImagePairDegradationEdresParams DEFAULT_PARAMETERS;
+            StereoDegradationEdresParams parameters;
+            static const StereoDegradationEdresParams DEFAULT_PARAMETERS;
             void ValidateParameters();
     };
 }
 }
 }
 
-#endif // IMAGEPAIRDEGRADATION_IMAGEPAIRDEGRADATIONEDRES_HPP
+#endif // STEREODEGRADATION_STEREODEGRADATIONEDRES_HPP
 
 /** @} */

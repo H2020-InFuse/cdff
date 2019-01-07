@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef IMAGEPAIRDEGRADATION_IMAGEPAIRDEGRADATIONINTERFACE_HPP
-#define IMAGEPAIRDEGRADATION_IMAGEPAIRDEGRADATIONINTERFACE_HPP
+#ifndef STEREODEGRADATION_STEREODEGRADATIONINTERFACE_HPP
+#define STEREODEGRADATION_STEREODEGRADATIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Types/C/Frame.h>
@@ -16,12 +16,12 @@ namespace DFN
     /**
      * DFN that degrade the resolution of an image
      */
-    class ImagePairDegradationInterface : public DFNCommonInterface
+    class StereoDegradationInterface : public DFNCommonInterface
     {
         public:
 
-            ImagePairDegradationInterface();
-            virtual ~ImagePairDegradationInterface();
+            StereoDegradationInterface();
+            virtual ~StereoDegradationInterface();
 
             /**
              * Send value to input port "originalImagePair"
@@ -45,6 +45,6 @@ namespace DFN
 }
 }
 
-#endif // IMAGEPAIRDEGRADATION_IMAGEPAIRDEGRADATIONINTERFACE_HPP
+#endif // STEREODEGRADATION_STEREODEGRADATIONINTERFACE_HPP
 
 /** @} */
