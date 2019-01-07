@@ -54,6 +54,19 @@
    changes:
     - Tools/Docker/Dockerfile.pangolin
 
+ docker:cdff-opencv-contrib:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.ci
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.opencv-contrib cdff-opencv-contrib
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.opencv-contrib
+    
  docker:cdff-dev-ci:
   <<: *connect
   services:
@@ -124,10 +137,14 @@
   stage: build
   dependencies:
    - generate:asn
-  artifacts:
-   paths:
-    - build/
-   expire_in: 4 weeks
+
+ build:cdff-opencv-contrib:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-opencv-contrib:latest
+  stage: build
+  dependencies:
+   - generate:asn
 
  build:user:system:
   <<: *configure
@@ -160,10 +177,6 @@
    - master
   script:
    - Tools/CPPCheck/partial-cppcheck.sh
-  artifacts:
-   paths: 
-    - cppcheck/
-   expire_in: 4 weeks
 
  pages:
   stage: deploy
