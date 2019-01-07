@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # will use the Dockerfile provided, check it against current last version of it
 # Will push it to Nexus if the dockerfile contains a new label with imagename::LABEL
-# eg Usage docker-builder.sh Dockerfile.ci cdff-ci
+# eg Usage docker-builder.sh Dockerfile.base cdff-ci
 # will produce nexus.spaceapplications.com/repository/infuse/cdff-ci:latest and '...'cdff-ci:LABEL
 
 set -e
