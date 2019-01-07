@@ -78,7 +78,7 @@ void StereoMotionEstimationEdres::ValidateParameters()
 {
     ASSERT(parameters.method >= 0 && parameters.method <= 1, "method has to be within [0..1]");
     ASSERT(parameters.motionEstimationMatchingAlgo >= 0 && parameters.motionEstimationMatchingAlgo <= 23, "motionEstimationMatchingAlgo has to be within [0..23]");
-    ASSERT(parameters.featureMatchingAlgo >= 0 && parameters.featureMatchingAlgo <= 1, "featureMatchingAlgo has to be within [0..23]");
+    ASSERT(parameters.featureMatchingAlgo >= 0 && parameters.featureMatchingAlgo <= 23, "featureMatchingAlgo has to be within [0..23]");
     ASSERT(parameters.bundleAdjustmentType >= 0 && parameters.bundleAdjustmentType <= 2, "bundleAdjustmentType has to be within [0..2]");
     ASSERT(parameters.theshold_us >= 0, "theshold_us has to be >= 0");
 }
