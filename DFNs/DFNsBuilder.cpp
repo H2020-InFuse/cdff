@@ -40,6 +40,8 @@
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
+#include <StereoRectification/StereoRectification.hpp>
+#include <StereoRectification/StereoRectificationEdres.hpp>
 #include <Transform3DEstimation/CeresEstimation.hpp>
 #include <Transform3DEstimation/LeastSquaresMinimization.hpp>
 #include <DepthFiltering/ConvolutionFilter.hpp>
@@ -367,6 +369,20 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(const std
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoReconstruction implementation");
 	return NULL;
+}
+
+StereoRectificationInterface* DFNsBuilder::CreateStereoRectification(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "StereoRectification")
+    {
+        return new StereoRectification::StereoRectification;
+    }
+    else if (dfnImplementation == "StereoRectificationEdres")
+    {
+        return new StereoRectification::StereoRectificationEdres;
+    }
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoRectification implementation");
+    return NULL;
 }
 
 Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(const std::string& dfnImplementation)

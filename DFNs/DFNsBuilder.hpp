@@ -26,6 +26,7 @@
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DInterface.hpp>
 #include <Registration3D/Registration3DInterface.hpp>
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
+#include <StereoRectification/StereoRectificationInterface.hpp>
 #include <Transform3DEstimation/Transform3DEstimationInterface.hpp>
 #include <PrimitiveMatching/PrimitiveMatchingInterface.hpp>
 #include <DepthFiltering/DepthFilteringInterface.hpp>
@@ -69,6 +70,7 @@ namespace DFN
 			static PrimitiveMatchingInterface* CreatePrimitiveMatching(const std::string& dfnImplementation);
 			static Registration3DInterface* CreateRegistration3D(const std::string& dfnImplementation);
 			static StereoReconstructionInterface* CreateStereoReconstruction(const std::string& dfnImplementation);
+            static StereoRectificationInterface* CreateStereoRectification(const std::string& dfnImplementation);
 			static Transform3DEstimationInterface* CreateTransform3DEstimation(const std::string& dfnImplementation);
 			static DepthFilteringInterface* CreateDepthFiltering(const std::string& dfnImplementation);
 			static ForceMeshGeneratorInterface* CreateForceMeshGenerator(const std::string& dfnImplementation);
