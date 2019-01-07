@@ -31,6 +31,8 @@
 #include <ImageFiltering/BackgroundExtraction.hpp>
 #include <ImageFiltering/NormalVectorExtraction.hpp>
 #include <ImageFiltering/KMeansClustering.hpp>
+#include <ImageRectification/ImageRectification.hpp>
+#include <ImageRectification/ImageRectificationEdres.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <PrimitiveMatching/HuInvariants.hpp>
@@ -301,6 +303,20 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(const std::string& df
 
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN ImageFiltering implementation");
 	return NULL;
+}
+
+ImageRectificationInterface* DFNsBuilder::CreateImageRectification(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "ImageRectification")
+    {
+        return new ImageRectification::ImageRectification;
+    }
+    else if (dfnImplementation == "ImageRectificationEdres")
+    {
+        return new ImageRectification::ImageRectificationEdres;
+    }
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN ImageRectification implementation");
+    return NULL;
 }
 
 PerspectiveNPointSolvingInterface* DFNsBuilder::CreatePerspectiveNPointSolving(const std::string& dfnImplementation)
