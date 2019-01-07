@@ -1,5 +1,5 @@
-name: ImagePairDegradation
-doc: DFN that degrade the resolution of an image
+name: StereoDegradation
+doc: DFN that degrades the resolution of an image
 input_ports:
     - name: originalImagePair
       type: asn1SccFramePair
@@ -9,5 +9,5 @@ output_ports:
       type: asn1SccFramePair
       doc: Degraded/dowscaled image pair
 implementations:
-    - ImagePairDegradation
-    - ImagePairDegradationEdres
+    - StereoDegradation
+    - StereoDegradationEdres
