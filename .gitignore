@@ -41,7 +41,6 @@ cmake_purge.cmake
 *.la
 *.a
 *.lib
-*.lo
 
 # Executables
 *.exe
@@ -76,3 +75,5 @@ cmake_install.cmake
 install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
+/cmake-build-debug/
+/.idea/
