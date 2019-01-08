@@ -1,6 +1,6 @@
 set(WEIGHTING_EXPERT_SOURCES "WeightingExpertInterface.cpp")
 set(WEIGHTING_EXPERT_INCLUDE_DIRS "")
-set(WEIGHTING_EXPERT_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
+set(WEIGHTING_EXPERT_DEPENDENCIES "cdff_helpers" "cdff_converters")
 
 if(OpenCV_FOUND)
     set(WEIGHTING_EXPERT_SOURCES ${WEIGHTING_EXPERT_SOURCES} "PoseWeighting.cpp")
