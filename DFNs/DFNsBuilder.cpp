@@ -12,6 +12,7 @@
 #include <BundleAdjustment/CeresAdjustment.hpp>
 #include <BundleAdjustment/SvdDecomposition.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
+#include <DisparityFiltering/DisparityFilteringEdres.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
@@ -178,6 +179,16 @@ CamerasTransformEstimationInterface* DFNsBuilder::CreateCamerasTransformEstimati
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN CameraTransformEstimation implementation");
 	return NULL;
+}
+
+DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "DisparityFilteringEdres")
+    {
+        return new DisparityFiltering::DisparityFilteringEdres;
+    }
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityFiltering implementation");
+    return NULL;
 }
 
 FeaturesDescription2DInterface* DFNsBuilder::CreateFeaturesDescription2D(const std::string& dfnImplementation)
