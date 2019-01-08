@@ -64,6 +64,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
     DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
     DFNs/Voxelization/Octree.cpp
+    DFNs/PrimitiveFinder/BasicPrimitiveFinder.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/HapticScanning/HapticScanning.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
@@ -106,6 +107,7 @@ set(unittest_libraries catch
     cdff_dfn_features_matching_3d
     cdff_dfn_bundle_adjustment
     cdff_dfn_voxelization
+    cdff_dfn_primitive_finder
     synthetic_generators
     cdff_dfpc_configurator
     cdff_dfpc_reconstruction_3d
