@@ -45,6 +45,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
+    DFNs/ImageFiltering/BackgroundSubtractorMOG2.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
