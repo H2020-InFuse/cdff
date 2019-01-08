@@ -69,7 +69,7 @@ TEST_CASE( "Call to configure (BasicPrimitiveFinder) ", "[configure]" )
     std::unique_ptr<BasicPrimitiveFinder> primitive_finder (new BasicPrimitiveFinder);
 
     // Setup DFN
-    primitive_finder->setConfigurationFile("../tests/ConfigurationFiles/DFNs/ImageFiltering/BackgroundSubtractorMOG2.yaml");
+    primitive_finder->setConfigurationFile("../tests/ConfigurationFiles/DFNs/PrimitiveFinder/BasicPrimitiveFinder.yaml");
     primitive_finder->configure();
 
     // Send input data to DFN
