@@ -28,7 +28,7 @@ namespace DFN
 
             /**
              * Send value to input port "imagePair"
-             * @param imagePair The current image on which to perform tracking.
+             * @param imagePair The current rectifed image pair on which to perform tracking.
              */
             virtual void imagePairInput(const asn1SccFramePair& data);
             /**
