@@ -76,6 +76,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
     {
         return CreateColorConversion(dfnImplementation);
     }
+    else if (dfnType == "DisparityToPointCloud")
+    {
+        return CreateDisparityToPointCloud(dfnImplementation);
+    }
 	else if (dfnType == "FeaturesDescription2D")
 	{
 		return CreateFeaturesDescription2D(dfnImplementation);
