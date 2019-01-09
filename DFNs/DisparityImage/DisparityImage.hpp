@@ -22,7 +22,15 @@ namespace DFN
 namespace DisparityImage
 {
     /**
-     * TODO Class documentation
+     * @brief Implementation of the stereo correspondance algorithms provided by OpenCV
+     * See OpenCV's documentation on cv::StereoMatcher, cv::StereoBM and cv::StereoSGBM for more information
+     * https://docs.opencv.org/3.4.0/d2/d6e/classcv_1_1StereoMatcher.html
+     * https://docs.opencv.org/3.4.0/d9/dba/classcv_1_1StereoBM.html
+     * https://docs.opencv.org/3.4.0/d2/d85/classcv_1_1StereoSGBM.html
+     *
+     * If OpenCV contrib module ximgproc is installed, this DFN also implement a disparity filtering algorithm
+     * See OpenCV's documentation on cv::ximgproc::DisparityWLSFilter
+     * https://docs.opencv.org/3.4.0/d9/d51/classcv_1_1ximgproc_1_1DisparityWLSFilter.html
      */
     class DisparityImage : public DisparityImageInterface
     {
@@ -185,7 +193,6 @@ namespace DisparityImage
                  * Typical values range from 0.8 to 2.0.
                  */
                 double sigmaColor;
-
             };
 
             struct DisparityImageParams
