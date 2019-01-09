@@ -11,7 +11,7 @@ output_ports:
 implementations:
     - ImageUndistortion
     - ImageUndistortionRectification
-    - BackgroundSubtraction
-    - EdgeDetection
+    - BackgroundExtraction
+    - CannyEdgeDetection
     - NormalVectorExtraction
     - KMeansClustering
