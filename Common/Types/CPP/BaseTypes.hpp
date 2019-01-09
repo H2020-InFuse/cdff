@@ -42,17 +42,17 @@ const int MAX_STRING_SIZE = maxSize_T_String;
 
 // Point Types
 struct Point3D
-	{
-	T_Double x;
-	T_Double y;
-	T_Double z;	
-	};
+    {
+    T_Double x;
+    T_Double y;
+    T_Double z;
+    };
 
 struct Point2D
-	{
-	T_Double x;
-	T_Double y;
-	};
+    {
+    T_Double x;
+    T_Double y;
+    };
 
 // Pointer types
 
@@ -68,32 +68,40 @@ void PrepareBitStreamBufferForDeconding(BitStream& bitStream, long size);
 void DeallocateBitStreamBuffer(BitStream& bitStream);
 
 #define CONVERT_TO_BIT_STREAM(inputData, bitStreamSize, encodeMethod) \
-	{ \
-	BitStream bitStream; \
-	AllocateBitStreamBufferForEncoding(bitStream, bitStreamSize ); \
-	\
-	int errorCode = 0; \
-	bool success = encodeMethod(&inputData, &bitStream, &errorCode, true); \
-	\
-	ASSERT(success && (errorCode == 0), "Error while executing #conversionMethod"); \
-	return bitStream; \
-	}
+    { \
+    BitStream bitStream; \
+    AllocateBitStreamBufferForEncoding(bitStream, bitStreamSize ); \
+    \
+    int errorCode = 0; \
+    bool success = encodeMethod(&inputData, &bitStream, &errorCode, true); \
+    \
+    ASSERT(success && (errorCode == 0), "Error while executing #conversionMethod"); \
+    return bitStream; \
+    }
 
 #define CONVERT_FROM_BIT_STREAM(inputBitStream, bitStreamSize, outputData, decodeMethod) \
-	{ \
-	PrepareBitStreamBufferForDeconding(inputBitStream, bitStreamSize); \
-	int errorCode = 0; \
-	bool success = decodeMethod(&outputData, &inputBitStream, &errorCode); \
-	ASSERT(success && (errorCode == 0), "Error while executing #conversionMethod"); \
-	}
+    { \
+    PrepareBitStreamBufferForDeconding(inputBitStream, bitStreamSize); \
+    int errorCode = 0; \
+    bool success = decodeMethod(&outputData, &inputBitStream, &errorCode); \
+    ASSERT(success && (errorCode == 0), "Error while executing #conversionMethod"); \
+    }
 
 
 // String manipulation helper functions
 
 void CopyString(const asn1SccT_String& source, asn1SccT_String& destination);
+/**
+* Copy the content of a std::string to an asn1SccT_String.
+* Assume null terminating string in the buffer.
+*/
+void CopyString(const std::string& source, asn1SccT_String& destination);
+/**
+ * Copy the content of a asn1SccT_String to an std::string.
+ * Assume null terminating string in the buffer.
+ */
+void CopyString(const asn1SccT_String& source, std::string& destination);
 }
-
-
 #endif // BASE_TYPES_HPP
 
 /** @} */
