@@ -8,6 +8,7 @@
 
 #include "StereoSlamInterface.hpp"
 #include <Helpers/ParametersListHelper.hpp>
+#include "liborbslam/System.h"
 
 namespace CDFF
 {
@@ -24,12 +25,14 @@ namespace StereoSlam
      * no. 5, pp. 1255-1262, 2017.
      * https://arxiv.org/pdf/1610.06475.pdf
      *
-     * @brief DFN which performs SLAM tracking using only a rectified stereo pair as input
+     * @brief DFN which performs SLAM tracking using only a rectified stereo pair as input.
+     * If tracking is successful, it outputs the current estimated camera pose expressed in the reference
+     * frame of the first input image.
      *
      * @param settingsPath
      *        Path to the setting file to be passed to ORB-SLAM.
-     *        The settings file contains operational parameters for the SLAM system. An example
-     *        of such a settings file is available in Tests/ConfigurationFiles/DFNs/StereoSlam
+     *        The settings file contains operational parameters for the SLAM system, as well as camera calibration
+     *        parameters. An example of such a settings file is available in Tests/ConfigurationFiles/DFNs/StereoSlam
      * @param vocabularyPath
      *        Path to the binary vocabulary file to be used by ORB-SLAM. This vocabulary consists in
      *        a pre-trained, serialized bag-of-words structure used to perform ORB matching for
@@ -75,6 +78,8 @@ private:
 
     void ValidateParameters();
     void ValidateInputs(const asn1SccFramePair& pair);
+
+    ORB_SLAM2::System *slam;
 };
 }
 }

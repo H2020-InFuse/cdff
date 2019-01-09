@@ -16,8 +16,8 @@ namespace DFN
 {
 /**
      * @brief DFN that performs visual SLAM on a stereo image pair input.
-     * If tracking is successful, the pose output is relative to the pose
-     * of the first image passed to the tracker.
+     * As this is a relative localisation technique, if tracking is successful,
+     * the pose output is expressed in the reference frame of the first image passed to the tracker.
      */
     class StereoSlamInterface : public DFNCommonInterface
     {
