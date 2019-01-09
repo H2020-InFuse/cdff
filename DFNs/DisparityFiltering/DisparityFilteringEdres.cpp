@@ -42,7 +42,7 @@ void DisparityFilteringEdres::process()
 
 void DisparityFilteringEdres::ValidateParameters()
 {
-    ASSERT(parameters.trimWidth > 0, "trimWidth has to be positive");
+    ASSERT(parameters.trimWidth >= 0, "trimWidth has to be positive");
     ASSERT(parameters.connexityThresh >= 0, "connexityThresh has to be positive");
     ASSERT(parameters.surfMin >= 0, "surfMin has to be positive");
     ASSERT(parameters.surfMax >= 0 && parameters.surfMax > parameters.surfMin, "surfMax has to be positive and > surfMin");
