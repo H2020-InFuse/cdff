@@ -43,8 +43,6 @@ set(unittest_sources UnitTests.cpp
     DFNs/FeaturesMatching3D/BestDescriptorMatch.cpp
     DFNs/FeaturesMatching3D/Icp3D.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
-    DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
-    DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/ImageFiltering/NormalVectorExtraction.cpp
@@ -102,7 +100,6 @@ set(unittest_libraries catch
     cdff_dfn_registration_3d
     cdff_dfn_image_filtering
     cdff_dfn_point_cloud_filtering
-    cdff_dfn_force_mesh_generator
     cdff_dfn_transform_3d_estimation
     cdff_dfn_point_cloud_reconstruction_2d_to_3d
     cdff_dfn_stereo_reconstruction
@@ -117,6 +114,12 @@ set(unittest_libraries catch
     cdff_dfpc_point_cloud_model_localisation
     cdff_dfpc_haptic_scanning
 )
+
+if(PCL_FOUND)
+    set(unittest_sources ${unittest_sources} "DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp" "DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp")
+    set(unittest_libraries ${unittest_libraries} cdff_dfn_force_mesh_generator pcl_io pcl_kdtree )
+endif()
+
 
 # Make the Catch executable that runs the unit tests
 add_executable(cdff-unit-tests ${unittest_sources})
