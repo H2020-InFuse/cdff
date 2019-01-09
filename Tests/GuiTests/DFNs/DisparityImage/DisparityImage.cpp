@@ -133,17 +133,32 @@ DisparityImageTestInterface::~DisparityImageTestInterface()
 
 void DisparityImageTestInterface::SetupParameters()
 {
-    AddParameter("DisparityImageParams", "minDisparity", 0, 100);
-    AddParameter("DisparityImageParams", "numDisparities", 320, 500);
-    AddParameter("DisparityImageParams", "blockSize", 3, 20);
-    AddParameter("DisparityImageParams", "P1", 0, 100);
-    AddParameter("DisparityImageParams", "P2", 0, 100);
-    AddParameter("DisparityImageParams", "disp12MaxDiff", 0, 100);
-    AddParameter("DisparityImageParams", "preFilterCap", 0, 100);
-    AddParameter("DisparityImageParams", "uniquenessRatio", 0, 20);
-    AddParameter("DisparityImageParams", "speckleWindowSize", 0, 200);
-    AddParameter("DisparityImageParams", "speckleRange", 0, 5);
-    AddParameter("DisparityImageParams", "mode", 0, 3);
+    AddParameter("stereoMatcherParams", "algorithm", 1, 2);
+    AddParameter("stereoMatcherParams", "minDisparity", 0, 160);
+    AddParameter("stereoMatcherParams", "numDisparities", 192, 640, 16);
+    AddParameter("stereoMatcherParams", "blockSize", 5, 39);
+    AddParameter("stereoMatcherParams", "speckleWindowSize", 0, 200);
+    AddParameter("stereoMatcherParams", "speckleRange", 0, 10);
+    AddSignedParameter("stereoMatcherParams", "disp12MaxDiff", -1, 50, 1);
+    AddSignedParameter("stereoMatcherParams", "preFilterCap", 31, 63, 1, 1);
+    AddParameter("stereoMatcherParams", "uniquenessRatio", 10, 100);
+
+    AddParameter("stereoBMParams", "preFilterType", 0, 2);
+    AddParameter("stereoBMParams", "preFilterSize", 9, 255);
+    AddParameter("stereoBMParams", "textureThreshold", 10, 100);
+
+    AddParameter("stereoSGBMParams", "P1", 0, 100);
+    AddParameter("stereoSGBMParams", "P2", 0, 100);
+    AddParameter("stereoSGBMParams", "mode", 0, 3);
+
+#if WITH_XIMGPROC
+    AddParameter("filterParams", "useFilter", 0, 1);
+    AddParameter("filterParams", "useConfidence", 0, 1);
+    AddParameter("filterParams", "depthDiscontinuityRadius", 0, 100);
+    AddParameter("filterParams", "lambda", 8000, 20000);
+    AddParameter("filterParams", "lrcThresh", 24, 100);
+    AddParameter("filterParams", "sigmaColor", 0.8, 2, 0.1);
+#endif
 }
 
 void DisparityImageTestInterface::DisplayResult()
