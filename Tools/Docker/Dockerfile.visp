@@ -11,8 +11,7 @@ COPY get-cdff-dependencies.sh /tmp/CDFF/Tools/Docker/
 COPY installers/ /tmp/CDFF/Tools/Docker/installers/
 COPY patches/ /tmp/CDFF/Tools/Docker/patches/
 
-RUN apt-get update
-RUN apt-get install --yes --quiet libx11-6 \
+RUN apt-get update && apt-get install --yes --quiet libx11-6 \
 libbz2-1.0 \
 libfreetype6 \
 libsimage-dev \
@@ -59,6 +58,6 @@ libois-dev \
 libqhull-dev && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d visp
 
-LABEL version="1.0.1"
+LABEL version="1.0"
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="CI + single dependency"
