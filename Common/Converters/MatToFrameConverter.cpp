@@ -43,7 +43,7 @@ using namespace FrameWrapper;
 
 FrameConstPtr MatToFrameConverter::Convert(const cv::Mat& image)
 	{
-	FramePtr frame = new Frame();
+	FramePtr frame = FrameWrapper::NewFrame();
 	if (image.rows == 0 && image.cols == 0)
 		//set status empty
 		return frame;
