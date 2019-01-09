@@ -25,8 +25,16 @@ namespace PrimitiveFinder
 {
 
 BasicPrimitiveFinder::BasicPrimitiveFinder()
-    : m_ellipse_path(std::string(std::getenv("CDFFPATH"))+"/Tests/Data/Images/primitive_matching/templates/ellipse.yml")
 {
+    if( std::getenv("CDFFPATH") )
+    {
+        m_ellipse_path = std::string(std::getenv("CDFFPATH"))+"/Tests/Data/Images/primitive_matching/templates/ellipse.yml";
+    }
+    else
+    {
+        m_ellipse_path = "../tests/Data/Images/primitive_matching/templates/ellipse.yml";
+    }
+
     configurationFilePath = "";
     parametersHelper.AddParameter<double>("HoughCirclesParameters", "DP", parameters.houghCirclesParameters.dp, DEFAULT_PARAMETERS.houghCirclesParameters.dp);
     parametersHelper.AddParameter<double>("HoughCirclesParameters", "MinDist", parameters.houghCirclesParameters.minDist, DEFAULT_PARAMETERS.houghCirclesParameters.minDist);
