@@ -71,6 +71,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreateCamerasTransformEstimation(dfnImplementation);
 	}
+    else if (dfnType == "DisparityImage")
+    {
+        return CreateDisparityImage(dfnImplementation);
+    }
 	else if (dfnType == "FeaturesDescription2D")
 	{
 		return CreateFeaturesDescription2D(dfnImplementation);
