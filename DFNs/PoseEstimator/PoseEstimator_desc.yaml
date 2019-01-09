@@ -1,0 +1,19 @@
+name: PoseEstimator
+doc: DFN that estimates the pose of a robot given the primitives found in the image
+input_ports:
+    - name: image
+      type: asn1SccFrame
+      doc: 2D image captured by a camera
+    - name: depth
+      type: asn1SccFrame
+      doc: 2D depth image
+    - name: primitives
+      type: asn1SccVectorXdSequence
+      doc:  location and necessary information of the found primitives
+output_ports:
+    - name: poses
+      type: asn1SccPosesSequence
+      doc: Pose of the different joints of the robot and its end effector
+implementations:
+    - PrimitivesPoseEstimator
+    - WheeledRobotPoseEstimator
