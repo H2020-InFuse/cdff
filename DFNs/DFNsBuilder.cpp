@@ -12,6 +12,7 @@
 #include <BundleAdjustment/CeresAdjustment.hpp>
 #include <BundleAdjustment/SvdDecomposition.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
+#include <ColorConversion/ColorConversion.hpp>
 #include <DisparityToPointCloud/DisparityToPointCloud.hpp>
 #include <DisparityToPointCloud/DisparityToPointCloudEdres.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
@@ -71,6 +72,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreateCamerasTransformEstimation(dfnImplementation);
 	}
+    else if (dfnType == "ColorConversion")
+    {
+        return CreateColorConversion(dfnImplementation);
+    }
 	else if (dfnType == "FeaturesDescription2D")
 	{
 		return CreateFeaturesDescription2D(dfnImplementation);
@@ -180,6 +185,16 @@ CamerasTransformEstimationInterface* DFNsBuilder::CreateCamerasTransformEstimati
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN CameraTransformEstimation implementation");
 	return NULL;
+}
+
+ColorConversionInterface* DFNsBuilder::CreateColorConversion(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "ColorConversion")
+    {
+        return new ColorConversion::ColorConversion;
+    }
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN ColorConversion implementation");
+    return NULL;
 }
 
 DisparityToPointCloudInterface* DFNsBuilder::CreateDisparityToPointCloud(const std::string& dfnImplementation)

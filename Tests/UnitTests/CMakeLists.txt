@@ -27,6 +27,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
+    DFNs/ColorConversion/ColorConversion.cpp
     DFNs/ImageFiltering/DerivativeEdgeDetection.cpp
     DFNs/ImageFiltering/CannyEdgeDetection.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
@@ -92,6 +93,7 @@ set(unittest_libraries catch
     cdff_dfn_point_cloud_transform
     cdff_dfn_depth_filtering
     cdff_dfn_cameras_transform_estimation
+    cdff_dfn_color_conversion
     cdff_dfn_features_matching_2d
     cdff_dfn_fundamental_matrix_computation
     cdff_dfn_primitive_matching
