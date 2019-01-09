@@ -365,6 +365,7 @@ target_link_libraries(
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
     ${VTK_LIBRARIES}
 )
+
 add_executable(
     DisparityImageGuiTest
     DFNs/DisparityImage/DisparityImage.cpp
