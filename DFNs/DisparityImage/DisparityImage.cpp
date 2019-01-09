@@ -4,7 +4,6 @@
  */
 
 #include "DisparityImage.hpp"
-#include <iostream>
 
 namespace CDFF
 {
@@ -128,7 +127,6 @@ void DisparityImage::process()
         if(parameters.filter.useConfidence){
             cv::Mat disparityRight;
             if(_rightMatcher.empty() || resetMatcher){
-                std::cout << "resetting right matcher" << std::endl;
                 switch(_algorithm){
                 case 0:
                     _rightMatcher = cv::ximgproc::createRightMatcher(_bm);
@@ -142,7 +140,6 @@ void DisparityImage::process()
             _rightMatcher->compute(imgRight, imgLeft, disparityRight);
 
             if(_filter.empty() || resetFilter){
-                std::cout << "resetting filter" << std::endl;
                 switch(_algorithm){
                 case 0:
                     _filter = cv::ximgproc::createDisparityWLSFilter(_bm);
@@ -158,12 +155,10 @@ void DisparityImage::process()
             _filter->setLRCthresh(parameters.filter.lrcThresh);
             _filter->setSigmaColor(parameters.filter.sigmaColor);
 
-            std::cout << "there" << std::endl;
             _filter->filter(disparity, imgLeft, disparityFiltered, disparityRight);
         }
         else{
             if(_filter.empty() || resetFilter){
-                std::cout << "resetting filter" << std::endl;
                 _filter = cv::ximgproc::createDisparityWLSFilterGeneric(false);
             }
 
@@ -171,7 +166,6 @@ void DisparityImage::process()
             _filter->setLambda(parameters.filter.lambda);
             _filter->setSigmaColor(parameters.filter.sigmaColor);
 
-            std::cout << "here" << std::endl;
             _filter->filter(disparity, imgLeft, disparityFiltered);
         }
 
