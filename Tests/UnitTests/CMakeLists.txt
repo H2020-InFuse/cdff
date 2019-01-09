@@ -73,6 +73,11 @@ set(unittest_sources UnitTests.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
 )
 
+if(WITH_EDRES)
+    set(unittest_sources ${unittest_sources}
+        DFNs/DisparityFiltering/DisparityFilteringEdres.cpp)
+endif()
+
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
