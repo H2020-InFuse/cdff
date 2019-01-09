@@ -351,6 +351,21 @@ target_link_libraries(
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
 
+add_executable(
+    ColorConversionGuiTest
+    DFNs/ColorConversion/ColorConversion.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(ColorConversionGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(ColorConversionGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+    ColorConversionGuiTest
+    cdff_dfn_color_conversion
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
+)
+
 
 ## Graphical tests for the DFPCs -----------------------------------------------
 
