@@ -30,6 +30,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/ColorConversion/ColorConversion.cpp
     DFNs/ImageFiltering/DerivativeEdgeDetection.cpp
     DFNs/ImageFiltering/CannyEdgeDetection.cpp
+    DFNs/ImageFiltering/BackgroundExtraction.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
