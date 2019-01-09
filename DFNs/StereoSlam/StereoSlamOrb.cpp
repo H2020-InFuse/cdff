@@ -63,38 +63,31 @@ void StereoSlamOrb::process()
     cv::Mat left(inImagePair.left.data.rows, inImagePair.left.data.cols, CV_MAKETYPE((int)(inImagePair.left.data.depth), inImagePair.left.data.channels), inImagePair.left.data.data.arr, inImagePair.left.data.rowSize);
     cv::Mat right(inImagePair.right.data.rows, inImagePair.right.data.cols, CV_MAKETYPE((int)(inImagePair.right.data.depth), inImagePair.right.data.channels), inImagePair.right.data.data.arr, inImagePair.right.data.rowSize);
 
-    // Make sure the image mode is correct
-    if( (inImagePair.left.metadata.mode != 0) && (inImagePair.right.metadata.mode != 1) )
+    // Perform slam iteration
+    cv::Mat cvPose;
+    cvPose = slam->TrackStereo(left, right, inImagePair.left.metadata.timeStamp.microseconds *1.0e-6);
+    if( !cvPose.empty() )
     {
-        PRINT_WARNING("Image mode is different of RGB or BGR");
-    }
-    else
-    {
-        // Perform slam iteration
-        cv::Mat cvPose;
-        cvPose = slam->TrackStereo(left, right, inImagePair.left.metadata.timeStamp.microseconds *1.0e-6);
-        if( !cvPose.empty() )
-        {
-            // Set the pose metadata to the input metadata
-            BaseTypesWrapper::CopyString("StereoSlamOrb", outPose.metadata.producerId);
-            outPose.metadata.childFrameId = inImagePair.left.extrinsic.pose_robotFrame_sensorFrame.metadata.childFrameId;
-            BaseTypesWrapper::CopyString("InitialCamera", outPose.metadata.parentFrameId);
-            outPose.metadata.childTime = inImagePair.left.metadata.timeStamp;
-            outPose.metadata.parentTime = inImagePair.left.metadata.timeStamp;
+        // Set the pose metadata to the input metadata
+        BaseTypesWrapper::CopyString("StereoSlamOrb", outPose.metadata.producerId);
+        outPose.metadata.childFrameId = inImagePair.left.extrinsic.pose_robotFrame_sensorFrame.metadata.childFrameId;
+        BaseTypesWrapper::CopyString("InitialCamera", outPose.metadata.parentFrameId);
+        outPose.metadata.childTime = inImagePair.left.metadata.timeStamp;
+        outPose.metadata.parentTime = inImagePair.left.metadata.timeStamp;
 
-            // Set the pose output data to the estimation
-            Eigen::Matrix4d tmp;
-            cv::cv2eigen(cvPose, tmp);
-            Eigen::Isometry3d iso(tmp);
-            outPose.data.translation.arr[0] = iso.translation()[0];
-            outPose.data.translation.arr[1] = iso.translation()[1];
-            outPose.data.translation.arr[2] = iso.translation()[2];
-            Eigen::Quaterniond quaternion(iso.rotation());
-            outPose.data.orientation.arr[0] = quaternion.coeffs()[0];
-            outPose.data.orientation.arr[1] = quaternion.coeffs()[1];
-            outPose.data.orientation.arr[2] = quaternion.coeffs()[2];
-            outPose.data.orientation.arr[3] = quaternion.coeffs()[3];
-        }
+        // Set the pose output data to the estimation
+        Eigen::Matrix4d tmp;
+        cv::cv2eigen(cvPose, tmp);
+        Eigen::Isometry3d iso(tmp);
+        outPose.data.translation.arr[0] = iso.translation()[0];
+        outPose.data.translation.arr[1] = iso.translation()[1];
+        outPose.data.translation.arr[2] = iso.translation()[2];
+        Eigen::Quaterniond quaternion(iso.rotation());
+        outPose.data.orientation.arr[0] = quaternion.coeffs()[0];
+        outPose.data.orientation.arr[1] = quaternion.coeffs()[1];
+        outPose.data.orientation.arr[2] = quaternion.coeffs()[2];
+        outPose.data.orientation.arr[3] = quaternion.coeffs()[3];
+
     }
 }
 
