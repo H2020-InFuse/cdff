@@ -52,3 +52,5 @@ target_link_libraries(
   cdff_dfn_features_matching_3d
   cdff_dfn_bundle_adjustment
 )
+
+target_compile_definitions(dfns_builder PUBLIC WITH_EDRES=$<BOOL:${WITH_EDRES}>)
