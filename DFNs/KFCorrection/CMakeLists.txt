@@ -5,7 +5,7 @@ set(KF_CORRECTION_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_conv
 if(OpenCV_FOUND)
 	set(KF_CORRECTION_SOURCES ${KF_CORRECTION_SOURCES} "KalmanCorrector.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(KF_CORRECTION_DEPENDENCIES ${KF_CORRECTION_DEPENDENCIES} ${OpenCV_LIBS})
+	set(KF_CORRECTION_DEPENDENCIES ${KF_CORRECTION_DEPENDENCIES} opencv_core)
 endif()
 
 add_library(
