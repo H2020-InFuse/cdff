@@ -55,7 +55,7 @@ if [[ ! -d "${INSTALL_DIR}/include/visp" ]]; then
     -DBUILD_MODULE_visp_vision=ON \
     -DBUILD_MODULE_visp_visual_features=ON \
     -DBUILD_MODULE_visp_vs=OFF \
-    "${SOURCE_DIR}/visp"
+    "${SOURCE_DIR}/visp/visp-3.1.0"
 
   make --jobs=${CPUS}
 
