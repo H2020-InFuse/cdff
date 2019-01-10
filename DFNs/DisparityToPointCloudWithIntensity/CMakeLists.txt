@@ -5,7 +5,7 @@ set(DISPARITY_TO_POINTCLOUD_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" 
 if(OpenCV_FOUND)
 	set(DISPARITY_TO_POINTCLOUD_SOURCES ${DISPARITY_TO_POINTCLOUD_SOURCES} "DisparityToPointCloudWithIntensity.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(DISPARITY_TO_POINTCLOUD_DEPENDENCIES ${DISPARITY_TO_POINTCLOUD_DEPENDENCIES} ${OpenCV_LIBS})
+        set(DISPARITY_TO_POINTCLOUD_DEPENDENCIES ${DISPARITY_TO_POINTCLOUD_DEPENDENCIES} opencv_core)
 endif()
 
 if(Edres-Wrapper_FOUND)
