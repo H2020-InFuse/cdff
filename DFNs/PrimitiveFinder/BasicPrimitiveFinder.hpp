@@ -8,7 +8,7 @@
 
 #include "PrimitiveFinderInterface.hpp"
 #include <Helpers/ParametersListHelper.hpp>
-#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc.hpp>
 
 namespace CDFF
 {

@@ -5,7 +5,7 @@ set(PRIMITIVE_FINDER_DEPENDENCIES "cdff_helpers" "cdff_converters")
 if(OpenCV_FOUND)
     set(PRIMITIVE_FINDER_SOURCES ${PRIMITIVE_FINDER_SOURCES} "BasicPrimitiveFinder.cpp")
     #OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-    set(PRIMITIVE_FINDER_DEPENDENCIES ${PRIMITIVE_FINDER_DEPENDENCIES} opencv_highgui)
+    set(PRIMITIVE_FINDER_DEPENDENCIES ${PRIMITIVE_FINDER_DEPENDENCIES} opencv_imgproc)
 endif()
 
 add_library(

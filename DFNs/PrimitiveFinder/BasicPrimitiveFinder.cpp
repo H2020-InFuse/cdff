@@ -8,8 +8,6 @@
 #include <Converters/FrameToMatConverter.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 
-#include <opencv2/imgproc/imgproc.hpp>
-
 namespace
 {
     const std::string CIRCLE = "circle";
