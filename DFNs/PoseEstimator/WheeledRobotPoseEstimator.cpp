@@ -12,7 +12,7 @@
 #include <iostream>
 #include <eigen3/Eigen/Dense>
 #include <opencv2/core/eigen.hpp>
-#include <FrameToMatConverter.hpp>
+#include <Converters/FrameToMatConverter.hpp>
 
 #include <Eigen/Dense>
 #include <Eigen/Geometry>

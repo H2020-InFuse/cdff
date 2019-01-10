@@ -7,8 +7,9 @@
 #define POSEESTIMATOR_POSEESTIMATORINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Sequences.h>
-#include <Frame.h>
+#include <Types/C/Sequences.h>
+#include <Types/C/Frame.h>
+
 
 namespace CDFF
 {
