@@ -42,10 +42,6 @@ using namespace CDFF::DFN::PrimitiveMatching;
 using namespace Converters;
 using namespace FrameWrapper;
 
-using namespace CDFF::DFN::PrimitiveMatching;
-using namespace Converters;
-using namespace FrameWrapper;
-
 /* --------------------------------------------------------------------------
  *
  * Test Cases
