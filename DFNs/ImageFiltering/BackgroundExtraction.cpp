@@ -3,26 +3,55 @@
  * @{
  */
 
-#include <opencv2/imgproc.hpp>
-#include <random>
+#include "BackgroundExtraction.hpp"
+#include <Converters/FrameToMatConverter.hpp>
+#include <Converters/MatToFrameConverter.hpp>
+
+
+#include <opencv2/imgproc/imgproc.hpp>
 
 #include <Types/C/Frame.h>
-#include <Converters/MatToFrameConverter.hpp>
-#include <Converters/FrameToMatConverter.hpp>
-
 #include "Validators/Frame.hpp"
 #include "BackgroundExtraction.hpp"
-
+#include <iostream>
 using namespace FrameWrapper;
 
-namespace CDFF {
-    namespace DFN {
-        namespace ImageFiltering {
+namespace CDFF
+{
+    namespace DFN
+    {
+        namespace ImageFiltering
+        {
 
-            const BackgroundExtraction::Parameters BackgroundExtraction::DefaultParameters = {};
+            BackgroundExtraction::BackgroundExtraction()
+            {
+                configurationFilePath = "";
+                parametersHelper.AddParameter<int>("GeneralParameters", "SamplesPerPixel", parameters.samplesPerPixel, DEFAULT_PARAMETERS.samplesPerPixel);
+                parametersHelper.AddParameter<int>("GeneralParameters", "DistanceThreshold", parameters.distanceThreshold, DEFAULT_PARAMETERS.distanceThreshold);
+                parametersHelper.AddParameter<int>("GeneralParameters", "RequiredMatches", parameters.requiredMatches, DEFAULT_PARAMETERS.requiredMatches);
+                parametersHelper.AddParameter<int>("GeneralParameters", "SubsamplingFactor", parameters.subsamplingFactor, DEFAULT_PARAMETERS.subsamplingFactor);
+                parametersHelper.AddParameter<int>("GeneralParameters", "ForegroundLabel", parameters.foregroundLabel, DEFAULT_PARAMETERS.foregroundLabel);
+                parametersHelper.AddParameter<int>("GeneralParameters", "BackgroundLabel", parameters.backgroundLabel, DEFAULT_PARAMETERS.backgroundLabel);
 
+            }
 
-            cv::Point2i getPointFromNeighbourhoodOf(const cv::Point2i &pt, const cv::Size &size) {
+            const BackgroundExtraction::BackgroundExtractionOptionsSet BackgroundExtraction::DEFAULT_PARAMETERS =
+                    {
+                    /* samplesPerPixel =*/ 20,              //Image buffer size : higher values for slow objects. Generally 20-30 is enough.
+                    /* distanceThreshold =*/ 40,            //Pixel intensity deviation. Above this threshold, pixel hypothetically belongs to background
+                    /* requiredMatches = */ 2,              //Minimum matches in the buffer to confirm the above hypothesis on pixel (cardinality). Higher values exponentially increase runtime.
+                    /* subsamplingFactor =*/ 32,            //Temporal and spatial subsampling factor. High values improve runtime as more pixels in the image are compared (spatial),
+                                                            // reaching the cardinality faster, but increase ghosts persistence (temporal). Generally values between 8-32.
+                    /* foregroundLabel =*/ 255,             // foreground color in segmentation map
+                    /* backgroundLabel =*/ 0                // background color in segmentation map
+                    };
+
+            BackgroundExtraction::~BackgroundExtraction()
+            {
+            }
+
+            cv::Point2i BackgroundExtraction::getPointFromNeighbourhoodOf(const cv::Point2i &pt, const cv::Size &size) const
+            {
                 std::random_device rand;
                 std::default_random_engine random_engine(rand());
                 std::uniform_int_distribution<uint8_t> rand_in_neighbourhood(0, 255);
@@ -36,7 +65,7 @@ namespace CDFF {
                 cv::Point neighbour = pt;
                 if (pt.x == 0) {
                     neighbour.x += rand_in_neighbourhood(random_engine) % 2;
-                } else if (neighbour.x == size.width) {
+                } else if (neighbour.x == size.width - 1) {
                     neighbour.x -= rand_in_neighbourhood(random_engine) % 2;
                 } else {
                     neighbour.x += rand_in_neighbourhood(random_engine) % 3 - 1;
@@ -44,7 +73,7 @@ namespace CDFF {
 
                 if (pt.y == 0) {
                     neighbour.y += rand_in_neighbourhood(random_engine) % 2;
-                } else if (neighbour.y == size.height) {
+                } else if (neighbour.y == size.height - 1) {
                     neighbour.y -= rand_in_neighbourhood(random_engine) % 2;
                 } else {
                     neighbour.y += rand_in_neighbourhood(random_engine) % 3 - 1;
@@ -53,28 +82,13 @@ namespace CDFF {
                 return neighbour;
             }
 
-
-            BackgroundExtraction::BackgroundExtraction() {
-		parameters = DefaultParameters;
-                parametersHelper.AddParameter("Background Extraction", "ForegroundLabel",
-                                              parameters.foregroundLabel, DefaultParameters.foregroundLabel);
-                parametersHelper.AddParameter("Background Extraction", "BackgroundLabel",
-                                              parameters.backgroundLabel, DefaultParameters.backgroundLabel);
-                parametersHelper.AddParameter("Background Extraction", "SamplesPerPixel",
-                                              parameters.samplesPerPixel, DefaultParameters.samplesPerPixel);
-                parametersHelper.AddParameter("Background Extraction", "DistanceThreshold",
-                                              parameters.distanceThreshold, DefaultParameters.distanceThreshold);
-                parametersHelper.AddParameter("Background Extraction", "SamplesPerPixel",
-                                              parameters.requiredMatches, DefaultParameters.requiredMatches);
-                parametersHelper.AddParameter("Background Extraction", "RequiredMatches",
-                                              parameters.samplesPerPixel, DefaultParameters.samplesPerPixel);
-                parametersHelper.AddParameter("Background Extraction", "SubsamplingFactor",
-                                              parameters.subsamplingFactor, DefaultParameters.subsamplingFactor);
-            }
-
-            void BackgroundExtraction::configure() {
-                parametersHelper.ReadFile(configurationFilePath);
-                validateParameters();
+            void BackgroundExtraction::configure()
+            {
+                if( configurationFilePath.empty() == false )
+                {
+                    parametersHelper.ReadFile(configurationFilePath);
+                    validateParameters();
+                }
             }
 
             void BackgroundExtraction::process() {
@@ -96,17 +110,14 @@ namespace CDFF {
                 delete new_segmentation;
             }
 
-
-            void BackgroundExtraction::reset() {
-                _backgroundModel.setTo(cv::Scalar(0, 0, 0));
-            }
-
-
             void BackgroundExtraction::validateParameters() const {
                 ASSERT(parameters.backgroundLabel != parameters.foregroundLabel,
                        "Foreground and background labels must be different");
             }
 
+            void BackgroundExtraction::reset() {
+                _backgroundModel.setTo(cv::Scalar(0, 0, 0));
+            }
 
             void BackgroundExtraction::validateInputs() const {
                 Validators::Frame::NotEmpty(inImage);
@@ -134,6 +145,8 @@ namespace CDFF {
                        "BackgroundExtraction: Frame too small to properly initialize classifier");
 
                 // pick points from the neighbourhood at random until we fill the model
+                std::random_device rand;
+                std::default_random_engine random_engine(rand());
                 std::uniform_int_distribution<int32_t> rand_int(-half_window, +half_window);
 
                 const cv::Size imsize = frame.size();
@@ -153,8 +166,8 @@ namespace CDFF {
                     const cv::Mat &frame, cv::Mat &background_model, cv::Mat &segmentation) const {
                 std::random_device rand;
                 std::default_random_engine random_engine(rand());
-                std::uniform_int_distribution<int32_t> rand_sample(1, parameters.samplesPerPixel);
-                std::uniform_int_distribution<int32_t> rand_subsample(1, parameters.subsamplingFactor);
+                std::uniform_int_distribution<int32_t> rand_sample(0, parameters.samplesPerPixel);
+                std::uniform_int_distribution<int32_t> rand_subsample(0, parameters.subsamplingFactor);
 
                 const cv::Size imsize = frame.size();
 
@@ -184,25 +197,28 @@ namespace CDFF {
                                     segmentation.at<uint8_t>(row, col) = parameters.backgroundLabel;
 
                                     // Temporal subsampling
-                                    if (rand_subsample(random_engine) == 1) {
+                                    if (rand_subsample(random_engine) == 0) {
                                         const int32_t sample_to_discard = rand_sample(random_engine);
                                         background_model.at<uint8_t>(row, col, sample_to_discard) = frame.at<uint8_t>(
                                                 row,
                                                 col);
                                     }
 
-                                    // Spatial subsampling
-                                    if (rand_subsample(random_engine) == 1) {
-                                        const auto dst = getPointFromNeighbourhoodOf({col, row}, imsize);
-                                        const int32_t sample_to_discard = rand_sample(random_engine);
-                                        background_model.at<uint8_t>(dst.y, dst.x,
-                                                                     sample_to_discard) = frame.at<uint8_t>(
-                                                row, col);
-                                    }
-
                                     break;  // break to for cols ...
+                                } else {
+                                    segmentation.at<uint8_t>(row, col) = parameters.foregroundLabel;
                                 }
                             }
+
+                            // Spatial subsampling
+                            if (rand_subsample(random_engine) == 0) {
+                                const auto dst = getPointFromNeighbourhoodOf({col, row}, imsize);
+                                const int32_t sample_to_discard = rand_sample(random_engine);
+                                background_model.at<uint8_t>(dst.y, dst.x,
+                                                             sample_to_discard) = frame.at<uint8_t>(
+                                        row, col);
+                            }
+
                         } // end for comparisons
                     } // end for cols
                 } // end for rows
@@ -215,6 +231,9 @@ namespace CDFF {
                 cv::threshold(mask, mask, /* thresh = */ 30, /* maxval = */ 255, cv::THRESH_BINARY);
                 segmentation = segmentation & mask;
             }
-        } // End namespace ImageFiltering
-    } // End namespace DFN
-} // End namespace CDFF
+
+        }
+    }
+}
+
+/** @} */
