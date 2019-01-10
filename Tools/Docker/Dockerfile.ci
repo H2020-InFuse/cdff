@@ -2,6 +2,8 @@ FROM nexus.spaceapplications.com/repository/infuse/cdff-base:latest
 
 ## Base + All extra dependencies
 
+ARG USER
+ARG PASS
 ARG INSTALL_DIR=/usr/local
 ENV INSTALL_CDFF=$INSTALL_DIR
 
@@ -19,6 +21,8 @@ RUN apt-get update && apt-get install --yes --quiet pkg-config libtinyxml-dev li
 
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv_contrib
 
-LABEL version="4.1.1"
+RUN wget --user ${USER} --password ${PASS} https://nexus.spaceapplications.com/repository/raw-infuse/DLRtrackerCore-1.0.0.zip -P /tmp/CDFF/External/source/ && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d dlrtracker-core
+
+LABEL version="4.2"
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="CI + all extra dependencies"
