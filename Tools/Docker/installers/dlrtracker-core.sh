@@ -58,7 +58,7 @@ if [[ ! -d "${INSTALL_DIR}/include/DLRtracker_core" ]]; then
   # Extract library and change to resulting directory
   unzip -d "${SOURCE_DIR}/DLRTracker-core" "${SOURCE_DIR}/DLRtrackerCore-1.0.0.zip"
   rm "${SOURCE_DIR}/DLRtrackerCore-1.0.0.zip"
-  cd "${SOURCE_DIR}/DLRTracker-core/DLRtrackerCore"
+  cd "${SOURCE_DIR}/DLRTracker-core/DLRtracker_core"
 
   # Install
   install -m 0644 -D -t "${INSTALL_DIR}/share/DLRtracker_core/" DLRtracker_coreConfig.cmake
