@@ -49,6 +49,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/ImageFiltering/KMeansClustering.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
+    DFNs/LinemodDetect/LinemodDetect.cpp
     DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
     DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
     DFNs/PointCloudAssembly/NeighbourSinglePointAverage.cpp
@@ -95,6 +96,7 @@ set(unittest_libraries catch
     cdff_dfn_perspective_n_point_solving
     cdff_dfn_kf_correction
     cdff_dfn_kf_prediction
+    cdff_dfn_linemod_detect
     cdff_dfn_point_cloud_assembly
     cdff_dfn_features_description_2d
     cdff_dfn_features_extraction_2d
