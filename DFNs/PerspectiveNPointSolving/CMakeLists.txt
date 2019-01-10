@@ -5,7 +5,7 @@ set(PERSPECTIVE_N_POINT_SOLVING_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpe
 if(OpenCV_FOUND)
 	set(PERSPECTIVE_N_POINT_SOLVING_SOURCES ${PERSPECTIVE_N_POINT_SOLVING_SOURCES} "IterativePnpSolver.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(PERSPECTIVE_N_POINT_SOLVING_DEPENDENCIES ${PERSPECTIVE_N_POINT_SOLVING_DEPENDENCIES} ${OpenCV_LIBS})
+	set(PERSPECTIVE_N_POINT_SOLVING_DEPENDENCIES ${PERSPECTIVE_N_POINT_SOLVING_DEPENDENCIES} opencv_core)
 endif()
 
 add_library(
