@@ -6,7 +6,7 @@ if(OpenCV_FOUND)
 	set(IMAGE_FILTERING_SOURCES ${IMAGE_FILTERING_SOURCES} "ImageUndistortion.cpp" "ImageUndistortionRectification.cpp" "DerivativeEdgeDetection.cpp" "CannyEdgeDetection.cpp"
 		"BackgroundExtraction.cpp" "NormalVectorExtraction.cpp" "KMeansClustering.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(IMAGE_FILTERING_DEPENDENCIES ${IMAGE_FILTERING_DEPENDENCIES} ${OpenCV_LIBS} cdff_validators)
+	set(IMAGE_FILTERING_DEPENDENCIES ${IMAGE_FILTERING_DEPENDENCIES} opencv_core opencv_calib3d cdff_validators)
 endif()
 
 add_library(

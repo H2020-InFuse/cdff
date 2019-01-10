@@ -28,6 +28,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/ColorConversion/ColorConversion.cpp
+    DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.cpp
     DFNs/ImageFiltering/DerivativeEdgeDetection.cpp
     DFNs/ImageFiltering/CannyEdgeDetection.cpp
     DFNs/ImageFiltering/BackgroundExtraction.cpp
@@ -66,7 +67,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
     DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
     DFNs/Voxelization/Octree.cpp
-    DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.cpp
+    DFNs/WeightingExpert/PoseWeighting.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/HapticScanning/HapticScanning.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
@@ -95,6 +96,7 @@ set(unittest_libraries catch
     cdff_dfn_depth_filtering
     cdff_dfn_cameras_transform_estimation
     cdff_dfn_color_conversion
+    cdff_dfn_disparity_to_pointcloud_with_intensity
     cdff_dfn_features_matching_2d
     cdff_dfn_fundamental_matrix_computation
     cdff_dfn_primitive_matching
@@ -115,7 +117,7 @@ set(unittest_libraries catch
     cdff_dfn_features_matching_3d
     cdff_dfn_bundle_adjustment
     cdff_dfn_voxelization
-    cdff_dfn_disparity_to_pointcloud_with_intensity
+    cdff_dfn_weighting_expert
     synthetic_generators
     cdff_dfpc_configurator
     cdff_dfpc_reconstruction_3d
