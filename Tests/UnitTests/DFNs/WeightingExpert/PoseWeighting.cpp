@@ -57,13 +57,13 @@ TEST_CASE( "Call to process (PoseWeighting)", "[process]" )
     const asn1SccPose& output = pose_weighting->poseOutput();
 
     // Check the DFN output pose is different from init pose (all 0s)
-    BOOST_ASSERT(output.pos.arr[0] != 0);
-    BOOST_ASSERT(output.pos.arr[0] != 0);
-    BOOST_ASSERT(output.pos.arr[0] != 0);
-    BOOST_ASSERT(output.orient.arr[0] != 0);
-    BOOST_ASSERT(output.orient.arr[0] != 0);
-    BOOST_ASSERT(output.orient.arr[0] != 0);
-    BOOST_ASSERT(output.orient.arr[0] != 0);
+    CHECK(output.pos.arr[0] != 0);
+    CHECK(output.pos.arr[0] != 0);
+    CHECK(output.pos.arr[0] != 0);
+    CHECK(output.orient.arr[0] != 0);
+    CHECK(output.orient.arr[0] != 0);
+    CHECK(output.orient.arr[0] != 0);
+    CHECK(output.orient.arr[0] != 0);
 }
 
 TEST_CASE( "Call to configure (PoseWeighting) ", "[configure]" )
@@ -107,13 +107,13 @@ TEST_CASE( "Call to configure (PoseWeighting) ", "[configure]" )
     const asn1SccPose& output = pose_weighting->poseOutput();
 
     // Check the DFN output pose is different from init pose (all 0s)
-    BOOST_ASSERT(output.pos.arr[0] != 0);
-    BOOST_ASSERT(output.pos.arr[0] != 0);
-    BOOST_ASSERT(output.pos.arr[0] != 0);
-    BOOST_ASSERT(output.orient.arr[0] != 0);
-    BOOST_ASSERT(output.orient.arr[0] != 0);
-    BOOST_ASSERT(output.orient.arr[0] != 0);
-    BOOST_ASSERT(output.orient.arr[0] != 0);
+    CHECK(output.pos.arr[0] != 0);
+    CHECK(output.pos.arr[0] != 0);
+    CHECK(output.pos.arr[0] != 0);
+    CHECK(output.orient.arr[0] != 0);
+    CHECK(output.orient.arr[0] != 0);
+    CHECK(output.orient.arr[0] != 0);
+    CHECK(output.orient.arr[0] != 0);
 }
 
 /** @} */
