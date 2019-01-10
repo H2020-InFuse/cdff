@@ -26,7 +26,6 @@
 #include <FeaturesMatching3D/BestDescriptorMatch.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
 #include <ImageDegradation/ImageDegradation.hpp>
-#include <ImageDegradation/ImageDegradationEdres.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
 #include <ImageFiltering/CannyEdgeDetection.hpp>
@@ -54,6 +53,10 @@
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
+
+#if WITH_EDRES
+#include <ImageDegradation/ImageDegradationEdres.hpp>
+#endif
 
 #include <Errors/Assert.hpp>
 
@@ -297,10 +300,12 @@ ImageDegradationInterface* DFNsBuilder::CreateImageDegradation(const std::string
     {
         return new ImageDegradation::ImageDegradation;
     }
+#if WITH_EDRES
     else if (dfnImplementation == "ImageDegradationEdres")
     {
         return new ImageDegradation::ImageDegradationEdres;
     }
+#endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN ImageDegradation implementation");
     return NULL;
 }
