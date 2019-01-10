@@ -5,7 +5,7 @@ set(FEATURES_EXTRACTION_2D_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "
 if(OpenCV_FOUND)
 	set(FEATURES_EXTRACTION_2D_SOURCES ${FEATURES_EXTRACTION_2D_SOURCES} "HarrisDetector2D.cpp" "OrbDetectorDescriptor.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(FEATURES_EXTRACTION_2D_DEPENDENCIES ${FEATURES_EXTRACTION_2D_DEPENDENCIES} ${OpenCV_LIBS})
+	set(FEATURES_EXTRACTION_2D_DEPENDENCIES ${FEATURES_EXTRACTION_2D_DEPENDENCIES} opencv_core opencv_features2d)
 endif()
 
 add_library(
