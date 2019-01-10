@@ -8,6 +8,7 @@
   - generation
   - analyse
   - build
+  - debug-build
   - test
   - deploy
 
@@ -131,6 +132,18 @@
    - "make --jobs=${JOBS} --output-sync=target"
    - "cd .."
 
+ build:cdff-base:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
+  stage: build
+  dependencies:
+   - generate:asn
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
+
  build:cdff-ci:system:
   <<: *configure
   <<: *make
@@ -147,25 +160,28 @@
   <<: *configure
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-pangolin:latest
-  stage: build
+  stage: debug-build
   dependencies:
    - generate:asn
+  when: on_failure
 
  build:cdff-opencv-contrib:system:
   <<: *configure
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-opencv-contrib:latest
-  stage: build
+  stage: debug-build
   dependencies:
    - generate:asn
+  when: on_failure
 
  build:cdff-dlrtracker:system:
   <<: *configure
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-dlrtracker:latest
-  stage: build
+  stage: debug-build
   dependencies:
-   - generate:asn 
+   - generate:asn
+  when: on_failure
 
  build:user:system:
   <<: *configure
@@ -214,7 +230,16 @@
   only:
    - master
 
- test:unit-tests:
+ test:base:unit-tests:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
+  stage: test
+  dependencies:
+   - build:cdff-base:system
+  script:
+   - cd build/Tests/UnitTests
+   - ./cdff-unit-tests
+
+ test:full:unit-tests:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage: test
   dependencies:
@@ -222,6 +247,7 @@
   script:
    - cd build/Tests/UnitTests
    - ./cdff-unit-tests
+
 
  test:dependencies:local:
   image: ubuntu:latest
@@ -231,6 +257,7 @@
    - mkdir -p build && cd build
    - cmake -D USE_BUNDLED_DEPENDENCIES=ON ..
    - make
+   - make install
   only:
    - manual
 
@@ -242,6 +269,7 @@
     - mkdir -p build && cd build
     - cmake ..
     - make
+    - make install
    only:
     - manual
 
