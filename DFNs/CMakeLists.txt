@@ -53,3 +53,5 @@ target_link_libraries(
   cdff_dfn_bundle_adjustment
   cdff_dfn_disparity_to_pointcloud_with_intensity
 )
+
+target_compile_definitions(dfns_builder PUBLIC WITH_EDRES=$<BOOL:${WITH_EDRES}>)
