@@ -10,11 +10,7 @@
 
 #include <Helpers/ParametersListHelper.hpp>
 #include <opencv2/video/tracking.hpp>
-
-#include <Eigen/Core>
 #include <Eigen/Dense>
-
-#include <memory>
 
 namespace CDFF
 {

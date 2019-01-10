@@ -9,13 +9,10 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include <opencv2/video/tracking.hpp>
-#include <iostream>
 #include <eigen3/Eigen/Dense>
 #include <opencv2/core/eigen.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 
-#include <Eigen/Dense>
-#include <Eigen/Geometry>
 
 cv::Mat rot2euler(const cv::Mat & rotationMatrix)
 {

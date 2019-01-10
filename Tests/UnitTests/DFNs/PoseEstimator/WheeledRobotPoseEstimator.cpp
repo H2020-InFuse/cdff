@@ -9,9 +9,9 @@
 
 #include <catch.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 #include <PoseEstimator/WheeledRobotPoseEstimator.hpp>
+
 
 using namespace CDFF::DFN::PoseEstimator;
 using namespace FrameWrapper;
@@ -27,8 +27,21 @@ TEST_CASE( "Call to process (WheeledRobotPoseEstimator)", "[process]" )
     const asn1SccFrame* inImage = MatToFrameConverter().Convert(gray_cv_img);
     const asn1SccFrame* inDepth = MatToFrameConverter().Convert(gray_cv_img);
     const asn1SccFrame* frame_without_background = MatToFrameConverter().Convert(gray_cv_img);
-    asn1SccVectorXdSequence* inPrimitives;
+
+
+    asn1SccVectorXdSequence* inPrimitives = new asn1SccVectorXdSequence();
     asn1SccVectorXdSequence_Initialize(inPrimitives);
+
+    // fill in with 2 x wheel (x,y,rad)
+    // TODO : extract from a urdf file
+    inPrimitives->nCount = 2;
+    inPrimitives->arr[0].nCount = 3;
+    inPrimitives->arr[0].arr[0] = 100;
+    inPrimitives->arr[0].arr[1] = 100;
+    inPrimitives->arr[0].arr[2] = 0.5;
+    inPrimitives->arr[1].arr[0] = 150;
+    inPrimitives->arr[1].arr[1] = 100;
+    inPrimitives->arr[1].arr[2] = 0.5;
 
     // Instantiate DFN
     std::unique_ptr<WheeledRobotPoseEstimator> m_pose_estimator (new WheeledRobotPoseEstimator);
@@ -48,6 +61,10 @@ TEST_CASE( "Call to process (WheeledRobotPoseEstimator)", "[process]" )
     // Query output data from DFN
     const asn1SccPosesSequence & output = m_pose_estimator->posesOutput();
 
+    delete inPrimitives;
+    delete inImage;
+    delete inDepth;
+    delete frame_without_background;
 }
 
 TEST_CASE( "Call to configure (WheeledRobotPoseEstimator) ", "[configure]" )
