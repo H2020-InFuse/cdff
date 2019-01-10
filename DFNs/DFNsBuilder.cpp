@@ -13,7 +13,6 @@
 #include <BundleAdjustment/SvdDecomposition.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 #include <ColorConversion/ColorConversion.hpp>
-#include <DisparityFiltering/DisparityFilteringEdres.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
@@ -53,6 +52,10 @@
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
+
+#if WITH_EDRES
+#include <DisparityFiltering/DisparityFilteringEdres.hpp>
+#endif
 
 #include <Errors/Assert.hpp>
 
@@ -202,10 +205,12 @@ ColorConversionInterface* DFNsBuilder::CreateColorConversion(const std::string& 
 
 DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::string& dfnImplementation)
 {
+#if WITH_EDRES
     if (dfnImplementation == "DisparityFilteringEdres")
     {
         return new DisparityFiltering::DisparityFilteringEdres;
     }
+#endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityFiltering implementation");
     return NULL;
 }
