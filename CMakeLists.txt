@@ -273,6 +273,7 @@ if(Ceres_FOUND)
   # and ${_DEPENDENCIES_PREFIX}/include -> really necessary to restrict the
   # include dirs to specific targets
   include_directories(SYSTEM ${CERES_INCLUDE_DIRS})
+  add_definitions(-DWITH_CERES)
 
 else()
 
@@ -286,6 +287,9 @@ endif()
 set(CLOUDCOMPARE_FOUND true)
 set(CLOUDCOMPARE_INCLUDE_DIRS "")
 set(CLOUDCOMPARE_LIBRARIES "cloudcompare_core")
+if(CLOUDCOMPARE_FOUND)
+add_definitions(-DWITH_CLOUDCOMPARE)
+endif()
 
 # There aren't any CMake find modules nor any package configuration files for
 # those libraries, so just add the main include directory and use the libraries
@@ -314,6 +318,9 @@ find_package_mode(PCL)
 add_definitions(${PCL_DEFINITIONS})
 include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
+if(PCL_FOUND)
+add_definitions(-DWITH_PCL)
+endif()
 
 message(STATUS "Preprocessor definitions and compiler flags added by the PCL: ${PCL_DEFINITIONS}")
 message(STATUS "Found PCL headers, and the headers of its dependencies, in: ${PCL_INCLUDE_DIRS}")
@@ -323,12 +330,19 @@ message(STATUS "All requested PCL libraries, and their dependencies: ${PCL_LIBRA
 find_package(OpenCV 3.4.0 REQUIRED)
 find_package_mode(OpenCV)
 
+if(OpenCV_FOUND)
+add_definitions(-DWITH_OPENCV)
+endif()
+
 ## Look for libpointmatcher ---------------------------------------------------
 
 # TODO: rework this section
 
 find_package(libpointmatcher 1.3.0 REQUIRED)
 set(POINTMATCHER_FOUND true)
+if(POINTMATCHER_FOUND)
+add_definitions(-DWITH_POINTMATCHER)
+endif()
 
 # Usage:
 # target_include_directories(<target> SYSTEM PRIVATE|PUBLIC ${POINTMATCHER_INCLUDE_DIRS})
