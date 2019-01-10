@@ -66,6 +66,19 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.opencv-contrib
+
+ docker:cdff-dlrtracker:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.ci
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.dlrtracker cdff-dlrtracker USER=$DOCKER_USER PASS=$DOCKER_PASSWORD
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.dlrtracker
     
  docker:cdff-dev-ci:
   <<: *connect

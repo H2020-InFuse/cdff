@@ -56,8 +56,8 @@ function install4infuse_dlrtracker-core {
 if [[ ! -d "${INSTALL_DIR}/include/DLRtracker_core" ]]; then
 
   # Extract library and change to resulting directory
-  unzip -d "${SOURCE_DIR}/DLRTracker-core" "${SOURCE_DIR}/DLRtrackerCore.zip"
-  rm "${SOURCE_DIR}/DLRtrackerCore.zip"
+  unzip -d "${SOURCE_DIR}/DLRTracker-core" "${SOURCE_DIR}/DLRtrackerCore-1.0.0.zip"
+  rm "${SOURCE_DIR}/DLRtrackerCore-1.0.0.zip"
   cd "${SOURCE_DIR}/DLRTracker-core/DLRtrackerCore"
 
   # Install
