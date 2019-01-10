@@ -111,12 +111,12 @@ TEST_CASE( "Call to process (Disparity To PointCloud With Intensity Edres)", "[p
 	// Query output data from DFN
 	const asn1SccPointcloud &output = disparityToPointCloudWithIntensityEdres->pointCloudOutput();
 
-	REQUIRE(dispImage->data.cols > 0);
-	REQUIRE(dispImage->data.rows > 0);
-	REQUIRE(intensityImage->data.cols > 0);
-	REQUIRE(intensityImage->data.rows > 0);
-	REQUIRE(output.data.points.nCount > 0);
-	REQUIRE(output.data.intensity.nCount > 0);
+    REQUIRE(output.metadata.msgVersion == pointCloud_Version);
+    REQUIRE(output.metadata.height == dispImage->data.rows);
+    REQUIRE(output.metadata.width == dispImage->data.cols);
+    REQUIRE(output.metadata.isOrdered == true);
+    REQUIRE(output.data.points.nCount == dispImage->data.rows * dispImage->data.cols);
+    REQUIRE(output.data.intensity.nCount == dispImage->data.rows * dispImage->data.cols);
 
 	// Cleanup
 	delete(dispImage);
