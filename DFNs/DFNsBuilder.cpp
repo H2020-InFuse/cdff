@@ -42,7 +42,6 @@
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
 #include <StereoRectification/StereoRectification.hpp>
-#include <StereoRectification/StereoRectificationEdres.hpp>
 #include <Transform3DEstimation/CeresEstimation.hpp>
 #include <Transform3DEstimation/LeastSquaresMinimization.hpp>
 #include <DepthFiltering/ConvolutionFilter.hpp>
@@ -54,6 +53,10 @@
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
+
+#if WITH_EDRES
+#include <StereoRectification/StereoRectificationEdres.hpp>
+#endif
 
 #include <Errors/Assert.hpp>
 
@@ -396,10 +399,12 @@ StereoRectificationInterface* DFNsBuilder::CreateStereoRectification(const std::
     {
         return new StereoRectification::StereoRectification;
     }
+#if WITH_EDRES
     else if (dfnImplementation == "StereoRectificationEdres")
     {
         return new StereoRectification::StereoRectificationEdres;
     }
+#endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoRectification implementation");
     return NULL;
 }
