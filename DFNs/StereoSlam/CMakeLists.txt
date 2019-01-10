@@ -31,7 +31,7 @@ add_library(
 )
 target_include_directories(
     cdff_dfn_stereo_slam
-    SYSTEM PRIVATE ${STEREO_SLAM_INCLUDE_DIRS}
+    SYSTEM PUBLIC ${STEREO_SLAM_INCLUDE_DIRS}
 )
 target_link_libraries(
     cdff_dfn_stereo_slam
