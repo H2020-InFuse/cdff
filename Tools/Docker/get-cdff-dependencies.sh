@@ -114,7 +114,6 @@ function cdff_wget {
   if [[ "${2: -7}" == ".tar.gz" ]]; then
     tar x --file="${2}"
     rm -f "${2}"
-    cd "${2%.tar.gz}"
   fi
   echo "Downloading ${1}: done"
 }
