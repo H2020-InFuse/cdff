@@ -8,7 +8,6 @@
  */
 
 #include <catch.hpp>
-#include <boost/assert.hpp>
 #include <ImageFiltering/NormalVectorExtraction.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 
@@ -56,8 +55,8 @@ TEST_CASE( "Call to process (NormalVectorExtraction)", "[process]" )
 	const Frame& output = normal_vector_extraction->imageOutput();
 
     // Check the DFN output image is not empty
-    BOOST_ASSERT(output.data.rows == input.rows);
-    BOOST_ASSERT(output.data.cols == input.cols);
+    CHECK(output.data.rows == input.rows);
+    CHECK(output.data.cols == input.cols);
 }
 
 /** @} */
