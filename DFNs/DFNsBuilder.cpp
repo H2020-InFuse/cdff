@@ -14,7 +14,6 @@
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 #include <ColorConversion/ColorConversion.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.hpp>
-#include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
@@ -54,6 +53,10 @@
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
+
+#if WITH_EDRES
+#include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.hpp>
+#endif
 
 #include <Errors/Assert.hpp>
 
@@ -207,10 +210,12 @@ DisparityToPointCloudWithIntensityInterface* DFNsBuilder::CreateDisparityToPoint
     {
         return new DisparityToPointCloudWithIntensity::DisparityToPointCloudWithIntensity;
     }
+#if WITH_EDRES
     else if (dfnImplementation == "DisparityToPointCloudWithIntensityEdres")
     {
         return new DisparityToPointCloudWithIntensity::DisparityToPointCloudWithIntensityEdres;
     }
+#endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityToPointCloudWithIntensity implementation");
     return NULL;
 }
