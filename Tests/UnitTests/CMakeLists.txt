@@ -66,7 +66,6 @@ set(unittest_sources UnitTests.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
     DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
     DFNs/Voxelization/Octree.cpp
-    DFPCs/ModelBasedVisualTracking/EdgeModelContourMatching.cpp # memory intensive!
     DFPCs/DfpcConfigurator.cpp
     DFPCs/HapticScanning/HapticScanning.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
@@ -120,6 +119,11 @@ set(unittest_libraries catch
 if(PCL_FOUND)
     set(unittest_sources ${unittest_sources} "DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp" "DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp")
     set(unittest_libraries ${unittest_libraries} cdff_dfn_force_mesh_generator pcl_io pcl_kdtree )
+endif()
+
+if(WITH_DLRTRACKER AND OpenCV_FOUND )
+    set(unittest_sources ${unittest_sources} "DFPCs/ModelBasedVisualTracking/EdgeModelContourMatching.cpp") # memory intensive
+    set(unittest_libraries ${unittest_libraries} cdff_dfpc_model_based_visual_tracking )
 endif()
 
 
