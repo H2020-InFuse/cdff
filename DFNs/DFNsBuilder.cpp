@@ -38,7 +38,6 @@
 #include <Registration3D/Icp3D.hpp>
 #include <Registration3D/IcpCC.hpp>
 #include <Registration3D/IcpMatcher.hpp>
-#include <StereoMotionEstimation/StereoMotionEstimationEdres.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
@@ -53,6 +52,10 @@
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
+
+#if WITH_EDRES
+#include <StereoMotionEstimation/StereoMotionEstimationEdres.hpp>
+#endif
 
 #include <Errors/Assert.hpp>
 
@@ -119,6 +122,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreateRegistration3D(dfnImplementation);
 	}
+    else if (dfnType == "StereoMotionEstimation")
+    {
+        return CreateStereoMotionEstimation(dfnImplementation);
+    }
 	else if (dfnType == "StereoReconstruction")
 	{
 		return CreateStereoReconstruction(dfnImplementation);
@@ -369,10 +376,12 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(const std::string& df
 
 StereoMotionEstimationInterface* DFNsBuilder::CreateStereoMotionEstimation(const std::string& dfnImplementation)
 {
+#if WITH_EDRES
     if (dfnImplementation == "StereoMotionEstimation")
     {
         return new StereoMotionEstimation::StereoMotionEstimationEdres;
     }
+#endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoMotionEstimation implementation");
     return NULL;
 }
