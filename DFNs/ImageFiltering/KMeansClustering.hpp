@@ -16,6 +16,24 @@ namespace CDFF {
     namespace DFN {
         namespace ImageFiltering {
 
+            /**
+            * Performs K-Means clustering on a 3C metric Image.
+            * 1. Initializes clusters centroids randomly with K number of seeds
+            * 2. Assigns each point to closest centroid
+            * 3. replace centroids with new cluster's mean
+            * 4. Computes distance between new and old centroid.
+            *    if below tolerance, algorithm converged
+            *    otherwise, back to step 2.
+            * @inputs :
+            *        3-channel Image including values in meters for X,Y,Z respectively
+            * @outputs :
+            *        Vector of K centroids
+            * @params :
+            *        - number of set clusters K
+            *        - max iterations
+            *        - error tolerance
+            */
+
             class KMeansClustering : public ImageFilteringInterface {
             public:
                 KMeansClustering();
@@ -27,9 +45,10 @@ namespace CDFF {
             private:
 
                 struct Parameters {
-                    int num_centers = 5;
-                    int max_iterations = 20;
-                    double tolerance = 1e-2;
+                    int num_centers;        //  Number of clusters (minimum 2)
+                    int max_iterations;     //  Maximum consecutive clustering before convergence
+                    double tolerance;       //  Metric error below which clustering converged, to be compared with RMS of errors between cluster means and new centers.
+
                 };
                 static const Parameters DefaultParameters;
 
