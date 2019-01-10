@@ -1,0 +1,4 @@
+- Name: KMeansClustering
+  NumCenters: 2
+  MaxIterations: 10
+  Tolerance: 1e-2
