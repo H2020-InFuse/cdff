@@ -122,13 +122,15 @@ TEST_CASE( "Call to process (Disparity Image Edres)", "[process]" )
 	// Query output data from DFN
 	const asn1SccFrame &output = disparityImageEdres->rawDisparityOutput();
 
-	REQUIRE(framePair->left.data.cols > 0);
-	REQUIRE(framePair->right.data.rows > 0);
-	REQUIRE(output.data.cols > 0);
-	REQUIRE(output.data.rows > 0);
-	REQUIRE(output.data.data.nCount > 0);
+    REQUIRE( output.metadata.pixelModel == asn1Sccpix_DISP );
+    REQUIRE( output.metadata.pixelCoeffs.arr[2] == framePair->baseline );
+    REQUIRE( output.data.msgVersion == array3D_Version );
+    REQUIRE( output.data.rows == framePair->left.data.rows );
+    REQUIRE( output.data.cols == framePair->left.data.cols );
+    REQUIRE( output.data.channels == 1 );
+    REQUIRE( output.data.data.nCount == static_cast<int>(output.data.rowSize * output.data.rows) );
 
-	// Cleanup
+    // Cleanup
 	delete(framePair);
 	delete(disparityImageEdres);
 }
