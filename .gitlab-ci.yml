@@ -159,6 +159,14 @@
   dependencies:
    - generate:asn
 
+ build:cdff-dlrtracker:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-dlrtracker:latest
+  stage: build
+  dependencies:
+   - generate:asn 
+
  build:user:system:
   <<: *configure
   <<: *make
