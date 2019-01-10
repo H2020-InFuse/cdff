@@ -43,12 +43,9 @@ using namespace FrameWrapper;
 
 FrameConstPtr MatToFrameConverter::Convert(const cv::Mat& image)
 	{
-	FramePtr frame = new Frame();
-	FrameWrapper::Initialize(*frame);
-	frame->metadata.status = STATUS_VALID;
-
-
+	FramePtr frame = FrameWrapper::NewFrame();
 	if (image.rows == 0 && image.cols == 0)
+		//set status empty
 		return frame;
 
 	SetFrameSize(*frame, image.cols, image.rows);
@@ -88,43 +85,63 @@ FrameSharedConstPtr MatToFrameConverter::ConvertShared(const cv::Mat& image)
  */
 void MatToFrameConverter::ConvertRGB(const cv::Mat& image, Frame& frame)
 	{
-	SetFrameMode(frame, MODE_RGB);		
-	
-	for(int rowIndex = 0; rowIndex < image.rows; rowIndex++)
-		{
-		for(int columnIndex = 0; columnIndex < image.cols; columnIndex++)
-			{
-			cv::Vec3b pixel = image.at<cv::Vec3b>(rowIndex, columnIndex);
-				AppendData<uint8_t>(frame,  pixel[0]);
-				AppendData<uint8_t>(frame,  pixel[1]);
-				AppendData<uint8_t>(frame,  pixel[2]);
+	try{
+		SetFrameMode(frame, MODE_RGB);
+
+		for (int rowIndex = 0; rowIndex < image.rows; rowIndex++) {
+			for (int columnIndex = 0; columnIndex < image.cols; columnIndex++) {
+				cv::Vec3b pixel = image.at<cv::Vec3b>(rowIndex, columnIndex);
+				AppendData<uint8_t>(frame, pixel[0]);
+				AppendData<uint8_t>(frame, pixel[1]);
+				AppendData<uint8_t>(frame, pixel[2]);
 			}
 		}
+		//status valid
+		SetFrameStatus(frame, STATUS_VALID);
+	}
+	catch(std::exception e){
+		//status invalid
+		SetFrameStatus(frame, STATUS_INVALID);
+	}
 	}
 
 void MatToFrameConverter::ConvertGrayscale(const cv::Mat& image, Frame& frame)
 	{
-	SetFrameMode(frame, MODE_GRAYSCALE);
-	for(int rowIndex = 0; rowIndex < image.rows; rowIndex++)
-		{
-		for(int columnIndex = 0; columnIndex < image.cols; columnIndex++)
+	try{
+		SetFrameMode(frame, MODE_GRAYSCALE);
+		for(int rowIndex = 0; rowIndex < image.rows; rowIndex++)
 			{
-				uchar pixel = image.at<uchar>(rowIndex, columnIndex);
-				AppendData<uint8_t>(frame, pixel);
+			for(int columnIndex = 0; columnIndex < image.cols; columnIndex++)
+				{
+					uchar pixel = image.at<uchar>(rowIndex, columnIndex);
+					AppendData<uint8_t>(frame, pixel);
+				}
 			}
-		}
+		//status valid
+		SetFrameStatus(frame, STATUS_VALID);
+	}
+	catch(std::exception e){
+		//status invalid
+		SetFrameStatus(frame, STATUS_INVALID);
+	}
 	}
 
 	void MatToFrameConverter::ConvertFloat(const cv::Mat& image, Frame& frame)
 	{
-		SetFrameMode(frame, MODE_GRAYSCALE);
-		for(int rowIndex = 0; rowIndex < image.rows; rowIndex++)
-		{
-			for(int columnIndex = 0; columnIndex < image.cols; columnIndex++)
-			{
-				float pixel = image.at<float>(rowIndex, columnIndex);
-				AppendData<float>(frame, pixel);
+		try {
+			SetFrameMode(frame, MODE_GRAYSCALE);
+			for (int rowIndex = 0; rowIndex < image.rows; rowIndex++) {
+				for (int columnIndex = 0; columnIndex < image.cols; columnIndex++) {
+					float pixel = image.at<float>(rowIndex, columnIndex);
+					AppendData<float>(frame, pixel);
+				}
 			}
+			//status valid
+			SetFrameStatus(frame, STATUS_VALID);
+		}
+		catch(std::exception e){
+			//status invalid
+			SetFrameStatus(frame, STATUS_INVALID);
 		}
 	}
 

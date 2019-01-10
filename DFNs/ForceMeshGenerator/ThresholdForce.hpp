@@ -46,8 +46,7 @@ namespace ForceMeshGenerator
 
 			struct ThresholdForceOptionsSet
 			{
-				/// The minimum force required for us to consider that the arm is in contact with a rigid object
-				double threshold;
+				double threshold;	//	Minimum force required to consider that the arm is in contact with a rigid object
 			};
 
 			Helpers::ParametersListHelper parametersHelper;
