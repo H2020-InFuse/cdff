@@ -22,7 +22,6 @@ namespace DFN
 namespace ForceMeshGenerator
 {
 
-//=====================================================================================================================
 ThresholdForce::ThresholdForce()
 {
     parameters = DEFAULT_PARAMETERS;
@@ -31,20 +30,17 @@ ThresholdForce::ThresholdForce()
 	configurationFilePath = "";
 }
 
-//=====================================================================================================================
 const ThresholdForce::ThresholdForceOptionsSet ThresholdForce::DEFAULT_PARAMETERS =
 {
     /*.threshold =*/ 0.5
 };
 
-//=====================================================================================================================
 void ThresholdForce::configure()
 {
 	parametersHelper.ReadFile(configurationFilePath);
 	ValidateParameters();
 }
 
-//=====================================================================================================================
 void ThresholdForce::process()
 {
 	Eigen::Vector3d contact_force(
@@ -68,7 +64,6 @@ void ThresholdForce::process()
 	}
 }
 
-//=====================================================================================================================
 void ThresholdForce::ValidateParameters()
 {
     Validators::Number::IsPositive(parameters.threshold);

@@ -41,7 +41,20 @@
    changes:
     - Tools/Docker/Dockerfile.ci
 
- docker:cdff-ci-pangolin:
+ docker:cdff-visp:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.ci
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.visp cdff-visp
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.visp
+
+ docker:cdff-pangolin:
   <<: *connect
   services:
    - docker:dind
@@ -66,7 +79,7 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.opencv-contrib
-    
+
  docker:cdff-dev-ci:
   <<: *connect
   services:
@@ -99,7 +112,7 @@
   script:
     - Tools/ASN.1/GeneratorScript.sh
   artifacts:
-   paths: 
+   paths:
     - Common/Types/C/
    expire_in: 4 weeks
 
@@ -126,7 +139,7 @@
   dependencies:
    - generate:asn
   artifacts:
-   paths: 
+   paths:
     - build/
    expire_in: 4 weeks
 
@@ -166,7 +179,7 @@
     - merge_requests
     - master
   artifacts:
-   paths: 
+   paths:
     - cppcheck/
    expire_in: 4 weeks
 
