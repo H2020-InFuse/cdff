@@ -5,7 +5,7 @@ set(IMAGE_DEGRADATION_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers")
 if(OpenCV_FOUND)
 	set(IMAGE_DEGRADATION_SOURCES ${IMAGE_DEGRADATION_SOURCES} "ImageDegradation.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(IMAGE_DEGRADATION_DEPENDENCIES ${IMAGE_DEGRADATION_DEPENDENCIES} ${OpenCV_LIBS})
+        set(IMAGE_DEGRADATION_DEPENDENCIES ${IMAGE_DEGRADATION_DEPENDENCIES} opencv_core opencv_imgproc)
 endif()
 
 if(Edres-Wrapper_FOUND)
