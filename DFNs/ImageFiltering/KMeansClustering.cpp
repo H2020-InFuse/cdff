@@ -11,35 +11,33 @@
 #include <opencv2/imgproc.hpp>
 
 
-void print_uniques(const cv::Mat& mat) {
-
-    std::set<uint8_t> unique_values;
-    for (int row = 0; row < mat.rows; ++row) {
-        for (int col = 0; col < mat.cols; ++col) {
-            unique_values.insert(mat.at<uint8_t>(row, col));
-        }
-    }
-}
-
 namespace CDFF {
     namespace DFN {
         namespace ImageFiltering {
-            const KMeansClustering::Parameters KMeansClustering::DefaultParameters = {};
+
+            const KMeansClustering::Parameters KMeansClustering::DefaultParameters =
+            {
+                    /* num_centers = */     5,
+                    /* max_iterations = */  20,
+                    /* tolerance = */       1e-2
+            };
 
             KMeansClustering::KMeansClustering() {
-		_parameters = DefaultParameters;
-
-                _parametersHelper.AddParameter("KMeansClustering", "num_centers",
+		        _parameters = DefaultParameters;
+                _parametersHelper.AddParameter("KMeansClustering", "NumCenters",
                                                _parameters.num_centers, DefaultParameters.num_centers);
-                _parametersHelper.AddParameter<double>("KMeansClustering", "tolerance", _parameters.tolerance,
+                _parametersHelper.AddParameter<double>("KMeansClustering", "Tolerance", _parameters.tolerance,
                                                        DefaultParameters.tolerance);
-                _parametersHelper.AddParameter("KMeansClustering", "max_iterations",
+                _parametersHelper.AddParameter("KMeansClustering", "MaxIterations",
                                                _parameters.max_iterations, DefaultParameters.max_iterations);
             }
 
             void KMeansClustering::configure() {
-                _parametersHelper.ReadFile(configurationFilePath);
-                ValidateParameters();
+                if( configurationFilePath.empty() == false )
+                {
+                    _parametersHelper.ReadFile(configurationFilePath);
+                    ValidateParameters();
+                }
             }
 
             void KMeansClustering::process() {
