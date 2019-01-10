@@ -5,7 +5,7 @@ set(STEREO_DEGRADATION_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers")
 if(OpenCV_FOUND)
 	set(STEREO_DEGRADATION_SOURCES ${STEREO_DEGRADATION_SOURCES} "StereoDegradation.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(STEREO_DEGRADATION_DEPENDENCIES ${STEREO_DEGRADATION_DEPENDENCIES} ${OpenCV_LIBS})
+        set(STEREO_DEGRADATION_DEPENDENCIES ${STEREO_DEGRADATION_DEPENDENCIES} opencv_core opencv_imgproc)
 endif()
 
 if(Edres-Wrapper_FOUND)
