@@ -33,7 +33,6 @@
 #include <ImageFiltering/NormalVectorExtraction.hpp>
 #include <ImageFiltering/KMeansClustering.hpp>
 #include <ImageRectification/ImageRectification.hpp>
-#include <ImageRectification/ImageRectificationEdres.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <PrimitiveMatching/HuInvariants.hpp>
@@ -54,6 +53,10 @@
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
+
+#if WITH_EDRES
+#include <ImageRectification/ImageRectificationEdres.hpp>
+#endif
 
 #include <Errors/Assert.hpp>
 
@@ -330,10 +333,12 @@ ImageRectificationInterface* DFNsBuilder::CreateImageRectification(const std::st
     {
         return new ImageRectification::ImageRectification;
     }
+#if WITH_EDRES
     else if (dfnImplementation == "ImageRectificationEdres")
     {
         return new ImageRectification::ImageRectificationEdres;
     }
+#endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN ImageRectification implementation");
     return NULL;
 }
