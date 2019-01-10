@@ -11,7 +11,7 @@ endif()
 if(OpenCV_FOUND)
 	set(STEREO_RECONSTRUCTION_SOURCES ${STEREO_RECONSTRUCTION_SOURCES} "DisparityMapping.cpp" "HirschmullerDisparityMapping.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(STEREO_RECONSTRUCTION_DEPENDENCIES ${STEREO_RECONSTRUCTION_DEPENDENCIES} ${OpenCV_LIBS})
+	set(STEREO_RECONSTRUCTION_DEPENDENCIES ${STEREO_RECONSTRUCTION_DEPENDENCIES} opencv_core opencv_calib3d)
 endif()
 
 if(TEST_ENABLED)

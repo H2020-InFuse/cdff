@@ -5,7 +5,7 @@ set(VOXELIZATION_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_conve
 if(OpenCV_FOUND)
 	set(VOXELIZATION_SOURCES ${VOXELIZATION_SOURCES} "Octree.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(VOXELIZATION_DEPENDENCIES ${VOXELIZATION_DEPENDENCIES} ${OpenCV_LIBS})
+	set(VOXELIZATION_DEPENDENCIES ${VOXELIZATION_DEPENDENCIES} opencv_core)
 endif()
 
 add_library(
