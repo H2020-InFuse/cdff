@@ -7,7 +7,8 @@
 #define STEREORECTIFICATION_STEREORECTIFICATION_HPP
 
 #include "StereoRectificationInterface.hpp"
-#include <opencv2/opencv.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/calib3d.hpp>
 #include "Helpers/ParametersListHelper.hpp"
 
 namespace CDFF
