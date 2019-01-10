@@ -5,7 +5,7 @@ set(FEATURES_DESCRIPTION_2D_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" 
 if(OpenCV_FOUND)
 	set(FEATURES_DESCRIPTION_2D_SOURCES ${FEATURES_DESCRIPTION_2D_SOURCES} "OrbDescriptor.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(FEATURES_DESCRIPTION_2D_DEPENDENCIES ${FEATURES_DESCRIPTION_2D_DEPENDENCIES} ${OpenCV_LIBS})
+	set(FEATURES_DESCRIPTION_2D_DEPENDENCIES ${FEATURES_DESCRIPTION_2D_DEPENDENCIES} opencv_core opencv_features2d)
 endif()
 
 add_library(
