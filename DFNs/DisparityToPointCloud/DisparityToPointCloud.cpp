@@ -4,7 +4,7 @@
  */
 
 #include "DisparityToPointCloud.hpp"
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 #include <Errors/Assert.hpp>
 
 namespace CDFF
