@@ -39,7 +39,6 @@
 #include <Registration3D/IcpCC.hpp>
 #include <Registration3D/IcpMatcher.hpp>
 #include <StereoDegradation/StereoDegradation.hpp>
-#include <StereoDegradation/StereoDegradationEdres.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
@@ -54,6 +53,10 @@
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
+
+#if WITH_EDRES
+#include <StereoDegradation/StereoDegradationEdres.hpp>
+#endif
 
 #include <Errors/Assert.hpp>
 
@@ -378,10 +381,12 @@ StereoDegradationInterface* DFNsBuilder::CreateStereoDegradation(const std::stri
     {
         return new StereoDegradation::StereoDegradation;
     }
+#if WITH_EDRES
     else if (dfnImplementation == "StereoDegradationEdres")
     {
         return new StereoDegradation::StereoDegradationEdres;
     }
+#endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoDegradation implementation");
     return NULL;
 }
