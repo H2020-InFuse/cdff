@@ -14,7 +14,6 @@
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 #include <ColorConversion/ColorConversion.hpp>
 #include <DisparityImage/DisparityImage.hpp>
-#include <DisparityImage/DisparityImageEdres.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
@@ -54,6 +53,10 @@
 #include <PointCloudTransform/CartesianSystemTransform.hpp>
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
+
+#if WITH_EDRES
+#include <DisparityImage/DisparityImageEdres.hpp>
+#endif
 
 #include <Errors/Assert.hpp>
 
@@ -207,10 +210,12 @@ DisparityImageInterface* DFNsBuilder::CreateDisparityImage(const std::string& df
     {
         return new DisparityImage::DisparityImage;
     }
+#if WITH_EDRES
     else if (dfnImplementation == "DisparityImageEdres")
     {
         return new DisparityImage::DisparityImageEdres;
     }
+#endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityImage implementation");
     return NULL;
 }
