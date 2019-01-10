@@ -8,10 +8,8 @@
  */
 
 #include <catch.hpp>
-
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-
 #include <Converters/MatToFrameConverter.hpp>
 #include <PoseEstimator/WheeledRobotPoseEstimator.hpp>
 
@@ -23,22 +21,23 @@ TEST_CASE( "Call to process (WheeledRobotPoseEstimator)", "[process]" )
 {
     // Prepare input data
     cv::Mat rgb = cv::imread("../tests/Data/Images/AlgeriaDesert.jpg", cv::IMREAD_COLOR);
-    cv::Mat gray_cv_image;
-    cv::cvtColor(rgb, gray, cv::COLOR_RGB2GRAY);
+    cv::Mat gray_cv_img;
+    cv::cvtColor(rgb, gray_cv_img, cv::COLOR_RGB2GRAY);
 
-    asn1SccFrame inImage = MatToFrameConverter().Convert(gray);
-    asn1SccFrame inDepth = MatToFrameConverter().Convert(gray);
-    asn1SccVectorXdSequence inPrimitives = MatToFrameConverter().Convert(gray);
-    asn1SccFrame frame_without_background = MatToFrameConverter().Convert(gray);
+    const asn1SccFrame* inImage = MatToFrameConverter().Convert(gray_cv_img);
+    const asn1SccFrame* inDepth = MatToFrameConverter().Convert(gray_cv_img);
+    const asn1SccFrame* frame_without_background = MatToFrameConverter().Convert(gray_cv_img);
+    asn1SccVectorXdSequence* inPrimitives;
+    asn1SccVectorXdSequence_Initialize(inPrimitives);
 
     // Instantiate DFN
     std::unique_ptr<WheeledRobotPoseEstimator> m_pose_estimator (new WheeledRobotPoseEstimator);
 
     // Send input data to DFN
-    m_pose_estimator->imageInput(inImage);
-    m_pose_estimator->depthInput(inDepth);
-    m_pose_estimator->primitivesInput(inPrimitives);
-    m_pose_estimator->imageInput(frame_without_background);
+    m_pose_estimator->imageInput(*inImage);
+    m_pose_estimator->depthInput(*inDepth);
+    m_pose_estimator->primitivesInput(*inPrimitives);
+    m_pose_estimator->imageInput(*frame_without_background);
 
     // Run DFN more than the number of stabilizing frames (default = 4)
     for(unsigned int i = 0; i < 5; i++)
