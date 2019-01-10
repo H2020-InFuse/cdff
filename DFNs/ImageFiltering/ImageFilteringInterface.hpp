@@ -25,13 +25,15 @@ namespace DFN
 
             /**
              * Send value to input port "image"
-             * @param image: 2D image captured by a camera
+             * @param image
+             *     2D image captured by a camera
              */
             virtual void imageInput(const asn1SccFrame& data);
 
             /**
              * Query value from output port "image"
-             * @return image: same image, filtered
+             * @return image
+             *     same image, filtered
              */
             virtual const asn1SccFrame& imageOutput() const;
 
