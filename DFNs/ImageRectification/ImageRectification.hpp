@@ -7,7 +7,8 @@
 #define IMAGERECTIFICATION_IMAGERECTIFICATION_HPP
 
 #include "ImageRectificationInterface.hpp"
-#include <opencv2/opencv.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/calib3d.hpp>
 #include "Helpers/ParametersListHelper.hpp"
 
 namespace CDFF
