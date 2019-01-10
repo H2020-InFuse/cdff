@@ -83,7 +83,6 @@ set(unittest_libraries catch
     cdff_helpers
     cdff_logger
     cdff_types
-    cdff_dfpc_implementation_edge_model_contour_matching
     cdff_dfn_dfnexecutors
     cdff_dfn_point_cloud_transform
     cdff_dfn_depth_filtering
