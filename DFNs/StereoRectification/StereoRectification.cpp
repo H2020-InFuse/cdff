@@ -15,6 +15,7 @@ namespace StereoRectification
 {
 
 StereoRectification::StereoRectification()
+:parameters(DEFAULT_PARAMETERS)
 {
     _sensorIdLeft = "";
     _sensorIdRight = "";

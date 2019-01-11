@@ -13,6 +13,7 @@ namespace StereoRectification
 {
 
 StereoRectificationEdres::StereoRectificationEdres()
+:parameters(DEFAULT_PARAMETERS)
 {
     _mapFileLeft = " ";
     _mapFileRight = " ";
