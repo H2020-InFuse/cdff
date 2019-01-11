@@ -13,6 +13,7 @@
 #include <BundleAdjustment/SvdDecomposition.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 #include <ColorConversion/ColorConversion.hpp>
+#include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
@@ -57,6 +58,7 @@
 #if WITH_EDRES
 #include <DisparityFiltering/DisparityFilteringEdres.hpp>
 #include <ImageRectification/ImageRectificationEdres.hpp>
+#include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.hpp>
 #include <StereoMotionEstimation/StereoMotionEstimationEdres.hpp>
 #endif
 
@@ -84,6 +86,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
     else if (dfnType == "DisparityFiltering")
     {
         return CreateDisparityFiltering(dfnImplementation);
+    }
+    else if (dfnType == "DisparityToPointCloudWithIntensity")
+    {
+        return CreateDisparityToPointCloudWithIntensity(dfnImplementation);
     }
 	else if (dfnType == "FeaturesDescription2D")
 	{
@@ -223,6 +229,22 @@ DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::st
     }
 #endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityFiltering implementation");
+    return NULL;
+}
+
+DisparityToPointCloudWithIntensityInterface* DFNsBuilder::CreateDisparityToPointCloudWithIntensity(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "DisparityToPointCloudWithIntensity")
+    {
+        return new DisparityToPointCloudWithIntensity::DisparityToPointCloudWithIntensity;
+    }
+#if WITH_EDRES
+    else if (dfnImplementation == "DisparityToPointCloudWithIntensityEdres")
+    {
+        return new DisparityToPointCloudWithIntensity::DisparityToPointCloudWithIntensityEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityToPointCloudWithIntensity implementation");
     return NULL;
 }
 
