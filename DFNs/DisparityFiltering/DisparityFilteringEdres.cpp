@@ -14,6 +14,7 @@ namespace DisparityFiltering
 {
 
 DisparityFilteringEdres::DisparityFilteringEdres()
+: parameters(DEFAULT_PARAMETERS)
 {
     parametersHelper.AddParameter<int>("DisparityFilteringEdresParams", "trimWidth", parameters.trimWidth, DEFAULT_PARAMETERS.trimWidth);
     parametersHelper.AddParameter<float>("DisparityFilteringEdresParams", "connexityThresh", parameters.connexityThresh, DEFAULT_PARAMETERS.connexityThresh);
