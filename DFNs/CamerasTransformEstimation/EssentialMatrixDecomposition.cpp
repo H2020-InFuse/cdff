@@ -92,7 +92,7 @@ void EssentialMatrixDecomposition::process()
 
 const EssentialMatrixDecomposition::EssentialMatrixDecompositionOptionsSet EssentialMatrixDecomposition::DEFAULT_PARAMETERS =
 {
-	/*.numberOfTestPoints =*/ 20,
+	/*.numberOfTestPoints =*/ 1,
 	//.firstCameraMatrix =
 	{
 		/*.focalLengthX =*/ 1.0,
