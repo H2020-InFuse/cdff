@@ -14,6 +14,7 @@ namespace DisparityImage
 {
 
 DisparityImageEdres::DisparityImageEdres()
+:parameters(DEFAULT_PARAMETERS)
 {
     parametersHelper.AddParameter<double>("DisparityImageEdresParams", "minDistance", parameters.minDistance, DEFAULT_PARAMETERS.minDistance);
     parametersHelper.AddParameter<double>("DisparityImageEdresParams", "maxDistance", parameters.maxDistance, DEFAULT_PARAMETERS.maxDistance);

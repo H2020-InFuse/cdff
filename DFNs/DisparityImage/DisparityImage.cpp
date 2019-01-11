@@ -13,6 +13,7 @@ namespace DisparityImage
 {
 
 DisparityImage::DisparityImage()
+:parameters(DEFAULT_PARAMETERS)
 {
     parametersHelper.AddParameter<int>("stereoMatcherParams", "algorithm", parameters.stereoMatcher.algorithm, DEFAULT_PARAMETERS.stereoMatcher.algorithm);
     parametersHelper.AddParameter<int>("stereoMatcherParams", "minDisparity", parameters.stereoMatcher.minDisparity, DEFAULT_PARAMETERS.stereoMatcher.minDisparity);
