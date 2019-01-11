@@ -8,6 +8,7 @@
   - generation
   - analyse
   - build
+  - debug-build
   - test
   - deploy
 
@@ -36,12 +37,25 @@
   stage: docker.ci
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.ci cdff-ci
+   - ./docker-builder.sh Dockerfile.ci cdff-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD
   only:
    changes:
     - Tools/Docker/Dockerfile.ci
 
- docker:cdff-ci-pangolin:
+ docker:cdff-visp:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.ci
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.visp cdff-visp
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.visp
+
+ docker:cdff-pangolin:
   <<: *connect
   services:
    - docker:dind
@@ -66,6 +80,19 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.opencv-contrib
+
+ docker:cdff-dlrtracker:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.ci
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.dlrtracker cdff-dlrtracker USER=$DOCKER_USER PASS=$DOCKER_PASSWORD
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.dlrtracker
     
  docker:cdff-dev-ci:
   <<: *connect
@@ -99,7 +126,7 @@
   script:
     - Tools/ASN.1/GeneratorScript.sh
   artifacts:
-   paths: 
+   paths:
     - Common/Types/C/
    expire_in: 4 weeks
 
@@ -118,6 +145,18 @@
    - "make --jobs=${JOBS} --output-sync=target"
    - "cd .."
 
+ build:cdff-base:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
+  stage: build
+  dependencies:
+   - generate:asn
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
+
  build:cdff-ci:system:
   <<: *configure
   <<: *make
@@ -126,7 +165,7 @@
   dependencies:
    - generate:asn
   artifacts:
-   paths: 
+   paths:
     - build/
    expire_in: 4 weeks
 
@@ -134,17 +173,28 @@
   <<: *configure
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-pangolin:latest
-  stage: build
+  stage: debug-build
   dependencies:
    - generate:asn
+  when: on_failure
 
  build:cdff-opencv-contrib:system:
   <<: *configure
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-opencv-contrib:latest
-  stage: build
+  stage: debug-build
   dependencies:
    - generate:asn
+  when: on_failure
+
+ build:cdff-dlrtracker:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-dlrtracker:latest
+  stage: debug-build
+  dependencies:
+   - generate:asn
+  when: on_failure
 
  build:user:system:
   <<: *configure
@@ -166,7 +216,7 @@
     - merge_requests
     - master
   artifacts:
-   paths: 
+   paths:
     - cppcheck/
    expire_in: 4 weeks
 
@@ -193,7 +243,16 @@
   only:
    - master
 
- test:unit-tests:
+ test:base:unit-tests:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
+  stage: test
+  dependencies:
+   - build:cdff-base:system
+  script:
+   - cd build/Tests/UnitTests
+   - ./cdff-unit-tests
+
+ test:full:unit-tests:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage: test
   dependencies:
@@ -201,6 +260,7 @@
   script:
    - cd build/Tests/UnitTests
    - ./cdff-unit-tests
+
 
  test:dependencies:local:
   image: ubuntu:latest
@@ -210,6 +270,7 @@
    - mkdir -p build && cd build
    - cmake -D USE_BUNDLED_DEPENDENCIES=ON ..
    - make
+   - make install
   only:
    - manual
 
@@ -221,6 +282,7 @@
     - mkdir -p build && cd build
     - cmake ..
     - make
+    - make install
    only:
     - manual
 
