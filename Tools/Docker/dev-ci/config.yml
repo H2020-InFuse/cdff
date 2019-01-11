@@ -1,0 +1,40 @@
+---
+ruby_executable: "/usr/bin/ruby2.3"
+gems_install_path: "/root/.autoproj/gems"
+prefer_indep_over_os_packages: false
+osdeps_mode: none  # all
+reused_autoproj_installations: []
+manifest_source:
+  :type: git
+  :url: git@gitlab.spaceapplications.com:InFuse/cdff-buildconf
+  :branch: cdff_dev
+GITHUB: http,ssh
+GITHUB_ROOT: https://github.com
+GITHUB_PUSH_ROOT: 'git@github.com:'
+GITHUB_PRIVATE_ROOT: 'git@github.com:'
+SPACEAPP: ssh,ssh
+SPACEAPP_ROOT: 'git@gitlab.spaceapplications.com:'
+SPACEAPP_PUSH_ROOT: 'git@gitlab.spaceapplications.com:'
+SPACEAPP_PRIVATE_ROOT: 'git@gitlab.spaceapplications.com:'
+operating_system:
+- - ubuntu
+  - debian
+- - '16.04'
+  - 16.04.4
+  - lts
+  - xenial
+  - xerus
+  - default
+CDFF_EXTERNAL_SOURCE_INSTALL: none  # all
+DFKIGIT: ssh,ssh
+DFKIGIT_ROOT: 'git@git.hb.dfki.de:'
+DFKIGIT_PUSH_ROOT: 'git@git.hb.dfki.de:'
+DFKIGIT_PRIVATE_ROOT: 'git@git.hb.dfki.de:'
+ROCK_SELECTED_FLAVOR: stable
+ROCK_FLAVOR: stable
+ROCK_BRANCH: stable
+cxx11: true
+typelib_cxx_loader: castxml
+USE_OCL: false
+rtt_target: gnulinux
+rtt_corba_implementation: omniorb

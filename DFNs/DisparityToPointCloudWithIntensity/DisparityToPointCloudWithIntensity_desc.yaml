@@ -1,0 +1,15 @@
+name: DisparityToPointCloudWithIntensity
+input_ports:
+    - name: dispImage
+      type: asn1SccFrame
+      doc: A disparity image
+    - name: intensityImage
+      type: asn1SccFrame
+      doc: Left image for intensity information
+output_ports:
+    - name: pointCloud
+      type: asn1SccPointcloud
+      doc: The corresponding pointcloud
+implementations:
+    - DisparityToPointCloudWithIntensity
+    - DisparityToPointCloudWithIntensityEdres
