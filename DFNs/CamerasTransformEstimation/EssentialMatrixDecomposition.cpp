@@ -92,7 +92,7 @@ void EssentialMatrixDecomposition::process()
 
 const EssentialMatrixDecomposition::EssentialMatrixDecompositionOptionsSet EssentialMatrixDecomposition::DEFAULT_PARAMETERS =
 {
-	/*.numberOfTestPoints =*/ 1,
+	/*.numberOfTestPoints =*/ 20,
 	//.firstCameraMatrix =
 	{
 		/*.focalLengthX =*/ 1.0,
@@ -254,7 +254,7 @@ bool EssentialMatrixDecomposition::ProjectionMatrixIsValidForTestPoints(cv::Mat 
 
 void EssentialMatrixDecomposition::ValidateParameters()
 {
-	ASSERT(parameters.numberOfTestPoints > 0, "EssentialMatrixComputation Configuration Error: number of test points has to be positive");
+	ASSERT(parameters.numberOfTestPoints > 1, "EssentialMatrixComputation Configuration Error: number of test points has to be positive and greater than 1");
 	ASSERT(parameters.firstCameraMatrix.focalLengthX > 0 && parameters.firstCameraMatrix.focalLengthY > 0, "EssentialMatrixComputation Configuration Error: focalLength is not positive");
 	ASSERT(parameters.secondCameraMatrix.focalLengthX > 0 && parameters.secondCameraMatrix.focalLengthY > 0, "EssentialMatrixComputation Configuration Error: focalLength is not positive");
 }
@@ -262,7 +262,6 @@ void EssentialMatrixDecomposition::ValidateParameters()
 void EssentialMatrixDecomposition::ValidateInputs(cv::Mat fundamentalMatrix, cv::Mat correspondenceMap)
 {
 	ASSERT(fundamentalMatrix.cols == 3 && fundamentalMatrix.rows == 3, "EssentialMatrixComputation Error, unexpected fundamental matrix size");
-	ASSERT(correspondenceMap.cols > parameters.numberOfTestPoints, "EssentialMatrixComputation Error, insufficient number of test point for testing");
 }
 
 }

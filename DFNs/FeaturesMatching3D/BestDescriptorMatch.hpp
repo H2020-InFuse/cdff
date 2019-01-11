@@ -45,6 +45,7 @@ namespace FeaturesMatching3D
 
 		private:
 
+			//DFN Parameters
 			struct BestDescriptorMatchOptionsSet
 			{
 				double maxCorrespondenceDistance;
@@ -54,11 +55,14 @@ namespace FeaturesMatching3D
 			BestDescriptorMatchOptionsSet parameters;
 			static const BestDescriptorMatchOptionsSet DEFAULT_PARAMETERS;
 
+			//External Converters
 			Converters::VisualPointFeatureVector3DToPclPointCloudConverter
 				visualPointFeatureVector3DToPclPointCloud;
-			PoseWrapper::Pose3DConstPtr Convert(
-				Eigen::Matrix4f eigenTransform);
 
+			//Type Conversion Methods
+			PoseWrapper::Pose3DConstPtr Convert(Eigen::Matrix4f eigenTransform);
+
+			//Core Computation Methods
 			void ComputeBestMatches(
 				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
 				Converters::SupportTypes::PointCloudWithFeatures sinkCloud,
@@ -71,6 +75,7 @@ namespace FeaturesMatching3D
 
 			float ComputeDistance(const Converters::SupportTypes::FeatureType& feature1, const Converters::SupportTypes::FeatureType& feature2, int numberOfFeatureComponents);
 
+			//Input Validation Methods
 			void ValidateParameters();
 			void ValidateInputs(
 				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,

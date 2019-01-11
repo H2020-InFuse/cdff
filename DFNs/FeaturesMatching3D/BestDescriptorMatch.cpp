@@ -96,7 +96,8 @@ const BestDescriptorMatch::BestDescriptorMatchOptionsSet BestDescriptorMatch::DE
 	/*.maxCorrespondenceDistance =*/ 0.05
 };
 
-
+/*This method computes the point clouds containing the best matches among the points in the input clouds. 
+Output: For each index i, bestMatchSourceCloud(i) is a point in sourceCloud that is the best match of bestMatchSinkCloud(i) among the points in sinkCloud */
 void BestDescriptorMatch::ComputeBestMatches( PointCloudWithFeatures sourceCloud, PointCloudWithFeatures sinkCloud, pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSourceCloud, 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSinkCloud)
 	{
@@ -105,6 +106,7 @@ void BestDescriptorMatch::ComputeBestMatches( PointCloudWithFeatures sourceCloud
 	std::vector<float> minimumDistances(numberOfSourcePoints);
 	std::vector<int> minimumSinkIndex(numberOfSourcePoints);
 
+	// For each source point we compute the sink point whose feature distance from the source point is the minimum among all sink points
 	for(int sourceIndex = 0; sourceIndex < numberOfSourcePoints; sourceIndex++)
 		{
 		const FeatureType& sourceDescriptor = sourceCloud.featureCloud->points.at(sourceIndex);
@@ -124,6 +126,8 @@ void BestDescriptorMatch::ComputeBestMatches( PointCloudWithFeatures sourceCloud
 			}
 		}
 
+	//For each source point, we test whether the minimum distance computed above is belowe the maxCorrespondenceDistance parameters. If yes, a best match is recorded between
+	//the source point and the minimum distance sink point associated to it.
 	for(int sourceIndex = 0; sourceIndex < numberOfSourcePoints; sourceIndex++)
 		{
 		if ( minimumDistances.at(sourceIndex) < parameters.maxCorrespondenceDistance )
