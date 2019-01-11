@@ -18,7 +18,7 @@ StereoSlamInterface::~StereoSlamInterface()
 {
 }
 
-void StereoSlamInterface::imagePairInput(const asn1SccFramePair& data)
+void StereoSlamInterface::framePairInput(const asn1SccFramePair& data)
 {
     inImagePair = data;
 }

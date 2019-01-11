@@ -27,10 +27,10 @@ namespace DFN
             virtual ~StereoSlamInterface();
 
             /**
-             * Send value to input port "imagePair"
-             * @param imagePair The current rectifed image pair on which to perform tracking.
+             * Send value to input port "framePair"
+             * @param data The current rectifed image pair on which to perform tracking.
              */
-            virtual void imagePairInput(const asn1SccFramePair& data);
+            virtual void framePairInput(const asn1SccFramePair& data);
             /**
              * Query value from output port "Pose"
              * @return Pose The latest pose estimated by the SLAM system.
