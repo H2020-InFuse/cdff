@@ -46,6 +46,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/FeaturesMatching3D/Icp3D.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
+    DFNs/StereoDegradation/StereoDegradation.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/ImageFiltering/BackgroundSubtractorMOG2.cpp
     DFNs/ImageFiltering/NormalVectorExtraction.cpp
@@ -83,8 +84,9 @@ set(unittest_sources UnitTests.cpp
 if(WITH_EDRES)
     set(unittest_sources ${unittest_sources}
         DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
-        DFNs/ImageRectification/ImageRectificationEdres.cpp
         DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.cpp
+        DFNs/ImageRectification/ImageRectificationEdres.cpp
+        DFNs/StereoDegradation/StereoDegradationEdres.cpp
         DFNs/StereoMotionEstimation/StereoMotionEstimationEdres.cpp
     )
 endif()
@@ -115,6 +117,7 @@ set(unittest_libraries catch
     cdff_dfn_features_extraction_2d
     cdff_dfn_registration_3d
     cdff_dfn_image_filtering
+    cdff_dfn_stereo_degradation
     cdff_dfn_point_cloud_filtering
     cdff_dfn_transform_3d_estimation
     cdff_dfn_point_cloud_reconstruction_2d_to_3d
