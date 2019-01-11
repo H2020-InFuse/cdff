@@ -52,6 +52,7 @@ namespace PointCloudReconstruction2DTo3D
 
 		private:
 
+			//DFN Parameters
 			enum CAMERA_TYPE
 			{
 				SOURCE_CAMERA,
@@ -75,19 +76,25 @@ namespace PointCloudReconstruction2DTo3D
 				float maximumReprojectionError;
 			};
 
-			cv::Mat firstCameraMatrix;
-			cv::Mat secondCameraMatrix;
-
 			TriangulationOptionsSet parameters;
 			static const TriangulationOptionsSet DEFAULT_PARAMETERS;
+
+			//External conversion helpers
+			Converters::Pose3DToMatConverter pose3DToMat;
+
+			//Parameters Conversion
+			cv::Mat firstCameraMatrix;
+			cv::Mat secondCameraMatrix;
 			cv::Mat ConvertToMat(CameraMatrix cameraMatrix);
 
-			Converters::Pose3DToMatConverter pose3DToMat;
+			//Type conversion methods
 			cv::Mat ConvertAtPose(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap, CAMERA_TYPE cameraPoseIdentifier);
 			PointCloudWrapper::PointCloudConstPtr Convert(cv::Mat pointCloudMatrix);
 
+			//Core computation methods
 			cv::Mat Triangulate(cv::Mat projectionMatrix, cv::Mat pointsVectorAtPose1, cv::Mat pointsVectorAtPose2);
 
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(const CorrespondenceMap2DWrapper::CorrespondenceMap2D& matches, const PoseWrapper::Pose3D& pose);
 	};

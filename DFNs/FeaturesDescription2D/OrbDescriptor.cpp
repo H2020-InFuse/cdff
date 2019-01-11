@@ -83,6 +83,47 @@ const OrbDescriptor::OrbOptionsSet OrbDescriptor::DEFAULT_PARAMETERS =
 	/*.sizeOfBrightnessTestSet =*/ 2
 };
 
+int OrbDescriptor::ConvertToScoreType(const std::string& scoreType)
+{
+	if (scoreType == "HarrisScore" || scoreType == "0")
+		{
+		return cv::ORB::HARRIS_SCORE;
+		}
+	if (scoreType == "FastScore" || scoreType == "1")
+		{
+		return cv::ORB::FAST_SCORE;
+		}
+	ASSERT(false, "Orb Detector Descriptor Configuration Error: Score type should be either HarrisScore or FastScore (1, or 2)");
+}
+
+std::vector<cv::KeyPoint> OrbDescriptor::Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& featuresVector)
+{
+	std::vector<cv::KeyPoint> keypointsVector;
+	for (int featureIndex = 0; featureIndex < GetNumberOfPoints(featuresVector); featureIndex++)
+	{
+		int descriptorSize = GetNumberOfDescriptorComponents(featuresVector, featureIndex);
+
+		float size = (descriptorSize > 0) ? GetDescriptorComponent(featuresVector, featureIndex, 0) : 1;
+		float angle = (descriptorSize > 1) ? GetDescriptorComponent(featuresVector, featureIndex, 1) : -1;
+		float response = (descriptorSize > 2) ? GetDescriptorComponent(featuresVector, featureIndex, 2) : 0;
+		float octave = (descriptorSize > 3) ? GetDescriptorComponent(featuresVector, featureIndex, 3) : 0;
+		float id = (descriptorSize > 4) ? GetDescriptorComponent(featuresVector, featureIndex, 4) : -1;
+
+		cv::KeyPoint newPoint(
+			GetXCoordinate(featuresVector, featureIndex),
+			GetYCoordinate(featuresVector, featureIndex),
+			size,
+			angle,
+			response,
+			octave,
+			id
+		);
+		keypointsVector.push_back(newPoint);
+	}
+
+	return keypointsVector;
+}
+
 cv::Mat OrbDescriptor::ComputeOrbFeatures(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector)
 {
 	cv::Ptr<cv::ORB> orb = cv::ORB::create();
@@ -119,34 +160,6 @@ cv::Mat OrbDescriptor::ComputeOrbFeatures(cv::Mat inputImage, std::vector<cv::Ke
 	return orbFeaturesMatrix;
 }
 
-std::vector<cv::KeyPoint> OrbDescriptor::Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& featuresVector)
-{
-	std::vector<cv::KeyPoint> keypointsVector;
-	for (int featureIndex = 0; featureIndex < GetNumberOfPoints(featuresVector); featureIndex++)
-	{
-		int descriptorSize = GetNumberOfDescriptorComponents(featuresVector, featureIndex);
-
-		float size = (descriptorSize > 0) ? GetDescriptorComponent(featuresVector, featureIndex, 0) : 1;
-		float angle = (descriptorSize > 1) ? GetDescriptorComponent(featuresVector, featureIndex, 1) : -1;
-		float response = (descriptorSize > 2) ? GetDescriptorComponent(featuresVector, featureIndex, 2) : 0;
-		float octave = (descriptorSize > 3) ? GetDescriptorComponent(featuresVector, featureIndex, 3) : 0;
-		float id = (descriptorSize > 4) ? GetDescriptorComponent(featuresVector, featureIndex, 4) : -1;
-
-		cv::KeyPoint newPoint(
-			GetXCoordinate(featuresVector, featureIndex),
-			GetYCoordinate(featuresVector, featureIndex),
-			size,
-			angle,
-			response,
-			octave,
-			id
-		);
-		keypointsVector.push_back(newPoint);
-	}
-
-	return keypointsVector;
-}
-
 void OrbDescriptor::ValidateParameters()
 {
 	ASSERT(parameters.edgeThreshold > 0, "Orb Detector Descriptor Configuration Error: edge threshold should be strictly positive");
@@ -164,19 +177,6 @@ void OrbDescriptor::ValidateInputs(cv::Mat inputImage, const std::vector<cv::Key
 {
 	ASSERT(inputImage.type() == CV_8UC3 || inputImage.type() == CV_8UC1, "OrbDetectorDescriptor error: input image is not of type CV_8UC3 or CV_8UC1");
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "OrbDetectorDescriptor error: input image is empty");
-}
-
-int OrbDescriptor::ConvertToScoreType(const std::string& scoreType)
-{
-	if (scoreType == "HarrisScore" || scoreType == "0")
-		{
-		return cv::ORB::HARRIS_SCORE;
-		}
-	if (scoreType == "FastScore" || scoreType == "1")
-		{
-		return cv::ORB::FAST_SCORE;
-		}
-	ASSERT(false, "Orb Detector Descriptor Configuration Error: Score type should be either HarrisScore or FastScore (1, or 2)");
 }
 
 }

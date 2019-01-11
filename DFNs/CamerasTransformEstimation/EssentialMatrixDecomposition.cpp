@@ -263,6 +263,8 @@ void EssentialMatrixDecomposition::ValidateParameters()
 
 void EssentialMatrixDecomposition::ValidateInputs(cv::Mat fundamentalMatrix, cv::Mat correspondenceMap)
 {
+	ASSERT(fundamentalMatrix.cols == 3 && fundamentalMatrix.rows == 3, "EssentialMatrixComputation Error, unexpected fundamental matrix size");
+	ASSERT(correspondenceMap.cols > parameters.numberOfTestPoints, "EssentialMatrixComputation Error, insufficient number of test point for testing");
 }
 
 }

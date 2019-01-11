@@ -56,6 +56,7 @@ namespace FeaturesExtraction2D
 
 		private:
 
+			//DFN Parameters
 			struct GaussianBlurOptionsSet
 			{
 				int kernelWidth;
@@ -83,16 +84,17 @@ namespace FeaturesExtraction2D
 			HarrisOptionsSet parameters;
 			static const HarrisOptionsSet DEFAULT_PARAMETERS;
 
+			//External conversion helpers
 			Converters::FrameToMatConverter frameToMat;
 			Converters::MatToVisualPointFeatureVector2DConverter matToVisualPointFeatureVector2D;
 
+			//Core computation methods
 			cv::Mat ComputeHarrisImage(cv::Mat inputImage);
 			cv::Mat ExtractHarrisPoints(cv::Mat harrisImage);
 
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat inputImage);
-
-			void Configure(const YAML::Node& configurationNode);
 	};
 }
 }
