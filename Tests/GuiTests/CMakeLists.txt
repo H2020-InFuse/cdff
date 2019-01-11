@@ -398,6 +398,21 @@ target_link_libraries(
     ${VTK_LIBRARIES}
 )
 
+add_executable(
+    ImageRectificationGuiTest
+    DFNs/ImageRectification/ImageRectification.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(ImageRectificationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(ImageRectificationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+    ImageRectificationGuiTest
+    cdff_dfn_image_rectification
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
+)
+
 if(WITH_EDRES)
     add_executable(
         StereoRectificationEdresGuiTest
@@ -410,6 +425,21 @@ if(WITH_EDRES)
     target_link_libraries(
         StereoRectificationEdresGuiTest
         cdff_dfn_stereo_rectification
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+        ${VTK_LIBRARIES}
+    )
+
+    add_executable(
+        ImageRectificationEdresGuiTest
+        DFNs/ImageRectification/ImageRectificationEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+    )
+    set_target_properties(ImageRectificationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(ImageRectificationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        ImageRectificationEdresGuiTest
+        cdff_dfn_image_rectification
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
         ${VTK_LIBRARIES}
     )

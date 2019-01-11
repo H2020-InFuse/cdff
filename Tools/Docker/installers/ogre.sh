@@ -30,7 +30,7 @@ if [[ ! -d "${INSTALL_DIR}/include/ogre" ]]; then
   cd build
   
   # Build
-  cmake -DOGRE_BUILD_SAMPLES=OFF -DOGRE_BUILD_TESTS=OFF "${SOURCE_DIR}/ogre-1.9.1"
+  cmake -DCMAKE_BUILD_TYPE=Release -DOGRE_BUILD_SAMPLES=OFF -DOGRE_BUILD_TESTS=OFF "${SOURCE_DIR}/ogre-1.9.1"
 
   make --jobs=${CPUS}
 
