@@ -30,6 +30,7 @@ target_link_libraries(
   cdff_dfn_fundamental_matrix_computation
   cdff_dfn_features_description_2d
   cdff_dfn_image_filtering
+  cdff_dfn_image_rectification
   cdff_dfn_stereo_reconstruction
   cdff_dfn_features_extraction_2d
   cdff_dfn_features_matching_2d
@@ -54,6 +55,7 @@ target_link_libraries(
   cdff_dfn_features_matching_3d
   cdff_dfn_bundle_adjustment
   cdff_dfn_disparity_to_pointcloud
+  cdff_dfn_disparity_to_pointcloud_with_intensity
 )
 
 target_compile_definitions(dfns_builder PUBLIC WITH_EDRES=$<BOOL:${WITH_EDRES}>)
