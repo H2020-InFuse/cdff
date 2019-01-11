@@ -14,6 +14,7 @@ namespace StereoDegradation
 {
 
 StereoDegradationEdres::StereoDegradationEdres()
+:parameters(DEFAULT_PARAMETERS)
 {
     parametersHelper.AddParameter<int>("StereoDegradationEdresParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
     parametersHelper.AddParameter<int>("StereoDegradationEdresParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
