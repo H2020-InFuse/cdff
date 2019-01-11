@@ -1,0 +1,13 @@
+name: ImageDegradation
+doc: DFN that degrade the resolution of an image
+input_ports:
+    - name: originalImage
+      type: asn1SccFrame
+      doc: Full size image
+output_ports:
+    - name: degradedImage
+      type: asn1SccFrame
+      doc: Degraded/dowscaled image
+implementations:
+    - ImageDegradation
+    - ImageDegradationEdres

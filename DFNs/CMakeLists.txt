@@ -29,6 +29,7 @@ target_link_libraries(
   cdff_dfn_disparity_filtering
   cdff_dfn_fundamental_matrix_computation
   cdff_dfn_features_description_2d
+  cdff_dfn_image_degradation
   cdff_dfn_image_filtering
   cdff_dfn_image_rectification
   cdff_dfn_stereo_degradation
