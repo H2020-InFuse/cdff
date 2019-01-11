@@ -45,6 +45,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
+    DFNs/ImageFiltering/BackgroundSubtractorMOG2.cpp
     DFNs/ImageFiltering/NormalVectorExtraction.cpp
     DFNs/ImageFiltering/KMeansClustering.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
