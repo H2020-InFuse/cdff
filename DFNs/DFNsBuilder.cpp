@@ -13,6 +13,7 @@
 #include <BundleAdjustment/SvdDecomposition.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 #include <ColorConversion/ColorConversion.hpp>
+#include <DisparityToPointCloud/DisparityToPointCloud.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
@@ -58,8 +59,9 @@
 
 #if WITH_EDRES
 #include <DisparityFiltering/DisparityFilteringEdres.hpp>
-#include <ImageRectification/ImageRectificationEdres.hpp>
+#include <DisparityToPointCloud/DisparityToPointCloudEdres.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.hpp>
+#include <ImageRectification/ImageRectificationEdres.hpp>
 #include <StereoDegradation/StereoDegradationEdres.hpp>
 #include <StereoMotionEstimation/StereoMotionEstimationEdres.hpp>
 #endif
@@ -88,6 +90,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
     else if (dfnType == "DisparityFiltering")
     {
         return CreateDisparityFiltering(dfnImplementation);
+    }
+    else if (dfnType == "DisparityToPointCloud")
+    {
+        return CreateDisparityToPointCloud(dfnImplementation);
     }
     else if (dfnType == "DisparityToPointCloudWithIntensity")
     {
@@ -235,6 +241,22 @@ DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::st
     }
 #endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityFiltering implementation");
+    return NULL;
+}
+
+DisparityToPointCloudInterface* DFNsBuilder::CreateDisparityToPointCloud(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "DisparityToPointCloud")
+    {
+        return new DisparityToPointCloud::DisparityToPointCloud;
+    }
+#if WITH_EDRES
+    else if (dfnImplementation == "DisparityToPointCloudEdres")
+    {
+        return new DisparityToPointCloud::DisparityToPointCloudEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityToPointCloud implementation");
     return NULL;
 }
 
