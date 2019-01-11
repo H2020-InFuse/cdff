@@ -191,6 +191,7 @@ int EssentialMatrixDecomposition::FindValidTransform(std::vector<cv::Mat> projec
 	return validMatrixIndex;
 }
 
+//Projection test as described by described in Richard Hartley and Andrew Zisserman, in "Multiple View Geometry in Computer Vision".
 bool EssentialMatrixDecomposition::ProjectionMatrixIsValidForTestPoints(cv::Mat projectionMatrix, cv::Mat correspondenceMap)
 {
 	static const float EPSILON = 1e-2;
