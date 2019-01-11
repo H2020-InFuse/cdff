@@ -15,8 +15,13 @@ namespace CDFF
 namespace DFPC
 {
     /**
-     * TODO Class documentation
+     * The Haptic Scanning DFPC is used to build up a point cloud of an object
+     * by touching it with a robotic arm and measuring the contact force at each point.
+     *
+     * The output of the DFPC is the list of points for which the arm was in contact
+     * with the object.
      */
+
     class HapticScanning : public HapticScanningInterface
     {
         public:

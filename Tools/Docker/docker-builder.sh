@@ -49,13 +49,22 @@ vercomp () {
 
 IMAGE_NAME=$2
 DOCKER_FILE=$1
+shift 2 #shift all variables and restart at 1.
 
-#if we passed env variables we pass them along
+#if we passed more variables we pass them along
 ENV_VAR=""
-if ! test -z "$4"
-then
-   ENV_VAR='--build-arg '$4' '
-fi
+FORCE=false
+for var in "$@"
+do
+   if [[ $var == "--force"  ]]
+    then
+    FORCE=true
+   else
+    ENV_VAR+=" --build-arg ${var}"
+   fi
+done
+
+echo ENV_VAR: $ENV_VAR
 
 REGISTRY_PREFIX=nexus.spaceapplications.com/
 INFUSE_REGISTRY_PREFIX=repository/infuse/
@@ -76,7 +85,7 @@ echo latest_tag $latest_tag
 echo current_tag $current_tag
 vercomp $current_tag $latest_tag
 
-if [[ $op = '>' ]] || [[ $3 == "--force" ]]
+if [[ $op = '>' ]] || [[ "$FORCE" == true ]]
     then
         docker pull $IMAGE_TAG':'$latest_tag || true
         docker build -t $IMAGE_TAG':'$current_tag -f $DOCKER_FILE $ENV_VAR .
