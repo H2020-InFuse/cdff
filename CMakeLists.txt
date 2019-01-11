@@ -375,15 +375,18 @@ else()
 endif()
 
 ## Try to compile Core/liborbslam ------------------------------
-
-FIND_PACKAGE(Pangolin QUIET)
+find_package(Pangolin REQUIRED)
 
 if(Pangolin_FOUND)
-
-  if(EXISTS Core/liborbslam)
-    message("Building Core/liborbslam")
-    ADD_SUBDIRECTORY(Core/liborbslam)
+  find_package_mode(Pangolin)
+  if(EXISTS ${CMAKE_SOURCE_DIR}/Core/liborbslam)
+    message(STATUS "Building Core/liborbslam")
+    add_subdirectory(${CMAKE_SOURCE_DIR}/Core/liborbslam)
   endif()
+
+else()
+
+  message(STATUS "Pangolin not found: Core/liborbslam will not be built")
 
 endif()
 
