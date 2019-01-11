@@ -14,6 +14,7 @@ namespace ImageRectification
 {
 
 ImageRectification::ImageRectification()
+:parameters(DEFAULT_PARAMETERS)
 {
     _sensorId = "";
     _xratio = 1;

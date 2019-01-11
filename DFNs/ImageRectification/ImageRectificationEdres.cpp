@@ -13,6 +13,7 @@ namespace ImageRectification
 {
 
 ImageRectificationEdres::ImageRectificationEdres()
+:parameters(DEFAULT_PARAMETERS)
 {
     _mapFile = " ";
     _rectification = new Edres::Rectification();
