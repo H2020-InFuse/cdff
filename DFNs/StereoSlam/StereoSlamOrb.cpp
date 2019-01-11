@@ -32,6 +32,7 @@ StereoSlamOrb::StereoSlamOrb()
 
     //Initialize output structure
     asn1SccTransformWithCovariance_Initialize(&outPose);
+    outPose.metadata.msgVersion = transformWithCovariance_version;
 }
 
 StereoSlamOrb::~StereoSlamOrb()
@@ -79,6 +80,7 @@ void StereoSlamOrb::process()
         Eigen::Matrix4d tmp;
         cv::cv2eigen(cvPose, tmp);
         Eigen::Isometry3d iso(tmp);
+        iso = iso.inverse();
         outPose.data.translation.arr[0] = iso.translation()[0];
         outPose.data.translation.arr[1] = iso.translation()[1];
         outPose.data.translation.arr[2] = iso.translation()[2];
