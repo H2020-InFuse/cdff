@@ -82,7 +82,7 @@ if(WITH_EDRES)
     set(unittest_sources ${unittest_sources}
         DFNs/StereoMotionEstimation/StereoMotionEstimationEdres.cpp
         DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
-        DFNs/ImageDegradation/ImageDegradationEdres.cpp)
+        DFNs/ImageDegradation/ImageDegradationEdres.cpp
         )
 endif()
 
