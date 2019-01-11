@@ -1,0 +1,15 @@
+name: StereoMotionEstimation
+doc: DFN that computes an estimated motion between two stereo acquisitions
+input_ports:
+    - name: framePair
+      type: asn1SccFramePair
+      doc: Degraded/dowscaled input frame pair
+    - name: disparity
+      type: asn1SccFrame
+      doc: Disparity image computed from the input frame pair
+output_ports:
+    - name: pose
+      type: asn1SccTransformWithCovariance
+      doc: Computed pose estimation of the robot
+implementations:
+    - StereoMotionEstimationEdres

@@ -90,7 +90,7 @@ if [[ ${boost_ok} = false ]]; then
 
   # Download source code, extract, and change to resulting directory
   cdff_wget boost boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/
-
+  cd boost_1_66_0
   # Build and install
   mkdir build
   ./bootstrap.sh \
