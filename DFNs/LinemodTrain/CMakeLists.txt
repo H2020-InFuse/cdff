@@ -7,7 +7,7 @@ if(OpenCV_FOUND AND VTK_FOUND)
        "linemod-wrapper/LinemodTemplateGenerator.cpp" "linemod-wrapper/LinemodTemplateGeneratorIteratorSinCos.cpp"
        "linemod-wrapper/LinemodTrainImpl.cpp")
     #OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-    set(LINEMOD_TRAIN_DEPENDENCIES ${LINEMOD_TRAIN_DEPENDENCIES} ${VTK_LIBRARIES} ${OpenCV_LIBS})
+    set(LINEMOD_TRAIN_DEPENDENCIES ${LINEMOD_TRAIN_DEPENDENCIES} ${VTK_LIBRARIES} opencv_rgbd opencv_core opencv_calib3d opencv_imgproc)
 endif()
 
 add_library(

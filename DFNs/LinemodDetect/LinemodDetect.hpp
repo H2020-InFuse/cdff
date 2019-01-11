@@ -52,9 +52,9 @@ namespace LinemodDetect
             void ValidateParameters();
             cv::Mat convertToCameraPose(const cv::Vec3d& vec_R, const cv::Vec3d& vec_T, const cv::Rect& detection);
 
-            LinemodBasedPoseDetector linemodDetector;
             Helpers::ParametersListHelper parametersHelper;
             static const LinemodDetectParams DEFAULT_PARAMETERS;
+            LinemodBasedPoseDetector linemodDetector;
             bool retDetection;
             float similarity;
             cv::Rect detection;

@@ -17,8 +17,9 @@ namespace DFN
 namespace LinemodDetect
 {
 
-LinemodBasedPoseDetector::LinemodBasedPoseDetector(): _num_modalities(1), _ui_numberOfTemplates(0),
-    _cvptr_detector(), _x_poseMap(), _winW(640), _winH(480), _fx(700.0), _fy(700.0), _cx(320.0), _cy(240.0)
+LinemodBasedPoseDetector::LinemodBasedPoseDetector() :
+    _num_modalities(1), _ui_numberOfTemplates(0), _cvptr_detector(), _x_poseMap(),
+    _winW(640), _winH(480), _fx(700.0), _fy(700.0), _cx(320.0), _cy(240.0)
 {
 }
 

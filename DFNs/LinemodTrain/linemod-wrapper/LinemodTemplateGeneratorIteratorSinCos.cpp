@@ -42,6 +42,7 @@ LinemodTemplateGeneratorIteratorSinCos::LinemodTemplateGeneratorIteratorSinCos(L
       _f_radiusMax(f_radiusMax),
       _f_radiusStep(f_radiusStep),
       _f_radius(f_radiusMin),
+      _mat4_currentPose(),
       _i_size( static_cast<int>((std::floor((f_lonMax-f_lonMin)/f_lonStep)+1)
                * (std::floor((f_latMax-f_latMin)/f_latStep)+1)
                * (std::floor((f_angleMax-f_angleMin)/f_angleStep)+1)

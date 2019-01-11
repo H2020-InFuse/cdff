@@ -42,7 +42,6 @@ public:
            template<class Archive>
            void serialize(Archive& ar, const unsigned int version)
            {
-               (void)(version);
                ar & ui_objectId;
                ar & ui_templateId;
                ar & i_bbX;

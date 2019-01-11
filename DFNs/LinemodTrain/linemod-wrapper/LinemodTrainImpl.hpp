@@ -109,7 +109,6 @@ public:
     bool AddToTemplateBase(const std::string &str_objName, unsigned int ui_objectId, const std::vector<cv::Mat> &sources,
                            const cv::Mat& cvmat_mask, const cv::Vec3d &vec_R, const cv::Vec3d &vec_T);
 
-public:
     int _num_modalities;
     unsigned int _ui_numberOfTemplates;
     cv::Ptr<cv::linemod::Detector> _cvptr_detector;

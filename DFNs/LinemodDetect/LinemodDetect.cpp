@@ -15,7 +15,9 @@ namespace DFN
 namespace LinemodDetect
 {
 
-LinemodDetect::LinemodDetect() : linemodDetector()
+LinemodDetect::LinemodDetect() :
+    parametersHelper(), linemodDetector(), retDetection(false), similarity(0.0f), detection(),
+    class_id(), template_id(0), detection_R(), detection_T(), cameraPose(), matToPose3D()
 {
     parameters = DEFAULT_PARAMETERS;
 

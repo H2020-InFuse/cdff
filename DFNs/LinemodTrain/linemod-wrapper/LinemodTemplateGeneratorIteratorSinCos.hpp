@@ -43,7 +43,6 @@ private:
     int _i_size;
     /** iterator end flag */
     bool _b_isDone;
-    unsigned int _ui_planifiedIteration;
 
 public:
     LinemodTemplateGeneratorIteratorSinCos(LinemodTemplateGenerator* px_renderer,
