@@ -47,6 +47,7 @@ target_link_libraries(
   cdff_dfn_point_cloud_assembly
   cdff_dfn_point_cloud_transform
   cdff_dfn_point_cloud_filtering
+  cdff_dfn_stereo_motion_estimation
   cdff_dfn_stereo_reconstruction
   cdff_dfn_features_extraction_3d
   cdff_dfn_features_description_3d
