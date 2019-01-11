@@ -24,6 +24,7 @@
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
 #include <ImageFiltering/ImageFilteringInterface.hpp>
+#include <ImageRectification/ImageRectificationInterface.hpp>
 #include <PerspectiveNPointSolving/PerspectiveNPointSolvingInterface.hpp>
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DInterface.hpp>
 #include <Registration3D/Registration3DInterface.hpp>
@@ -69,6 +70,7 @@ namespace DFN
 			static FeaturesMatching3DInterface* CreateFeaturesMatching3D(const std::string& dfnImplementation);
 			static FundamentalMatrixComputationInterface* CreateFundamentalMatrixComputation(const std::string& dfnImplementation);
 			static ImageFilteringInterface* CreateImageFiltering(const std::string& dfnImplementation);
+            static ImageRectificationInterface* CreateImageRectification(const std::string& dfnImplementation);
 			static PerspectiveNPointSolvingInterface* CreatePerspectiveNPointSolving(const std::string& dfnImplementation);
 			static PointCloudReconstruction2DTo3DInterface* CreatePointCloudReconstruction2DTo3D(const std::string& dfnImplementation);
 			static PrimitiveMatchingInterface* CreatePrimitiveMatching(const std::string& dfnImplementation);
