@@ -366,6 +366,23 @@ target_link_libraries(
     ${VTK_LIBRARIES}
 )
 
+if(WITH_EDRES)
+    add_executable(
+        DisparityFilteringEdresGuiTest
+        DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+    )
+    set_target_properties(DisparityFilteringEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(DisparityFilteringEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        DisparityFilteringEdresGuiTest
+        cdff_dfn_disparity_filtering
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+        ${VTK_LIBRARIES}
+    )
+endif()
+
 add_executable(
     StereoDegradationGuiTest
     DFNs/StereoDegradation/StereoDegradation.cpp

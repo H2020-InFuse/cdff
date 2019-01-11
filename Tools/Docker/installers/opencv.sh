@@ -6,6 +6,7 @@
 function install4infuse_opencv {
 if [[ ! -n $(find $PKG_DIR -name 'opencv*') ]]; then
 	cdff_gitclone opencv 3.4.0 https://github.com/opencv/opencv.git
+	cdff_gitclone opencv_contrib 3.4.0 https://github.com/opencv/opencv_contrib.git
 	mkdir build
 	cd build
 	cmake \

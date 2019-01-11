@@ -12,6 +12,7 @@ implementations:
     - ImageUndistortion
     - ImageUndistortionRectification
     - BackgroundExtraction
+    - BackgroundSubtractorMOG2
     - CannyEdgeDetection
     - NormalVectorExtraction
     - KMeansClustering
