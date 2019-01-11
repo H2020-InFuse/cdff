@@ -34,10 +34,6 @@ namespace LinemodDetect
                 int T_level0;
                 int T_level1;
                 float matchingThreshold;
-                double fx;
-                double fy;
-                double cx;
-                double cy;
                 std::string cadObjectName;
                 bool useDepthModality;
                 bool resizeVGA;
@@ -50,7 +46,7 @@ namespace LinemodDetect
 
     private:
             void ValidateParameters();
-            cv::Mat convertToCameraPose(const cv::Vec3d& vec_R, const cv::Vec3d& vec_T, const cv::Rect& detection);
+            cv::Mat convertToCameraPose(const cv::Vec3d& vec_R, const cv::Vec3d& vec_T);
 
             Helpers::ParametersListHelper parametersHelper;
             static const LinemodDetectParams DEFAULT_PARAMETERS;

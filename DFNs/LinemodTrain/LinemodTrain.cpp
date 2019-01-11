@@ -105,6 +105,7 @@ void LinemodTrain::ValidateParameters()
     ASSERT(parameters.fy > 0, "Focal length in y must be > 0");
     ASSERT(parameters.cx >= 0 && parameters.cx < parameters.renderWindowWidth, "Principal point in x must be inside the rendering window");
     ASSERT(parameters.cy >= 0 && parameters.cy < parameters.renderWindowHeight, "Principal point in y must be inside the rendering window");
+    ASSERT(!parameters.cadObjectName.empty(), "Path to CAD object name cannot be empty.");
     ASSERT(parameters.longMax >= parameters.longMin, "Longitude max must be >= longitude min");
     ASSERT(parameters.latMax >= parameters.latMin, "Latitude max must be >= latitude min");
     ASSERT(parameters.angleMax >= parameters.angleMin, "Angle max must be >= angle min");

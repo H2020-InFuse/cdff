@@ -24,10 +24,6 @@ LinemodDetect::LinemodDetect() :
     parametersHelper.AddParameter<int>("LinemodDetectParams", "T_level0", parameters.T_level0, DEFAULT_PARAMETERS.T_level0);
     parametersHelper.AddParameter<int>("LinemodDetectParams", "T_level1", parameters.T_level1, DEFAULT_PARAMETERS.T_level1);
     parametersHelper.AddParameter<float>("LinemodDetectParams", "matchingThreshold", parameters.matchingThreshold, DEFAULT_PARAMETERS.matchingThreshold);
-    parametersHelper.AddParameter<double>("LinemodDetectParams", "fx", parameters.fx, DEFAULT_PARAMETERS.fx);
-    parametersHelper.AddParameter<double>("LinemodDetectParams", "fy", parameters.fy, DEFAULT_PARAMETERS.fy);
-    parametersHelper.AddParameter<double>("LinemodDetectParams", "cx", parameters.cx, DEFAULT_PARAMETERS.cx);
-    parametersHelper.AddParameter<double>("LinemodDetectParams", "cy", parameters.cy, DEFAULT_PARAMETERS.cy);
     parametersHelper.AddParameter<std::string>("LinemodDetectParams", "CAD object name", parameters.cadObjectName, DEFAULT_PARAMETERS.cadObjectName);
     parametersHelper.AddParameter<bool>("LinemodDetectParams", "Use depth", parameters.useDepthModality, DEFAULT_PARAMETERS.useDepthModality);
     parametersHelper.AddParameter<bool>("LinemodDetectParams", "Resize to VGA resolution", parameters.resizeVGA, DEFAULT_PARAMETERS.resizeVGA);
@@ -97,7 +93,7 @@ void LinemodDetect::process()
         template_id = matches.template_id;
         detection_R = vec_R;
         detection_T = vec_T;
-        cameraPose = convertToCameraPose(detection_R, detection_T, detection);
+        cameraPose = convertToCameraPose(detection_R, detection_T);
 
 //        printf("Similarity: %5.1f%%; x: %3d; y: %3d; class: %s; template: %3d\n",
 //               static_cast<double>(matches.similarity), matches.x, matches.y, matches.class_id.c_str(), matches.template_id);
@@ -146,7 +142,7 @@ bool LinemodDetect::getDetection(float& similarity_, cv::Rect& detection_, std::
     return retDetection;
 }
 
-cv::Mat LinemodDetect::convertToCameraPose(const cv::Vec3d& vec_R, const cv::Vec3d& vec_T, const cv::Rect& detection)
+cv::Mat LinemodDetect::convertToCameraPose(const cv::Vec3d& vec_R, const cv::Vec3d& vec_T)
 {
     // From vtkPerspectiveTransform::SetupCamera()
     const double position[3] = {vec_T[0], vec_T[1], vec_T[2]};
@@ -207,28 +203,16 @@ cv::Mat LinemodDetect::convertToCameraPose(const cv::Vec3d& vec_R, const cv::Vec
                                                0, 0,-1, 0,
                                                0, 0, 0, 1);
 
-    // Try to take into account the detection offset
-    // but this is not correct
-    double u = detection.x + detection.width/2.0;
-    double v = detection.y + detection.height/2.0;
-    double x = (u - parameters.cx) / parameters.fx;
-    double y = (v - parameters.cy) / parameters.fy;
-    double Z = matT.at<double>(2,3);
-    cv::Mat offsetT = cv::Mat::eye(4,4,CV_64FC1);
-    offsetT.at<double>(0,3) = -x*Z;
-    offsetT.at<double>(1,3) = -y*Z;
-
-    // Do not apply the correction for now
+    // To take into account the detection bounding box offset,
+    // the correct way should be to do an ICP to refine the pose
+    // starting from the pose used during the training
     return gl2cv*matT;
 }
 
 void LinemodDetect::ValidateParameters()
 {
     ASSERT(parameters.matchingThreshold >= 0 && parameters.matchingThreshold <= 100, "Matching threshold must be between [0 - 100]");
-    ASSERT(parameters.fx > 0, "Focal length in x must be > 0");
-    ASSERT(parameters.fy > 0, "Focal length in y must be > 0");
-    ASSERT(parameters.cx >= 0, "Principal point in x must be >= 0");
-    ASSERT(parameters.cy >= 0, "Principal point in y must be >= 0");
+    ASSERT(!parameters.cadObjectName.empty(), "Path to CAD object name for training data cannot be empty.");
 }
 
 const LinemodDetect::LinemodDetectParams LinemodDetect::DEFAULT_PARAMETERS = {
@@ -236,10 +220,6 @@ const LinemodDetect::LinemodDetectParams LinemodDetect::DEFAULT_PARAMETERS = {
     .T_level0 = 5,
     .T_level1 = 8,
     .matchingThreshold = 80.0f,
-    .fx = 682.559,
-    .fy = 682.261,
-    .cx = (288.105 - 264.0) * 640.0/528.0 + 320.0,
-    .cy = (225.578 - 203.0) * 480.0/406.0 + 240.0,
     .cadObjectName = "",
     .useDepthModality = false,
     .resizeVGA = false,
