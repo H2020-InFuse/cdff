@@ -91,18 +91,30 @@ if [[ ${boost_ok} = false ]]; then
   # Download source code, extract, and change to resulting directory
   cdff_wget boost boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/
   cd boost_1_66_0
-  # Build and install
+
+  # Build
   mkdir build
   ./bootstrap.sh \
     --with-libraries="$(echo "${compiled_libraries[@]}" | tr " " ,)" \
     --prefix="${INSTALL_DIR}"
-  ./b2 --build-dir=build -q -j ${CPUS} link=shared install
+  ./b2 --build-dir=build -q -j ${CPUS} link=shared #stage
+
+  # Install
+  if [[ ${INSTALL_AS_ROOT} == yes ]]; then
+    sudo ./b2 --build-dir=build install
+  else
+    ./b2 --build-dir=build install
+  fi
 
   # Patch: support for Boost 1.66.0 in the CMake find module FindBoost.cmake is
   # only available from the module shipped with CMake 3.11: download that module
-  mkdir -p "${INSTALL_DIR}/share/cmake-3.11.4/Modules"
-  cd "${INSTALL_DIR}/share/cmake-3.11.4/Modules"
   wget https://gitlab.kitware.com/cmake/cmake/raw/v3.11.4/Modules/FindBoost.cmake
+  if [[ ${INSTALL_AS_ROOT} == yes ]]; then
+    sudo install -m 0644 -D -t "${INSTALL_DIR}/share/cmake-3.11.4/Modules/" FindBoost.cmake
+  else
+    install -m 0664 -D -t "${INSTALL_DIR}/share/cmake-3.11.4/Modules/" FindBoost.cmake
+  fi
+  rm FindBoost.cmake
 
   # Remove source and build directories
   cdff_makedistclean boost

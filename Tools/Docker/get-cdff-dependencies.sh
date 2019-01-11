@@ -19,35 +19,38 @@ PKG_DIR="$(readlink -m "${DIR}/../../External/package")"
 
 # Usage
 function print_help {
-  cat <<EOF
-Usage: [bash [--]] get-cdff-dependencies [OPTIONS]
+  cat <<- END_OF_HELP
+	Usage: [bash [--]] get-cdff-dependencies [OPTIONS]
 
-Download, build, and install the direct dependencies of the CDFF. This program
-doesn't install the dependencies of those dependencies, you are responsible for
-making sure that they are available on your system.
+	Download, build, and install the direct dependencies of the CDFF. This
+	program doesn't install the dependencies of those dependencies, you are
+	responsible for making sure that they are available on your system.
 
-If CheckInstall is available, it is used for installation, otherwise a regular
-make install is used. The program assumes that you have write access to the
-chosen installation prefix, and will fail if you haven't.
+	If CheckInstall is available, it is used for installation, otherwise a
+	regular make install is used. You will be asked for your sudo credentials
+	if you use CheckInstall or don't have write access to your chosen
+	installation prefix. Note that if the sudo timeout expires (by default after
+	15 minutes), the program will ask again, which makes unattended installation
+	difficult.
 
-Options:
-  -h, --help             Display this help and exit
-  -d, --dependency LIB   Install LIB
-                         Repeat as needed: -d LIB1 -d LIB2 ...
-                         Default: boost yaml-cpp eigen cloudcompare-core ceres
-                           flann nabo pointmatcher opencv vtk pcl edres-wrapper
-  -e, --envire           Install EnviRe and its dependencies (to only install
-                         EnviRe and its dependencies without the default libs,
-                         use -d none in addition to this option)
-                         Required by CDFF::CentralDPM
-                         Default: no
-  -s, --sources DIR      Where to download the sources of the requested LIBs
-                         Default: ${SOURCE_DIR}
-  -i, --install DIR      Installation prefix
-                         Default: ${INSTALL_DIR}
-  -p, --package DIR      Output directory for packages made by CheckInstall
-                         Default: ${PKG_DIR}
-EOF
+	Options:
+	  -h, --help             Display this help and exit
+	  -d, --dependency LIB   Install LIB
+	                         Repeat as needed: -d LIB1 -d LIB2 ...
+	                         Default: boost yaml-cpp eigen cloudcompare-core
+	                           ceres flann nabo pointmatcher opencv vtk pcl
+	                           edres-wrapper
+	  -e, --envire           Install EnviRe and its dependencies (required by
+	                           CDFF::CentralDPM)
+	                         To install without the default libs, use: -d none -e
+	                         Default: no
+	  -s, --sources DIR      Where to download the sources of the requested LIBs
+	                         Default: ${SOURCE_DIR}
+	  -i, --install DIR      Installation prefix
+	                         Default: ${INSTALL_DIR}
+	  -p, --package DIR      Output directory for packages made by CheckInstall
+	                         Default: ${PKG_DIR}
+	END_OF_HELP
 }
 
 # Cleanup leftover source directories in case of early termination on error
@@ -73,16 +76,15 @@ function find_installers {
   done
 
   declare -g -A installers
-  installer_prefix=install4infuse_
-  all_fct_names=$(declare -F | grep -o "${installer_prefix}.*$")
-  for fct_name in $all_fct_names 
-    do
+  local installer_prefix=install4infuse_
+  fct_names=$(declare -F | grep -o "${installer_prefix}.*$")
+  for fct_name in ${fct_names}; do
     dependency=${fct_name#${installer_prefix}}
     installers[${dependency}]=${fct_name}
   done
 }
 
-# Run all requested installers who have an install function
+# Run all requested installers that have an install function
 function run_installers {
   mkdir -p "${SOURCE_DIR}"
   mkdir -p "${INSTALL_DIR}"
@@ -99,7 +101,7 @@ function run_installers {
 ## Functions used by the installers in installers/ ############################
 
 # How many processors?
-if [ -f /proc/cpuinfo ]; then
+if [[ -f /proc/cpuinfo ]]; then
   CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)
 else
   CPUS=1
@@ -124,26 +126,32 @@ function cdff_gitclone {
   # Uncomment the lines prefixed with #+# to install from local sources already
   # available in ${SOURCE_DIR}/${1} instead of first cloning sources in there;
   # this can be useful, for instance, for debugging purposes
-  #+# if [ ! -d "${SOURCE_DIR}/${1}" ]; then
-    if [ -z ${4} ]; then
-      git -C "${SOURCE_DIR}" clone --recursive --depth 1 --single-branch --branch "${2}" "${3}" "${1}"
+  #+# if [[ ! -d "${SOURCE_DIR}/${1}" ]]; then
+    if [[ -z ${4} ]]; then
+      git -C "${SOURCE_DIR}" clone --recursive --depth 1 \
+        --single-branch --branch "${2}" "${3}" "${1}"
     else
       git -C "${SOURCE_DIR}" clone --recursive --branch "${2}" "${3}" "${1}"
       git -C "${SOURCE_DIR}/${1}" checkout -f ${4}
     fi
   #+# else
-  #+#   echo "Directory ${SOURCE_DIR}/${1} already exists, we will work with that one."
+  #+#   echo "Directory ${SOURCE_DIR}/${1} already exists, we will work with it"
   #+# fi
   cd "${SOURCE_DIR}/${1}"
   echo "Cloning ${1}'s code repository: done"
 }
 
-# A wrapper around "make install", or "checkinstall" if installed
+# A wrapper around "make install", or "checkinstall" if available
 function cdff_makeinstall {
   if (command -v checkinstall); then
-   sudo checkinstall -y --pakdir "${PKG_DIR}" --nodoc --pkgname="${1}" --pkgversion="${2}"
+    sudo checkinstall -y --pakdir "${PKG_DIR}" --nodoc \
+      --pkgname="${1}" --pkgversion="${2}"
   else
-   make --jobs=${CPUS} install
+    if [[ ${INSTALL_AS_ROOT} == yes ]]; then
+      sudo make --jobs=${CPUS} install
+    else
+      make --jobs=${CPUS} install
+    fi
   fi
 }
 
@@ -194,16 +202,16 @@ if [[ -z "${dependencies[*]}" ]]; then
 fi
 
 # If EnviRe was requested, mark it for installation
-if [[ "${envire}" = yes ]]; then
+if [[ ${envire} == yes ]]; then
   dependencies+=(base_cmake base_logging sisl base_types base_numeric \
     base_boost_serialization console_bridge poco poco_vendor class_loader \
     tools_plugin_manager envire_envire_core)
 
   # Add pkg-config directories to PKG_CONFIG_PATH, if they aren't in
   # PKG_CONFIG_PATH already, and export PKG_CONFIG_PATH to the environment
-  AddToPkg="${INSTALL_DIR}/lib/pkgconfig:${INSTALL_DIR}/share/pkgconfig"
-  if [[ ":${PKG_CONFIG_PATH}:" != *":${AddToPkg}:"* ]]; then
-    export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:${AddToPkg}"
+  pkgconfigpath="${INSTALL_DIR}/lib/pkgconfig:${INSTALL_DIR}/share/pkgconfig"
+  if [[ ":${PKG_CONFIG_PATH}:" != *":${pkgconfigpath}:"* ]]; then
+    export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:${pkgconfigpath}"
   fi
 
   # More environment variables used for installing EnviRe
@@ -214,19 +222,23 @@ fi
 
 # Parse the installers/ subdirectory
 find_installers
+echo "Found installers for: " "${!installers[@]}"
 
-# Unmark dependencies which don't have an installer
+# Parse the list of requested dependencies
 for i in "${!dependencies[@]}"; do
-  if [[ -z ${installers[${dependencies[i]}]} ]]; then
-    echo 'ERROR: found no installer for: ' ${dependencies[i]}
-    echo "Found installers for: " "${!installers[@]}"
+  # Remove keyword "none" if present (-d none can be used to inhibit the
+  # default behavior of marking everything but EnviRe for installation)
+  if [[ ${dependencies[i]} == none ]]; then
+    unset dependencies[i]
+  # Exit with an error if a requested dependency doesn't have an installer
+  elif [[ -z ${installers[${dependencies[i]}]} ]]; then
+    echo "Found no installer for: ${dependencies[i]}" >&2
     exit 1
   fi
 done
+echo "Dependencies marked for installation: " "${dependencies[@]}"
 
-# Print what will be installed, and where
-echo "Found installers for: " "${!installers[@]}"
-echo "Dependencies selected for installation: " "${dependencies[@]}"
+# Print where the dependencies will be installed
 echo "Where sources will be downloaded: ${SOURCE_DIR}"
 echo "Installation prefix:              ${INSTALL_DIR}"
 echo "Output directory for packages:    ${PKG_DIR}"
@@ -234,15 +246,28 @@ echo "Output directory for packages:    ${PKG_DIR}"
 # Install
 if [[ "${dependencies[*]}" ]]; then
 
-  # TODO: check if we have write access to ${INSTALL_DIR}: if not ask user
-  # password and cache it for sudo, if yes run next test
-
-  # Check if `checkinstall` is installed. If it is installed we need superuser
-  # privileges to complete the build & install for each package even if we're
-  # not installing the packages globally.
-  if type checkinstall 2>/dev/null; then
-    echo "Caching your sudoers credential for running checkinstall unattended"
+  # Check if we have write access to INSTALL_DIR, or if INSTALL_DIR doesn't
+  # exist yet check if we can create it: if not prepare for installation as
+  # the superuser: update the user's cached sudo credentials (i.e. extend the
+  # sudo timeout for another 15 minutes by default), authenticating the user
+  # if necessary (i.e. asking the user's password)
+  dir="${INSTALL_DIR}"
+  while [[ ! -d "${dir}" ]]; do
+    dir="$(dirname "${dir}")"
+  done
+  if [[ ! (-w "${dir}" && -x "${dir}") ]]; then
+    echo "You don't have write access to your chosen installation prefix"
     sudo --validate
+    echo "Caching your sudo credentials to install as root: done"
+    INSTALL_AS_ROOT=yes
+  fi
+
+  # Check if CheckInstall is available: if it is prepare for installation as
+  # the superuser, since CheckInstall writes to the system's package database
+  if (command -v checkinstall); then
+    echo "CheckInstall is available so it will be used instead of make install"
+    sudo --validate
+    echo "Caching your sudo credentials to run CheckInstall: done"
   fi
 
   # Run the installers for the selected dependencies
