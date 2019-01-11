@@ -14,6 +14,7 @@ namespace ImageDegradation
 {
 
 ImageDegradationEdres::ImageDegradationEdres()
+        : parameters(DEFAULT_PARAMETERS)
 {
     parametersHelper.AddParameter<int>("ImageDegradationEdresParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
     parametersHelper.AddParameter<int>("ImageDegradationEdresParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
