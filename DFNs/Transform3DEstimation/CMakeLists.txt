@@ -5,7 +5,7 @@ set(TRANSFORM_3D_ESTIMATION_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" 
 if(OpenCV_FOUND)
 	set(TRANSFORM_3D_ESTIMATION_SOURCES ${TRANSFORM_3D_ESTIMATION_SOURCES} "LeastSquaresMinimization.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(TRANSFORM_3D_ESTIMATION_DEPENDENCIES ${TRANSFORM_3D_ESTIMATION_DEPENDENCIES} ${OpenCV_LIBS})
+	set(TRANSFORM_3D_ESTIMATION_DEPENDENCIES ${TRANSFORM_3D_ESTIMATION_DEPENDENCIES} opencv_core)
 endif()
 
 if(CERES_FOUND)

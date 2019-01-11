@@ -45,6 +45,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
+    DFNs/ImageFiltering/BackgroundSubtractorMOG2.cpp
     DFNs/ImageFiltering/NormalVectorExtraction.cpp
     DFNs/ImageFiltering/KMeansClustering.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
@@ -66,6 +67,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
     DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
     DFNs/Voxelization/Octree.cpp
+    DFNs/WeightingExpert/PoseWeighting.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/HapticScanning/HapticScanning.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
@@ -74,6 +76,13 @@ set(unittest_sources UnitTests.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
 )
+
+if(WITH_EDRES)
+    set(unittest_sources ${unittest_sources}
+        DFNs/StereoMotionEstimation/StereoMotionEstimationEdres.cpp
+        DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
+        )
+endif()
 
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
@@ -108,6 +117,7 @@ set(unittest_libraries catch
     cdff_dfn_features_matching_3d
     cdff_dfn_bundle_adjustment
     cdff_dfn_voxelization
+    cdff_dfn_weighting_expert
     synthetic_generators
     cdff_dfpc_configurator
     cdff_dfpc_reconstruction_3d
