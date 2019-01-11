@@ -236,8 +236,6 @@ bool EssentialMatrixDecomposition::ProjectionMatrixIsValidForTestPoints(cv::Mat 
 		double scaledW = scaledProjectedPoint.at<double>(2, 0);
 		double scaledDepth = (rotationDeterminantSign * scaledW ) / (scaledT * principleRayNorm);
 
-		//float z = testPointCloudMatrix.at<double>(2, pointIndex) / testPointCloudMatrix.at<double>(3, pointIndex);
-		//bool validPoint = (z == z) && (!std::isinf(z)) && (z >= 0);
 		bool validPoint = (depth < scaledDepth + EPSILON && depth > scaledDepth - EPSILON && depth > 0);
 		if (validPoint)
 		{

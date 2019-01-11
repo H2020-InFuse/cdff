@@ -1,4 +1,4 @@
-#include "MultipleCorrespondencesRecorder.hpp"
+#include "MultipleCorrespondences3DRecorder.hpp"
 #include "Errors/Assert.hpp"
 #include <cmath>
 
@@ -14,7 +14,7 @@ using namespace CorrespondenceMap2DWrapper;
 using namespace PointCloudWrapper;
 using namespace BaseTypesWrapper;
 
-MultipleCorrespondencesRecorder::MultipleCorrespondencesRecorder(int maximumNumberOfPoses) :
+MultipleCorrespondences3DRecorder::MultipleCorrespondences3DRecorder(int maximumNumberOfPoses) :
 	MAXIMUM_NUMBER_OF_POSES(maximumNumberOfPoses)
 	{
 	firstCorrespondenceMapSequence = NewCorrespondenceMaps3DSequence();
@@ -31,14 +31,14 @@ MultipleCorrespondencesRecorder::MultipleCorrespondencesRecorder(int maximumNumb
 	numberOfMapsAddedSinceLastInitialization = 0;
 	}
 
-MultipleCorrespondencesRecorder::~MultipleCorrespondencesRecorder()
+MultipleCorrespondences3DRecorder::~MultipleCorrespondences3DRecorder()
 	{
 	delete(firstCorrespondenceMapSequence);
 	delete(secondCorrespondenceMapSequence);
 	delete(temporaryMap);
 	}
 
-void MultipleCorrespondencesRecorder::InitializeNewSequence()
+void MultipleCorrespondences3DRecorder::InitializeNewSequence()
 	{
 	ASSERT(!addingNewSequence, "InitializeNewSequence, a sequence was never completed");
 	if (latestSequence == WorkingSequence::SECOND_SEQUENCE)
@@ -87,7 +87,7 @@ void MultipleCorrespondencesRecorder::InitializeNewSequence()
 		continue; \
 		}
 
-void MultipleCorrespondencesRecorder::AddCorrespondencesFromTwoImagePairs(std::vector<CorrespondenceMap2DConstPtr> mapList, std::vector<PointCloudWrapper::PointCloudConstPtr> pointCloudList)
+void MultipleCorrespondences3DRecorder::AddCorrespondencesFromTwoImagePairs(std::vector<CorrespondenceMap2DConstPtr> mapList, std::vector<PointCloudWrapper::PointCloudConstPtr> pointCloudList)
 	{
 	ASSERT(addingNewSequence, "AddCorrespondencesFromTwoImagePairs, method  InitializeNewSequence was not called before");
 	ASSERT( mapList.size() == 4 && pointCloudList.size() == 2, "EstimationFromStereo::Extract3DCorrespondencesFromTwoImagePairs, input do not have expected size");
@@ -150,7 +150,7 @@ void MultipleCorrespondencesRecorder::AddCorrespondencesFromTwoImagePairs(std::v
 
 #define MIN(a, b) ( a < b ? a : b )
 
-void MultipleCorrespondencesRecorder::CompleteNewSequence()
+void MultipleCorrespondences3DRecorder::CompleteNewSequence()
 	{
 	ASSERT(addingNewSequence, "AddCorrespondencesFromTwoImagePairs, method  InitializeNewSequence was not called before");
 	ASSERT(numberOfMapsAddedSinceLastInitialization == MIN(numberOfOldPoses, MAXIMUM_NUMBER_OF_POSES-1), "Correspondences Recorder, complete new sequence, unexpected number of maps");
@@ -180,7 +180,7 @@ void MultipleCorrespondencesRecorder::CompleteNewSequence()
 	oneCorrespondenceWasAddedSinceLastDiscard = true;
 	}
 
-CorrespondenceMaps3DSequencePtr MultipleCorrespondencesRecorder::GetLatestCorrespondences()
+CorrespondenceMaps3DSequencePtr MultipleCorrespondences3DRecorder::GetLatestCorrespondences()
 	{
 	if (oneCorrespondenceWasAddedSinceLastDiscard)
 		{
@@ -192,9 +192,9 @@ CorrespondenceMaps3DSequencePtr MultipleCorrespondencesRecorder::GetLatestCorres
 		}
 	}
 
-void MultipleCorrespondencesRecorder::DiscardLatestCorrespondences()
+void MultipleCorrespondences3DRecorder::DiscardLatestCorrespondences()
 	{
-	ASSERT(oneCorrespondenceWasAddedSinceLastDiscard, "MultipleCorrespondencesRecorder: Cannot discard the oldest correspondences. Only two correspondences are saved.!");
+	ASSERT(oneCorrespondenceWasAddedSinceLastDiscard, "MultipleCorrespondences3DRecorder: Cannot discard the oldest correspondences. Only two correspondences are saved.!");
 	if (latestSequence == WorkingSequence::SECOND_SEQUENCE)
 		{
 		latestSequence = WorkingSequence::FIRST_SEQUENCE;
