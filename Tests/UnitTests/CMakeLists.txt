@@ -45,6 +45,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
     DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
+    DFNs/ImageFiltering/BackgroundSubtractorMOG2.cpp
     DFNs/ImageFiltering/NormalVectorExtraction.cpp
     DFNs/ImageFiltering/KMeansClustering.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
@@ -79,9 +80,11 @@ set(unittest_sources UnitTests.cpp
 
 if(WITH_EDRES)
     set(unittest_sources ${unittest_sources}
+        DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
+        DFNs/StereoMotionEstimation/StereoMotionEstimationEdres.cpp
         DFNs/StereoRectification/StereoRectificationEdres.cpp)
+        )
 endif()
-
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
