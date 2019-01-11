@@ -374,6 +374,19 @@ else()
 
 endif()
 
+## Try to compile Core/liborbslam ------------------------------
+
+FIND_PACKAGE(Pangolin QUIET)
+
+if(Pangolin_FOUND)
+
+  if(EXISTS Core/liborbslam)
+    message("Building Core/liborbslam")
+    ADD_SUBDIRECTORY(Core/liborbslam)
+  endif()
+
+endif()
+
 ## Setup CDFF installation -----------------------------------------------------
 
 # Standard installation directories, as defined by the GNU Coding Standards:
