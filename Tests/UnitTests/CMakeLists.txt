@@ -138,6 +138,11 @@ if(PCL_FOUND)
     set(unittest_libraries ${unittest_libraries} cdff_dfn_force_mesh_generator pcl_io pcl_kdtree )
 endif()
 
+if(OPENCV_FOUND)
+    set(unittest_sources ${unittest_sources} DFNs/PrimitiveFinder/BasicPrimitiveFinder.cpp)
+    set(unittest_libraries ${unittest_libraries} cdff_dfn_primitive_finder opencv_highgui )
+endif()
+
 
 # Make the Catch executable that runs the unit tests
 add_executable(cdff-unit-tests ${unittest_sources})
