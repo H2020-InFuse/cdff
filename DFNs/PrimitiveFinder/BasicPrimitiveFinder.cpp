@@ -23,6 +23,7 @@ namespace PrimitiveFinder
 {
 
 BasicPrimitiveFinder::BasicPrimitiveFinder()
+: parameters(DEFAULT_PARAMETERS)
 {
     if( std::getenv("CDFFPATH") )
     {
