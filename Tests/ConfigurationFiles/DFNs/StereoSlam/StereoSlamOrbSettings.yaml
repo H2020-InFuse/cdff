@@ -1,4 +1,5 @@
 %YAML:1.0
+
 # This file contains settings required by the ORB-SLAM2 library for proper setup and operation
 # of the Slam system. 
 #--------------------------------------------------------------------------------------------
@@ -6,25 +7,25 @@
 #--------------------------------------------------------------------------------------------
 
 # Camera calibration and distortion parameters (OpenCV) 
-Camera.fx: 516.1290322580645161290323
-Camera.fy: 516.1290322580645161290323
+Camera.fx: 1018.6
+Camera.fy: 1018.6
 
-Camera.cx: 319.5
-Camera.cy: 255.5
+Camera.cx: 956.501
+Camera.cy: 617.314
 
 Camera.k1: 0.0
 Camera.k2: 0.0
 Camera.p1: 0.0
 Camera.p2: 0.0
 
-Camera.width: 640
-Camera.height: 512
+Camera.width: 1920
+Camera.height: 1200
 
 # Camera frames per second 
 Camera.fps: 2
 
 # stereo baseline times fx
-Camera.bf: 51.61290322580645161290323
+Camera.bf: 275.295435674
 
 # Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
 Camera.RGB: 1
