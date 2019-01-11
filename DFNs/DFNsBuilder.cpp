@@ -68,6 +68,11 @@
 #include <FeaturesMatching3D/BestDescriptorMatch.hpp>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
 
+#if WITH_EDRES
+#include <DisparityFiltering/DisparityFilteringEdres.hpp>
+#include <StereoMotionEstimation/StereoMotionEstimationEdres.hpp>
+#endif
+
 #include <Errors/Assert.hpp>
 
 namespace CDFF
@@ -88,7 +93,12 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	else if (dfnType == "ColorConversion")
 	{
         return CreateColorConversion(dfnImplementation);
+
 	}
+    	else if (dfnType == "DisparityFiltering")
+    	{
+        return CreateDisparityFiltering(dfnImplementation);
+    	}
 	else if (dfnType == "FeaturesDescription2D")
 	{
 		return CreateFeaturesDescription2D(dfnImplementation);
@@ -133,6 +143,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreateRegistration3D(dfnImplementation);
 	}
+    else if (dfnType == "StereoMotionEstimation")
+    	{
+        return CreateStereoMotionEstimation(dfnImplementation);
+    	}
 	else if (dfnType == "StereoReconstruction")
 	{
 		return CreateStereoReconstruction(dfnImplementation);
@@ -216,6 +230,18 @@ ColorConversionInterface* DFNsBuilder::CreateColorConversion(const std::string& 
 #endif
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN ColorConversion implementation");
 	return NULL;
+}
+
+DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::string& dfnImplementation)
+{
+#if WITH_EDRES
+    if (dfnImplementation == "DisparityFilteringEdres")
+    {
+        return new DisparityFiltering::DisparityFilteringEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityFiltering implementation");
+    return NULL;
 }
 
 FeaturesDescription2DInterface* DFNsBuilder::CreateFeaturesDescription2D(const std::string& dfnImplementation)
@@ -416,6 +442,18 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(const std::string& df
 #endif
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN Registration3D implementation");
 	return NULL;
+}
+
+StereoMotionEstimationInterface* DFNsBuilder::CreateStereoMotionEstimation(const std::string& dfnImplementation)
+{
+#if WITH_EDRES
+    if (dfnImplementation == "StereoMotionEstimation")
+    {
+        return new StereoMotionEstimation::StereoMotionEstimationEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoMotionEstimation implementation");
+    return NULL;
 }
 
 StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(const std::string& dfnImplementation)
