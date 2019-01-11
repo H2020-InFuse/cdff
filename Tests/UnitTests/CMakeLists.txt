@@ -78,7 +78,9 @@ set(unittest_sources UnitTests.cpp
 
 if(WITH_EDRES)
     set(unittest_sources ${unittest_sources}
-        DFNs/StereoMotionEstimation/StereoMotionEstimationEdres.cpp)
+        DFNs/StereoMotionEstimation/StereoMotionEstimationEdres.cpp
+        DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
+        )
 endif()
 
 # Libraries used by the aforementioned source files. They will be linked in the

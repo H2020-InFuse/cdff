@@ -15,6 +15,7 @@
 #include <BundleAdjustment/BundleAdjustmentInterface.hpp>
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
 #include <ColorConversion/ColorConversion.hpp>
+#include <DisparityFiltering/DisparityFilteringInterface.hpp>
 #include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
@@ -59,6 +60,7 @@ namespace DFN
 			static BundleAdjustmentInterface* CreateBundleAdjustment(const std::string& dfnImplementation);
 			static CamerasTransformEstimationInterface* CreateCamerasTransformEstimation(const std::string& dfnImplementation);
             static ColorConversionInterface* CreateColorConversion(const std::string& dfnImplementation);
+            static DisparityFilteringInterface* CreateDisparityFiltering(const std::string& dfnImplementation);
 			static FeaturesDescription2DInterface* CreateFeaturesDescription2D(const std::string& dfnImplementation);
 			static FeaturesDescription3DInterface* CreateFeaturesDescription3D(const std::string& dfnImplementation);
 			static FeaturesExtraction2DInterface* CreateFeaturesExtraction2D(const std::string& dfnImplementation);

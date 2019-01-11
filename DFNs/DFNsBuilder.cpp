@@ -54,6 +54,7 @@
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
 
 #if WITH_EDRES
+#include <DisparityFiltering/DisparityFilteringEdres.hpp>
 #include <StereoMotionEstimation/StereoMotionEstimationEdres.hpp>
 #endif
 
@@ -77,6 +78,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
     else if (dfnType == "ColorConversion")
     {
         return CreateColorConversion(dfnImplementation);
+    }
+    else if (dfnType == "DisparityFiltering")
+    {
+        return CreateDisparityFiltering(dfnImplementation);
     }
 	else if (dfnType == "FeaturesDescription2D")
 	{
@@ -200,6 +205,18 @@ ColorConversionInterface* DFNsBuilder::CreateColorConversion(const std::string& 
         return new ColorConversion::ColorConversion;
     }
     ASSERT(false, "DFNsBuilder Error: unhandled DFN ColorConversion implementation");
+    return NULL;
+}
+
+DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::string& dfnImplementation)
+{
+#if WITH_EDRES
+    if (dfnImplementation == "DisparityFilteringEdres")
+    {
+        return new DisparityFiltering::DisparityFilteringEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityFiltering implementation");
     return NULL;
 }
 
