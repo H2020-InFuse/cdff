@@ -53,6 +53,10 @@
 #include <Voxelization/Octree.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
 
+#if WITH_EDRES
+#include <StereoMotionEstimation/StereoMotionEstimationEdres.hpp>
+#endif
+
 #include <Errors/Assert.hpp>
 
 namespace CDFF
@@ -118,6 +122,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreateRegistration3D(dfnImplementation);
 	}
+    else if (dfnType == "StereoMotionEstimation")
+    {
+        return CreateStereoMotionEstimation(dfnImplementation);
+    }
 	else if (dfnType == "StereoReconstruction")
 	{
 		return CreateStereoReconstruction(dfnImplementation);
@@ -364,6 +372,18 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(const std::string& df
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN Registration3D implementation");
 	return NULL;
+}
+
+StereoMotionEstimationInterface* DFNsBuilder::CreateStereoMotionEstimation(const std::string& dfnImplementation)
+{
+#if WITH_EDRES
+    if (dfnImplementation == "StereoMotionEstimation")
+    {
+        return new StereoMotionEstimation::StereoMotionEstimationEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoMotionEstimation implementation");
+    return NULL;
 }
 
 StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(const std::string& dfnImplementation)
