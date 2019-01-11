@@ -14,6 +14,7 @@ namespace StereoMotionEstimation
 {
 
 StereoMotionEstimationEdres::StereoMotionEstimationEdres()
+: parameters(DEFAULT_PARAMETERS)
 {
     _vo = new Edres::VisualOdometry();
 
