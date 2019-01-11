@@ -73,7 +73,7 @@ set(unittest_sources UnitTests.cpp
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
     DFPCs/Reconstruction3D/BundleHistory.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
-    DFPCs/Reconstruction3D/MultipleCorrespondencesRecorder.cpp
+    DFPCs/Reconstruction3D/MultipleCorrespondences3DRecorder.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
 )
 
