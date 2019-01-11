@@ -21,7 +21,7 @@
 # CDFF::DFNs::StereoModelBasedTracking
 
 function install4infuse_visp {
-if [[ ! -d "${INSTALL_DIR}/include/pangolin" ]]; then
+if [[ ! -d "${INSTALL_DIR}/include/visp" ]]; then
 
   # Download library, extract, and change to resulting directory
   cdff_wget visp 3.1.0.tar.gz https://github.com/lagadic/visp/archive/
@@ -55,7 +55,7 @@ if [[ ! -d "${INSTALL_DIR}/include/pangolin" ]]; then
     -DBUILD_MODULE_visp_vision=ON \
     -DBUILD_MODULE_visp_visual_features=ON \
     -DBUILD_MODULE_visp_vs=OFF \
-    "${SOURCE_DIR}/visp"
+    "${SOURCE_DIR}/visp/visp-3.1.0"
 
   make --jobs=${CPUS}
 

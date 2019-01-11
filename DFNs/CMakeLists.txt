@@ -26,9 +26,12 @@ target_link_libraries(
   cdff_types
   cdff_dfn_cameras_transform_estimation
   cdff_dfn_color_conversion
+  cdff_dfn_disparity_filtering
   cdff_dfn_fundamental_matrix_computation
   cdff_dfn_features_description_2d
   cdff_dfn_image_filtering
+  cdff_dfn_image_rectification
+  cdff_dfn_stereo_degradation
   cdff_dfn_stereo_reconstruction
   cdff_dfn_features_extraction_2d
   cdff_dfn_features_matching_2d
@@ -48,11 +51,13 @@ target_link_libraries(
   cdff_dfn_point_cloud_assembly
   cdff_dfn_point_cloud_transform
   cdff_dfn_point_cloud_filtering
+  cdff_dfn_stereo_motion_estimation
   cdff_dfn_stereo_reconstruction
   cdff_dfn_features_extraction_3d
   cdff_dfn_features_description_3d
   cdff_dfn_features_matching_3d
   cdff_dfn_bundle_adjustment
+  cdff_dfn_disparity_to_pointcloud_with_intensity
 )
 
 target_compile_definitions(dfns_builder PUBLIC WITH_EDRES=$<BOOL:${WITH_EDRES}>)
