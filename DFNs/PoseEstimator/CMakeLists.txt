@@ -3,7 +3,7 @@ set(POSE_ESTIMATOR_INCLUDE_DIRS "")
 set(POSE_ESTIMATOR_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
 
 if(OpenCV_FOUND)
-    set(POSE_ESTIMATOR_SOURCES ${POSE_ESTIMATOR_SOURCES} "WheeledRobotPoseEstimator.cpp" "PrimitivesPoseEstimator.cpp")
+    set(POSE_ESTIMATOR_SOURCES ${POSE_ESTIMATOR_SOURCES} "WheeledRobotPoseEstimator.cpp" "PrimitivesPoseEstimator.cpp" "KFHelper.cpp")
     #OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
     set(POSE_ESTIMATOR_DEPENDENCIES ${POSE_ESTIMATOR_DEPENDENCIES} opencv_core opencv_video cdff_validators)
 endif()
