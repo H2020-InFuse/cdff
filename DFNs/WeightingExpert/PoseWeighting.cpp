@@ -13,11 +13,13 @@ namespace WeightingExpert
 {
 
 PoseWeighting::PoseWeighting()
+: parameters(DEFAULT_PARAMETERS)
 {
     m_count = 0;
     m_last_center.x = -1;
     m_last_center.y = -1;
     configurationFilePath = "";
+
     parametersHelper.AddParameter<int>("GeneralParameters", "NumFrames", parameters.numFrames, DEFAULT_PARAMETERS.numFrames);
     parametersHelper.AddParameter<double>("GeneralParameters", "MaxDistance", parameters.maxDistance, DEFAULT_PARAMETERS.maxDistance);
 

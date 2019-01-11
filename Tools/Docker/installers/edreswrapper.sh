@@ -31,7 +31,7 @@ if [[ ! -d "${INSTALL_DIR}/include/edres-wrapper" ]]; then
 
   # Download library, extract, and change to resulting directory
   cdff_wget edres-wrapper edreswrapper-sdk-1.0.0.tar.gz http://web.magellium.fr/~H2020INFUSE/
-
+  cd edreswrapper-sdk-1.0.0
   # Install
   install -m 0644 -D -t "${INSTALL_DIR}/share/edres-wrapper/" Edres-WrapperConfig.cmake
   install -m 0644 -D -t "${INSTALL_DIR}/include/edres-wrapper/" include/edres-wrapper/*.h
