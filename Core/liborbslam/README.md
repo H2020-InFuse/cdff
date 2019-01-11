@@ -5,5 +5,5 @@ This library is a slightly customized fork of the open-source ORB-SLAM2 implemen
 
 ## Dependencies
 See Dependencies.md for a complete list of Orb-Slam dependencies. 
-In the CDFF, liborbslam requires OpenCV, Eigen and Pangolin. 
+In the CDFF, liborbslam requires OpenCV, Eigen, Boost::Serialization and Pangolin.
 
