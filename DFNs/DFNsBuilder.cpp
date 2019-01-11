@@ -40,6 +40,7 @@
 #include <Registration3D/Icp3D.hpp>
 #include <Registration3D/IcpCC.hpp>
 #include <Registration3D/IcpMatcher.hpp>
+#include <StereoDegradation/StereoDegradation.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
@@ -60,6 +61,7 @@
 #include <DisparityFiltering/DisparityFilteringEdres.hpp>
 #include <ImageRectification/ImageRectificationEdres.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.hpp>
+#include <StereoDegradation/StereoDegradationEdres.hpp>
 #include <StereoMotionEstimation/StereoMotionEstimationEdres.hpp>
 #include <StereoRectification/StereoRectificationEdres.hpp>
 #endif
@@ -141,6 +143,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreateRegistration3D(dfnImplementation);
 	}
+    else if (dfnType == "StereoDegradation")
+    {
+        return CreateStereoDegradation(dfnImplementation);
+    }
     else if (dfnType == "StereoMotionEstimation")
     {
         return CreateStereoMotionEstimation(dfnImplementation);
@@ -439,6 +445,22 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(const std::string& df
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN Registration3D implementation");
 	return NULL;
+}
+
+StereoDegradationInterface* DFNsBuilder::CreateStereoDegradation(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "StereoDegradation")
+    {
+        return new StereoDegradation::StereoDegradation;
+    }
+#if WITH_EDRES
+    else if (dfnImplementation == "StereoDegradationEdres")
+    {
+        return new StereoDegradation::StereoDegradationEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoDegradation implementation");
+    return NULL;
 }
 
 StereoMotionEstimationInterface* DFNsBuilder::CreateStereoMotionEstimation(const std::string& dfnImplementation)
