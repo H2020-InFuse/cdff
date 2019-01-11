@@ -82,8 +82,8 @@ if(WITH_EDRES)
     set(unittest_sources ${unittest_sources}
         DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
         DFNs/StereoMotionEstimation/StereoMotionEstimationEdres.cpp
-        DFNs/StereoRectification/StereoRectificationEdres.cpp)
-        )
+        DFNs/StereoRectification/StereoRectificationEdres.cpp
+    )
 endif()
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY

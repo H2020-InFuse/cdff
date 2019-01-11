@@ -382,6 +382,7 @@ if(WITH_EDRES)
         ${VTK_LIBRARIES}
     )
 endif()
+
 add_executable(
     StereoRectificationGuiTest
     DFNs/StereoRectification/StereoRectification.cpp
