@@ -1,14 +1,9 @@
-# YARPHelper
+# Liborbslam
+This library is a slightly customized fork of the open-source ORB-SLAM2 implementation. It provides a complete SLAM system, able to perform a robust tracking in Mono, Stereo and RGBD images. 
 
-YARPHelper a framework built on top of YARP with the goal of facilitating its use and extending its functionalities in the context of robotics.
-YARPHelper can also be used to create, deploy and monitor any type of data processing chains using various sensors, multiple computing nodes and mixed processor architectures.
+ For the full details on the SLAM implementation, please see:  Raúl Mur-Artal and Juan D. Tardós. ORB-SLAM2: an Open-Source SLAM System for Monocular, Stereo and RGB-D Cameras. IEEE Transactions on Robotics, vol. 33, no. 5, pp. 1255-1262, 2017. https://arxiv.org/pdf/1610.06475.pdf
 
-Among the functions provided by YARPHelper :
-* Sensor acquisition and control for RGB Cameras, Kinect, ToF Camera, IMUs, GPS, Altimeter, Rangefinder, Lidar, etc.
-* Data logging for sensors
-* Data replay
-* Data visualization (Image viewer, point cloud viewer, etc.)
-* And, of course, implementing your own algorithm
+## Dependencies
+See Dependencies.md for a complete list of Orb-Slam dependencies. 
+In the CDFF, liborbslam requires OpenCV, Eigen and Pangolin. 
 
-# Full Documentation
-You can access the project documentation, with various guides and examples here: <a href="http://192.168.2.178:9090/job/YarpHelper/doxygen/"><b>YARPHelper Documentation</b></a>
