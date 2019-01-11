@@ -29,6 +29,7 @@
 #include <PerspectiveNPointSolving/PerspectiveNPointSolvingInterface.hpp>
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DInterface.hpp>
 #include <Registration3D/Registration3DInterface.hpp>
+#include <StereoDegradation/StereoDegradationInterface.hpp>
 #include <StereoMotionEstimation/StereoMotionEstimationInterface.hpp>
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
 #include <Transform3DEstimation/Transform3DEstimationInterface.hpp>
@@ -77,6 +78,7 @@ namespace DFN
 			static PointCloudReconstruction2DTo3DInterface* CreatePointCloudReconstruction2DTo3D(const std::string& dfnImplementation);
 			static PrimitiveMatchingInterface* CreatePrimitiveMatching(const std::string& dfnImplementation);
 			static Registration3DInterface* CreateRegistration3D(const std::string& dfnImplementation);
+            static StereoDegradationInterface* CreateStereoDegradation(const std::string& dfnImplementation);
             static StereoMotionEstimationInterface* CreateStereoMotionEstimation(const std::string& dfnImplementation);
 			static StereoReconstructionInterface* CreateStereoReconstruction(const std::string& dfnImplementation);
 			static Transform3DEstimationInterface* CreateTransform3DEstimation(const std::string& dfnImplementation);
