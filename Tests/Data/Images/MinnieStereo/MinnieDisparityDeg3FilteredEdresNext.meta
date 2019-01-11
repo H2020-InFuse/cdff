@@ -1,0 +1,53 @@
+.metadata:
+	.pixelModel: 2
+	.pixelCoeffs: 
+       1
+       0
+0.270282
+       3
+     184
+.intrinsic:
+	.cameraMatrix: 
+     339.532            0      318.834
+     339.532      205.771            0
+           1 4.94066e-324 2.47033e-323
+	.cameraModel: 1
+	.distCoeffs: 
+0
+0
+0
+0
+0
+	.sensorId: StereoBench
+	.msgVersion: 1
+.extrinsic:
+	.hasFixedTransform: 1
+	.msgVersion: 1
+	.pose_fixedFrame_robotFrame.data:
+		.cov:
+			.arr[0]: 47989963.162121 -5542687.567666 -1232.644810 -0.071024 0.003829 -6.922400 
+			.arr[1]: -5542687.567666 640165.133514 -10672.541122 0.006665 -0.000775 0.799457 
+			.arr[2]: -1232.644810 -10672.541122 48630123.549130 6.933387 1.501057 -0.070346 
+			.arr[3]: -0.071024 0.006665 6.933387 0.000004 -0.000000 -0.000000 
+			.arr[4]: 0.003829 -0.000775 1.501057 -0.000000 0.000004 -0.000000 
+			.arr[5]: -6.922400 0.799457 -0.070346 -0.000000 -0.000000 0.000004 
+		.orientation: -0.00142314-0.0098489-0.3223070.946583
+		.translation: -75.1466-11.1867-4.27527
+	.pose_fixedFrame_robotFrame.metadata:
+		.childFrameId: RoverBodyFrame
+		.parentFrameId: LocalTerrainFrame
+		.producerId: 
+	.pose_robotFrame_sensorFrame.data:
+		.cov:
+			.arr[0]: 0.000004 -0.000000 -0.000000 0.000000 0.000000 -0.000000 
+			.arr[1]: -0.000000 0.000004 -0.000000 -0.000000 -0.000000 -0.000000 
+			.arr[2]: -0.000000 -0.000000 0.000004 0.000000 -0.000000 0.000000 
+			.arr[3]: 0.000000 -0.000000 0.000000 0.000004 0.000000 -0.000000 
+			.arr[4]: 0.000000 -0.000000 -0.000000 0.000000 0.000004 0.000000 
+			.arr[5]: -0.000000 -0.000000 0.000000 -0.000000 0.000000 0.000004 
+		.orientation: -0.6316660.623851-0.3182270.332476
+		.translation: 0.2959220.1245421.66978
+	.pose_robotFrame_sensorFrame.metadata:
+		.childFrameId: NavCamL
+		.parentFrameId: RoverBodyFrame
+		.producerId: CRISP

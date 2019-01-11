@@ -1,0 +1,12 @@
+name: DisparityFiltering
+doc: DFN that filters a disparity image
+input_ports:
+    - name: rawDisparity
+      type: asn1SccFrame
+      doc: Raw disparity image
+output_ports:
+    - name: filteredDisparity
+      type: asn1SccFrame
+      doc: Filtered disparity image
+implementations:
+    - DisparityFilteringEdres

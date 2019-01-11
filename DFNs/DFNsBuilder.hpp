@@ -16,6 +16,7 @@
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
 #include <ColorConversion/ColorConversion.hpp>
 #include <DisparityImage/DisparityImageInterface.hpp>
+#include <DisparityFiltering/DisparityFilteringInterface.hpp>
 #include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesExtraction2D/FeaturesExtraction2DInterface.hpp>
@@ -27,6 +28,7 @@
 #include <PerspectiveNPointSolving/PerspectiveNPointSolvingInterface.hpp>
 #include <PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DInterface.hpp>
 #include <Registration3D/Registration3DInterface.hpp>
+#include <StereoMotionEstimation/StereoMotionEstimationInterface.hpp>
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
 #include <Transform3DEstimation/Transform3DEstimationInterface.hpp>
 #include <PrimitiveMatching/PrimitiveMatchingInterface.hpp>
@@ -60,6 +62,7 @@ namespace DFN
 			static CamerasTransformEstimationInterface* CreateCamerasTransformEstimation(const std::string& dfnImplementation);
             static ColorConversionInterface* CreateColorConversion(const std::string& dfnImplementation);
             static DisparityImageInterface* CreateDisparityImage(const std::string& dfnImplementation);
+            static DisparityFilteringInterface* CreateDisparityFiltering(const std::string& dfnImplementation);
 			static FeaturesDescription2DInterface* CreateFeaturesDescription2D(const std::string& dfnImplementation);
 			static FeaturesDescription3DInterface* CreateFeaturesDescription3D(const std::string& dfnImplementation);
 			static FeaturesExtraction2DInterface* CreateFeaturesExtraction2D(const std::string& dfnImplementation);
@@ -72,6 +75,7 @@ namespace DFN
 			static PointCloudReconstruction2DTo3DInterface* CreatePointCloudReconstruction2DTo3D(const std::string& dfnImplementation);
 			static PrimitiveMatchingInterface* CreatePrimitiveMatching(const std::string& dfnImplementation);
 			static Registration3DInterface* CreateRegistration3D(const std::string& dfnImplementation);
+            static StereoMotionEstimationInterface* CreateStereoMotionEstimation(const std::string& dfnImplementation);
 			static StereoReconstructionInterface* CreateStereoReconstruction(const std::string& dfnImplementation);
 			static Transform3DEstimationInterface* CreateTransform3DEstimation(const std::string& dfnImplementation);
 			static DepthFilteringInterface* CreateDepthFiltering(const std::string& dfnImplementation);
