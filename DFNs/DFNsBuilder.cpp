@@ -14,6 +14,7 @@
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 #include <ColorConversion/ColorConversion.hpp>
 #include <DisparityImage/DisparityImage.hpp>
+#include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
@@ -33,6 +34,7 @@
 #include <ImageFiltering/BackgroundExtraction.hpp>
 #include <ImageFiltering/NormalVectorExtraction.hpp>
 #include <ImageFiltering/KMeansClustering.hpp>
+#include <ImageRectification/ImageRectification.hpp>
 #include <PerspectiveNPointSolving/IterativePnpSolver.hpp>
 #include <PointCloudReconstruction2DTo3D/Triangulation.hpp>
 #include <PrimitiveMatching/HuInvariants.hpp>
@@ -57,6 +59,8 @@
 #if WITH_EDRES
 #include <DisparityImage/DisparityImageEdres.hpp>
 #include <DisparityFiltering/DisparityFilteringEdres.hpp>
+#include <ImageRectification/ImageRectificationEdres.hpp>
+#include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.hpp>
 #include <StereoMotionEstimation/StereoMotionEstimationEdres.hpp>
 #endif
 
@@ -88,6 +92,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
     else if (dfnType == "DisparityFiltering")
     {
         return CreateDisparityFiltering(dfnImplementation);
+    }
+    else if (dfnType == "DisparityToPointCloudWithIntensity")
+    {
+        return CreateDisparityToPointCloudWithIntensity(dfnImplementation);
     }
 	else if (dfnType == "FeaturesDescription2D")
 	{
@@ -121,6 +129,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreateImageFiltering(dfnImplementation);
 	}
+    else if (dfnType == "ImageRectification")
+    {
+        return CreateImageRectification(dfnImplementation);
+    }
 	else if (dfnType == "PerspectiveNPointSolving")
 	{
 		return CreatePerspectiveNPointSolving(dfnImplementation);
@@ -239,6 +251,22 @@ DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::st
     }
 #endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityFiltering implementation");
+    return NULL;
+}
+
+DisparityToPointCloudWithIntensityInterface* DFNsBuilder::CreateDisparityToPointCloudWithIntensity(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "DisparityToPointCloudWithIntensity")
+    {
+        return new DisparityToPointCloudWithIntensity::DisparityToPointCloudWithIntensity;
+    }
+#if WITH_EDRES
+    else if (dfnImplementation == "DisparityToPointCloudWithIntensityEdres")
+    {
+        return new DisparityToPointCloudWithIntensity::DisparityToPointCloudWithIntensityEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityToPointCloudWithIntensity implementation");
     return NULL;
 }
 
@@ -363,6 +391,22 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(const std::string& df
 
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN ImageFiltering implementation");
 	return NULL;
+}
+
+ImageRectificationInterface* DFNsBuilder::CreateImageRectification(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "ImageRectification")
+    {
+        return new ImageRectification::ImageRectification;
+    }
+#if WITH_EDRES
+    else if (dfnImplementation == "ImageRectificationEdres")
+    {
+        return new ImageRectification::ImageRectificationEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN ImageRectification implementation");
+    return NULL;
 }
 
 PerspectiveNPointSolvingInterface* DFNsBuilder::CreatePerspectiveNPointSolving(const std::string& dfnImplementation)

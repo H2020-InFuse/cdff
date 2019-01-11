@@ -29,9 +29,11 @@ set(unittest_sources UnitTests.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/ColorConversion/ColorConversion.cpp
     DFNs/DisparityImage/DisparityImage.cpp
+    DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.cpp
     DFNs/ImageFiltering/DerivativeEdgeDetection.cpp
     DFNs/ImageFiltering/CannyEdgeDetection.cpp
     DFNs/ImageFiltering/BackgroundExtraction.cpp
+    DFNs/ImageRectification/ImageRectification.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
@@ -82,8 +84,10 @@ if(WITH_EDRES)
     set(unittest_sources ${unittest_sources}
         DFNs/DisparityImage/DisparityImageEdres.cpp
         DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
+        DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.cpp
+        DFNs/ImageRectification/ImageRectificationEdres.cpp
         DFNs/StereoMotionEstimation/StereoMotionEstimationEdres.cpp
-        )
+    )
 endif()
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
@@ -99,8 +103,10 @@ set(unittest_libraries catch
     cdff_dfn_cameras_transform_estimation
     cdff_dfn_color_conversion
     cdff_dfn_disparity_image
+    cdff_dfn_disparity_to_pointcloud_with_intensity
     cdff_dfn_features_matching_2d
     cdff_dfn_fundamental_matrix_computation
+    cdff_dfn_image_rectification
     cdff_dfn_primitive_matching
     cdff_dfn_perspective_n_point_solving
     cdff_dfn_kf_correction
@@ -130,6 +136,11 @@ set(unittest_libraries catch
 if(PCL_FOUND)
     set(unittest_sources ${unittest_sources} "DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp" "DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp")
     set(unittest_libraries ${unittest_libraries} cdff_dfn_force_mesh_generator pcl_io pcl_kdtree )
+endif()
+
+if(OPENCV_FOUND)
+    set(unittest_sources ${unittest_sources} DFNs/PrimitiveFinder/BasicPrimitiveFinder.cpp)
+    set(unittest_libraries ${unittest_libraries} cdff_dfn_primitive_finder opencv_highgui )
 endif()
 
 
