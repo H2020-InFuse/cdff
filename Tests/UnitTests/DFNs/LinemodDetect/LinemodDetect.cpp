@@ -31,6 +31,19 @@
 #include <LinemodDetect/LinemodDetect.hpp>
 #include <opencv2/imgcodecs.hpp>
 
+static void cvMat2ASN1(const cv::Mat& mat, asn1SccFrame * asn)
+{
+    asn1SccArray3D &imageOnly = asn->data;
+    imageOnly.msgVersion = array3D_Version;
+    imageOnly.rows = static_cast<asn1SccT_UInt32>(mat.rows);
+    imageOnly.cols = static_cast<asn1SccT_UInt32>(mat.cols);
+    imageOnly.channels = static_cast<asn1SccT_UInt32>(mat.channels());
+    imageOnly.depth = static_cast<asn1SccArray3D_depth_t>(mat.depth());
+    imageOnly.rowSize = mat.step[0];
+    imageOnly.data.nCount = static_cast<int>(imageOnly.rows * imageOnly.rowSize);
+    memcpy(imageOnly.data.arr, mat.data, static_cast<size_t>(imageOnly.data.nCount));
+}
+
 /* --------------------------------------------------------------------------
  *
  * Test Cases
@@ -51,15 +64,7 @@ TEST_CASE( "Call to process (Linemod detection color image)", "[process]" )
     asn1SccFrame_Initialize(colorImage);
 
     // Copy image data
-    asn1SccArray3D &imageOnly = colorImage->data;
-    imageOnly.msgVersion = array3D_Version;
-    imageOnly.rows = static_cast<asn1SccT_UInt32>(cvColorImage.rows);
-    imageOnly.cols = static_cast<asn1SccT_UInt32>(cvColorImage.cols);
-    imageOnly.channels = static_cast<asn1SccT_UInt32>(cvColorImage.channels());
-    imageOnly.depth = static_cast<asn1SccArray3D_depth_t>(cvColorImage.depth());
-    imageOnly.rowSize = cvColorImage.step[0];
-    imageOnly.data.nCount = static_cast<int>(imageOnly.rows * imageOnly.rowSize);
-    memcpy(imageOnly.data.arr, cvColorImage.data, static_cast<size_t>(imageOnly.data.nCount));
+    cvMat2ASN1(cvColorImage, colorImage);
 
     // Instantiate DFN
     CDFF::DFN::LinemodDetect::LinemodDetect *linemodDetect = new CDFF::DFN::LinemodDetect::LinemodDetect;
@@ -128,25 +133,8 @@ TEST_CASE( "Call to process (Linemod detection color + depth images)", "[process
     asn1SccFrame_Initialize(depthImage);
 
     // Copy image data
-    asn1SccArray3D &imageOnly = colorImage->data;
-    imageOnly.msgVersion = array3D_Version;
-    imageOnly.rows = static_cast<asn1SccT_UInt32>(cvColorImage.rows);
-    imageOnly.cols = static_cast<asn1SccT_UInt32>(cvColorImage.cols);
-    imageOnly.channels = static_cast<asn1SccT_UInt32>(cvColorImage.channels());
-    imageOnly.depth = static_cast<asn1SccArray3D_depth_t>(cvColorImage.depth());
-    imageOnly.rowSize = cvColorImage.step[0];
-    imageOnly.data.nCount = static_cast<int>(imageOnly.rows * imageOnly.rowSize);
-    memcpy(imageOnly.data.arr, cvColorImage.data, static_cast<size_t>(imageOnly.data.nCount));
-
-    asn1SccArray3D &depthOnly = depthImage->data;
-    depthOnly.msgVersion = array3D_Version;
-    depthOnly.rows = static_cast<asn1SccT_UInt32>(cvDepthImage.rows);
-    depthOnly.cols = static_cast<asn1SccT_UInt32>(cvDepthImage.cols);
-    depthOnly.channels = static_cast<asn1SccT_UInt32>(cvDepthImage.channels());
-    depthOnly.depth = static_cast<asn1SccArray3D_depth_t>(cvDepthImage.depth());
-    depthOnly.rowSize = cvDepthImage.step[0];
-    depthOnly.data.nCount = static_cast<int>(depthOnly.rows * depthOnly.rowSize);
-    memcpy(depthOnly.data.arr, cvDepthImage.data, static_cast<size_t>(depthOnly.data.nCount));
+    cvMat2ASN1(cvColorImage, colorImage);
+    cvMat2ASN1(cvDepthImage, depthImage);
 
     // Instantiate DFN
     CDFF::DFN::LinemodDetect::LinemodDetect *linemodDetect = new CDFF::DFN::LinemodDetect::LinemodDetect;
@@ -217,25 +205,8 @@ TEST_CASE( "Call to process (Linemod detection color + depth images Blender)", "
     asn1SccFrame_Initialize(depthImage);
 
     // Copy image data
-    asn1SccArray3D &imageOnly = colorImage->data;
-    imageOnly.msgVersion = array3D_Version;
-    imageOnly.rows = static_cast<asn1SccT_UInt32>(cvColorImage.rows);
-    imageOnly.cols = static_cast<asn1SccT_UInt32>(cvColorImage.cols);
-    imageOnly.channels = static_cast<asn1SccT_UInt32>(cvColorImage.channels());
-    imageOnly.depth = static_cast<asn1SccArray3D_depth_t>(cvColorImage.depth());
-    imageOnly.rowSize = cvColorImage.step[0];
-    imageOnly.data.nCount = static_cast<int>(imageOnly.rows * imageOnly.rowSize);
-    memcpy(imageOnly.data.arr, cvColorImage.data, static_cast<size_t>(imageOnly.data.nCount));
-
-    asn1SccArray3D &depthOnly = depthImage->data;
-    depthOnly.msgVersion = array3D_Version;
-    depthOnly.rows = static_cast<asn1SccT_UInt32>(cvDepthImage.rows);
-    depthOnly.cols = static_cast<asn1SccT_UInt32>(cvDepthImage.cols);
-    depthOnly.channels = static_cast<asn1SccT_UInt32>(cvDepthImage.channels());
-    depthOnly.depth = static_cast<asn1SccArray3D_depth_t>(cvDepthImage.depth());
-    depthOnly.rowSize = cvDepthImage.step[0];
-    depthOnly.data.nCount = static_cast<int>(depthOnly.rows * depthOnly.rowSize);
-    memcpy(depthOnly.data.arr, cvDepthImage.data, static_cast<size_t>(depthOnly.data.nCount));
+    cvMat2ASN1(cvColorImage, colorImage);
+    cvMat2ASN1(cvDepthImage, depthImage);
 
     // Instantiate DFN
     CDFF::DFN::LinemodDetect::LinemodDetect *linemodDetect = new CDFF::DFN::LinemodDetect::LinemodDetect;

@@ -1,6 +1,6 @@
 set(LINEMOD_TRAIN_SOURCES "LinemodTrainInterface.cpp")
 set(LINEMOD_TRAIN_INCLUDE_DIRS "")
-set(LINEMOD_TRAIN_DEPENDENCIES "cdff_types" "cdff_helpers" "cdff_converters")
+set(LINEMOD_TRAIN_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
 
 if(WITH_OPENCV_CONTRIB AND VTK_FOUND)
     set(LINEMOD_TRAIN_SOURCES ${LINEMOD_TRAIN_SOURCES} "LinemodTrain.cpp"

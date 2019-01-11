@@ -1,6 +1,6 @@
 set(LINEMOD_DETECT_SOURCES "LinemodDetectInterface.cpp")
 set(LINEMOD_DETECT_INCLUDE_DIRS "")
-set(LINEMOD_DETECT_DEPENDENCIES "cdff_types" "cdff_helpers" "cdff_converters")
+set(LINEMOD_DETECT_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_converters")
 
 if(WITH_OPENCV_CONTRIB AND VTK_FOUND)
     set(LINEMOD_DETECT_SOURCES ${LINEMOD_DETECT_SOURCES} "LinemodDetect.cpp" "linemod-wrapper/LinemodDetectImpl.cpp")
