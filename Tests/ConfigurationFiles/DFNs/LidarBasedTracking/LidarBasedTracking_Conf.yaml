@@ -1,0 +1,10 @@
+- Name: LidarTrackParameters
+  StandardDeviationtdOrientationProcess: 1.0
+  StandardDeviationtdTranslationProcess: 1.0
+  StandardDeviationtdOrientationMeasurement: 1.0
+  StandardDeviationtdTranslationMeasurement: 1.0
+  InitialStateCovariance: 0.1
+  MaxCorrespondenceDistance: 0.5
+  MaximumIterations: 100
+  TransformationEpsilon: 1e-8
+  EuclideanFitnessEpsilon: 1e-6
