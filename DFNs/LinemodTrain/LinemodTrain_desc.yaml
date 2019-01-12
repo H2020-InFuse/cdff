@@ -1,0 +1,4 @@
+name: LinemodTrain
+doc: DFN that performs Linemod training for object pose detection
+implementations:
+    - LinemodTrain

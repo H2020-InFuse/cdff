@@ -40,6 +40,8 @@ target_link_libraries(
   cdff_dfn_point_cloud_reconstruction_2d_to_3d
   cdff_dfn_kf_prediction
   cdff_dfn_kf_correction
+  cdff_dfn_linemod_detect
+  cdff_dfn_linemod_train
   cdff_dfn_registration_3d
   cdff_dfn_transform_3d_estimation
   cdff_dfn_primitive_matching

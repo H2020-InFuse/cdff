@@ -95,6 +95,27 @@ if(WITH_EDRES)
     )
 endif()
 
+if(WITH_OPENCV_CONTRIB)
+    set(unittest_sources ${unittest_sources}
+        DFNs/LinemodDetect/LinemodDetect.cpp
+    )
+endif()
+
+if(PCL_FOUND)
+    set(unittest_sources ${unittest_sources}
+        DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
+        DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
+    )
+endif()
+
+if(OPENCV_FOUND)
+    set(unittest_sources ${unittest_sources}
+            DFNs/PrimitiveFinder/BasicPrimitiveFinder.cpp
+            )
+endif()
+
+
+
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
@@ -117,6 +138,7 @@ set(unittest_libraries catch
     cdff_dfn_perspective_n_point_solving
     cdff_dfn_kf_correction
     cdff_dfn_kf_prediction
+    cdff_dfn_linemod_detect
     cdff_dfn_point_cloud_assembly
     cdff_dfn_features_description_2d
     cdff_dfn_features_extraction_2d
@@ -142,16 +164,20 @@ set(unittest_libraries catch
     cdff_dfpc_haptic_scanning
 )
 
+if(WITH_OPENCV_CONTRIB)
+    set(unittest_libraries ${unittest_libraries}
+            cdff_dfn_linemod_detect )
+endif()
+
 if(PCL_FOUND)
-    set(unittest_sources ${unittest_sources} "DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp" "DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp")
-    set(unittest_libraries ${unittest_libraries} cdff_dfn_force_mesh_generator pcl_io pcl_kdtree )
+    set(unittest_libraries ${unittest_libraries}
+            cdff_dfn_force_mesh_generator pcl_io pcl_kdtree )
 endif()
 
 if(OPENCV_FOUND)
-    set(unittest_sources ${unittest_sources} DFNs/PrimitiveFinder/BasicPrimitiveFinder.cpp)
-    set(unittest_libraries ${unittest_libraries} cdff_dfn_primitive_finder opencv_highgui )
+    set(unittest_libraries ${unittest_libraries}
+            cdff_dfn_primitive_finder opencv_highgui )
 endif()
-
 
 # Make the Catch executable that runs the unit tests
 add_executable(cdff-unit-tests ${unittest_sources})
