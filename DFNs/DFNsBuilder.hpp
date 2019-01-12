@@ -16,6 +16,7 @@
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
 #include <ColorConversion/ColorConversion.hpp>
 #include <DisparityFiltering/DisparityFilteringInterface.hpp>
+#include <DisparityToPointCloud/DisparityToPointCloudInterface.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityInterface.hpp>
 #include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
@@ -24,6 +25,7 @@
 #include <FeaturesMatching2D/FeaturesMatching2DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
+#include <ImageDegradation/ImageDegradationInterface.hpp>
 #include <ImageFiltering/ImageFilteringInterface.hpp>
 #include <ImageRectification/ImageRectificationInterface.hpp>
 #include <PerspectiveNPointSolving/PerspectiveNPointSolvingInterface.hpp>
@@ -65,6 +67,7 @@ namespace DFN
 			static CamerasTransformEstimationInterface* CreateCamerasTransformEstimation(const std::string& dfnImplementation);
             static ColorConversionInterface* CreateColorConversion(const std::string& dfnImplementation);
             static DisparityFilteringInterface* CreateDisparityFiltering(const std::string& dfnImplementation);
+            static DisparityToPointCloudInterface* CreateDisparityToPointCloud(const std::string& dfnImplementation);
             static DisparityToPointCloudWithIntensityInterface* CreateDisparityToPointCloudWithIntensity(const std::string& dfnImplementation);
 			static FeaturesDescription2DInterface* CreateFeaturesDescription2D(const std::string& dfnImplementation);
 			static FeaturesDescription3DInterface* CreateFeaturesDescription3D(const std::string& dfnImplementation);
@@ -73,6 +76,7 @@ namespace DFN
 			static FeaturesMatching2DInterface* CreateFeaturesMatching2D(const std::string& dfnImplementation);
 			static FeaturesMatching3DInterface* CreateFeaturesMatching3D(const std::string& dfnImplementation);
 			static FundamentalMatrixComputationInterface* CreateFundamentalMatrixComputation(const std::string& dfnImplementation);
+            static ImageDegradationInterface* CreateImageDegradation(const std::string& dfnImplementation);
 			static ImageFilteringInterface* CreateImageFiltering(const std::string& dfnImplementation);
             static ImageRectificationInterface* CreateImageRectification(const std::string& dfnImplementation);
 			static PerspectiveNPointSolvingInterface* CreatePerspectiveNPointSolving(const std::string& dfnImplementation);
