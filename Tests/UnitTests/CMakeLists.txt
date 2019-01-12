@@ -69,6 +69,7 @@ set(unittest_sources UnitTests.cpp
     #DFNs/Registration3D/IcpMatcher.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    DFNs/StereoRectification/StereoRectification.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
     DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
     DFNs/Voxelization/Octree.cpp
@@ -92,6 +93,7 @@ if(WITH_EDRES)
         DFNs/ImageRectification/ImageRectificationEdres.cpp
         DFNs/StereoDegradation/StereoDegradationEdres.cpp
         DFNs/StereoMotionEstimation/StereoMotionEstimationEdres.cpp
+        DFNs/StereoRectification/StereoRectificationEdres.cpp
     )
 endif()
 
@@ -150,6 +152,7 @@ set(unittest_libraries catch
     cdff_dfn_transform_3d_estimation
     cdff_dfn_point_cloud_reconstruction_2d_to_3d
     cdff_dfn_stereo_reconstruction
+    cdff_dfn_stereo_rectification
     cdff_dfn_features_extraction_3d
     cdff_dfn_features_description_3d
     cdff_dfn_features_matching_3d

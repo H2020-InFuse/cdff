@@ -34,6 +34,7 @@ target_link_libraries(
   cdff_dfn_image_rectification
   cdff_dfn_stereo_degradation
   cdff_dfn_stereo_reconstruction
+  cdff_dfn_stereo_rectification
   cdff_dfn_features_extraction_2d
   cdff_dfn_features_matching_2d
   cdff_dfn_perspective_n_point_solving
