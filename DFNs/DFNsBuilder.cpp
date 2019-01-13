@@ -13,6 +13,7 @@
 #include <BundleAdjustment/SvdDecomposition.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 #include <ColorConversion/ColorConversion.hpp>
+#include <DisparityImage/DisparityImage.hpp>
 #include <DisparityToPointCloud/DisparityToPointCloud.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
@@ -61,6 +62,7 @@
 
 #if WITH_EDRES
 #include <ImageDegradation/ImageDegradationEdres.hpp>
+#include <DisparityImage/DisparityImageEdres.hpp>
 #include <DisparityFiltering/DisparityFilteringEdres.hpp>
 #include <DisparityToPointCloud/DisparityToPointCloudEdres.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.hpp>
@@ -90,6 +92,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
     else if (dfnType == "ColorConversion")
     {
         return CreateColorConversion(dfnImplementation);
+    }
+    else if (dfnType == "DisparityImage")
+    {
+        return CreateDisparityImage(dfnImplementation);
     }
     else if (dfnType == "DisparityFiltering")
     {
@@ -241,6 +247,22 @@ ColorConversionInterface* DFNsBuilder::CreateColorConversion(const std::string& 
         return new ColorConversion::ColorConversion;
     }
     ASSERT(false, "DFNsBuilder Error: unhandled DFN ColorConversion implementation");
+    return NULL;
+}
+
+DisparityImageInterface* DFNsBuilder::CreateDisparityImage(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "DisparityImage")
+    {
+        return new DisparityImage::DisparityImage;
+    }
+#if WITH_EDRES
+    else if (dfnImplementation == "DisparityImageEdres")
+    {
+        return new DisparityImage::DisparityImageEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityImage implementation");
     return NULL;
 }
 

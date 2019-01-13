@@ -28,6 +28,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/BundleAdjustment/SvdDecomposition.cpp
     DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
     DFNs/ColorConversion/ColorConversion.cpp
+    DFNs/DisparityImage/DisparityImage.cpp
     DFNs/DisparityToPointCloud/DisparityToPointCloud.cpp
     DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.cpp
     DFNs/ImageFiltering/DerivativeEdgeDetection.cpp
@@ -87,6 +88,7 @@ set(unittest_sources UnitTests.cpp
 
 if(WITH_EDRES)
     set(unittest_sources ${unittest_sources}
+        DFNs/DisparityImage/DisparityImageEdres.cpp
         DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
         DFNs/DisparityToPointCloud/DisparityToPointCloudEdres.cpp
         DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.cpp
@@ -132,6 +134,7 @@ set(unittest_libraries catch
     cdff_dfn_depth_filtering
     cdff_dfn_cameras_transform_estimation
     cdff_dfn_color_conversion
+    cdff_dfn_disparity_image
     cdff_dfn_disparity_to_pointcloud
     cdff_dfn_disparity_to_pointcloud_with_intensity
     cdff_dfn_features_matching_2d

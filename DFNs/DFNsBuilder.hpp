@@ -15,6 +15,7 @@
 #include <BundleAdjustment/BundleAdjustmentInterface.hpp>
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
 #include <ColorConversion/ColorConversion.hpp>
+#include <DisparityImage/DisparityImageInterface.hpp>
 #include <DisparityFiltering/DisparityFilteringInterface.hpp>
 #include <DisparityToPointCloud/DisparityToPointCloudInterface.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityInterface.hpp>
@@ -66,6 +67,7 @@ namespace DFN
 			static BundleAdjustmentInterface* CreateBundleAdjustment(const std::string& dfnImplementation);
 			static CamerasTransformEstimationInterface* CreateCamerasTransformEstimation(const std::string& dfnImplementation);
             static ColorConversionInterface* CreateColorConversion(const std::string& dfnImplementation);
+            static DisparityImageInterface* CreateDisparityImage(const std::string& dfnImplementation);
             static DisparityFilteringInterface* CreateDisparityFiltering(const std::string& dfnImplementation);
             static DisparityToPointCloudInterface* CreateDisparityToPointCloud(const std::string& dfnImplementation);
             static DisparityToPointCloudWithIntensityInterface* CreateDisparityToPointCloudWithIntensity(const std::string& dfnImplementation);

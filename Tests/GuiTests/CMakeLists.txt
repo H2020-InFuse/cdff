@@ -381,6 +381,37 @@ target_link_libraries(
     ${VTK_LIBRARIES}
 )
 
+add_executable(
+    DisparityImageGuiTest
+    DFNs/DisparityImage/DisparityImage.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(DisparityImageGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(DisparityImageGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+    DisparityImageGuiTest
+    cdff_dfn_disparity_image
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+)
+
+if(WITH_EDRES)
+    add_executable(
+        DisparityImageEdresGuiTest
+        DFNs/DisparityImage/DisparityImageEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+    )
+    set_target_properties(DisparityImageEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(DisparityImageEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        DisparityImageEdresGuiTest
+        cdff_dfn_disparity_image
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    )
+endif()
+
+
 if(WITH_EDRES)
     add_executable(
         ImageDegradationEdresGuiTest
