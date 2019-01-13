@@ -50,6 +50,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/ImageDegradation/ImageDegradation.cpp
     DFNs/StereoDegradation/StereoDegradation.cpp
     DFNs/ImageFiltering/ImageUndistortion.cpp
+    DFNs/PoseEstimator/WheeledRobotPoseEstimator.cpp
     DFNs/ImageFiltering/BackgroundSubtractorMOG2.cpp
     DFNs/ImageFiltering/NormalVectorExtraction.cpp
     DFNs/ImageFiltering/KMeansClustering.cpp
@@ -147,6 +148,7 @@ set(unittest_libraries catch
     cdff_dfn_registration_3d
     cdff_dfn_image_degradation
     cdff_dfn_image_filtering
+    cdff_dfn_pose_estimator
     cdff_dfn_stereo_degradation
     cdff_dfn_point_cloud_filtering
     cdff_dfn_transform_3d_estimation
