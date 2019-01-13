@@ -103,6 +103,72 @@ const SvdDecomposition::SvdDecompositionOptionsSet SvdDecomposition::DEFAULT_PAR
 	/*.baseline =*/ 1.0
 };
 
+cv::Mat SvdDecomposition::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix)
+	{
+	cv::Mat cvCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
+	cvCameraMatrix.at<float>(0,0) = cameraMatrix.focalLengthX;
+	cvCameraMatrix.at<float>(1,1) = cameraMatrix.focalLengthY;
+	cvCameraMatrix.at<float>(2,0) = cameraMatrix.principalPointX;
+	cvCameraMatrix.at<float>(2,1) = cameraMatrix.principalPointY;
+	cvCameraMatrix.at<float>(2,2) = 1.0;
+
+	return cvCameraMatrix;
+	}
+
+void SvdDecomposition::ConvertRotationTranslationMatricesToPosesSequence(cv::Mat translationMatrix, cv::Mat rotationMatrix, PoseWrapper::Poses3DSequence& posesSequence)
+	{
+	ASSERT( translationMatrix.rows == rotationMatrix.rows/2, "Translation Matrix and rotation Matrix sizes do not match");
+
+	// the rotation matrix is an affine rotation matrix, it needs to be multipled on the right by an appropriate 3x3 matrix.
+	// ComputeMetricRotationMatrix finds the matrix according to section 10.4.2 of "Multiple View Geometry in Computer Vision" by Richard Hartley, and Andrew Zisserman.
+	cv::Mat finalRotationMatrix, firstMetricRotationMatrix;
+		{	
+		// x = M X + t for the first camera matrix, M is given by the first two row of the rotation matrix and t is given by the first centroid;
+		// The rotation matrix of the projective 3x4 transformation matrix P = [M'|m]. M' is given by the first two columns of M concatenated with t, concatenated with a final row (0, 0, 1).  
+		int firstPoseIndex = 0;
+		cv::Mat firstProjectionMatrixColumns[4];
+		firstProjectionMatrixColumns[0] = (cv::Mat_<float>(3, 1, CV_32FC1) << rotationMatrix.at<float>(2*firstPoseIndex, 0), rotationMatrix.at<float>(2*firstPoseIndex+1, 0), 0);
+		firstProjectionMatrixColumns[1] = (cv::Mat_<float>(3, 1, CV_32FC1) << rotationMatrix.at<float>(2*firstPoseIndex, 1), rotationMatrix.at<float>(2*firstPoseIndex+1, 1), 0);
+		firstProjectionMatrixColumns[2] = (cv::Mat_<float>(3, 1, CV_32FC1) << translationMatrix.at<float>(firstPoseIndex, 0), translationMatrix.at<float>(firstPoseIndex, 1), 1);
+		firstProjectionMatrixColumns[3] = (cv::Mat_<float>(3, 1, CV_32FC1) << rotationMatrix.at<float>(2*firstPoseIndex, 2), rotationMatrix.at<float>(2*firstPoseIndex+1, 2), 0);
+
+		cv::Mat firstProjectionMatrix;
+		cv::hconcat(firstProjectionMatrixColumns, 4, firstProjectionMatrix);
+		firstMetricRotationMatrix = ComputeMetricRotationMatrix(firstProjectionMatrix(cv::Rect(0, 0, 3, 3)), firstPoseIndex);
+
+		finalRotationMatrix = rotationMatrix * firstMetricRotationMatrix;
+		}
+
+	AffineTransform inverseOfFirstCameraTransform;
+	for(int poseIndex = 0; poseIndex < translationMatrix.rows; poseIndex++)
+		{
+		Eigen::Matrix3f eigenRotationMatrix;
+		eigenRotationMatrix << finalRotationMatrix.at<float>(2*poseIndex, 0), finalRotationMatrix.at<float>(2*poseIndex, 1), finalRotationMatrix.at<float>(2*poseIndex, 2),
+			finalRotationMatrix.at<float>(2*poseIndex+1, 0), finalRotationMatrix.at<float>(2*poseIndex+1, 1), finalRotationMatrix.at<float>(2*poseIndex+1, 2),
+			0, 0, 0;
+		Eigen::Quaternion<float> eigenRotation(eigenRotationMatrix);
+		eigenRotation.normalize();
+		Eigen::Translation<float, 3> translation(translationMatrix.at<float>(poseIndex,0), translationMatrix.at<float>(poseIndex,1), translationMatrix.at<float>(poseIndex, 2));
+		AffineTransform affineTransform = translation * eigenRotation;
+
+		// We put the transforms in the reference frame of the first camera.
+		if (poseIndex == 0)
+			{
+			inverseOfFirstCameraTransform = affineTransform.inverse();
+			}
+		affineTransform = affineTransform * inverseOfFirstCameraTransform;
+		AffineTransform cameraTransform = affineTransform.inverse();
+
+		Pose3D newPose;
+		SetPosition(newPose, cameraTransform.translation()(0), cameraTransform.translation()(1), cameraTransform.translation()(2));
+		Eigen::Quaternion<float> outputQuaternion( cameraTransform.rotation() );
+		SetOrientation(newPose, outputQuaternion.x(), outputQuaternion.y(), outputQuaternion.z(), outputQuaternion.w());
+
+		PRINT_TO_LOG("newPose", ToString(newPose));
+		AddPose(posesSequence, newPose);	
+		}
+	}
+
 void SvdDecomposition::DecomposeMeasurementMatrix(cv::Mat measurementMatrix, cv::Mat& compatibleRotationMatrix, cv::Mat& compatiblePositionMatrix)
 	{
 	//This is the algorithm of Tomasi and Kanade as describe in page 437 of "Multiple View Geometry in Computer Vision" by Richard Hartley, and Andrew Zisserman.
@@ -175,60 +241,6 @@ void SvdDecomposition::CentreMeasurementMatrix(cv::Mat centroidMatrix, cv::Mat& 
 		}
 	}
 
-void SvdDecomposition::ConvertRotationTranslationMatricesToPosesSequence(cv::Mat translationMatrix, cv::Mat rotationMatrix, PoseWrapper::Poses3DSequence& posesSequence)
-	{
-	ASSERT( translationMatrix.rows == rotationMatrix.rows/2, "Translation Matrix and rotation Matrix sizes do not match");
-
-	// the rotation matrix is an affine rotation matrix, it needs to be multipled on the right by an appropriate 3x3 matrix.
-	// ComputeMetricRotationMatrix finds the matrix according to section 10.4.2 of "Multiple View Geometry in Computer Vision" by Richard Hartley, and Andrew Zisserman.
-	cv::Mat finalRotationMatrix, firstMetricRotationMatrix;
-		{	
-		// x = M X + t for the first camera matrix, M is given by the first two row of the rotation matrix and t is given by the first centroid;
-		// The rotation matrix of the projective 3x4 transformation matrix P = [M'|m]. M' is given by the first two columns of M concatenated with t, concatenated with a final row (0, 0, 1).  
-		int firstPoseIndex = 0;
-		cv::Mat firstProjectionMatrixColumns[4];
-		firstProjectionMatrixColumns[0] = (cv::Mat_<float>(3, 1, CV_32FC1) << rotationMatrix.at<float>(2*firstPoseIndex, 0), rotationMatrix.at<float>(2*firstPoseIndex+1, 0), 0);
-		firstProjectionMatrixColumns[1] = (cv::Mat_<float>(3, 1, CV_32FC1) << rotationMatrix.at<float>(2*firstPoseIndex, 1), rotationMatrix.at<float>(2*firstPoseIndex+1, 1), 0);
-		firstProjectionMatrixColumns[2] = (cv::Mat_<float>(3, 1, CV_32FC1) << translationMatrix.at<float>(firstPoseIndex, 0), translationMatrix.at<float>(firstPoseIndex, 1), 1);
-		firstProjectionMatrixColumns[3] = (cv::Mat_<float>(3, 1, CV_32FC1) << rotationMatrix.at<float>(2*firstPoseIndex, 2), rotationMatrix.at<float>(2*firstPoseIndex+1, 2), 0);
-
-		cv::Mat firstProjectionMatrix;
-		cv::hconcat(firstProjectionMatrixColumns, 4, firstProjectionMatrix);
-		firstMetricRotationMatrix = ComputeMetricRotationMatrix(firstProjectionMatrix(cv::Rect(0, 0, 3, 3)), firstPoseIndex);
-
-		finalRotationMatrix = rotationMatrix * firstMetricRotationMatrix;
-		}
-
-	AffineTransform inverseOfFirstCameraTransform;
-	for(int poseIndex = 0; poseIndex < translationMatrix.rows; poseIndex++)
-		{
-		Eigen::Matrix3f eigenRotationMatrix;
-		eigenRotationMatrix << finalRotationMatrix.at<float>(2*poseIndex, 0), finalRotationMatrix.at<float>(2*poseIndex, 1), finalRotationMatrix.at<float>(2*poseIndex, 2),
-			finalRotationMatrix.at<float>(2*poseIndex+1, 0), finalRotationMatrix.at<float>(2*poseIndex+1, 1), finalRotationMatrix.at<float>(2*poseIndex+1, 2),
-			0, 0, 0;
-		Eigen::Quaternion<float> eigenRotation(eigenRotationMatrix);
-		eigenRotation.normalize();
-		Eigen::Translation<float, 3> translation(translationMatrix.at<float>(poseIndex,0), translationMatrix.at<float>(poseIndex,1), translationMatrix.at<float>(poseIndex, 2));
-		AffineTransform affineTransform = translation * eigenRotation;
-
-		// We put the transforms in the reference frame of the first camera.
-		if (poseIndex == 0)
-			{
-			inverseOfFirstCameraTransform = affineTransform.inverse();
-			}
-		affineTransform = affineTransform * inverseOfFirstCameraTransform;
-		AffineTransform cameraTransform = affineTransform.inverse();
-
-		Pose3D newPose;
-		SetPosition(newPose, cameraTransform.translation()(0), cameraTransform.translation()(1), cameraTransform.translation()(2));
-		Eigen::Quaternion<float> outputQuaternion( cameraTransform.rotation() );
-		SetOrientation(newPose, outputQuaternion.x(), outputQuaternion.y(), outputQuaternion.z(), outputQuaternion.w());
-
-		PRINT_TO_LOG("newPose", ToString(newPose));
-		AddPose(posesSequence, newPose);	
-		}
-	}
-
 cv::Mat SvdDecomposition::ComputeMetricRotationMatrix(cv::Mat rotationMatrix, int poseIndex)
 	{
 	// computation of the metric matrix according to section 10.4.2 of "Multiple View Geometry in Computer Vision" by Richard Hartley, and Andrew Zisserman.
@@ -259,17 +271,6 @@ void SvdDecomposition::ValidateInputs()
 	ASSERT( n == 6 || n == 15 || n == 28, "SvdDecomposition Error: you should provide correspondence maps for either 2, 3 or 4 pairs of stereo camera images");
 }
 
-cv::Mat SvdDecomposition::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix)
-	{
-	cv::Mat cvCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
-	cvCameraMatrix.at<float>(0,0) = cameraMatrix.focalLengthX;
-	cvCameraMatrix.at<float>(1,1) = cameraMatrix.focalLengthY;
-	cvCameraMatrix.at<float>(2,0) = cameraMatrix.principalPointX;
-	cvCameraMatrix.at<float>(2,1) = cameraMatrix.principalPointY;
-	cvCameraMatrix.at<float>(2,2) = 1.0;
-
-	return cvCameraMatrix;
-	}
 }
 }
 }

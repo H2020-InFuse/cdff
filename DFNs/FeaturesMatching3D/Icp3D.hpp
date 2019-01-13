@@ -54,6 +54,7 @@ namespace FeaturesMatching3D
 
 		private:
 
+			//DFN Parameters
 			struct IcpOptionsSet
 			{
 				double maxCorrespondenceDistance;
@@ -66,15 +67,20 @@ namespace FeaturesMatching3D
 			IcpOptionsSet parameters;
 			static const IcpOptionsSet DEFAULT_PARAMETERS;
 
+			//External conversion helpers
 			Converters::VisualPointFeatureVector3DToPclPointCloudConverter
 				visualPointFeatureVector3DToPclPointCloud;
+
+			//Type conversion methods
 			PoseWrapper::Pose3DConstPtr Convert(
 				Eigen::Matrix4f eigenTransform);
 
+			//Core computation methods
 			PoseWrapper::Pose3DConstPtr ComputeTransform(
 				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
 				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
 
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(
 				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,

@@ -50,6 +50,7 @@ namespace PointCloudAssembly
 			virtual void process() override;
 
 		private:
+			//DFN Paramerters
 			struct NeighbourPointAverageOptionsSet
 			{
 				float maxNeighbourDistance;
@@ -61,11 +62,16 @@ namespace PointCloudAssembly
 			NeighbourPointAverageOptionsSet parameters;
 			static const NeighbourPointAverageOptionsSet DEFAULT_PARAMETERS;
 
+			//External conversion helpers
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
-			pcl::PointCloud<pcl::PointXYZ>::ConstPtr firstCloud;
-			pcl::PointCloud<pcl::PointXYZ>::ConstPtr secondCloud;
-			pcl::PointCloud<pcl::PointXYZ>::Ptr storedCloud;
-			pcl::PointCloud<pcl::PointXYZ>::Ptr assembledCloud;
+
+			//Variable for input-output handling
+			pcl::PointCloud<pcl::PointXYZ>::ConstPtr firstCloud; //first operand of the merge
+			pcl::PointCloud<pcl::PointXYZ>::ConstPtr secondCloud; //second operand of the merge
+			pcl::PointCloud<pcl::PointXYZ>::Ptr assembledCloud; //result of the merge
+
+			//Variable for storage
+			pcl::PointCloud<pcl::PointXYZ>::Ptr storedCloud; //result of previous operations
 
 			//correspondenceMap: For each point of index x in firstCloud, if correspondenceMap.at(x) is the list of points y in secondCloud, such that x is the 
 			//closest neighbour of y in firstCloud.
@@ -88,8 +94,10 @@ namespace PointCloudAssembly
 			pcl::PointXYZ ComputeAveragePoint(const pcl::PointXYZ& firstPoint, const pcl::PointXYZ& secondPoint);
 			pcl::PointXYZ DisplacePointBySameDistance(const pcl::PointXYZ& pointToDisplace, const pcl::PointXYZ& startDistanceReference, const pcl::PointXYZ& endDistanceReference);
 
+			//This method converts the output to the expected output type.
 			void PrepareOutAssembledPointCloud();
 
+			//Input Validation methods
 			void ValidateParameters();
 	};
 }

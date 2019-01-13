@@ -152,57 +152,19 @@ const HirschmullerDisparityMapping::HirschmullerDisparityMappingOptionsSet Hirsc
 	}
 };
 
-cv::Mat HirschmullerDisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage)
+cv::Mat HirschmullerDisparityMapping::Convert(DisparityToDepthMap disparityToDepthMap)
 {
-	cv::Ptr<cv::StereoSGBM> stereo = cv::StereoSGBM::create
-		(
-		parameters.disparities.minimum,
-		parameters.disparities.numberOfIntervals,
-		parameters.blocksMatching.blockSize,
-		parameters.disparities.smoothnessParameter1,
-		parameters.disparities.smoothnessParameter2,
-		(parameters.disparities.useMaximumDifference ? parameters.disparities.maximumDifference : -1),
-		parameters.prefilter.maximum,
-		parameters.blocksMatching.uniquenessRatio,
-		parameters.disparities.speckleWindow,
-		parameters.disparities.speckleRange,
-		parameters.useFullScaleTwoPassAlgorithm
-		);
+	cv::Mat conversion(4, 4, CV_64FC1);
 
-	cv::Mat greyLeftImage, greyRightImage;
-    if(leftImage.channels() == 3)
+	for (unsigned row = 0; row < 4; row++)
 	{
-		cv::cvtColor(leftImage, greyLeftImage, CV_BGR2GRAY);
-	}
-	else  // grayscale
-	{
-		greyLeftImage = leftImage;
-	}
-    if(rightImage.channels() == 3)
-	{
-		cv::cvtColor(rightImage, greyRightImage, CV_BGR2GRAY);
-	}
-	else  // grayscale
-	{
-		greyRightImage = rightImage;
+		for (unsigned column = 0; column < 4; column++)
+		{
+			conversion.at<double>(row, column) = disparityToDepthMap[4*row + column];
+		}
 	}
 
-	cv::Mat disparity;
-	stereo->compute(greyLeftImage, greyRightImage, disparity);
-	DEBUG_SHOW_DISPARITY(disparity);
-	SAVE_DISPARITY_MATRIX(disparity);
-
-	cv::Mat pointCloud;
-	if (parameters.useDisparityToDepthMap)
-	{
-		cv::reprojectImageTo3D(disparity, pointCloud, disparityToDepthMap);
-	}
-	else
-	{
-		pointCloud = ComputePointCloudFromDisparity(disparity);
-	}
-
-	return pointCloud;
+	return conversion;
 }
 
 PointCloudConstPtr HirschmullerDisparityMapping::Convert(cv::Mat cvPointCloud)
@@ -282,19 +244,57 @@ PointCloudConstPtr HirschmullerDisparityMapping::ConvertWithVoxelFilter(cv::Mat 
 	return pointCloud;
 }
 
-cv::Mat HirschmullerDisparityMapping::Convert(DisparityToDepthMap disparityToDepthMap)
+cv::Mat HirschmullerDisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage)
 {
-	cv::Mat conversion(4, 4, CV_64FC1);
+	cv::Ptr<cv::StereoSGBM> stereo = cv::StereoSGBM::create
+		(
+		parameters.disparities.minimum,
+		parameters.disparities.numberOfIntervals,
+		parameters.blocksMatching.blockSize,
+		parameters.disparities.smoothnessParameter1,
+		parameters.disparities.smoothnessParameter2,
+		(parameters.disparities.useMaximumDifference ? parameters.disparities.maximumDifference : -1),
+		parameters.prefilter.maximum,
+		parameters.blocksMatching.uniquenessRatio,
+		parameters.disparities.speckleWindow,
+		parameters.disparities.speckleRange,
+		parameters.useFullScaleTwoPassAlgorithm
+		);
 
-	for (unsigned row = 0; row < 4; row++)
+	cv::Mat greyLeftImage, greyRightImage;
+    if(leftImage.channels() == 3)
 	{
-		for (unsigned column = 0; column < 4; column++)
-		{
-			conversion.at<double>(row, column) = disparityToDepthMap[4*row + column];
-		}
+		cv::cvtColor(leftImage, greyLeftImage, CV_BGR2GRAY);
+	}
+	else  // grayscale
+	{
+		greyLeftImage = leftImage;
+	}
+    if(rightImage.channels() == 3)
+	{
+		cv::cvtColor(rightImage, greyRightImage, CV_BGR2GRAY);
+	}
+	else  // grayscale
+	{
+		greyRightImage = rightImage;
 	}
 
-	return conversion;
+	cv::Mat disparity;
+	stereo->compute(greyLeftImage, greyRightImage, disparity);
+	DEBUG_SHOW_DISPARITY(disparity);
+	SAVE_DISPARITY_MATRIX(disparity);
+
+	cv::Mat pointCloud;
+	if (parameters.useDisparityToDepthMap)
+	{
+		cv::reprojectImageTo3D(disparity, pointCloud, disparityToDepthMap);
+	}
+	else
+	{
+		pointCloud = ComputePointCloudFromDisparity(disparity);
+	}
+
+	return pointCloud;
 }
 
 /**

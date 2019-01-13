@@ -43,7 +43,9 @@ namespace BundleAdjustment
 			virtual void process() override;
 
 		private:
+			typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
 
+			//DFN Parameters
 			struct CameraMatrix
 			{
 				float focalLengthX;
@@ -63,23 +65,28 @@ namespace BundleAdjustment
 			SvdDecompositionOptionsSet parameters;
 			static const SvdDecompositionOptionsSet DEFAULT_PARAMETERS;
 
-			typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
+			//External conversion helpers
 			Converters::CorrespondenceMaps2DSequenceToMatConverter correspondencesSequenceConverter;
 
+			//Configuration Parameters conversion
 			cv::Mat leftCameraMatrix, rightCameraMatrix;
 			cv::Mat leftCameraMatrixInverse, rightCameraMatrixInverse;
 			cv::Mat leftAbsoluteConicImage,	rightAbsoluteConicImage;
+			cv::Mat CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix);
 
+			//Internal Type Conversion Methods
+			void ConvertRotationTranslationMatricesToPosesSequence(cv::Mat translationMatrix, cv::Mat rotationMatrix, PoseWrapper::Poses3DSequence& posesSequence);
+
+			//Core Computation Methods
 			void DecomposeMeasurementMatrix(cv::Mat measurementMatrix, cv::Mat& compatibleRotationMatrix, cv::Mat& compatiblePositionMatrix);
 			cv::Mat ComputeTranslationMatrix(cv::Mat centroidMatrix);
 			cv::Mat ComputeMeasuresCentroid(cv::Mat measurementMatrix);
 			void CentreMeasurementMatrix(cv::Mat centroidMatrix, cv::Mat& measurementMatrix);
-			void ConvertRotationTranslationMatricesToPosesSequence(cv::Mat translationMatrix, cv::Mat rotationMatrix, PoseWrapper::Poses3DSequence& posesSequence);
 			cv::Mat ComputeMetricRotationMatrix(cv::Mat rotationMatrix, int poseIndex);
 
+			//Validation Methods
 			void ValidateParameters();
 			void ValidateInputs();
-			cv::Mat CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix);
 	};
 }
 }

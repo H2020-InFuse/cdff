@@ -84,6 +84,7 @@ namespace Registration3D
 
 		private:
 
+			//DFN Parameters
 			enum MinimizerType
 				{
 				Identity,
@@ -176,25 +177,32 @@ namespace Registration3D
 			IcpOptionsSet parameters;
 			static const IcpOptionsSet DEFAULT_PARAMETERS;
 
+			//Previous result storage
 			PointMatcher<float>::TransformationParameters lastTransformGuess;
-			PointMatcher<float>::ICP icp;
 
+			//Icp variable and initialization
+			PointMatcher<float>::ICP icp;
+			void SetupIcpMatcher();
+
+			//External conversion helpers
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 			Converters::EigenTransformToTransform3DConverter eigenTransformToTransform3D;
 			Converters::Transform3DToEigenTransformConverter transform3DToEigenTransform;
 
+			//Type conversion methods
 			PointMatcher<float>::DataPoints ConvertToDataPoints(const PointCloudWrapper::PointCloud& cloud);
 			PoseWrapper::Pose3D ConvertToPose3D(PointMatcher<float>::TransformationParameters transform);
 
+			//Core computation methods
 			PoseWrapper::Pose3DConstPtr ComputeTransform(PointMatcher<float>::DataPoints sourceCloud, PointMatcher<float>::DataPoints sinkCloud);
 			PoseWrapper::Pose3DConstPtr ComputeTransform(PointMatcher<float>::DataPoints sourceCloud, PointMatcher<float>::DataPoints sinkCloud, 
 				PointMatcher<float>::TransformationParameters transformGuess);
 
-			void SetupIcpMatcher();
 			bool FixTransformationMatrix(PointMatcher<float>::TransformationParameters& transform);
 			bool FixSingleRotationElement(PointMatcher<float>::TransformationParameters& transform, float determinant);
 			bool NormalizeRotationMatrix(PointMatcher<float>::TransformationParameters& transform, float determinant);
 
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
 			void ValidateCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);

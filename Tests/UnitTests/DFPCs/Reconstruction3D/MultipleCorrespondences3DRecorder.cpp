@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file MultipleCorrespondencesRecorder.cpp
+ * @file MultipleCorrespondences3DRecorder.cpp
  * @date 15/08/2018
  * @author Alessandro Bianco
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNsTest
  * 
- * Unit Test for the MultipleCorrespondencesRecorder Class.
+ * Unit Test for the MultipleCorrespondences3DRecorder Class.
  * 
  * 
  * @{
@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <Reconstruction3D/MultipleCorrespondencesRecorder.hpp>
+#include <Reconstruction3D/MultipleCorrespondences3DRecorder.hpp>
 #include <Errors/Assert.hpp>
 
 using namespace CorrespondenceMap2DWrapper;
@@ -43,7 +43,7 @@ using namespace BaseTypesWrapper;
  * --------------------------------------------------------------------------
  */
 
-TEST_CASE( "Add and Get (MultipleCorrespondencesRecorder)", "[AddAndGet]" )
+TEST_CASE( "Add and Get (MultipleCorrespondences3DRecorder)", "[AddAndGet]" )
 	{
 	CorrespondenceMap2DPtr map1 = NewCorrespondenceMap2D();
 	CorrespondenceMap2DPtr map2 = NewCorrespondenceMap2D();
@@ -96,7 +96,7 @@ TEST_CASE( "Add and Get (MultipleCorrespondencesRecorder)", "[AddAndGet]" )
 	std::vector<PointCloudWrapper::PointCloudConstPtr> pointCloudList2 = {cloud3, cloud4};
 
 
-	MultipleCorrespondencesRecorder* recorder = new MultipleCorrespondencesRecorder(3);
+	MultipleCorrespondences3DRecorder* recorder = new MultipleCorrespondences3DRecorder(3);
 	CorrespondenceMaps3DSequencePtr sequenceM1 = recorder->GetLatestCorrespondences();
 	REQUIRE( GetNumberOfCorrespondenceMaps(*sequenceM1) == 0);
 

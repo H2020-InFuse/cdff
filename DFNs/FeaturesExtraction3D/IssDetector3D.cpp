@@ -110,6 +110,25 @@ const IssDetector3D::IssOptionsSet IssDetector3D::DEFAULT_PARAMETERS
 	/*.outputFormat =*/ POSITIONS_OUTPUT
 };
 
+VisualPointFeatureVector3DConstPtr IssDetector3D::Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, const pcl::PointIndicesConstPtr indicesList)
+{
+	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
+	ClearPoints(*featuresVector);
+	for (unsigned pointIndex = 0; pointIndex < indicesList->indices.size() && pointIndex < MAX_FEATURE_3D_POINTS; pointIndex++)
+	{
+		if (parameters.outputFormat == POSITIONS_OUTPUT)
+		{
+			pcl::PointXYZ point = inputCloud->points.at(indicesList->indices.at(pointIndex));
+			AddPoint(*featuresVector, point.x, point.y, point.z);
+		}
+		else if (parameters.outputFormat == REFERENCES_OUTPUT)
+		{
+			AddPoint(*featuresVector, indicesList->indices.at(pointIndex) );
+		}
+	}
+	return featuresVector;
+}
+
 pcl::PointIndicesConstPtr IssDetector3D::ComputeIssPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
 {
 	pcl::ISSKeypoint3D<pcl::PointXYZ, pcl::PointXYZ, pcl::Normal> detector;
@@ -128,25 +147,6 @@ pcl::PointIndicesConstPtr IssDetector3D::ComputeIssPoints(pcl::PointCloud<pcl::P
 	pcl::PointIndicesConstPtr issPoints = detector.getKeypointsIndices();
 
 	return issPoints;
-}
-
-VisualPointFeatureVector3DConstPtr IssDetector3D::Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, const pcl::PointIndicesConstPtr indicesList)
-{
-	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
-	ClearPoints(*featuresVector);
-	for (unsigned pointIndex = 0; pointIndex < indicesList->indices.size() && pointIndex < MAX_FEATURE_3D_POINTS; pointIndex++)
-	{
-		if (parameters.outputFormat == POSITIONS_OUTPUT)
-		{
-			pcl::PointXYZ point = inputCloud->points.at(indicesList->indices.at(pointIndex));
-			AddPoint(*featuresVector, point.x, point.y, point.z);
-		}
-		else if (parameters.outputFormat == REFERENCES_OUTPUT)
-		{
-			AddPoint(*featuresVector, indicesList->indices.at(pointIndex) );
-		}
-	}
-	return featuresVector;
 }
 
 void IssDetector3D::ValidateParameters()

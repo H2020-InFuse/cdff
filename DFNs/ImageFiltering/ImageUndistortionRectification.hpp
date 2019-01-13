@@ -87,6 +87,7 @@ namespace ImageFiltering
 
 		private:
 
+			//DFN Parameters
 			enum CameraConfigurationMode
 			{
 				IN_CONFIGURATION_FILE,
@@ -167,25 +168,28 @@ namespace ImageFiltering
 				RectificationMatrix rectificationMatrix;
 			};
 
-			cv::Mat transformMap1, transformMap2;
-			cv::Mat cameraMatrix, distortionVector, rectificationMatrix;
-
 			Helpers::ParametersListHelper parametersHelper;
 			ImageUndistortionRectificationOptionsSet parameters;
 			static const ImageUndistortionRectificationOptionsSet DEFAULT_PARAMETERS;
-			void LoadUndistortionRectificationMaps();
 
+			//External conversion helpers
 			Converters::FrameToMatConverter frameToMat;
 			Converters::MatToFrameConverter matToFrame;
 
+			//Parameters conversion variabled and methods
+			cv::Mat transformMap1, transformMap2;
+			cv::Mat cameraMatrix, distortionVector, rectificationMatrix;
+			void ConvertParametersToCvMatrices();
+			void ComputeUndistortionRectificationMap();
+			void LoadUndistortionRectificationMaps();
+
+			//Core computation methods
 			cv::Mat UndistortAndRectify(cv::Mat inputImage);
 
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat inputImage);
 
-			void Configure(const YAML::Node& configurationNode);
-			void ConvertParametersToCvMatrices();
-			void ComputeUndistortionRectificationMap();
 	};
 }
 }

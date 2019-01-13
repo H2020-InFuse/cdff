@@ -16,14 +16,21 @@
  *
  *  This DFN chain implements the Adjustment From Stereo as implementation of the DPFC for Reconstruction3D.
  *  This chain operates as follows:
- *  the input is a stream of pairs of stereo images;
- *  the left and right images are used to reconstruct a 3D point cloud throught computation of a disparity map
- *  2d features and their descriptors are extracted from the left and right images;
- *  the left and right features are matched against each other and against the previous N left and right features;
- *  the point cloud and the matches are stored in a database for future processing;
- *  3d positions of the keypoints are found by triangulation;
- *  the 3d point correspondences among the latest N image pairs are used for the computation of the camera pose by means 3d transform estimation dfn.
+ *  (i) the input is a stream of pairs of stereo images;
+ *  (ii) the left and right images are used to reconstruct a 3D point cloud throught computation of a disparity map
+ *  (iii) 2d features and their descriptors are extracted from the left and right images;
+ *  (iv) the left and right features are matched against each other and against the previous N left and right features;
+ *  (v) the point cloud and the matches are stored in a database for future processing;
+ *  (vi) 3d positions of the keypoints are found by triangulation;
+ *  (vii) the 3d point correspondences among the latest N image pairs are used for the computation of the camera pose by means 3d transform estimation dfn.
  *
+ * This DFPC is configured according to the following parameters (beyond those that are needed to configure the DFN components):
+ * @param SearchRadius, the output is given by the point of the reconstructed cloud contained within a sphere of center given by the current camera pose and radius given by this parameter;
+ * @param PointCloudMapResolution, the voxel resolution of the output point cloud, if the cloud is denser it will be filtered by PCL voxel filter;
+ * @param NumberOfAdjustedStereoPairs, it is the number N of stereo pairs that will be used for bundle adjustment, it can be one of {2, 3, 4};
+ * @param Baseline, the baseline of the stereo camera pair.
+ *
+ * Notes: no set of DFNs implementation has produced good result for this DFPC during testing.
  * @{
  */
 
@@ -59,7 +66,7 @@
 
 #include "PointCloudMap.hpp"
 #include "BundleHistory.hpp"
-#include "MultipleCorrespondencesRecorder.hpp"
+#include "MultipleCorrespondences3DRecorder.hpp"
 
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
@@ -106,12 +113,10 @@ namespace Reconstruction3D
 	 * --------------------------------------------------------------------
 	 */
 	private:
+		//General configuration helper
 		DfpcConfigurator configurator;
-		PointCloudMap pointCloudMap;
-		int currentInputNumber;
-		int oldestCameraIndex;
-		bool firstTimeBundle;
 
+		//Additional DFPC Parameters
 		struct EstimationFromStereoOptionsSet
 			{
 			float searchRadius;
@@ -124,7 +129,10 @@ namespace Reconstruction3D
 		EstimationFromStereoOptionsSet parameters;
 		static const EstimationFromStereoOptionsSet DEFAULT_PARAMETERS;
 
+		//Costants
 		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;
+
+		//Categories for the BundleHistory instance
 		const std::string LEFT_FEATURE_CATEGORY;
 		const std::string RIGHT_FEATURE_CATEGORY;
 		const std::string STEREO_CLOUD_CATEGORY;
@@ -141,33 +149,41 @@ namespace Reconstruction3D
 		CDFF::DFN::Transform3DEstimationInterface* transformEstimator;
 		CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;
 
-		//Helpers
+		//State tracker variables
 		BundleHistory* bundleHistory;
-		MultipleCorrespondencesRecorder* correspondencesRecorder;
+		MultipleCorrespondences3DRecorder* correspondencesRecorder;
 		PoseWrapper::Pose3D rightToLeftCameraPose;
+		PointCloudMap pointCloudMap;
+		int currentInputNumber;
+		int oldestCameraIndex;
+		bool firstTimeBundle;
 
 		//Intermediate data
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr leftTimeCorrespondenceMap;
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr rightTimeCorrespondenceMap;
 
+		//Parameters Configuration method
 		void ConfigureExtraParameters();
+
+		//DFN instantuation method
 		void InstantiateDFNs();
 
+		//Core computation methods that execute a step of the DFPC pipeline
 		void ComputeVisualPointFeatures(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
-		void ComputeStereoPointCloud(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
 		void CreateWorkingCorrespondences();
+		void ComputeStereoPointCloud(FrameWrapper::FrameConstPtr filteredLeftImage, FrameWrapper::FrameConstPtr filteredRightImage);
 		bool ComputeCameraPoses(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
 
+		//Core computation method for managing the set of correspondences over N pairs of images.
+
+
+		//Methods for adding point cloud to the current reconstruction.
 		void AddAllPointCloudsToMap(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
 		void AddLastPointCloudToMap(PoseWrapper::Poses3DSequenceConstPtr& cameraPoses);
 
-		CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequencePtr CreateCorrespondenceMapsSequence();
-
 		/*
-		* Inline Methods
-		*
+		* Inline helper Method
 		*/
-
 		template <typename Type>
 		void DeleteIfNotNull(Type* &pointer)
 			{
