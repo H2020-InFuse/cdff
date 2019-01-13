@@ -11,9 +11,10 @@
 # Adapt to suit your needs. In particular, set the necessary paths in the
 # --volume options.
 #
-# If your shell is bash, a good place for that function defition is ~/.bashrc,
-# because that file is not only read by interactive non-login shells, but also
-# commonly sourced in ~/.profile, which is read by interactive login shells.
+# If your shell is bash, a good place for that function defition is
+# ~/.bash_aliases, because that file is sourced by ~/.bashrc, which is not only
+# read by interactive non-login shells, but also commonly sourced in ~/.profile,
+# which is read by interactive login shells.
 #
 # If your shell is sh or dash (or bash), you can put that function definition in
 # ~/.profile, which is read by login shells, and add "export docker" afterwards
@@ -33,14 +34,14 @@ docker() {
       shift
       sudo -H /usr/bin/docker run \
         --name=cdff --hostname=cdff \
-        --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
+        --env=DISPLAY=${DISPLAY} --volume=/tmp/.X11-unix:/tmp/.X11-unix \
         --volume=/dev/log:/dev/log \
         --cap-add=SYS_PTRACE --publish=2159:2159 \
         --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
         --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
-        --user=$(id -u $(whoami)):$(id -g $(whoami)) \
+        --user=$(id -u):$(id -g) \
         --init --rm \
-        --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
+        --volume=/absolute/path/to/CDFF:/where/i/want/it/in/the/container \
         --interactive --tty \
         "${@}" \
         h2020infuse/cdff:latest bash ;;
@@ -48,7 +49,7 @@ docker() {
       shift
       docker cdff \
         --name=cdff-dev --hostname=cdff-dev \
-        --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
+        --volume=/absolute/path/to/CDFF-dev:/where/i/want/it/in/the/container \
         "${@}" ;;
     *)
       sudo -H /usr/bin/docker "${@}" ;;
@@ -61,7 +62,7 @@ docker() {
 # --name=cdff --hostname=cdff
 #
 # Optional: if you need graphics display
-# --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix
+# --env=DISPLAY=${DISPLAY} --volume=/tmp/.X11-unix:/tmp/.X11-unix
 #
 # Optional: allow messages from inside the container to be logged outside
 # --volume=/dev/log:/dev/log
@@ -75,16 +76,16 @@ docker() {
 # Recommended: be the same user inside your container as outside
 # --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro
 # --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro
-# --user=$(id -u $(whoami)):$(id -g $(whoami))
+# --user=$(id -u):$(id -g)
 #
 # Recommended: use an init process and delete your container when you exit it
 # --init --rm
 #
 # Mandatory: mount your local CDFF-core+support repository inside your container
-# --volume=/home/me/InFuse/CDFF:/opt/cdff
+# --volume=${HOME}/InFuse/CDFF:/opt/cdff
 #
 # Optional: also mount your local CDFF-dev repository if you want to use CDFF-dev
-# --volume=/home/me/InFuse/CDFF_dev:/opt/cdff-dev
+# --volume=${HOME}/InFuse/CDFF_dev:/opt/cdff-dev
 #
 # Mandatory: interactively use a terminal in your container
 # --interactive --tty

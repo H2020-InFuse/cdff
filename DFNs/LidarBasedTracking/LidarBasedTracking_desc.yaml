@@ -1,0 +1,12 @@
+name: LidarBasedTracking
+doc: DFN that tracks a model in a point cloud 
+input_ports:
+    - name: sourceCloud
+      type: asn1SccPointcloud
+      doc: point cloud in which we want to track the model
+output_ports:
+    - name: state
+      type: asn1SccRigidBodyState
+      doc: state vector containing the pose and the velocities of the model in the point cloud
+implementations:
+    - LidarBasedTracking

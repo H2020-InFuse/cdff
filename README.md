@@ -34,15 +34,16 @@ There are two ways you can build the CDFF (Core and Support components):
     $ docker pull h2020infuse/cdff:latest
     $ docker run \
       --name=cdff --hostname=cdff \
-      --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
+      --env=DISPLAY=${DISPLAY} --volume=/tmp/.X11-unix:/tmp/.X11-unix \
       --volume=/dev/log:/dev/log \
       --cap-add=SYS_PTRACE --publish=2159:2159 \
       --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
       --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
-      --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
-      --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
-      --user=$(id -u $(whoami)):$(id -g $(whoami))
-      --init --rm --interactive --tty \
+      --user=$(id -u):$(id -g) \
+      --init --rm \
+      --volume=/absolute/path/to/CDFF:/where/i/want/it/in/the/container \
+      --volume=/absolute/path/to/CDFF-dev:/where/i/want/it/in/the/container \
+      --interactive --tty \
       h2020infuse/cdff:latest [bash]
     ```
 

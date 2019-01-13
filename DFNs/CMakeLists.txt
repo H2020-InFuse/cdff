@@ -30,16 +30,20 @@ target_link_libraries(
   cdff_dfn_disparity_filtering
   cdff_dfn_fundamental_matrix_computation
   cdff_dfn_features_description_2d
+  cdff_dfn_image_degradation
   cdff_dfn_image_filtering
   cdff_dfn_image_rectification
   cdff_dfn_stereo_degradation
   cdff_dfn_stereo_reconstruction
+  cdff_dfn_stereo_rectification
   cdff_dfn_features_extraction_2d
   cdff_dfn_features_matching_2d
   cdff_dfn_perspective_n_point_solving
   cdff_dfn_point_cloud_reconstruction_2d_to_3d
   cdff_dfn_kf_prediction
   cdff_dfn_kf_correction
+  cdff_dfn_linemod_detect
+  cdff_dfn_linemod_train
   cdff_dfn_registration_3d
   cdff_dfn_transform_3d_estimation
   cdff_dfn_primitive_matching
@@ -56,7 +60,9 @@ target_link_libraries(
   cdff_dfn_features_description_3d
   cdff_dfn_features_matching_3d
   cdff_dfn_bundle_adjustment
+  cdff_dfn_disparity_to_pointcloud
   cdff_dfn_disparity_to_pointcloud_with_intensity
+  cdff_dfn_lidar_based_tracking
 )
 
 target_compile_definitions(dfns_builder PUBLIC WITH_EDRES=$<BOOL:${WITH_EDRES}>)
