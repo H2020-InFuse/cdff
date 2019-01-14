@@ -8,11 +8,12 @@ T-UInt32 FROM TASTE-BasicTypes;
 -- Message version
 octree-InFuse-Version T-UInt32 ::= 1
 
---- Definition of PointCloud_InFuse starts
+--- Definition of Octree starts
 Octree ::= SEQUENCE
 {
     resolution                     T-Double,
     pointCloud                     Pointcloud
 }
+--- Definition of Octree ends
 
 END
