@@ -84,6 +84,8 @@ set(unittest_sources UnitTests.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences3DRecorder.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
+    DFPCs/MidRange3DModelTracking/WheelTracker.cpp
+    DFPCs/MidRange3DModelTracking/WheeledRobotTracker.cpp
 )
 
 if(WITH_EDRES)
@@ -170,6 +172,7 @@ set(unittest_libraries catch
     cdff_dfpc_reconstruction_3d
     cdff_dfpc_point_cloud_model_localisation
     cdff_dfpc_haptic_scanning
+    cdff_dfpc_model_based_tracker
 )
 
 if(WITH_OPENCV_CONTRIB)
