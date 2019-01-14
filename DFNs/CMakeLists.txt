@@ -65,4 +65,4 @@ target_link_libraries(
   cdff_dfn_lidar_based_tracking
 )
 
-target_compile_definitions(dfns_builder PUBLIC WITH_EDRES=$<BOOL:${WITH_EDRES}>)
+#target_compile_definitions(dfns_builder PUBLIC WITH_EDRES=$<BOOL:${WITH_EDRES}>)
