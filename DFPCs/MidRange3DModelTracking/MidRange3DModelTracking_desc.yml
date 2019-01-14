@@ -1,0 +1,176 @@
+name: MidRange3DModelTracking
+doc: Tracking of the pose of a robot in a scene given its URDF description
+input_ports:
+- name: image
+  type: asn1SccFrame
+  doc: "2D image captured by a camera"
+  connections:
+  - dfn: NoDfn
+    port: noPort
+- name: depth
+  type: asn1SccFrame
+  doc: "2D depth image"
+  connections:
+  - dfn: NoDfn
+    port: noPort
+- name: robotName
+  type: asn1SccT_String
+  doc: "Name of the robot being tracked"
+  connections:
+  - dfn: NoDfn
+    port: noPort
+output_ports:
+- name: pose
+  type: asn1SccPose
+  doc: "Pose of the robot"
+  connections:
+  - dfn: NoDfn
+    port: noPort
+implementations:
+- name: WheelTracker
+  dfns:
+  - dfn_id: background_subtractor
+    name: ImageFiltering
+    implementation: BackgroundSubtractorMOG2
+    activation:
+        type: input_triggered
+        value: image
+  - dfn_id: ellipse_finder
+    name: PrimitiveFinder
+    implementation: BasicPrimitiveFinder
+    activation:
+        type: input_triggered
+        value: inPrimitive
+  - dfn_id: circle_finder
+    name: PrimitiveFinder
+    implementation: BasicPrimitiveFinder
+    activation:
+        type: input_triggered
+        value: inPrimitive
+  - dfn_id: ellipse_pose_estimator
+    name: PoseEstimator
+    implementation: PrimitivesPoseEstimator
+    activation:
+        type: input_triggered
+        value: inPrimitives
+  - dfn_id: circle_pose_estimator
+    name: PoseEstimator
+    implementation: PrimitivesPoseEstimator
+    activation:
+        type: input_triggered
+        value: inPrimitives
+  - dfn_id: weighting_expert
+    name: WeightingExpert
+    implementation: PoseWeighting
+    activation:
+        type: input_triggered
+        value: inPoses
+  internal_connections:
+  - from:
+        dfn_id: background_subtractor
+        port: outImage
+    to:
+        dfn_id: circle_finder
+        port: image
+  - from:
+        dfn_id: background_subtractor
+        port: outImage
+    to:
+        dfn_id: ellipse_finder
+        port: image
+  - from:
+        dfn_id: background_subtractor
+        port: outImage
+    to:
+        dfn_id: circle_pose_estimator
+        port: image
+  - from:
+        dfn_id: background_subtractor
+        port: outImage
+    to:
+        dfn_id: ellipse_pose_estimator
+        port: image
+  - from:
+        dfn_id: circle_finder
+        port: outPrimitives
+    to:
+        dfn_id: circle_pose_estimator
+        port: inPrimitives
+  - from:
+        dfn_id: ellipse_finder
+        port: outPrimitives
+    to:
+        dfn_id: ellipse_pose_estimator
+        port: inPrimitives
+  - from:
+        dfn_id: ellipse_pose_estimator
+        port: outPoses
+    to:
+        dfn_id: weighting_expert
+        port: inPoses
+  - from:
+        dfn_id: ellipse_pose_estimator
+        port: outPoses
+    to:
+        dfn_id: weighting_expert
+        port: inPoses
+  input_connections:
+  - dfpc_input: image
+    dfn_id: background_subtractor
+    port: image
+  - dfpc_input: depth
+    dfn_id: ellipse_pose_estimator
+    port: depth
+  - dfpc_input: depth
+    dfn_id: circle_pose_estimator
+    port: depth
+  output_connections:
+  - dfpc_output: outPose
+    dfn_id: weighting_expert
+    port: outPose
+- name: WheeledRobotTracker
+  dfns:
+  - dfn_id: background_subtractor
+    name: ImageFiltering
+    implementation: BackgroundSubtractorMOG2
+    activation:
+      type: input_triggered
+      value: image
+  - dfn_id: circle_finder
+    name: PrimitiveFinder
+    implementation: BasicPrimitiveFinder
+    activation:
+      type: input_triggered
+      value: inPrimitive
+  - dfn_id: wheeled_robot_pose_estimator
+    name: PoseEstimator
+    implementation: PrimitivesPoseEstimator
+    activation:
+      type: input_triggered
+      value: inPrimitives
+  internal_connections:
+  - from:
+      dfn_id: background_subtractor
+      port: outImage
+    to:
+      dfn_id: circle_finder
+      port: image
+  - from:
+      dfn_id: background_subtractor
+      port: outImage
+    to:
+      dfn_id: wheeled_robot_pose_estimator
+      port: image
+  - from:
+      dfn_id: circle_finder
+      port: outPrimitives
+    to:
+      dfn_id: wheeled_robot_pose_estimator
+      port: inPrimitives
+  input_connections:
+  - dfpc_input: image
+    dfn_id: background_subtractor
+    port: image
+  - dfpc_input: depth
+    dfn_id: wheeled_robot_pose_estimator
+    port: depth
