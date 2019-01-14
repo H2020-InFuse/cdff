@@ -15,7 +15,7 @@ if(PCL_FOUND)
 		"ReconstructionFromStereo.cpp"
 		"ObservedScene.cpp"
 		"MultipleCorrespondences2DRecorder.cpp"
-		"MultipleCorrespondencesRecorder.cpp"
+		"MultipleCorrespondences3DRecorder.cpp"
 		)
 	set(RECONSTRUCTION_3D_INCLUDE_DIRS ${RECONSTRUCTION_3D_INCLUDE_DIRS} 
 		${PCL_INCLUDE_DIRS}

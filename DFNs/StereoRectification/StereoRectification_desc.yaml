@@ -1,0 +1,13 @@
+name: StereoRectification
+doc: DFN that rectifies an stereo pair
+input_ports:
+    - name: originalStereoPair
+      type: asn1SccFramePair
+      doc: Original distorted stereo pair
+output_ports:
+    - name: rectifiedStereoPair
+      type: asn1SccFramePair
+      doc: Undistorted/rectified stereo pair
+implementations:
+    - StereoRectification
+    - StereoRectificationEdres

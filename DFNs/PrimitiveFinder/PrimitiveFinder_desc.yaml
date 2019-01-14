@@ -1,0 +1,15 @@
+name: PrimitiveFinder
+doc: DFN that finds primitives in a 2D image
+input_ports:
+    - name: image
+      type: asn1SccFrame
+      doc: 2D image captured by a camera
+    - name: primitive
+      type: asn1SccT_String
+      doc: primitive to be found in the input image
+output_ports:
+    - name: primitives
+      type: asn1SccVectorXdSequence
+      doc:  location and necessary information of the found primitives
+implementations:
+    - BasicPrimitiveFinder

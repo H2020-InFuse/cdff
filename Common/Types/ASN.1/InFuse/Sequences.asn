@@ -27,6 +27,7 @@ T-Int32, T-UInt32, T-Int8, T-UInt8, T-Boolean  FROM TASTE-BasicTypes
 T-Int64, T-UInt16, T-Double, T-Float, T-UInt64, T-String  FROM TASTE-ExtendedTypes
 Frame FROM Frame-Types
 Pose FROM Pose-Types
+VectorXd FROM Eigen-Types
 CorrespondenceMap2D FROM CorrespondenceMap2DNS
 CorrespondenceMap3D FROM CorrespondenceMap3DNS
 Point FROM Point-Types;
@@ -37,6 +38,7 @@ maxPosesSequenceLength T-UInt32 ::= 10
 maxCorrespondenceMapsSequenceLength T-UInt32 ::= 56
 maxPointsSequenceLength T-UInt32 ::= 327680
 maxDoubleSequenceLength T-UInt32 ::= 327680
+maxVectorXdSequenceLength T-UInt32 ::= 327680
 maxStringSequenceLength T-UInt32 ::= 100
 
 FramesSequence ::= SEQUENCE (SIZE(0..maxFramesSequenceLength)) OF Frame
@@ -52,5 +54,7 @@ PointSequence ::= SEQUENCE (SIZE(0..maxPointsSequenceLength)) OF Point
 DoubleSequence ::= SEQUENCE (SIZE(0..maxDoubleSequenceLength)) OF T-Double
 
 StringSequence ::= SEQUENCE (SIZE(0..maxStringSequenceLength)) OF T-String
+
+VectorXdSequence ::= SEQUENCE (SIZE(0..maxVectorXdSequenceLength)) OF VectorXd
 
 END

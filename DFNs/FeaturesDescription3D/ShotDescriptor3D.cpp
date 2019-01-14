@@ -140,6 +140,59 @@ const ShotDescriptor3D::ShotOptionsSet ShotDescriptor3D::DEFAULT_PARAMETERS
 	}
 };
 
+pcl::IndicesConstPtr ShotDescriptor3D::Convert( const VisualPointFeatureVector3DConstPtr featuresVector)
+{
+	ASSERT(GetNumberOfPoints(*featuresVector) == 0 || GetVectorType(*featuresVector) == ALL_REFERENCES_VECTOR, "ShotDescriptor3D: input features set does not contain all reference-defined points");
+	pcl::IndicesPtr indicesList = boost::make_shared<std::vector<int> >();
+
+	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
+	{
+		indicesList->push_back( GetReferenceIndex(*featuresVector, pointIndex) );
+	}
+
+	return indicesList;
+}
+
+VisualPointFeatureVector3DConstPtr ShotDescriptor3D::Convert(
+	const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud,
+	const pcl::IndicesConstPtr indicesList,
+	const pcl::PointCloud<pcl::SHOT352>::ConstPtr shotPointCloud)
+{
+	static const float LARGE_NUMBER_THAT_REPLACES_NAN = 1000;
+	static const unsigned SHOT_DESCRIPTOR_SIZE = 352;
+	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
+	ClearPoints(*featuresVector);
+	bool computedNanFeature = false;
+	for (unsigned pointIndex = 0; pointIndex < indicesList->size() && pointIndex < MAX_FEATURE_3D_POINTS; pointIndex++)
+	{
+		if (parameters.baseOptions.outputFormat == POSITIONS_OUTPUT)
+		{
+			pcl::PointXYZ point = inputCloud->points.at(indicesList->at(pointIndex));
+			AddPoint(*featuresVector, point.x, point.y, point.z);
+		}
+		else if (parameters.baseOptions.outputFormat == REFERENCES_OUTPUT)
+		{
+			AddPoint(*featuresVector, indicesList->at(pointIndex));
+		}
+
+		pcl::SHOT352 feature = shotPointCloud->points.at(pointIndex);
+		for (unsigned componentIndex = 0; componentIndex < SHOT_DESCRIPTOR_SIZE; componentIndex++)
+		{
+			if (feature.descriptor[componentIndex] != feature.descriptor[componentIndex])
+			{
+				computedNanFeature = true;
+				feature.descriptor[componentIndex] = LARGE_NUMBER_THAT_REPLACES_NAN;
+			}
+			AddDescriptorComponent(*featuresVector, pointIndex, feature.descriptor[componentIndex]);
+		}
+	}
+	if (computedNanFeature)
+	{
+		DEBUG_PRINT_TO_LOG("SHOT 3D problem: At least one of the computed features is NaN", "");
+	}
+	return featuresVector;
+}
+
 pcl::PointCloud<pcl::SHOT352>::ConstPtr ShotDescriptor3D::ComputeShotDescriptors(
 	pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud,
 	pcl::IndicesConstPtr indicesList,
@@ -228,59 +281,6 @@ pcl::PointCloud<pcl::Normal>::ConstPtr ShotDescriptor3D::EstimateNormals(pcl::Po
 	normalEstimation.compute(*normalsCloud);
 
 	return normalsCloud;
-}
-
-pcl::IndicesConstPtr ShotDescriptor3D::Convert( const VisualPointFeatureVector3DConstPtr featuresVector)
-{
-	ASSERT(GetNumberOfPoints(*featuresVector) == 0 || GetVectorType(*featuresVector) == ALL_REFERENCES_VECTOR, "ShotDescriptor3D: input features set does not contain all reference-defined points");
-	pcl::IndicesPtr indicesList = boost::make_shared<std::vector<int> >();
-
-	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
-	{
-		indicesList->push_back( GetReferenceIndex(*featuresVector, pointIndex) );
-	}
-
-	return indicesList;
-}
-
-VisualPointFeatureVector3DConstPtr ShotDescriptor3D::Convert(
-	const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud,
-	const pcl::IndicesConstPtr indicesList,
-	const pcl::PointCloud<pcl::SHOT352>::ConstPtr shotPointCloud)
-{
-	static const float LARGE_NUMBER_THAT_REPLACES_NAN = 1000;
-	static const unsigned SHOT_DESCRIPTOR_SIZE = 352;
-	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
-	ClearPoints(*featuresVector);
-	bool computedNanFeature = false;
-	for (unsigned pointIndex = 0; pointIndex < indicesList->size() && pointIndex < MAX_FEATURE_3D_POINTS; pointIndex++)
-	{
-		if (parameters.baseOptions.outputFormat == POSITIONS_OUTPUT)
-		{
-			pcl::PointXYZ point = inputCloud->points.at(indicesList->at(pointIndex));
-			AddPoint(*featuresVector, point.x, point.y, point.z);
-		}
-		else if (parameters.baseOptions.outputFormat == REFERENCES_OUTPUT)
-		{
-			AddPoint(*featuresVector, indicesList->at(pointIndex));
-		}
-
-		pcl::SHOT352 feature = shotPointCloud->points.at(pointIndex);
-		for (unsigned componentIndex = 0; componentIndex < SHOT_DESCRIPTOR_SIZE; componentIndex++)
-		{
-			if (feature.descriptor[componentIndex] != feature.descriptor[componentIndex])
-			{
-				computedNanFeature = true;
-				feature.descriptor[componentIndex] = LARGE_NUMBER_THAT_REPLACES_NAN;
-			}
-			AddDescriptorComponent(*featuresVector, pointIndex, feature.descriptor[componentIndex]);
-		}
-	}
-	if (computedNanFeature)
-	{
-		DEBUG_PRINT_TO_LOG("SHOT 3D problem: At least one of the computed features is NaN", "");
-	}
-	return featuresVector;
 }
 
 void ShotDescriptor3D::ValidateParameters()

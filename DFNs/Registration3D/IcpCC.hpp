@@ -71,6 +71,7 @@ namespace Registration3D
 
 		private:
 
+			//DFN Parameters
 			enum ConvergenceType
 			{
 				MINIMUM_ERROR_REDUCTION,
@@ -99,17 +100,24 @@ namespace Registration3D
 			Helpers::ParametersListHelper parametersHelper;
 			IcpOptionsSet parameters;
 			static const IcpOptionsSet DEFAULT_PARAMETERS;
-			CCLib::ICPRegistrationTools::Parameters ccParametersList;
 
+			//Parameters Conversion
+			CCLib::ICPRegistrationTools::Parameters ccParametersList;
+			void ConvertParametersToCCParametersList();
+
+			//External conversion helpers
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 			Converters::EigenTransformToTransform3DConverter eigenTransformToTransform3D;
 
-			void ComputeTransform(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud);
+			//Type conversion methods
 			CCLib::PointCloud* Convert(PointCloudWrapper::PointCloudConstPtr cloud);
-			void ConvertParametersToCCParametersList();
 			CCLib::RegistrationTools::ScaledTransformation ConvertTrasformToCCTransform(const PoseWrapper::Pose3D& transform);
 			PoseWrapper::Pose3D ConvertCCTransformToTranform(const CCLib::RegistrationTools::ScaledTransformation& ccTransform);
 
+			//Core computation methods
+			void ComputeTransform(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud);
+
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud);
 			void ValidateCloud(CCLib::PointCloud* cloud);

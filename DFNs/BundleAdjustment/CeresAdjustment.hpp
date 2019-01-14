@@ -45,6 +45,7 @@ namespace BundleAdjustment
 
 		private:
 
+			//DFN Parameters
 			struct CameraMatrix
 			{
 				float focalLengthX;
@@ -64,9 +65,8 @@ namespace BundleAdjustment
 			Helpers::ParametersListHelper parametersHelper;
 			CeresAdjustmentOptionsSet parameters;
 			static const CeresAdjustmentOptionsSet DEFAULT_PARAMETERS;
-			bool initialPoseEstimationIsAvailable;
-			bool initialPointEstimationIsAvailable;
 
+			//Ceres Functor
 			struct StereoImagePointCostFunctor
 				{
 				StereoImagePointCostFunctor(cv::Mat leftCameraMatrix, cv::Mat rightCameraMatrix, cv::Mat pointMeasuresMatrix, float baseline);
@@ -82,19 +82,30 @@ namespace BundleAdjustment
 			typedef double Point3d[3];
 			typedef double Transform3d[6];
 
-			Converters::CorrespondenceMaps2DSequenceToMatConverter correspondencesSequenceConverter;
-			cv::Mat leftCameraMatrix, rightCameraMatrix;
+			//Internal State variables
+			bool initialPoseEstimationIsAvailable;
+			bool initialPointEstimationIsAvailable;
 
-			std::vector<cv::Mat> SolveBundleAdjustment(cv::Mat measurementMatrix, bool& success);
+			//Configuration Parameters conversion
+			cv::Mat leftCameraMatrix, rightCameraMatrix;
+			cv::Mat CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix);
+
+			//External conversion helpers
+			Converters::CorrespondenceMaps2DSequenceToMatConverter correspondencesSequenceConverter;
+
+			//Internal Type Conversion Methods
 			void ConvertProjectionMatricesListToPosesSequence(std::vector<cv::Mat> projectionMatricesList, PoseWrapper::Poses3DSequence& posesSequence);
+
+			//Core Computation Methods
+			std::vector<cv::Mat> SolveBundleAdjustment(cv::Mat measurementMatrix, bool& success);
 			void InitializePoints(std::vector<Point3d>& pointCloud, cv::Mat measurementMatrix);
 			void InitializePoses(std::vector<Transform3d>& posesSequence, int numberOfImages);
-
 			bool PointIsNotInVector(BaseTypesWrapper::Point2D point, const std::vector<BaseTypesWrapper::Point2D>& vector);
+
+			//Validation Methods
 			void ValidateParameters();
 			void ValidateInputs();
 			void ValidateInitialEstimations(int numberOfCameras);
-			cv::Mat CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix);
 
 	};
 }

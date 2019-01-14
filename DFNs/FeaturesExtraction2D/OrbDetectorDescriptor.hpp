@@ -54,6 +54,7 @@ namespace FeaturesExtraction2D
 
 		private:
 
+			//DFN Parameters
 			struct OrbOptionsSet
 			{
 				int edgeThreshold;
@@ -71,15 +72,19 @@ namespace FeaturesExtraction2D
 			OrbOptionsSet parameters;
 			static const OrbOptionsSet DEFAULT_PARAMETERS;
 
+			//External conversion helpers
 			Converters::FrameToMatConverter frameToMat;
 			Converters::MatToVisualPointFeatureVector2DConverter matToVisualPointFeatureVector2D;
 
+			//Type conversion methods
+			static int ConvertToScoreType(const std::string& scoreType);
+
+			//Core computation methods
 			cv::Mat ComputeOrbFeatures(cv::Mat inputImage);
 
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat inputImage);
-
-			static int ConvertToScoreType(const std::string& scoreType);
 	};
 }
 }

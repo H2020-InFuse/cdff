@@ -64,6 +64,7 @@ namespace FeaturesExtraction3D
 
 		private:
 
+			//DFN Parameters
 			enum OutputFormat
 			{
 				POSITIONS_OUTPUT,
@@ -95,12 +96,17 @@ namespace FeaturesExtraction3D
 			IssOptionsSet parameters;
 			static const IssOptionsSet DEFAULT_PARAMETERS;
 
+			//External conversion helpers
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 
-			pcl::PointIndicesConstPtr ComputeIssPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
+			//Type conversion methods
 			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, 
 				const pcl::PointIndicesConstPtr indicesList);
 
+			//Core computation methods
+			pcl::PointIndicesConstPtr ComputeIssPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
+
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 	};

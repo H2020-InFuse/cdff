@@ -259,6 +259,28 @@ pcl::PointXYZ NeighbourSinglePointAverage::DisplacePointBySameDistance(const pcl
 	return displacedPoint;
 	}
 
+void NeighbourSinglePointAverage::AddNewMatchToCorrespondenceMap(Correspondence newCorrespondence)
+	{
+	int numberOfCorrespondences = correspondenceMap.size();
+	for(int correspondenceIndex = 0; correspondenceIndex < numberOfCorrespondences; correspondenceIndex++)
+		{
+		Correspondence& correspondence = correspondenceMap.at(correspondenceIndex);
+		bool conflictCorrespondence = (correspondence.firstIndex == newCorrespondence.firstIndex) || (correspondence.secondIndex == newCorrespondence.secondIndex);
+		
+		if(conflictCorrespondence)
+			{
+			bool betterCorrespondence = newCorrespondence.squaredDistance < correspondence.squaredDistance;
+			if (betterCorrespondence)
+				{
+				correspondence = newCorrespondence;
+				}
+			return; // if we find a conflict, and the conflicting match is better, we just stop.
+			}
+		}
+	//At this point we found no conflicts.
+	correspondenceMap.push_back(newCorrespondence);
+	}
+
 void NeighbourSinglePointAverage::PrepareOutAssembledPointCloud()
 	{
 	float squaredViewRadius = (inViewRadius*inViewRadius);
@@ -282,28 +304,6 @@ void NeighbourSinglePointAverage::PrepareOutAssembledPointCloud()
 			AddPoint(outAssembledPointCloud, point.x, point.y, point.z);
 			}
 		}
-	}
-
-void NeighbourSinglePointAverage::AddNewMatchToCorrespondenceMap(Correspondence newCorrespondence)
-	{
-	int numberOfCorrespondences = correspondenceMap.size();
-	for(int correspondenceIndex = 0; correspondenceIndex < numberOfCorrespondences; correspondenceIndex++)
-		{
-		Correspondence& correspondence = correspondenceMap.at(correspondenceIndex);
-		bool conflictCorrespondence = (correspondence.firstIndex == newCorrespondence.firstIndex) || (correspondence.secondIndex == newCorrespondence.secondIndex);
-		
-		if(conflictCorrespondence)
-			{
-			bool betterCorrespondence = newCorrespondence.squaredDistance < correspondence.squaredDistance;
-			if (betterCorrespondence)
-				{
-				correspondence = newCorrespondence;
-				}
-			return; // if we find a conflict, and the conflicting match is better, we just stop.
-			}
-		}
-	//At this point we found no conflicts.
-	correspondenceMap.push_back(newCorrespondence);
 	}
 
 void NeighbourSinglePointAverage::ValidateParameters()

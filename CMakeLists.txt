@@ -331,7 +331,21 @@ find_package(OpenCV 3.4.0 REQUIRED)
 find_package_mode(OpenCV)
 
 if(OpenCV_FOUND)
-add_definitions(-DWITH_OPENCV)
+
+  add_definitions(-DWITH_OPENCV)
+  option(WITH_OPENCV "Build OpenCV dependent parts" ON)
+  add_definitions(-DHAVE_OPENCV)
+  # checking extra contrib modules
+  include(CheckIncludeFileCXX)
+  check_include_file_cxx(opencv2/ximgproc.hpp HAVE_OPENCV_XIMGPROC)
+  check_include_file_cxx(opencv2/rgbd.hpp HAVE_OPENCV_RGBD)
+  if(HAVE_OPENCV_RGBD AND HAVE_OPENCV_XIMGPROC)
+    option(WITH_OPENCV_CONTRIB "Build OpenCV_Contrib dependent parts" ON)
+    add_definitions(-DHAVE_OPENCV_CONTRIB)
+  else()
+    message(WARNING one of the modules from OPENCV_CONTRIB is missing : ximgproc, rgbd )
+  endif()
+
 endif()
 
 ## Look for libpointmatcher ---------------------------------------------------

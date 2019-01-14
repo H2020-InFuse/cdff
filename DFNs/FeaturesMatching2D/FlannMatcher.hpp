@@ -88,6 +88,7 @@ namespace FeaturesMatching2D
 
 		private:
 
+			//DFN Parameters
 			typedef cvflann::flann_centers_init_t CenterInitializationMethod;
 			class CenterInitializationMethodHelper : public Helpers::ParameterHelper<CenterInitializationMethod, std::string>
 			{
@@ -185,15 +186,20 @@ namespace FeaturesMatching2D
 			FlannMatcherOptionsSet parameters;
 			static const FlannMatcherOptionsSet DEFAULT_PARAMETERS;
 
+			//External conversion helpers
 			Converters::VisualPointFeatureVector2DToMatConverter visualPointFeatureVector2DToMat;
 
+			//Type conversion methods
 			cv::Ptr<cv::flann::IndexParams> ConvertParameters();
-			std::vector< cv::DMatch > ComputeMatches(cv::Mat sourceDescriptorsMatrix, cv::Mat sinkDescriptorsMatrix);
-			void CleanLowScoringMatches(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap, 
-				CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr cleanMap);
 			cv::Mat ConvertToValidType(cv::Mat floatDescriptorsMatrix);
 			CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr Convert(std::vector<cv::DMatch> matchesVector, cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix);
 
+			//Core computation methods
+			std::vector< cv::DMatch > ComputeMatches(cv::Mat sourceDescriptorsMatrix, cv::Mat sinkDescriptorsMatrix);
+			void CleanLowScoringMatches(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap, 
+				CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr cleanMap);
+
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix);
 	};
