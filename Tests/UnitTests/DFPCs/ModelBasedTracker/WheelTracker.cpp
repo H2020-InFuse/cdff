@@ -8,7 +8,7 @@
  */
 
 #include <catch.hpp>
-#include <MidRange3DModelTracking/WheelTracker.hpp>
+#include <ModelBasedTracker/WheelTracker.hpp>
 #include <Errors/Assert.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 #include <Types/CPP/Frame.hpp>
@@ -21,7 +21,7 @@ using namespace Array3DWrapper;
 TEST_CASE( "Call to setup (WheelTracker)", "[setup]" )
 {
     std::unique_ptr<WheelTracker> tracker( new WheelTracker() );
-    tracker->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/MidRange3DModelTracking/DfpcMidRange3DModelTracking_conf01.yaml");
+    tracker->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/ModelBasedTracker/DfpcModelBasedTracker_conf01.yaml");
     tracker->setup();
 }
 
@@ -54,7 +54,7 @@ TEST_CASE( "Call to run (WheelTracker)", "[run]" )
     FrameWrapper::FrameConstPtr input_img = Converters::MatToFrameConverter().Convert(img);
 
     std::unique_ptr<WheelTracker> tracker( new WheelTracker() );
-    tracker->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/MidRange3DModelTracking/DfpcMidRange3DModelTracking_conf01.yaml");
+    tracker->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/ModelBasedTracker/DfpcModelBasedTracker_conf01.yaml");
     tracker->setup();
 
     tracker->imageInput(*input_img);

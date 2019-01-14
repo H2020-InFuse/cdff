@@ -8,7 +8,7 @@
  */
 
 #include <catch.hpp>
-#include <MidRange3DModelTracking/WheeledRobotTracker.hpp>
+#include <ModelBasedTracker/WheeledRobotTracker.hpp>
 #include <Errors/Assert.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 #include <Types/CPP/Frame.hpp>
@@ -21,7 +21,7 @@ using namespace Array3DWrapper;
 TEST_CASE( "Call to setup (WheeledRobotTracker)", "[setup]" )
 {
     std::unique_ptr<WheeledRobotTracker> tracker( new WheeledRobotTracker() );
-    tracker->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/MidRange3DModelTracking/DfpcMidRange3DModelTracking_conf01.yaml");
+    tracker->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/ModelBasedTracker/DfpcModelBasedTracker_conf01.yaml");
     tracker->setup();
 }
 
@@ -59,7 +59,7 @@ TEST_CASE( "Call to run (WheeledRobotTracker)", "[run]" )
     memcpy(robot_name_asn1.arr, robot_name.data(), robot_name.length());
 
     std::unique_ptr<WheeledRobotTracker> tracker( new WheeledRobotTracker() );
-    tracker->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/MidRange3DModelTracking/DfpcMidRange3DModelTracking_conf01.yaml");
+    tracker->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/ModelBasedTracker/DfpcModelBasedTracker_conf01.yaml");
     tracker->setup();
 
     tracker->imageInput(*input_img);

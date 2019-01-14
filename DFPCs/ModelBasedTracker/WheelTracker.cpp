@@ -35,7 +35,7 @@ void WheelTracker::setup()
         path_to_cdff = std::string(std::getenv("CDFFPATH"));
         if( configurationFilePath.empty() )
         {
-            configurationFilePath = std::string(std::getenv("CDFFPATH")) + "/Tests/ConfigurationFiles/DFPCs/MidRange3DModelTracking/DfpcMidRange3DModelTracking_conf01.yaml";
+            configurationFilePath = std::string(std::getenv("CDFFPATH")) + "/Tests/ConfigurationFiles/DFPCs/ModelBasedTracker/DfpcModelBasedTracker_conf01.yaml";
         }
     }
     else
@@ -43,7 +43,7 @@ void WheelTracker::setup()
         path_to_cdff = std::string("../../../");
         if( configurationFilePath.empty() )
         {
-            configurationFilePath = "Tests/ConfigurationFiles/DFPCs/MidRange3DModelTracking/DfpcMidRange3DModelTracking_conf01.yaml";
+            configurationFilePath = "Tests/ConfigurationFiles/DFPCs/ModelBasedTracker/DfpcModelBasedTracker_conf01.yaml";
         }
     }
 

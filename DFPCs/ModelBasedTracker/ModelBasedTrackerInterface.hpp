@@ -3,12 +3,12 @@
  * @{
  */
 
-#ifndef MIDRANGE3DMODELTRACKING_MIDRANGE3DMODELTRACKINGINTERFACE_HPP
-#define MIDRANGE3DMODELTRACKING_MIDRANGE3DMODELTRACKINGINTERFACE_HPP
+#ifndef MODELBASEDTRACKER_MODELBASEDTRACKERINTERFACE_HPP
+#define MODELBASEDTRACKER_MODELBASEDTRACKERINTERFACE_HPP
 
 #include "DFPCCommonInterface.hpp"
-#include <Types/C/Frame.h>
 #include <Types/C/Pose.h>
+#include <Types/C/Frame.h>
 
 namespace CDFF
 {
@@ -17,12 +17,12 @@ namespace DFPC
     /**
      * Tracking of the pose of a robot in a scene given its URDF description
      */
-    class MidRange3DModelTrackingInterface : public DFPCCommonInterface
+    class ModelBasedTrackerInterface : public DFPCCommonInterface
     {
         public:
 
-            MidRange3DModelTrackingInterface();
-            virtual ~MidRange3DModelTrackingInterface();
+            ModelBasedTrackerInterface();
+            virtual ~ModelBasedTrackerInterface();
 
             /**
              * Send value to input port "image"
@@ -62,6 +62,6 @@ namespace DFPC
 }
 }
 
-#endif // MIDRANGE3DMODELTRACKING_MIDRANGE3DMODELTRACKINGINTERFACE_HPP
+#endif // MODELBASEDTRACKER_MODELBASEDTRACKERINTERFACE_HPP
 
 /** @} */

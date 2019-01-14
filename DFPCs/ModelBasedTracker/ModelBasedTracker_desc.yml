@@ -1,4 +1,4 @@
-name: MidRange3DModelTracking
+name: ModelBasedTracker
 doc: Tracking of the pose of a robot in a scene given its URDF description
 input_ports:
 - name: image

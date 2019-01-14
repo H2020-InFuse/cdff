@@ -6,7 +6,7 @@
 #ifndef WHEELEDROBOT_TRACKER_HPP
 #define WHEELEDROBOT_TRACKER_HPP
 
-#include "MidRange3DModelTrackingInterface.hpp"
+#include "ModelBasedTrackerInterface.hpp"
 #include <PrimitiveFinder/BasicPrimitiveFinder.hpp>
 #include <PoseEstimator/PrimitivesPoseEstimator.hpp>
 #include <WeightingExpert/PoseWeighting.hpp>
@@ -20,7 +20,7 @@ namespace DFPC
     /**
      * WheeledRobotTracker, DFPC implementation that tracks wheeled robots using the 2D image and depth information.
      */
-    class WheeledRobotTracker : public MidRange3DModelTrackingInterface
+    class WheeledRobotTracker : public ModelBasedTrackerInterface
     {
         public:
             WheeledRobotTracker();

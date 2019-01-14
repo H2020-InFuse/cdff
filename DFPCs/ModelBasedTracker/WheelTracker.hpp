@@ -6,7 +6,7 @@
 #ifndef WHEELTRACKER_HPP
 #define WHEELTRACKER_HPP
 
-#include "MidRange3DModelTrackingInterface.hpp"
+#include "ModelBasedTrackerInterface.hpp"
 #include <PrimitiveFinder/BasicPrimitiveFinder.hpp>
 #include <PoseEstimator/PrimitivesPoseEstimator.hpp>
 #include <WeightingExpert/PoseWeighting.hpp>
@@ -19,7 +19,7 @@ namespace DFPC
     /**
      * WheelTracker, DFPC implementation that tracks a wheel using the 2D image and depth information.
      */
-    class WheelTracker : public MidRange3DModelTrackingInterface
+    class WheelTracker : public ModelBasedTrackerInterface
     {
         public:
             WheelTracker();

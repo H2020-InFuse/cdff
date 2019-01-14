@@ -37,7 +37,7 @@ void WheeledRobotTracker::setup()
         path_to_cdff = std::string(std::getenv("CDFFPATH"));
         if( configurationFilePath.empty() )
         {
-            configurationFilePath = std::string(std::getenv("CDFFPATH")) + "/Tests/ConfigurationFiles/DFPCs/MidRange3DModelTracking/"+getRobotConfigurationFileName();
+            configurationFilePath = std::string(std::getenv("CDFFPATH")) + "/Tests/ConfigurationFiles/DFPCs/ModelBasedTracker/"+getRobotConfigurationFileName();
         }
     }
     else
@@ -45,7 +45,7 @@ void WheeledRobotTracker::setup()
         path_to_cdff = std::string("../../../");
         if( configurationFilePath.empty() )
         {
-            configurationFilePath = "Tests/ConfigurationFiles/DFPCs/MidRange3DModelTracking/"+getRobotConfigurationFileName();
+            configurationFilePath = "Tests/ConfigurationFiles/DFPCs/ModelBasedTracker/"+getRobotConfigurationFileName();
         }
     }
 
@@ -69,11 +69,11 @@ std::string WheeledRobotTracker::getRobotConfigurationFileName()
 {
     if(m_robot == robots::SHERPA)
     {
-        return "DfpcMidRange3DModelTracking_SherpaTracker.yaml";
+        return "DfpcModelBasedTracker_SherpaTracker.yaml";
     }
     else if(m_robot == robots::MANA)
     {
-        return "DfpcMidRange3DModelTracking_ManaTracker.yaml";
+        return "DfpcModelBasedTracker_ManaTracker.yaml";
     }
     else //Return, no config file for given robot.
     {

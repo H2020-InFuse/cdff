@@ -84,8 +84,8 @@ set(unittest_sources UnitTests.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences3DRecorder.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
-    DFPCs/MidRange3DModelTracking/WheelTracker.cpp
-    DFPCs/MidRange3DModelTracking/WheeledRobotTracker.cpp
+    DFPCs/ModelBasedTracker/WheelTracker.cpp
+    DFPCs/ModelBasedTracker/WheeledRobotTracker.cpp
 )
 
 if(WITH_EDRES)
