@@ -83,6 +83,7 @@ void CeresEstimationTest::RandomCorrespondencesTest(cv::Mat transform, unsigned 
 		sink.z = transformedPoint3d.at<float>(2,0);
 		AddCorrespondence(*input, source, sink, 1.0);
 		}
+	std::cout << "end 1" << std::endl;
 
 	CorrespondenceMaps3DSequencePtr sequence = NewCorrespondenceMaps3DSequence();
 	AddCorrespondenceMap(*sequence, *input);
@@ -132,6 +133,7 @@ void CeresEstimationTest::DoubleRandomCorrespondencesTest(cv::Mat transform1, cv
 		AddCorrespondence(*input2, source, secondSink, 1.0);
 		AddCorrespondence(*input3, sink, secondSink, 1.0);
 		}
+	std::cout << "end 2" << std::endl;
 
 	CorrespondenceMaps3DSequencePtr sequence = NewCorrespondenceMaps3DSequence();
 	AddCorrespondenceMap(*sequence, *input1);
@@ -204,6 +206,7 @@ void CeresEstimationTest::TripleRandomCorrespondencesTest(cv::Mat transform1, cv
 		AddCorrespondence(*input5, sink, thirdSink, 1.0);
 		AddCorrespondence(*input6, secondSink, thirdSink, 1.0);
 		}
+	std::cout << "end 3" << std::endl;
 
 	CorrespondenceMaps3DSequencePtr sequence = NewCorrespondenceMaps3DSequence();
 	AddCorrespondenceMap(*sequence, *input1);
@@ -272,6 +275,7 @@ void CeresEstimationTest::RandomCorrespondencesWithOneFailureTest(cv::Mat transf
 		sink.z = transformedPoint3d.at<float>(2,0);
 		AddCorrespondence(*input, source, sink, 1.0);
 		}
+	std::cout << "end 4" << std::endl;
 
 	CorrespondenceMaps3DSequencePtr sequence = NewCorrespondenceMaps3DSequence();
 	AddCorrespondenceMap(*sequence, *input);
