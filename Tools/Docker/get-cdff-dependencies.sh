@@ -35,7 +35,7 @@ function print_help {
 
 	Options:
 	  -h, --help             Display this help and exit
-	  -d, --dependency LIB   Install LIB
+	  -d, --dependency=LIB   Install LIB
 	                         Repeat as needed: -d LIB1 -d LIB2 ...
 	                         Default: boost yaml-cpp eigen cloudcompare-core
 	                           ceres flann nabo pointmatcher opencv vtk pcl
@@ -44,11 +44,11 @@ function print_help {
 	                           CDFF::CentralDPM)
 	                         To install without the default libs, use: -d none -e
 	                         Default: no
-	  -s, --sources DIR      Where to download the sources of the requested LIBs
+	  -s, --sources=DIR      Where to download the sources of the requested LIBs
 	                         Default: ${SOURCE_DIR}
-	  -i, --install DIR      Installation prefix
+	  -i, --install=DIR      Installation prefix
 	                         Default: ${INSTALL_DIR}
-	  -p, --package DIR      Output directory for packages made by CheckInstall
+	  -p, --package=DIR      Output directory for packages made by CheckInstall
 	                         Default: ${PKG_DIR}
 	END_OF_HELP
 }
@@ -222,7 +222,7 @@ fi
 
 # Parse the installers/ subdirectory
 find_installers
-echo "Found installers for: " "${!installers[@]}"
+echo "Found installers for:" "${!installers[@]}"
 
 # Parse the list of requested dependencies
 for i in "${!dependencies[@]}"; do
@@ -232,11 +232,11 @@ for i in "${!dependencies[@]}"; do
     unset dependencies[i]
   # Exit with an error if a requested dependency doesn't have an installer
   elif [[ -z ${installers[${dependencies[i]}]} ]]; then
-    echo "Found no installer for: ${dependencies[i]}" >&2
+    echo "Found no installer for:" "${dependencies[i]}" >&2
     exit 1
   fi
 done
-echo "Dependencies marked for installation: " "${dependencies[@]}"
+echo "Dependencies marked for installation:" "${dependencies[@]}"
 
 # Print where the dependencies will be installed
 echo "Where sources will be downloaded: ${SOURCE_DIR}"

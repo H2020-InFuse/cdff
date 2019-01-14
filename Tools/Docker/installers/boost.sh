@@ -92,19 +92,19 @@ if [[ ${boost_ok} = false ]]; then
   cdff_wget boost boost_1_66_0.tar.gz https://dl.bintray.com/boostorg/release/1.66.0/source/
   cd boost_1_66_0
 
-  # Build
+  # Build and install
   mkdir build
   ./bootstrap.sh \
     --with-libraries="$(echo "${compiled_libraries[@]}" | tr " " ,)" \
     --prefix="${INSTALL_DIR}"
-  ./b2 --build-dir=build -q -j ${CPUS} link=shared #stage
-
-  # Install
   if [[ ${INSTALL_AS_ROOT} == yes ]]; then
-    sudo ./b2 --build-dir=build install
+    sudo ./b2 --build-dir=build -q -j ${CPUS} link=shared install
+    sudo rm -rf build
   else
-    ./b2 --build-dir=build install
+    ./b2 --build-dir=build -q -j ${CPUS} link=shared install
+    rm -rf build
   fi
+  cd ..
 
   # Patch: support for Boost 1.66.0 in the CMake find module FindBoost.cmake is
   # only available from the module shipped with CMake 3.11: download that module
@@ -116,7 +116,7 @@ if [[ ${boost_ok} = false ]]; then
   fi
   rm FindBoost.cmake
 
-  # Remove source and build directories
+  # Remove source directory
   cdff_makedistclean boost
 
 fi
