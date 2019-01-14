@@ -366,7 +366,68 @@ target_link_libraries(
     ${VTK_LIBRARIES}
 )
 
+add_executable(
+    ImageDegradationGuiTest
+    DFNs/ImageDegradation/ImageDegradation.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(ImageDegradationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(ImageDegradationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+    ImageDegradationGuiTest
+    cdff_dfn_image_degradation
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
+)
+
+add_executable(
+    DisparityImageGuiTest
+    DFNs/DisparityImage/DisparityImage.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(DisparityImageGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(DisparityImageGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+    DisparityImageGuiTest
+    cdff_dfn_disparity_image
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+)
+
 if(WITH_EDRES)
+    add_executable(
+        DisparityImageEdresGuiTest
+        DFNs/DisparityImage/DisparityImageEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+    )
+    set_target_properties(DisparityImageEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(DisparityImageEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        DisparityImageEdresGuiTest
+        cdff_dfn_disparity_image
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    )
+endif()
+
+
+if(WITH_EDRES)
+    add_executable(
+        ImageDegradationEdresGuiTest
+        DFNs/ImageDegradation/ImageDegradationEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+    )
+    set_target_properties(ImageDegradationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(ImageDegradationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        ImageDegradationEdresGuiTest
+        cdff_dfn_image_degradation
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+        ${VTK_LIBRARIES}
+    )
+
     add_executable(
         DisparityFilteringEdresGuiTest
         DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
@@ -381,7 +442,23 @@ if(WITH_EDRES)
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
         ${VTK_LIBRARIES}
     )
+    
 endif()
+
+add_executable(
+    StereoRectificationGuiTest
+    DFNs/StereoRectification/StereoRectification.cpp
+    DFNs/DFNTestInterface.cpp
+    ${GRAPHICALTEST_GUI_SOURCES}
+)
+set_target_properties(StereoRectificationGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+target_compile_definitions(StereoRectificationGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+    StereoRectificationGuiTest
+    cdff_dfn_stereo_rectification
+    ${GRAPHICALTEST_OPENCV_LIBRARIES}
+    ${VTK_LIBRARIES}
+)
 
 add_executable(
     ImageRectificationGuiTest
@@ -399,6 +476,21 @@ target_link_libraries(
 )
 
 if(WITH_EDRES)
+    add_executable(
+        StereoRectificationEdresGuiTest
+        DFNs/StereoRectification/StereoRectificationEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+    )
+    set_target_properties(StereoRectificationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(StereoRectificationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        StereoRectificationEdresGuiTest
+        cdff_dfn_stereo_rectification
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+        ${VTK_LIBRARIES}
+    )
+
     add_executable(
         ImageRectificationEdresGuiTest
         DFNs/ImageRectification/ImageRectificationEdres.cpp

@@ -139,6 +139,25 @@ const HarrisDetector3D::HarryOptionsSet HarrisDetector3D::DEFAULT_PARAMETERS
 	/*.outputFormat =*/ POSITIONS_OUTPUT,
 };
 
+VisualPointFeatureVector3DConstPtr HarrisDetector3D::Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, const pcl::PointIndicesConstPtr indicesList)
+{
+	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
+	ClearPoints(*featuresVector);
+	for (unsigned pointIndex = 0; pointIndex < indicesList->indices.size() && pointIndex < MAX_FEATURE_3D_POINTS; pointIndex++)
+	{
+		if (parameters.outputFormat == POSITIONS_OUTPUT)
+		{
+			pcl::PointXYZ point = inputCloud->points.at(indicesList->indices.at(pointIndex));
+			AddPoint(*featuresVector, point.x, point.y, point.z);
+		}
+		else if (parameters.outputFormat == REFERENCES_OUTPUT)
+		{
+			AddPoint(*featuresVector, indicesList->indices.at(pointIndex) );
+		}
+	}
+	return featuresVector;
+}
+
 pcl::PointIndicesConstPtr HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
 {
 	pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI> detector;
@@ -158,25 +177,6 @@ pcl::PointIndicesConstPtr HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<
 	pcl::PointIndicesConstPtr harrisPoints = detector.getKeypointsIndices();
 
 	return harrisPoints;
-}
-
-VisualPointFeatureVector3DConstPtr HarrisDetector3D::Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, const pcl::PointIndicesConstPtr indicesList)
-{
-	VisualPointFeatureVector3DPtr featuresVector = new VisualPointFeatureVector3D();
-	ClearPoints(*featuresVector);
-	for (unsigned pointIndex = 0; pointIndex < indicesList->indices.size() && pointIndex < MAX_FEATURE_3D_POINTS; pointIndex++)
-	{
-		if (parameters.outputFormat == POSITIONS_OUTPUT)
-		{
-			pcl::PointXYZ point = inputCloud->points.at(indicesList->indices.at(pointIndex));
-			AddPoint(*featuresVector, point.x, point.y, point.z);
-		}
-		else if (parameters.outputFormat == REFERENCES_OUTPUT)
-		{
-			AddPoint(*featuresVector, indicesList->indices.at(pointIndex) );
-		}
-	}
-	return featuresVector;
 }
 
 void HarrisDetector3D::ValidateParameters()

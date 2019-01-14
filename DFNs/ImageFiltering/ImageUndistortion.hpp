@@ -48,6 +48,7 @@ namespace ImageFiltering
 
 	private:
 
+		//DFN Parameters 
 		struct CameraMatrix
 		{
 			float focalLengthX;
@@ -74,15 +75,16 @@ namespace ImageFiltering
 		ImageUndistortionOptionsSet parameters;
 		static const ImageUndistortionOptionsSet DEFAULT_PARAMETERS;
 
+		//External conversion helpers
 		Converters::FrameToMatConverter frameToMat;
 		Converters::MatToFrameConverter matToFrame;
 
+		//Core computation methods
 		cv::Mat Undistort(cv::Mat inputImage);
 
+		//Input Validation methods
 		void ValidateParameters();
 		void ValidateInputs(cv::Mat inputImage);
-
-		void Configure(const YAML::Node& configurationNode);
 	};
 }
 }

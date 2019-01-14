@@ -43,6 +43,7 @@ namespace PerspectiveNPointSolving
 
 		private:
 
+			//DFN Parameters
 			struct CameraMatrix
 			{
 				float focalLengthX;
@@ -60,12 +61,17 @@ namespace PerspectiveNPointSolving
 			IterativePnpOptionsSet parameters;
 			static const IterativePnpOptionsSet DEFAULT_PARAMETERS;
 
-			cv::Mat Convert(PointCloudWrapper::PointCloudConstPtr points);
+			//External conversion helpers
 			Converters::VisualPointFeatureVector2DToMatConverter visualPointFeatureVector2DToMat;
 			Converters::MatToPose3DConverter matToPose3D;
 
+			//Type conversion methods
+			cv::Mat Convert(PointCloudWrapper::PointCloudConstPtr points);
+
+			//Core computation methods
 			cv::Mat ComputePose(cv::Mat points, cv::Mat projections, bool& success);
 
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat points, cv::Mat projections);
 	};

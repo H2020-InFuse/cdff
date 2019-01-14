@@ -197,47 +197,19 @@ const DisparityMapping::DisparityMappingOptionsSet DisparityMapping::DEFAULT_PAR
 	}
 };
 
-cv::Mat DisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage)
+cv::Mat DisparityMapping::Convert(DisparityToDepthMap disparityToDepthMap)
 {
-	cv::Ptr<cv::StereoBM> stereo = cv::StereoBM::create(parameters.disparities.numberOfIntervals, parameters.blocksMatching.blockSize);
-	stereo->setPreFilterCap(parameters.prefilter.maximum);
-	stereo->setPreFilterSize(parameters.prefilter.size);
-	stereo->setPreFilterType( parameters.prefilter.type == XSOBEL ? cv::StereoBM::PREFILTER_XSOBEL : cv::StereoBM::PREFILTER_NORMALIZED_RESPONSE );
-	stereo->setTextureThreshold( parameters.blocksMatching.textureThreshold );
-	stereo->setUniquenessRatio( parameters.blocksMatching.uniquenessRatio );
-	stereo->setSmallerBlockSize( parameters.blocksMatching.blockSize );
-	stereo->setMinDisparity( parameters.disparities.minimum );
-	stereo->setSpeckleRange( parameters.disparities.speckleRange );
-	stereo->setSpeckleWindowSize( parameters.disparities.speckleWindow );
-	if ( parameters.disparities.useMaximumDifference )
-	{
-		stereo->setDisp12MaxDiff( parameters.disparities.maximumDifference );
-	}
-	stereo->setROI1( cv::Rect(parameters.firstRegionOfInterest.topLeftColumn, parameters.firstRegionOfInterest.topLeftRow,
-				parameters.firstRegionOfInterest.numberOfColumns, parameters.firstRegionOfInterest.numberOfRows) );
-	stereo->setROI2( cv::Rect(parameters.secondRegionOfInterest.topLeftColumn, parameters.secondRegionOfInterest.topLeftRow,
-				parameters.secondRegionOfInterest.numberOfColumns, parameters.secondRegionOfInterest.numberOfRows) );
+	cv::Mat conversion(4, 4, CV_32FC1);
 
-	cv::Mat greyLeftImage, greyRightImage;
-	cv::cvtColor(leftImage, greyLeftImage, CV_BGR2GRAY);
-	cv::cvtColor(rightImage, greyRightImage, CV_BGR2GRAY);
-
-	cv::Mat disparity;
-	stereo->compute(greyLeftImage, greyRightImage, disparity);
-	DEBUG_SHOW_DISPARITY(disparity);
-	SAVE_DISPARITY_MATRIX(disparity);
-
-	cv::Mat pointCloud;
-	if (parameters.useDisparityToDepthMap)
+	for (unsigned row = 0; row < 4; row++)
 	{
-		cv::reprojectImageTo3D(disparity, pointCloud, disparityToDepthMap);
-	}
-	else
-	{
-		pointCloud = ComputePointCloudFromDisparity(disparity);
+		for (unsigned column = 0; column < 4; column++)
+		{
+			conversion.at<float>(row, column) = disparityToDepthMap[4*row + column];
+		}
 	}
 
-	return pointCloud;
+	return conversion;
 }
 
 PointCloudConstPtr DisparityMapping::Convert(cv::Mat cvPointCloud)
@@ -317,21 +289,6 @@ PointCloudConstPtr DisparityMapping::ConvertWithVoxelFilter(cv::Mat cvPointCloud
 	return pointCloud;
 }
 
-cv::Mat DisparityMapping::Convert(DisparityToDepthMap disparityToDepthMap)
-{
-	cv::Mat conversion(4, 4, CV_32FC1);
-
-	for (unsigned row = 0; row < 4; row++)
-	{
-		for (unsigned column = 0; column < 4; column++)
-		{
-			conversion.at<float>(row, column) = disparityToDepthMap[4*row + column];
-		}
-	}
-
-	return conversion;
-}
-
 /**
  * This algorithm comes from the PCL library, file /stereo/src/stereo_matching.cpp
  */
@@ -364,6 +321,49 @@ cv::Mat DisparityMapping::ComputePointCloudFromDisparity(cv::Mat disparity)
 			}
 		}
 	}
+	return pointCloud;
+}
+
+cv::Mat DisparityMapping::ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage)
+{
+	cv::Ptr<cv::StereoBM> stereo = cv::StereoBM::create(parameters.disparities.numberOfIntervals, parameters.blocksMatching.blockSize);
+	stereo->setPreFilterCap(parameters.prefilter.maximum);
+	stereo->setPreFilterSize(parameters.prefilter.size);
+	stereo->setPreFilterType( parameters.prefilter.type == XSOBEL ? cv::StereoBM::PREFILTER_XSOBEL : cv::StereoBM::PREFILTER_NORMALIZED_RESPONSE );
+	stereo->setTextureThreshold( parameters.blocksMatching.textureThreshold );
+	stereo->setUniquenessRatio( parameters.blocksMatching.uniquenessRatio );
+	stereo->setSmallerBlockSize( parameters.blocksMatching.blockSize );
+	stereo->setMinDisparity( parameters.disparities.minimum );
+	stereo->setSpeckleRange( parameters.disparities.speckleRange );
+	stereo->setSpeckleWindowSize( parameters.disparities.speckleWindow );
+	if ( parameters.disparities.useMaximumDifference )
+	{
+		stereo->setDisp12MaxDiff( parameters.disparities.maximumDifference );
+	}
+	stereo->setROI1( cv::Rect(parameters.firstRegionOfInterest.topLeftColumn, parameters.firstRegionOfInterest.topLeftRow,
+				parameters.firstRegionOfInterest.numberOfColumns, parameters.firstRegionOfInterest.numberOfRows) );
+	stereo->setROI2( cv::Rect(parameters.secondRegionOfInterest.topLeftColumn, parameters.secondRegionOfInterest.topLeftRow,
+				parameters.secondRegionOfInterest.numberOfColumns, parameters.secondRegionOfInterest.numberOfRows) );
+
+	cv::Mat greyLeftImage, greyRightImage;
+	cv::cvtColor(leftImage, greyLeftImage, CV_BGR2GRAY);
+	cv::cvtColor(rightImage, greyRightImage, CV_BGR2GRAY);
+
+	cv::Mat disparity;
+	stereo->compute(greyLeftImage, greyRightImage, disparity);
+	DEBUG_SHOW_DISPARITY(disparity);
+	SAVE_DISPARITY_MATRIX(disparity);
+
+	cv::Mat pointCloud;
+	if (parameters.useDisparityToDepthMap)
+	{
+		cv::reprojectImageTo3D(disparity, pointCloud, disparityToDepthMap);
+	}
+	else
+	{
+		pointCloud = ComputePointCloudFromDisparity(disparity);
+	}
+
 	return pointCloud;
 }
 

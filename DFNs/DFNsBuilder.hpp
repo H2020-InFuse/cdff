@@ -15,7 +15,9 @@
 #include <BundleAdjustment/BundleAdjustmentInterface.hpp>
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
 #include <ColorConversion/ColorConversion.hpp>
+#include <DisparityImage/DisparityImageInterface.hpp>
 #include <DisparityFiltering/DisparityFilteringInterface.hpp>
+#include <DisparityToPointCloud/DisparityToPointCloudInterface.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityInterface.hpp>
 #include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
@@ -24,6 +26,7 @@
 #include <FeaturesMatching2D/FeaturesMatching2DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
+#include <ImageDegradation/ImageDegradationInterface.hpp>
 #include <ImageFiltering/ImageFilteringInterface.hpp>
 #include <ImageRectification/ImageRectificationInterface.hpp>
 #include <PerspectiveNPointSolving/PerspectiveNPointSolvingInterface.hpp>
@@ -32,6 +35,7 @@
 #include <StereoDegradation/StereoDegradationInterface.hpp>
 #include <StereoMotionEstimation/StereoMotionEstimationInterface.hpp>
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
+#include <StereoRectification/StereoRectificationInterface.hpp>
 #include <Transform3DEstimation/Transform3DEstimationInterface.hpp>
 #include <PrimitiveMatching/PrimitiveMatchingInterface.hpp>
 #include <DepthFiltering/DepthFilteringInterface.hpp>
@@ -63,7 +67,9 @@ namespace DFN
 			static BundleAdjustmentInterface* CreateBundleAdjustment(const std::string& dfnImplementation);
 			static CamerasTransformEstimationInterface* CreateCamerasTransformEstimation(const std::string& dfnImplementation);
             static ColorConversionInterface* CreateColorConversion(const std::string& dfnImplementation);
+            static DisparityImageInterface* CreateDisparityImage(const std::string& dfnImplementation);
             static DisparityFilteringInterface* CreateDisparityFiltering(const std::string& dfnImplementation);
+            static DisparityToPointCloudInterface* CreateDisparityToPointCloud(const std::string& dfnImplementation);
             static DisparityToPointCloudWithIntensityInterface* CreateDisparityToPointCloudWithIntensity(const std::string& dfnImplementation);
 			static FeaturesDescription2DInterface* CreateFeaturesDescription2D(const std::string& dfnImplementation);
 			static FeaturesDescription3DInterface* CreateFeaturesDescription3D(const std::string& dfnImplementation);
@@ -72,6 +78,7 @@ namespace DFN
 			static FeaturesMatching2DInterface* CreateFeaturesMatching2D(const std::string& dfnImplementation);
 			static FeaturesMatching3DInterface* CreateFeaturesMatching3D(const std::string& dfnImplementation);
 			static FundamentalMatrixComputationInterface* CreateFundamentalMatrixComputation(const std::string& dfnImplementation);
+            static ImageDegradationInterface* CreateImageDegradation(const std::string& dfnImplementation);
 			static ImageFilteringInterface* CreateImageFiltering(const std::string& dfnImplementation);
             static ImageRectificationInterface* CreateImageRectification(const std::string& dfnImplementation);
 			static PerspectiveNPointSolvingInterface* CreatePerspectiveNPointSolving(const std::string& dfnImplementation);
@@ -81,6 +88,7 @@ namespace DFN
             static StereoDegradationInterface* CreateStereoDegradation(const std::string& dfnImplementation);
             static StereoMotionEstimationInterface* CreateStereoMotionEstimation(const std::string& dfnImplementation);
 			static StereoReconstructionInterface* CreateStereoReconstruction(const std::string& dfnImplementation);
+            static StereoRectificationInterface* CreateStereoRectification(const std::string& dfnImplementation);
 			static Transform3DEstimationInterface* CreateTransform3DEstimation(const std::string& dfnImplementation);
 			static DepthFilteringInterface* CreateDepthFiltering(const std::string& dfnImplementation);
 			static ForceMeshGeneratorInterface* CreateForceMeshGenerator(const std::string& dfnImplementation);

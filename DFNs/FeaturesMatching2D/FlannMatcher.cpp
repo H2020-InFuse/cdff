@@ -305,6 +305,36 @@ cv::Ptr<cv::flann::IndexParams> FlannMatcher::ConvertParameters()
 	}
 }
 
+cv::Mat FlannMatcher::ConvertToValidType(cv::Mat floatDescriptorsMatrix)
+{
+	if (parameters.generalOptionsSet.matcherMethod == LOCALITY_SENSITIVE_HASHING)
+	{
+		cv::Mat uint8DescriptorsMatrix(floatDescriptorsMatrix.rows, floatDescriptorsMatrix.cols, CV_8UC1);
+		floatDescriptorsMatrix.convertTo(uint8DescriptorsMatrix, CV_8UC1);
+		return uint8DescriptorsMatrix;
+	}
+	return floatDescriptorsMatrix.clone();
+}
+
+CorrespondenceMap2DConstPtr FlannMatcher::Convert(std::vector< cv::DMatch > matchesVector, cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix)
+{
+	CorrespondenceMap2DPtr correspondenceMap = new CorrespondenceMap2D();
+
+	for (unsigned matchIndex = 0; matchIndex < matchesVector.size(); matchIndex++)
+	{
+		cv::DMatch currentMatch = matchesVector.at(matchIndex);
+		BaseTypesWrapper::Point2D sourcePoint, sinkPoint;
+		sourcePoint.x = sourceFeaturesMatrix.at<float>( currentMatch.queryIdx, 0);
+		sourcePoint.y = sourceFeaturesMatrix.at<float>( currentMatch.queryIdx, 1);
+		sinkPoint.x = sinkFeaturesMatrix.at<float>( currentMatch.trainIdx, 0);
+		sinkPoint.y = sinkFeaturesMatrix.at<float>( currentMatch.trainIdx, 1);
+
+		AddCorrespondence(*correspondenceMap, sourcePoint, sinkPoint, 1 - currentMatch.distance / parameters.generalOptionsSet.distanceThreshold);
+	}
+
+	return correspondenceMap;
+}
+
 std::vector<cv::DMatch> FlannMatcher::ComputeMatches(cv::Mat sourceDescriptorsMatrix, cv::Mat sinkDescriptorsMatrix)
 {
 	cv::Mat validTypeSourceDescriptorsMatrix = ConvertToValidType(sourceDescriptorsMatrix);
@@ -365,36 +395,6 @@ void FlannMatcher::CleanLowScoringMatches(CorrespondenceMap2DConstPtr correspond
 		}
 	RemoveCorrespondences(*cleanMap, removeIndexList);
 	}
-
-cv::Mat FlannMatcher::ConvertToValidType(cv::Mat floatDescriptorsMatrix)
-{
-	if (parameters.generalOptionsSet.matcherMethod == LOCALITY_SENSITIVE_HASHING)
-	{
-		cv::Mat uint8DescriptorsMatrix(floatDescriptorsMatrix.rows, floatDescriptorsMatrix.cols, CV_8UC1);
-		floatDescriptorsMatrix.convertTo(uint8DescriptorsMatrix, CV_8UC1);
-		return uint8DescriptorsMatrix;
-	}
-	return floatDescriptorsMatrix.clone();
-}
-
-CorrespondenceMap2DConstPtr FlannMatcher::Convert(std::vector< cv::DMatch > matchesVector, cv::Mat sourceFeaturesMatrix, cv::Mat sinkFeaturesMatrix)
-{
-	CorrespondenceMap2DPtr correspondenceMap = new CorrespondenceMap2D();
-
-	for (unsigned matchIndex = 0; matchIndex < matchesVector.size(); matchIndex++)
-	{
-		cv::DMatch currentMatch = matchesVector.at(matchIndex);
-		BaseTypesWrapper::Point2D sourcePoint, sinkPoint;
-		sourcePoint.x = sourceFeaturesMatrix.at<float>( currentMatch.queryIdx, 0);
-		sourcePoint.y = sourceFeaturesMatrix.at<float>( currentMatch.queryIdx, 1);
-		sinkPoint.x = sinkFeaturesMatrix.at<float>( currentMatch.trainIdx, 0);
-		sinkPoint.y = sinkFeaturesMatrix.at<float>( currentMatch.trainIdx, 1);
-
-		AddCorrespondence(*correspondenceMap, sourcePoint, sinkPoint, 1 - currentMatch.distance / parameters.generalOptionsSet.distanceThreshold);
-	}
-
-	return correspondenceMap;
-}
 
 void FlannMatcher::ValidateParameters()
 {

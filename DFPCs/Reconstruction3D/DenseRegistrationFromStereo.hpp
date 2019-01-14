@@ -104,10 +104,10 @@ namespace Reconstruction3D
 	private:
 		typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
 
+		//General configuration helper
 		DfpcConfigurator configurator;
-		PointCloudMap pointCloudMap;
-		bool firstInput;
 
+		//Additional DFPC Parameters
 		enum CloudUpdateType
 			{
 			TimePassed,
@@ -144,8 +144,11 @@ namespace Reconstruction3D
 		Helpers::ParametersListHelper parametersHelper;
 		RegistrationFromStereoOptionsSet parameters;
 		static const RegistrationFromStereoOptionsSet DEFAULT_PARAMETERS;
+
+		//Costants
 		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;
 
+		//Pointers to DFN instances
 		CDFF::DFN::ImageFilteringInterface* optionalLeftFilter;
 		CDFF::DFN::ImageFilteringInterface* optionalRightFilter;
 		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
@@ -154,29 +157,39 @@ namespace Reconstruction3D
 		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
 		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
 
-		//Helpers
-		BundleHistory* bundleHistory;
-		PoseWrapper::Pose3D outputPoseAtLastMerge;
-		bool outputPoseAtLastMergeSet;
+		//External conversion helpers
 		Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloudConverter;
 
+		//State tracker variables
+		BundleHistory* bundleHistory; //the most recent collection of point clouds, features and images
+		PoseWrapper::Pose3D outputPoseAtLastMerge; 
+		bool outputPoseAtLastMergeSet;
+		PointCloudMap pointCloudMap; //the most recent point cloud
+		bool firstInput;
+
+		//Parameters Configuration method
 		void ConfigureExtraParameters();
+
+		//DFN instantuation method
 		void InstantiateDFNs();
 
+		//Core computation method that execute a step of the DFPC pipeline
 		void UpdatePose(PointCloudWrapper::PointCloudConstPtr inputCloud);
 		void UpdatePointCloudOnTimePassed(PointCloudWrapper::PointCloudConstPtr inputCloud);
 		void UpdatePointCloudOnDistanceCovered(PointCloudWrapper::PointCloudConstPtr inputCloud);
 		void UpdatePointCloudOnMaximumOverlapping(PointCloudWrapper::PointCloudConstPtr inputCloud);
 		void MergePointCloud(PointCloudWrapper::PointCloudConstPtr inputCloud);
 
-		void SaveOutputCloud();
+		// Computation helper methods
 		float ComputeOverlappingRatio(PointCloudWrapper::PointCloudConstPtr cloud, const PoseWrapper::Pose3D& pose, PointCloudWrapper::PointCloudConstPtr sceneCloud);
 		pcl::PointXYZ TransformPoint(const pcl::PointXYZ& point, const AffineTransform& affineTransform);
-		/*
-		* Inline Methods
-		*
-		*/
 
+		//This method saves the current point cloud to file as long as parameter saveCloudsToFile is true
+		void SaveOutputCloud();
+
+		/*
+		* Inline helper Method
+		*/
 		template <typename Type>
 		void DeleteIfNotNull(Type* &pointer)
 			{

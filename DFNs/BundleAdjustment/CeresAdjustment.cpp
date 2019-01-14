@@ -177,6 +177,44 @@ ceres::CostFunction* CeresAdjustment::StereoImagePointCostFunctor::Create(cv::Ma
 		);
 	}
 
+cv::Mat CeresAdjustment::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix)
+	{
+	cv::Mat cvCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
+	cvCameraMatrix.at<float>(0,0) = cameraMatrix.focalLengthX;
+	cvCameraMatrix.at<float>(1,1) = cameraMatrix.focalLengthY;
+	cvCameraMatrix.at<float>(2,0) = cameraMatrix.principalPointX;
+	cvCameraMatrix.at<float>(2,1) = cameraMatrix.principalPointY;
+	cvCameraMatrix.at<float>(2,2) = 1.0;
+
+	return cvCameraMatrix;
+	}
+
+void CeresAdjustment::ConvertProjectionMatricesListToPosesSequence(std::vector<cv::Mat> projectionMatricesList, PoseWrapper::Poses3DSequence& posesSequence)
+	{
+	Clear(posesSequence);
+	DEBUG_PRINT_TO_LOG("Projection matrices list size", projectionMatricesList.size() );
+	for(int imageIndex = 0; imageIndex < projectionMatricesList.size(); imageIndex++)
+		{
+		cv::Mat projectionMatrix = projectionMatricesList.at(imageIndex);
+		Eigen::Matrix3f eigenRotationMatrix;
+		eigenRotationMatrix << projectionMatrix.at<float>(0,0), projectionMatrix.at<float>(0,1), projectionMatrix.at<float>(0,2),
+			projectionMatrix.at<float>(1,0), projectionMatrix.at<float>(1,1), projectionMatrix.at<float>(1,2), 
+			projectionMatrix.at<float>(2,0), projectionMatrix.at<float>(2,1), projectionMatrix.at<float>(2,2);
+		Eigen::Quaternion<float> eigenRotation(eigenRotationMatrix);
+		//eigenRotation = eigenRotation.inverse();
+		eigenRotation.normalize();
+		Eigen::Vector3f translation( projectionMatrix.at<float>(0,3), projectionMatrix.at<float>(1,3), projectionMatrix.at<float>(2,3) );
+		Eigen::Vector3f position = - (eigenRotation.inverse() * translation);
+
+		Pose3D newPose;
+		SetPosition(newPose, position(0), position(1), position(2));
+		SetOrientation(newPose, eigenRotation.x(), eigenRotation.y(), eigenRotation.z(), eigenRotation.w());
+
+		AddPose(posesSequence, newPose);	
+		}
+	DEBUG_PRINT_TO_LOG("pose vector size", GetNumberOfPoses(posesSequence) );
+	}
+
 std::vector<cv::Mat> CeresAdjustment::SolveBundleAdjustment(cv::Mat measurementMatrix, bool& success)
 	{
 	int numberOfImages = measurementMatrix.rows/2;
@@ -263,32 +301,6 @@ std::vector<cv::Mat> CeresAdjustment::SolveBundleAdjustment(cv::Mat measurementM
 	outError = summary.final_cost / numberOfResiduals;
 	success = outError < parameters.squaredPixelErrorTolerance;
 	return projectionMatricesList;
-	}
-
-void CeresAdjustment::ConvertProjectionMatricesListToPosesSequence(std::vector<cv::Mat> projectionMatricesList, PoseWrapper::Poses3DSequence& posesSequence)
-	{
-	Clear(posesSequence);
-	DEBUG_PRINT_TO_LOG("Projection matrices list size", projectionMatricesList.size() );
-	for(int imageIndex = 0; imageIndex < projectionMatricesList.size(); imageIndex++)
-		{
-		cv::Mat projectionMatrix = projectionMatricesList.at(imageIndex);
-		Eigen::Matrix3f eigenRotationMatrix;
-		eigenRotationMatrix << projectionMatrix.at<float>(0,0), projectionMatrix.at<float>(0,1), projectionMatrix.at<float>(0,2),
-			projectionMatrix.at<float>(1,0), projectionMatrix.at<float>(1,1), projectionMatrix.at<float>(1,2), 
-			projectionMatrix.at<float>(2,0), projectionMatrix.at<float>(2,1), projectionMatrix.at<float>(2,2);
-		Eigen::Quaternion<float> eigenRotation(eigenRotationMatrix);
-		//eigenRotation = eigenRotation.inverse();
-		eigenRotation.normalize();
-		Eigen::Vector3f translation( projectionMatrix.at<float>(0,3), projectionMatrix.at<float>(1,3), projectionMatrix.at<float>(2,3) );
-		Eigen::Vector3f position = - (eigenRotation.inverse() * translation);
-
-		Pose3D newPose;
-		SetPosition(newPose, position(0), position(1), position(2));
-		SetOrientation(newPose, eigenRotation.x(), eigenRotation.y(), eigenRotation.z(), eigenRotation.w());
-
-		AddPose(posesSequence, newPose);	
-		}
-	DEBUG_PRINT_TO_LOG("pose vector size", GetNumberOfPoses(posesSequence) );
 	}
 
 void CeresAdjustment::InitializePoints(std::vector<Point3d>& pointCloud, cv::Mat measurementMatrix)
@@ -487,18 +499,6 @@ void CeresAdjustment::ValidateInitialEstimations(int numberOfCameras)
 			ASSERT(validPose, "Ceres adjustment error, an invalid pose was provided as a guess");
 			}
 		}
-	}
-
-cv::Mat CeresAdjustment::CameraMatrixToCvMatrix(const CameraMatrix& cameraMatrix)
-	{
-	cv::Mat cvCameraMatrix(3, 3, CV_32FC1, cv::Scalar(0));
-	cvCameraMatrix.at<float>(0,0) = cameraMatrix.focalLengthX;
-	cvCameraMatrix.at<float>(1,1) = cameraMatrix.focalLengthY;
-	cvCameraMatrix.at<float>(2,0) = cameraMatrix.principalPointX;
-	cvCameraMatrix.at<float>(2,1) = cameraMatrix.principalPointY;
-	cvCameraMatrix.at<float>(2,2) = 1.0;
-
-	return cvCameraMatrix;
 	}
 }
 }
