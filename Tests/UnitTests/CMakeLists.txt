@@ -67,7 +67,6 @@ set(unittest_sources UnitTests.cpp
     #DFNs/Registration3D/IcpMatcher.cpp
     DFNs/StereoReconstruction/DisparityMapping.cpp
     DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
-    DFNs/StereoSlam/StereoSlamOrb.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
     DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
     DFNs/Voxelization/Octree.cpp
@@ -89,6 +88,10 @@ if(WITH_EDRES)
         DFNs/StereoDegradation/StereoDegradationEdres.cpp
         DFNs/StereoMotionEstimation/StereoMotionEstimationEdres.cpp
     )
+endif()
+
+if(WITH_LIBORBSLAM)
+   set(unittest_sources ${unittest_sources} DFNs/StereoSlam/StereoSlamOrb.cpp)
 endif()
 
 # Libraries used by the aforementioned source files. They will be linked in the
@@ -145,7 +148,6 @@ if(OPENCV_FOUND)
     set(unittest_sources ${unittest_sources} DFNs/PrimitiveFinder/BasicPrimitiveFinder.cpp)
     set(unittest_libraries ${unittest_libraries} cdff_dfn_primitive_finder opencv_highgui )
 endif()
-
 
 # Make the Catch executable that runs the unit tests
 add_executable(cdff-unit-tests ${unittest_sources})

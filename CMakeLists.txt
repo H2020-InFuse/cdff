@@ -381,11 +381,13 @@ if(Pangolin_FOUND)
   find_package_mode(Pangolin)
   if(EXISTS ${CMAKE_SOURCE_DIR}/Core/liborbslam)
     message(STATUS "Building Core/liborbslam")
+    option(WITH_LIBORBSLAM "Build Core/liborbslam" ON)
     add_subdirectory(${CMAKE_SOURCE_DIR}/Core/liborbslam)
   endif()
 
 else()
 
+  option(WITH_LIBORBSLAM "Build Core/liborbslam" OFF)
   message(STATUS "Pangolin not found: Core/liborbslam will not be built")
 
 endif()

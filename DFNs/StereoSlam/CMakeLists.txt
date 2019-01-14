@@ -4,16 +4,18 @@ set(STEREO_SLAM_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers")
 
 # Look for OpenCV
 if(OpenCV_FOUND)
-	# OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(STEREO_SLAM_DEPENDENCIES ${STEREO_SLAM_DEPENDENCIES} ${OpenCV_LIBS})
+  # OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
+  set(STEREO_SLAM_DEPENDENCIES ${STEREO_SLAM_DEPENDENCIES} ${OpenCV_LIBS})
 
-	# Look for Core/liborbslam library, build this DFN if found
-	find_package(LIBORBSLAM QUIET)
-	if(LIBORBSLAM_FOUND)
-		set(STEREO_SLAM_SOURCES ${STEREO_SLAM_SOURCES} "StereoSlamOrb.cpp")
-		set(STEREO_SLAM_INCLUDE_DIRS ${STEREO_SLAM_INCLUDE_DIRS} ${LIBORBSLAM_INCLUDE_DIRS})
-		set(STEREO_SLAM_DEPENDENCIES ${STEREO_SLAM_DEPENDENCIES} ${LIBORBSLAM_LIBRARIES})
-	endif()
+  # Look for Core/liborbslam library, build this DFN if found
+  if(WITH_LIBORBSLAM)
+    find_package(LIBORBSLAM QUIET)
+    if(LIBORBSLAM_FOUND)
+      set(STEREO_SLAM_SOURCES ${STEREO_SLAM_SOURCES} "StereoSlamOrb.cpp")
+      set(STEREO_SLAM_INCLUDE_DIRS ${STEREO_SLAM_INCLUDE_DIRS} ${LIBORBSLAM_INCLUDE_DIRS})
+      set(STEREO_SLAM_DEPENDENCIES ${STEREO_SLAM_DEPENDENCIES} ${LIBORBSLAM_LIBRARIES})
+    endif()
+  endif()
 endif()
 
 add_library(
