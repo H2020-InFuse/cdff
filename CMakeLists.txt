@@ -391,7 +391,7 @@ else()
 endif()
 
 ## Try to compile Core/liborbslam ------------------------------
-find_package(Pangolin REQUIRED)
+find_package(Pangolin QUIET)
 
 if(Pangolin_FOUND)
   find_package_mode(Pangolin)
