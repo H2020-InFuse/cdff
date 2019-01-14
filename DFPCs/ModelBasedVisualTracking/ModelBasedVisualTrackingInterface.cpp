@@ -40,7 +40,17 @@ namespace DFPC
  *
  * --------------------------------------------------------------------------
  */
-ModelBasedVisualTrackingInterface::ModelBasedVisualTrackingInterface()
+ModelBasedVisualTrackingInterface::ModelBasedVisualTrackingInterface():
+
+	 inImageLeft(),
+	 inImageRight(),
+	 inInit(),
+	 inImageTime(),
+	 inInitTime(),
+	 inDoInit(),
+	 inEgoMotion(),
+         outState(),
+	 outSuccess()
 	{
 	
 	}

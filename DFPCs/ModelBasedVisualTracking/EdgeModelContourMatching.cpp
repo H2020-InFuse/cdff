@@ -44,11 +44,17 @@ namespace DFPC
  *
  * --------------------------------------------------------------------------
  */
-EdgeModelContourMatching::EdgeModelContourMatching()
+EdgeModelContourMatching::EdgeModelContourMatching():
+	 parser(),
+	 DLRTracker(),
+	 status(-1),
+	 numberOfCameras(1),
+	 images(),
+	 imageOutputColor(NULL),
+	 xResolutionMax(0),
+	 yResolutionMax(0),
+	 frameToMat()
 	{
-
-	imageOutputColor = NULL;
-
 		    //Uchar,   UcharPtr, Double,  Float,   Int, IntPtr,  Short)	
 	doBigMalloc(102400000, 1200000, 12000000, 200000, 5600000, 1400000, 3200000); 
 			
@@ -65,9 +71,7 @@ EdgeModelContourMatching::~EdgeModelContourMatching()
 void EdgeModelContourMatching::allocateImageMemory()
 	{
 	 numberOfCameras = DLRTracker.getNcams();
-	 xResolutionMax = 0;
-	 yResolutionMax = 0;
-    
+	    
 	 for(int c=0; c< numberOfCameras; c++)
 	 {
 	  images[c] = myMallocUchar(DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char));
@@ -167,11 +171,9 @@ void EdgeModelContourMatching::setup()
 		
 	double setup_global_array[_MAX_PARSE_ARRAY];
 	int setup_global_array_counter;
-	std::string file_path_string = configurator.configurePath(configurationFilePath);
+	const char* pathTOSpecifications = configurationFilePath.c_str();
 
-        const char* pathTOSpecifications = file_path_string.c_str();
-
-	std::cout<< " Path to configuration file: "<<file_path_string<<std::endl;
+	std::cout<< " Path to configuration file: "<<configurationFilePath<<std::endl;
 	
 
 	 if(parser.parseAllFiles(pathTOSpecifications, "camera_parameters.txt", "tracker_parameters.txt", "theModel_client.txt", setup_global_array_counter, 				setup_global_array)!=0)

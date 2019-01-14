@@ -91,7 +91,8 @@ class EdgeTrackerExecutor
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		
+		Converters::MatToFrameConverter frameConverter;
+		asn1SccRigidBodyState outputPose;
 		std::string configurationFilePath;
 		std::string inputImagesFolder;
 		std::string inputImagesListFileName;
@@ -106,12 +107,9 @@ class EdgeTrackerExecutor
 
 		FrameWrapper::FrameConstPtr inputLeftFrame;
 		FrameWrapper::FrameConstPtr inputRightFrame;
-		asn1SccRigidBodyState outputPose;
-		bool outputSuccess;
-		
-		Converters::MatToFrameConverter frameConverter;
 		CDFF::DFPC::ModelBasedVisualTrackingInterface* dfpc;
-		
+
+		bool outputSuccess;
 		bool inputImagesWereLoaded;
 		bool outputPoseWasLoaded;
 		bool dfpcExecuted;

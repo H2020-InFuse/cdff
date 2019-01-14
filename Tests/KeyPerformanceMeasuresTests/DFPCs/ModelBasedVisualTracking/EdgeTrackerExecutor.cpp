@@ -31,19 +31,23 @@ using namespace EdgeTrackerHelper;
  *
  * --------------------------------------------------------------------------
  */
-EdgeTrackerExecutor::EdgeTrackerExecutor()
+EdgeTrackerExecutor::EdgeTrackerExecutor():
+	 dtImages(1.0),
+	 logGroundTruthError(false),
+	 frameConverter(),
+	 outputPose()
 	{
 	
 	inputLeftFrame = NULL;
 	inputRightFrame = NULL;
-
-	logGroundTruthError = false;
+	dfpc = NULL;
 	
 	inputImagesWereLoaded = false;
 	outputPoseWasLoaded = false;
 	dfpcExecuted = false;
 	dfpcWasLoaded = false;
-			
+	outputSuccess =false;
+				
 	}
 
 EdgeTrackerExecutor::~EdgeTrackerExecutor()
@@ -102,7 +106,15 @@ void EdgeTrackerExecutor::initVelocity(double* velocity0)
 	{
 	//  starts at  Rest 
 	 double  startVelocity[6] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
-	 velocity0 = &startVelocity[0];
+         double unitToradPerSecond=1;
+	 double unitTomillimeterPerSecond=1;
+         for(int i=0;i<6;i++)
+	 {
+          if(i < 3)
+	 	velocity0[i] = startVelocity[i]*unitToradPerSecond;
+	   else
+	 	 velocity0[i] = startVelocity[i]*unitTomillimeterPerSecond;
+	 }
 	
 	}
 

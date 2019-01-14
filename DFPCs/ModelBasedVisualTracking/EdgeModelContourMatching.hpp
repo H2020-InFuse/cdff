@@ -83,9 +83,8 @@ namespace DFPC
 		int numberOfCameras;
 		unsigned char* images[];
 		unsigned char* imageOutputColor;
-	        int xResolutionMax;
+		int xResolutionMax;
 		int yResolutionMax;
-		DfpcConfigurator configurator;
 		Converters::FrameToMatConverter frameToMat;
 
 		void ConvertAsnStateToState(asn1SccRigidBodyState& poseState, double* pose, double* velocity = NULL);

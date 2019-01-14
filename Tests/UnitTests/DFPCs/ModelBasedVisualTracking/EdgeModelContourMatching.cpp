@@ -43,7 +43,6 @@ using namespace CDFF;
 using namespace DFPC;
 
 using namespace Converters;
-//using namespace Common;
 using namespace Converters::SupportTypes;
 using namespace FrameWrapper;
 
@@ -56,12 +55,21 @@ using namespace FrameWrapper;
  * --------------------------------------------------------------------------
  */
 
-// mock external DFPC
+// mock external DFPC, to initialize
 
 void initPose(double* guessT0, double* velocity0 )
 {
-	 double  velocity[6] = {0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000};
-	 velocity0 = &velocity[0];
+	 double  startVelocity[6] = {0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000};
+	 double unitToRadPerSecond=1;
+	 double unitToMillimeterPerSecond=1;
+         for(int i=0;i<6;i++)
+	 {
+          if(i < 3)
+	 	velocity0[i] = startVelocity[i]*unitToRadPerSecond;
+	   else
+	 	 velocity0[i] = startVelocity[i]*unitToMillimeterPerSecond;
+	 }
+	
 	 double guessT00[16]= {0.014377, -0.997371, 0.071024, 1207.899488,
 				 0.433600, 0.070224, 0.898365, 296.456254,
 				 -0.900991, 0.017880, 0.433469, 1202.087847,
@@ -78,6 +86,7 @@ void initPose(double* guessT0, double* velocity0 )
 
 TEST_CASE( "Success Call to Configure (EdgeModelContourMatching)", "[configureDLRTracker]" ) 
 	{
+	
 	EdgeModelContourMatching* contourMatching = new EdgeModelContourMatching() ;
 	contourMatching->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking");
 	contourMatching->setup();// comment (off) since called in [processDLRTracker] TEST CASE, otherwise requires large memory pre-allocation 
@@ -156,12 +165,18 @@ TEST_CASE( "Success Call to Process (EdgeModelContourMatching)", "[processDLRTra
 	egoMotion.pos.arr[0] = 0.0;
 	egoMotion.pos.arr[1] = 0.0;
  	egoMotion.pos.arr[2] = 0.0;
+
 	contourMatching->egoMotionInput(egoMotion);	
 
 	contourMatching->run();
         //output  ASN type
 	bool success = contourMatching->successOutput();
 	asn1SccRigidBodyState estimatedState = contourMatching->stateOutput();
+	
+	REQUIRE(estimatedState.pos.arr[0] == 0);
+	REQUIRE(estimatedState.pos.arr[1] == 0);
+	REQUIRE(estimatedState.pos.arr[2] == 0);
+
 	std::cout<< " Tracker DFPC- Process Functionality Test success "<<std::endl;
 	
 	delete contourMatching;
