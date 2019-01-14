@@ -114,7 +114,7 @@ if(WITH_CLOUDCOMPARE)
     )
 endif()
 
-if(WITH_EDRES)
+if(Edres-Wrapper_FOUND)
     set(unittest_sources ${unittest_sources}
         DFNs/DisparityImage/DisparityImageEdres.cpp
         DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
