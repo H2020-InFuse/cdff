@@ -88,7 +88,7 @@ TEST_CASE( "DFN configuration succeeds (3D PFH descriptor)", "[configure]" )
 	delete pfh;
 }
 
-TEST_CASE( "DFN configuration fails because of conflicting parameters: computation of surface normals is disabled and forced at the same time", "[configure][bad config]" )
+TEST_CASE( "DFN PFH configuration fails because of conflicting parameters: computation of surface normals is disabled and forced at the same time", "[configure][bad config]" )
 {
 	// Instantiate DFN
 	PfhDescriptor3D *pfh = new PfhDescriptor3D;
@@ -101,7 +101,7 @@ TEST_CASE( "DFN configuration fails because of conflicting parameters: computati
 	delete pfh;
 }
 
-TEST_CASE( "DFN configuration fails because of conflicting normal estimation parameters", "[configure][bad config]" )
+TEST_CASE( "DFN PFH configuration fails because of conflicting normal estimation parameters", "[configure][bad config]" )
 {
 	// Instantiate DFN
 	PfhDescriptor3D *pfh = new PfhDescriptor3D;
@@ -114,7 +114,7 @@ TEST_CASE( "DFN configuration fails because of conflicting normal estimation par
 	delete pfh;
 }
 
-TEST_CASE( "DFN processing fails on account of the provided normals being inadequate and normal estimation being disabled", "[process][bad input]")
+TEST_CASE( "DFN PFH processing fails on account of the provided normals being inadequate and normal estimation being disabled", "[process][bad input]")
 {
 	// Instantiate DFN
 	PfhDescriptor3D *pfh = new PfhDescriptor3D;
