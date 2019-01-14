@@ -66,7 +66,6 @@ set(wrappers
     CPP/CorrespondenceMaps3DSequence.cpp
     CPP/Frame.cpp
     CPP/FramesSequence.cpp
-    CPP/Image.cpp
     CPP/Matrix.cpp
     CPP/PointCloud.cpp
     CPP/Pose.cpp
