@@ -31,6 +31,8 @@
 #include <Types/CPP/PosesSequence.hpp>
 #include <Types/CPP/CorrespondenceMaps3DSequence.hpp>
 #include <Errors/Assert.hpp>
+#include <stdlib.h>
+#include <iostream>
 
 using namespace CDFF::DFN::Transform3DEstimation;
 using namespace BaseTypesWrapper;
@@ -65,10 +67,11 @@ void CeresEstimationTest::RandomCorrespondencesTest(cv::Mat transform, unsigned 
 	for(int index = 0; index < numberOfCorrespondences; index++)
 		{
 		cv::Mat point3d(4, 1, CV_32FC1);
-		point3d.at<float>(0,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
-		point3d.at<float>(1,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
-		point3d.at<float>(2,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
+		point3d.at<float>(0,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
+		point3d.at<float>(1,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
+		point3d.at<float>(2,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
 		point3d.at<float>(3,0) = 1;
+		std::cout << point3d.at<float>(0,0) <<", " << point3d.at<float>(1,0) <<", " << point3d.at<float>(2,0) << std::endl;
 
 		cv::Mat transformedPoint3d = transform*point3d;
 		Point3D source, sink;
@@ -107,10 +110,11 @@ void CeresEstimationTest::DoubleRandomCorrespondencesTest(cv::Mat transform1, cv
 	for(int index = 0; index < numberOfCorrespondences; index++)
 		{
 		cv::Mat point3d(4, 1, CV_32FC1);
-		point3d.at<float>(0,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
-		point3d.at<float>(1,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
-		point3d.at<float>(2,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
+		point3d.at<float>(0,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
+		point3d.at<float>(1,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
+		point3d.at<float>(2,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
 		point3d.at<float>(3,0) = 1;
+		std::cout << point3d.at<float>(0,0) <<", " << point3d.at<float>(1,0) <<", " << point3d.at<float>(2,0) << std::endl;
 
 		cv::Mat transformedPoint3d1 = transform1*point3d;
 		cv::Mat transformedPoint3d2 = transform2*point3d;
@@ -171,27 +175,28 @@ void CeresEstimationTest::TripleRandomCorrespondencesTest(cv::Mat transform1, cv
 	for(int index = 0; index < numberOfCorrespondences; index++)
 		{
 		cv::Mat point3d(4, 1, CV_32FC1);
-		point3d.at<float>(0,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
-		point3d.at<float>(1,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
-		point3d.at<float>(2,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
+		point3d.at<float>(0,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
+		point3d.at<float>(1,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
+		point3d.at<float>(2,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
 		point3d.at<float>(3,0) = 1;
+		std::cout << point3d.at<float>(0,0) <<", " << point3d.at<float>(1,0) <<", " << point3d.at<float>(2,0) << std::endl;
 
 		cv::Mat transformedPoint3d1 = transform1*point3d;
 		cv::Mat transformedPoint3d2 = transform2*point3d;
 		cv::Mat transformedPoint3d3 = transform3*point3d;
 		Point3D source, sink, secondSink, thirdSink;
-		source.x = point3d.at<float>(0,0) + ( (float)(rand()%10) - 5) * noise;
-		source.y = point3d.at<float>(1,0) + ( (float)(rand()%10) - 5) * noise;
-		source.z = point3d.at<float>(2,0) + ( (float)(rand()%10) - 5) * noise;
-		sink.x = transformedPoint3d1.at<float>(0,0) + ( (float)(rand()%10) - 5) * noise;
-		sink.y = transformedPoint3d1.at<float>(1,0) + ( (float)(rand()%10) - 5) * noise;
-		sink.z = transformedPoint3d1.at<float>(2,0) + ( (float)(rand()%10) - 5) * noise;
-		secondSink.x = transformedPoint3d2.at<float>(0,0) + ( (float)(rand()%10) - 5) * noise;
-		secondSink.y = transformedPoint3d2.at<float>(1,0) + ( (float)(rand()%10) - 5) * noise;
-		secondSink.z = transformedPoint3d2.at<float>(2,0) + ( (float)(rand()%10) - 5) * noise;
-		thirdSink.x = transformedPoint3d3.at<float>(0,0) + ( (float)(rand()%10) - 5) * noise;
-		thirdSink.y = transformedPoint3d3.at<float>(1,0) + ( (float)(rand()%10) - 5) * noise;
-		thirdSink.z = transformedPoint3d3.at<float>(2,0) + ( (float)(rand()%10) - 5) * noise;
+		source.x = point3d.at<float>(0,0) + ( (float)(rand()%100) - 50) * noise;
+		source.y = point3d.at<float>(1,0) + ( (float)(rand()%100) - 50) * noise;
+		source.z = point3d.at<float>(2,0) + ( (float)(rand()%100) - 50) * noise;
+		sink.x = transformedPoint3d1.at<float>(0,0) + ( (float)(rand()%100) - 50) * noise;
+		sink.y = transformedPoint3d1.at<float>(1,0) + ( (float)(rand()%100) - 50) * noise;
+		sink.z = transformedPoint3d1.at<float>(2,0) + ( (float)(rand()%100) - 50) * noise;
+		secondSink.x = transformedPoint3d2.at<float>(0,0) + ( (float)(rand()%100) - 50) * noise;
+		secondSink.y = transformedPoint3d2.at<float>(1,0) + ( (float)(rand()%100) - 50) * noise;
+		secondSink.z = transformedPoint3d2.at<float>(2,0) + ( (float)(rand()%100) - 50) * noise;
+		thirdSink.x = transformedPoint3d3.at<float>(0,0) + ( (float)(rand()%100) - 50) * noise;
+		thirdSink.y = transformedPoint3d3.at<float>(1,0) + ( (float)(rand()%100) - 50) * noise;
+		thirdSink.z = transformedPoint3d3.at<float>(2,0) + ( (float)(rand()%100) - 50) * noise;
 		AddCorrespondence(*input1, source, sink, 1.0);
 		AddCorrespondence(*input2, source, secondSink, 1.0);
 		AddCorrespondence(*input3, source, thirdSink, 1.0);
@@ -251,10 +256,11 @@ void CeresEstimationTest::RandomCorrespondencesWithOneFailureTest(cv::Mat transf
 	for(int index = 0; index < numberOfCorrespondences; index++)
 		{
 		cv::Mat point3d(4, 1, CV_32FC1);
-		point3d.at<float>(0,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
-		point3d.at<float>(1,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
-		point3d.at<float>(2,0) = ( (float)(rand()%10) + 0.1) * 0.1 + 2;
+		point3d.at<float>(0,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
+		point3d.at<float>(1,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
+		point3d.at<float>(2,0) = ( (float)(rand()%50) + 50.0) * 0.1 + 2;
 		point3d.at<float>(3,0) = 1;
+		std::cout << point3d.at<float>(0,0) <<", " << point3d.at<float>(1,0) <<", " << point3d.at<float>(2,0) << std::endl;
 
 		cv::Mat transformedPoint3d = transform*point3d;
 		Point3D source, sink;
