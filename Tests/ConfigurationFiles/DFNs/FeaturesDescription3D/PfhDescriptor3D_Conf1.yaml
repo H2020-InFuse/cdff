@@ -1,0 +1,8 @@
+- Name: GeneralParameters
+  SearchRadius: 0.015
+  OutputFormat: Positions
+  EnableNormalsEstimation: true
+  ForceNormalsEstimation: true
+- Name: NormalEstimationParameters
+  SearchRadius: 0.01
+  NeighboursSetSize: 0
