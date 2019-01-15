@@ -38,3 +38,4 @@ output_ports:
            or as their index into the input pointcloud
 implementations:
     - ShotDescriptor3D
+    - PfhDescriptor3D
