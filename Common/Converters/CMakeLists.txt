@@ -3,7 +3,6 @@
 set(converters
     MatToFrameConverter.cpp
     FrameToMatConverter.cpp
-    FrameToImageConverter.cpp
     MatToVisualPointFeatureVector2DConverter.cpp
     VisualPointFeatureVector2DToMatConverter.cpp
     MatToVisualPointFeatureVector3DConverter.cpp
