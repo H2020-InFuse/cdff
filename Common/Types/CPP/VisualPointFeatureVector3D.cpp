@@ -8,7 +8,7 @@
  */
 
 #include "VisualPointFeatureVector3D.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 #include "BaseTypes.hpp"
 
 using namespace BaseTypesWrapper;
@@ -161,7 +161,7 @@ VisualPointType GetPointType(const VisualPointFeatureVector3D& featuresVector, i
 		case VisualPoint::VisualPointFeature3D_point_NONE: return VISUAL_POINT_NONE;
 		case VisualPoint::position_PRESENT: return VISUAL_POINT_POSITION;
 		case VisualPoint::reference_PRESENT: return VISUAL_POINT_REFERENCE;
-		default: ASSERT(false, "Unhandled point type in VisualPointFeatureVector3D");
+		default: ASSERT_ON_TEST(false, "Unhandled point type in VisualPointFeatureVector3D");
 	}
 	return VISUAL_POINT_NONE;
 }
@@ -195,11 +195,14 @@ float GetDescriptorComponent(const VisualPointFeatureVector3D& featuresVector, i
 }
 
 BitStream ConvertToBitStream(const VisualPointFeatureVector3D& vector)
-	CONVERT_TO_BIT_STREAM(vector, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccVisualPointFeatureVector3D_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(vector, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccVisualPointFeatureVector3D_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, VisualPointFeatureVector3D& vector)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, vector, asn1SccVisualPointFeatureVector3D_Decode)
-
+	{	
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, vector, asn1SccVisualPointFeatureVector3D_Decode);
+	}
 }
 
 /** @} */

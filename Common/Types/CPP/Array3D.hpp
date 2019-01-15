@@ -19,7 +19,7 @@
 #include "BaseTypes.hpp"
 #include <stdlib.h>
 #include <memory>
-#include "Errors/Assert.hpp"
+#include "Errors/AssertOnTest.hpp"
 #include <cstring>
 
 /**

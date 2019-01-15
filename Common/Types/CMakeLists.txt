@@ -80,9 +80,10 @@ add_library(cdff_types
     ${datatypes}
     ${wrappers})
 
-target_link_libraries(cdff_types
-    PUBLIC cdff_logger
-)
+if(TESTING)
+    target_link_libraries(cdff_types
+        PUBLIC cdff_logger)
+endif()
 
 install(TARGETS cdff_types
     DESTINATION "${CMAKE_INSTALL_LIBDIR}")

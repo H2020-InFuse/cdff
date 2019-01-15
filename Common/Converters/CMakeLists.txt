@@ -32,7 +32,7 @@ add_library(cdff_converters
 
 target_link_libraries(cdff_converters
     PUBLIC cdff_types Eigen3::Eigen opencv_core ${PCL_COMMON_LIBRARIES} ${PCL_OCTREE_LIBRARIES}
-    PRIVATE Boost::boost)
+    PRIVATE cdff_logger Boost::boost)
 
 install(TARGETS cdff_converters
     DESTINATION "${CMAKE_INSTALL_LIBDIR}")

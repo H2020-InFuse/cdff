@@ -93,11 +93,9 @@ void RegistrationAndMatching::setup()
 	configurationFile >> registrationFromStereoConfigurationFile;
 	configurationFile >> featuresMatching3dConfigurationFile;
 	
-	PRINT_TO_LOG("con", registrationFromStereoConfigurationFile);
 	registrationFromStereo->setConfigurationFile( registrationFromStereoConfigurationFile );
 	registrationFromStereo->setup();
 
-	PRINT_TO_LOG("con", featuresMatching3dConfigurationFile);
 	featuresMatching3d->setConfigurationFile( featuresMatching3dConfigurationFile );
 	featuresMatching3d->setup();
 

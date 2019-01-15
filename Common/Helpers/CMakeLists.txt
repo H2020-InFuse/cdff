@@ -5,7 +5,7 @@ add_library(cdff_helpers
     ParametersListHelper.cpp)
 
 target_link_libraries(cdff_helpers
-    PUBLIC yaml-cpp)
+    PUBLIC cdff_logger yaml-cpp)
 
 install(TARGETS cdff_helpers
     DESTINATION "${CMAKE_INSTALL_LIBDIR}")

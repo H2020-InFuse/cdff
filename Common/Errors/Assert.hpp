@@ -57,6 +57,7 @@ class AssertException: public std::exception
  *
  * --------------------------------------------------------------------------
  */
+
 #ifndef TESTING
 	#define ABORT_PROGRAM() exit(EXIT_FAILURE);
 #else
@@ -78,12 +79,6 @@ class AssertException: public std::exception
 		ABORT_PROGRAM() \
 		} \
 	}
-
-#ifndef TESTING
-	#define ASSERT_ON_TEST(condition, message) 
-#else
-	#define ASSERT_ON_TEST(condition, message) ASSERT(condition, message)
-#endif
 
 #define ASSERT_EQUAL(expression1, expression2, message) \
 	{ \
@@ -163,20 +158,6 @@ class AssertException: public std::exception
 		throw e; \
 		} \
 	}
-
-#ifndef TESTING
-	#define DEBUG_WRITE_TO_LOG(message, value)
-	#define DEBUG_PRINT_LOG()
-	#define DEBUG_PRINT_TO_LOG(message, value) 
-	#define DEBUG_VERIFY(condition, message)
-	#define DEBUG_NOTIFY_ON_EXCEPTION(expression, message)
-#else
-	#define DEBUG_WRITE_TO_LOG(message, value) WRITE_TO_LOG(message, value)
-	#define DEBUG_PRINT_LOG() PRINT_LOG()
-	#define DEBUG_PRINT_TO_LOG(message, value) PRINT_TO_LOG(message, value)
-	#define DEBUG_VERIFY(condition, message) VERIFY(condition, message)
-	#define DEBUG_NOTIFY_ON_EXCEPTION(expression, message) NOTIFY_ON_EXCEPTION(expression, message)
-#endif
 
 #endif
 
