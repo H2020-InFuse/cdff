@@ -18,6 +18,7 @@
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
+#include <FeaturesDescription3D/PfhDescriptor3D.hpp>
 #include <FeaturesExtraction2D/HarrisDetector2D.hpp>
 #include <FeaturesExtraction2D/OrbDetectorDescriptor.hpp>
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
@@ -325,6 +326,10 @@ FeaturesDescription3DInterface* DFNsBuilder::CreateFeaturesDescription3D(const s
 	if (dfnImplementation == "ShotDescriptor3D")
 	{
 		return new FeaturesDescription3D::ShotDescriptor3D;
+	}
+	if (dfnImplementation == "PfhDescriptor3D")
+	{
+		return new FeaturesDescription3D::PfhDescriptor3D;
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesDescription3D implementation");
 	return NULL;
