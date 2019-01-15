@@ -9,6 +9,8 @@ target_include_directories(
     SYSTEM PRIVATE ${ENVIRE_CORE_INCLUDE_DIRS} PluginManager
 )
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/envire_asn1.xml ${_DEPENDENCIES_PREFIX}/lib/plugin_manager/envire_asn1.xml COPYONLY)
+
 target_link_libraries(
     envire_asn1
     PUBLIC cdff_types
