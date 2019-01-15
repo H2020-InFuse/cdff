@@ -69,7 +69,7 @@ void PrepareBitStreamBufferForDeconding(BitStream& bitStream, long size);
 void DeallocateBitStreamBuffer(BitStream& bitStream);
 
 template <typename T>
-BitStream ConvertToBitStream(T inputData, long bitStreamSize, bool (*encodeMethod) (const T*, BitStream*, int*, bool) )
+BitStream ConvertToBitStream(const T& inputData, long bitStreamSize, bool (*encodeMethod) (const T*, BitStream*, int*, bool) )
 	{
 	BitStream bitStream;
 	AllocateBitStreamBufferForEncoding(bitStream, bitStreamSize );
@@ -82,7 +82,7 @@ BitStream ConvertToBitStream(T inputData, long bitStreamSize, bool (*encodeMetho
 	}
 
 template <typename T>
-void ConvertFromBitStream(BitStream inputBitStream, long bitStreamSize, T outputData, bool (*decodeMethod) (T*, BitStream*, int*) )
+void ConvertFromBitStream(BitStream& inputBitStream, long bitStreamSize, T& outputData, bool (*decodeMethod) (T*, BitStream*, int*) )
 	{
 	PrepareBitStreamBufferForDeconding(inputBitStream, bitStreamSize);
 	int errorCode = 0;
