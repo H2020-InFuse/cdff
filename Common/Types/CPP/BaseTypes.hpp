@@ -77,7 +77,7 @@ BitStream ConvertToBitStream(T inputData, long bitStreamSize, bool (*encodeMetho
 	int errorCode = 0;
 	bool success = encodeMethod(&inputData, &bitStream, &errorCode, true);
 
-	ASSERT_ON_TEST(success && (errorCode == 0), "Error while executing #conversionMethod");
+	ASSERT_ON_TEST(success && (errorCode == 0), "Error while executing conversion to bitstream");
 	return bitStream;
 	}
 
@@ -87,29 +87,8 @@ void ConvertFromBitStream(BitStream inputBitStream, long bitStreamSize, T output
 	PrepareBitStreamBufferForDeconding(inputBitStream, bitStreamSize);
 	int errorCode = 0;
 	bool success = decodeMethod(&outputData, &inputBitStream, &errorCode);
-	ASSERT_ON_TEST(success && (errorCode == 0), "Error while executing #conversionMethod");
+	ASSERT_ON_TEST(success && (errorCode == 0), "Error while executing conversion from bitstream");
 	}
-
-#define CONVERT_TO_BIT_STREAM(inputData, bitStreamSize, encodeMethod) \
-	{ \
-	BitStream bitStream; \
-	AllocateBitStreamBufferForEncoding(bitStream, bitStreamSize ); \
-	\
-	int errorCode = 0; \
-	bool success = encodeMethod(&inputData, &bitStream, &errorCode, true); \
-	\
-	ASSERT(success && (errorCode == 0), "Error while executing #conversionMethod"); \
-	return bitStream; \
-	}
-
-#define CONVERT_FROM_BIT_STREAM(inputBitStream, bitStreamSize, outputData, decodeMethod) \
-	{ \
-	PrepareBitStreamBufferForDeconding(inputBitStream, bitStreamSize); \
-	int errorCode = 0; \
-	bool success = decodeMethod(&outputData, &inputBitStream, &errorCode); \
-	ASSERT(success && (errorCode == 0), "Error while executing #conversionMethod"); \
-	}
-
 
 // String manipulation helper functions
 
