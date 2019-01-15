@@ -361,7 +361,7 @@ endif()
 
 ## Look for Edres-Wrapper (optional dependency) --------------------------------
 
-#find_package(Edres-Wrapper QUIET)
+find_package(Edres-Wrapper QUIET)
 
 if(Edres-Wrapper_FOUND)
 
