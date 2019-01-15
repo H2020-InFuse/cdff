@@ -72,7 +72,7 @@ RUN wget --user ${USER} --password ${PASS} https://nexus.spaceapplications.com/r
 
 RUN apt-get update && apt-get install --yes --quiet \
 libgdal1-dev \ 
-libgsl-dev \
+libgsl-dev && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d gdalwrap
 
 LABEL version="4.3.2"
