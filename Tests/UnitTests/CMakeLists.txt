@@ -79,7 +79,6 @@ set(unittest_sources UnitTests.cpp
     DFNs/LidarBasedTracking/LidarBasedTracking.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/HapticScanning/HapticScanning.cpp
-    DFPCs/ModelBasedVisualTracking/EdgeModelContourMatching.cpp # memory intensive!
     DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
     DFPCs/Reconstruction3D/BundleHistory.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
