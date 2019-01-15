@@ -49,7 +49,7 @@ Matrix3dPtr NewMatrix3d(InitializationType initializationType)
 		}
 		default:
 		{
-			ASSERT(false, "Matrix3d, unhandled initialization type");
+			ASSERT_ON_TEST(false, "Matrix3d, unhandled initialization type");
 		}
 	}
 

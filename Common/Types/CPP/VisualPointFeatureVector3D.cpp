@@ -161,7 +161,7 @@ VisualPointType GetPointType(const VisualPointFeatureVector3D& featuresVector, i
 		case VisualPoint::VisualPointFeature3D_point_NONE: return VISUAL_POINT_NONE;
 		case VisualPoint::position_PRESENT: return VISUAL_POINT_POSITION;
 		case VisualPoint::reference_PRESENT: return VISUAL_POINT_REFERENCE;
-		default: ASSERT(false, "Unhandled point type in VisualPointFeatureVector3D");
+		default: ASSERT_ON_TEST(false, "Unhandled point type in VisualPointFeatureVector3D");
 	}
 	return VISUAL_POINT_NONE;
 }

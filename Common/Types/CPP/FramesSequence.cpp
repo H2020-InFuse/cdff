@@ -66,7 +66,7 @@ void Clear(FramesSequence& framesSequence)
 
 void AddFrame(FramesSequence& framesSequence, const Frame& frame)
 {
-	ASSERT( GetNumberOfFrames(framesSequence) < MAX_FRAMES_SEQUENCE_LENGTH, "Error, frames sequence limit reached");
+	ASSERT_ON_TEST( GetNumberOfFrames(framesSequence) < MAX_FRAMES_SEQUENCE_LENGTH, "Error, frames sequence limit reached");
 	Copy( frame, framesSequence.arr[framesSequence.nCount] );
 	framesSequence.nCount++;
 }

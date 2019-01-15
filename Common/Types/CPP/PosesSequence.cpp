@@ -65,7 +65,7 @@ void Clear(Poses3DSequence& posesSequence)
 
 void AddPose(Poses3DSequence& posesSequence, const Pose3D& pose)
 {
-	ASSERT( GetNumberOfPoses(posesSequence) < MAX_POSES_SEQUENCE_LENGTH, "Error, poses sequence limit reached");
+	ASSERT_ON_TEST( GetNumberOfPoses(posesSequence) < MAX_POSES_SEQUENCE_LENGTH, "Error, poses sequence limit reached");
 	Copy( pose, posesSequence.arr[posesSequence.nCount] );
 	posesSequence.nCount++;
 }

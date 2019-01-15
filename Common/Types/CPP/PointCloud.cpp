@@ -57,7 +57,7 @@ void AddPoint(PointCloud& pointCloud, T_Double x, T_Double y, T_Double z)
 void AddColorToLastPoint(PointCloud& pointCloud, BaseTypesWrapper::T_Double r, BaseTypesWrapper::T_Double g, BaseTypesWrapper::T_Double b, BaseTypesWrapper::T_Double alpha)
 	{
 	int lastAddedIndex = pointCloud.data.points.nCount - 1;
-	ASSERT(lastAddedIndex >= 0, "Point Cloud error: color could not be added, cloud is empty");
+	ASSERT_ON_TEST(lastAddedIndex >= 0, "Point Cloud error: color could not be added, cloud is empty");
 
 	pointCloud.data.colors.arr[lastAddedIndex].arr[0] = r;
 	pointCloud.data.colors.arr[lastAddedIndex].arr[1] = g;
@@ -134,10 +134,10 @@ void RemovePoints(PointCloud& pointCloud, std::vector<BaseTypesWrapper::T_UInt32
 	static const std::string errorMessage = "Remove Points in PointCloud error, the second input was not an ORDERED list or some index is not within range";
 	for(int listIndex = 1; listIndex < elementsToRemove-1; listIndex++)
 		{
-		ASSERT( pointIndexOrderedList.at(listIndex-1) < pointIndexOrderedList.at(listIndex), errorMessage);
-		ASSERT(	pointIndexOrderedList.at(listIndex) < pointIndexOrderedList.at(listIndex+1), errorMessage);
+		ASSERT_ON_TEST( pointIndexOrderedList.at(listIndex-1) < pointIndexOrderedList.at(listIndex), errorMessage);
+		ASSERT_ON_TEST(	pointIndexOrderedList.at(listIndex) < pointIndexOrderedList.at(listIndex+1), errorMessage);
 		}
-	ASSERT( pointIndexOrderedList.at(elementsToRemove-1) < pointCloud.data.points.nCount, errorMessage);
+	ASSERT_ON_TEST( pointIndexOrderedList.at(elementsToRemove-1) < pointCloud.data.points.nCount, errorMessage);
 	BaseTypesWrapper::T_UInt32 firstIndex = pointIndexOrderedList.at(0);
 
 	//Removing elements 
