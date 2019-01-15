@@ -27,7 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include "FeaturesMatching3D.hpp"
-#include "Errors/Assert.hpp"
+#include <Errors/Assert.hpp>
+#include <Errors/AssertOnTest.hpp>
 
 #include <Executors/FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>
 #include <Executors/FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
