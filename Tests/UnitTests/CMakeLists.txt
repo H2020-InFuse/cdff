@@ -85,6 +85,7 @@ endif()
 if(PCL_FOUND)
     set(unittest_sources ${unittest_sources}
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
+    DFNs/FeaturesDescription3D/PfhDescriptor3D.cpp
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
     DFNs/FeaturesExtraction3D/IssDetector3D.cpp
     DFNs/FeaturesExtraction3D/CornerDetector3D.cpp
@@ -185,6 +186,7 @@ set(unittest_libraries catch
     cdff_dfpc_reconstruction_3d
     cdff_dfpc_point_cloud_model_localisation
     cdff_dfpc_haptic_scanning
+    cdff_dfpc_model_based_tracker
 )
 
 if(WITH_OPENCV_CONTRIB)

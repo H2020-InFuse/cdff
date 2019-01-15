@@ -1,0 +1,3 @@
+/Tests/ConfigurationFiles/DFNs/ImageFiltering/BackgroundSubtractorMOG2_ManaTracker.yaml
+/Tests/ConfigurationFiles/DFNs/PrimitiveFinder/BasicPrimitiveFinder_ManaTracker.yaml
+/Tests/ConfigurationFiles/DFNs/PoseEstimator/WheeledRobotPoseEstimator_ManaTracker.yaml

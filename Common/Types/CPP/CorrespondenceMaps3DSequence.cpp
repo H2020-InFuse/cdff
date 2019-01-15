@@ -8,7 +8,7 @@
  */
 
 #include "CorrespondenceMaps3DSequence.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 
 namespace CorrespondenceMap3DWrapper
 {
@@ -66,14 +66,14 @@ void Clear(CorrespondenceMaps3DSequence& correspondenceMapsSequence)
 
 void AddCorrespondenceMap(CorrespondenceMaps3DSequence& correspondenceMapsSequence, const CorrespondenceMap3D& correspondenceMap)
 {
-	ASSERT( GetNumberOfCorrespondenceMaps(correspondenceMapsSequence) < MAX_CORRESPONDENCE_MAPS_SEQUENCE_LENGTH, "Error, correspondenceMaps sequence limit reached");
+	ASSERT_ON_TEST( GetNumberOfCorrespondenceMaps(correspondenceMapsSequence) < MAX_CORRESPONDENCE_MAPS_SEQUENCE_LENGTH, "Error, correspondenceMaps sequence limit reached");
 	Copy( correspondenceMap, correspondenceMapsSequence.arr[correspondenceMapsSequence.nCount] );
 	correspondenceMapsSequence.nCount++;
 }
 
 const CorrespondenceMap3D& GetCorrespondenceMap(const CorrespondenceMaps3DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 correspondenceMapIndex)
 {
-	ASSERT(correspondenceMapIndex < correspondenceMapsSequence.nCount, "GetCorrespondenceMap error, correspondenceMapIndex out of range");
+	ASSERT_ON_TEST(correspondenceMapIndex < correspondenceMapsSequence.nCount, "GetCorrespondenceMap error, correspondenceMapIndex out of range");
 	return correspondenceMapsSequence.arr[correspondenceMapIndex];
 }
 
@@ -99,10 +99,10 @@ void RemoveCorrespondenceMaps(CorrespondenceMaps3DSequence& correspondenceMapsSe
 	static const std::string errorMessage = "Remove Correspondence Map error, the second input was not an ORDERED list or some index is not within range";
 	for(int listIndex = 1; listIndex < elementsToRemove-1; listIndex++)
 		{
-		ASSERT( correspondenceMapIndexOrderedList.at(listIndex-1) < correspondenceMapIndexOrderedList.at(listIndex), errorMessage);
-		ASSERT(	correspondenceMapIndexOrderedList.at(listIndex) < correspondenceMapIndexOrderedList.at(listIndex+1), errorMessage);
+		ASSERT_ON_TEST( correspondenceMapIndexOrderedList.at(listIndex-1) < correspondenceMapIndexOrderedList.at(listIndex), errorMessage);
+		ASSERT_ON_TEST(	correspondenceMapIndexOrderedList.at(listIndex) < correspondenceMapIndexOrderedList.at(listIndex+1), errorMessage);
 		}
-	ASSERT( correspondenceMapIndexOrderedList.at(elementsToRemove-1) < correspondenceMapsSequence.nCount, errorMessage);
+	ASSERT_ON_TEST( correspondenceMapIndexOrderedList.at(elementsToRemove-1) < correspondenceMapsSequence.nCount, errorMessage);
 	BaseTypesWrapper::T_UInt32 firstIndex = correspondenceMapIndexOrderedList.at(0);
 
 	//Removing elements
@@ -126,15 +126,18 @@ void RemoveCorrespondenceMaps(CorrespondenceMaps3DSequence& correspondenceMapsSe
 
 void RemoveCorrespondences(CorrespondenceMaps3DSequence& correspondenceMapsSequence, BaseTypesWrapper::T_UInt32 mapIndex, const std::vector<BaseTypesWrapper::T_UInt32>& correspondenceIndexOrderedList)
 	{
-	ASSERT(mapIndex < correspondenceMapsSequence.nCount, "RemoveCorrespondences error, mapIndex out of range");
+	ASSERT_ON_TEST(mapIndex < correspondenceMapsSequence.nCount, "RemoveCorrespondences error, mapIndex out of range");
 	RemoveCorrespondences(correspondenceMapsSequence.arr[mapIndex], correspondenceIndexOrderedList);
 	}
 
 BitStream ConvertToBitStream(const CorrespondenceMaps3DSequence& sequence)
-	CONVERT_TO_BIT_STREAM(sequence, asn1SccCorrespondenceMaps3DSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMaps3DSequence_Encode)
-
+	{
+	return BaseTypesWrapper::ConvertToBitStream(sequence, asn1SccCorrespondenceMaps3DSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMaps3DSequence_Encode);
+	}
 void ConvertFromBitStream(BitStream bitStream, CorrespondenceMaps3DSequence& sequence)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccCorrespondenceMaps3DSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccCorrespondenceMaps3DSequence_Decode)
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccCorrespondenceMaps3DSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccCorrespondenceMaps3DSequence_Decode);
+	}
 
 }
 

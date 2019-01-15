@@ -49,6 +49,7 @@
 
 #ifdef WITH_PCL
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
+#include <FeaturesDescription3D/PfhDescriptor3D.hpp>
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
 #include <FeaturesExtraction3D/IssDetector3D.hpp>
 #include <FeaturesExtraction3D/CornerDetector3D.hpp>
@@ -357,6 +358,10 @@ FeaturesDescription3DInterface* DFNsBuilder::CreateFeaturesDescription3D(const s
 	if (dfnImplementation == "ShotDescriptor3D")
 	{
 		return new FeaturesDescription3D::ShotDescriptor3D;
+	}
+	else if (dfnImplementation == "PfhDescriptor3D")
+	{
+		return new FeaturesDescription3D::PfhDescriptor3D;
 	}
 #endif
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN FeaturesDescription3D implementation");
