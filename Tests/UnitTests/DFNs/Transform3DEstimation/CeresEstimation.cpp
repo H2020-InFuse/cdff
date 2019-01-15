@@ -61,13 +61,18 @@ class CeresEstimationTest
 
 void CeresEstimationTest::RandomCorrespondencesTest(cv::Mat transform, unsigned numberOfCorrespondences)
 	{
+	const int NUMBER_OF_TEST_POINTS = 20;
+	cv::Mat points3d = (cv::Mat_<float>(NUMBER_OF_TEST_POINTS, 3) << 9.9, 10.6, 7.3, 10.5, 10.7, 10.7, 8.7, 8.8, 8.3, 9.6, 10.3, 11, 10.3, 10.5, 10.7, 8.7, 10.2, 9.1, 9.8, 11, 9.3,
+						11, 10.2, 7.2, 8.8, 9.2, 7, 7.6, 10.1, 9.1, 8.5, 8, 7.9, 9, 11.8, 11.6, 7.7, 8.5, 8.6, 9.1, 11.3, 7.2, 8.3, 9.7, 10.7, 7, 11.6, 9,
+						9.3, 9.6, 8.2, 11.7, 8.7, 11.6, 7.1, 10.5, 8.8, 7.3, 11.3, 7);
+
 	CorrespondenceMap3DPtr input = NewCorrespondenceMap3D();
 	for(int index = 0; index < numberOfCorrespondences; index++)
 		{
 		cv::Mat point3d(4, 1, CV_32FC1);
-		point3d.at<float>(0,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
-		point3d.at<float>(1,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
-		point3d.at<float>(2,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
+		point3d.at<float>(0,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 0);
+		point3d.at<float>(1,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 1);
+		point3d.at<float>(2,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 2);
 		point3d.at<float>(3,0) = 1;
 
 		cv::Mat transformedPoint3d = transform*point3d;
@@ -101,15 +106,20 @@ void CeresEstimationTest::RandomCorrespondencesTest(cv::Mat transform, unsigned 
 
 void CeresEstimationTest::DoubleRandomCorrespondencesTest(cv::Mat transform1, cv::Mat transform2, unsigned numberOfCorrespondences)
 	{
+	const int NUMBER_OF_TEST_POINTS = 20;
+	cv::Mat points3d = (cv::Mat_<float>(NUMBER_OF_TEST_POINTS, 3) << 7.5, 7.7, 8, 10.3, 10.6, 7.5, 11.5, 10.3, 11.8, 7.8, 11.4, 10.7, 9.1, 8.6, 10.9, 7, 11.8, 10.6,
+			9.2, 9.7, 11.7, 7.3, 7.2, 10.1, 10.9, 11.6, 7.6, 9.1, 7.3, 10.8, 8.9, 8, 11.6, 9.9, 11.4, 10.4, 10.6, 10.9, 8.7, 10.4, 11.8, 8.2, 9.2, 8.9, 9.8, 8.3, 9.1, 9.9,
+			7.1, 11.6, 7.8, 11.8, 11.9, 8.2, 9.9, 11, 7.8, 10.7, 8.1, 8.3);
+
 	CorrespondenceMap3DPtr input1 = NewCorrespondenceMap3D();
 	CorrespondenceMap3DPtr input2 = NewCorrespondenceMap3D();
 	CorrespondenceMap3DPtr input3 = NewCorrespondenceMap3D();
 	for(int index = 0; index < numberOfCorrespondences; index++)
 		{
 		cv::Mat point3d(4, 1, CV_32FC1);
-		point3d.at<float>(0,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
-		point3d.at<float>(1,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
-		point3d.at<float>(2,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
+		point3d.at<float>(0,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 0);
+		point3d.at<float>(1,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 1);
+		point3d.at<float>(2,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 2);
 		point3d.at<float>(3,0) = 1;
 
 		cv::Mat transformedPoint3d1 = transform1*point3d;
@@ -162,6 +172,11 @@ void CeresEstimationTest::DoubleRandomCorrespondencesTest(cv::Mat transform1, cv
 
 void CeresEstimationTest::TripleRandomCorrespondencesTest(cv::Mat transform1, cv::Mat transform2, cv::Mat transform3, unsigned numberOfCorrespondences, float noise)
 	{
+	const int NUMBER_OF_TEST_POINTS = 20;
+	cv::Mat points3d = (cv::Mat_<float>(NUMBER_OF_TEST_POINTS, 3) << 9.6, 10, 9.4, 9, 8.9, 7.6, 11.6, 8.5, 10.9, 7, 11, 8.1, 8.4, 7.9, 8.1, 10.1, 7.4, 11.5, 10.5, 7.9, 11,
+						11.4, 11.8, 11.3, 8.8, 10.9, 9.1, 8.3, 10.2, 11.5, 9.8, 9.8, 8.3, 9, 11.7, 8.6, 8.8, 8.9, 7.4, 7.5, 11.5, 8, 11.7, 7.2, 9.9, 8.1, 10.4, 9.4,
+						9.1, 7.3, 10.3, 11.3, 10.2, 7.8, 11.7, 9, 10.3, 8.6, 10.8, 10.1);
+
 	CorrespondenceMap3DPtr input1 = NewCorrespondenceMap3D();
 	CorrespondenceMap3DPtr input2 = NewCorrespondenceMap3D();
 	CorrespondenceMap3DPtr input3 = NewCorrespondenceMap3D();
@@ -171,9 +186,9 @@ void CeresEstimationTest::TripleRandomCorrespondencesTest(cv::Mat transform1, cv
 	for(int index = 0; index < numberOfCorrespondences; index++)
 		{
 		cv::Mat point3d(4, 1, CV_32FC1);
-		point3d.at<float>(0,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
-		point3d.at<float>(1,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
-		point3d.at<float>(2,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
+		point3d.at<float>(0,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 0);
+		point3d.at<float>(1,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 1);
+		point3d.at<float>(2,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 2);
 		point3d.at<float>(3,0) = 1;
 
 		cv::Mat transformedPoint3d1 = transform1*point3d;
@@ -247,13 +262,18 @@ void CeresEstimationTest::TripleRandomCorrespondencesTest(cv::Mat transform1, cv
 
 void CeresEstimationTest::RandomCorrespondencesWithOneFailureTest(cv::Mat transform, unsigned numberOfCorrespondences)
 	{
+	const int NUMBER_OF_TEST_POINTS = 20;
+	cv::Mat points3d = (cv::Mat_<float>(NUMBER_OF_TEST_POINTS, 3) << 9.7, 8.9, 7.2, 7.3, 9.9, 11.7, 9.5, 10.6, 8.4, 8.6, 10.5, 8.5, 7.6, 9.3, 8.7, 9.3, 9.6, 11.1,
+							8.7, 7.7, 8.6, 9, 11.5, 10.4, 10, 7.8, 8.3, 10.7, 10.2, 10.9, 7.9, 7.9, 8, 8.4, 8.2, 11, 8.3, 10.9, 9.8, 10, 7.7, 8.5, 11.5, 8.4, 10.8,
+							8.2, 10.7, 8.4, 7.5, 7.4, 9.4, 9.4, 9.6, 8.9, 7.8, 7.9, 10, 9.3, 11.6, 8.2);
+
 	CorrespondenceMap3DPtr input = NewCorrespondenceMap3D();
 	for(int index = 0; index < numberOfCorrespondences; index++)
 		{
 		cv::Mat point3d(4, 1, CV_32FC1);
-		point3d.at<float>(0,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
-		point3d.at<float>(1,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
-		point3d.at<float>(2,0) = ( (float)(rand()%100) + 1) * 0.1 + 2;
+		point3d.at<float>(0,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 0);
+		point3d.at<float>(1,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 1);
+		point3d.at<float>(2,0) = points3d.at<float>(index % NUMBER_OF_TEST_POINTS, 2);
 		point3d.at<float>(3,0) = 1;
 
 		cv::Mat transformedPoint3d = transform*point3d;
@@ -287,24 +307,6 @@ void CeresEstimationTest::RandomCorrespondencesWithOneFailureTest(cv::Mat transf
 	const Poses3DSequence& output = squaresMinimization->transformsOutput();
 	bool success = squaresMinimization->successOutput();
 	REQUIRE(success == false);
-	/*REQUIRE( GetNumberOfPoses(output) == 3);
-	ValidateOutput(GetPose(output, 0), transform);
-
-	REQUIRE( GetXPosition( GetPose(output, 1) ) == 0);
-	REQUIRE( GetYPosition( GetPose(output, 1) ) == 0);
-	REQUIRE( GetZPosition( GetPose(output, 1) ) == 0);
-	REQUIRE( GetXOrientation( GetPose(output, 1) ) == 0);
-	REQUIRE( GetYOrientation( GetPose(output, 1) ) == 0);
-	REQUIRE( GetZOrientation( GetPose(output, 1) ) == 0);
-	REQUIRE( GetWOrientation( GetPose(output, 1) ) == 0);
-
-	REQUIRE( GetXPosition( GetPose(output, 2) ) == 0);
-	REQUIRE( GetYPosition( GetPose(output, 2) ) == 0);
-	REQUIRE( GetZPosition( GetPose(output, 2) ) == 0);
-	REQUIRE( GetXOrientation( GetPose(output, 2) ) == 0);
-	REQUIRE( GetYOrientation( GetPose(output, 2) ) == 0);
-	REQUIRE( GetZOrientation( GetPose(output, 2) ) == 0);
-	REQUIRE( GetWOrientation( GetPose(output, 2) ) == 0);*/
 
 	delete(sequence);
 	delete(input);
