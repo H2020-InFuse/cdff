@@ -8,7 +8,7 @@
  */
 
 #include "CorrespondenceMap3D.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 
 namespace CorrespondenceMap3DWrapper
 {
@@ -138,11 +138,14 @@ void RemoveCorrespondences(CorrespondenceMap3D& correspondenceMap, std::vector<B
 	}
 
 BitStream ConvertToBitStream(const CorrespondenceMap3D& map)
-	CONVERT_TO_BIT_STREAM(map, asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMap3D_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(map, asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMap3D_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, CorrespondenceMap3D& map)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING, map, asn1SccCorrespondenceMap3D_Decode)
-
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING, map, asn1SccCorrespondenceMap3D_Decode);
+	}
 }
 
 /** @} */

@@ -10,6 +10,7 @@
 #include "CeresEstimation.hpp"
 
 #include <Errors/Assert.hpp>
+#include <Errors/AssertOnTest.hpp>
 #include <Macros/YamlcppMacros.hpp>
 
 #include <opencv2/calib3d.hpp>

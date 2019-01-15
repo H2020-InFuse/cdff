@@ -13,9 +13,9 @@
 
 /*!
  * @addtogroup Helpers
- * 
- *  The ParametersListHelper is an high level wrapper for the yamlcpp library. It offers common method for the extraction of DFN parameters from a configuration file. 
- * 
+ *
+ *  The ParametersListHelper is an high level wrapper for the yamlcpp library. It offers common method for the extraction of DFN parameters from a configuration file.
+ *
  * @{
  */
 
@@ -33,7 +33,6 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 #include "ParameterHelper.hpp"
-#include <Errors/Assert.hpp>
 
 namespace Helpers
 {
@@ -80,7 +79,7 @@ class ParametersListHelper
 			};
 
 		std::vector<ParametersGroup> groupsList;
-		
+
 
 		void ReadGroup(const YAML::Node& configurationNode);
 		ParametersGroup* GetGroup(const std::string& groupName);
@@ -93,4 +92,3 @@ class ParametersListHelper
 #endif
 /* ParametersListHelper.hpp */
 /** @} */
-

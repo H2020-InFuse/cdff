@@ -5,6 +5,8 @@
 #ifndef CDFF_VALIDATORS_NUMBER_HPP
 #define CDFF_VALIDATORS_NUMBER_HPP
 
+#include <Errors/Assert.hpp>
+
 namespace CDFF {
     namespace Validators {
         namespace Number {

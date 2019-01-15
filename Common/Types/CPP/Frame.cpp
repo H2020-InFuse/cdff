@@ -218,10 +218,14 @@ int GetNumberOfDataBytes(const Frame& frame)
 }
 
 BitStream ConvertToBitStream(const Frame& frame)
-	CONVERT_TO_BIT_STREAM(frame, asn1SccFrame_REQUIRED_BYTES_FOR_ENCODING, asn1SccFrame_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(frame, asn1SccFrame_REQUIRED_BYTES_FOR_ENCODING, asn1SccFrame_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, Frame& frame)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccFrame_REQUIRED_BYTES_FOR_ENCODING, frame, asn1SccFrame_Decode)
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccFrame_REQUIRED_BYTES_FOR_ENCODING, frame, asn1SccFrame_Decode);
+	}
 
 }
 
