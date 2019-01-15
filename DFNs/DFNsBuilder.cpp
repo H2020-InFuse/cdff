@@ -76,7 +76,7 @@
 #include <FeaturesMatching3D/BestDescriptorMatch.hpp>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
 
-#if WITH_EDRES
+#ifdef WITH_EDRES
 #include <ImageDegradation/ImageDegradationEdres.hpp>
 #include <DisparityImage/DisparityImageEdres.hpp>
 #include <DisparityFiltering/DisparityFilteringEdres.hpp>
@@ -282,7 +282,7 @@ DisparityImageInterface* DFNsBuilder::CreateDisparityImage(const std::string& df
         return new DisparityImage::DisparityImage;
     }
 #endif
-#if WITH_EDRES
+#ifdef WITH_EDRES
     if (dfnImplementation == "DisparityImageEdres")
     {
         return new DisparityImage::DisparityImageEdres;
@@ -294,7 +294,7 @@ DisparityImageInterface* DFNsBuilder::CreateDisparityImage(const std::string& df
 
 DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::string& dfnImplementation)
 {
-#if WITH_EDRES
+#ifdef WITH_EDRES
     if (dfnImplementation == "DisparityFilteringEdres")
     {
         return new DisparityFiltering::DisparityFilteringEdres;
@@ -312,7 +312,7 @@ DisparityToPointCloudInterface* DFNsBuilder::CreateDisparityToPointCloud(const s
         return new DisparityToPointCloud::DisparityToPointCloud;
     }
 #endif
-#if WITH_EDRES
+#ifdef WITH_EDRES
     if (dfnImplementation == "DisparityToPointCloudEdres")
     {
         return new DisparityToPointCloud::DisparityToPointCloudEdres;
@@ -456,7 +456,7 @@ ImageDegradationInterface* DFNsBuilder::CreateImageDegradation(const std::string
         return new ImageDegradation::ImageDegradation;
     }
 #endif
-#if WITH_EDRES
+#ifdef WITH_EDRES
     if (dfnImplementation == "ImageDegradationEdres")
     {
         return new ImageDegradation::ImageDegradationEdres;
@@ -510,7 +510,7 @@ ImageRectificationInterface* DFNsBuilder::CreateImageRectification(const std::st
         return new ImageRectification::ImageRectification;
     }
 #endif
-#if WITH_EDRES
+#ifdef WITH_EDRES
     if (dfnImplementation == "ImageRectificationEdres")
     {
         return new ImageRectification::ImageRectificationEdres;
@@ -588,7 +588,7 @@ StereoDegradationInterface* DFNsBuilder::CreateStereoDegradation(const std::stri
         return new StereoDegradation::StereoDegradation;
     }
 #endif
-#if WITH_EDRES
+#ifdef WITH_EDRES
     if (dfnImplementation == "StereoDegradationEdres")
     {
         return new StereoDegradation::StereoDegradationEdres;
@@ -600,7 +600,7 @@ StereoDegradationInterface* DFNsBuilder::CreateStereoDegradation(const std::stri
 
 StereoMotionEstimationInterface* DFNsBuilder::CreateStereoMotionEstimation(const std::string& dfnImplementation)
 {
-#if WITH_EDRES
+#ifdef WITH_EDRES
     if (dfnImplementation == "StereoMotionEstimation")
     {
         return new StereoMotionEstimation::StereoMotionEstimationEdres;
@@ -640,7 +640,7 @@ StereoRectificationInterface* DFNsBuilder::CreateStereoRectification(const std::
         return new StereoRectification::StereoRectification;
     }
 #endif
-#if WITH_EDRES
+#ifdef WITH_EDRES
     if (dfnImplementation == "StereoRectificationEdres")
     {
         return new StereoRectification::StereoRectificationEdres;
