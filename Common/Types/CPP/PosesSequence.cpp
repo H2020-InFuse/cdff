@@ -8,7 +8,7 @@
  */
 
 #include "PosesSequence.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 
 namespace PoseWrapper
 {

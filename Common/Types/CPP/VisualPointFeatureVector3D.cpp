@@ -8,7 +8,7 @@
  */
 
 #include "VisualPointFeatureVector3D.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 #include "BaseTypes.hpp"
 
 using namespace BaseTypesWrapper;

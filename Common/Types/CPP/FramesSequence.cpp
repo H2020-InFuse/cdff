@@ -8,7 +8,7 @@
  */
 
 #include "FramesSequence.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 
 namespace FrameWrapper
 {

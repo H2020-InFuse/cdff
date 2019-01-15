@@ -8,7 +8,7 @@
  */
 
 #include "CorrespondenceMap3D.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 
 namespace CorrespondenceMap3DWrapper
 {

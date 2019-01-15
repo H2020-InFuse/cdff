@@ -8,7 +8,7 @@
  */
 
 #include "Pose.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 #include <cmath>
 
 namespace PoseWrapper
