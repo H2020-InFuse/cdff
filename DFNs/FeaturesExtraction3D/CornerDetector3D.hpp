@@ -64,6 +64,7 @@ namespace FeaturesExtraction3D
 
 		private:
 
+			//DFN Parameters
 			enum OutputFormat
 			{
 				POSITIONS_OUTPUT,
@@ -96,12 +97,18 @@ namespace FeaturesExtraction3D
 			CornerOptionsSet parameters;
 			static const CornerOptionsSet DEFAULT_PARAMETERS;
 
+			//External Converters
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 
+			//Type Converter Method
+			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, 
+				const pcl::PointIndicesConstPtr indicesList);
+
+			//Core computation methods
 			pcl::PointIndicesConstPtr DetectCorners(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 			bool PointIsInner(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, const pcl::PointXYZ& originPoint, const pcl::Normal& normal, const std::vector<int>& neighbours);
-			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, const pcl::PointIndicesConstPtr indicesList);
-
+			
+			//Input validation methods
 			void ValidateParameters();
 			void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 	};

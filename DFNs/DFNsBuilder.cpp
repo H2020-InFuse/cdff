@@ -13,6 +13,8 @@
 #include <BundleAdjustment/SvdDecomposition.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 #include <ColorConversion/ColorConversion.hpp>
+#include <DisparityImage/DisparityImage.hpp>
+#include <DisparityToPointCloud/DisparityToPointCloud.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.hpp>
 #include <FeaturesDescription2D/OrbDescriptor.hpp>
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
@@ -26,6 +28,7 @@
 #include <FeaturesMatching3D/Ransac3D.hpp>
 #include <FeaturesMatching3D/BestDescriptorMatch.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixRansac.hpp>
+#include <ImageDegradation/ImageDegradation.hpp>
 #include <ImageFiltering/ImageUndistortion.hpp>
 #include <ImageFiltering/ImageUndistortionRectification.hpp>
 #include <ImageFiltering/CannyEdgeDetection.hpp>
@@ -40,9 +43,11 @@
 #include <Registration3D/Icp3D.hpp>
 #include <Registration3D/IcpCC.hpp>
 #include <Registration3D/IcpMatcher.hpp>
+#include <StereoDegradation/StereoDegradation.hpp>
 #include <StereoReconstruction/DisparityMapping.hpp>
 #include <StereoReconstruction/HirschmullerDisparityMapping.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
+#include <StereoRectification/StereoRectification.hpp>
 #include <Transform3DEstimation/CeresEstimation.hpp>
 #include <Transform3DEstimation/LeastSquaresMinimization.hpp>
 #include <DepthFiltering/ConvolutionFilter.hpp>
@@ -56,10 +61,15 @@
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
 
 #if WITH_EDRES
+#include <ImageDegradation/ImageDegradationEdres.hpp>
+#include <DisparityImage/DisparityImageEdres.hpp>
 #include <DisparityFiltering/DisparityFilteringEdres.hpp>
-#include <ImageRectification/ImageRectificationEdres.hpp>
+#include <DisparityToPointCloud/DisparityToPointCloudEdres.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.hpp>
+#include <ImageRectification/ImageRectificationEdres.hpp>
+#include <StereoDegradation/StereoDegradationEdres.hpp>
 #include <StereoMotionEstimation/StereoMotionEstimationEdres.hpp>
+#include <StereoRectification/StereoRectificationEdres.hpp>
 #endif
 
 #include <Errors/Assert.hpp>
@@ -83,9 +93,17 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
     {
         return CreateColorConversion(dfnImplementation);
     }
+    else if (dfnType == "DisparityImage")
+    {
+        return CreateDisparityImage(dfnImplementation);
+    }
     else if (dfnType == "DisparityFiltering")
     {
         return CreateDisparityFiltering(dfnImplementation);
+    }
+    else if (dfnType == "DisparityToPointCloud")
+    {
+        return CreateDisparityToPointCloud(dfnImplementation);
     }
     else if (dfnType == "DisparityToPointCloudWithIntensity")
     {
@@ -119,6 +137,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreateFundamentalMatrixComputation(dfnImplementation);
 	}
+    else if (dfnType == "ImageDegradation")
+    {
+        return CreateImageDegradation(dfnImplementation);
+    }
 	else if (dfnType == "ImageFiltering")
 	{
 		return CreateImageFiltering(dfnImplementation);
@@ -139,6 +161,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreateRegistration3D(dfnImplementation);
 	}
+    else if (dfnType == "StereoDegradation")
+    {
+        return CreateStereoDegradation(dfnImplementation);
+    }
     else if (dfnType == "StereoMotionEstimation")
     {
         return CreateStereoMotionEstimation(dfnImplementation);
@@ -147,6 +173,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreateStereoReconstruction(dfnImplementation);
 	}
+    else if (dfnType == "StereoRectification")
+    {
+        return CreateStereoRectification(dfnImplementation);
+    }
 	else if (dfnType == "Transform3DEstimation")
 	{
 		return CreateTransform3DEstimation(dfnImplementation);
@@ -220,6 +250,22 @@ ColorConversionInterface* DFNsBuilder::CreateColorConversion(const std::string& 
     return NULL;
 }
 
+DisparityImageInterface* DFNsBuilder::CreateDisparityImage(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "DisparityImage")
+    {
+        return new DisparityImage::DisparityImage;
+    }
+#if WITH_EDRES
+    else if (dfnImplementation == "DisparityImageEdres")
+    {
+        return new DisparityImage::DisparityImageEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityImage implementation");
+    return NULL;
+}
+
 DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::string& dfnImplementation)
 {
 #if WITH_EDRES
@@ -229,6 +275,22 @@ DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::st
     }
 #endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityFiltering implementation");
+    return NULL;
+}
+
+DisparityToPointCloudInterface* DFNsBuilder::CreateDisparityToPointCloud(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "DisparityToPointCloud")
+    {
+        return new DisparityToPointCloud::DisparityToPointCloud;
+    }
+#if WITH_EDRES
+    else if (dfnImplementation == "DisparityToPointCloudEdres")
+    {
+        return new DisparityToPointCloud::DisparityToPointCloudEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityToPointCloud implementation");
     return NULL;
 }
 
@@ -338,6 +400,22 @@ FundamentalMatrixComputationInterface* DFNsBuilder::CreateFundamentalMatrixCompu
 	return NULL;
 }
 
+ImageDegradationInterface* DFNsBuilder::CreateImageDegradation(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "ImageDegradation")
+    {
+        return new ImageDegradation::ImageDegradation;
+    }
+#if WITH_EDRES
+    else if (dfnImplementation == "ImageDegradationEdres")
+    {
+        return new ImageDegradation::ImageDegradationEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN ImageDegradation implementation");
+    return NULL;
+}
+
 ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(const std::string& dfnImplementation)
 {
 	if (dfnImplementation == "ImageUndistortion")
@@ -435,6 +513,22 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(const std::string& df
 	return NULL;
 }
 
+StereoDegradationInterface* DFNsBuilder::CreateStereoDegradation(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "StereoDegradation")
+    {
+        return new StereoDegradation::StereoDegradation;
+    }
+#if WITH_EDRES
+    else if (dfnImplementation == "StereoDegradationEdres")
+    {
+        return new StereoDegradation::StereoDegradationEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoDegradation implementation");
+    return NULL;
+}
+
 StereoMotionEstimationInterface* DFNsBuilder::CreateStereoMotionEstimation(const std::string& dfnImplementation)
 {
 #if WITH_EDRES
@@ -463,6 +557,22 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(const std
 	}
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoReconstruction implementation");
 	return NULL;
+}
+
+StereoRectificationInterface* DFNsBuilder::CreateStereoRectification(const std::string& dfnImplementation)
+{
+    if (dfnImplementation == "StereoRectification")
+    {
+        return new StereoRectification::StereoRectification;
+    }
+#if WITH_EDRES
+    else if (dfnImplementation == "StereoRectificationEdres")
+    {
+        return new StereoRectification::StereoRectificationEdres;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoRectification implementation");
+    return NULL;
 }
 
 Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(const std::string& dfnImplementation)

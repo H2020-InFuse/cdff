@@ -50,6 +50,7 @@ namespace PointCloudAssembly
 			virtual void process() override;
 
 		private:
+			//DFN Parameters
 			struct VoxelBinningOptionsSet
 			{
 				float voxelResolution;
@@ -61,11 +62,16 @@ namespace PointCloudAssembly
 			VoxelBinningOptionsSet parameters;
 			static const VoxelBinningOptionsSet DEFAULT_PARAMETERS;
 
+			//Variable for input-output handling
+			pcl::PointCloud<pcl::PointXYZ>::ConstPtr firstCloud; //first operand of the merge
+			pcl::PointCloud<pcl::PointXYZ>::ConstPtr secondCloud; //second operand of the merge
+			pcl::PointCloud<pcl::PointXYZ>::Ptr assembledCloud; //result of the merge
+
+			//Variable for storage
+			pcl::PointCloud<pcl::PointXYZ>::Ptr storedCloud; //result of previous operations
+
+			//External conversion helpers
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
-			pcl::PointCloud<pcl::PointXYZ>::ConstPtr firstCloud;
-			pcl::PointCloud<pcl::PointXYZ>::ConstPtr secondCloud;
-			pcl::PointCloud<pcl::PointXYZ>::Ptr storedCloud;
-			pcl::PointCloud<pcl::PointXYZ>::Ptr assembledCloud;
 
 			// For each point P of index x of a point cloud, if x appears in correspondenceMap, then replacementMap[x] is the point that should replace P in the fused cloud.
 			std::map<int, pcl::PointXYZ > firstReplacementMap, secondReplacementMap;
@@ -73,8 +79,10 @@ namespace PointCloudAssembly
 			//This method assemble the final point cloud.
 			void AssemblePointCloud();
 
+			//This method converts the output to the expected output type.
 			void PrepareOutAssembledPointCloud();
 
+			//Input Validation methods
 			void ValidateParameters();
 	};
 }

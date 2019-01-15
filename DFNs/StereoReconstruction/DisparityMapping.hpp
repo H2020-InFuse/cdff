@@ -99,6 +99,7 @@ namespace StereoReconstruction
 
 			static const float EPSILON;
 
+			//DFN Parameters
 			enum PrefilterType
 			{
 				NORMALIZED_RESPONSE,
@@ -176,24 +177,30 @@ namespace StereoReconstruction
 				StereoCameraParameters stereoCameraParameters;
 			};
 
-			cv::Mat disparityToDepthMap;
-
 			Helpers::ParametersListHelper parametersHelper;
 			DisparityMappingOptionsSet parameters;
 			static const DisparityMappingOptionsSet DEFAULT_PARAMETERS;
 
-			cv::Mat ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage);
+			//Parameters Conversion
+			cv::Mat disparityToDepthMap;
+			cv::Mat Convert(DisparityToDepthMap disparityToDepthMap);
 
+			//External conversion helpers
+			Converters::FrameToMatConverter frameToMat;
+
+			//Type conversion methods
 			PointCloudWrapper::PointCloudConstPtr Convert(cv::Mat cvPointCloud);
 			PointCloudWrapper::PointCloudConstPtr ConvertWithPeriodicSampling(cv::Mat cvPointCloud);
 			PointCloudWrapper::PointCloudConstPtr ConvertWithVoxelFilter(cv::Mat cvPointCloud);
-			cv::Mat Convert(DisparityToDepthMap disparityToDepthMap);
-			Converters::FrameToMatConverter frameToMat;
 
+			//Core computation methods
+			cv::Mat ComputePointCloud(cv::Mat leftImage, cv::Mat rightImage);
 			cv::Mat ComputePointCloudFromDisparity(cv::Mat disparity);
 
+			//Input Validation methods
 			void ValidateParameters();
 
+			//Testing methods for visualizing intermediate disparity map output.
 			#ifdef TESTING
 				#define SAVE_DISPARITY_MATRIX(disparity) disparityMatrix = disparity
 			#else

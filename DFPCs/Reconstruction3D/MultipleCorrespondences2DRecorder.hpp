@@ -17,7 +17,7 @@
  * This is the storage of correspondence 2D Maps, let (L0, R0), (L1, R1), ..., (LN, RN) be a sequence of image pair from the most recent to the oldest.
  * The correspondences between images are stored in the following order (L0-R0), (L0-L1), (L0-R1), ..., (L0-RN), (R0-L0), (R0-L1), (R0-R1), ...,
  * (R0, LN), (L1-R1), (L1-L2), ..., (L1-RN), ...., (LN-RN). The number N is defined by the parameter numberOfAdjustedStereoPairs.
- * Only the most recent N image pairs are kept in storage, the others will be discarded.
+ * Only the Nmost recent image pairs are kept in storage, the others will be discarded.
  *
  * @{
  */
@@ -48,6 +48,9 @@ namespace Reconstruction3D
  *
  * Class definition
  *
+ * This class has the purpose of storing a sequence of 2D correspondence maps between image features. It offers:
+ * (i) a mechanism for adding correspondence maps one by one;
+ * (ii) a method for storing the latest two sequences of correspondence maps in an efficient way, and discard the most recent one if no longer useful.
  * --------------------------------------------------------------------------
  */
 class MultipleCorrespondences2DRecorder
@@ -56,11 +59,18 @@ class MultipleCorrespondences2DRecorder
 		MultipleCorrespondences2DRecorder(int maximumNumberOfPoses, bool filterPointsThatDoNotAppearInAllMatches = false);
 		~MultipleCorrespondences2DRecorder();
 
+		/* The following three methods define a protocol for adding a sequence of 2D correspondence maps:
+		the call pattern is: [call to InitializeNewSequence] [call to AddCorrespondences zero or more times] [call to CompleteNewSequence]
+		 */
 		void InitializeNewSequence();
 		void AddCorrespondences(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr map);
 		void CompleteNewSequence();
 
+		/* This method retrieves the sequence of correspondence maps that was previously inserted */
 		CorrespondenceMap2DWrapper::CorrespondenceMaps2DSequenceConstPtr GetLatestCorrespondences();
+
+		/*This method discards the sequence of correspondence maps that was previously inserted, and the older one becomes available for retrievial by the GetLatestCorrespondences() method
+		This method will cause an error if it is called before adding a sequence or if it is called twice in a row without adding a sequence in between */
 		void DiscardLatestCorrespondences();
 
 	protected:

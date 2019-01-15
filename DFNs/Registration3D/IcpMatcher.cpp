@@ -284,89 +284,6 @@ const IcpMatcher::IcpOptionsSet IcpMatcher::DEFAULT_PARAMETERS =
 	/*.smoothnessLength =*/ 4
 };
 
-PointMatcher<float>::DataPoints IcpMatcher::ConvertToDataPoints(const PointCloudWrapper::PointCloud& cloud)
-	{
-	int numberOfPoints = GetNumberOfPoints(cloud);
-	PointMatcher<float>::Matrix cloudMatrix(4, numberOfPoints);
-	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
-		{
-		cloudMatrix(0, pointIndex) = GetXCoordinate(cloud, pointIndex);
-		cloudMatrix(1, pointIndex) = GetYCoordinate(cloud, pointIndex);
-		cloudMatrix(2, pointIndex) = GetZCoordinate(cloud, pointIndex);
-		cloudMatrix(3, pointIndex) = 1;
-		}
-
-	PointMatcher<float>::DataPoints::Labels labels;
-	labels.push_back( PointMatcher<float>::DataPoints::Label("x", 1)); 
-	labels.push_back( PointMatcher<float>::DataPoints::Label("y", 1)); 
-	labels.push_back( PointMatcher<float>::DataPoints::Label("z", 1)); 
-	labels.push_back( PointMatcher<float>::DataPoints::Label("w", 1)); 
-
-	PointMatcher<float>::DataPoints conversion(cloudMatrix, labels);
-
-	return conversion;
-	}
-
-PoseWrapper::Pose3D IcpMatcher::ConvertToPose3D(PointMatcher<float>::TransformationParameters transform)
-	{
-	PoseWrapper::Pose3D conversion;
-
-	return conversion;
-	}
-
-Pose3DConstPtr IcpMatcher::ComputeTransform(PointMatcher<float>::DataPoints sourceCloud, PointMatcher<float>::DataPoints sinkCloud)
-	{
-	PointMatcher<float>::TransformationParameters transform = icp(sourceCloud, sinkCloud);
-
-	if (!FixTransformationMatrix(transform))
-		{
-		outSuccess = false;
-		return NULL;
-		}
-	outSuccess = true;
-	return eigenTransformToTransform3D.Convert(transform);
-	}
-
-Pose3DConstPtr IcpMatcher::ComputeTransform(PointMatcher<float>::DataPoints sourceCloud, PointMatcher<float>::DataPoints sinkCloud, PointMatcher<float>::TransformationParameters transformGuess)
-	{
-	PointMatcher<float>::TransformationParameters transform;
-	Pose3DConstPtr returnPose = NULL;
-	try 
-		{
-		if (!FixTransformationMatrix(transformGuess))
-			{
-			throw std::exception();
-			}
-		transform = icp(sourceCloud, sinkCloud, transformGuess);
-
-		if (!FixTransformationMatrix(transform))
-			{
-			throw std::exception();
-			}
-		returnPose = eigenTransformToTransform3D.Convert(transform);
-		lastTransformGuess = transformGuess;
-		} 
-	catch( ... )
-		{
-		VERIFY(false, "Warning: ICP failure with current transform guess, trying to use the previous guess");
-		transform = icp(sourceCloud, sinkCloud, lastTransformGuess);
-		if (returnPose != NULL)
-			{
-			delete returnPose;
-			}
-
-		if (!FixTransformationMatrix(transform))
-			{
-			outSuccess = false;
-			return NULL;
-			}
-		returnPose = eigenTransformToTransform3D.Convert(transform);
-		}
-
-	outSuccess = true;
-	return returnPose;
-	}
-
 void IcpMatcher::SetupIcpMatcher()
 	{
 	//Defining convinient alias for data types
@@ -549,6 +466,89 @@ void IcpMatcher::SetupIcpMatcher()
 		SharedTransformation rigidTransformation = PointMatcher<float>::get().TransformationRegistrar.create("RigidTransformation");
 		icp.transformations.push_back(rigidTransformation);		
 		}
+	}
+
+PointMatcher<float>::DataPoints IcpMatcher::ConvertToDataPoints(const PointCloudWrapper::PointCloud& cloud)
+	{
+	int numberOfPoints = GetNumberOfPoints(cloud);
+	PointMatcher<float>::Matrix cloudMatrix(4, numberOfPoints);
+	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+		{
+		cloudMatrix(0, pointIndex) = GetXCoordinate(cloud, pointIndex);
+		cloudMatrix(1, pointIndex) = GetYCoordinate(cloud, pointIndex);
+		cloudMatrix(2, pointIndex) = GetZCoordinate(cloud, pointIndex);
+		cloudMatrix(3, pointIndex) = 1;
+		}
+
+	PointMatcher<float>::DataPoints::Labels labels;
+	labels.push_back( PointMatcher<float>::DataPoints::Label("x", 1)); 
+	labels.push_back( PointMatcher<float>::DataPoints::Label("y", 1)); 
+	labels.push_back( PointMatcher<float>::DataPoints::Label("z", 1)); 
+	labels.push_back( PointMatcher<float>::DataPoints::Label("w", 1)); 
+
+	PointMatcher<float>::DataPoints conversion(cloudMatrix, labels);
+
+	return conversion;
+	}
+
+PoseWrapper::Pose3D IcpMatcher::ConvertToPose3D(PointMatcher<float>::TransformationParameters transform)
+	{
+	PoseWrapper::Pose3D conversion;
+
+	return conversion;
+	}
+
+Pose3DConstPtr IcpMatcher::ComputeTransform(PointMatcher<float>::DataPoints sourceCloud, PointMatcher<float>::DataPoints sinkCloud)
+	{
+	PointMatcher<float>::TransformationParameters transform = icp(sourceCloud, sinkCloud);
+
+	if (!FixTransformationMatrix(transform))
+		{
+		outSuccess = false;
+		return NULL;
+		}
+	outSuccess = true;
+	return eigenTransformToTransform3D.Convert(transform);
+	}
+
+Pose3DConstPtr IcpMatcher::ComputeTransform(PointMatcher<float>::DataPoints sourceCloud, PointMatcher<float>::DataPoints sinkCloud, PointMatcher<float>::TransformationParameters transformGuess)
+	{
+	PointMatcher<float>::TransformationParameters transform;
+	Pose3DConstPtr returnPose = NULL;
+	try 
+		{
+		if (!FixTransformationMatrix(transformGuess))
+			{
+			throw std::exception();
+			}
+		transform = icp(sourceCloud, sinkCloud, transformGuess);
+
+		if (!FixTransformationMatrix(transform))
+			{
+			throw std::exception();
+			}
+		returnPose = eigenTransformToTransform3D.Convert(transform);
+		lastTransformGuess = transformGuess;
+		} 
+	catch( ... )
+		{
+		VERIFY(false, "Warning: ICP failure with current transform guess, trying to use the previous guess");
+		transform = icp(sourceCloud, sinkCloud, lastTransformGuess);
+		if (returnPose != NULL)
+			{
+			delete returnPose;
+			}
+
+		if (!FixTransformationMatrix(transform))
+			{
+			outSuccess = false;
+			return NULL;
+			}
+		returnPose = eigenTransformToTransform3D.Convert(transform);
+		}
+
+	outSuccess = true;
+	return returnPose;
 	}
 
 bool IcpMatcher::FixTransformationMatrix(PointMatcher<float>::TransformationParameters& transform)

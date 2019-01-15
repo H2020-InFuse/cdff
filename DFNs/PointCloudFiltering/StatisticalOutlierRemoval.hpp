@@ -50,6 +50,7 @@ namespace PointCloudFiltering
 			virtual void process() override;
 
 		private:
+			//DFN Parameters
 			typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
 
 			struct StatisticalOutlierRemovalOptionsSet
@@ -63,10 +64,14 @@ namespace PointCloudFiltering
 			StatisticalOutlierRemovalOptionsSet parameters;
 			static const StatisticalOutlierRemovalOptionsSet DEFAULT_PARAMETERS;
 
+			//External conversion helpers
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 			Converters::PclPointCloudToPointCloudConverter pclPointCloudToPointCloud;
 
+			//Core computation methods
 			pcl::PointCloud<pcl::PointXYZ>::ConstPtr FilterCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);
+
+			//Input Validation methods
 			void ValidateParameters();
 	};
 }

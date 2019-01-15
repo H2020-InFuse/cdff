@@ -54,6 +54,7 @@ namespace FeaturesDescription2D
 
 		private:
 
+			//DFN Parameters
 			struct OrbOptionsSet
 			{
 				int edgeThreshold;
@@ -71,16 +72,20 @@ namespace FeaturesDescription2D
 			OrbOptionsSet parameters;
 			static const OrbOptionsSet DEFAULT_PARAMETERS;
 
+			//External conversion helpers			
 			Converters::FrameToMatConverter frameToMat;
 			Converters::MatToVisualPointFeatureVector2DConverter matToVisualPointFeatureVector2D;
 
-			cv::Mat ComputeOrbFeatures(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector);
+			//Type conversion methods
+			static int ConvertToScoreType(const std::string& scoreType);
 			std::vector<cv::KeyPoint> Convert(const VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2D& featuresVector);
 
+			//Core computation methods
+			cv::Mat ComputeOrbFeatures(cv::Mat inputImage, std::vector<cv::KeyPoint> keypointsVector);
+
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat inputImage, const std::vector<cv::KeyPoint>& keypointsVector);
-
-			static int ConvertToScoreType(const std::string& scoreType);
 	};
 }
 }

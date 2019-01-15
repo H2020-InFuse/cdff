@@ -94,6 +94,19 @@ const Icp3D::IcpOptionsSet Icp3D::DEFAULT_PARAMETERS =
 	/*.euclideanFitnessEpsilon =*/ 1.0
 };
 
+Pose3DConstPtr Icp3D::Convert(Eigen::Matrix4f eigenTransform)
+{
+	Pose3DPtr transform = new Pose3D;
+
+	Eigen::Matrix3f eigenRotationMatrix = eigenTransform.block(0,0,3,3);
+	Eigen::Quaternionf eigenRotation(eigenRotationMatrix);
+
+	SetPosition(*transform, eigenTransform(0, 3), eigenTransform(1, 3), eigenTransform(2, 3) );
+	SetOrientation(*transform, eigenRotation.x(), eigenRotation.y(), eigenRotation.z(), eigenRotation.w());
+
+	return transform;
+}
+
 /**
  * This function detects if the source pointcloud is within the sink pointcloud,
  * and computes the geometric transformation that turns the source cloud into
@@ -132,19 +145,6 @@ Pose3DConstPtr Icp3D::ComputeTransform(PointCloudWithFeatures sourceCloud, Point
 		Reset(*transform);
 		return transform;
 	}
-}
-
-Pose3DConstPtr Icp3D::Convert(Eigen::Matrix4f eigenTransform)
-{
-	Pose3DPtr transform = new Pose3D;
-
-	Eigen::Matrix3f eigenRotationMatrix = eigenTransform.block(0,0,3,3);
-	Eigen::Quaternionf eigenRotation(eigenRotationMatrix);
-
-	SetPosition(*transform, eigenTransform(0, 3), eigenTransform(1, 3), eigenTransform(2, 3) );
-	SetOrientation(*transform, eigenRotation.x(), eigenRotation.y(), eigenRotation.z(), eigenRotation.w());
-
-	return transform;
 }
 
 void Icp3D::ValidateParameters()
