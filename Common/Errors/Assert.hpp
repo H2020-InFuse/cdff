@@ -58,6 +58,12 @@ class AssertException: public std::exception
  * --------------------------------------------------------------------------
  */
 
+#ifndef TESTING
+	#define ABORT_PROGRAM() exit(EXIT_FAILURE);
+#else
+	#define ABORT_PROGRAM() throw AssertException();
+#endif
+
 #define PRINT_ERROR(message) \
 	{ \
 	LoggerFactory::GetLogger()->AddEntry(message, Logger::MessageType::ERROR); \

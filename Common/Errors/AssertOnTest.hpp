@@ -26,7 +26,6 @@
 
 #ifndef TESTING //This will be active only on testing
 
-	#define ABORT_PROGRAM() exit(EXIT_FAILURE);
 	#define ASSERT_ON_TEST(condition, message)
 	#define DEBUG_WRITE_TO_LOG(message, value)
 	#define DEBUG_PRINT_LOG()
@@ -38,7 +37,6 @@
 
 #include "Assert.hpp"
 
-	#define ABORT_PROGRAM() throw AssertException();
 	#define ASSERT_ON_TEST(condition, message) ASSERT(condition, message)
 	#define DEBUG_WRITE_TO_LOG(message, value) WRITE_TO_LOG(message, value)
 	#define DEBUG_PRINT_LOG() PRINT_LOG()
