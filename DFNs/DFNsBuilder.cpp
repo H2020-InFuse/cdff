@@ -9,7 +9,7 @@
 
 #include <DFNsBuilder.hpp>
 
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 #include <BundleAdjustment/SvdDecomposition.hpp>
 #include <CamerasTransformEstimation/EssentialMatrixDecomposition.hpp>
 #include <ColorConversion/ColorConversion.hpp>
@@ -42,12 +42,12 @@
 #include <PrimitiveMatching/HuInvariants.hpp>
 #endif
 
-#ifdef WITH_CERES
+#ifdef HAVE_CERES
 #include <BundleAdjustment/CeresAdjustment.hpp>
 #include <Transform3DEstimation/CeresEstimation.hpp>
 #endif
 
-#ifdef WITH_PCL
+#ifdef HAVE_PCL
 #include <FeaturesDescription3D/ShotDescriptor3D.hpp>
 #include <FeaturesDescription3D/PfhDescriptor3D.hpp>
 #include <FeaturesExtraction3D/HarrisDetector3D.hpp>
@@ -64,19 +64,19 @@
 #include <PointCloudAssembly/VoxelBinning.hpp>
 #endif
 
-#ifdef WITH_POINTMATCHER
+#ifdef HAVE_POINTMATCHER
 #include <Registration3D/IcpMatcher.hpp>
 #include <PointCloudAssembly/MatcherAssembly.hpp>
 #endif
 
-#ifdef WITH_CLOUDCOMPARE
+#ifdef HAVE_CLOUDCOMPARE
 #include <Registration3D/IcpCC.hpp>
 #endif
 
 #include <FeaturesMatching3D/BestDescriptorMatch.hpp>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
 
-#ifdef WITH_EDRES
+#ifdef HAVE_EDRES
 #include <ImageDegradation/ImageDegradationEdres.hpp>
 #include <DisparityImage/DisparityImageEdres.hpp>
 #include <DisparityFiltering/DisparityFilteringEdres.hpp>
@@ -234,13 +234,13 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 
 BundleAdjustmentInterface* DFNsBuilder::CreateBundleAdjustment(const std::string& dfnImplementation)
 {
-#ifdef WITH_CERES
+#ifdef HAVE_CERES
 	if (dfnImplementation == "CeresAdjustment")
 	{
 		return new BundleAdjustment::CeresAdjustment;
 	}
 #endif
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "SvdDecomposition")
 	{
 		return new BundleAdjustment::SvdDecomposition;
@@ -252,7 +252,7 @@ BundleAdjustmentInterface* DFNsBuilder::CreateBundleAdjustment(const std::string
 
 CamerasTransformEstimationInterface* DFNsBuilder::CreateCamerasTransformEstimation(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "EssentialMatrixDecomposition")
 	{
 		return new CamerasTransformEstimation::EssentialMatrixDecomposition;
@@ -264,7 +264,7 @@ CamerasTransformEstimationInterface* DFNsBuilder::CreateCamerasTransformEstimati
 
 ColorConversionInterface* DFNsBuilder::CreateColorConversion(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "ColorConversion")
 	{
 		return new ColorConversion::ColorConversion;
@@ -276,13 +276,13 @@ ColorConversionInterface* DFNsBuilder::CreateColorConversion(const std::string& 
 
 DisparityImageInterface* DFNsBuilder::CreateDisparityImage(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
     if (dfnImplementation == "DisparityImage")
     {
         return new DisparityImage::DisparityImage;
     }
 #endif
-#ifdef WITH_EDRES
+#ifdef HAVE_EDRES
     if (dfnImplementation == "DisparityImageEdres")
     {
         return new DisparityImage::DisparityImageEdres;
@@ -294,7 +294,7 @@ DisparityImageInterface* DFNsBuilder::CreateDisparityImage(const std::string& df
 
 DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::string& dfnImplementation)
 {
-#ifdef WITH_EDRES
+#ifdef HAVE_EDRES
     if (dfnImplementation == "DisparityFilteringEdres")
     {
         return new DisparityFiltering::DisparityFilteringEdres;
@@ -306,13 +306,13 @@ DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::st
 
 DisparityToPointCloudInterface* DFNsBuilder::CreateDisparityToPointCloud(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
     if (dfnImplementation == "DisparityToPointCloud")
     {
         return new DisparityToPointCloud::DisparityToPointCloud;
     }
 #endif
-#ifdef WITH_EDRES
+#ifdef HAVE_EDRES
     if (dfnImplementation == "DisparityToPointCloudEdres")
     {
         return new DisparityToPointCloud::DisparityToPointCloudEdres;
@@ -324,13 +324,13 @@ DisparityToPointCloudInterface* DFNsBuilder::CreateDisparityToPointCloud(const s
 
 DisparityToPointCloudWithIntensityInterface* DFNsBuilder::CreateDisparityToPointCloudWithIntensity(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
     if (dfnImplementation == "DisparityToPointCloudWithIntensity")
     {
         return new DisparityToPointCloudWithIntensity::DisparityToPointCloudWithIntensity;
     }
 #endif
-#if WITH_EDRES
+#if HAVE_EDRES
     if (dfnImplementation == "DisparityToPointCloudWithIntensityEdres")
     {
         return new DisparityToPointCloudWithIntensity::DisparityToPointCloudWithIntensityEdres;
@@ -342,7 +342,7 @@ DisparityToPointCloudWithIntensityInterface* DFNsBuilder::CreateDisparityToPoint
 
 FeaturesDescription2DInterface* DFNsBuilder::CreateFeaturesDescription2D(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "OrbDescriptor")
 	{
 		return new FeaturesDescription2D::OrbDescriptor;
@@ -354,7 +354,7 @@ FeaturesDescription2DInterface* DFNsBuilder::CreateFeaturesDescription2D(const s
 
 FeaturesDescription3DInterface* DFNsBuilder::CreateFeaturesDescription3D(const std::string& dfnImplementation)
 {
-#ifdef WITH_PCL
+#ifdef HAVE_PCL
 	if (dfnImplementation == "ShotDescriptor3D")
 	{
 		return new FeaturesDescription3D::ShotDescriptor3D;
@@ -370,7 +370,7 @@ FeaturesDescription3DInterface* DFNsBuilder::CreateFeaturesDescription3D(const s
 
 FeaturesExtraction2DInterface* DFNsBuilder::CreateFeaturesExtraction2D(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "HarrisDetector2D")
 	{
 		return new FeaturesExtraction2D::HarrisDetector2D;
@@ -386,7 +386,7 @@ FeaturesExtraction2DInterface* DFNsBuilder::CreateFeaturesExtraction2D(const std
 
 FeaturesExtraction3DInterface* DFNsBuilder::CreateFeaturesExtraction3D(const std::string& dfnImplementation)
 {
-#ifdef WITH_PCL
+#ifdef HAVE_PCL
 	if (dfnImplementation == "HarrisDetector3D")
 	{
 		return new FeaturesExtraction3D::HarrisDetector3D;
@@ -406,7 +406,7 @@ FeaturesExtraction3DInterface* DFNsBuilder::CreateFeaturesExtraction3D(const std
 
 FeaturesMatching2DInterface* DFNsBuilder::CreateFeaturesMatching2D(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "FlannMatcher")
 	{
 		return new FeaturesMatching2D::FlannMatcher;
@@ -418,7 +418,7 @@ FeaturesMatching2DInterface* DFNsBuilder::CreateFeaturesMatching2D(const std::st
 
 FeaturesMatching3DInterface* DFNsBuilder::CreateFeaturesMatching3D(const std::string& dfnImplementation)
 {
-#ifdef WITH_PCL
+#ifdef HAVE_PCL
 	if (dfnImplementation == "Icp3D")
 	{
 		return new FeaturesMatching3D::Icp3D;
@@ -438,7 +438,7 @@ FeaturesMatching3DInterface* DFNsBuilder::CreateFeaturesMatching3D(const std::st
 
 FundamentalMatrixComputationInterface* DFNsBuilder::CreateFundamentalMatrixComputation(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "FundamentalMatrixRansac")
 	{
 		return new FundamentalMatrixComputation::FundamentalMatrixRansac;
@@ -450,13 +450,13 @@ FundamentalMatrixComputationInterface* DFNsBuilder::CreateFundamentalMatrixCompu
 
 ImageDegradationInterface* DFNsBuilder::CreateImageDegradation(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
     if (dfnImplementation == "ImageDegradation")
     {
         return new ImageDegradation::ImageDegradation;
     }
 #endif
-#ifdef WITH_EDRES
+#ifdef HAVE_EDRES
     if (dfnImplementation == "ImageDegradationEdres")
     {
         return new ImageDegradation::ImageDegradationEdres;
@@ -468,7 +468,7 @@ ImageDegradationInterface* DFNsBuilder::CreateImageDegradation(const std::string
 
 ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "ImageUndistortion")
 	{
 		return new ImageFiltering::ImageUndistortion;
@@ -504,13 +504,13 @@ ImageFilteringInterface* DFNsBuilder::CreateImageFiltering(const std::string& df
 
 ImageRectificationInterface* DFNsBuilder::CreateImageRectification(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
     if (dfnImplementation == "ImageRectification")
     {
         return new ImageRectification::ImageRectification;
     }
 #endif
-#ifdef WITH_EDRES
+#ifdef HAVE_EDRES
     if (dfnImplementation == "ImageRectificationEdres")
     {
         return new ImageRectification::ImageRectificationEdres;
@@ -522,7 +522,7 @@ ImageRectificationInterface* DFNsBuilder::CreateImageRectification(const std::st
 
 PerspectiveNPointSolvingInterface* DFNsBuilder::CreatePerspectiveNPointSolving(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "IterativePnpSolver")
 	{
 		return new PerspectiveNPointSolving::IterativePnpSolver;
@@ -534,7 +534,7 @@ PerspectiveNPointSolvingInterface* DFNsBuilder::CreatePerspectiveNPointSolving(c
 
 PointCloudReconstruction2DTo3DInterface* DFNsBuilder::CreatePointCloudReconstruction2DTo3D(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "Triangulation")
 	{
 		return new PointCloudReconstruction2DTo3D::Triangulation;
@@ -546,7 +546,7 @@ PointCloudReconstruction2DTo3DInterface* DFNsBuilder::CreatePointCloudReconstruc
 
 PrimitiveMatchingInterface* DFNsBuilder::CreatePrimitiveMatching(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "HuInvariants")
 	{
 		return new PrimitiveMatching::HuInvariants;
@@ -558,19 +558,19 @@ PrimitiveMatchingInterface* DFNsBuilder::CreatePrimitiveMatching(const std::stri
 
 Registration3DInterface* DFNsBuilder::CreateRegistration3D(const std::string& dfnImplementation)
 {
-#ifdef WITH_PCL
+#ifdef HAVE_PCL
 	if (dfnImplementation == "Icp3D")
 	{
 		return new Registration3D::Icp3D;
 	}
 #endif
-#ifdef WITH_CLOUDCOMPARE
+#ifdef HAVE_CLOUDCOMPARE
 	if (dfnImplementation == "IcpCC")
 	{
 		return new Registration3D::IcpCC;
 	}
 #endif
-#ifdef WITH_POINTMATCHER
+#ifdef HAVE_POINTMATCHER
 	if (dfnImplementation == "IcpMatcher")
 	{
 		return new Registration3D::IcpMatcher;
@@ -582,13 +582,13 @@ Registration3DInterface* DFNsBuilder::CreateRegistration3D(const std::string& df
 
 StereoDegradationInterface* DFNsBuilder::CreateStereoDegradation(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
     if (dfnImplementation == "StereoDegradation")
     {
         return new StereoDegradation::StereoDegradation;
     }
 #endif
-#ifdef WITH_EDRES
+#ifdef HAVE_EDRES
     if (dfnImplementation == "StereoDegradationEdres")
     {
         return new StereoDegradation::StereoDegradationEdres;
@@ -600,7 +600,7 @@ StereoDegradationInterface* DFNsBuilder::CreateStereoDegradation(const std::stri
 
 StereoMotionEstimationInterface* DFNsBuilder::CreateStereoMotionEstimation(const std::string& dfnImplementation)
 {
-#ifdef WITH_EDRES
+#ifdef HAVE_EDRES
     if (dfnImplementation == "StereoMotionEstimation")
     {
         return new StereoMotionEstimation::StereoMotionEstimationEdres;
@@ -612,7 +612,7 @@ StereoMotionEstimationInterface* DFNsBuilder::CreateStereoMotionEstimation(const
 
 StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "DisparityMapping")
 	{
 		return new StereoReconstruction::DisparityMapping;
@@ -622,7 +622,7 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(const std
 		return new StereoReconstruction::HirschmullerDisparityMapping;
 	}
 #endif
-#ifdef WITH_PCL
+#ifdef HAVE_PCL
 	if (dfnImplementation == "ScanlineOptimization")
 	{
 		return new StereoReconstruction::ScanlineOptimization;
@@ -634,13 +634,13 @@ StereoReconstructionInterface* DFNsBuilder::CreateStereoReconstruction(const std
 
 StereoRectificationInterface* DFNsBuilder::CreateStereoRectification(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
     if (dfnImplementation == "StereoRectification")
     {
         return new StereoRectification::StereoRectification;
     }
 #endif
-#ifdef WITH_EDRES
+#ifdef HAVE_EDRES
     if (dfnImplementation == "StereoRectificationEdres")
     {
         return new StereoRectification::StereoRectificationEdres;
@@ -652,13 +652,13 @@ StereoRectificationInterface* DFNsBuilder::CreateStereoRectification(const std::
 
 Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(const std::string& dfnImplementation)
 {
-#ifdef WITH_CERES
+#ifdef HAVE_CERES
 	if (dfnImplementation == "CeresEstimation")
 	{
 		return new Transform3DEstimation::CeresEstimation;
 	}
 #endif
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "LeastSquaresMinimization")
 	{
 		return new Transform3DEstimation::LeastSquaresMinimization;
@@ -670,7 +670,7 @@ Transform3DEstimationInterface* DFNsBuilder::CreateTransform3DEstimation(const s
 
 DepthFilteringInterface* DFNsBuilder::CreateDepthFiltering(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "ConvolutionFilter")
 	{
 		return new DepthFiltering::ConvolutionFilter();
@@ -692,7 +692,7 @@ ForceMeshGeneratorInterface* DFNsBuilder::CreateForceMeshGenerator(const std::st
 
 PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(const std::string& dfnImplementation)
 {
-#ifdef WITH_PCL
+#ifdef HAVE_PCL
 	if (dfnImplementation == "NeighbourPointAverage")
 	{
 		return new PointCloudAssembly::NeighbourPointAverage;
@@ -706,7 +706,7 @@ PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(const std::st
 		return new PointCloudAssembly::NeighbourSinglePointAverage;
 	}
 #endif
-#ifdef WITH_POINTMATCHER
+#ifdef HAVE_POINTMATCHER
 	if (dfnImplementation == "MatcherAssembly")
 	{
 		return new PointCloudAssembly::MatcherAssembly;
@@ -719,7 +719,7 @@ PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(const std::st
 
 PointCloudTransformInterface* DFNsBuilder::CreatePointCloudTransform(const std::string& dfnImplementation)
 {
-#ifdef WITH_PCL
+#ifdef HAVE_PCL
 	if (dfnImplementation == "CartesianSystemTransform")
 	{
 		return new PointCloudTransform::CartesianSystemTransform;
@@ -731,7 +731,7 @@ PointCloudTransformInterface* DFNsBuilder::CreatePointCloudTransform(const std::
 
 VoxelizationInterface* DFNsBuilder::CreateVoxelization(const std::string& dfnImplementation)
 {
-#ifdef WITH_OPENCV
+#ifdef HAVE_OPENCV
 	if (dfnImplementation == "Octree")
 	{
 		return new Voxelization::Octree;
@@ -743,7 +743,7 @@ VoxelizationInterface* DFNsBuilder::CreateVoxelization(const std::string& dfnImp
 
 PointCloudFilteringInterface* DFNsBuilder::CreatePointCloudFiltering(const std::string& dfnImplementation)
 {
-#ifdef WITH_PCL
+#ifdef HAVE_PCL
 	if (dfnImplementation == "StatisticalOutlierRemoval")
 	{
 		return new PointCloudFiltering::StatisticalOutlierRemoval;

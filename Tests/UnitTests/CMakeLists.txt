@@ -129,7 +129,7 @@ if(Edres-Wrapper_FOUND)
     )
 endif()
 
-if(WITH_OPENCV_CONTRIB)
+if(HAVE_OPENCV_CONTRIB)
     set(unittest_sources ${unittest_sources}
         DFNs/LinemodDetect/LinemodDetect.cpp
     )
