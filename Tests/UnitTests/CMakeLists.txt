@@ -38,6 +38,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
     DFNs/FeaturesDescription2D/OrbDescriptor.cpp
     DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
+    DFNs/FeaturesDescription3D/PfhDescriptor3D.cpp
     DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
     DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
     DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
@@ -84,6 +85,8 @@ set(unittest_sources UnitTests.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences3DRecorder.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
+    DFPCs/ModelBasedTracker/WheelTracker.cpp
+    DFPCs/ModelBasedTracker/WheeledRobotTracker.cpp
 )
 
 if(WITH_EDRES)
@@ -170,6 +173,7 @@ set(unittest_libraries catch
     cdff_dfpc_reconstruction_3d
     cdff_dfpc_point_cloud_model_localisation
     cdff_dfpc_haptic_scanning
+    cdff_dfpc_model_based_tracker
 )
 
 if(WITH_OPENCV_CONTRIB)
