@@ -86,10 +86,14 @@ BaseTypesWrapper::T_UInt32 GetNumberOfPoses(const Poses3DSequence& posesSequence
 }
 
 BitStream ConvertToBitStream(const Poses3DSequence& sequence)
-	CONVERT_TO_BIT_STREAM(sequence, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccPosesSequence_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(sequence, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccPosesSequence_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, Poses3DSequence& sequence)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccPosesSequence_Decode)
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccPosesSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccPosesSequence_Decode);
+	}
 
 }
 

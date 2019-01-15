@@ -305,10 +305,14 @@ T_Double GetRotation(const Pose2D& pose)
 }
 
 BitStream ConvertToBitStream(const Pose2D& pose)
-	CONVERT_TO_BIT_STREAM(pose, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose2D_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(pose, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose2D_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, Pose2D& pose)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, pose, asn1SccPose2D_Decode)
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, pose, asn1SccPose2D_Decode);
+	}
 
 }
 

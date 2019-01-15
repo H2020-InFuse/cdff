@@ -131,10 +131,13 @@ void RemoveCorrespondences(CorrespondenceMaps3DSequence& correspondenceMapsSeque
 	}
 
 BitStream ConvertToBitStream(const CorrespondenceMaps3DSequence& sequence)
-	CONVERT_TO_BIT_STREAM(sequence, asn1SccCorrespondenceMaps3DSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMaps3DSequence_Encode)
-
+	{
+	return BaseTypesWrapper::ConvertToBitStream(sequence, asn1SccCorrespondenceMaps3DSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMaps3DSequence_Encode);
+	}
 void ConvertFromBitStream(BitStream bitStream, CorrespondenceMaps3DSequence& sequence)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccCorrespondenceMaps3DSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccCorrespondenceMaps3DSequence_Decode)
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccCorrespondenceMaps3DSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccCorrespondenceMaps3DSequence_Decode);
+	}
 
 }
 

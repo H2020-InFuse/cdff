@@ -195,11 +195,14 @@ float GetDescriptorComponent(const VisualPointFeatureVector3D& featuresVector, i
 }
 
 BitStream ConvertToBitStream(const VisualPointFeatureVector3D& vector)
-	CONVERT_TO_BIT_STREAM(vector, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccVisualPointFeatureVector3D_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(vector, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccVisualPointFeatureVector3D_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, VisualPointFeatureVector3D& vector)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, vector, asn1SccVisualPointFeatureVector3D_Decode)
-
+	{	
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, vector, asn1SccVisualPointFeatureVector3D_Decode);
+	}
 }
 
 /** @} */

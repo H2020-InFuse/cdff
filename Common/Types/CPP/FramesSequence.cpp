@@ -87,10 +87,14 @@ BaseTypesWrapper::T_UInt32 GetNumberOfFrames(const FramesSequence& framesSequenc
 }
 
 BitStream ConvertToBitStream(const FramesSequence& sequence)
-	CONVERT_TO_BIT_STREAM(sequence, asn1SccFramesSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccFramesSequence_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(sequence, asn1SccFramesSequence_REQUIRED_BYTES_FOR_ENCODING, asn1SccFramesSequence_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, FramesSequence& sequence)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccFramesSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccFramesSequence_Decode)
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccFramesSequence_REQUIRED_BYTES_FOR_ENCODING, sequence, asn1SccFramesSequence_Decode);
+	}
 
 }
 

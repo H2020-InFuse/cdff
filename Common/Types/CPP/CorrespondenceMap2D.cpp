@@ -135,12 +135,12 @@ void RemoveCorrespondences(CorrespondenceMap2D& correspondenceMap, std::vector<B
 
 BitStream ConvertToBitStream(const CorrespondenceMap2D& map)
 	{
-	BaseTypesWrapper::ConvertToBitStream(map, asn1SccCorrespondenceMap2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMap2D_Encode)
+	return BaseTypesWrapper::ConvertToBitStream(map, asn1SccCorrespondenceMap2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMap2D_Encode);
 	}
 
 void ConvertFromBitStream(BitStream bitStream, CorrespondenceMap2D& map)
 	{
-	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccCorrespondenceMap2D_REQUIRED_BYTES_FOR_ENCODING, map, asn1SccCorrespondenceMap2D_Decode)
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccCorrespondenceMap2D_REQUIRED_BYTES_FOR_ENCODING, map, asn1SccCorrespondenceMap2D_Decode);
 	}
 }
 
