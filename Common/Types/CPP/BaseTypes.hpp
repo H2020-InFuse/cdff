@@ -67,6 +67,28 @@ void AllocateBitStreamBufferForEncoding(BitStream& bitStream, long size);
 void PrepareBitStreamBufferForDeconding(BitStream& bitStream, long size);
 void DeallocateBitStreamBuffer(BitStream& bitStream);
 
+template <typename T>
+BitStream ConvertToBitStream(T inputData, long bitStreamSize, bool (*encodeMethod) (T*, BitStream*, int*, bool) )
+	{
+	BitStream bitStream;
+	AllocateBitStreamBufferForEncoding(bitStream, bitStreamSize );
+
+	int errorCode = 0;
+	bool success = encodeMethod(&inputData, &bitStream, &errorCode, true);
+
+	ASSERT(success && (errorCode == 0), "Error while executing #conversionMethod");
+	return bitStream;
+	}
+
+template <typename T>
+void ConvertFromBitStream(BitStream inputBitStream, long bitStreamSize, T outputData, bool (*decodeMethod) (T*, BitStream*, int*) )
+	{
+	PrepareBitStreamBufferForDeconding(inputBitStream, bitStreamSize);
+	int errorCode = 0;
+	bool success = decodeMethod(&outputData, &inputBitStream, &errorCode);
+	ASSERT(success && (errorCode == 0), "Error while executing #conversionMethod");
+	}
+
 #define CONVERT_TO_BIT_STREAM(inputData, bitStreamSize, encodeMethod) \
 	{ \
 	BitStream bitStream; \
