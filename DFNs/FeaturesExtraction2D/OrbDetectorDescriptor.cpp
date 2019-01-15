@@ -82,6 +82,19 @@ const OrbDetectorDescriptor::OrbOptionsSet OrbDetectorDescriptor::DEFAULT_PARAME
 	/*.sizeOfBrightnessTestSet =*/ 2
 };
 
+int OrbDetectorDescriptor::ConvertToScoreType(const std::string& scoreType)
+{
+	if (scoreType == "HarrisScore" || scoreType == "0")
+	{
+		return cv::ORB::HARRIS_SCORE;
+	}
+	if (scoreType == "FastScore" || scoreType == "1")
+	{
+		return cv::ORB::FAST_SCORE;
+	}
+	ASSERT(false, "Orb Detector Descriptor Configuration Error: Score type should be either HarrisScore or FastScore (1, or 2)");
+}
+
 cv::Mat OrbDetectorDescriptor::ComputeOrbFeatures(cv::Mat inputImage)
 {
 	cv::Ptr<cv::ORB> orb = cv::ORB::create();
@@ -138,19 +151,6 @@ void OrbDetectorDescriptor::ValidateInputs(cv::Mat inputImage)
 {
 	ASSERT(inputImage.type() == CV_8UC3 || inputImage.type() == CV_8UC1, "OrbDetectorDescriptor error: input image is not of type CV_8UC3 or CV_8UC1");
 	ASSERT(inputImage.rows > 0 && inputImage.cols > 0, "OrbDetectorDescriptor error: input image is empty");
-}
-
-int OrbDetectorDescriptor::ConvertToScoreType(const std::string& scoreType)
-{
-	if (scoreType == "HarrisScore" || scoreType == "0")
-	{
-		return cv::ORB::HARRIS_SCORE;
-	}
-	if (scoreType == "FastScore" || scoreType == "1")
-	{
-		return cv::ORB::FAST_SCORE;
-	}
-	ASSERT(false, "Orb Detector Descriptor Configuration Error: Score type should be either HarrisScore or FastScore (1, or 2)");
 }
 
 }

@@ -1,0 +1,12 @@
+FROM nexus.spaceapplications.com/repository/infuse/cdff-base:latest
+
+ARG INSTALL_DIR=/usr/local
+ENV INSTALL_CDFF=$INSTALL_DIR
+
+COPY installers/ /tmp/CDFF/Tools/Docker/installers/
+
+RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv_contrib
+
+LABEL version="1.1"
+LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
+LABEL description="A self-contained environment for building and testing some DFN's"

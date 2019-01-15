@@ -8,7 +8,7 @@
  */
 
 #include "Matrix.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 
 namespace MatrixWrapper
 {
@@ -49,7 +49,7 @@ Matrix3dPtr NewMatrix3d(InitializationType initializationType)
 		}
 		default:
 		{
-			ASSERT(false, "Matrix3d, unhandled initialization type");
+			ASSERT_ON_TEST(false, "Matrix3d, unhandled initialization type");
 		}
 	}
 
@@ -107,10 +107,14 @@ void SetElement(Matrix3d& matrix, unsigned rowIndex, unsigned columnIndex, T_Dou
 }
 
 BitStream ConvertToBitStream(const Matrix3d& matrix)
-	CONVERT_TO_BIT_STREAM(matrix, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING, asn1SccMatrix3d_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(matrix, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING, asn1SccMatrix3d_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, Matrix3d& matrix)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING, matrix, asn1SccMatrix3d_Decode)
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccMatrix3d_REQUIRED_BYTES_FOR_ENCODING, matrix, asn1SccMatrix3d_Decode);
+	}
 
 }
 

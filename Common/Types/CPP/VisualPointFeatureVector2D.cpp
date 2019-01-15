@@ -8,7 +8,7 @@
  */
 
 #include "VisualPointFeatureVector2D.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 #include "BaseTypes.hpp"
 
 using namespace BaseTypesWrapper;
@@ -112,11 +112,14 @@ float GetDescriptorComponent(const VisualPointFeatureVector2D& featuresVector, i
 }
 
 BitStream ConvertToBitStream(const VisualPointFeatureVector2D& vector)
-	CONVERT_TO_BIT_STREAM(vector, asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccVisualPointFeatureVector2D_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(vector, asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccVisualPointFeatureVector2D_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, VisualPointFeatureVector2D& vector)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING, vector, asn1SccVisualPointFeatureVector2D_Decode)
-
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccVisualPointFeatureVector2D_REQUIRED_BYTES_FOR_ENCODING, vector, asn1SccVisualPointFeatureVector2D_Decode);
+	}
 }
 
 /** @} */

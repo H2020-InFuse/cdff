@@ -70,11 +70,16 @@ namespace PointCloudAssembly
 			NeighbourSinglePointAverageOptionsSet parameters;
 			static const NeighbourSinglePointAverageOptionsSet DEFAULT_PARAMETERS;
 
+			//Variable for input-output handling
+			pcl::PointCloud<pcl::PointXYZ>::ConstPtr firstCloud; //first operand of the merge
+			pcl::PointCloud<pcl::PointXYZ>::ConstPtr secondCloud; //second operand of the merge
+			pcl::PointCloud<pcl::PointXYZ>::Ptr assembledCloud; //result of the merge
+
+			//Variable for storage
+			pcl::PointCloud<pcl::PointXYZ>::Ptr storedCloud; //result of previous operations
+
+			//External conversion helpers
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
-			pcl::PointCloud<pcl::PointXYZ>::ConstPtr firstCloud;
-			pcl::PointCloud<pcl::PointXYZ>::ConstPtr secondCloud;
-			pcl::PointCloud<pcl::PointXYZ>::Ptr storedCloud;
-			pcl::PointCloud<pcl::PointXYZ>::Ptr assembledCloud;
 
 			//For some index x in first cloud, bijectiveCorrespondenceMap[x] is the index y in second cloud such that (i) the distance between x and y is smaller than maxNeighbourDistance,
 			// and (ii) there is no other index y' in second cloud such that the distance between x and y' is smaller than the distance between x and y,
@@ -94,13 +99,16 @@ namespace PointCloudAssembly
 			void AssemblePointCloud();
 			void AssembleLeftoverPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const std::map<int, pcl::PointXYZ >& replacementMap, bool ignoreCloseUmantchedPoints = false);
 
+			//Other Core computation methods
 			pcl::PointXYZ ComputeAveragePoint(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud, const std::vector<int>& indexList);
 			pcl::PointXYZ ComputeAveragePoint(const pcl::PointXYZ& firstPoint, const pcl::PointXYZ& secondPoint);
 			pcl::PointXYZ DisplacePointBySameDistance(const pcl::PointXYZ& pointToDisplace, const pcl::PointXYZ& startDistanceReference, const pcl::PointXYZ& endDistanceReference);
-
-			void PrepareOutAssembledPointCloud();
 			void AddNewMatchToCorrespondenceMap(Correspondence newCorrespondence);
 
+			//This method converts the output to the expected output type.
+			void PrepareOutAssembledPointCloud();
+
+			//Input Validation methods
 			void ValidateParameters();
 	};
 }

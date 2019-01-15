@@ -98,7 +98,7 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
 
 2. Create a Docker container from that image, mounting your code repository inside it at the same time.
 
-    It is worth defining an alias for this long command in one of your shell startup files, for instance `~/.bashrc` if you use `bash`. Have a look at the file [`Tools/Docker/docker_aliases.template`](/Tools/Docker/docker_aliases.template) for a suggested solution that you can copy-paste into one of your shell startup files.
+    It is worth defining an alias for this long command in one of your shell startup files, for instance `~/.bashrc` or `~/.bash_aliases` if you use `bash`. Have a look at the file [`Tools/Docker/docker_aliases.template`](/Tools/Docker/docker_aliases.template) for a suggested solution that you can copy-paste into one of your shell startup files.
 
     ```shell
     $ sudo -H docker run
@@ -107,7 +107,7 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
       --name=container-name --hostname=container-hostname \
 
       # Optional: if you need graphics display
-      --env=DISPLAY=$DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
+      --env=DISPLAY=${DISPLAY} --volume=/tmp/.X11-unix:/tmp/.X11-unix \
 
       # Optional: allow messages from inside the container to be logged outside
       --volume=/dev/log:/dev/log \
@@ -121,16 +121,16 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
       # Recommended: be the same user inside your container as outside
       --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
       --volume=/etc/shadow:/etc/shadow:ro --volume=/etc/gshadow:/etc/gshadow:ro \
-      --user=$(id -u $(whoami)):$(id -g $(whoami)) \
+      --user=$(id -u):$(id -g) \
 
       # Recommended: use an init process and delete your container when you exit it
       --init --rm \
 
       # Mandatory: mount your local CDFF-core+support repository inside your container
-      --volume=/absolute/path/to/CDFF/repository:/where/i/want/it/in/the/container \
+      --volume=/absolute/path/to/CDFF:/where/i/want/it/in/the/container \
 
       # Optional: also mount your local CDFF-dev repository if you want to use CDFF-dev
-      --volume=/absolute/path/to/CDFF-dev/repository:/where/i/want/it/in/the/container \
+      --volume=/absolute/path/to/CDFF-dev:/where/i/want/it/in/the/container \
 
       # Mandatory: interactively use a terminal in your container
       --interactive --tty \

@@ -46,6 +46,7 @@ namespace Registration3D
 
 		private:
 
+			//DFN Parameters
 			struct IcpOptionsSet
 			{
 				double maxCorrespondenceDistance;
@@ -58,11 +59,14 @@ namespace Registration3D
 			IcpOptionsSet parameters;
 			static const IcpOptionsSet DEFAULT_PARAMETERS;
 
+			//External conversion helpers			
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 			Converters::EigenTransformToTransform3DConverter eigenTransformToTransform3D;
 
+			//Core computation methods
 			PoseWrapper::Pose3DConstPtr ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
 
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::ConstPtr sinkCloud);
 			void ValidateCloud(pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud);

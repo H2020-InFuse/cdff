@@ -122,41 +122,6 @@ const ScanlineOptimization::ScanlineOptimizationOptionsSet ScanlineOptimization:
 	}
 };
 
-ScanlineOptimization::PclPointCloudPtr ScanlineOptimization::ComputePointCloud(PclImagePtr leftImage, PclImagePtr rightImage)
-{
-	pcl::AdaptiveCostSOStereoMatching stereo;
-	stereo.setRadius(parameters.costAggregationRadius);
-	stereo.setGammaS(parameters.spatialBandwidth);
-	stereo.setGammaC(parameters.colorBandwidth);
-	stereo.setSmoothWeak(parameters.strongSmoothnessPenalty);
-	stereo.setSmoothStrong(parameters.weakSmoothnessPenalty);
-
-	stereo.setMaxDisparity(parameters.matchingOptionsSet.numberOfDisparities);
-	stereo.setXOffset(parameters.matchingOptionsSet.horizontalOffset);
-	stereo.setRatioFilter(parameters.matchingOptionsSet.ratioFilter);
-	stereo.setPeakFilter(parameters.matchingOptionsSet.peakFilter);
-	stereo.setPreProcessing(parameters.matchingOptionsSet.usePreprocessing);
-	stereo.setLeftRightCheck(parameters.matchingOptionsSet.useLeftRightConsistencyCheck);
-	stereo.setLeftRightCheckThreshold(parameters.matchingOptionsSet.leftRightConsistencyThreshold);
-
-	stereo.compute(*leftImage, *rightImage);
-
-	PclImagePtr visualMap(new PclImage);
-	stereo.getVisualMap(visualMap);
-
-	PclPointCloudPtr pointCloud(new PclPointCloud);
-	stereo.getPointCloud
-		(
-		parameters.cameraParameters.leftPrinciplePointX,
-		parameters.cameraParameters.leftPrinciplePointY,
-		parameters.cameraParameters.leftFocalLength,
-		parameters.cameraParameters.baseline,
-		pointCloud
-		);
-
-	return pointCloud;
-}
-
 ScanlineOptimization::PclImagePtr ScanlineOptimization::Convert(FrameConstPtr frame)
 {
 	PclImagePtr image(new PclImage);
@@ -242,19 +207,6 @@ PointCloudConstPtr ScanlineOptimization::SampleCloudWithVoxelGrid(PclPointCloudC
 	return sampledPointCloud;
 }
 
-void ScanlineOptimization::ValidateParameters()
-{
-	ASSERT(parameters.matchingOptionsSet.numberOfDisparities > 0, "ScanlineOptimization Configuration Error: number of disparities needs to be positive");
-	ASSERT( parameters.reconstructionSpace.limitX > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
-	ASSERT( parameters.reconstructionSpace.limitY > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
-	ASSERT( parameters.reconstructionSpace.limitZ > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
-
-	ASSERT( (parameters.voxelGridLeafSize > EPSILON && parameters.pointCloudSamplingDensity <= EPSILON) ||
-		(parameters.voxelGridLeafSize <= EPSILON && parameters.pointCloudSamplingDensity > EPSILON),
-		"DisparityMapping Configuration Error: Only one between voxelGridLeafSize and pointCloudSamplingDensity can be greater than 0");
-	ASSERT(parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
-}
-
 cv::Mat ScanlineOptimization::PclImageToCvMatrix(PclImagePtr pclImage)
 {
 	cv::Mat cvImage(pclImage->height, pclImage->width, CV_8UC3);
@@ -269,6 +221,54 @@ cv::Mat ScanlineOptimization::PclImageToCvMatrix(PclImagePtr pclImage)
 		}
 	}
 	return cvImage;
+}
+
+ScanlineOptimization::PclPointCloudPtr ScanlineOptimization::ComputePointCloud(PclImagePtr leftImage, PclImagePtr rightImage)
+{
+	pcl::AdaptiveCostSOStereoMatching stereo;
+	stereo.setRadius(parameters.costAggregationRadius);
+	stereo.setGammaS(parameters.spatialBandwidth);
+	stereo.setGammaC(parameters.colorBandwidth);
+	stereo.setSmoothWeak(parameters.strongSmoothnessPenalty);
+	stereo.setSmoothStrong(parameters.weakSmoothnessPenalty);
+
+	stereo.setMaxDisparity(parameters.matchingOptionsSet.numberOfDisparities);
+	stereo.setXOffset(parameters.matchingOptionsSet.horizontalOffset);
+	stereo.setRatioFilter(parameters.matchingOptionsSet.ratioFilter);
+	stereo.setPeakFilter(parameters.matchingOptionsSet.peakFilter);
+	stereo.setPreProcessing(parameters.matchingOptionsSet.usePreprocessing);
+	stereo.setLeftRightCheck(parameters.matchingOptionsSet.useLeftRightConsistencyCheck);
+	stereo.setLeftRightCheckThreshold(parameters.matchingOptionsSet.leftRightConsistencyThreshold);
+
+	stereo.compute(*leftImage, *rightImage);
+
+	PclImagePtr visualMap(new PclImage);
+	stereo.getVisualMap(visualMap);
+
+	PclPointCloudPtr pointCloud(new PclPointCloud);
+	stereo.getPointCloud
+		(
+		parameters.cameraParameters.leftPrinciplePointX,
+		parameters.cameraParameters.leftPrinciplePointY,
+		parameters.cameraParameters.leftFocalLength,
+		parameters.cameraParameters.baseline,
+		pointCloud
+		);
+
+	return pointCloud;
+}
+
+void ScanlineOptimization::ValidateParameters()
+{
+	ASSERT(parameters.matchingOptionsSet.numberOfDisparities > 0, "ScanlineOptimization Configuration Error: number of disparities needs to be positive");
+	ASSERT( parameters.reconstructionSpace.limitX > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
+	ASSERT( parameters.reconstructionSpace.limitY > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
+	ASSERT( parameters.reconstructionSpace.limitZ > 0, "ScanlineOptimization Configuration Error: Limits for reconstruction space have to be positive");
+
+	ASSERT( (parameters.voxelGridLeafSize > EPSILON && parameters.pointCloudSamplingDensity <= EPSILON) ||
+		(parameters.voxelGridLeafSize <= EPSILON && parameters.pointCloudSamplingDensity > EPSILON),
+		"DisparityMapping Configuration Error: Only one between voxelGridLeafSize and pointCloudSamplingDensity can be greater than 0");
+	ASSERT(parameters.pointCloudSamplingDensity <= 1, "DisparityMapping Configuration Error: pointCloudSamplingDensity has to be in the set (0, 1]");
 }
 
 }

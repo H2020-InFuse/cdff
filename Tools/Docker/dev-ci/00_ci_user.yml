@@ -1,0 +1,5 @@
+---
+- cdff/CDFF:
+  url: https://cdff-dev:cdff-dev@gitlab.spaceapplications.com/InFuse/CDFF.git
+- cdff/CDFF_dev:
+  url: https://cdff-dev:cdff-dev@gitlab.spaceapplications.com/InFuse/CDFF_dev.git

@@ -134,11 +134,14 @@ int GetNumberOfDataBytes(const Array3D& array)
 }
 
 BitStream ConvertToBitStream(const Array3D& array)
-    CONVERT_TO_BIT_STREAM(array, asn1SccArray3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccArray3D_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(array, asn1SccArray3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccArray3D_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, Array3D& array)
-    CONVERT_FROM_BIT_STREAM(bitStream, asn1SccArray3D_REQUIRED_BYTES_FOR_ENCODING, array, asn1SccArray3D_Decode)
-
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccArray3D_REQUIRED_BYTES_FOR_ENCODING, array, asn1SccArray3D_Decode);
+	}
 }
 
 /** @} */

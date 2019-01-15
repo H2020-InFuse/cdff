@@ -66,7 +66,6 @@ set(wrappers
     CPP/CorrespondenceMaps3DSequence.cpp
     CPP/Frame.cpp
     CPP/FramesSequence.cpp
-    CPP/Image.cpp
     CPP/Matrix.cpp
     CPP/PointCloud.cpp
     CPP/Pose.cpp
@@ -80,9 +79,10 @@ add_library(cdff_types
     ${datatypes}
     ${wrappers})
 
+if(TESTING)
+    target_link_libraries(cdff_types
+        PUBLIC cdff_logger)
+endif()
+
 install(TARGETS cdff_types
     DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-target_link_libraries(
-    cdff_types
-    cdff_logger
-)

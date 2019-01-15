@@ -3,6 +3,7 @@
 //
 
 #include "Frame.hpp"
+#include <Errors/Assert.hpp>
 
 namespace CDFF {
     namespace Validators {

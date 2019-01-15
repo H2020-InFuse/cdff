@@ -90,6 +90,7 @@ namespace StereoReconstruction
 
 			static const float EPSILON;
 
+			//DFN Parameters 
 			typedef pcl::PointCloud<pcl::RGB> PclImage;
 			typedef pcl::PointCloud<pcl::RGB>::Ptr PclImagePtr;
 			typedef pcl::PointCloud<pcl::RGB>::ConstPtr PclImageConstPtr;
@@ -142,17 +143,20 @@ namespace StereoReconstruction
 			ScanlineOptimizationOptionsSet parameters;
 			static const ScanlineOptimizationOptionsSet DEFAULT_PARAMETERS;
 
-			PclPointCloudPtr ComputePointCloud(PclImagePtr leftImage, PclImagePtr rightImage);
-
+			//Type conversion methods
 			PclImagePtr Convert(FrameWrapper::FrameConstPtr frame);
-
 			PointCloudWrapper::PointCloudConstPtr SampleCloud(PclPointCloudConstPtr pointCloud);
 			PointCloudWrapper::PointCloudConstPtr SampleCloudWithPeriodicSampling(PclPointCloudConstPtr pointCloud);
 			PointCloudWrapper::PointCloudConstPtr SampleCloudWithVoxelGrid(PclPointCloudConstPtr pointCloud);
 			cv::Mat PclImageToCvMatrix(PclImagePtr pclImage);
 
+			//Core computation methods
+			PclPointCloudPtr ComputePointCloud(PclImagePtr leftImage, PclImagePtr rightImage);
+
+			//Input Validation methods
 			void ValidateParameters();
 
+			//Testing methods for visualizing intermediate disparity map output.
 			#ifdef TESTING
 				#define SAVE_DISPARITY_MATRIX(visualMap) disparityMatrix = PclImageToCvMatrix(visualMap);
 			#else

@@ -1,0 +1,12 @@
+name: DisparityToPointCloud
+input_ports:
+    - name: dispImage
+      type: asn1SccFrame
+      doc: A disparity image
+output_ports:
+    - name: pointCloud
+      type: asn1SccPointcloud
+      doc: The corresponding pointcloud
+implementations:
+    - DisparityToPointCloud
+    - DisparityToPointCloudEdres

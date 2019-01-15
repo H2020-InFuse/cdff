@@ -1,0 +1,13 @@
+name: ImageRectification
+doc: DFN that rectifies an image
+input_ports:
+    - name: originalImage
+      type: asn1SccFrame
+      doc: Original distorted image
+output_ports:
+    - name: rectifiedImage
+      type: asn1SccFrame
+      doc: Undistorted/rectified image
+implementations:
+    - ImageRectification
+    - ImageRectificationEdres

@@ -1,0 +1,19 @@
+FROM nexus.spaceapplications.com/repository/infuse/cdff-base:latest
+
+## Base + single dependency
+
+ARG INSTALL_DIR=/usr/local
+ENV INSTALL_CDFF=$INSTALL_DIR
+
+SHELL ["/bin/bash", "-c"]
+
+COPY get-cdff-dependencies.sh /tmp/CDFF/Tools/Docker/
+COPY installers/ /tmp/CDFF/Tools/Docker/installers/
+COPY patches/ /tmp/CDFF/Tools/Docker/patches/
+
+RUN apt-get update && apt-get install --yes --quiet libglew-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pangolin
+
+LABEL version="1.0.1"
+LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
+LABEL description="CI + single dependency"

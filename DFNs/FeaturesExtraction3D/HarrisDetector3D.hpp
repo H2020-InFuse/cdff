@@ -62,6 +62,7 @@ namespace FeaturesExtraction3D
 
 		private:
 
+			//DFN Parameters
 			enum OutputFormat
 			{
 				POSITIONS_OUTPUT,
@@ -100,11 +101,17 @@ namespace FeaturesExtraction3D
 			HarryOptionsSet parameters;
 			static const HarryOptionsSet DEFAULT_PARAMETERS;
 
+			//External conversion helpers
 			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
 
-			pcl::PointIndicesConstPtr ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
-			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, const pcl::PointIndicesConstPtr indicesList);
+			//Type conversion methods
+			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud, 
+				const pcl::PointIndicesConstPtr indicesList);
 
+			//Core computation methods
+			pcl::PointIndicesConstPtr ComputeHarrisPoints(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
+			
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud);
 	};

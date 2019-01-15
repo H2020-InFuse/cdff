@@ -27,7 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include "EstimationFromStereo.hpp"
-#include "Errors/Assert.hpp"
+#include <Errors/Assert.hpp>
+#include <Errors/AssertOnTest.hpp>
 #include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
 #include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
@@ -180,7 +181,7 @@ void EstimationFromStereo::setup()
 	bundleHistory = new BundleHistory(parameters.numberOfAdjustedStereoPairs + 1);
 
 	DeleteIfNotNull(correspondencesRecorder);
-	correspondencesRecorder = new MultipleCorrespondencesRecorder(parameters.numberOfAdjustedStereoPairs);	
+	correspondencesRecorder = new MultipleCorrespondences3DRecorder(parameters.numberOfAdjustedStereoPairs);	
 
 	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
 
@@ -283,6 +284,37 @@ void EstimationFromStereo::ComputeVisualPointFeatures(FrameConstPtr filteredLeft
 	DEBUG_PRINT_TO_LOG("Triangulated points Number", GetNumberOfPoints(*triangulatedKeypointCloud) );
 	}
 
+void EstimationFromStereo::CreateWorkingCorrespondences()
+	{
+	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
+	VisualPointFeatureVector2DConstPtr rightFeatureVector = bundleHistory->GetFeatures(0, RIGHT_FEATURE_CATEGORY);
+	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = bundleHistory->GetMatches(0);
+	PointCloudConstPtr triangulatedKeypointCloud = bundleHistory->GetPointCloud(0, TRIANGULATION_CLOUD_CATEGORY);	
+
+	correspondencesRecorder->InitializeNewSequence();
+	for(int backwardSteps = 1; backwardSteps < parameters.numberOfAdjustedStereoPairs; backwardSteps++)
+		{
+		VisualPointFeatureVector2DConstPtr pastLeftFeatureVector = bundleHistory->GetFeatures(backwardSteps, LEFT_FEATURE_CATEGORY);
+		VisualPointFeatureVector2DConstPtr pastRightFeatureVector = bundleHistory->GetFeatures(backwardSteps, RIGHT_FEATURE_CATEGORY);
+		CorrespondenceMap2DConstPtr pastLeftRightCorrespondenceMap = bundleHistory->GetMatches(backwardSteps);
+		PointCloudConstPtr pastTriangulatedKeypointCloud = bundleHistory->GetPointCloud(backwardSteps, TRIANGULATION_CLOUD_CATEGORY);
+
+		if (pastLeftFeatureVector == NULL || pastRightFeatureVector == NULL || pastLeftRightCorrespondenceMap == NULL || pastTriangulatedKeypointCloud == NULL)
+			{
+			DEBUG_PRINT_TO_LOG("Breaking at", backwardSteps);
+			break;
+			}
+
+		Executors::Execute(featuresMatcher2d, leftFeatureVector, pastLeftFeatureVector, leftTimeCorrespondenceMap);
+		Executors::Execute(featuresMatcher2d, rightFeatureVector, pastRightFeatureVector, rightTimeCorrespondenceMap);
+		std::vector<CorrespondenceMap2DConstPtr> correspondenceMapList = {leftRightCorrespondenceMap, leftTimeCorrespondenceMap, rightTimeCorrespondenceMap, pastLeftRightCorrespondenceMap};
+		std::vector<PointCloudConstPtr> pointCloudList = {triangulatedKeypointCloud, pastTriangulatedKeypointCloud};
+		
+		correspondencesRecorder->AddCorrespondencesFromTwoImagePairs(correspondenceMapList, pointCloudList);
+		} 
+	correspondencesRecorder->CompleteNewSequence();
+	}
+
 bool EstimationFromStereo::ComputeCameraPoses(Poses3DSequenceConstPtr& cameraPoses)
 	{
 	cameraPoses = NULL;
@@ -336,37 +368,6 @@ void EstimationFromStereo::AddLastPointCloudToMap(Poses3DSequenceConstPtr& camer
 	const Pose3D& poseOfCurrentCameraInPastCamera = GetPose(*cameraPoses, 0);
 
 	pointCloudMap.AttachPointCloud(bundleHistory->GetPointCloud(0, STEREO_CLOUD_CATEGORY), EMPTY_FEATURE_VECTOR, &poseOfCurrentCameraInPastCamera);
-	}
-
-void EstimationFromStereo::CreateWorkingCorrespondences()
-	{
-	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
-	VisualPointFeatureVector2DConstPtr rightFeatureVector = bundleHistory->GetFeatures(0, RIGHT_FEATURE_CATEGORY);
-	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = bundleHistory->GetMatches(0);
-	PointCloudConstPtr triangulatedKeypointCloud = bundleHistory->GetPointCloud(0, TRIANGULATION_CLOUD_CATEGORY);	
-
-	correspondencesRecorder->InitializeNewSequence();
-	for(int backwardSteps = 1; backwardSteps < parameters.numberOfAdjustedStereoPairs; backwardSteps++)
-		{
-		VisualPointFeatureVector2DConstPtr pastLeftFeatureVector = bundleHistory->GetFeatures(backwardSteps, LEFT_FEATURE_CATEGORY);
-		VisualPointFeatureVector2DConstPtr pastRightFeatureVector = bundleHistory->GetFeatures(backwardSteps, RIGHT_FEATURE_CATEGORY);
-		CorrespondenceMap2DConstPtr pastLeftRightCorrespondenceMap = bundleHistory->GetMatches(backwardSteps);
-		PointCloudConstPtr pastTriangulatedKeypointCloud = bundleHistory->GetPointCloud(backwardSteps, TRIANGULATION_CLOUD_CATEGORY);
-
-		if (pastLeftFeatureVector == NULL || pastRightFeatureVector == NULL || pastLeftRightCorrespondenceMap == NULL || pastTriangulatedKeypointCloud == NULL)
-			{
-			DEBUG_PRINT_TO_LOG("Breaking at", backwardSteps);
-			break;
-			}
-
-		Executors::Execute(featuresMatcher2d, leftFeatureVector, pastLeftFeatureVector, leftTimeCorrespondenceMap);
-		Executors::Execute(featuresMatcher2d, rightFeatureVector, pastRightFeatureVector, rightTimeCorrespondenceMap);
-		std::vector<CorrespondenceMap2DConstPtr> correspondenceMapList = {leftRightCorrespondenceMap, leftTimeCorrespondenceMap, rightTimeCorrespondenceMap, pastLeftRightCorrespondenceMap};
-		std::vector<PointCloudConstPtr> pointCloudList = {triangulatedKeypointCloud, pastTriangulatedKeypointCloud};
-		
-		correspondencesRecorder->AddCorrespondencesFromTwoImagePairs(correspondenceMapList, pointCloudList);
-		} 
-	correspondencesRecorder->CompleteNewSequence();
 	}
 
 }
