@@ -29,6 +29,7 @@
 
 #include "FrameToImageConverter.hpp"
 #include <Errors/Assert.hpp>
+#include <Errors/AssertOnTest.hpp>
 #include<iostream>
 
 namespace Converters {
