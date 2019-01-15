@@ -49,7 +49,8 @@ namespace DFPC
 	    	 *
 	    	 * @param configurationFilePath, this is the path to the configuration file.
 	    	*/
-	   	std::string configurePath(std::string configurationFilePath);
+//	   	std::string configurePath(std::string configurationFilePath);
+
 
 		/*
 		* @brief allows you to retrieve the extra configuration file for the extra DFPC configuration parameters

@@ -1,20 +1,23 @@
-if(WITH_DLRTRACKER)
- add_library(
-  cdff_dfpc_model_based_visual_tracking
-  ModelBasedVisualTrackingInterface.cpp
- )
- add_library(
-  cdff_dfpc_implementation_edge_model_contour_matching
-  EdgeModelContourMatching.cpp
- )
- target_link_libraries(
-   cdff_dfpc_implementation_edge_model_contour_matching
-   PRIVATE cdff_dfpc_model_based_visual_tracking ${DLRTRACKER-CORE_LIBRARIES}
-   PUBLIC cdff_types yaml-cpp cdff_helpers opencv_imgproc opencv_core opencv_imgcodecs cdff_visualizers_pcl cdff_dfpc_configurator 
- )
+set(MODEL_BASED_VISUAL_TRACKING_SOURCES ModelBasedVisualTrackingInterface.cpp)
+set(MODEL_BASED_VISUAL_TRACKING_INCLUDE_DIRS "")
+
+if(OpenCV_FOUND )
+ set(MODEL_BASED_VISUAL_TRACKING_SOURCES ${MODEL_BASED_VISUAL_TRACKING_SOURCES} EdgeModelContourMatching.cpp )
+ set(MODEL_BASED_VISUAL_TRACKING_INCLUDE_DIRS ${MODEL_BASED_VISUAL_TRACKING_INCLUDE_DIRS} ${DLRTRACKER-CORE_INCLUDE_DIRS} )
+ set(MODEL_BASED_VISUAL_TRACKING_DEPENDENCIES ${MODEL_BASED_VISUAL_TRACKING_DEPENDENCIES} opencv_imgproc opencv_core opencv_imgcodecs opencv_features2d ${DLRTRACKER-CORE_LIBRARIES})
 endif()
 
+add_library(
+  cdff_dfpc_model_based_visual_tracking
+  ${MODEL_BASED_VISUAL_TRACKING_SOURCES}
+)
 
+target_include_directories(
+  cdff_dfpc_model_based_visual_tracking
+  SYSTEM PUBLIC ${MODEL_BASED_VISUAL_TRACKING_INCLUDE_DIRS}
+)
 
-
-
+target_link_libraries(
+   cdff_dfpc_model_based_visual_tracking
+   PUBLIC ${MODEL_BASED_VISUAL_TRACKING_DEPENDENCIES}
+)

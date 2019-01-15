@@ -132,7 +132,6 @@ set(unittest_libraries catch
     cdff_helpers
     cdff_logger
     cdff_types
-    cdff_dfpc_implementation_edge_model_contour_matching
     cdff_dfn_dfnexecutors
     cdff_dfn_point_cloud_transform
     cdff_dfn_depth_filtering
@@ -190,6 +189,10 @@ endif()
 if(OPENCV_FOUND)
     set(unittest_libraries ${unittest_libraries}
             cdff_dfn_primitive_finder opencv_highgui )
+endif()
+if(WITH_DLRTRACKER AND OpenCV_FOUND )
+    set(unittest_sources ${unittest_sources} "DFPCs/ModelBasedVisualTracking/EdgeModelContourMatching.cpp") # memory intensive
+    set(unittest_libraries ${unittest_libraries} cdff_dfpc_model_based_visual_tracking )
 endif()
 
 # Make the Catch executable that runs the unit tests
