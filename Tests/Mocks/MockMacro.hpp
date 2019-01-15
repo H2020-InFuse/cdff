@@ -23,8 +23,8 @@
  *
  *  Notes: 
  *  (1) the input parameters need to be wrapped in the brackets, no type should be specified;
- *  (2) if the output type contains commas (such as std::map<float, float>), you will need to create a new type with typedef.
- *
+ *  (2) if the output type contains commas (such as std::map<float, float>), you will need to create a new type with typedef;
+ *  (3) Limitation: the overriden method has to be declared virtual in the base class.
  *
  * @{
  */
