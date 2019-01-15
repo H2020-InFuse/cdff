@@ -75,7 +75,7 @@ if(OPENCV_FOUND)
     )
 endif()
 
-if(WITH_CERES)
+if(Ceres_FOUND)
     set(unittest_sources ${unittest_sources}
     DFNs/BundleAdjustment/CeresAdjustment.cpp
     DFNs/Transform3DEstimation/CeresEstimation.cpp
@@ -102,14 +102,14 @@ if(PCL_FOUND)
     )
 endif()
 
-if(WITH_POINTMATCHER)
+if(POINTMATCHER_FOUND)
     set(unittest_sources ${unittest_sources}
     #DFNs/PointCloudAssembly/MatcherAssembly.cpp
     #DFNs/Registration3D/IcpMatcher.cpp
     )
 endif()
 
-if(WITH_CLOUDCOMPARE)
+if(CLOUDCOMPARE_FOUND)
     set(unittest_sources ${unittest_sources}
     DFNs/Registration3D/IcpCC.cpp
     )
