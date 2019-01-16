@@ -79,7 +79,7 @@ add_library(cdff_types
     ${datatypes}
     ${wrappers})
 
-if(TESTING)
+if(TEST_ENABLED)
     target_link_libraries(cdff_types
         PUBLIC cdff_logger)
 endif()
