@@ -70,7 +70,11 @@ libqhull-dev && \
 
 RUN wget --user ${USER} --password ${PASS} https://nexus.spaceapplications.com/repository/raw-infuse/DLRtrackerCore-1.0.0.zip -P /tmp/CDFF/External/source/ && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d dlrtracker-core
 
+RUN apt-get update && apt-get install --yes --quiet \
+libgdal1-dev \ 
+libgsl-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d gdalwrap
 
-LABEL version="4.3.1"
+LABEL version="4.4"
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="CI + all extra dependencies"
