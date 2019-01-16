@@ -27,7 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include "AdjustmentFromStereo.hpp"
-#include "Errors/Assert.hpp"
+#include <Errors/Assert.hpp>
+#include <Errors/AssertOnTest.hpp>
 #include <Types/CPP/VisualPointFeatureVector3D.hpp>
 
 #include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>

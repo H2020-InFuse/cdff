@@ -34,6 +34,7 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 #include <Errors/Assert.hpp>
+#include <Errors/AssertOnTest.hpp>
 
 namespace Helpers
 {
