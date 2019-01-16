@@ -75,6 +75,6 @@ libgdal1-dev \
 libgsl-dev && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d gdalwrap
 
-LABEL version="4.4"
+LABEL version="4.5"
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="CI + all extra dependencies"

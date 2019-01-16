@@ -7,6 +7,6 @@ COPY installers/ /tmp/CDFF/Tools/Docker/installers/
 
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv_contrib
 
-LABEL version="1.1"
+LABEL version="1.2"
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="A self-contained environment for building and testing some DFN's"
