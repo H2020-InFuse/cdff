@@ -75,12 +75,19 @@ namespace PoseEstimator
             static const KalmanFilterOptionsSet DEFAULT_KF_PARAMETERS;
 
             std::vector<cv::Vec3f> filterRobotWheels();
-            std::vector<cv::Point> extractRobotCenterAndAxisProjections(std::vector<cv::Vec3f> wheels);
+
+            void extractRobotPoints(std::vector<cv::Vec3f> wheels);
+
             cv::Point extractForegroundCentroid(cv::Mat imgWithoutBackground);
+
             cv::Point outputPose(cv::Vec3d position, std::vector<double> orientation);
-            cv::Vec3f get3DCoordinates(cv::Point2d point);
-            std::vector<double> extractOrientation(std::vector<cv::Vec3f> robotWheels, std::vector<cv::Point> axisPoints);
-            void visualizeResults(std::vector<cv::Vec3f> wheels, std::vector<cv::Point> axisPoints);
+
+            cv::Vec3f get3DCoordinates(cv::Point point);
+            double getDisparityAroundPoint(cv::Point point, const cv::Mat & disparity);
+
+            std::vector<double> extractOrientation();
+
+            void visualizeResults();
 
             cv::Point m_last_center;
 
@@ -90,7 +97,22 @@ namespace PoseEstimator
             asn1SccPose prevEstimatedPose;
             double convergenceIdx, prevConvergenceIdx, prevDeltaCov;
             bool converged;
-    };
+
+            struct WheelPoints {
+                cv::Vec3d center;
+                cv::Vec3d up;
+                cv::Vec3d down;
+            };
+
+            struct RobotPoints {
+                WheelPoints left_wheel;
+                WheelPoints right_wheel;
+                cv::Point robot_center_px;
+                cv::Vec3d robot_center_3D;
+            };
+
+            RobotPoints m_robot_points;
+};
 }
 }
 }
