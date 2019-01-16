@@ -115,7 +115,7 @@
   stage: docker.external
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.dev-ci cdff-dev-ci
+   - ./docker-builder.sh Dockerfile.dev-ci cdff-dev-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD
   only:
    changes:
     - Tools/Docker/Dockerfile.dev-ci
@@ -128,7 +128,7 @@
   stage: docker.external
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.user cdff-user
+   - ./docker-builder.sh Dockerfile.user cdff-user USER=$DOCKER_USER PASS=$DOCKER_PASSWORD
   only:
    changes:
     - Tools/Docker/Dockerfile.user
