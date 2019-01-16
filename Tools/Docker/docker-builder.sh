@@ -70,7 +70,7 @@ REGISTRY_PREFIX=nexus.spaceapplications.com/
 INFUSE_REGISTRY_PREFIX=repository/infuse/
 IMAGE_TAG=${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}${IMAGE_NAME}
 
-current_tag=$(grep "LABEL version=" $DOCKER_FILE | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+current_tag=$(grep -oP 'LABEL version="\K[^"]+' $DOCKER_FILE )
 latest_tag=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$IMAGE_NAME https://hook.io/datastore/get | tr -d '"')
 
 if [ -z "$latest_tag" ] || [ $latest_tag == 'null' ] ; then
