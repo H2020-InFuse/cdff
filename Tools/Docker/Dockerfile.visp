@@ -58,6 +58,6 @@ libois-dev \
 libqhull-dev && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d visp
 
-LABEL version="1.1"
+LABEL version="1.1.1"
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="CI + single dependency"

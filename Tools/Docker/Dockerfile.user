@@ -127,6 +127,6 @@ CMD ["bash"]
 
 ## Image information
 
-LABEL version="2.1"
+LABEL version="2.1.1"
 LABEL maintainer="Romain Michalec <romain.michalec@strath.ac.uk>, Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="A self-contained environment for building and testing CDFF-core and CDFF-support, and for using CDFF-dev"
