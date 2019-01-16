@@ -43,6 +43,7 @@ if [[ ! -d "${INSTALL_DIR}/include/ceres" ]]; then
   # Download source code, extract, and change to resulting directory
   cdff_wget ceres ceres-solver-1.14.0.tar.gz http://ceres-solver.org/
   cd ceres-solver-1.14.0
+
   # Build
   mkdir build
   cd build

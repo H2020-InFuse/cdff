@@ -1,0 +1,3 @@
+/Tests/ConfigurationFiles/DFNs/ImageFiltering/BackgroundSubtractorMOG2_SherpaTracker.yaml
+/Tests/ConfigurationFiles/DFNs/PrimitiveFinder/BasicPrimitiveFinder_SherpaTracker.yaml
+/Tests/ConfigurationFiles/DFNs/PoseEstimator/WheeledRobotPoseEstimator_SherpaTracker.yaml

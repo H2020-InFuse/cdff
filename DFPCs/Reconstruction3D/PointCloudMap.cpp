@@ -27,7 +27,8 @@
  * --------------------------------------------------------------------------
  */
 #include "PointCloudMap.hpp"
-#include "Errors/Assert.hpp"
+#include <Errors/Assert.hpp>
+#include <Errors/AssertOnTest.hpp>
 #include <pcl/filters/voxel_grid.h>
 
 namespace CDFF
