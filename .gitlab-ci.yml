@@ -55,6 +55,19 @@
    changes:
     - Tools/Docker/Dockerfile.visp
 
+ docker:cdff-gdalwrap:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.ci
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.gdalwrap cdff-gdalwrap
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.gdalwrap
+
  docker:cdff-pangolin:
   <<: *connect
   services:
@@ -173,6 +186,15 @@
   <<: *configure
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-pangolin:latest
+  stage: debug-build
+  dependencies:
+   - generate:asn
+  when: on_failure
+
+ build:cdff-gdalwrap:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-gdalwrap:latest
   stage: debug-build
   dependencies:
    - generate:asn
