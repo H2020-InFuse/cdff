@@ -39,18 +39,12 @@ namespace DFPC
 		~DfpcConfigurator();
 
 		/*
-		* @brief this method instantiates the DFNs and configures them according to the information available in the configuration file. It also creates an extra file for the DFPC extra parameters.
+		* @brief this method instantiates the DFNs and configures them according to the information available in the configuration file. It also creates an extra file for the 				DFPC extra parameters.
 		*
 		* @param configurationFilePath, this is the path to the configuration file.
 		*/
 		void configure(std::string configurationFilePath);
-		/*
-	   	 * @brief this method  creates an extra file for the DFPC extra parameters.
-	    	 *
-	    	 * @param configurationFilePath, this is the path to the configuration file.
-	    	*/
-//	   	std::string configurePath(std::string configurationFilePath);
-
+	
 
 		/*
 		* @brief allows you to retrieve the extra configuration file for the extra DFPC configuration parameters
