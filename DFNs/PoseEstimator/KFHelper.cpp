@@ -199,9 +199,9 @@ asn1SccPose estimatePose(cv::KalmanFilter &KF, asn1SccPose &extractedPose, cv::M
         KF.measurementMatrix.at<double>(0, 0) = 1;  // x
         KF.measurementMatrix.at<double>(1, 1) = 1;  // y
         KF.measurementMatrix.at<double>(2, 2) = 1;  // z
-        KF.measurementMatrix.at<double>(3, 9) = 1;  // roll
-        KF.measurementMatrix.at<double>(4, 10) = 1; // pitch
-        KF.measurementMatrix.at<double>(5, 11) = 1; // yaw
+        KF.measurementMatrix.at<double>(3, 9) = 0;  // roll
+        KF.measurementMatrix.at<double>(4, 10) = 0; // pitch
+        KF.measurementMatrix.at<double>(5, 11) = 0; // yaw
     } else {
         KF.measurementMatrix.at<double>(0, 0) = 0;  // x
         KF.measurementMatrix.at<double>(1, 1) = 0;  // y
@@ -221,10 +221,10 @@ asn1SccPose estimatePose(cv::KalmanFilter &KF, asn1SccPose &extractedPose, cv::M
 
     // get 'measured' orientation
     Eigen::Quaternionf q;
-    q.x() = extractedPose.orient.arr[0];
-    q.y() = extractedPose.orient.arr[1];
-    q.z() = extractedPose.orient.arr[2];
-    q.w() = extractedPose.orient.arr[3];
+    q.w() = extractedPose.orient.arr[0];
+    q.x() = extractedPose.orient.arr[1];
+    q.y() = extractedPose.orient.arr[2];
+    q.z() = extractedPose.orient.arr[3];
     Eigen::Matrix3f m1 = q.normalized().toRotationMatrix();
     eigen2cv(m1, rotation_measured);
 
