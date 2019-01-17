@@ -24,7 +24,7 @@
   stage: docker.base
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.base cdff-base
+   - ./docker-builder.sh Dockerfile.base cdff-base SHA=$CI_COMMIT_SHORT_SHA
   only:
    changes:
     - Tools/Docker/Dockerfile.base
@@ -37,7 +37,7 @@
   stage: docker.ci
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.ci cdff-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD
+   - ./docker-builder.sh Dockerfile.ci cdff-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHORT_SHA
   only:
    changes:
     - Tools/Docker/Dockerfile.ci
@@ -50,7 +50,7 @@
   stage: docker.ci
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.visp cdff-visp
+   - ./docker-builder.sh Dockerfile.visp cdff-visp SHA=$CI_COMMIT_SHORT_SHA
   only:
    changes:
     - Tools/Docker/Dockerfile.visp
@@ -63,7 +63,7 @@
   stage: docker.ci
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.gdalwrap cdff-gdalwrap
+   - ./docker-builder.sh Dockerfile.gdalwrap cdff-gdalwrap SHA=$CI_COMMIT_SHORT_SHA
   only:
    changes:
     - Tools/Docker/Dockerfile.gdalwrap
@@ -76,7 +76,7 @@
   stage: docker.ci
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.pangolin cdff-pangolin
+   - ./docker-builder.sh Dockerfile.pangolin cdff-pangolin SHA=$CI_COMMIT_SHORT_SHA
   only:
    changes:
     - Tools/Docker/Dockerfile.pangolin
@@ -89,7 +89,7 @@
   stage: docker.ci
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.opencv-contrib cdff-opencv-contrib
+   - ./docker-builder.sh Dockerfile.opencv-contrib cdff-opencv-contrib SHA=$CI_COMMIT_SHORT_SHA
   only:
    changes:
     - Tools/Docker/Dockerfile.opencv-contrib
@@ -102,11 +102,24 @@
   stage: docker.ci
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.dlrtracker cdff-dlrtracker USER=$DOCKER_USER PASS=$DOCKER_PASSWORD
+   - ./docker-builder.sh Dockerfile.dlrtracker cdff-dlrtracker USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHORT_SHA
   only:
    changes:
     - Tools/Docker/Dockerfile.dlrtracker
-    
+
+ docker:cdff-envire:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.ci
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.envire cdff-envire USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHORT_SHA
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.envire
+
  docker:cdff-dev-ci:
   <<: *connect
   services:
@@ -115,7 +128,7 @@
   stage: docker.external
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.dev-ci cdff-dev-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD
+   - ./docker-builder.sh Dockerfile.dev-ci cdff-dev-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHORT_SHA
   only:
    changes:
     - Tools/Docker/Dockerfile.dev-ci
@@ -128,7 +141,7 @@
   stage: docker.external
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.user cdff-user USER=$DOCKER_USER PASS=$DOCKER_PASSWORD
+   - ./docker-builder.sh Dockerfile.user cdff-user USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHORT_SHA
   only:
    changes:
     - Tools/Docker/Dockerfile.user
@@ -145,6 +158,7 @@
 
  .build:configure: &configure
   before_script:
+   - echo "Docker Image (version:) " $IMAGE_VERSION ", (sha:)" $IMAGE_SHA
    - "mkdir -p build && cd build"
    - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
    - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
@@ -189,7 +203,7 @@
   stage: debug-build
   dependencies:
    - generate:asn
-  when: on_failure
+  when: manual
 
  build:cdff-gdalwrap:system:
   <<: *configure
@@ -198,7 +212,16 @@
   stage: debug-build
   dependencies:
    - generate:asn
-  when: on_failure
+  when: manual
+
+ build:cdff-envire:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-envire:latest
+  stage: debug-build
+  dependencies:
+   - generate:asn
+  when: manual
 
  build:cdff-opencv-contrib:system:
   <<: *configure
@@ -207,7 +230,7 @@
   stage: debug-build
   dependencies:
    - generate:asn
-  when: on_failure
+  when: manual
 
  build:cdff-dlrtracker:system:
   <<: *configure
@@ -216,7 +239,16 @@
   stage: debug-build
   dependencies:
    - generate:asn
-  when: on_failure
+  when: manual
+
+ build:cdff-visp:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-visp:latest
+  stage: debug-build
+  dependencies:
+   - generate:asn
+  when: manual
 
  build:user:system:
   <<: *configure

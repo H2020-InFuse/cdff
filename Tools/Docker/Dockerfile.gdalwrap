@@ -16,6 +16,10 @@ libgdal1-dev \
 libgsl-dev && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d gdalwrap
 
-LABEL version="1.1.1"
+ARG VERSION=1.1.2
+ARG SHA=0000
+ENV IMAGE_VERSION=$VERSION
+ENV IMAGE_SHA=$SHA
+LABEL version=${IMAGE_VERSION}
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="CI + single dependency"
