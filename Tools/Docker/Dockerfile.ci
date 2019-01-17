@@ -75,7 +75,7 @@ libgdal1-dev \
 libgsl-dev && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d gdalwrap
 
-ARG VERSION=4.5.2
+ARG VERSION="4.5.2"
 ARG SHA=0000
 ENV IMAGE_VERSION=$VERSION
 ENV IMAGE_SHA=$SHA

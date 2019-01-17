@@ -58,7 +58,7 @@ libois-dev \
 libqhull-dev && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d visp
 
-ARG VERSION=1.1.2
+ARG VERSION="1.1.2"
 ARG SHA=0000
 ENV IMAGE_VERSION=$VERSION
 ENV IMAGE_SHA=$SHA
