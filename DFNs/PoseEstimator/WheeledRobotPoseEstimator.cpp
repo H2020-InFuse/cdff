@@ -99,7 +99,7 @@ void WheeledRobotPoseEstimator::process()
     cv::Mat inputImage = Converters::FrameToMatConverter().Convert(&inImage);
     std::vector<cv::Vec3f> robot_wheels = filterRobotWheels();
 
-    if(robot_wheels.empty()==false)
+    if(robot_wheels.size()>=2)
     {
         extractRobotPoints(robot_wheels);
         // ---------- CASE 1/3 : wheels position available ----------
@@ -121,8 +121,9 @@ void WheeledRobotPoseEstimator::process()
     else
     {
         m_robot_points.robot_center_px = extractForegroundCentroid(inputImage);
+        m_robot_points.robot_center_3D = get3DCoordinates(m_robot_points.robot_center_px);
         visualizeResults();
-        outputPose(get3DCoordinates(m_robot_points.robot_center_px), std::vector<double>());
+        outputPose(m_robot_points.robot_center_3D, std::vector<double>());
         m_last_center = cv::Point(-1,-1);
 
         // ---------- CASE 2/3 : foreground centroid available ----------
@@ -150,7 +151,8 @@ void WheeledRobotPoseEstimator::process()
         // ---------- CASE 3/3 : no measures available ----------
         else {
             //  if convergence reached, apply KF prediction only
-            if (converged == true){
+            if (converged == true)
+            {
                 estimatedPose = estimatePose(KF, prevEstimatedPose, measurements, 1);
             }
         }
@@ -257,6 +259,7 @@ cv::Point WheeledRobotPoseEstimator::extractForegroundCentroid(cv::Mat imgWithou
             {
                 max_diff = boundRect.width/2;
                 correction = boundRect.width/8;
+                output_point.y += boundRect.height/5 ;
             }
             else if(parameters.robot==robots::MANA)
             {
@@ -289,13 +292,13 @@ cv::Point WheeledRobotPoseEstimator::extractForegroundCentroid(cv::Mat imgWithou
 
 void WheeledRobotPoseEstimator::extractRobotPoints(std::vector<cv::Vec3f> wheels)
 {
-    if(wheels.empty() == false)
+    if(wheels.size() >= 2)
     {
         cv::Point wheel_center_1 = cv::Point(wheels[0][0], wheels[0][1]);
         cv::Point wheel_center_2 = cv::Point(wheels[1][0], wheels[1][1]);
 
         double distance_between_wheels = cv::norm(wheel_center_1 - wheel_center_2);
-        double h = 10;
+        double h = wheels[0][2]/2;
         double alpha = asin((wheel_center_1.y - wheel_center_2.y) / distance_between_wheels);
         double beta = M_PI / 2 - alpha;
 
@@ -384,24 +387,29 @@ std::vector<cv::Vec3f> WheeledRobotPoseEstimator::filterRobotWheels()
 
 cv::Vec3f WheeledRobotPoseEstimator::get3DCoordinates(cv::Point point)
 {
-    cv::Mat disparity = cv::Mat::zeros(cv::Size(inDepth.data.cols, inDepth.data.rows), CV_32FC1);
-    disparity.data = inDepth.data.data.arr;
-
-    double fx = inDepth.intrinsic.cameraMatrix.arr[0].arr[0];
-    double cx = inDepth.intrinsic.cameraMatrix.arr[0].arr[2];
-    double fy = inDepth.intrinsic.cameraMatrix.arr[1].arr[1];
-    double cy = inDepth.intrinsic.cameraMatrix.arr[1].arr[2];
-
     cv::Vec3f point_3d;
-    double disparity_value = getDisparityAroundPoint(point, disparity);
-    if(disparity_value != 0 && disparity_value > (fx*parameters.baseline)/parameters.maxStereoDepth)
-    {
-        double z = fx * parameters.baseline / disparity_value;
-        point_3d[0] = (z / fx) * (point.x - cx);
-        point_3d[1] = (z / fy) * (point.y - cy);
-        point_3d[2] = z;
-    }
 
+    if( point.x > 0 && point.y > 0 )
+    {
+        cv::Mat disparity = cv::Mat::zeros(cv::Size(inDepth.data.cols, inDepth.data.rows), CV_32FC1);
+        disparity.data = inDepth.data.data.arr;
+
+        double fx = inDepth.intrinsic.cameraMatrix.arr[0].arr[0];
+        double cx = inDepth.intrinsic.cameraMatrix.arr[0].arr[2];
+        double fy = inDepth.intrinsic.cameraMatrix.arr[1].arr[1];
+        double cy = inDepth.intrinsic.cameraMatrix.arr[1].arr[2];
+
+
+        double disparity_value = disparity.at<float>(point.y,point.x);
+        if(disparity_value != 0 && disparity_value > (fx*parameters.baseline)/parameters.maxStereoDepth)
+        {
+            double z = fx * parameters.baseline / disparity_value;
+
+            point_3d[0] = (z / fx) * (point.x - cx);
+            point_3d[1] = (z / fy) * (point.y - cy);
+            point_3d[2] = z;
+        }
+    }
 
     return point_3d;
 }
@@ -434,11 +442,11 @@ void WheeledRobotPoseEstimator::visualizeResults()
         cv::Scalar red = cv::Scalar(0,0,255);
         cv::circle(img, m_robot_points.robot_center_px, 5, red, 5);
 
-        cv::line( img, cv::Point(img.cols/2, 0), cv::Point(img.cols/2, img.rows), red); //middle of image
+        cv::line( img, cv::Point(img.cols/2, 0), cv::Point(img.cols/2, img.rows), red, 4); //middle of image
 
         cv::namedWindow(parameters.robot+"_TRACKER", CV_WINDOW_NORMAL);
         cv::imshow(parameters.robot+"_TRACKER", img);
-        cv::waitKey(1);
+        cv::waitKey(10);
     }
 }
 
