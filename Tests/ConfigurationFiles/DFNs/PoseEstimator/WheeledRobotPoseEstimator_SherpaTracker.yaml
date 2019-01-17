@@ -1,7 +1,7 @@
 - Name: GeneralParameters
   Robot: "SHERPA"
-  Baseline: 0.26749999999999996
-  MaxStereoDepth: 20
+  Baseline: 0.0898885
+  MaxStereoDepth: 30
   Visualize: true
 - Name: KFParameters
   nStates: 18
