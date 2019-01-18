@@ -198,7 +198,6 @@ endif()
 if(BUILD_CENTRALDPM)
     set(unittest_libraries ${unittest_libraries}
         cdff_centraldpm
-        envire_asn1
     )
 endif()
 

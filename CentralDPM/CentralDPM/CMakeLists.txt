@@ -1,6 +1,5 @@
 add_library(
     cdff_centraldpm
-    CentralDPM.hpp
     CentralDPM.cpp
 )
 
