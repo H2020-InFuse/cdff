@@ -43,14 +43,32 @@ using namespace SupportTypes;
  *
  * --------------------------------------------------------------------------
  */
-const VisualPointFeatureVector3DConstPtr PclPointCloudToVisualPointFeatureVector3DConverter::Convert(const SupportTypes::PointCloudWithFeatures& featuresCloud)
+const VisualPointFeatureVector3DConstPtr PclPointCloudToVisualPointFeatureVector3DConverter::Convert(const PointCloudWithFeatures<pcl::SHOT352>& featuresCloud)
 	{	
 	VisualPointFeatureVector3DPtr conversion = NewVisualPointFeatureVector3D();
 	
 	for(unsigned pointIndex = 0; pointIndex < featuresCloud.pointCloud->points.size(); pointIndex++)
 		{
 		pcl::PointXYZ point = featuresCloud.pointCloud->points.at(pointIndex);
-		FeatureType feature = featuresCloud.featureCloud->points.at(pointIndex);
+		pcl::SHOT352 feature = featuresCloud.featureCloud->points.at(pointIndex);
+		AddPoint(*conversion, point.x, point.y, point.z);
+		for(unsigned componentIndex = 0; componentIndex < featuresCloud.descriptorSize; componentIndex++)
+			{
+			AddDescriptorComponent(*conversion, pointIndex, feature.descriptor[componentIndex]);
+			}
+		}
+
+	return conversion;
+	}
+
+const VisualPointFeatureVector3DConstPtr PclPointCloudToVisualPointFeatureVector3DConverter::Convert(const PointCloudWithFeatures<pcl::PFHSignature125>& featuresCloud)
+	{	
+	VisualPointFeatureVector3DPtr conversion = NewVisualPointFeatureVector3D();
+	
+	for(unsigned pointIndex = 0; pointIndex < featuresCloud.pointCloud->points.size(); pointIndex++)
+		{
+		pcl::PointXYZ point = featuresCloud.pointCloud->points.at(pointIndex);
+		pcl::PFHSignature125 feature = featuresCloud.featureCloud->points.at(pointIndex);
 		AddPoint(*conversion, point.x, point.y, point.z);
 		for(unsigned componentIndex = 0; componentIndex < featuresCloud.descriptorSize; componentIndex++)
 			{
@@ -59,13 +77,6 @@ const VisualPointFeatureVector3DConstPtr PclPointCloudToVisualPointFeatureVector
 		}
 
 	return conversion;
-	}
-
-const VisualPointFeatureVector3DSharedConstPtr PclPointCloudToVisualPointFeatureVector3DConverter::ConvertShared(const SupportTypes::PointCloudWithFeatures& featuresCloud)
-	{	
-	VisualPointFeatureVector3DConstPtr conversion = Convert(featuresCloud);
-	VisualPointFeatureVector3DSharedConstPtr sharedConversion(conversion);
-	return sharedConversion;
 	}
 
 

@@ -60,15 +60,18 @@ VisualPointFeatureVector3DSharedPtr NewSharedVisualPointFeatureVector3D()
 void Initialize(VisualPointFeatureVector3D& featuresVector)
 {
 	ClearPoints(featuresVector);
+	featuresVector.feature_type = HISTOGRAM_DESCRIPTOR;
 }
 
-void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, float z)
+void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, float z, VisualPointFeature3DType featureType)
 {
 	ASSERT_ON_TEST(featuresVector.list.nCount < MAX_FEATURE_3D_POINTS, "Features descriptor vector maximum capacity has been reached");
+	ASSERT_ON_TEST(featuresVector.list.nCount == 0 || featuresVector.feature_type == featureType, "Trying to add multiple feature types in the same feature vector");
 	int currentIndex = featuresVector.list.nCount;
 	if (currentIndex == 0)
 	{
 		featuresVector.list_type = ALL_POSITIONS_VECTOR;
+		featuresVector.feature_type = featureType;
 	}
 	else if (featuresVector.list_type != ALL_POSITIONS_VECTOR)
 	{
@@ -83,13 +86,15 @@ void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, floa
 	featuresVector.list.nCount++;
 }
 
-void AddPoint(VisualPointFeatureVector3D& featuresVector, BaseTypesWrapper::T_UInt64 index, BaseTypesWrapper::T_UInt16 pointCloudIdentifier)
+void AddPoint(VisualPointFeatureVector3D& featuresVector, BaseTypesWrapper::T_UInt64 index, BaseTypesWrapper::T_UInt16 pointCloudIdentifier, VisualPointFeature3DType featureType)
 {
 	ASSERT_ON_TEST(featuresVector.list.nCount < MAX_FEATURE_3D_POINTS, "Features descriptor vector maximum capacity has been reached");
+	ASSERT_ON_TEST(featuresVector.list.nCount == 0 || featuresVector.feature_type == featureType, "Trying to add multiple feature types in the same feature vector");
 	int currentIndex = featuresVector.list.nCount;
 	if (currentIndex == 0)
 	{
 		featuresVector.list_type = ALL_REFERENCES_VECTOR;
+		featuresVector.feature_type = featureType;
 	}
 	else if (featuresVector.list_type != ALL_REFERENCES_VECTOR)
 	{
@@ -111,6 +116,11 @@ void ClearPoints(VisualPointFeatureVector3D& featuresVector)
 VisualPointFeatureVector3DType GetVectorType(const VisualPointFeatureVector3D& featuresVector)
 {
 	return featuresVector.list_type;
+}
+
+VisualPointFeature3DType GetFeatureType(const VisualPointFeatureVector3D& featuresVector)
+{
+	return featuresVector.feature_type;
 }
 
 int GetNumberOfPoints(const VisualPointFeatureVector3D& featuresVector)
@@ -169,7 +179,21 @@ VisualPointType GetPointType(const VisualPointFeatureVector3D& featuresVector, i
 void AddDescriptorComponent(VisualPointFeatureVector3D& featuresVector, int pointIndex, float component)
 {
 	ASSERT_ON_TEST(pointIndex < featuresVector.list.nCount, "A missing point was requested from a features vector 3D");
-	ASSERT_ON_TEST(featuresVector.list.arr[pointIndex].descriptor.nCount < MAX_DESCRIPTOR_3D_LENGTH, "Descriptor maximum capacity has been reached");
+	switch(featuresVector.feature_type)
+		{
+		case HISTOGRAM_DESCRIPTOR: 
+			ASSERT_ON_TEST(featuresVector.list.arr[pointIndex].descriptor.nCount < MAX_DESCRIPTOR_3D_LENGTH, "Descriptor maximum capacity has been reached");
+			break;
+		case SHOT_DESCRIPTOR:
+			ASSERT_ON_TEST(featuresVector.list.arr[pointIndex].descriptor.nCount < SHOT_DESCRIPTOR_LENGTH, "SHOT Descriptor maximum capacity has been reached");
+			break;
+		case PFH_DESCRIPTOR:
+			ASSERT_ON_TEST(featuresVector.list.arr[pointIndex].descriptor.nCount < PFH_DESCRIPTOR_LENGTH, "PFH Descriptor maximum capacity has been reached");
+			break;
+		default:
+			ASSERT_ON_TEST(false, "Unhandled descriptor type in AddDescriptorComponent function");		
+		}
+
 	int currentIndex = featuresVector.list.arr[pointIndex].descriptor.nCount;
 	featuresVector.list.arr[pointIndex].descriptor.arr[currentIndex] = component;
 	featuresVector.list.arr[pointIndex].descriptor.nCount++;
