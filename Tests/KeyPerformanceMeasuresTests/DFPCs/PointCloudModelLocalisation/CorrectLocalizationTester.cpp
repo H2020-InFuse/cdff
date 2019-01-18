@@ -109,8 +109,10 @@ void CorrectLocalizationTester::ExecuteDfpc(bool showClouds)
 	ASSERT(dfpcWasConfigured, "Error: there was a call to ExecuteDfns before actually configuring the DFNs");
 	ASSERT(inputsWereLoaded && groundTruthWasLoaded, "Error: there was a call to ExecuteDfns before actually loading inputs");
 
-	processingTime = 0;
+	beginTime = clock();
 	Localize();
+	endTime = clock();
+	processingTime += float(endTime - beginTime) / CLOCKS_PER_SEC;
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 
 	if (showClouds)
@@ -163,14 +165,6 @@ bool CorrectLocalizationTester::IsOutputCorrect(float relativeLocationError, flo
  *
  * --------------------------------------------------------------------------
  */
-#define PROCESS_AND_MEASURE_TIME(dfn) \
-	{ \
-	beginTime = clock(); \
-	dfn->process(); \
-	endTime = clock(); \
-	processingTime += float(endTime - beginTime) / CLOCKS_PER_SEC; \
-	}
-
 void CorrectLocalizationTester::Localize()
 	{
 	dfpc->sceneInput(*inputSceneCloud);
@@ -333,11 +327,6 @@ void CorrectLocalizationTester::ShowClouds()
 		{
 		pcl::PointXYZ transformedPoint = TransformPoint( baseModelPclCloud->points.at(pointIndex), affineTransform );
 		transformedModelCloud->points.at(pointIndex) = transformedPoint;
-		if (pointIndex == 0)
-			{
-			std::cout << baseModelPclCloud->points.at(pointIndex).x << " " << baseModelPclCloud->points.at(pointIndex).y << " " << baseModelPclCloud->points.at(pointIndex).z << std::endl;
-			std::cout << transformedPoint.x << " " << transformedPoint.y << " " << transformedPoint.z << std::endl;
-			}
 		}
 
 	std::vector< pcl::PointCloud<pcl::PointXYZ>::ConstPtr > cloudsList = { baseScenePclCloud, transformedModelCloud };

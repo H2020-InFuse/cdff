@@ -411,11 +411,6 @@ void CorrectLocalizationTester::ShowClouds()
 		{
 		pcl::PointXYZ transformedPoint = TransformPoint( baseModelPclCloud->points.at(pointIndex), affineTransform );
 		transformedModelCloud->points.at(pointIndex) = transformedPoint;
-		if (pointIndex == 0)
-			{
-			std::cout << baseModelPclCloud->points.at(pointIndex).x << " " << baseModelPclCloud->points.at(pointIndex).y << " " << baseModelPclCloud->points.at(pointIndex).z << std::endl;
-			std::cout << transformedPoint.x << " " << transformedPoint.y << " " << transformedPoint.z << std::endl;
-			}
 		}
 
 	std::vector< pcl::PointCloud<pcl::PointXYZ>::ConstPtr > cloudsList = { baseScenePclCloud, transformedModelCloud };
