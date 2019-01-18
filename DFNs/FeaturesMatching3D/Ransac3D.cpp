@@ -156,8 +156,9 @@ Pose3DConstPtr Ransac3D::ComputeTransform(PointCloudWithFeatures sourceCloud, Po
 
 	if (outSuccess)
 	{
-		Eigen::Matrix4f eigenTransform = ransac->getFinalTransformation();
-		return EigenTransformToTransform3DConverter().Convert(eigenTransform);
+		Eigen::Matrix4f eigenTransformSceneInModel = ransac->getFinalTransformation();
+		Eigen::Matrix4f eigenTransformModelInScene = eigenTransformSceneInModel.inverse();
+		return EigenTransformToTransform3DConverter().Convert(eigenTransformModelInScene);
 	}
 	else
 	{

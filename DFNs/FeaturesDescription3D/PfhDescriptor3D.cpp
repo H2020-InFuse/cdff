@@ -239,6 +239,7 @@ pcl::PointCloud<pcl::PFHSignature125>::ConstPtr PfhDescriptor3D::ComputePfhDescr
 	pfh.setSearchMethod(kdTree);
 	pfh.setInputCloud(pointCloud);
 	pfh.setInputNormals(normalsCloud);
+	pfh.setIndices(indicesList);
 	pfh.setRadiusSearch(parameters.baseOptions.searchRadius);
 
 	// Setup output
