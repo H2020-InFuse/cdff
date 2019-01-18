@@ -7,7 +7,7 @@
 set -e
 
 if [ $# -lt 2 ]; then
-    echo "incorrect parameters: Usage docker-builder.sh [dockerfile] [imagename] [optional=--force] [optional=environnement variables]"
+    echo "incorrect parameters: Usage docker-builder.sh [dockerfile] [imagename] [optional=--force] [optional=--no-cache] [optional=environnement variables]"
     exit 1
 fi
 
@@ -54,11 +54,15 @@ shift 2 #shift all variables and restart at 1.
 #if we passed more variables we pass them along
 ENV_VAR=""
 FORCE=false
+NOCACHE=""
 for var in "$@"
 do
    if [[ $var == "--force"  ]]
     then
     FORCE=true
+   elif [[ $var == "--no-cache"  ]]
+    then
+    NOCACHE="--no-cache"
    else
     ENV_VAR+=" --build-arg ${var}"
    fi
@@ -88,7 +92,7 @@ vercomp $current_tag $latest_tag
 if [[ $op = '>' ]] || [[ "$FORCE" == true ]]
     then
         docker pull $IMAGE_TAG':'$latest_tag || true
-        docker build -t $IMAGE_TAG':'$current_tag -f $DOCKER_FILE $ENV_VAR .
+        docker build $NOCACHE -t $IMAGE_TAG':'$current_tag -f $DOCKER_FILE $ENV_VAR .
         docker push $IMAGE_TAG':'$current_tag
         docker tag $IMAGE_TAG':'$current_tag $IMAGE_TAG':'latest
         docker push $IMAGE_TAG':'latest

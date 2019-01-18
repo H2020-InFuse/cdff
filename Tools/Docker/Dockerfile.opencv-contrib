@@ -7,7 +7,7 @@ COPY installers/ /tmp/CDFF/Tools/Docker/installers/
 
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv_contrib
 
-ARG VERSION="1.2.4"
+ARG VERSION="1.2.6"
 ARG SHA=0000
 ENV IMAGE_VERSION=$VERSION
 ENV IMAGE_SHA=$SHA
