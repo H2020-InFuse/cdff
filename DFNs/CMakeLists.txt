@@ -65,5 +65,3 @@ target_link_libraries(
   cdff_dfn_disparity_to_pointcloud_with_intensity
   cdff_dfn_lidar_based_tracking
 )
-
-target_compile_definitions(dfns_builder PUBLIC WITH_EDRES=$<BOOL:${WITH_EDRES}>)
