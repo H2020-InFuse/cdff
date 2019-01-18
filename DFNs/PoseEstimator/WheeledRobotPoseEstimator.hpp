@@ -89,7 +89,7 @@ namespace PoseEstimator
 
             void visualizeResults();
 
-            cv::Point m_last_center;
+            double m_last_left_wheel_x;
 
             // KF variables
             cv::KalmanFilter KF;
