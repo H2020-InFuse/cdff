@@ -11,7 +11,6 @@ target_include_directories(catch SYSTEM INTERFACE "${CATCH_INCLUDE_DIR}")
 # Source files containing Catch test cases. They will be linked together to
 # produce the test executable. Add any additional file in ALPHABETICAL ORDER.
 set(unittest_sources UnitTests.cpp
-    CentralDPM/CentralDPM.cpp
     Common/BitStream/BitStream.cpp
     Common/Converters/MatCorrespondenceMaps2DSequenceConvertersTest.cpp
     Common/Converters/MatCorrespondenceMaps3DSequenceConvertersTest.cpp
@@ -123,13 +122,16 @@ if(OPENCV_FOUND)
             )
 endif()
 
-
+if(BUILD_CENTRALDPM)
+    set(unittest_sources ${unittest_sources}
+        CentralDPM/CentralDPM.cpp
+    )
+endif()
 
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
 set(unittest_libraries catch
-    cdff_centraldpm
     cdff_converters
     cdff_helpers
     cdff_logger
@@ -176,7 +178,6 @@ set(unittest_libraries catch
     cdff_dfpc_point_cloud_model_localisation
     cdff_dfpc_haptic_scanning
     cdff_dfpc_model_based_tracker
-    envire_asn1
 )
 
 if(WITH_OPENCV_CONTRIB)
@@ -192,6 +193,13 @@ endif()
 if(OPENCV_FOUND)
     set(unittest_libraries ${unittest_libraries}
             cdff_dfn_primitive_finder opencv_highgui )
+endif()
+
+if(BUILD_CENTRALDPM)
+    set(unittest_libraries ${unittest_libraries}
+        cdff_centraldpm
+        envire_asn1
+    )
 endif()
 
 # Make the Catch executable that runs the unit tests

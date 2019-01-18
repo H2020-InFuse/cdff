@@ -27,7 +27,7 @@
  * --------------------------------------------------------------------------
  */
 #include <catch.hpp>
-#include <CentralDPM.hpp>
+#include <CentralDPM/CentralDPM.hpp>
 #include <Types/CPP/PointCloud.hpp>
 #include <string>
 

@@ -390,10 +390,14 @@ else()
 
 endif()
 
-## Look for Envire ---------------------------------------------------
-find_package(PkgConfig REQUIRED)
+option(BUILD_CENTRALDPM "Build the central data product manager" ON)
+if(BUILD_CENTRALDPM)
+  message("Data Product Manager will be built")
+  ## Look for Envire ---------------------------------------------------
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(ENVIRE_CORE REQUIRED envire_core)
 
-pkg_check_modules(ENVIRE_CORE REQUIRED envire_core)
+endif()
 
 ## Setup CDFF installation -----------------------------------------------------
 
@@ -461,7 +465,6 @@ add_custom_target(purge
 
 include_directories(
   Common
-  CentralDPM
   DFNs
   DFPCs
 )
@@ -469,9 +472,13 @@ include_directories(
 # Process all subdirectories containing a CMakeLists file
 
 add_subdirectory(Common)
-add_subdirectory(CentralDPM)
 add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
+
+if(BUILD_CENTRALDPM)
+  include_directories(CentralDPM)
+  add_subdirectory(CentralDPM)
+endif()
 
 # Optionally compile the tests (unit tests, interactive tests, performance
 # tests, etc)
