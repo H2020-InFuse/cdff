@@ -136,8 +136,9 @@ Pose3DConstPtr Icp3D::ComputeTransform(PointCloudWithFeatures sourceCloud, Point
 	outSuccess = icp.hasConverged();
 	if (outSuccess)
 	{
-		Eigen::Matrix4f eigenTransform = icp.getFinalTransformation();
-		return EigenTransformToTransform3DConverter().Convert(eigenTransform);
+		Eigen::Matrix4f eigenTransformSceneInModel = icp.getFinalTransformation();
+		Eigen::Matrix4f eigenTransformModelInScene = eigenTransformSceneInModel.inverse();
+		return EigenTransformToTransform3DConverter().Convert(eigenTransformModelInScene);
 	}
 	else
 	{
