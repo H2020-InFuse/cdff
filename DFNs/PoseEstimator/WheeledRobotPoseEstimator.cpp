@@ -14,6 +14,7 @@
 #include <opencv2/core/eigen.hpp>
 #include <Converters/FrameToMatConverter.hpp>
 
+#include <iostream>
 
 namespace robots
 {
@@ -48,6 +49,7 @@ WheeledRobotPoseEstimator::WheeledRobotPoseEstimator()
     initKalmanFilter(KF, KFparameters.nStates, KFparameters.nMeasurements, KFparameters.nInputs, KFparameters.dt);
     converged = false;
     convergenceIdx = 0;
+    prevCovInnovTrace = 0;
 
     prevEstimatedPose.pos.arr[0] = 0;
     prevEstimatedPose.pos.arr[1] = 0;
@@ -56,7 +58,6 @@ WheeledRobotPoseEstimator::WheeledRobotPoseEstimator()
     prevEstimatedPose.orient.arr[1] = 0;
     prevEstimatedPose.orient.arr[2] = 0;
     prevEstimatedPose.orient.arr[3] = 0;
-
 }
 
 WheeledRobotPoseEstimator::~WheeledRobotPoseEstimator()
@@ -99,6 +100,11 @@ void WheeledRobotPoseEstimator::process()
     cv::Mat inputImage = Converters::FrameToMatConverter().Convert(&inImage);
     std::vector<cv::Vec3f> robot_wheels = filterRobotWheels();
 
+//    std::cout << " === detected wheels : " << robot_wheels[0][1] << " " << robot_wheels[1][1] << std::endl;
+
+    m_last_center.x = 1;
+
+// ===========================================================================================   POSE EXTRACTION  ==========================================================
     if(robot_wheels.size()>=2)
     {
         extractRobotPoints(robot_wheels);
@@ -107,30 +113,37 @@ void WheeledRobotPoseEstimator::process()
         if(m_last_center.x != -1)
         {
             outputPose(m_robot_points.robot_center_3D, extractOrientation());
-            // lower confidence in measurements (higher measurement noise)
-            cv::setIdentity(KF.measurementNoiseCov, cv::Scalar::all(1e-2));
-            estimatedPose = estimatePose(KF, outPoses.arr[0], measurements, 0);
+
+            // good confidence in measurements (TODO : lower for orientation )
+            cv::setIdentity(KF.measurementNoiseCov, cv::Scalar::all(1e-3));
+            estimatedPose = estimatePose(KF, outPoses.arr[0], measurements, 0, 0);
+            m_last_center = m_robot_points.robot_center_px;
         }
         else
         {
+            // ---------- discard orientation : measure position only
+            std::cout << " ---------- measure position only  ----------" << std::endl;
+            // TODO : check orientation is not taken in count (otherwise floor its confidence)
             outputPose(m_robot_points.robot_center_3D, std::vector<double>());
+            estimatedPose = estimatePose(KF, outPoses.arr[0], measurements, 0, 1);
         }
-
-        m_last_center = m_robot_points.robot_center_px;
     }
     else
     {
+        std::cout << " NO available measurement :";
+        // extract centroid, display, extract position only
+
         m_robot_points.robot_center_px = extractForegroundCentroid(inputImage);
         m_robot_points.robot_center_3D = get3DCoordinates(m_robot_points.robot_center_px);
         visualizeResults();
-        outputPose(m_robot_points.robot_center_3D, std::vector<double>());
         m_last_center = cv::Point(-1,-1);
 
-        // ---------- CASE 2/3 : foreground centroid available ----------
+        // if backup measurement allowed and available
         if (m_robot_points.robot_center_px.x > 0 && m_robot_points.robot_center_px.y > 0 && KFparameters.backupMeasurement == true)
         {
-            // lower confidence in measurements (higher measurement noise)
-            cv::setIdentity(KF.measurementNoiseCov, cv::Scalar::all(1e-1));
+            outputPose(m_robot_points.robot_center_3D, std::vector<double>());
+            // ---------- CASE 2/3 : foreground centroid available ----------
+            std::cout << " ---------- backup : centroid ----------" << std::endl;
 
             // get blob center 3D coords
             asn1SccPose poseFromCentroid;
@@ -140,33 +153,42 @@ void WheeledRobotPoseEstimator::process()
             poseFromCentroid.pos.arr[1] = m_robot_points.robot_center_3D[1];
             poseFromCentroid.pos.arr[2] = m_robot_points.robot_center_3D[2];
 
-            poseFromCentroid.orient.arr[0] = 0;
-            poseFromCentroid.orient.arr[1] = 0;
-            poseFromCentroid.orient.arr[2] = 0;
-            poseFromCentroid.orient.arr[3] = 1;
-
-            estimatedPose = estimatePose(KF, poseFromCentroid, measurements, 0);
-
+            // TODO : check orientation is not taken in count (otherwise floor its confidence)
+            // lower confidence in measurements (higher measurement noise)
+            cv::setIdentity(KF.measurementNoiseCov, cv::Scalar::all(1e-1));
+            estimatedPose = estimatePose(KF, poseFromCentroid, measurements, 0, 1);
         }
-        // ---------- CASE 3/3 : no measures available ----------
-        else {
-            //  if convergence reached, apply KF prediction only
-            if (converged == true)
-            {
-                estimatedPose = estimatePose(KF, prevEstimatedPose, measurements, 1);
-            }
+        else if (prevEstimatedPose.pos.arr[0] !=0 && prevEstimatedPose.pos.arr[1] !=0)
+        {
+            // ---------- CASE 3/3 : no measures available, prevPose != 0, KF converged -> predict ----------
+            std::cout << " ---------- converged ? prediciton only ----------" << std::endl;
+            // confidence in measurements (higher process noise)
+//            cv::setIdentity(KF.processNoiseCov, cv::Scalar::all(1e-3));
+            estimatedPose = estimatePose(KF, prevEstimatedPose, measurements, 1, 1);
         }
     }
 
-    checkFilterConvergence(KF, KFparameters.nStates, KFparameters.nMeasurements, KFparameters.nInputs, KFparameters.dt, KFparameters.maxJumpInPosition,
-                           prevEstimatedPose, estimatedPose, prevConvergenceIdx, convergenceIdx, prevDeltaCov, converged);
 
-    if (converged)
+
+//    std::cout << " poses - raw : " << outPoses.arr[0].pos.arr[0] << "    estimated : " << estimatedPose.pos.arr[0] << std::endl;
+    converged = checkKFConvergence(KF, prevCovInnovTrace, 1e-4);
+//
+//    checkFilterConvergence(KF, KFparameters.nStates, KFparameters.nMeasurements, KFparameters.nInputs, KFparameters.dt, KFparameters.maxJumpInPosition,
+//                           prevEstimatedPose, estimatedPose, prevConvergenceIdx, convergenceIdx, prevDeltaCov, converged);
+
+    if (1)
     {
         outPoses.arr[0] = estimatedPose;
+        prevEstimatedPose = outPoses.arr[0];
+    } else {
+        return;
     }
 
-    prevEstimatedPose = estimatedPose;
+    std::cout << " convergence : " << converged
+              << " output pose : " << outPoses.arr[0].pos.arr[0]
+              << std::endl;
+
+// ===========================================================================================  END ESTIMATION  ==========================================================
 }
 
 cv::Point WheeledRobotPoseEstimator::outputPose(cv::Vec3d position, std::vector<double> orientation)
@@ -298,7 +320,7 @@ void WheeledRobotPoseEstimator::extractRobotPoints(std::vector<cv::Vec3f> wheels
         cv::Point wheel_center_2 = cv::Point(wheels[1][0], wheels[1][1]);
 
         double distance_between_wheels = cv::norm(wheel_center_1 - wheel_center_2);
-        double h = wheels[0][2]/2;
+        double h = distance_between_wheels/3; //wheels[0][2]/2;
         double alpha = asin((wheel_center_1.y - wheel_center_2.y) / distance_between_wheels);
         double beta = M_PI / 2 - alpha;
 
@@ -320,11 +342,11 @@ void WheeledRobotPoseEstimator::extractRobotPoints(std::vector<cv::Vec3f> wheels
         m_robot_points.left_wheel.down = get3DCoordinates(bottom_left);
         m_robot_points.right_wheel.down = get3DCoordinates(bottom_right);
 
-        m_robot_points.robot_center_3D[0] = (m_robot_points.left_wheel.center[0] + m_robot_points.right_wheel.center[0]) / 2;
-        m_robot_points.robot_center_3D[1] = (m_robot_points.left_wheel.center[1] + m_robot_points.right_wheel.center[1]) / 2;
-        m_robot_points.robot_center_3D[2] = (m_robot_points.left_wheel.center[2] + m_robot_points.right_wheel.center[2]) / 2;
+        m_robot_points.robot_center_3D[0] = (m_robot_points.left_wheel.center[0] + m_robot_points.right_wheel.center[0]) / 2.0;
+        m_robot_points.robot_center_3D[1] = (m_robot_points.left_wheel.center[1] + m_robot_points.right_wheel.center[1]) / 2.0;
+        m_robot_points.robot_center_3D[2] = (m_robot_points.left_wheel.center[2] + m_robot_points.right_wheel.center[2]) / 2.0;
 
-        m_robot_points.robot_center_px.x = wheel_center_1.x + (wheel_center_2.x - wheel_center_1.x) / 2;
+        m_robot_points.robot_center_px.x = wheel_center_1.x + (wheel_center_2.x - wheel_center_1.x) / 2.0;
         m_robot_points.robot_center_px.y = wheel_center_1.y + (wheel_center_2.y - wheel_center_1.y) / 2;
 
     }
@@ -400,11 +422,12 @@ cv::Vec3f WheeledRobotPoseEstimator::get3DCoordinates(cv::Point point)
         double cy = inDepth.intrinsic.cameraMatrix.arr[1].arr[2];
 
 
-        double disparity_value = disparity.at<float>(point.y,point.x);
-        if(disparity_value != 0 && disparity_value > (fx*parameters.baseline)/parameters.maxStereoDepth)
-        {
-            double z = fx * parameters.baseline / disparity_value;
+        double disparity_value = disparity.at<float>(point);
+        double z = fx * parameters.baseline / disparity_value;
+        double Dmax = parameters.maxStereoDepth;
 
+        if(disparity_value != 0 &&  z < Dmax)
+        {
             point_3d[0] = (z / fx) * (point.x - cx);
             point_3d[1] = (z / fy) * (point.y - cy);
             point_3d[2] = z;
