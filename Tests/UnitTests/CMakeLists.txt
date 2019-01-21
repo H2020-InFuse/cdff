@@ -123,9 +123,7 @@ if(OPENCV_FOUND)
 endif()
 
 if(BUILD_CENTRALDPM)
-    set(unittest_sources ${unittest_sources}
-        CentralDPM/CentralDPM.cpp
-    )
+    list(APPEND unittest_sources CentralDPM/CentralDPM.cpp)
 endif()
 
 # Libraries used by the aforementioned source files. They will be linked in the
@@ -196,9 +194,7 @@ if(OPENCV_FOUND)
 endif()
 
 if(BUILD_CENTRALDPM)
-    set(unittest_libraries ${unittest_libraries}
-        cdff_centraldpm
-    )
+    list(APPEND unittest_libraries cdff_support_centraldpm)
 endif()
 
 # Make the Catch executable that runs the unit tests

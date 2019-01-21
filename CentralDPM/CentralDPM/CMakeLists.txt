@@ -1,15 +1,15 @@
 add_library(
-    cdff_centraldpm
+    cdff_support_centraldpm
     CentralDPM.cpp
 )
 
 target_include_directories(
-  cdff_centraldpm
+  cdff_support_centraldpm
   SYSTEM PRIVATE ${ENVIRE_CORE_INCLUDE_DIRS} 
 )
 
 target_link_libraries(
-    cdff_centraldpm
+    cdff_support_centraldpm
     PUBLIC cdff_types
-    PRIVATE cdff_logger ${ENVIRE_CORE_LIBRARIES} class_loader envire_asn1
+    PRIVATE cdff_logger ${ENVIRE_CORE_LIBRARIES} class_loader cdff_support_envire_asn1
 )

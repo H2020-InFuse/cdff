@@ -1,2 +1,2 @@
 add_subdirectory(CentralDPM)
-add_subdirectory(Envire_asn1)
+add_subdirectory(EnvireAsn1)
