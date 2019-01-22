@@ -102,6 +102,11 @@ void WheeledRobotPoseEstimator::process()
 
 
 // ===========================================================================================   POSE EXTRACTION  ==========================================================
+    std::vector<double> prevQuat = {prevEstimatedPose.orient.arr[0],
+                                    prevEstimatedPose.orient.arr[1],
+                                    prevEstimatedPose.orient.arr[2],
+                                    prevEstimatedPose.orient.arr[3]};
+
     if(robot_wheels.size()>=2)
     {
         extractRobotPoints(robot_wheels);
@@ -120,7 +125,7 @@ void WheeledRobotPoseEstimator::process()
             // ---------- discard orientation : measure position only
             std::cout << " ---------- measure position only  ----------" << std::endl;
             // TODO : check orientation is not taken in count (otherwise floor its confidence)
-            outputPose(m_robot_points.robot_center_3D, std::vector<double>());
+            outputPose(m_robot_points.robot_center_3D, prevQuat);
             estimatedPose = estimatePose(KF, outPoses.arr[0], measurements, 0, 1);
         }
 
@@ -141,7 +146,7 @@ void WheeledRobotPoseEstimator::process()
         // if backup measurement allowed and available
         if (m_robot_points.robot_center_px.x > 0 && m_robot_points.robot_center_px.y > 0 && KFparameters.backupMeasurement == true)
         {
-            outputPose(m_robot_points.robot_center_3D, std::vector<double>());
+            outputPose(m_robot_points.robot_center_3D, prevQuat);
             // ---------- CASE 2/3 : foreground centroid available ----------
             std::cout << " ---------- backup : centroid ----------" << std::endl;
 
