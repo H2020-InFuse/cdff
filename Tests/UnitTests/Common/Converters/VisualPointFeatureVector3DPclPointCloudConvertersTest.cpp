@@ -300,7 +300,6 @@ TEST_CASE("Empty Point Cloud conversion", "[EmptyPointCloud]")
 	PclPointCloudToVisualPointFeatureVector3DConverter firstConverter;
 	VisualPointFeatureVector3DToPclPointCloudConverter secondConverter;
 
-	std::cout << "Init" << std::endl;
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::PointCloud<pcl::SHOT352>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<pcl::SHOT352> >();
 	PointCloudWithFeatures<pcl::SHOT352> inputCloud;
@@ -308,25 +307,18 @@ TEST_CASE("Empty Point Cloud conversion", "[EmptyPointCloud]")
 	inputCloud.featureCloud = featureCloud;
 	inputCloud.descriptorSize = 0;
 
-	std::cout << "First" << std::endl;
 	VisualPointFeatureVector3DSharedConstPtr asnVector = firstConverter.ConvertShared(inputCloud);
-	std::cout << "Second" << std::endl;
 	PointCloudWithFeatures<pcl::SHOT352> intermediateCloud = secondConverter.ConvertShared<pcl::SHOT352>(asnVector);
-	std::cout << "Third" << std::endl;
 	VisualPointFeatureVector3DSharedConstPtr outputCloud = firstConverter.ConvertShared(intermediateCloud);
 
-	std::cout << "Check" << std::endl;
 	REQUIRE(GetNumberOfPoints(*asnVector) == 0);
 	REQUIRE(intermediateCloud.pointCloud->points.size() == 0);
 	REQUIRE(intermediateCloud.featureCloud->points.size() == 0);
 	REQUIRE(intermediateCloud.descriptorSize == SHOT_DESCRIPTOR_LENGTH);
 	REQUIRE(GetNumberOfPoints(*outputCloud) == 0);
 
-	std::cout << "reset" << std::endl;
 	asnVector.reset();
 	outputCloud.reset();
-
-	std::cout << "end" << std::endl;
 	}
 
 TEST_CASE("Reference Features Conversion (Visual)", "[ReferenceFeaturesConversion]")
