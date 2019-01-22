@@ -160,7 +160,7 @@
    - ./docker-builder.sh Dockerfile.valgrind cdff-valgrind USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
   only:
    changes:
-    - Tools/Docker/Dockerfile.user
+    - Tools/Docker/Dockerfile.valgrind
 
  generate:asn:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
