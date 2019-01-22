@@ -169,11 +169,11 @@ VisualPointFeatureVector3DConstPtr ShotDescriptor3D::Convert(
 		if (parameters.baseOptions.outputFormat == POSITIONS_OUTPUT)
 		{
 			pcl::PointXYZ point = inputCloud->points.at(indicesList->at(pointIndex));
-			AddPoint(*featuresVector, point.x, point.y, point.z);
+			AddPoint(*featuresVector, point.x, point.y, point.z, SHOT_DESCRIPTOR);
 		}
 		else if (parameters.baseOptions.outputFormat == REFERENCES_OUTPUT)
 		{
-			AddPoint(*featuresVector, indicesList->at(pointIndex));
+			AddPoint(*featuresVector, indicesList->at(pointIndex), SHOT_DESCRIPTOR);
 		}
 
 		pcl::SHOT352 feature = shotPointCloud->points.at(pointIndex);
