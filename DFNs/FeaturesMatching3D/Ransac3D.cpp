@@ -156,8 +156,14 @@ Pose3DConstPtr Ransac3D::ComputeTransform(PointCloudWithFeatures sourceCloud, Po
 
 	if (outSuccess)
 	{
-		Eigen::Matrix4f eigenTransform = ransac->getFinalTransformation();
-		return EigenTransformToTransform3DConverter().Convert(eigenTransform);
+		Eigen::Matrix4f eigenTransformSceneInModel = ransac->getFinalTransformation();
+		Pose3DConstPtr scenePoseInModel = EigenTransformToTransform3DConverter().Convert(eigenTransformSceneInModel);
+
+		Pose3DPtr modelPoseInScene = NewPose3D();
+		SetPosition(*modelPoseInScene, -GetXPosition(*scenePoseInModel), -GetYPosition(*scenePoseInModel), -GetZPosition(*scenePoseInModel));
+		SetOrientation(*modelPoseInScene, -GetXOrientation(*scenePoseInModel), -GetYOrientation(*scenePoseInModel), -GetZOrientation(*scenePoseInModel), GetWOrientation(*scenePoseInModel));
+		delete(scenePoseInModel);
+		return modelPoseInScene;
 	}
 	else
 	{

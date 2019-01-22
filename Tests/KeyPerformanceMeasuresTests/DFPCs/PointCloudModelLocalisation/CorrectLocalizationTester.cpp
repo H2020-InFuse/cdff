@@ -33,7 +33,7 @@
 
 #include <Visualizers/PCLVisualizer.hpp>
 
-using namespace CDFF::DFN;
+using namespace CDFF::DFPC;
 using namespace Converters;
 using namespace VisualPointFeatureVector3DWrapper;
 using namespace PointCloudWrapper;
@@ -53,29 +53,22 @@ using namespace SupportTypes;
  * --------------------------------------------------------------------------
  */
 CorrectLocalizationTester::CorrectLocalizationTester() :
-	extractorConfigurationFile(""),
-	descriptorConfigurationFile(""),
-	matcherConfigurationFile(""),
-	modelCloudFilePath(""),
+	dfpcConfigurationFilePath(""),
 	sceneCloudFilePath(""),
+	modelCloudFilePath(""),
+	groundTruthPoseFilePath(""),
 	beginTime(clock()),
 	endTime(beginTime)
 	{
-	extractor = NULL;
-	descriptor = NULL;
-	matcher = NULL;
+	dfpc = NULL;
 
 	inputSceneCloud = NULL;
 	inputModelCloud = NULL;
 	inputTruthModelPoseInScene = NULL;
-	sceneKeypointsVector = NULL;
-	modelKeypointsVector = NULL;
-	sceneFeaturesVector = NULL;
-	modelFeaturesVector = NULL;
 	outputModelPoseInScene = NULL;
 
 	outputMatcherSuccess = false;
-	dfnsWereConfigured = false;
+	dfpcWasConfigured = false;
 	inputsWereLoaded = false;
 	groundTruthWasLoaded = false;
 	
@@ -87,10 +80,6 @@ CorrectLocalizationTester::~CorrectLocalizationTester()
 	DELETE_IF_NOT_NULL(inputSceneCloud);
 	DELETE_IF_NOT_NULL(inputModelCloud);
 	DELETE_IF_NOT_NULL(inputTruthModelPoseInScene);
-	DELETE_IF_NOT_NULL(sceneKeypointsVector);
-	DELETE_IF_NOT_NULL(modelKeypointsVector);
-	DELETE_IF_NOT_NULL(sceneFeaturesVector);
-	DELETE_IF_NOT_NULL(modelFeaturesVector);
 	DELETE_IF_NOT_NULL(outputModelPoseInScene);
 	}
 
@@ -104,39 +93,26 @@ void CorrectLocalizationTester::SetInputClouds(const std::string& sceneCloudFile
 	LoadGroudTruthPose();
 	}
 
-void CorrectLocalizationTester::SetConfigurationFiles(const std::string& extractorConfigurationFile, const std::string& descriptorConfigurationFile, const std::string& matcherConfigurationFile)
+void CorrectLocalizationTester::SetDfpc(const std::string& configurationFilePath, CDFF::DFPC::PointCloudModelLocalisationInterface* dfpc)
 	{
-	this->extractorConfigurationFile = extractorConfigurationFile;
-	this->descriptorConfigurationFile = descriptorConfigurationFile;
-	this->matcherConfigurationFile = matcherConfigurationFile;
+	this->dfpcConfigurationFilePath = configurationFilePath;
+	this->dfpc = dfpc;
 
-	if (extractor != NULL)
+	if (dfpcConfigurationFilePath != "")
 		{
-		ConfigureDfns();
+		ConfigureDfpc();
 		}
 	}
 
-void CorrectLocalizationTester::SetDfns(CDFF::DFN::FeaturesExtraction3DInterface* extractor, CDFF::DFN::FeaturesDescription3DInterface* descriptor, CDFF::DFN::FeaturesMatching3DInterface* matcher)
+void CorrectLocalizationTester::ExecuteDfpc(bool showClouds)
 	{
-	this->extractor = extractor;
-	this->descriptor = descriptor;
-	this->matcher = matcher;
-
-	if (extractorConfigurationFile != "")
-		{
-		ConfigureDfns();
-		}
-	}
-
-void CorrectLocalizationTester::ExecuteDfns(bool showClouds)
-	{
-	ASSERT(dfnsWereConfigured, "Error: there was a call to ExecuteDfns before actually configuring the DFNs");
+	ASSERT(dfpcWasConfigured, "Error: there was a call to ExecuteDfns before actually configuring the DFNs");
 	ASSERT(inputsWereLoaded && groundTruthWasLoaded, "Error: there was a call to ExecuteDfns before actually loading inputs");
 
-	processingTime = 0;
-	ExtractFeatures();
-	DescribeFeatures();
-	MatchFeatures();
+	beginTime = clock();
+	Localize();
+	endTime = clock();
+	processingTime += float(endTime - beginTime) / CLOCKS_PER_SEC;
 	PRINT_TO_LOG("Processing took (seconds): ", processingTime);
 
 	if (showClouds)
@@ -189,68 +165,18 @@ bool CorrectLocalizationTester::IsOutputCorrect(float relativeLocationError, flo
  *
  * --------------------------------------------------------------------------
  */
-#define PROCESS_AND_MEASURE_TIME(dfn) \
-	{ \
-	beginTime = clock(); \
-	dfn->process(); \
-	endTime = clock(); \
-	processingTime += float(endTime - beginTime) / CLOCKS_PER_SEC; \
-	}
-
-void CorrectLocalizationTester::ExtractFeatures()
+void CorrectLocalizationTester::Localize()
 	{
-	extractor->pointcloudInput(*inputSceneCloud);
-	extractor->process();
-
-	DELETE_IF_NOT_NULL(sceneKeypointsVector);
-	VisualPointFeatureVector3DPtr newSceneKeypointsVector = NewVisualPointFeatureVector3D();
-	Copy( extractor->featuresOutput(), *newSceneKeypointsVector);
-	sceneKeypointsVector = newSceneKeypointsVector;
-	PRINT_TO_LOG("Number of scene keypoints extracted is", GetNumberOfPoints(*sceneKeypointsVector));
-
-	extractor->pointcloudInput(*inputModelCloud);
-	PROCESS_AND_MEASURE_TIME(extractor);
-
-	DELETE_IF_NOT_NULL(modelKeypointsVector);
-	VisualPointFeatureVector3DPtr newModelKeypointsVector = NewVisualPointFeatureVector3D();
-	Copy( extractor->featuresOutput(), *newModelKeypointsVector);
-	modelKeypointsVector = newModelKeypointsVector;
-	PRINT_TO_LOG("Number of model keypoints extracted is", GetNumberOfPoints(*modelKeypointsVector));
-	}
-
-void CorrectLocalizationTester::DescribeFeatures()
-	{
-	descriptor->pointcloudInput(*inputSceneCloud);
-	descriptor->featuresInput(*sceneKeypointsVector);
-	descriptor->process();
-
-	DELETE_IF_NOT_NULL(sceneFeaturesVector);
-	VisualPointFeatureVector3DPtr newSceneFeaturesVector = NewVisualPointFeatureVector3D();
-	Copy( descriptor->featuresOutput(), *newSceneFeaturesVector);
-	sceneFeaturesVector = newSceneFeaturesVector;
-	PRINT_TO_LOG("Number of scene features described is", GetNumberOfPoints(*sceneFeaturesVector));
-
-	descriptor->pointcloudInput(*inputModelCloud);
-	descriptor->featuresInput(*modelKeypointsVector);
-	PROCESS_AND_MEASURE_TIME(descriptor);
-	DELETE_IF_NOT_NULL(modelFeaturesVector);
-	VisualPointFeatureVector3DPtr newModelFeaturesVector = NewVisualPointFeatureVector3D();
-	Copy( descriptor->featuresOutput(), *newModelFeaturesVector);
-	modelFeaturesVector = newModelFeaturesVector;
-	PRINT_TO_LOG("Number of model features described is", GetNumberOfPoints(*modelFeaturesVector));
-	}
-
-void CorrectLocalizationTester::MatchFeatures()
-	{
-	matcher->sourceFeaturesInput(*modelFeaturesVector);
-	matcher->sinkFeaturesInput(*sceneFeaturesVector);
-	PROCESS_AND_MEASURE_TIME(matcher);
+	dfpc->sceneInput(*inputSceneCloud);
+	dfpc->modelInput(*inputModelCloud);
+	dfpc->computeModelFeaturesInput(true);
+	dfpc->run();
 
 	DELETE_IF_NOT_NULL(outputModelPoseInScene);
 	Pose3DPtr newOutputModelPoseInScene = NewPose3D();
-	Copy( matcher->transformOutput(), *newOutputModelPoseInScene);
+	Copy( dfpc->poseOutput(), *newOutputModelPoseInScene );
 	outputModelPoseInScene = newOutputModelPoseInScene;
-	outputMatcherSuccess = matcher->successOutput();
+	outputMatcherSuccess = dfpc->successOutput();
 
 	if (outputMatcherSuccess)
 		{
@@ -298,25 +224,15 @@ void CorrectLocalizationTester::LoadGroudTruthPose()
 	groundTruthWasLoaded = true;
 	}
 
-void CorrectLocalizationTester::ConfigureDfns()
+void CorrectLocalizationTester::ConfigureDfpc()
 	{
-	ASSERT(extractor != NULL && matcher != NULL, "One mandatory DFN was not set up");
-	ASSERT(extractorConfigurationFile != "" && matcherConfigurationFile != "", "One mandatory DFN configuration file was not set up");
-	ASSERT(descriptor == NULL || descriptorConfigurationFile != "", "Descriptor DFN configuration file was not set up");
+	ASSERT(dfpc != NULL, "DFPC was not set up");
+	ASSERT(dfpcConfigurationFilePath != "", "DFPC configuration file was not set up");
 
-	extractor->setConfigurationFile(extractorConfigurationFile);
-	extractor->configure();
+	dfpc->setConfigurationFile(dfpcConfigurationFilePath);
+	dfpc->setup();
 
-	if (descriptor != NULL)
-		{
-		descriptor->setConfigurationFile(descriptorConfigurationFile);
-		descriptor->configure();
-		}
-
-	matcher->setConfigurationFile(matcherConfigurationFile);
-	matcher->configure();
-
-	dfnsWereConfigured = true;
+	dfpcWasConfigured = true;
 	}
 
 float CorrectLocalizationTester::ComputeLocationError()

@@ -13,6 +13,7 @@
 #include <Converters/PointCloudToPclNormalsCloudConverter.hpp>
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
+#include <Errors/AssertOnTest.hpp>
 
 #include <pcl/kdtree/kdtree.h>
 #include <pcl/features/normal_3d.h>
@@ -238,6 +239,7 @@ pcl::PointCloud<pcl::PFHSignature125>::ConstPtr PfhDescriptor3D::ComputePfhDescr
 	pfh.setSearchMethod(kdTree);
 	pfh.setInputCloud(pointCloud);
 	pfh.setInputNormals(normalsCloud);
+	pfh.setIndices(indicesList);
 	pfh.setRadiusSearch(parameters.baseOptions.searchRadius);
 
 	// Setup output

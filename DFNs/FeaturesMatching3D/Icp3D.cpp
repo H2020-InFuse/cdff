@@ -136,8 +136,14 @@ Pose3DConstPtr Icp3D::ComputeTransform(PointCloudWithFeatures sourceCloud, Point
 	outSuccess = icp.hasConverged();
 	if (outSuccess)
 	{
-		Eigen::Matrix4f eigenTransform = icp.getFinalTransformation();
-		return EigenTransformToTransform3DConverter().Convert(eigenTransform);
+		Eigen::Matrix4f eigenTransformSceneInModel = icp.getFinalTransformation();
+		Pose3DConstPtr scenePoseInModel = EigenTransformToTransform3DConverter().Convert(eigenTransformSceneInModel);
+
+		Pose3DPtr modelPoseInScene = NewPose3D();
+		SetPosition(*modelPoseInScene, -GetXPosition(*scenePoseInModel), -GetYPosition(*scenePoseInModel), -GetZPosition(*scenePoseInModel));
+		SetOrientation(*modelPoseInScene, -GetXOrientation(*scenePoseInModel), -GetYOrientation(*scenePoseInModel), -GetZOrientation(*scenePoseInModel), GetWOrientation(*scenePoseInModel));
+		delete(scenePoseInModel);
+		return modelPoseInScene;
 	}
 	else
 	{

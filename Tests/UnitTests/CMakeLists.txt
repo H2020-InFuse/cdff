@@ -24,58 +24,12 @@ set(unittest_sources UnitTests.cpp
     Common/Converters/VisualPointFeatureVector3DPclPointCloudConvertersTest.cpp
     Common/Helpers/ParametersHelper.cpp
     Common/Types/CorrespondenceMap2D.cpp
-    DFNs/BundleAdjustment/CeresAdjustment.cpp
-    DFNs/BundleAdjustment/SvdDecomposition.cpp
-    DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
-    DFNs/ColorConversion/ColorConversion.cpp
-    DFNs/DisparityImage/DisparityImage.cpp
-    DFNs/DisparityToPointCloud/DisparityToPointCloud.cpp
-    DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.cpp
-    DFNs/ImageFiltering/DerivativeEdgeDetection.cpp
-    DFNs/ImageFiltering/CannyEdgeDetection.cpp
-    DFNs/ImageFiltering/BackgroundExtraction.cpp
-    DFNs/ImageRectification/ImageRectification.cpp
     DFNs/DepthFiltering/DepthFiltering.cpp
-    DFNs/FeaturesDescription2D/OrbDescriptor.cpp
-    DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
-    DFNs/FeaturesDescription3D/PfhDescriptor3D.cpp
-    DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
-    DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
-    DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
-    DFNs/FeaturesExtraction3D/IssDetector3D.cpp
-    DFNs/FeaturesExtraction3D/CornerDetector3D.cpp
-    DFNs/FeaturesMatching2D/FlannMatcher.cpp
     DFNs/FeaturesMatching3D/BestDescriptorMatch.cpp
-    DFNs/FeaturesMatching3D/Icp3D.cpp
-    DFNs/FeaturesMatching3D/Ransac3D.cpp
-    DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
-    DFNs/ImageDegradation/ImageDegradation.cpp
-    DFNs/StereoDegradation/StereoDegradation.cpp
-    DFNs/ImageFiltering/ImageUndistortion.cpp
     DFNs/PoseEstimator/WheeledRobotPoseEstimator.cpp
     DFNs/ImageFiltering/BackgroundSubtractorMOG2.cpp
-    DFNs/ImageFiltering/NormalVectorExtraction.cpp
-    DFNs/ImageFiltering/KMeansClustering.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
-    DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
-    DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
-    DFNs/PointCloudAssembly/NeighbourSinglePointAverage.cpp
-    DFNs/PointCloudAssembly/VoxelBinning.cpp
-    #DFNs/PointCloudAssembly/MatcherAssembly.cpp
-    DFNs/PointCloudFiltering/StatisticalOutlierRemoval.cpp
-    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
-    DFNs/PointCloudTransform/CartesianSystemTransform.cpp
-    DFNs/PrimitiveMatching/HuInvariants.cpp
-    DFNs/Registration3D/Icp3D.cpp
-    DFNs/Registration3D/IcpCC.cpp
-    #DFNs/Registration3D/IcpMatcher.cpp
-    DFNs/StereoReconstruction/DisparityMapping.cpp
-    DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
-    DFNs/StereoRectification/StereoRectification.cpp
-    DFNs/Transform3DEstimation/CeresEstimation.cpp
-    DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
-    DFNs/Voxelization/Octree.cpp
     DFNs/WeightingExpert/PoseWeighting.cpp
     DFNs/LidarBasedTracking/LidarBasedTracking.cpp
     DFPCs/DfpcConfigurator.cpp
@@ -85,11 +39,83 @@ set(unittest_sources UnitTests.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences2DRecorder.cpp
     DFPCs/Reconstruction3D/MultipleCorrespondences3DRecorder.cpp
     DFPCs/Reconstruction3D/PointCloudMap.cpp
-    DFPCs/ModelBasedTracker/WheelTracker.cpp
-    DFPCs/ModelBasedTracker/WheeledRobotTracker.cpp
 )
 
-if(WITH_EDRES)
+if(OPENCV_FOUND)
+    set(unittest_sources ${unittest_sources}
+    DFNs/BundleAdjustment/SvdDecomposition.cpp
+    DFNs/CamerasTransformEstimation/EssentialMatrixDecomposition.cpp
+    DFNs/ColorConversion/ColorConversion.cpp
+    DFNs/DisparityImage/DisparityImage.cpp
+    DFNs/DisparityToPointCloud/DisparityToPointCloud.cpp
+    DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensity.cpp
+    DFNs/FeaturesDescription2D/OrbDescriptor.cpp
+    DFNs/FeaturesExtraction2D/HarrisDetector2D.cpp
+    DFNs/FeaturesExtraction2D/OrbDetectorDescriptor.cpp
+    DFNs/FeaturesMatching2D/FlannMatcher.cpp
+    DFNs/FundamentalMatrixComputation/FundamentalMatrixRansac.cpp
+    DFNs/ImageDegradation/ImageDegradation.cpp
+    DFNs/ImageFiltering/ImageUndistortion.cpp
+    DFNs/ImageFiltering/CannyEdgeDetection.cpp
+    DFNs/ImageFiltering/DerivativeEdgeDetection.cpp
+    DFNs/ImageFiltering/BackgroundExtraction.cpp
+    DFNs/ImageFiltering/NormalVectorExtraction.cpp
+    DFNs/ImageFiltering/KMeansClustering.cpp
+    DFNs/ImageRectification/ImageRectification.cpp
+    DFNs/PerspectiveNPointSolving/IterativePnpSolver.cpp
+    DFNs/PointCloudReconstruction2DTo3D/Triangulation.cpp
+    DFNs/StereoReconstruction/DisparityMapping.cpp
+    DFNs/StereoReconstruction/HirschmullerDisparityMapping.cpp
+    DFNs/StereoDegradation/StereoDegradation.cpp
+    DFNs/StereoRectification/StereoRectification.cpp
+    DFNs/Transform3DEstimation/LeastSquaresMinimization.cpp
+    DFNs/Voxelization/Octree.cpp
+    DFNs/PrimitiveMatching/HuInvariants.cpp
+    DFNs/PrimitiveFinder/BasicPrimitiveFinder.cpp
+    )
+endif()
+
+if(Ceres_FOUND)
+    set(unittest_sources ${unittest_sources}
+    DFNs/BundleAdjustment/CeresAdjustment.cpp
+    DFNs/Transform3DEstimation/CeresEstimation.cpp
+    )
+endif()
+
+if(PCL_FOUND)
+    set(unittest_sources ${unittest_sources}
+    DFNs/FeaturesDescription3D/ShotDescriptor3D.cpp
+    DFNs/FeaturesDescription3D/PfhDescriptor3D.cpp
+    DFNs/FeaturesExtraction3D/HarrisDetector3D.cpp
+    DFNs/FeaturesExtraction3D/IssDetector3D.cpp
+    DFNs/FeaturesExtraction3D/CornerDetector3D.cpp
+    DFNs/FeaturesMatching3D/Icp3D.cpp
+    DFNs/FeaturesMatching3D/Ransac3D.cpp
+    DFNs/PointCloudFiltering/StatisticalOutlierRemoval.cpp
+    DFNs/PointCloudTransform/CartesianSystemTransform.cpp
+    DFNs/Registration3D/Icp3D.cpp
+    DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
+    DFNs/PointCloudAssembly/NeighbourSinglePointAverage.cpp
+    DFNs/PointCloudAssembly/VoxelBinning.cpp
+    DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
+    DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
+    )
+endif()
+
+if(POINTMATCHER_FOUND)
+    set(unittest_sources ${unittest_sources}
+    #DFNs/PointCloudAssembly/MatcherAssembly.cpp
+    #DFNs/Registration3D/IcpMatcher.cpp
+    )
+endif()
+
+if(CLOUDCOMPARE_FOUND)
+    set(unittest_sources ${unittest_sources}
+    DFNs/Registration3D/IcpCC.cpp
+    )
+endif()
+
+if(Edres-Wrapper_FOUND)
     set(unittest_sources ${unittest_sources}
         DFNs/DisparityImage/DisparityImageEdres.cpp
         DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
@@ -103,24 +129,12 @@ if(WITH_EDRES)
     )
 endif()
 
-if(WITH_OPENCV_CONTRIB)
+if(HAVE_OPENCV_CONTRIB)
     set(unittest_sources ${unittest_sources}
         DFNs/LinemodDetect/LinemodDetect.cpp
     )
 endif()
 
-if(PCL_FOUND)
-    set(unittest_sources ${unittest_sources}
-        DFNs/ForceMeshGenerator/ForceMeshGenerator.cpp
-        DFNs/ForceMeshGenerator/ForceMeshHelperFunctions.cpp
-    )
-endif()
-
-if(OPENCV_FOUND)
-    set(unittest_sources ${unittest_sources}
-            DFNs/PrimitiveFinder/BasicPrimitiveFinder.cpp
-            )
-endif()
 
 if(BUILD_CENTRALDPM)
     list(APPEND unittest_sources CentralDPM/CentralDPM.cpp)

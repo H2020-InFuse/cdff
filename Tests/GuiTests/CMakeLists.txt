@@ -395,7 +395,7 @@ target_link_libraries(
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
 
-if(WITH_EDRES)
+if(Edres-Wrapper_FOUND)
     add_executable(
         DisparityImageEdresGuiTest
         DFNs/DisparityImage/DisparityImageEdres.cpp
@@ -412,7 +412,7 @@ if(WITH_EDRES)
 endif()
 
 
-if(WITH_EDRES)
+if(Edres-Wrapper_FOUND)
     add_executable(
         ImageDegradationEdresGuiTest
         DFNs/ImageDegradation/ImageDegradationEdres.cpp
@@ -475,7 +475,7 @@ target_link_libraries(
     ${VTK_LIBRARIES}
 )
 
-if(WITH_EDRES)
+if(Edres-Wrapper_FOUND)
     add_executable(
         StereoRectificationEdresGuiTest
         DFNs/StereoRectification/StereoRectificationEdres.cpp
@@ -522,7 +522,7 @@ target_link_libraries(
     ${VTK_LIBRARIES}
 )
 
-if(WITH_EDRES)
+if(Edres-Wrapper_FOUND)
     add_executable(
         StereoDegradationEdresGuiTest
         DFNs/StereoDegradation/StereoDegradationEdres.cpp

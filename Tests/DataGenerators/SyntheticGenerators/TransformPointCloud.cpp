@@ -125,14 +125,23 @@ int main(int argc, char** argv)
 			std::cin >> rotationX;
 			std::cin >> rotationY;
 			std::cin >> rotationZ;
-			std::cin >> rotationW;	
+			std::cin >> rotationW;
+			PRINT_TO_LOG("Showing with ", inputFile);
 			pointCloudTransformer.ShowWithAddedCloud(inputFile, positionX, positionY, positionZ, rotationX, rotationY, rotationZ, rotationW);
 			}
 		else if (command == "reduce")
 			{
 			int targetNumberOfPoints;
 			std::cin >> targetNumberOfPoints;
+			PRINT_TO_LOG("Reducing By ", targetNumberOfPoints);			
 			pointCloudTransformer.Reduce(targetNumberOfPoints);
+			}
+		else if (command == "remove_plane")
+			{
+			float inlierDistance;
+			std::cin >> inlierDistance;
+			PRINT_TO_LOG("Removing plane ", inlierDistance);
+			pointCloudTransformer.RemoveDominantPlane(inlierDistance);
 			}
 		}
 
