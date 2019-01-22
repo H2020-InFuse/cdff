@@ -1,0 +1,67 @@
+FROM nexus.spaceapplications.com/repository/infuse/cdff-pangolin:latest
+
+## Base + single dependency
+
+ARG INSTALL_DIR=/usr/local
+ENV INSTALL_CDFF=$INSTALL_DIR
+
+SHELL ["/bin/bash", "-c"]
+
+COPY get-cdff-dependencies.sh /tmp/CDFF/Tools/Docker/
+COPY installers/ /tmp/CDFF/Tools/Docker/installers/
+COPY patches/ /tmp/CDFF/Tools/Docker/patches/
+
+RUN apt-get update && apt-get install --yes --quiet libx11-6 \
+libbz2-1.0 \
+libfreetype6 \
+libsimage-dev \
+zlib1g \
+libgl1-mesa-dev \
+libxext-dev \
+libx11-dev \
+libxi-dev \
+libxmu-dev \
+libxpm-dev \
+libxt-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d coin3d
+
+RUN apt-get install --yes --quiet libfreetype6-dev \
+libfreeimage-dev \
+libzzip-dev \
+libxrandr-dev \
+libxaw7-dev \
+freeglut3-dev \
+libgl1-mesa-dev \
+libglu1-mesa-dev \
+nvidia-cg-toolkit \
+libois-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d ogre
+
+RUN apt-get install --yes --quiet libssl-dev \
+libusb-1.0-0-dev \
+pkg-config \
+libgtk-3-dev \
+libglfw3-dev \
+libgl1-mesa-dev \
+libglu1-mesa-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d realsense2
+
+RUN apt-get install --yes --quiet build-essential \
+libx11-dev \
+liblapack-dev \
+libxml2-dev \
+libzbar-dev \
+libpthread-stubs0-dev \
+libopenni-dev \
+libopenni2-dev \
+libois-dev \
+libqhull-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d visp
+
+ARG VERSION="1.1.8"
+ARG SHA=0000
+ENV IMAGE_VERSION=$VERSION
+ENV IMAGE_SHA=$SHA
+LABEL version=${IMAGE_VERSION}
+LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
+LABEL description="CI + single dependency"
