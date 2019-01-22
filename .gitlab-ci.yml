@@ -149,6 +149,19 @@
    changes:
     - Tools/Docker/Dockerfile.user
 
+ docker:cdff-valgrind:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.external
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.valgrind cdff-valgrind USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.user
+
  generate:asn:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage : generation
@@ -262,6 +275,37 @@
   dependencies:
    - generate:asn
   when: manual
+
+ analyse:valgrind:partial:
+  stage: test
+  image: nexus.spaceapplications.com/repository/infuse/cdff-valgrind:latest
+  dependencies:
+     - generate:asn
+  script:
+    - Tools/Valgrind/partial-valgrind.sh
+  only:
+    - merge_requests
+    - master
+  artifacts:
+    paths:
+     - valgrind/results
+    expire_in: 4 weeks
+
+ .analyse:valgrind:full:
+  stage: test
+  image: nexus.spaceapplications.com/repository/infuse/cdff-valgrind:latest
+  dependencies:
+     - generate:asn
+  script:
+    - Tools/Valgrind/full-valgrind.sh
+  only:
+    - merge_requests
+    - master
+  artifacts:
+    paths:
+     - valgrind/results
+    expire_in: 4 weeks
+
 
  analyse:cppcheck:full:
   <<: *configure

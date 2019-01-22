@@ -1,41 +1,26 @@
 #!/bin/bash
 
-# install autoconf (needed for Valgrind)
-sudo apt-get install autoconf
+# assuming we are running on an Image with valgrind.
+# assuming source contains already ASN types in c.
 
-# install Valgrind from source (the apt version has a bug in it on Ubuntu 16.04)
-git clone git://sourceware.org/git/valgrind.git
-cd valgrind/
-mkdir install
-./autogen.sh
-./configure --prefix=./install/
-make
-make install
+FULL=false
+for var in "$@"
+do
+   if [[ $var == "--full"  ]]
+    then
+    FULL=true
+   fi
+done
 
-# check Valgrind install
-./install/valgrind --version
 
-# in case Valgrind is not working as it should, install the apt version alongside it, to have the right settings / dependencies, but use the compiled version path ;-)
+mkdir -p valgrind && cd valgrind
 
-# go to the CDFF dir
-cd ../CDFF
-
-# from the CDFF dir, create the dir that will contain the built/compiled code (assuming no build folder)
-mkdir build
-cd build
-
-# if there was a build folder, reset the CMakeCache, just to make sure nothing is preconfigured
-rm CMakeCache.txt
-
-# maybe re-use the ASN1 types from a different job?
 # create the unit tests with debug symbols (-gdb3 for high level and better feedback; not portable! Else use -g2, which should work on all platforms)
-cmake -D USE_BUNDLED_DEPENDENCIES=ON -D COMPILE_ASN1=OFF -D CMAKE_INSTALL_PREFIX=../install/ -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_C_FLAGS_DEBUG:STRING=-ggdb3 -DCMAKE_CXX_FLAGS_DEBUG:STRING=-ggdb3 ..
+cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_C_FLAGS_DEBUG:STRING=-ggdb3 -DCMAKE_CXX_FLAGS_DEBUG:STRING=-ggdb3 ..
 
-# cd to where the UnitTests need to be executed
-cd ./Tests/UnitTests/
+make
 
-# create directory to hold the the log/xml output from Valgrind (and to create the artifacts from)
-mkdir leak_check_result
+mkdir results
 
 # run Valgrind
 # with these parameters, a full check will be performed, outputting the leaks / errors to an xml file that can be used with Valkyrie to parse them in a user-friendly way
@@ -44,8 +29,17 @@ mkdir leak_check_result
 # --child-silent-after-fork=yes to not mangle the xml output
 # -q to be less verbose and only output valgrind errors (not program errors/leaks) in the valgrind.log file. The file should therefore usually be completely empty.
 # --fullpath-after=InFuse/ supposedly cuts the path reference for source files from this reference frame. Though with xml output this does not seem to do anything.
-../../../../valgrind/install/bin/valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 --child-silent-after-fork=yes -q --xml=yes --xml-file=leak_check_result/error.xml --log-file=leak_check_result/valgrind.log --fullpath-after=InFuse/ ./cdff-unit-tests
+
+if [[ "$FULL" == true ]]
+    then
+        valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 --child-silent-after-fork=yes -q --xml=yes --xml-file=results/error.xml --log-file=results/valgrind.log --fullpath-after=CDFF/ ./Tests/UnitTests/cdff-unit-tests
+    else
+        valgrind --leak-check=full --show-leak-kinds=all --track-origins=no --undef-value-errors=no --error-exitcode=1 --child-silent-after-fork=yes -q --xml=yes --xml-file=results/error.xml --log-file=results/valgrind.log --fullpath-after=CDFF/ ./Tests/UnitTests/cdff-unit-tests
+fi
 
 # print summary for a nice view in gitlab
-cd leak_check_result
-awk '/== HEAP SUMMARY/,/== $/' ./valgrind.log; awk '/== LEAK SUMMARY/,/== $/' ./valgrind.log; awk '/== ERROR SUMMARY/,/== $/' ./valgrind.log
+cd valgrind_results
+
+awk '/== HEAP SUMMARY/,/== $/' ./valgrind.log;
+awk '/== LEAK SUMMARY/,/== $/' ./valgrind.log;
+awk '/== ERROR SUMMARY/,/== $/' ./valgrind.log;
