@@ -4,7 +4,7 @@
 ChangedFiles=$(git diff --name-only master . )
 SourceFiles=()
 for f in $ChangedFiles; do
-  if [[ $f =~ \.(c|cpp|h|cc)$ ]]; then
+  if [[ $f =~ \.(c|cc|cpp|h|hpp)$ ]]; then
    SourceFiles+=" $f" 
   fi
 done
