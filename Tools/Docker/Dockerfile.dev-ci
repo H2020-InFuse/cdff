@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
   python3-pyqt4 \
   libgdal-dev \
   libproj-dev \
-  python3.5-gdal
+  python3-gdal
 RUN pip3 install --upgrade pip
 RUN pip3 install pyyaml jinja2 cython numpy msgpack-python pydot nose nose2 pandas memory_profiler
 
