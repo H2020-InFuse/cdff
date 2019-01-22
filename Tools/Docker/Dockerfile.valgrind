@@ -1,4 +1,4 @@
-FROM nexus.spaceapplications.com/repository/infuse/cdff-base:latest
+FROM nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
 
 ## Base + single dependency
 
@@ -14,7 +14,7 @@ COPY patches/ /tmp/CDFF/Tools/Docker/patches/
 RUN apt-get update && apt-get install --yes --quiet autoconf && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d valgrind
 
-ARG VERSION="1.0.1"
+ARG VERSION="1.0.2"
 ARG SHA=0000
 ENV IMAGE_VERSION=$VERSION
 ENV IMAGE_SHA=$SHA
