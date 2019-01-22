@@ -277,12 +277,12 @@
   when: manual
 
  analyse:valgrind:partial:
-  stage: test
+  stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/cdff-valgrind:latest
   dependencies:
-     - generate:asn
+    - generate:asn
   script:
-    - Tools/Valgrind/partial-valgrind.sh
+    - Tools/Valgrind/valgrind.sh --full
   only:
     - merge_requests
     - master
@@ -290,22 +290,6 @@
     paths:
      - valgrind/results
     expire_in: 4 weeks
-
- .analyse:valgrind:full:
-  stage: test
-  image: nexus.spaceapplications.com/repository/infuse/cdff-valgrind:latest
-  dependencies:
-     - generate:asn
-  script:
-    - Tools/Valgrind/full-valgrind.sh
-  only:
-    - merge_requests
-    - master
-  artifacts:
-    paths:
-     - valgrind/results
-    expire_in: 4 weeks
-
 
  analyse:cppcheck:full:
   <<: *configure

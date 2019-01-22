@@ -38,8 +38,7 @@ if [[ "$FULL" == true ]]
 fi
 
 # print summary for a nice view in gitlab
-cd valgrind_results
 
-awk '/== HEAP SUMMARY/,/== $/' ./valgrind.log;
-awk '/== LEAK SUMMARY/,/== $/' ./valgrind.log;
-awk '/== ERROR SUMMARY/,/== $/' ./valgrind.log;
+awk '/== HEAP SUMMARY/,/== $/' results/valgrind.log;
+awk '/== LEAK SUMMARY/,/== $/' results/valgrind.log;
+awk '/== ERROR SUMMARY/,/== $/' results/valgrind.log;
