@@ -100,6 +100,21 @@ bool DescriptorsAreEqual(pcl::PFHSignature125 descriptor1, pcl::PFHSignature125 
 	return descriptorsAreEqual;
 	}
 
+bool FeatureTypeIsCorrect(VisualPointFeatureVector3DSharedConstPtr asnVector, PointCloudWithFeatures<MaxSizeHistogram> inputCloud)
+	{
+	return ( GetFeatureType(*asnVector) == HISTOGRAM_DESCRIPTOR);
+	}
+
+bool FeatureTypeIsCorrect(VisualPointFeatureVector3DSharedConstPtr asnVector, PointCloudWithFeatures<pcl::SHOT352> inputCloud)
+	{
+	return ( GetFeatureType(*asnVector) == SHOT_DESCRIPTOR);
+	}
+
+bool FeatureTypeIsCorrect(VisualPointFeatureVector3DSharedConstPtr asnVector, PointCloudWithFeatures<pcl::PFHSignature125> inputCloud)
+	{
+	return ( GetFeatureType(*asnVector) == PFH_DESCRIPTOR);
+	}
+
 template <class FeatureType>
 void ConversionAndBack(PointCloudWithFeatures<FeatureType> inputCloud)
 	{
@@ -110,6 +125,8 @@ void ConversionAndBack(PointCloudWithFeatures<FeatureType> inputCloud)
 
 	VisualPointFeatureVector3DSharedConstPtr asnVector = firstConverter.ConvertShared(inputCloud);
 	REQUIRE(GetNumberOfPoints(*asnVector) == inputCloud.pointCloud->points.size() );
+	REQUIRE( FeatureTypeIsCorrect(asnVector, inputCloud) );
+
 	for(unsigned pointIndex = 0; pointIndex < static_cast<unsigned>( inputCloud.pointCloud->points.size() ); pointIndex++)
 		{
 		REQUIRE( GetXCoordinate(*asnVector, pointIndex) == inputCloud.pointCloud->points.at(pointIndex).x );

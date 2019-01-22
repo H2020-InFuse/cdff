@@ -24,11 +24,11 @@ void Copy(const VisualPointFeatureVector3D& source, VisualPointFeatureVector3D& 
 	{
 		if (GetPointType(source, pointIndex) == VISUAL_POINT_POSITION)
 		{
-			AddPoint(destination, GetXCoordinate(source, pointIndex), GetYCoordinate(source, pointIndex), GetZCoordinate(source, pointIndex));
+			AddPoint(destination, GetXCoordinate(source, pointIndex), GetYCoordinate(source, pointIndex), GetZCoordinate(source, pointIndex), GetFeatureType(source) );
 		}
 		else if (GetPointType(source, pointIndex) == VISUAL_POINT_REFERENCE)
 		{
-			AddPoint(destination, GetReferenceIndex(source, pointIndex), GetPointCloudIdentifier(source, pointIndex));
+			AddPoint(destination, GetReferenceIndex(source, pointIndex), GetPointCloudIdentifier(source, pointIndex), GetFeatureType(source));
 		}
 
 		if (GetPointType(source, pointIndex) != VISUAL_POINT_NONE)
