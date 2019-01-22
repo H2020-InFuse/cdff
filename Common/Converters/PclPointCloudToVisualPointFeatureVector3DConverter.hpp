@@ -51,25 +51,6 @@ class PclPointCloudToVisualPointFeatureVector3DConverter
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		template <unsigned SIZE>
-		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const SupportTypes::PointCloudWithFeatures<pcl::Histogram<SIZE> >& featuresCloud)
-			{
-			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DPtr conversion = VisualPointFeatureVector3DWrapper::NewVisualPointFeatureVector3D();
-	
-			for(unsigned pointIndex = 0; pointIndex < featuresCloud.pointCloud->points.size(); pointIndex++)
-				{
-				pcl::PointXYZ point = featuresCloud.pointCloud->points.at(pointIndex);
-				pcl::Histogram<SIZE> feature = featuresCloud.featureCloud->points.at(pointIndex);
-				VisualPointFeatureVector3DWrapper::AddPoint(*conversion, point.x, point.y, point.z);
-				for(unsigned componentIndex = 0; componentIndex < featuresCloud.descriptorSize; componentIndex++)
-					{
-					AddDescriptorComponent(*conversion, pointIndex, feature.histogram[componentIndex]);
-					}
-				}
-
-			return conversion;
-			}
-
 		template <class FeatureType>
 		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DSharedConstPtr ConvertShared(const SupportTypes::PointCloudWithFeatures<FeatureType>& featuresCloud)
 			{
@@ -78,6 +59,7 @@ class PclPointCloudToVisualPointFeatureVector3DConverter
 			return sharedConversion;
 			}
 
+		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const SupportTypes::PointCloudWithFeatures<SupportTypes::MaxSizeHistogram >& featuresCloud);
 		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const SupportTypes::PointCloudWithFeatures<pcl::SHOT352 >& featuresCloud);
 		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const SupportTypes::PointCloudWithFeatures<pcl::PFHSignature125 >& featuresCloud);
 

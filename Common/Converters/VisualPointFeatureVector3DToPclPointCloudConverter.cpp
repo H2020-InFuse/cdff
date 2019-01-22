@@ -59,14 +59,43 @@ pcl::PointCloud<pcl::PointXYZ>::ConstPtr VisualPointFeatureVector3DToPclPointClo
 	return pointCloud;		
 	}
 
+void VisualPointFeatureVector3DToPclPointCloudConverter::ExtractFeaturesCloud(const VisualPointFeatureVector3DConstPtr& featuresVector, PointCloudWithFeatures<MaxSizeHistogram>& conversion)
+	{
+	pcl::PointCloud<MaxSizeHistogram >::Ptr featureCloud = boost::make_shared<pcl::PointCloud<MaxSizeHistogram > >();
+	conversion.featureCloud = featureCloud;	
+
+	unsigned numberOfPoints = GetNumberOfPoints(*featuresVector);
+	conversion.descriptorSize = (numberOfPoints == 0 ? 0 : GetNumberOfDescriptorComponents(*featuresVector, 0) );
+	ASSERT( conversion.descriptorSize <= MAX_HISTOGRAM_SIZE, "VisualPointFeatureVector3DToPclPointCloudConverter error: histogram size is too large");
+
+	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+		{
+		ASSERT(conversion.descriptorSize == GetNumberOfDescriptorComponents(*featuresVector, pointIndex), 
+			"VisualPointFeatureVector3DToPclPointCloudConverter: histogram descriptor with bad size found");
+		MaxSizeHistogram newFeature;
+		for(int componentIndex = 0; componentIndex < conversion.descriptorSize; componentIndex++)
+			{
+			newFeature.histogram[componentIndex] = VisualPointFeatureVector3DWrapper::GetDescriptorComponent(*featuresVector, pointIndex, componentIndex);
+			}
+		for(int componentIndex = conversion.descriptorSize; componentIndex < MAX_HISTOGRAM_SIZE; componentIndex++)
+			{
+			newFeature.histogram[componentIndex] = 0;
+			}
+		featureCloud->points.push_back(newFeature);		
+		}
+	}
+
 void VisualPointFeatureVector3DToPclPointCloudConverter::ExtractFeaturesCloud(const VisualPointFeatureVector3DConstPtr& featuresVector, PointCloudWithFeatures<pcl::SHOT352>& conversion)
 	{
 	pcl::PointCloud<pcl::SHOT352>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<pcl::SHOT352> >();
 
 	conversion.featureCloud = featureCloud;	
 	conversion.descriptorSize = SHOT_DESCRIPTOR_LENGTH;
+	unsigned numberOfPoints = GetNumberOfPoints(*featuresVector);
 
-	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
+	ASSERT( numberOfPoints == 0 || GetFeatureType(*featuresVector) == SHOT_DESCRIPTOR, 
+		"VisualPointFeatureVector3DToPclPointCloudConverter, Shot descriptor required by converter, but vector does not contain SHOT" );
+	for(int pointIndex = 0; pointIndex <numberOfPoints; pointIndex++)
 		{
 		ASSERT(conversion.descriptorSize == GetNumberOfDescriptorComponents(*featuresVector, pointIndex), 
 			"VisualPointFeatureVector3DToPclPointCloudConverter: expected Shot descriptor with 352 components, descriptor with bad size found");
@@ -85,8 +114,11 @@ void VisualPointFeatureVector3DToPclPointCloudConverter::ExtractFeaturesCloud(co
 
 	conversion.featureCloud = featureCloud;	
 	conversion.descriptorSize = PFH_DESCRIPTOR_LENGTH;
+	unsigned numberOfPoints = GetNumberOfPoints(*featuresVector);
 
-	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
+	ASSERT( numberOfPoints == 0 || GetFeatureType(*featuresVector) == PFH_DESCRIPTOR, 
+		"VisualPointFeatureVector3DToPclPointCloudConverter, PFH descriptor required by converter, but vector does not contain PFH" );
+	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
 		{
 		ASSERT(conversion.descriptorSize == GetNumberOfDescriptorComponents(*featuresVector, pointIndex), 
 			"VisualPointFeatureVector3DToPclPointCloudConverter: expected PFH descriptor with 125 components, descriptor with bad size found");

@@ -45,6 +45,9 @@ namespace Converters
 		 * --------------------------------------------------------------------------------
 		 */
 
+		const unsigned MAX_HISTOGRAM_SIZE = 352;
+		typedef pcl::Histogram<MAX_HISTOGRAM_SIZE> MaxSizeHistogram;
+
 		template <class FeatureType>	
 		struct PointCloudWithFeatures
 			{
@@ -52,7 +55,7 @@ namespace Converters
 			typename pcl::PointCloud<FeatureType>::ConstPtr featureCloud;
 			unsigned descriptorSize;
 			};
-		}
+		};
 
 	}
 #endif
