@@ -3,23 +3,36 @@
 # assuming we are running on an Image with valgrind.
 # assuming source contains already ASN types in c.
 
+set -eax
+
 FULL=false
+VALDIR=valgrind_release
 for var in "$@"
 do
    if [[ $var == "--full"  ]]
     then
     FULL=true
+    VALDIR=valgrind_debug
    fi
 done
 
+DIR=$PWD
+echo building in ${VALDIR}
 
-mkdir -p valgrind && cd valgrind
+mkdir -p ${VALDIR} && cd ${VALDIR}
 
 # create the unit tests with debug symbols (-gdb3 for high level and better feedback; not portable! Else use -g2, which should work on all platforms)
-cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_C_FLAGS_DEBUG:STRING=-ggdb3 -DCMAKE_CXX_FLAGS_DEBUG:STRING=-ggdb3 ..
+CMAKE_FLAGS=""
+if [[ "$FULL" == true ]]
+    then
+        CMAKE_FLAGS+="-DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_C_FLAGS_DEBUG:STRING=-ggdb3 -DCMAKE_CXX_FLAGS_DEBUG:STRING=-ggdb3"
+    else
+        CMAKE_FLAGS+="-DCMAKE_BUILD_TYPE:STRING=Release"
+fi
+
+cmake ${CMAKE_FLAGS} ..
 
 make
-
 mkdir -p results
 
 # run Valgrind
@@ -30,21 +43,21 @@ mkdir -p results
 # -q to be less verbose and only output valgrind errors (not program errors/leaks) in the valgrind.log file. The file should therefore usually be completely empty.
 # --fullpath-after=InFuse/ supposedly cuts the path reference for source files from this reference frame. Though with xml output this does not seem to do anything.
 
-DIR=$PWD
+
 cd Tests/UnitTests/
-FLAGS="--leak-check=full --show-leak-kinds=all --error-exitcode=1 --child-silent-after-fork=yes --quiet --xml=yes --xml-file=${DIR}/results/error.xml --log-file=${DIR}/results/valgrind.log --fullpath-after=CDFF/ --suppressions=${DIR}/suppression.txt"
+FLAGS="--leak-check=full --show-leak-kinds=all --error-exitcode=1 --child-silent-after-fork=yes --xml=yes --xml-file=${DIR}/${VALDIR}/results/error.xml --log-file=${DIR}/${VALDIR}/results/valgrind.log --fullpath-after=CDFF/ --suppressions=${DIR}/Tools/Valgrind/suppression.txt"
+
 if [[ "$FULL" == true ]]
     then
-        FLAGS+=" --track-origins=yes "
+        FLAGS+=" --track-origins=yes"
     else
-        FLAGS+=" --track-origins=no --undef-value-errors=no "
+        FLAGS+=" --track-origins=no --undef-value-errors=no"
 fi
 
 echo RUNNING valgrind: ${FLAGS}
-valgrind $FLAGS ./cdff-unit-tests
+valgrind ${FLAGS} ./cdff-unit-tests
 
 # print summary for a nice view in gitlab
-
-awk '/== HEAP SUMMARY/,/== $/' $DIR/results/valgrind.log;
-awk '/== LEAK SUMMARY/,/== $/' $DIR/results/valgrind.log;
-awk '/== ERROR SUMMARY/,/== $/' $DIR/results/valgrind.log;
+awk '/== HEAP SUMMARY/,/== $/' ${DIR}/${VALDIR}/results/valgrind.log;
+awk '/== LEAK SUMMARY/,/== $/' ${DIR}/${VALDIR}/results/valgrind.log;
+awk '/== ERROR SUMMARY/,/== $/' ${DIR}/${VALDIR}/results/valgrind.log;

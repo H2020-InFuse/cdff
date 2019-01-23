@@ -276,7 +276,7 @@
    - generate:asn
   when: manual
 
- analyse:valgrind:partial:
+ analyse:valgrind:full:
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/cdff-valgrind:latest
   dependencies:
