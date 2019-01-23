@@ -288,7 +288,7 @@
     - master
   artifacts:
     paths:
-     - valgrind/results
+     - valgrind_debug/results
     expire_in: 4 weeks
 
  analyse:cppcheck:full:

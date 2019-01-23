@@ -3,8 +3,6 @@
 # assuming we are running on an Image with valgrind.
 # assuming source contains already ASN types in c.
 
-set -eax
-
 FULL=false
 VALDIR=valgrind_release
 for var in "$@"

@@ -14,7 +14,10 @@ COPY patches/ /tmp/CDFF/Tools/Docker/patches/
 RUN apt-get update && apt-get install --yes --quiet autoconf libc6-dbg && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d valgrind
 
-ARG VERSION="1.1"
+
+
+
+ARG VERSION="1.2"
 ARG SHA=0000
 ENV IMAGE_VERSION=$VERSION
 ENV IMAGE_SHA=$SHA
