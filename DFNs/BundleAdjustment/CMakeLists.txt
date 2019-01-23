@@ -5,7 +5,7 @@ set(BUNDLE_ADJUSTMENT_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers" "cdff_
 if(OpenCV_FOUND)
 	set(BUNDLE_ADJUSTMENT_SOURCES ${BUNDLE_ADJUSTMENT_SOURCES} "SvdDecomposition.cpp" "SvdDecomposition.cpp")
 	#OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-	set(BUNDLE_ADJUSTMENT_DEPENDENCIES ${BUNDLE_ADJUSTMENT_DEPENDENCIES} ${OpenCV_LIBS})
+	set(BUNDLE_ADJUSTMENT_DEPENDENCIES ${BUNDLE_ADJUSTMENT_DEPENDENCIES} opencv_core)
 endif()
 
 if(CERES_FOUND)

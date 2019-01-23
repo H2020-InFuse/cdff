@@ -41,7 +41,6 @@ cmake_purge.cmake
 *.la
 *.a
 *.lib
-*.lo
 
 # Executables
 *.exe

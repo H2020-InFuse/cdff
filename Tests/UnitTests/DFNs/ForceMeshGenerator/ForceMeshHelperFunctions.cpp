@@ -9,7 +9,6 @@
 
 namespace ForceMeshHelperFunctions
 {
-    //=====================================================================================================================
     bool checkPointCloudContainsPoint ( const pcl::PointXYZ & out_point, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& cloud )
     {
         if( std::isnan(out_point.x) )
@@ -27,13 +26,11 @@ namespace ForceMeshHelperFunctions
         return (nn_dists[0] <= 0.0000000001);
     }
 
-    //=====================================================================================================================
     Eigen::Vector3d getPosition()
     {
         return Eigen::Vector3d(1, 2, -1);
     }
 
-    //=====================================================================================================================
     Eigen::Quaterniond getQuaternion()
     {
         Eigen::Quaterniond quaternion (2, 0, 1, -3);
@@ -41,7 +38,6 @@ namespace ForceMeshHelperFunctions
         return quaternion;
     }
 
-    //=====================================================================================================================
     asn1SccPose getEndEffectorPose()
     {
         asn1SccPose effector_pose;
@@ -61,7 +57,6 @@ namespace ForceMeshHelperFunctions
         return effector_pose;
     }
 
-    //=====================================================================================================================
     asn1SccPose getRoverPose()
     {
         asn1SccPose rover_pose;
@@ -81,7 +76,6 @@ namespace ForceMeshHelperFunctions
         return rover_pose;
     }
 
-    //=====================================================================================================================
     std::vector<std::pair<pcl::PointXYZ, double> > getInputData (const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud)
     {
         Eigen::Vector3d position = getPosition();

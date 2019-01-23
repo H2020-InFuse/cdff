@@ -54,6 +54,7 @@ namespace FeaturesMatching3D
 
 		private:
 
+			//DFN Parameters
 			struct IcpOptionsSet
 			{
 				double maxCorrespondenceDistance;
@@ -66,21 +67,23 @@ namespace FeaturesMatching3D
 			IcpOptionsSet parameters;
 			static const IcpOptionsSet DEFAULT_PARAMETERS;
 
+			//External conversion helpers
 			Converters::VisualPointFeatureVector3DToPclPointCloudConverter
 				visualPointFeatureVector3DToPclPointCloud;
-			PoseWrapper::Pose3DConstPtr Convert(
-				Eigen::Matrix4f eigenTransform);
 
+			//Type conversion methods
+			pcl::PointCloud<pcl::PointXYZ>::Ptr Convert(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& features);
+			PoseWrapper::Pose3DConstPtr InverseConvert(Eigen::Matrix4f eigenTransformSceneInModel);
+
+			//Core computation methods
 			PoseWrapper::Pose3DConstPtr ComputeTransform(
-				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
-				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
+				pcl::PointCloud<pcl::PointXYZ>::Ptr sourceCloud,
+				pcl::PointCloud<pcl::PointXYZ>::Ptr sinkCloud);
 
+			//Input Validation methods
 			void ValidateParameters();
-			void ValidateInputs(
-				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
-				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
-			void ValidateCloud(
-				Converters::SupportTypes::PointCloudWithFeatures cloud);
+			void ValidateInputs();
+			void ValidateCloud(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& features);
 	};
 }
 }

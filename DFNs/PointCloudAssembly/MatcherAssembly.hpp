@@ -59,8 +59,9 @@ namespace PointCloudAssembly
 
 		private:
 
-		typedef std::shared_ptr<PointMatcher<float>::DataPointsFilter> SharedDataPointsFilter;
-
+			typedef std::shared_ptr<PointMatcher<float>::DataPointsFilter> SharedDataPointsFilter;
+	
+			//DFN Parameters
 			struct SurfaceNormalPrefilterOptionsSet
 				{
 				int numberOfNeighbours;
@@ -83,17 +84,22 @@ namespace PointCloudAssembly
 			MatcherAssemblyOptionsSet parameters;
 			static const MatcherAssemblyOptionsSet DEFAULT_PARAMETERS;
 
+			//PointMatcher library required variables
 			SharedDataPointsFilter samplingSurfaceNormalPrefilter;
 			SharedDataPointsFilter maxDensityFilter;
 			PointMatcher<float>::DataPoints assembledCloud;
 
-			//This method assemble the final point cloud.
+			//Core computation Methods.
 			void AssemblePointCloud(const PointMatcher<float>::DataPoints& cloud);
 			void AssemblePointCloud(const PointMatcher<float>::DataPoints& cloud1, const PointMatcher<float>::DataPoints& cloud2);
+
+			//Output conversion methods
 			void PrepareOutAssembledPointCloud();
 
+			//Input conversion methods
 			PointMatcher<float>::DataPoints ConvertToDataPoints(const PointCloudWrapper::PointCloud& cloud);
 
+			//Input validation methods
 			void ValidateParameters();
 	};
 }

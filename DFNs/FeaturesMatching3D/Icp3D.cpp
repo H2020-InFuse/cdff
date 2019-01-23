@@ -70,15 +70,15 @@ void Icp3D::process()
 		Reset(outTransform);
 		return;
 	}
+		
+	//Input Validation
+	ValidateInputs();
 
 	// Read data from input ports
-	PointCloudWithFeatures inputSourceCloud =
-		visualPointFeatureVector3DToPclPointCloud.Convert(&inSourceFeatures);
-	PointCloudWithFeatures inputSinkCloud =
-		visualPointFeatureVector3DToPclPointCloud.Convert(&inSinkFeatures);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr inputSourceCloud = Convert(inSourceFeatures);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr inputSinkCloud = Convert(inSinkFeatures);
 
 	// Process data
-	ValidateInputs(inputSourceCloud, inputSinkCloud);
 	Pose3DConstPtr tmp = ComputeTransform(inputSourceCloud, inputSinkCloud);
 
 	// Write data to output port
@@ -94,6 +94,32 @@ const Icp3D::IcpOptionsSet Icp3D::DEFAULT_PARAMETERS =
 	/*.euclideanFitnessEpsilon =*/ 1.0
 };
 
+pcl::PointCloud<pcl::PointXYZ>::Ptr Icp3D::Convert(const VisualPointFeatureVector3D& features)
+	{
+	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+
+	int numberOfPoints = GetNumberOfPoints(features);
+	cloud->points.resize(numberOfPoints);
+	for(int pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+		{
+		cloud->points.at(pointIndex).x = GetXCoordinate(features, pointIndex);
+		cloud->points.at(pointIndex).y = GetYCoordinate(features, pointIndex);
+		cloud->points.at(pointIndex).z = GetZCoordinate(features, pointIndex);
+		}
+	return cloud;
+	}
+
+Pose3DConstPtr Icp3D::InverseConvert(Eigen::Matrix4f eigenTransformSceneInModel)
+{
+	Pose3DConstPtr scenePoseInModel = EigenTransformToTransform3DConverter().Convert(eigenTransformSceneInModel);
+
+	Pose3DPtr modelPoseInScene = NewPose3D();
+	SetPosition(*modelPoseInScene, -GetXPosition(*scenePoseInModel), -GetYPosition(*scenePoseInModel), -GetZPosition(*scenePoseInModel));
+	SetOrientation(*modelPoseInScene, -GetXOrientation(*scenePoseInModel), -GetYOrientation(*scenePoseInModel), -GetZOrientation(*scenePoseInModel), GetWOrientation(*scenePoseInModel));
+	delete(scenePoseInModel);
+	return modelPoseInScene;
+}
+
 /**
  * This function detects if the source pointcloud is within the sink pointcloud,
  * and computes the geometric transformation that turns the source cloud into
@@ -101,12 +127,12 @@ const Icp3D::IcpOptionsSet Icp3D::DEFAULT_PARAMETERS =
  *
  * Observe that in PCL terminology, the sink cloud is called target cloud.
  */
-Pose3DConstPtr Icp3D::ComputeTransform(PointCloudWithFeatures sourceCloud, PointCloudWithFeatures sinkCloud)
+Pose3DConstPtr Icp3D::ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::Ptr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::Ptr sinkCloud)
 {
 	// Setup PCL's ICP algorithm
 	pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
-	icp.setInputCloud(sourceCloud.pointCloud);
-	icp.setInputTarget(sinkCloud.pointCloud);
+	icp.setInputCloud(sourceCloud);
+	icp.setInputTarget(sinkCloud);
 
 	icp.setMaxCorrespondenceDistance(parameters.maxCorrespondenceDistance);
 	icp.setMaximumIterations(parameters.maximumIterations);
@@ -123,8 +149,8 @@ Pose3DConstPtr Icp3D::ComputeTransform(PointCloudWithFeatures sourceCloud, Point
 	outSuccess = icp.hasConverged();
 	if (outSuccess)
 	{
-		Eigen::Matrix4f eigenTransform = icp.getFinalTransformation();
-		return EigenTransformToTransform3DConverter().Convert(eigenTransform);
+		Eigen::Matrix4f eigenTransformSceneInModel = icp.getFinalTransformation();
+		return InverseConvert(eigenTransformSceneInModel);
 	}
 	else
 	{
@@ -132,19 +158,6 @@ Pose3DConstPtr Icp3D::ComputeTransform(PointCloudWithFeatures sourceCloud, Point
 		Reset(*transform);
 		return transform;
 	}
-}
-
-Pose3DConstPtr Icp3D::Convert(Eigen::Matrix4f eigenTransform)
-{
-	Pose3DPtr transform = new Pose3D;
-
-	Eigen::Matrix3f eigenRotationMatrix = eigenTransform.block(0,0,3,3);
-	Eigen::Quaternionf eigenRotation(eigenRotationMatrix);
-
-	SetPosition(*transform, eigenTransform(0, 3), eigenTransform(1, 3), eigenTransform(2, 3) );
-	SetOrientation(*transform, eigenRotation.x(), eigenRotation.y(), eigenRotation.z(), eigenRotation.w());
-
-	return transform;
 }
 
 void Icp3D::ValidateParameters()
@@ -155,31 +168,39 @@ void Icp3D::ValidateParameters()
 	ASSERT(parameters.euclideanFitnessEpsilon > 0, "Icp3D Configuration error, Euclidean Fitness Epsilon is not strictly positive");
 }
 
-void Icp3D::ValidateInputs(PointCloudWithFeatures sourceCloud, PointCloudWithFeatures sinkCloud)
+void Icp3D::ValidateInputs()
 {
-	ASSERT(sourceCloud.descriptorSize == sinkCloud.descriptorSize, "Icp3D Error, source cloud and sink cloud have a different descriptor size");
-	ValidateCloud(sourceCloud);
-	ValidateCloud(sinkCloud);
+	VisualPointFeature3DType featureType = GetFeatureType(inSourceFeatures);
+	ASSERT(featureType == GetFeatureType(inSinkFeatures), "Ransac3D Error, source and sink image do not have same type");
+	ValidateCloud(inSourceFeatures);
+	ValidateCloud(inSinkFeatures);
 }
 
-void Icp3D::ValidateCloud(PointCloudWithFeatures cloud)
+void Icp3D::ValidateCloud(const VisualPointFeatureVector3D& features)
 {
-	ASSERT(cloud.pointCloud->points.size() == cloud.featureCloud->points.size(), "Icp3D Error, point cloud and feature cloud don't have the same size");
-
-	for (unsigned pointIndex = 0; pointIndex < cloud.pointCloud->points.size(); pointIndex++)
-	{
-		pcl::PointXYZ point = cloud.pointCloud->points.at(pointIndex);
-		FeatureType feature = cloud.featureCloud->points.at(pointIndex);
-		ASSERT(point.x == point.x, "Icp3D Error, cloud contains a NaN point");
-		ASSERT(point.y == point.y, "Icp3D Error, cloud contains a NaN point");
-		ASSERT(point.z == point.z, "Icp3D Error, cloud contains a NaN point");
-		for (unsigned componentIndex = 0; componentIndex < cloud.descriptorSize; componentIndex++)
+	int numberOfPoints = GetNumberOfPoints(features);
+	if (numberOfPoints == 0)
 		{
-			ASSERT(feature.histogram[componentIndex] == feature.histogram[componentIndex], "Icp3D Error, feature cloud contains a NaN feature");
+		return;
 		}
-		for (unsigned componentIndex = cloud.descriptorSize; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
+
+	int baseDescriptorSize = GetNumberOfDescriptorComponents(features, 0);
+	for (unsigned pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+	{
+		float x = GetXCoordinate(features, pointIndex);
+		float y = GetYCoordinate(features, pointIndex);
+		float z = GetZCoordinate(features, pointIndex);
+		ASSERT(x == x, "BestDescriptorMatch Error, cloud contains a NaN point");
+		ASSERT(y == y, "BestDescriptorMatch Error, cloud contains a NaN point");
+		ASSERT(z == z, "BestDescriptorMatch Error, cloud contains a NaN point");
+
+		int descriptorSize = GetNumberOfDescriptorComponents(features, pointIndex);
+		ASSERT(descriptorSize == baseDescriptorSize, "Ransac3D Error, Descriptor sizes mismatch");
+
+		for (unsigned componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
 		{
-			ASSERT(feature.histogram[componentIndex] == 0, "Icp3D Error, feature cloud contains an invalid feature (probably coming from a conversion error)");
+			float component = GetDescriptorComponent(features, pointIndex, componentIndex);
+			ASSERT(component == component, "Ransac3D Error, feature cloud contains a NaN feature");
 		}
 	}
 }

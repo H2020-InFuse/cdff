@@ -13,14 +13,6 @@
 #include <Macros/YamlcppMacros.hpp>
 #include <Errors/Assert.hpp>
 
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <pcl/search/search.h>
-#include <pcl/sample_consensus/ransac.h>
-#include <pcl/sample_consensus/sac_model_registration.h>
-#include <pcl/sample_consensus/sac_model_plane.h>
-#include <pcl/registration/sample_consensus_prerejective.h>
-#include <pcl/kdtree/impl/kdtree_flann.hpp>
 #include <yaml-cpp/yaml.h>
 
 using namespace Converters;
@@ -83,20 +75,53 @@ void Ransac3D::process()
 		return;
 	}
 
+	//Input Validation
+	ValidateInputs();
+
 	// Read data from input ports
-	PointCloudWithFeatures inputSourceCloud =
-		visualPointFeatureVector3DToPclPointCloud.Convert(&inSourceFeatures);
-	PointCloudWithFeatures inputSinkCloud =
-		visualPointFeatureVector3DToPclPointCloud.Convert(&inSinkFeatures);
+	VisualPointFeature3DType featureType = GetFeatureType(inSourceFeatures);
+	switch(featureType)
+		{
+		case SHOT_DESCRIPTOR: 
+			ProcessOnShotDescriptors();
+			break;
+		case PFH_DESCRIPTOR:
+			ProcessOnPfhDescriptors();
+			break;
+		default:
+			ASSERT(false, "Ransac3D error, unhandled feature type in input");
+		}
+}
+
+void Ransac3D::ProcessOnShotDescriptors()
+	{
+	PointCloudWithFeatures<pcl::SHOT352> inputSourceCloud =
+		visualPointFeatureVector3DToPclPointCloud.Convert<pcl::SHOT352>(&inSourceFeatures);
+	PointCloudWithFeatures<pcl::SHOT352> inputSinkCloud =
+		visualPointFeatureVector3DToPclPointCloud.Convert<pcl::SHOT352>(&inSinkFeatures);
 
 	// Process data
-	ValidateInputs(inputSourceCloud, inputSinkCloud);
 	Pose3DConstPtr tmp = ComputeTransform(inputSourceCloud, inputSinkCloud);
 
 	// Write data to output port
 	Copy(*tmp, outTransform);
 	delete tmp;
-}
+	}
+
+void Ransac3D::ProcessOnPfhDescriptors()
+	{
+	PointCloudWithFeatures<pcl::PFHSignature125> inputSourceCloud =
+		visualPointFeatureVector3DToPclPointCloud.Convert<pcl::PFHSignature125>(&inSourceFeatures);
+	PointCloudWithFeatures<pcl::PFHSignature125> inputSinkCloud =
+		visualPointFeatureVector3DToPclPointCloud.Convert<pcl::PFHSignature125>(&inSinkFeatures);
+
+	// Process data
+	Pose3DConstPtr tmp = ComputeTransform(inputSourceCloud, inputSinkCloud);
+
+	// Write data to output port
+	Copy(*tmp, outTransform);
+	delete tmp;
+	}
 
 const Ransac3D::RansacOptionsSet Ransac3D::DEFAULT_PARAMETERS =
 {
@@ -108,76 +133,15 @@ const Ransac3D::RansacOptionsSet Ransac3D::DEFAULT_PARAMETERS =
 	/*.maxCorrespondenceDistance =*/ 0.00125
 };
 
-/**
- * This function detects if the source pointcloud is within the sink pointcloud,
- * and computes the geometric transformation that turns the source cloud into
- * its position in the sink cloud.
- *
- * Observe that in PCL terminology, the sink cloud is called target cloud.
- *
- * Note: a few more parameters used to be given for SampleConsensusPrerejective:
- * RANSACOutlierRejectionThreshold, RANSACIterations, TransformationEpsilon,
- * EuclideanFitnessEpislon, SearchMethodTarget, and SearchMethodSource. However,
- * besides the search method, those parameters don't seem to be used by the
- * algorithm. The set method is set in a standard way in the algorithm.
- */
-Pose3DConstPtr Ransac3D::ComputeTransform(PointCloudWithFeatures sourceCloud, PointCloudWithFeatures sinkCloud)
+Pose3DConstPtr Ransac3D::InverseConvert(Eigen::Matrix4f eigenTransformSceneInModel)
 {
-	// Setup PCL's RANSAC algorithm
-	pcl::SampleConsensusPrerejective<pcl::PointXYZ, pcl::PointXYZ, FeatureType>::Ptr ransac(new pcl::SampleConsensusPrerejective<pcl::PointXYZ, pcl::PointXYZ, FeatureType>);
-	ransac->setSourceFeatures(sourceCloud.featureCloud);
-	ransac->setTargetFeatures(sinkCloud.featureCloud);
-	ransac->setInputSource(sourceCloud.pointCloud);
-	ransac->setInputTarget(sinkCloud.pointCloud);
+	Pose3DConstPtr scenePoseInModel = EigenTransformToTransform3DConverter().Convert(eigenTransformSceneInModel);
 
-	ransac->setSimilarityThreshold(parameters.similarityThreshold);
-	ransac->setInlierFraction(parameters.inlierFraction);
-	ransac->setCorrespondenceRandomness(parameters.correspondenceRandomness);
-	ransac->setNumberOfSamples(parameters.numberOfSamples);
-	ransac->setMaximumIterations(parameters.maximumIterations);
-	ransac->setMaxCorrespondenceDistance(parameters.maxCorrespondenceDistance);
-
-	// Setup output
-	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud(new pcl::PointCloud<pcl::PointXYZ>);
-
-	try 
-		{
-		// Run RANSAC
-		ransac->align(*outputCloud);
-
-		// Check convergence
-		outSuccess = ransac->hasConverged();
-		}
-	catch ( ... )
-		{
-		VERIFY(false, "Ransac failed with exception!");
-		outSuccess = false;
-		}
-
-	if (outSuccess)
-	{
-		Eigen::Matrix4f eigenTransform = ransac->getFinalTransformation();
-		return EigenTransformToTransform3DConverter().Convert(eigenTransform);
-	}
-	else
-	{
-		Pose3DPtr transform = new Pose3D;
-		Reset(*transform);
-		return transform;
-	}
-}
-
-Pose3DConstPtr Ransac3D::Convert(Eigen::Matrix4f eigenTransform)
-{
-	Pose3DPtr transform = new Pose3D;
-
-	Eigen::Matrix3f eigenRotationMatrix = eigenTransform.block(0,0,3,3);
-	Eigen::Quaternionf eigenRotation(eigenRotationMatrix);
-
-	SetPosition(*transform, eigenTransform(0, 3), eigenTransform(1, 3), eigenTransform(2, 3) );
-	SetOrientation(*transform, eigenRotation.x(), eigenRotation.y(), eigenRotation.z(), eigenRotation.w());
-
-	return transform;
+	Pose3DPtr modelPoseInScene = NewPose3D();
+	SetPosition(*modelPoseInScene, -GetXPosition(*scenePoseInModel), -GetYPosition(*scenePoseInModel), -GetZPosition(*scenePoseInModel));
+	SetOrientation(*modelPoseInScene, -GetXOrientation(*scenePoseInModel), -GetYOrientation(*scenePoseInModel), -GetZOrientation(*scenePoseInModel), GetWOrientation(*scenePoseInModel));
+	delete(scenePoseInModel);
+	return modelPoseInScene;
 }
 
 void Ransac3D::ValidateParameters()
@@ -190,31 +154,39 @@ void Ransac3D::ValidateParameters()
 	ASSERT(parameters.maxCorrespondenceDistance >= 0, "Ransac3D Configuration error, max correspondence distance is not positive");
 }
 
-void Ransac3D::ValidateInputs(PointCloudWithFeatures sourceCloud, PointCloudWithFeatures sinkCloud)
+void Ransac3D::ValidateInputs()
 {
-	ASSERT(sourceCloud.descriptorSize == sinkCloud.descriptorSize, "Ransac3D Error, source cloud and sink cloud have a different descriptor size");
-	ValidateCloud(sourceCloud);
-	ValidateCloud(sinkCloud);
+	VisualPointFeature3DType featureType = GetFeatureType(inSourceFeatures);
+	ASSERT(featureType == GetFeatureType(inSinkFeatures), "Ransac3D Error, source and sink image do not have same type");
+	ValidateCloud(inSourceFeatures);
+	ValidateCloud(inSinkFeatures);
 }
 
-void Ransac3D::ValidateCloud(PointCloudWithFeatures cloud)
+void Ransac3D::ValidateCloud(const VisualPointFeatureVector3D& features)
 {
-	ASSERT(cloud.pointCloud->points.size() == cloud.featureCloud->points.size(), "Ransac3D Error, point cloud and feature cloud don't have the same size");
-
-	for (unsigned pointIndex = 0; pointIndex < cloud.pointCloud->points.size(); pointIndex++)
-	{
-		pcl::PointXYZ point = cloud.pointCloud->points.at(pointIndex);
-		FeatureType feature = cloud.featureCloud->points.at(pointIndex);
-		ASSERT(point.x == point.x, "Ransac3D Error, cloud contains a NaN point");
-		ASSERT(point.y == point.y, "Ransac3D Error, cloud contains a NaN point");
-		ASSERT(point.z == point.z, "Ransac3D Error, cloud contains a NaN point");
-		for (unsigned componentIndex = 0; componentIndex < cloud.descriptorSize; componentIndex++)
+	int numberOfPoints = GetNumberOfPoints(features);
+	if (numberOfPoints == 0)
 		{
-			ASSERT(feature.histogram[componentIndex] == feature.histogram[componentIndex], "Ransac3D Error, feature cloud contains a NaN feature");
+		return;
 		}
-		for (unsigned componentIndex = cloud.descriptorSize; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
+
+	int baseDescriptorSize = GetNumberOfDescriptorComponents(features, 0);
+	for (unsigned pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+	{
+		float x = GetXCoordinate(features, pointIndex);
+		float y = GetYCoordinate(features, pointIndex);
+		float z = GetZCoordinate(features, pointIndex);
+		ASSERT(x == x, "BestDescriptorMatch Error, cloud contains a NaN point");
+		ASSERT(y == y, "BestDescriptorMatch Error, cloud contains a NaN point");
+		ASSERT(z == z, "BestDescriptorMatch Error, cloud contains a NaN point");
+
+		int descriptorSize = GetNumberOfDescriptorComponents(features, pointIndex);
+		ASSERT(descriptorSize == baseDescriptorSize, "Ransac3D Error, Descriptor sizes mismatch");
+
+		for (unsigned componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
 		{
-			ASSERT(feature.histogram[componentIndex] == 0, "Ransac3D Error, feature cloud contains an invalid feature (probably coming from a conversion error)");
+			float component = GetDescriptorComponent(features, pointIndex, componentIndex);
+			ASSERT(component == component, "Ransac3D Error, feature cloud contains a NaN feature");
 		}
 	}
 }

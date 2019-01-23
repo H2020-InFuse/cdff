@@ -8,8 +8,10 @@
  */
 
 #include "Pose.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 #include <cmath>
+#include <stdlib.h>
+#include <sstream>
 
 namespace PoseWrapper
 {
@@ -214,10 +216,14 @@ BaseTypesWrapper::T_Double ComputeOrientationDistance(const Pose3D& pose1, const
 	}
 
 BitStream ConvertToBitStream(const Pose3D& pose)
-	CONVERT_TO_BIT_STREAM(pose, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(pose, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, Pose3D& pose)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING, pose, asn1SccPose_Decode)
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccPose_REQUIRED_BYTES_FOR_ENCODING, pose, asn1SccPose_Decode);
+	}
 
 void Copy(const Pose2D& source, Pose2D& destination)
 {
@@ -305,10 +311,14 @@ T_Double GetRotation(const Pose2D& pose)
 }
 
 BitStream ConvertToBitStream(const Pose2D& pose)
-	CONVERT_TO_BIT_STREAM(pose, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose2D_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(pose, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, asn1SccPose2D_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, Pose2D& pose)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, pose, asn1SccPose2D_Decode)
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccPose2D_REQUIRED_BYTES_FOR_ENCODING, pose, asn1SccPose2D_Decode);
+	}
 
 }
 

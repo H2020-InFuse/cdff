@@ -37,51 +37,109 @@ using namespace Converters;
 using namespace SupportTypes;
 using namespace VisualPointFeatureVector3DWrapper;
 
-TEST_CASE( "PclPointCloud to VisualPointFeatureVector3D and Back", "[PclPointCloudToVisualPointFeatureVector3D]" )
+bool DescriptorsAreEqual(VisualPointFeatureVector3DSharedConstPtr asnVector, unsigned pointIndex, MaxSizeHistogram descriptor)
+	{
+	REQUIRE( GetNumberOfDescriptorComponents(*asnVector, pointIndex) == MAX_HISTOGRAM_SIZE);
+	bool descriptorsAreEqual = true;
+	for(unsigned componentIndex = 0; componentIndex < MAX_HISTOGRAM_SIZE && descriptorsAreEqual; componentIndex++)
+		{
+		descriptorsAreEqual = ( GetDescriptorComponent(*asnVector, pointIndex, componentIndex) == descriptor.histogram[componentIndex] );
+		}
+	return descriptorsAreEqual;
+	}
+
+bool DescriptorsAreEqual(VisualPointFeatureVector3DSharedConstPtr asnVector, unsigned pointIndex, pcl::SHOT352 descriptor)
+	{
+	REQUIRE( GetNumberOfDescriptorComponents(*asnVector, pointIndex) == SHOT_DESCRIPTOR_LENGTH);
+	bool descriptorsAreEqual = true;
+	for(unsigned componentIndex = 0; componentIndex < SHOT_DESCRIPTOR_LENGTH && descriptorsAreEqual; componentIndex++)
+		{
+		descriptorsAreEqual = ( GetDescriptorComponent(*asnVector, pointIndex, componentIndex) == descriptor.descriptor[componentIndex] );
+		}
+	return descriptorsAreEqual;
+	}
+
+bool DescriptorsAreEqual(VisualPointFeatureVector3DSharedConstPtr asnVector, unsigned pointIndex, pcl::PFHSignature125 descriptor)
+	{
+	REQUIRE( GetNumberOfDescriptorComponents(*asnVector, pointIndex) == PFH_DESCRIPTOR_LENGTH);
+	bool descriptorsAreEqual = true;
+	for(unsigned componentIndex = 0; componentIndex < PFH_DESCRIPTOR_LENGTH && descriptorsAreEqual; componentIndex++)
+		{
+		descriptorsAreEqual = ( GetDescriptorComponent(*asnVector, pointIndex, componentIndex) == descriptor.histogram[componentIndex] );
+		}
+	return descriptorsAreEqual;
+	}
+
+bool DescriptorsAreEqual(MaxSizeHistogram descriptor1, MaxSizeHistogram descriptor2)
+	{
+	bool descriptorsAreEqual = true;
+	for(unsigned componentIndex = 0; componentIndex < MAX_HISTOGRAM_SIZE && descriptorsAreEqual; componentIndex++)
+		{
+		descriptorsAreEqual = ( descriptor1.histogram[componentIndex] == descriptor2.histogram[componentIndex] );
+		}
+	return descriptorsAreEqual;
+	}
+
+bool DescriptorsAreEqual(pcl::SHOT352 descriptor1, pcl::SHOT352 descriptor2)
+	{
+	bool descriptorsAreEqual = true;
+	for(unsigned componentIndex = 0; componentIndex < SHOT_DESCRIPTOR_LENGTH && descriptorsAreEqual; componentIndex++)
+		{
+		descriptorsAreEqual = ( descriptor1.descriptor[componentIndex] == descriptor2.descriptor[componentIndex] );
+		}
+	return descriptorsAreEqual;
+	}
+
+bool DescriptorsAreEqual(pcl::PFHSignature125 descriptor1, pcl::PFHSignature125 descriptor2)
+	{
+	bool descriptorsAreEqual = true;
+	for(unsigned componentIndex = 0; componentIndex < PFH_DESCRIPTOR_LENGTH && descriptorsAreEqual; componentIndex++)
+		{
+		descriptorsAreEqual = ( descriptor1.histogram[componentIndex] == descriptor2.histogram[componentIndex] );
+		}
+	return descriptorsAreEqual;
+	}
+
+bool FeatureTypeIsCorrect(VisualPointFeatureVector3DSharedConstPtr asnVector, PointCloudWithFeatures<MaxSizeHistogram> inputCloud)
+	{
+	return ( GetFeatureType(*asnVector) == HISTOGRAM_DESCRIPTOR);
+	}
+
+bool FeatureTypeIsCorrect(VisualPointFeatureVector3DSharedConstPtr asnVector, PointCloudWithFeatures<pcl::SHOT352> inputCloud)
+	{
+	return ( GetFeatureType(*asnVector) == SHOT_DESCRIPTOR);
+	}
+
+bool FeatureTypeIsCorrect(VisualPointFeatureVector3DSharedConstPtr asnVector, PointCloudWithFeatures<pcl::PFHSignature125> inputCloud)
+	{
+	return ( GetFeatureType(*asnVector) == PFH_DESCRIPTOR);
+	}
+
+template <class FeatureType>
+void ConversionAndBack(PointCloudWithFeatures<FeatureType> inputCloud)
 	{
 	PclPointCloudToVisualPointFeatureVector3DConverter firstConverter;
 	VisualPointFeatureVector3DToPclPointCloudConverter secondConverter;
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
-		{
-		pointCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
-		}
-	pcl::PointCloud<FeatureType>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<FeatureType> >();
-	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
-		{
-		FeatureType feature;
-		feature.histogram[0] = 2*pointIndex;
-		feature.histogram[1] = pointIndex /2;
-		int maxFeaturesNumber = static_cast<int>(MAX_FEATURES_NUMBER);
-		for(int componentIndex = 2; componentIndex < maxFeaturesNumber; componentIndex++)
-			{
-			feature.histogram[componentIndex] = 0;
-			}
-		featureCloud->points.push_back( feature );
-		}
-	PointCloudWithFeatures inputCloud;
-	inputCloud.pointCloud = pointCloud;
-	inputCloud.featureCloud = featureCloud;
-	inputCloud.descriptorSize = 2;
 	REQUIRE( inputCloud.pointCloud->points.size() == inputCloud.featureCloud->points.size() );	
 
 	VisualPointFeatureVector3DSharedConstPtr asnVector = firstConverter.ConvertShared(inputCloud);
 	REQUIRE(GetNumberOfPoints(*asnVector) == inputCloud.pointCloud->points.size() );
-	for(int pointIndex = 0; pointIndex < static_cast<int>( inputCloud.pointCloud->points.size() ); pointIndex++)
+	REQUIRE( FeatureTypeIsCorrect(asnVector, inputCloud) );
+
+	for(unsigned pointIndex = 0; pointIndex < static_cast<unsigned>( inputCloud.pointCloud->points.size() ); pointIndex++)
 		{
 		REQUIRE( GetXCoordinate(*asnVector, pointIndex) == inputCloud.pointCloud->points.at(pointIndex).x );
 		REQUIRE( GetYCoordinate(*asnVector, pointIndex) == inputCloud.pointCloud->points.at(pointIndex).y );
 		REQUIRE( GetZCoordinate(*asnVector, pointIndex) == inputCloud.pointCloud->points.at(pointIndex).z );
 		
 		REQUIRE( GetNumberOfDescriptorComponents(*asnVector, pointIndex) == inputCloud.descriptorSize );
-		for(unsigned componentIndex = 0; componentIndex < inputCloud.descriptorSize; componentIndex++)
-			{
-			REQUIRE( GetDescriptorComponent(*asnVector, pointIndex, componentIndex) == inputCloud.featureCloud->points.at(pointIndex).histogram[componentIndex]);
-			}
+
+		FeatureType inputFeature = inputCloud.featureCloud->points.at(pointIndex);
+		REQUIRE( DescriptorsAreEqual(asnVector, pointIndex, inputFeature) );
 		}
 
-	PointCloudWithFeatures outputCloud = secondConverter.ConvertShared(asnVector);
+	PointCloudWithFeatures<FeatureType> outputCloud = secondConverter.ConvertShared<FeatureType>(asnVector);
 	REQUIRE(outputCloud.pointCloud->points.size() == inputCloud.pointCloud->points.size() );
 	REQUIRE(outputCloud.featureCloud->points.size() == inputCloud.featureCloud->points.size() );
 	REQUIRE(outputCloud.descriptorSize == inputCloud.descriptorSize);
@@ -95,24 +153,15 @@ TEST_CASE( "PclPointCloud to VisualPointFeatureVector3D and Back", "[PclPointClo
 		
 		FeatureType inputFeature = inputCloud.featureCloud->points.at(pointIndex);
 		FeatureType outputFeature = outputCloud.featureCloud->points.at(pointIndex);
-		for(unsigned componentIndex = 0; componentIndex < outputCloud.descriptorSize; componentIndex++)
-			{
-			REQUIRE(inputFeature.histogram[componentIndex] == outputFeature.histogram[componentIndex]);
-			}	
-		int maxFeaturesNumber = static_cast<int>(MAX_FEATURES_NUMBER);
-		for(int componentIndex = outputCloud.descriptorSize; componentIndex < maxFeaturesNumber; componentIndex++)
-			{
-			REQUIRE(outputFeature.histogram[componentIndex] == 0);
-			}	
+		REQUIRE( DescriptorsAreEqual(inputFeature, outputFeature) );	
 		}
 
-	asnVector.reset();
-	} 
+	asnVector.reset();	
+	}
 
-TEST_CASE( "VisualPointFeatureVector3D to PclPointCloud and Back", "[VisualPointFeatureVector3DToPclPointCloud]" )
+PointCloudWithFeatures< MaxSizeHistogram > GetPointCloudWithHistogramFeatures()
 	{
-	PclPointCloudToVisualPointFeatureVector3DConverter firstConverter;
-	VisualPointFeatureVector3DToPclPointCloudConverter secondConverter;
+	typedef MaxSizeHistogram FeatureType;
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
@@ -125,21 +174,106 @@ TEST_CASE( "VisualPointFeatureVector3D to PclPointCloud and Back", "[VisualPoint
 		FeatureType feature;
 		feature.histogram[0] = 2*pointIndex;
 		feature.histogram[1] = pointIndex /2;
-		int maxFeaturesNumber = static_cast<int>(MAX_FEATURES_NUMBER);
-		for(int componentIndex = 2; componentIndex < maxFeaturesNumber; componentIndex++)
+		for(int componentIndex = 0; componentIndex < MAX_HISTOGRAM_SIZE; componentIndex++)
 			{
 			feature.histogram[componentIndex] = 0;
 			}
 		featureCloud->points.push_back( feature );
 		}
-	PointCloudWithFeatures inputCloud;
+	PointCloudWithFeatures<FeatureType> inputCloud;
 	inputCloud.pointCloud = pointCloud;
 	inputCloud.featureCloud = featureCloud;
-	inputCloud.descriptorSize = 2;
+	inputCloud.descriptorSize = MAX_HISTOGRAM_SIZE;
+
+	return inputCloud;
+	}
+
+PointCloudWithFeatures< pcl::SHOT352 > GetPointCloudWithShotFeatures()
+	{
+	typedef pcl::SHOT352 FeatureType;
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
+		{
+		pointCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
+		}
+	pcl::PointCloud<FeatureType>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<FeatureType> >();
+	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
+		{
+		FeatureType feature;
+		feature.descriptor[0] = 2*pointIndex;
+		feature.descriptor[1] = pointIndex /2;
+		for(int componentIndex = 2; componentIndex < SHOT_DESCRIPTOR_LENGTH; componentIndex++)
+			{
+			feature.descriptor[componentIndex] = 0;
+			}
+		featureCloud->points.push_back( feature );
+		}
+	PointCloudWithFeatures<FeatureType> inputCloud;
+	inputCloud.pointCloud = pointCloud;
+	inputCloud.featureCloud = featureCloud;
+	inputCloud.descriptorSize = SHOT_DESCRIPTOR_LENGTH;
+
+	return inputCloud;
+	}
+
+PointCloudWithFeatures< pcl::PFHSignature125 > GetPointCloudWithPfhFeatures()
+	{
+	typedef pcl::PFHSignature125 FeatureType;
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
+		{
+		pointCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
+		}
+	pcl::PointCloud<FeatureType>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<FeatureType> >();
+	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
+		{
+		FeatureType feature;
+		feature.histogram[0] = 2*pointIndex;
+		feature.histogram[1] = pointIndex /2;
+		for(int componentIndex = 2; componentIndex < PFH_DESCRIPTOR_LENGTH; componentIndex++)
+			{
+			feature.histogram[componentIndex] = 0;
+			}
+		featureCloud->points.push_back( feature );
+		}
+	PointCloudWithFeatures<FeatureType> inputCloud;
+	inputCloud.pointCloud = pointCloud;
+	inputCloud.featureCloud = featureCloud;
+	inputCloud.descriptorSize = PFH_DESCRIPTOR_LENGTH;
+
+	return inputCloud;
+	}
+
+TEST_CASE( "PclPointCloud to VisualPointFeatureVector3D and Back", "[PclPointCloudToVisualPointFeatureVector3D]" )
+	{
+	PointCloudWithFeatures<MaxSizeHistogram> inputCloud = GetPointCloudWithHistogramFeatures();
+	ConversionAndBack(inputCloud);
+	} 
+
+TEST_CASE( "SHOT PclPointCloud to VisualPointFeatureVector3D and Back", "[ShotPclPointCloudToVisualPointFeatureVector3D]" )
+	{
+	PointCloudWithFeatures<pcl::SHOT352> inputCloud = GetPointCloudWithShotFeatures();
+	ConversionAndBack(inputCloud);
+	} 
+
+TEST_CASE( "Pfh PclPointCloud to VisualPointFeatureVector3D and Back", "[PfhPclPointCloudToVisualPointFeatureVector3D]" )
+	{
+	PointCloudWithFeatures<pcl::PFHSignature125> inputCloud = GetPointCloudWithPfhFeatures();
+	ConversionAndBack(inputCloud);
+	} 
+
+template <class FeatureType>
+void ConversionAndBackAndConversionAgain(PointCloudWithFeatures<FeatureType> inputCloud)
+	{
+	PclPointCloudToVisualPointFeatureVector3DConverter firstConverter;
+	VisualPointFeatureVector3DToPclPointCloudConverter secondConverter;
+
 	REQUIRE( inputCloud.pointCloud->points.size() == inputCloud.featureCloud->points.size() );
 
 	VisualPointFeatureVector3DSharedConstPtr asnVector = firstConverter.ConvertShared(inputCloud);
-	PointCloudWithFeatures intermediateCloud = secondConverter.ConvertShared(asnVector);
+	PointCloudWithFeatures<FeatureType> intermediateCloud = secondConverter.ConvertShared<FeatureType>(asnVector);
 	VisualPointFeatureVector3DSharedConstPtr outputCloud = firstConverter.ConvertShared(intermediateCloud);
 
 	REQUIRE(GetNumberOfPoints(*outputCloud) == GetNumberOfPoints(*asnVector));
@@ -158,6 +292,24 @@ TEST_CASE( "VisualPointFeatureVector3D to PclPointCloud and Back", "[VisualPoint
 
 	asnVector.reset();
 	outputCloud.reset();
+	}
+
+TEST_CASE( "VisualPointFeatureVector3D to PclPointCloud and Back", "[VisualPointFeatureVector3DToPclPointCloud]" )
+	{
+	PointCloudWithFeatures<MaxSizeHistogram> inputCloud = GetPointCloudWithHistogramFeatures();
+	ConversionAndBackAndConversionAgain(inputCloud);
+	}
+
+TEST_CASE( "Shot VisualPointFeatureVector3D to PclPointCloud and Back", "[ShotVisualPointFeatureVector3DToPclPointCloud]" )
+	{
+	PointCloudWithFeatures<pcl::SHOT352> inputCloud = GetPointCloudWithShotFeatures();
+	ConversionAndBackAndConversionAgain(inputCloud);
+	} 
+
+TEST_CASE( "Pfh VisualPointFeatureVector3D to PclPointCloud and Back", "[PfhVisualPointFeatureVector3DToPclPointCloud]" )
+	{
+	PointCloudWithFeatures<pcl::PFHSignature125> inputCloud = GetPointCloudWithPfhFeatures();
+	ConversionAndBackAndConversionAgain(inputCloud);
 	} 
 
 TEST_CASE("Empty Point Cloud conversion", "[EmptyPointCloud]")
@@ -166,20 +318,20 @@ TEST_CASE("Empty Point Cloud conversion", "[EmptyPointCloud]")
 	VisualPointFeatureVector3DToPclPointCloudConverter secondConverter;
 
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::PointCloud<FeatureType>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<FeatureType> >();
-	PointCloudWithFeatures inputCloud;
+	pcl::PointCloud<pcl::SHOT352>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<pcl::SHOT352> >();
+	PointCloudWithFeatures<pcl::SHOT352> inputCloud;
 	inputCloud.pointCloud = pointCloud;
 	inputCloud.featureCloud = featureCloud;
 	inputCloud.descriptorSize = 0;
 
 	VisualPointFeatureVector3DSharedConstPtr asnVector = firstConverter.ConvertShared(inputCloud);
-	PointCloudWithFeatures intermediateCloud = secondConverter.ConvertShared(asnVector);
+	PointCloudWithFeatures<pcl::SHOT352> intermediateCloud = secondConverter.ConvertShared<pcl::SHOT352>(asnVector);
 	VisualPointFeatureVector3DSharedConstPtr outputCloud = firstConverter.ConvertShared(intermediateCloud);
 
 	REQUIRE(GetNumberOfPoints(*asnVector) == 0);
 	REQUIRE(intermediateCloud.pointCloud->points.size() == 0);
 	REQUIRE(intermediateCloud.featureCloud->points.size() == 0);
-	REQUIRE(intermediateCloud.descriptorSize == 0);
+	REQUIRE(intermediateCloud.descriptorSize == SHOT_DESCRIPTOR_LENGTH);
 	REQUIRE(GetNumberOfPoints(*outputCloud) == 0);
 
 	asnVector.reset();
@@ -194,7 +346,7 @@ TEST_CASE("Reference Features Conversion (Visual)", "[ReferenceFeaturesConversio
 	AddPoint(*featuresVector, 10, 0);
 	REQUIRE(GetPointType(*featuresVector, 0) == VISUAL_POINT_REFERENCE);
 	REQUIRE(GetVectorType(*featuresVector) == ALL_REFERENCES_VECTOR );
-	REQUIRE_THROWS( converter.Convert(featuresVector) );
+	REQUIRE_THROWS( converter.Convert<pcl::SHOT352>(featuresVector) );
 
 	delete(featuresVector);				
 	}
@@ -209,7 +361,7 @@ TEST_CASE("Hybrid Features Conversion (Visual)", "[HybridFeaturesConversion]")
 	REQUIRE(GetPointType(*featuresVector, 0) == VISUAL_POINT_REFERENCE);
 	REQUIRE(GetPointType(*featuresVector, 1) == VISUAL_POINT_POSITION);
 	REQUIRE(GetVectorType(*featuresVector) == HYBRID_VECTOR);
-	REQUIRE_THROWS( converter.Convert(featuresVector) );
+	REQUIRE_THROWS( converter.Convert<pcl::SHOT352>(featuresVector) );
 
 	delete(featuresVector);				
 	}

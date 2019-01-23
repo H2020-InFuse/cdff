@@ -16,10 +16,17 @@
  * 
  *  This DFN chain implements the Reconstruction From Motion as implementation of the DPFC for Reconsrtruction3D.
  *  This chain operates as follows: 
- *  the left images are compared in time to compute the motion of the camera from one position to the next
- *  the simultaneous left and right images of the stereo camera are used to compute a point cloud
- *  point clouds at different time are merged together taking into account the time displacement of the camera.
- * 
+ *  (i) the left images are compared in time to compute the motion of the camera from one position to the next;
+ *  (ii) the simultaneous left and right images of the stereo camera are used to compute a point cloud;
+ *  (iii) point clouds at different time are merged together taking into account the time displacement of the camera.
+ *
+ * This DFPC is configured according to the following parameters (beyond those that are needed to configure the DFN components):
+ * @param SearchRadius, the output is given by the point of the reconstructed cloud contained within a sphere of center given by the current camera pose and radius given by this parameter;
+ * @param PointCloudMapResolution, the voxel resolution of the output point cloud, if the cloud is denser it will be filtered by PCL voxel filter;
+ * @param RightToLeftCameraPose, pose of the right camera with respect to the left camera.
+ *
+ * Notes: no set of DFNs implementation has produced good result for this DFPC during testing;
+ * Notes: this class has never been refactored to the standards of the other implementation of the Reconstruction3D DFPC.
  * @{
  */
 
@@ -90,6 +97,8 @@ namespace Reconstruction3D
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+
+		//Additional DFPC Parameters
 		struct CameraPose
 			{
 			float positionX;
@@ -112,10 +121,14 @@ namespace Reconstruction3D
 		ReconstructionFromMotionOptionsSet parameters;
 		static const ReconstructionFromMotionOptionsSet DEFAULT_PARAMETERS;
 
+		//General configuration helper
 		DfpcConfigurator configurator;
+
+		//State tracker variables
 		Map* map;
 		PoseWrapper::Pose3DPtr rightToLeftCameraPose;
 
+		//DFN Interfaces
 		CDFF::DFN::ImageFilteringInterface* leftFilter;
 		CDFF::DFN::ImageFilteringInterface* rightFilter;		
 		CDFF::DFN::FeaturesExtraction2DInterface* featuresExtractor;
@@ -125,6 +138,7 @@ namespace Reconstruction3D
 		CDFF::DFN::CamerasTransformEstimationInterface* cameraTransformEstimator;
 		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3D;
 
+		//Intermediate output helper variables -- Legacy code --
 		FrameWrapper::FrameConstPtr pastLeftImage;
 		FrameWrapper::FramePtr currentLeftImage;
 		FrameWrapper::FramePtr currentRightImage;
@@ -143,13 +157,18 @@ namespace Reconstruction3D
 		PoseWrapper::Pose3DPtr pastToCurrentCameraTransform;
 		PointCloudWrapper::PointCloudPtr pointCloud;
 
+		//Parameters Configuration method
 		void ConfigureExtraParameters();
+
+		//DFN instantuation method
 		void AssignDfnsAlias();
 
+		//Core macro computation methods that execute a step of the DFPC pipeline
 		bool ComputeCameraMovement();
 		void ComputePointCloud();
 		void UpdateScene();
 
+		//Core micro computation methods that execute a single DFN -- Legacy code -- made obsolete by executors
 		void FilterCurrentLeftImage();
 		void FilterPastLeftImage();
 		void FilterCurrentRightImage();
@@ -166,10 +185,8 @@ namespace Reconstruction3D
 		void ComputeStereoPointCloud();
 
 		/*
-		* Inline Methods
-		*
+		* Inline helper Method
 		*/
-
 		template <typename Type>
 		void DeleteIfNotNull(Type* &pointer)
 			{

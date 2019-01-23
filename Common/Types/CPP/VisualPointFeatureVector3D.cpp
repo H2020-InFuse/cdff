@@ -8,7 +8,7 @@
  */
 
 #include "VisualPointFeatureVector3D.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 #include "BaseTypes.hpp"
 
 using namespace BaseTypesWrapper;
@@ -24,11 +24,11 @@ void Copy(const VisualPointFeatureVector3D& source, VisualPointFeatureVector3D& 
 	{
 		if (GetPointType(source, pointIndex) == VISUAL_POINT_POSITION)
 		{
-			AddPoint(destination, GetXCoordinate(source, pointIndex), GetYCoordinate(source, pointIndex), GetZCoordinate(source, pointIndex));
+			AddPoint(destination, GetXCoordinate(source, pointIndex), GetYCoordinate(source, pointIndex), GetZCoordinate(source, pointIndex), GetFeatureType(source) );
 		}
 		else if (GetPointType(source, pointIndex) == VISUAL_POINT_REFERENCE)
 		{
-			AddPoint(destination, GetReferenceIndex(source, pointIndex), GetPointCloudIdentifier(source, pointIndex));
+			AddPoint(destination, GetReferenceIndex(source, pointIndex), GetPointCloudIdentifier(source, pointIndex), GetFeatureType(source));
 		}
 
 		if (GetPointType(source, pointIndex) != VISUAL_POINT_NONE)
@@ -60,15 +60,18 @@ VisualPointFeatureVector3DSharedPtr NewSharedVisualPointFeatureVector3D()
 void Initialize(VisualPointFeatureVector3D& featuresVector)
 {
 	ClearPoints(featuresVector);
+	featuresVector.feature_type = HISTOGRAM_DESCRIPTOR;
 }
 
-void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, float z)
+void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, float z, VisualPointFeature3DType featureType)
 {
 	ASSERT_ON_TEST(featuresVector.list.nCount < MAX_FEATURE_3D_POINTS, "Features descriptor vector maximum capacity has been reached");
+	ASSERT_ON_TEST(featuresVector.list.nCount == 0 || featuresVector.feature_type == featureType, "Trying to add multiple feature types in the same feature vector");
 	int currentIndex = featuresVector.list.nCount;
 	if (currentIndex == 0)
 	{
 		featuresVector.list_type = ALL_POSITIONS_VECTOR;
+		featuresVector.feature_type = featureType;
 	}
 	else if (featuresVector.list_type != ALL_POSITIONS_VECTOR)
 	{
@@ -83,13 +86,15 @@ void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, floa
 	featuresVector.list.nCount++;
 }
 
-void AddPoint(VisualPointFeatureVector3D& featuresVector, BaseTypesWrapper::T_UInt64 index, BaseTypesWrapper::T_UInt16 pointCloudIdentifier)
+void AddPoint(VisualPointFeatureVector3D& featuresVector, BaseTypesWrapper::T_UInt64 index, BaseTypesWrapper::T_UInt16 pointCloudIdentifier, VisualPointFeature3DType featureType)
 {
 	ASSERT_ON_TEST(featuresVector.list.nCount < MAX_FEATURE_3D_POINTS, "Features descriptor vector maximum capacity has been reached");
+	ASSERT_ON_TEST(featuresVector.list.nCount == 0 || featuresVector.feature_type == featureType, "Trying to add multiple feature types in the same feature vector");
 	int currentIndex = featuresVector.list.nCount;
 	if (currentIndex == 0)
 	{
 		featuresVector.list_type = ALL_REFERENCES_VECTOR;
+		featuresVector.feature_type = featureType;
 	}
 	else if (featuresVector.list_type != ALL_REFERENCES_VECTOR)
 	{
@@ -111,6 +116,11 @@ void ClearPoints(VisualPointFeatureVector3D& featuresVector)
 VisualPointFeatureVector3DType GetVectorType(const VisualPointFeatureVector3D& featuresVector)
 {
 	return featuresVector.list_type;
+}
+
+VisualPointFeature3DType GetFeatureType(const VisualPointFeatureVector3D& featuresVector)
+{
+	return featuresVector.feature_type;
 }
 
 int GetNumberOfPoints(const VisualPointFeatureVector3D& featuresVector)
@@ -161,7 +171,7 @@ VisualPointType GetPointType(const VisualPointFeatureVector3D& featuresVector, i
 		case VisualPoint::VisualPointFeature3D_point_NONE: return VISUAL_POINT_NONE;
 		case VisualPoint::position_PRESENT: return VISUAL_POINT_POSITION;
 		case VisualPoint::reference_PRESENT: return VISUAL_POINT_REFERENCE;
-		default: ASSERT(false, "Unhandled point type in VisualPointFeatureVector3D");
+		default: ASSERT_ON_TEST(false, "Unhandled point type in VisualPointFeatureVector3D");
 	}
 	return VISUAL_POINT_NONE;
 }
@@ -169,7 +179,21 @@ VisualPointType GetPointType(const VisualPointFeatureVector3D& featuresVector, i
 void AddDescriptorComponent(VisualPointFeatureVector3D& featuresVector, int pointIndex, float component)
 {
 	ASSERT_ON_TEST(pointIndex < featuresVector.list.nCount, "A missing point was requested from a features vector 3D");
-	ASSERT_ON_TEST(featuresVector.list.arr[pointIndex].descriptor.nCount < MAX_DESCRIPTOR_3D_LENGTH, "Descriptor maximum capacity has been reached");
+	switch(featuresVector.feature_type)
+		{
+		case HISTOGRAM_DESCRIPTOR: 
+			ASSERT_ON_TEST(featuresVector.list.arr[pointIndex].descriptor.nCount < MAX_DESCRIPTOR_3D_LENGTH, "Descriptor maximum capacity has been reached");
+			break;
+		case SHOT_DESCRIPTOR:
+			ASSERT_ON_TEST(featuresVector.list.arr[pointIndex].descriptor.nCount < SHOT_DESCRIPTOR_LENGTH, "SHOT Descriptor maximum capacity has been reached");
+			break;
+		case PFH_DESCRIPTOR:
+			ASSERT_ON_TEST(featuresVector.list.arr[pointIndex].descriptor.nCount < PFH_DESCRIPTOR_LENGTH, "PFH Descriptor maximum capacity has been reached");
+			break;
+		default:
+			ASSERT_ON_TEST(false, "Unhandled descriptor type in AddDescriptorComponent function");		
+		}
+
 	int currentIndex = featuresVector.list.arr[pointIndex].descriptor.nCount;
 	featuresVector.list.arr[pointIndex].descriptor.arr[currentIndex] = component;
 	featuresVector.list.arr[pointIndex].descriptor.nCount++;
@@ -195,11 +219,14 @@ float GetDescriptorComponent(const VisualPointFeatureVector3D& featuresVector, i
 }
 
 BitStream ConvertToBitStream(const VisualPointFeatureVector3D& vector)
-	CONVERT_TO_BIT_STREAM(vector, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccVisualPointFeatureVector3D_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(vector, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccVisualPointFeatureVector3D_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, VisualPointFeatureVector3D& vector)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, vector, asn1SccVisualPointFeatureVector3D_Decode)
-
+	{	
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccVisualPointFeatureVector3D_REQUIRED_BYTES_FOR_ENCODING, vector, asn1SccVisualPointFeatureVector3D_Decode);
+	}
 }
 
 /** @} */

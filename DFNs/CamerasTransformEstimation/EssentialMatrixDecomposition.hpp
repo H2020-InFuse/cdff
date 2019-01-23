@@ -53,10 +53,11 @@ namespace CamerasTransformEstimation
 	 *        Internal parameters of the second/right camera:
 	 *        focal lengths and principal points
 	 * @param numberOfTestPoints
-	 *        Number of points that need to be tested from the 2d features
-	 *        matches, half of this number represents the minimum number of
-	 *        points whose 2d matching agrees with a transform in order to
-	 *        consider that transform as valid (???)
+	 *        Number of points that need to be tested. Each test verifies that 
+	 *        a point match is expected according to the candidate essential matrix.
+	 *        If half of the tested points pass the test for a candidate essential matrix,
+	 *	  the matrix is accepted as valid output. If one and only one matrix is accepted
+	 *	  the computation succeed, otherwise a failure is reported.
 	 */
 	class EssentialMatrixDecomposition : public CamerasTransformEstimationInterface
 	{
@@ -70,6 +71,7 @@ namespace CamerasTransformEstimation
 
 		private:
 
+			//DFN Parameters
 			Helpers::ParametersListHelper parametersHelper;
 
 			struct CameraMatrix
@@ -91,16 +93,21 @@ namespace CamerasTransformEstimation
 
 			EssentialMatrixDecompositionOptionsSet parameters;
 			static const EssentialMatrixDecompositionOptionsSet DEFAULT_PARAMETERS;
+
+			//External conversion helpers
+			Converters::MatToTransform3DConverter matToTransform3DConverter;
+
+			//Type conversion methods
 			cv::Mat ConvertToMat(CameraMatrix cameraMatrix);
 			cv::Mat ConvertToMat(MatrixWrapper::Matrix3dConstPtr matrix);
 			cv::Mat Convert(CorrespondenceMap2DWrapper::CorrespondenceMap2DConstPtr correspondenceMap);
 
-			Converters::MatToTransform3DConverter matToTransform3DConverter;
-
+			//Core computation methods
 			std::vector<cv::Mat> ComputeTransformMatrix(cv::Mat fundamentalMatrix);
 			int FindValidTransform(std::vector<cv::Mat> transformsList, cv::Mat correspondenceMap);
 			bool ProjectionMatrixIsValidForTestPoints(cv::Mat projectionMatrix, cv::Mat correspondenceMap);
 
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(cv::Mat fundamentalMatrix, cv::Mat CorrespondenceMap);
 	};

@@ -54,7 +54,8 @@ namespace Transform3DEstimation
 			virtual void process() override;
 
 		private:
-
+			
+			//DFN Parameters
 			Helpers::ParametersListHelper parametersHelper;
 
 			struct LeastSquaresMinimizationOptionsSet
@@ -62,14 +63,18 @@ namespace Transform3DEstimation
 				float maximumAllowedError;
 			};
 
-			PoseWrapper::Pose3D emptyPose;
 			LeastSquaresMinimizationOptionsSet parameters;
 			static const LeastSquaresMinimizationOptionsSet DEFAULT_PARAMETERS;
 
+			//Costant zero pose. This had to be declared as non-costant, because of lack of proper initialization method.
+			PoseWrapper::Pose3D emptyPose;
+
+			//Core computation methods
 			bool CreateLinearSystem(const CorrespondenceMap3DWrapper::CorrespondenceMap3D& map, cv::Mat& coefficientMatrix, cv::Mat& valueMatrix);
 			cv::Mat SolveLinearSystem(cv::Mat coefficientMatrix, cv::Mat valueMatrix, float& error);
 			void AddTransformOutput(cv::Mat transformMatrix);
 
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(const CorrespondenceMap3DWrapper::CorrespondenceMap3D& map);
 	};

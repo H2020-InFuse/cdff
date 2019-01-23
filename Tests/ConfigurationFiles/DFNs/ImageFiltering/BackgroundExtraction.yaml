@@ -1,0 +1,8 @@
+- Name: GeneralParameters
+  SamplesPerPixel: 20         # Image buffer size : higher values for slow objects. Generally 20-30 is enough.
+  DistanceThreshold: 40       # Pixel intensity deviation. Above this threshold, pixel hypothetically belongs to background
+  RequiredMatches: 2          # Minimum matches in the buffer to confirm the above hypothesis on pixel (cardinality).
+  SubsamplingFactor: 64       # Temporal and spatial subsampling factor. High values improve runtime as more pixels in the image are compared (spatial), reaching the cardinality earlier,
+                              # but increase ghosts persistence (temporal). Generally values between 8-32.
+  ForegroundLabel: 255
+  BackgroundLabel: 0

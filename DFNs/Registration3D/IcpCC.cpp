@@ -111,36 +111,24 @@ const IcpCC::IcpOptionsSet IcpCC::DEFAULT_PARAMETERS =
 	/*.maximumNumberOfThreads =*/ 0
 };
 
-void IcpCC::ComputeTransform(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud)
+void IcpCC::ConvertParametersToCCParametersList()
 {
-	RegistrationTools::ScaledTransformation scaledTransform;
-	if (inUseGuess)
+	if (parameters.convergenceType == MINIMUM_ERROR_REDUCTION)
 	{
-		scaledTransform = ConvertTrasformToCCTransform(inTransformGuess);
+		ccParametersList.convType = ICPRegistrationTools::MAX_ERROR_CONVERGENCE;
+		ccParametersList.minRMSDecrease = parameters.minimumErrorReduction;
 	}
 	else
 	{
-		scaledTransform.R = SquareMatrix(3);
-		scaledTransform.R.toIdentity();
-		scaledTransform.T.x = 0;
-		scaledTransform.T.y = 0;
-		scaledTransform.T.z = 0;
-		scaledTransform.s = 1.0;
+		ccParametersList.convType = ICPRegistrationTools::MAX_ITER_CONVERGENCE;
+		ccParametersList.nbMaxIterations = static_cast<unsigned>(parameters.maximumNumberOfIterations);
 	}
 
-	double finalRMS;
-	unsigned finalPointCount;
-	ICPRegistrationTools::RESULT_TYPE result = ICPRegistrationTools::Register(sourceCloud, nullptr, sinkCloud, ccParametersList, scaledTransform, finalRMS, finalPointCount);
-
-	if (result == ICPRegistrationTools::ICP_APPLY_TRANSFO || result == ICPRegistrationTools::ICP_NOTHING_TO_DO)
-	{
-		outTransform = ConvertCCTransformToTranform(scaledTransform);
-		outSuccess = true;
-	}
-	else
-	{
-		outSuccess = false;
-	}
+	ccParametersList.adjustScale = parameters.scaleIsAdjustable;
+	ccParametersList.filterOutFarthestPoints = parameters.farthestPointsAreFilteredOut;
+	ccParametersList.samplingLimit = static_cast<unsigned>(parameters.samplingLimit);
+	ccParametersList.finalOverlapRatio = parameters.finalOverlapRatio;
+	ccParametersList.maxThreadCount = static_cast<unsigned>(parameters.maximumNumberOfThreads);
 }
 
 CCLib::PointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
@@ -163,26 +151,6 @@ CCLib::PointCloud* IcpCC::Convert(PointCloudConstPtr cloud)
         ccCloud->setCurrentScalarField(fieldIndex);
     }
 	return ccCloud;
-}
-
-void IcpCC::ConvertParametersToCCParametersList()
-{
-	if (parameters.convergenceType == MINIMUM_ERROR_REDUCTION)
-	{
-		ccParametersList.convType = ICPRegistrationTools::MAX_ERROR_CONVERGENCE;
-		ccParametersList.minRMSDecrease = parameters.minimumErrorReduction;
-	}
-	else
-	{
-		ccParametersList.convType = ICPRegistrationTools::MAX_ITER_CONVERGENCE;
-		ccParametersList.nbMaxIterations = static_cast<unsigned>(parameters.maximumNumberOfIterations);
-	}
-
-	ccParametersList.adjustScale = parameters.scaleIsAdjustable;
-	ccParametersList.filterOutFarthestPoints = parameters.farthestPointsAreFilteredOut;
-	ccParametersList.samplingLimit = static_cast<unsigned>(parameters.samplingLimit);
-	ccParametersList.finalOverlapRatio = parameters.finalOverlapRatio;
-	ccParametersList.maxThreadCount = static_cast<unsigned>(parameters.maximumNumberOfThreads);
 }
 
 // The required initial estimate/guess/output is the position of the source
@@ -233,6 +201,38 @@ Pose3D IcpCC::ConvertCCTransformToTranform(const RegistrationTools::ScaledTransf
 
 	SetOrientation(transform, quaternion[1], quaternion[2], quaternion[3], quaternion[0]);
 	return transform;
+}
+
+void IcpCC::ComputeTransform(CCLib::PointCloud* sourceCloud, CCLib::PointCloud* sinkCloud)
+{
+	RegistrationTools::ScaledTransformation scaledTransform;
+	if (inUseGuess)
+	{
+		scaledTransform = ConvertTrasformToCCTransform(inTransformGuess);
+	}
+	else
+	{
+		scaledTransform.R = SquareMatrix(3);
+		scaledTransform.R.toIdentity();
+		scaledTransform.T.x = 0;
+		scaledTransform.T.y = 0;
+		scaledTransform.T.z = 0;
+		scaledTransform.s = 1.0;
+	}
+
+	double finalRMS;
+	unsigned finalPointCount;
+	ICPRegistrationTools::RESULT_TYPE result = ICPRegistrationTools::Register(sourceCloud, nullptr, sinkCloud, ccParametersList, scaledTransform, finalRMS, finalPointCount);
+
+	if (result == ICPRegistrationTools::ICP_APPLY_TRANSFO || result == ICPRegistrationTools::ICP_NOTHING_TO_DO)
+	{
+		outTransform = ConvertCCTransformToTranform(scaledTransform);
+		outSuccess = true;
+	}
+	else
+	{
+		outSuccess = false;
+	}
 }
 
 void IcpCC::ValidateParameters()

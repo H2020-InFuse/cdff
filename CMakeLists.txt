@@ -273,6 +273,7 @@ if(Ceres_FOUND)
   # and ${_DEPENDENCIES_PREFIX}/include -> really necessary to restrict the
   # include dirs to specific targets
   include_directories(SYSTEM ${CERES_INCLUDE_DIRS})
+  add_definitions(-DHAVE_CERES)
 
 else()
 
@@ -286,6 +287,9 @@ endif()
 set(CLOUDCOMPARE_FOUND true)
 set(CLOUDCOMPARE_INCLUDE_DIRS "")
 set(CLOUDCOMPARE_LIBRARIES "cloudcompare_core")
+if(CLOUDCOMPARE_FOUND)
+add_definitions(-DHAVE_CLOUDCOMPARE)
+endif()
 
 # There aren't any CMake find modules nor any package configuration files for
 # those libraries, so just add the main include directory and use the libraries
@@ -314,6 +318,9 @@ find_package_mode(PCL)
 add_definitions(${PCL_DEFINITIONS})
 include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
+if(PCL_FOUND)
+add_definitions(-DHAVE_PCL)
+endif()
 
 message(STATUS "Preprocessor definitions and compiler flags added by the PCL: ${PCL_DEFINITIONS}")
 message(STATUS "Found PCL headers, and the headers of its dependencies, in: ${PCL_INCLUDE_DIRS}")
@@ -323,12 +330,30 @@ message(STATUS "All requested PCL libraries, and their dependencies: ${PCL_LIBRA
 find_package(OpenCV 3.4.0 REQUIRED)
 find_package_mode(OpenCV)
 
+if(OpenCV_FOUND)
+
+  add_definitions(-DHAVE_OPENCV)
+  # checking extra contrib modules
+  include(CheckIncludeFileCXX)
+  check_include_file_cxx(opencv2/ximgproc.hpp HAVE_OPENCV_XIMGPROC)
+  check_include_file_cxx(opencv2/rgbd.hpp HAVE_OPENCV_RGBD)
+  if(HAVE_OPENCV_RGBD AND HAVE_OPENCV_XIMGPROC)
+    add_definitions(-DHAVE_OPENCV_CONTRIB)
+  else()
+    message(WARNING one of the modules from OPENCV_CONTRIB is missing : ximgproc, rgbd )
+  endif()
+
+endif()
+
 ## Look for libpointmatcher ---------------------------------------------------
 
 # TODO: rework this section
 
 find_package(libpointmatcher 1.3.0 REQUIRED)
 set(POINTMATCHER_FOUND true)
+if(POINTMATCHER_FOUND)
+add_definitions(-DHAVE_POINTMATCHER)
+endif()
 
 # Usage:
 # target_include_directories(<target> SYSTEM PRIVATE|PUBLIC ${POINTMATCHER_INCLUDE_DIRS})
@@ -344,13 +369,12 @@ if(Edres-Wrapper_FOUND)
   message(STATUS "Found Edres-Wrapper headers in: ${Edres-Wrapper_INCLUDE_DIRS}")
   message(STATUS "Found Edres-Wrapper libraries, and their dependencies: ${Edres-Wrapper_LIBRARIES}")
 
-  option(WITH_EDRES "Build Edres-dependent parts" ON)
+  add_definitions(-DHAVE_EDRES)
   include_directories(SYSTEM ${Edres-Wrapper_INCLUDE_DIRS})
 
 else()
 
   message(STATUS "Edres-Wrapper not found: Edres-dependent parts will not be built")
-  option(WITH_EDRES "Build Edres-dependent parts" OFF)
 
 endif()
 
@@ -364,13 +388,12 @@ if(DLRTRACKER-CORE_FOUND)
   message(STATUS "Found DLRTracker-core headers in: ${DLRTRACKER-CORE_INCLUDE_DIRS}")
   message(STATUS "Found DLRTracker-core libraries, and their dependencies: ${DLRTRACKER-CORE_LIBRARIES}")
 
-  option(WITH_DLRTRACKER "Build DLRTracker-dependent parts" ON)
+  add_definitions(-DHAVE_DLRTRACKER)
   include_directories(SYSTEM ${DLRTRACKER-CORE_INCLUDE_DIRS})
 
 else()
 
   message(STATUS "DLRTracker-core not found: DLRTracker-dependent parts will not be built")
-  option(WITH_DLRTRACKER "Build DLRTracker-dependent parts" OFF)
 
 endif()
 

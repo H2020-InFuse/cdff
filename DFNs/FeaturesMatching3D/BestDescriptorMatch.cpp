@@ -65,17 +65,10 @@ void BestDescriptorMatch::process()
 		return;
 	}
 
-	// Read data from input ports
-	PointCloudWithFeatures inputSourceCloud =
-		visualPointFeatureVector3DToPclPointCloud.Convert(&inSourceFeatures);
-	PointCloudWithFeatures inputSinkCloud =
-		visualPointFeatureVector3DToPclPointCloud.Convert(&inSinkFeatures);
-	ValidateInputs(inputSourceCloud, inputSinkCloud);
-
 	// Process data
 	pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSourceCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSinkCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	ComputeBestMatches(inputSourceCloud, inputSinkCloud, bestMatchSourceCloud, bestMatchSinkCloud);
+	ComputeBestMatches(bestMatchSourceCloud, bestMatchSinkCloud);
 
 	if (bestMatchSourceCloud->points.size() == 0)
 		{
@@ -96,26 +89,24 @@ const BestDescriptorMatch::BestDescriptorMatchOptionsSet BestDescriptorMatch::DE
 	/*.maxCorrespondenceDistance =*/ 0.05
 };
 
-
-void BestDescriptorMatch::ComputeBestMatches( PointCloudWithFeatures sourceCloud, PointCloudWithFeatures sinkCloud, pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSourceCloud, 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSinkCloud)
+/*This method computes the point clouds containing the best matches among the points in the input clouds. 
+Output: For each index i, bestMatchSourceCloud(i) is a point in sourceCloud that is the best match of bestMatchSinkCloud(i) among the points in sinkCloud */
+void BestDescriptorMatch::ComputeBestMatches(pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSourceCloud, pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSinkCloud)
 	{
-	int numberOfSourcePoints = sourceCloud.pointCloud->points.size();
-	int numberOfSinkPoints = sinkCloud.pointCloud->points.size();
+	int numberOfSourcePoints = GetNumberOfPoints(inSourceFeatures); 
+	int numberOfSinkPoints = GetNumberOfPoints(inSinkFeatures);
 	std::vector<float> minimumDistances(numberOfSourcePoints);
 	std::vector<int> minimumSinkIndex(numberOfSourcePoints);
 
+	// For each source point we compute the sink point whose feature distance from the source point is the minimum among all sink points
 	for(int sourceIndex = 0; sourceIndex < numberOfSourcePoints; sourceIndex++)
 		{
-		const FeatureType& sourceDescriptor = sourceCloud.featureCloud->points.at(sourceIndex);
 		float& minimumDistance = minimumDistances.at(sourceIndex);
 		minimumDistance = std::numeric_limits<float>::infinity();
 
 		for(int sinkIndex = 0; sinkIndex < numberOfSinkPoints; sinkIndex++)
 			{
-			const FeatureType& sinkDescriptor = sinkCloud.featureCloud->points.at(sinkIndex);
-
-			float descriptorDistance = ComputeDistance(sourceDescriptor, sinkDescriptor, sourceCloud.descriptorSize);
+			float descriptorDistance = ComputeDistance(sourceIndex, sinkIndex);
 			if (minimumDistance > descriptorDistance)
 				{
 				minimumDistance = descriptorDistance;
@@ -124,12 +115,16 @@ void BestDescriptorMatch::ComputeBestMatches( PointCloudWithFeatures sourceCloud
 			}
 		}
 
+	//For each source point, we test whether the minimum distance computed above is belowe the maxCorrespondenceDistance parameters. If yes, a best match is recorded between
+	//the source point and the minimum distance sink point associated to it.
 	for(int sourceIndex = 0; sourceIndex < numberOfSourcePoints; sourceIndex++)
 		{
 		if ( minimumDistances.at(sourceIndex) < parameters.maxCorrespondenceDistance )
 			{
-			pcl::PointXYZ sourcePoint = sourceCloud.pointCloud->points.at(sourceIndex);
-			pcl::PointXYZ sinkPoint = sinkCloud.pointCloud->points.at( minimumSinkIndex.at(sourceIndex) );
+			pcl::PointXYZ sourcePoint(GetXCoordinate(inSourceFeatures, sourceIndex),  GetYCoordinate(inSourceFeatures, sourceIndex), GetZCoordinate(inSourceFeatures, sourceIndex));
+			int sinkIndex = minimumSinkIndex.at(sourceIndex);
+			pcl::PointXYZ sinkPoint(GetXCoordinate(inSinkFeatures, sinkIndex),  GetYCoordinate(inSinkFeatures, sinkIndex), GetZCoordinate(inSinkFeatures, sinkIndex));
+
 			bestMatchSourceCloud->points.push_back(sourcePoint);
 			bestMatchSinkCloud->points.push_back(sinkPoint);
 			}
@@ -146,12 +141,14 @@ Pose3DConstPtr BestDescriptorMatch::ComputeTransform(pcl::PointCloud<pcl::PointX
 	return EigenTransformToTransform3DConverter().Convert(eigenTransform);
 }
 
-float BestDescriptorMatch::ComputeDistance(const SupportTypes::FeatureType& feature1, const SupportTypes::FeatureType& feature2, int numberOfFeatureComponents)
+float BestDescriptorMatch::ComputeDistance(int sourceIndex, int sinkIndex)
 	{
 	float squaredDistance = 0;
+	int numberOfFeatureComponents = GetNumberOfDescriptorComponents(inSourceFeatures, sourceIndex);
+	ASSERT( numberOfFeatureComponents == GetNumberOfDescriptorComponents(inSinkFeatures, sinkIndex), "BestDescriptorMatch error, mismatch size between source and sink descriptors");
 	for(int componentIndex = 0; componentIndex < numberOfFeatureComponents; componentIndex++)
 		{
-		float componentDistance = feature1.histogram[componentIndex] - feature2.histogram[componentIndex];
+		float componentDistance = GetDescriptorComponent(inSourceFeatures, sourceIndex, componentIndex) - GetDescriptorComponent(inSinkFeatures, sinkIndex, componentIndex);
 		squaredDistance += componentDistance*componentDistance;
 		}
 	return std::sqrt(squaredDistance);
@@ -175,31 +172,37 @@ void BestDescriptorMatch::ValidateParameters()
 	ASSERT(parameters.maxCorrespondenceDistance >= 0, "BestDescriptorMatch Configuration error, Max Correspondence Distance is negative");
 }
 
-void BestDescriptorMatch::ValidateInputs(PointCloudWithFeatures sourceCloud, PointCloudWithFeatures sinkCloud)
+void BestDescriptorMatch::ValidateInputs()
 {
-	ASSERT(sourceCloud.descriptorSize == sinkCloud.descriptorSize, "BestDescriptorMatch Error, source cloud and sink cloud have a different descriptor size");
-	ValidateCloud(sourceCloud);
-	ValidateCloud(sinkCloud);
+	ValidateCloud(inSourceFeatures);
+	ValidateCloud(inSinkFeatures);
 }
 
-void BestDescriptorMatch::ValidateCloud(PointCloudWithFeatures cloud)
+void BestDescriptorMatch::ValidateCloud(const VisualPointFeatureVector3D& features)
 {
-	ASSERT(cloud.pointCloud->points.size() == cloud.featureCloud->points.size(), "BestDescriptorMatch Error, point cloud and feature cloud don't have the same size");
-
-	for (unsigned pointIndex = 0; pointIndex < cloud.pointCloud->points.size(); pointIndex++)
-	{
-		pcl::PointXYZ point = cloud.pointCloud->points.at(pointIndex);
-		FeatureType feature = cloud.featureCloud->points.at(pointIndex);
-		ASSERT(point.x == point.x, "BestDescriptorMatch Error, cloud contains a NaN point");
-		ASSERT(point.y == point.y, "BestDescriptorMatch Error, cloud contains a NaN point");
-		ASSERT(point.z == point.z, "BestDescriptorMatch Error, cloud contains a NaN point");
-		for (unsigned componentIndex = 0; componentIndex < cloud.descriptorSize; componentIndex++)
+	int numberOfPoints = GetNumberOfPoints(features);
+	if (numberOfPoints == 0)
 		{
-			ASSERT(feature.histogram[componentIndex] == feature.histogram[componentIndex], "BestDescriptorMatch Error, feature cloud contains a NaN feature");
+		return;
 		}
-		for (unsigned componentIndex = cloud.descriptorSize; componentIndex < MAX_FEATURES_NUMBER; componentIndex++)
+
+	int baseDescriptorSize = GetNumberOfDescriptorComponents(features, 0);
+	for (unsigned pointIndex = 0; pointIndex < numberOfPoints; pointIndex++)
+	{
+		float x = GetXCoordinate(features, pointIndex);
+		float y = GetYCoordinate(features, pointIndex);
+		float z = GetZCoordinate(features, pointIndex);
+		ASSERT(x == x, "BestDescriptorMatch Error, cloud contains a NaN point");
+		ASSERT(y == y, "BestDescriptorMatch Error, cloud contains a NaN point");
+		ASSERT(z == z, "BestDescriptorMatch Error, cloud contains a NaN point");
+
+		int descriptorSize = GetNumberOfDescriptorComponents(features, pointIndex);
+		ASSERT(descriptorSize == baseDescriptorSize, "BestDescriptorMatch Error, Descriptor sizes mismatch");
+
+		for (unsigned componentIndex = 0; componentIndex < descriptorSize; componentIndex++)
 		{
-			ASSERT(feature.histogram[componentIndex] == 0, "BestDescriptorMatch Error, feature cloud contains an invalid feature (probably coming from a conversion error)");
+			float component = GetDescriptorComponent(features, pointIndex, componentIndex);
+			ASSERT(component == component, "BestDescriptorMatch Error, feature cloud contains a NaN feature");
 		}
 	}
 }

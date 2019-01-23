@@ -1,23 +1,11 @@
-FROM ubuntu:16.04
+FROM nexus.spaceapplications.com/repository/infuse/cdff-base:latest
 
-## Install basic tools that are not already available in the base image
+## Base + All extra dependencies
 
-ARG DEBIAN_FRONTEND=noninteractive
+ARG USER
+ARG PASS
 ARG INSTALL_DIR=/usr/local
-
 ENV INSTALL_CDFF=$INSTALL_DIR
-
-RUN apt-get update && apt-get install --yes --quiet apt-utils && \
-    apt-get install --yes --quiet \
-      build-essential \
-      cmake \
-      curl \
-      git \
-      mono-runtime libmono-system-core4.0-cil libmono-system-numerics4.0-cil \
-      unzip \
-      wget
-
-## Download, build, and install the CDFF's dependencies (and their dependencies)
 
 SHELL ["/bin/bash", "-c"]
 
@@ -25,32 +13,72 @@ COPY get-cdff-dependencies.sh /tmp/CDFF/Tools/Docker/
 COPY installers/ /tmp/CDFF/Tools/Docker/installers/
 COPY patches/ /tmp/CDFF/Tools/Docker/patches/
 
-RUN apt-get update && apt-get install --yes --quiet liblzma-dev libbz2-dev zlib1g-dev && \
-    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d boost
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d yaml-cpp
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d eigen
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d cloudcompare-core
-RUN apt-get update && apt-get install --yes --quiet libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev && \
-    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d ceres
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d nabo
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pointmatcher
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d flann
-RUN apt-get update && apt-get install --yes --quiet \
-      libavcodec-dev libavformat-dev libswscale-dev \
-      libjpeg-dev libpng++-dev libdc1394-22-dev libjasper-dev libtiff5-dev \
-      libv4l-dev \
-      freeglut3-dev && \
-    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d vtk
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pcl
-
-## Download, build, and install EnviRe and its dependencies
+RUN apt-get update && apt-get install --yes --quiet libglew-dev && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pangolin
 
 RUN apt-get update && apt-get install --yes --quiet pkg-config libtinyxml-dev libgoogle-glog-dev && \
     /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d none -e
 
-## Image information
 
-LABEL version="3.0.1"
-LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>, Romain Michalec <romain.michalec@strath.ac.uk>"
-LABEL description="Image providing the dependencies of CDFF-core and CDFF-support, compiled from source, and installed in ${INSTALL_CDFF}"
+RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv_contrib
+
+RUN apt-get update && apt-get install --yes --quiet libx11-6 \
+libbz2-1.0 \
+libfreetype6 \
+libsimage-dev \
+zlib1g \
+libgl1-mesa-dev \
+libxext-dev \
+libx11-dev \
+libxi-dev \
+libxmu-dev \
+libxpm-dev \
+libxt-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d coin3d
+
+RUN apt-get install --yes --quiet libfreetype6-dev \
+libfreeimage-dev \
+libzzip-dev \
+libxrandr-dev \
+libxaw7-dev \
+freeglut3-dev \
+libgl1-mesa-dev \
+libglu1-mesa-dev \
+nvidia-cg-toolkit \
+libois-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d ogre
+
+RUN apt-get install --yes --quiet libssl-dev \
+libusb-1.0-0-dev \
+pkg-config \
+libgtk-3-dev \
+libglfw3-dev \
+libgl1-mesa-dev \
+libglu1-mesa-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d realsense2
+
+RUN apt-get install --yes --quiet build-essential \
+libx11-dev \
+liblapack-dev \
+libxml2-dev \
+libzbar-dev \
+libpthread-stubs0-dev \
+libopenni-dev \
+libopenni2-dev \
+libois-dev \
+libqhull-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d visp
+
+RUN wget --user ${USER} --password ${PASS} https://nexus.spaceapplications.com/repository/raw-infuse/DLRtrackerCore-1.0.0.zip -P /tmp/CDFF/External/source/ && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d dlrtracker-core
+
+RUN apt-get update && apt-get install --yes --quiet \
+libgdal1-dev \ 
+libgsl-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d gdalwrap
+
+ARG VERSION="4.5.5"
+ARG SHA=0000
+ENV IMAGE_VERSION=$VERSION
+ENV IMAGE_SHA=$SHA
+LABEL version=${IMAGE_VERSION}
+LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
+LABEL description="CI + all extra dependencies"

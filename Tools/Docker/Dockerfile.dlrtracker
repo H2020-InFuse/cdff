@@ -1,0 +1,24 @@
+FROM nexus.spaceapplications.com/repository/infuse/cdff-base:latest
+
+## Base + single dependency
+
+ARG USER
+ARG PASS
+ARG INSTALL_DIR=/usr/local
+ENV INSTALL_CDFF=$INSTALL_DIR
+
+SHELL ["/bin/bash", "-c"]
+
+COPY get-cdff-dependencies.sh /tmp/CDFF/Tools/Docker/
+COPY installers/ /tmp/CDFF/Tools/Docker/installers/
+COPY patches/ /tmp/CDFF/Tools/Docker/patches/
+
+RUN wget --user ${USER} --password ${PASS} https://nexus.spaceapplications.com/repository/raw-infuse/DLRtrackerCore-1.0.0.zip -P /tmp/CDFF/External/source/ && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d dlrtracker-core
+
+ARG VERSION="1.1.6"
+ARG SHA=0000
+ENV IMAGE_VERSION=$VERSION
+ENV IMAGE_SHA=$SHA
+LABEL version=${IMAGE_VERSION}
+LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
+LABEL description="CI + single dependency"

@@ -56,6 +56,7 @@ namespace Transform3DEstimation
 
 		private:
 
+			//DFN Parameters
 			Helpers::ParametersListHelper parametersHelper;
 
 			struct CeresEstimationOptionsSet
@@ -64,6 +65,10 @@ namespace Transform3DEstimation
 				float maximumAllowedDeterminantError;
 			};
 
+			CeresEstimationOptionsSet parameters;
+			static const CeresEstimationOptionsSet DEFAULT_PARAMETERS;
+
+			//Ceres Cost Functor
 			struct Transform3DCostFunctor
 			{
 				Transform3DCostFunctor(BaseTypesWrapper::Point3D source, BaseTypesWrapper::Point3D sink);
@@ -81,9 +86,7 @@ namespace Transform3DEstimation
 			};
 			typedef double Transform3d[12];
 
-			CeresEstimationOptionsSet parameters;
-			static const CeresEstimationOptionsSet DEFAULT_PARAMETERS;
-
+			//Core computation methods
 			int ComputeNumberOfCameras(int numberOfCorrespondenceMaps);
 			void InitializeTransforms(std::vector<Transform3d>& transformList);
 			float SolveEstimation(const CorrespondenceMap3DWrapper::CorrespondenceMaps3DSequence& sequence, int numberOfCameras, std::vector<Transform3d>& transformList);
@@ -92,6 +95,7 @@ namespace Transform3DEstimation
 			bool CreateLinearSystem(const CorrespondenceMap3DWrapper::CorrespondenceMap3D& map, cv::Mat& coefficientMatrix, cv::Mat& valueMatrix);
 			cv::Mat SolveLinearSystem(cv::Mat coefficientMatrix, cv::Mat valueMatrix, float& error);
 
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateInputs(const CorrespondenceMap3DWrapper::CorrespondenceMap3D& map);
 	};

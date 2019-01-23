@@ -8,7 +8,7 @@
  */
 
 #include "CorrespondenceMap3D.hpp"
-#include <Errors/Assert.hpp>
+#include "Errors/AssertOnTest.hpp"
 
 namespace CorrespondenceMap3DWrapper
 {
@@ -110,10 +110,10 @@ void RemoveCorrespondences(CorrespondenceMap3D& correspondenceMap, std::vector<B
 	static const std::string errorMessage = "Remove Correspondences error, the second input was not an ORDERED list or some index is not within range";
 	for(int listIndex = 1; listIndex < elementsToRemove-1; listIndex++)
 		{
-		ASSERT( correspondenceIndexOrderedList.at(listIndex-1) < correspondenceIndexOrderedList.at(listIndex), errorMessage);
-		ASSERT(	correspondenceIndexOrderedList.at(listIndex) < correspondenceIndexOrderedList.at(listIndex+1), errorMessage);
+		ASSERT_ON_TEST( correspondenceIndexOrderedList.at(listIndex-1) < correspondenceIndexOrderedList.at(listIndex), errorMessage);
+		ASSERT_ON_TEST(	correspondenceIndexOrderedList.at(listIndex) < correspondenceIndexOrderedList.at(listIndex+1), errorMessage);
 		}
-	ASSERT( correspondenceIndexOrderedList.at(elementsToRemove-1) < correspondenceMap.nCount, errorMessage);
+	ASSERT_ON_TEST( correspondenceIndexOrderedList.at(elementsToRemove-1) < correspondenceMap.nCount, errorMessage);
 	BaseTypesWrapper::T_UInt32 firstIndex = correspondenceIndexOrderedList.at(0);
 
 	//Removing elements 
@@ -138,11 +138,14 @@ void RemoveCorrespondences(CorrespondenceMap3D& correspondenceMap, std::vector<B
 	}
 
 BitStream ConvertToBitStream(const CorrespondenceMap3D& map)
-	CONVERT_TO_BIT_STREAM(map, asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMap3D_Encode)
+	{
+	return BaseTypesWrapper::ConvertToBitStream(map, asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING, asn1SccCorrespondenceMap3D_Encode);
+	}
 
 void ConvertFromBitStream(BitStream bitStream, CorrespondenceMap3D& map)
-	CONVERT_FROM_BIT_STREAM(bitStream, asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING, map, asn1SccCorrespondenceMap3D_Decode)
-
+	{
+	BaseTypesWrapper::ConvertFromBitStream(bitStream, asn1SccCorrespondenceMap3D_REQUIRED_BYTES_FOR_ENCODING, map, asn1SccCorrespondenceMap3D_Decode);
+	}
 }
 
 /** @} */

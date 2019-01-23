@@ -15,8 +15,8 @@
  * @addtogroup GuiTests
  * 
  * This class will test requirement 4.1.1.8 of deliverable 5.5.
- * 90% of manually defined matches on manually defined features should be detected correctly.  Manually defined matches are considered to be matches between features made by a human 
- * on close inspection of a set of features on a pair of images.  A human will inspect each set of matches and identify those that are incorrect.
+ * "90% of manually defined matches on manually defined features should be detected correctly.  Manually defined matches are considered to be matches between features made by a human 
+ * on close inspection of a set of features on a pair of images.  A human will inspect each set of matches and identify those that are incorrect."
  *
  * @{
  */

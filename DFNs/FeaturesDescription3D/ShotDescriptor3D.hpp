@@ -75,7 +75,8 @@ namespace FeaturesDescription3D
 			virtual void process() override;
 
 		private:
-
+			
+			//DFN Parameters
 			enum OutputFormat
 			{
 				POSITIONS_OUTPUT,
@@ -115,21 +116,27 @@ namespace FeaturesDescription3D
 			ShotOptionsSet parameters;
 			static const ShotOptionsSet DEFAULT_PARAMETERS;
 
-			pcl::PointCloud<pcl::SHOT352>::ConstPtr ComputeShotDescriptors(
-				pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud,
-				pcl::IndicesConstPtr indicesList,
-				pcl::PointCloud<pcl::Normal>::ConstPtr optionalNormalsCloud
-			);
-			pcl::PointCloud<pcl::Normal>::ConstPtr EstimateNormals(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, pcl::search::KdTree<pcl::PointXYZ>::Ptr kdTree);
+			//External conversion helpers
+			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
+			Converters::PointCloudToPclNormalsCloudConverter pointCloudToPclNormalsCloud;
+
+			//Type conversion methods
 			pcl::IndicesConstPtr Convert(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr featuresVector);
 			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(
 				const pcl::PointCloud<pcl::PointXYZ>::ConstPtr inputCloud,
 				const pcl::IndicesConstPtr indicesList,
 				const pcl::PointCloud<pcl::SHOT352>::ConstPtr shotPointCloud
 			);
-			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
-			Converters::PointCloudToPclNormalsCloudConverter pointCloudToPclNormalsCloud;
 
+			//Core computation methods
+			pcl::PointCloud<pcl::SHOT352>::ConstPtr ComputeShotDescriptors(
+				pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud,
+				pcl::IndicesConstPtr indicesList,
+				pcl::PointCloud<pcl::Normal>::ConstPtr optionalNormalsCloud
+			);
+			pcl::PointCloud<pcl::Normal>::ConstPtr EstimateNormals(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, pcl::search::KdTree<pcl::PointXYZ>::Ptr kdTree);
+
+			//Input Validation methods
 			void ValidateParameters();
 			void ValidateMandatoryInputs(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, pcl::IndicesConstPtr indicesList);
 			bool IsNormalsCloudValid(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud, pcl::PointCloud<pcl::Normal>::ConstPtr normalsCloud);

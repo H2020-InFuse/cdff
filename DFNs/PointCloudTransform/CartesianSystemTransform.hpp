@@ -47,6 +47,7 @@ namespace PointCloudTransform
 			virtual void process() override;
 
 		private:
+			//DFN Parameters
 			typedef Eigen::Transform<float, 3, Eigen::Affine, Eigen::DontAlign> AffineTransform;
 
 			struct CartesianSystemTransformOptionsSet
@@ -58,11 +59,19 @@ namespace PointCloudTransform
 			CartesianSystemTransformOptionsSet parameters;
 			static const CartesianSystemTransformOptionsSet DEFAULT_PARAMETERS;
 
-			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
+			//Internal variable
 			pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud;
 
+			//External conversion helpers
+			Converters::PointCloudToPclPointCloudConverter pointCloudToPclPointCloud;
+
+			//Type conversion methods
 			AffineTransform ConvertCloudPoseToInversionTransform(const PoseWrapper::Pose3D& cloudPoseInSystem);
+
+			//Core computation methods
 			BaseTypesWrapper::Point3D TransformPoint(const BaseTypesWrapper::Point3D& point, const AffineTransform& affineTransform);
+
+			//Input Validation methods
 			void ValidateParameters();
 	};
 }
