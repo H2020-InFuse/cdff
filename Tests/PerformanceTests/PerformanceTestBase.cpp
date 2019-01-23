@@ -318,7 +318,7 @@ void PerformanceTestBase::SaveMeasures(MeasuresMap measuresMap)
 			if (changingParametersList.at(parameterIndex).optionsNumber > 1)
 				{
 				measuresFile << changingParametersList.at(parameterIndex).configurationFileIndex << ".";
-				measuresFile << changingParametersList.at(parameterIndex).baseLine <<" ";
+				measuresFile << RemoveStartAndEndSpaces( changingParametersList.at(parameterIndex).baseLine ) <<" ";
 				}
 			}
 		for(MeasuresMap::iterator iterator = measuresMap.begin(); iterator != measuresMap.end(); ++iterator)
@@ -332,8 +332,11 @@ void PerformanceTestBase::SaveMeasures(MeasuresMap measuresMap)
 	measuresFile << testIdentifier << " ";
 	for(unsigned parameterIndex = 0; parameterIndex < changingParametersList.size(); parameterIndex++)
 		{
-		unsigned currentOption = changingParametersList.at(parameterIndex).currentOption;
-		measuresFile << changingParametersList.at(parameterIndex).optionsList.at(currentOption) << " ";
+		if (changingParametersList.at(parameterIndex).optionsNumber > 1)
+			{
+			unsigned currentOption = changingParametersList.at(parameterIndex).currentOption;
+			measuresFile << changingParametersList.at(parameterIndex).optionsList.at(currentOption) << " ";
+			}
 		}
 	for(MeasuresMap::iterator iterator = measuresMap.begin(); iterator != measuresMap.end(); ++iterator)
 		{
@@ -489,7 +492,7 @@ void PerformanceTestBase::SaveParametersAndValueInAggregatorFile(std::ofstream& 
 			{
 			if (parameter->optionsNumber > 1)
 				{
-				file << parameter->baseLine << " ";
+				file << parameter->configurationFileIndex << "." << parameter->baseLine << " ";
 				}
 			}
 		file << "AggregatorResult" << "\n";
@@ -499,7 +502,10 @@ void PerformanceTestBase::SaveParametersAndValueInAggregatorFile(std::ofstream& 
 	for(std::vector<Parameter>::iterator parameter = changingParametersList.begin(); parameter != changingParametersList.end(); ++parameter)
 		{
 		unsigned optionIndex = residualIndex % parameter->optionsNumber;
-		file << parameter->optionsList.at(optionIndex) << " ";
+		if (parameter->optionsNumber > 1)
+			{
+			file << parameter->optionsList.at(optionIndex) << " ";
+			}
 		residualIndex = residualIndex / parameter->optionsNumber;
 		}
 	file << value << "\n";	
