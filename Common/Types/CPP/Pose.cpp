@@ -10,6 +10,8 @@
 #include "Pose.hpp"
 #include "Errors/AssertOnTest.hpp"
 #include <cmath>
+#include <stdlib.h>
+#include <sstream>
 
 namespace PoseWrapper
 {
