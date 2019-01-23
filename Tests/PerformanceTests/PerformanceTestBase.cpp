@@ -151,38 +151,6 @@ const std::string PerformanceTestBase::aggregatorsResultsFileName = "AggregatedM
  *
  * --------------------------------------------------------------------------
  */
-/*void PerformanceTestBase::ReadPerformanceConfigurationFiles()
-	{
-	for(unsigned configurationFileIndex = 0; configurationFileIndex < configurationFilesNumber; configurationFileIndex++)
-		{
-		configurationsList.push_back( YAML::LoadFile( baseConfigurationFilePathsList.at(configurationFileIndex) ) );
-		YAML::Node& configuration = configurationsList.at( configurationsList.size() - 1 );
-
-		for(unsigned groupIndex = 0; groupIndex < configuration.size(); groupIndex++)
-			{
-			YAML::Node group = configuration[groupIndex];
-			for(YAML::const_iterator iterator = group.begin(); iterator != group.end(); ++iterator)
-				{
-				std::string parameterName = iterator->first.as<std::string>();
-				std::vector<std::string> parameterValuesList = SplitString( iterator->second.as<std::string>() );
-				if (parameterValuesList.size() > 1)
-					{
-					Parameter parameter;
-					parameter.configurationFileIndex = configurationFileIndex;
-					parameter.groupIndex = groupIndex;
-					parameter.name = parameterName;
-					parameter.optionsNumber = parameterValuesList.size();
-					parameter.currentOption = 0;
-					parameter.optionsList = parameterValuesList;
-					parameter.groupName = group["Name"].as<std::string>();
-					group[parameterName] = parameterValuesList.at(0);
-					changingParametersList.push_back(parameter);
-					}
-				}
-			}
-		}
-	}*/
-
 void PerformanceTestBase::ReadPerformanceConfigurationFiles()
 	{
 	for(unsigned configurationFileIndex = 0; configurationFileIndex < configurationFilesNumber; configurationFileIndex++)
@@ -241,34 +209,6 @@ std::vector<std::string> PerformanceTestBase::SplitString(std::string inputStrin
 	return componentsList;
 	}
 
-/*bool PerformanceTestBase::PrepareTemporaryConfigurationFiles()	
-	{
-	if (firstRunOnInput)
-		{
-		firstRunOnInput = false;
-		SaveTemporaryConfigurationFiles();
-		return true;
-		}
-
-	for(int parameterIndex = changingParametersList.size()-1; parameterIndex >= 0; parameterIndex--)
-		{
-		Parameter& parameter = changingParametersList.at(parameterIndex);
-
-		parameter.currentOption = (parameter.currentOption + 1) % parameter.optionsNumber;
-		YAML::Node& configuration = configurationsList.at(parameter.configurationFileIndex);
-		YAML::Node group = configuration[parameter.groupIndex];
-		group[parameter.name] = parameter.optionsList.at(parameter.currentOption);
-
-		if (parameter.currentOption > 0)
-			{
-			SaveTemporaryConfigurationFiles();
-			return true;
-			}
-		}
-
-	return false;
-	}*/
-
 bool PerformanceTestBase::PrepareTemporaryConfigurationFiles()
 	{
 	if (firstRunOnInput)
@@ -293,16 +233,6 @@ bool PerformanceTestBase::PrepareTemporaryConfigurationFiles()
 
 	return false;
 	}	
-
-/*void PerformanceTestBase::SaveTemporaryConfigurationFiles()
-	{
-	for(unsigned configurationFileIndex = 0; configurationFileIndex < configurationFilesNumber; configurationFileIndex++)
-		{
-		std::ofstream yamlFile(temporaryConfigurationFilePathsList.at(configurationFileIndex).c_str());
-		yamlFile << configurationsList.at(configurationFileIndex);
-		yamlFile.close();
-		}
-	}*/
 
 void PerformanceTestBase::SaveTemporaryConfigurationFiles()
 	{

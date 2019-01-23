@@ -114,17 +114,6 @@ class PerformanceTestBase
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		/*struct Parameter
-			{
-			unsigned configurationFileIndex;
-			unsigned groupIndex;
-			std::string groupName;
-			std::string name;
-			unsigned optionsNumber;
-			unsigned currentOption;
-			std::vector<std::string> optionsList;
-			};*/
-
 		struct Parameter
 			{
 			unsigned configurationFileIndex;
