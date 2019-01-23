@@ -37,7 +37,7 @@ namespace DFN
         protected:
 
             asn1SccFramePair inFramePair;
-            asn1SccFrame outRawDisparity;
+            asn1SccFrame outDisparity;
     };
 }
 }
