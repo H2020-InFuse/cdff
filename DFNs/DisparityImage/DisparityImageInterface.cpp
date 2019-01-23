@@ -11,6 +11,7 @@ namespace DFN
 {
 
 DisparityImageInterface::DisparityImageInterface()
+        :  inFramePair(), outRawDisparity()
 {
 }
 

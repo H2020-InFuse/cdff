@@ -11,6 +11,7 @@ namespace DFN
 {
 
 ColorConversionInterface::ColorConversionInterface()
+ : inOriginalImage(), outConvertedImage()
 {
 }
 

@@ -11,6 +11,7 @@ namespace DFN
 {
 
 DisparityFilteringInterface::DisparityFilteringInterface()
+: inRawDisparity(), outFilteredDisparity()
 {
 }
 
