@@ -1,3 +1,9 @@
+[![build status](
+https://gitlab.spaceapplications.com/InFuse/CDFF/badges/master/build.svg)](
+https://gitlab.spaceapplications.com/InFuse/CDFF)
+
+# CDFF
+
 This is the code repository for the Core and Support components of the Common Data Fusion Framework (CDFF) developed by the InFuse consortium. [Another repository](https://gitlab.spaceapplications.com/InFuse/CDFF_dev), named `CDFF_dev`, contains the Dev component.
 
 * The Core and Support components are those that must be deployed in your final robotic target system.
