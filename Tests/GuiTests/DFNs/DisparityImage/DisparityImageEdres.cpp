@@ -152,7 +152,7 @@ void DisparityImageEdresTestInterface::DisplayResult()
 {
 	// Fetch the resulting disparity image
 	asn1SccFrame* res =  new asn1SccFrame();
-	*res = disparityImageEdres.rawDisparityOutput();
+    *res = disparityImageEdres.disparityOutput();
 
 	PRINT_TO_LOG("Processing time (seconds): ", GetLastProcessingTimeSeconds());
 	PRINT_TO_LOG("Virtual memory used (kB): ", GetTotalVirtualMemoryUsedKB());
