@@ -25,7 +25,7 @@ void DisparityImageInterface::framePairInput(const asn1SccFramePair& data)
 
 const asn1SccFrame& DisparityImageInterface::rawDisparityOutput() const
 {
-    return outRawDisparity;
+    return outDisparity;
 }
 
 }

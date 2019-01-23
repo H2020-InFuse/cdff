@@ -48,8 +48,8 @@ DisparityImageEdresTestInterface::DisparityImageEdresTestInterface(const std::st
 	SetDFN(&disparityImageEdres);
 
 	// Loads two grayscaled rectified images
-	cvLeftImage = cv::imread("../../tests/Data/Images/MinnieStereo/MinnieRectLeft.png", cv::IMREAD_GRAYSCALE);
-	cvRightImage = cv::imread("../../tests/Data/Images/MinnieStereo/MinnieRectRight.png", cv::IMREAD_GRAYSCALE);
+    cvLeftImage = cv::imread("../../tests/Data/Images/MinnieStereo/MinnieRectDeg3Left.png", cv::IMREAD_GRAYSCALE);
+    cvRightImage = cv::imread("../../tests/Data/Images/MinnieStereo/MinnieRectDeg3Right.png", cv::IMREAD_GRAYSCALE);
 
 	// Initialise a frame pair and set its metadata
 	asn1SccFramePair *framePair = new asn1SccFramePair();
@@ -134,12 +134,18 @@ DisparityImageEdresTestInterface::~DisparityImageEdresTestInterface()
 
 void DisparityImageEdresTestInterface::SetupParameters()
 {
-	AddParameter("DisparityImageEdresParams", "minDistance", 1.0, 100.0);
-	AddParameter("DisparityImageEdresParams", "maxDistance", 40.0, 100.0);
-	AddParameter("DisparityImageEdresParams", "method", 1, 4);
-	AddParameter("DisparityImageEdresParams", "grad", 2, 5);
-	AddParameter("DisparityImageEdresParams", "gradType", 5, 8);
-	AddParameter("DisparityImageEdresParams", "dispType", 8, 8);
+    AddParameter("DisparityParams", "minDistance", 1.0, 100.0);
+    AddParameter("DisparityParams", "maxDistance", 40.0, 100.0);
+    AddParameter("DisparityParams", "method", 1, 4);
+    AddParameter("DisparityParams", "grad", 2, 5);
+    AddParameter("DisparityParams", "gradType", 5, 8);
+    AddParameter("DisparityParams", "dispType", 8, 8);
+
+    AddParameter("FilterParams", "filter", 1, 1);
+    AddParameter("FilterParams", "trimWidth", 3, 100, 1);
+    AddParameter("FilterParams", "connexityThresh", 2, 10, 0.1);
+    AddParameter("FilterParams", "surfMin", 20, 1000, 10);
+    AddParameter("FilterParams", "surfMax", 1000, 5000, 10);
 }
 
 void DisparityImageEdresTestInterface::DisplayResult()
