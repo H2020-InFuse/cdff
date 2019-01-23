@@ -114,12 +114,21 @@ class PerformanceTestBase
 	 * --------------------------------------------------------------------
 	 */
 	private:
-		struct Parameter
+		/*struct Parameter
 			{
 			unsigned configurationFileIndex;
 			unsigned groupIndex;
 			std::string groupName;
 			std::string name;
+			unsigned optionsNumber;
+			unsigned currentOption;
+			std::vector<std::string> optionsList;
+			};*/
+
+		struct Parameter
+			{
+			unsigned configurationFileIndex;
+			std::string baseLine;
 			unsigned optionsNumber;
 			unsigned currentOption;
 			std::vector<std::string> optionsList;
@@ -151,6 +160,7 @@ class PerformanceTestBase
 		std::vector<std::string> SplitString(std::string inputString);
 		bool PrepareTemporaryConfigurationFiles();
 		void SaveTemporaryConfigurationFiles();
+		std::string RemoveStartAndEndSpaces(const std::string& word);
 
 		void SaveNewInputsLine();
 		void SaveMeasures(MeasuresMap measuresMap);

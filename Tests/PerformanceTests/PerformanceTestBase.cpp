@@ -151,7 +151,7 @@ const std::string PerformanceTestBase::aggregatorsResultsFileName = "AggregatedM
  *
  * --------------------------------------------------------------------------
  */
-void PerformanceTestBase::ReadPerformanceConfigurationFiles()
+/*void PerformanceTestBase::ReadPerformanceConfigurationFiles()
 	{
 	for(unsigned configurationFileIndex = 0; configurationFileIndex < configurationFilesNumber; configurationFileIndex++)
 		{
@@ -181,6 +181,57 @@ void PerformanceTestBase::ReadPerformanceConfigurationFiles()
 				}
 			}
 		}
+	}*/
+
+void PerformanceTestBase::ReadPerformanceConfigurationFiles()
+	{
+	for(unsigned configurationFileIndex = 0; configurationFileIndex < configurationFilesNumber; configurationFileIndex++)
+		{
+		std::ifstream file( baseConfigurationFilePathsList.at(configurationFileIndex).c_str() );
+		ASSERT(file.good(), "Error: file could not be loaded");
+
+		std::string line;
+		while(std::getline(file, line))
+			{
+			std::vector<std::string> stringsList;
+			boost::split(stringsList, line, boost::is_any_of(":"));
+
+			Parameter parameter;
+			parameter.configurationFileIndex = configurationFileIndex;
+			parameter.currentOption = 0;
+			if (stringsList.size() == 1)
+				{
+				parameter.baseLine = line;
+				parameter.optionsNumber = 1;
+				parameter.optionsList.push_back("");
+				}
+			else
+				{
+				parameter.baseLine = stringsList.at(0);
+				std::vector<std::string> optionsList;
+				std::string optionsString = RemoveStartAndEndSpaces(stringsList.at(1));
+				if (optionsString == "")
+					{
+					parameter.baseLine = parameter.baseLine + ":";
+					parameter.optionsNumber = 1;
+					parameter.optionsList.push_back("");
+					}
+				else
+					{
+					boost::split(optionsList, optionsString, boost::is_any_of(" "));
+
+					parameter.optionsNumber = optionsList.size();
+					for(int optionIndex = 0; optionIndex < parameter.optionsNumber; optionIndex++)
+						{
+						parameter.optionsList.push_back( optionsList.at(optionIndex) );
+						}	
+					}
+				}
+			changingParametersList.push_back(parameter);
+			}
+
+		file.close();
+		}	
 	}
 
 std::vector<std::string> PerformanceTestBase::SplitString(std::string inputString)
@@ -190,7 +241,7 @@ std::vector<std::string> PerformanceTestBase::SplitString(std::string inputStrin
 	return componentsList;
 	}
 
-bool PerformanceTestBase::PrepareTemporaryConfigurationFiles()	
+/*bool PerformanceTestBase::PrepareTemporaryConfigurationFiles()	
 	{
 	if (firstRunOnInput)
 		{
@@ -216,9 +267,34 @@ bool PerformanceTestBase::PrepareTemporaryConfigurationFiles()
 		}
 
 	return false;
-	}
+	}*/
 
-void PerformanceTestBase::SaveTemporaryConfigurationFiles()
+bool PerformanceTestBase::PrepareTemporaryConfigurationFiles()
+	{
+	if (firstRunOnInput)
+		{
+		firstRunOnInput = false;
+		SaveTemporaryConfigurationFiles();
+		return true;
+		}
+
+	for(int parameterIndex = changingParametersList.size()-1; parameterIndex >= 0; parameterIndex--)
+		{
+		Parameter& parameter = changingParametersList.at(parameterIndex);
+
+		parameter.currentOption = (parameter.currentOption + 1) % parameter.optionsNumber;
+
+		if (parameter.currentOption > 0)
+			{
+			SaveTemporaryConfigurationFiles();
+			return true;
+			}
+		}
+
+	return false;
+	}	
+
+/*void PerformanceTestBase::SaveTemporaryConfigurationFiles()
 	{
 	for(unsigned configurationFileIndex = 0; configurationFileIndex < configurationFilesNumber; configurationFileIndex++)
 		{
@@ -226,6 +302,45 @@ void PerformanceTestBase::SaveTemporaryConfigurationFiles()
 		yamlFile << configurationsList.at(configurationFileIndex);
 		yamlFile.close();
 		}
+	}*/
+
+void PerformanceTestBase::SaveTemporaryConfigurationFiles()
+	{
+	unsigned numberOfParameters = changingParametersList.size();
+	unsigned currentFileIndex = 0;
+	std::ofstream file(temporaryConfigurationFilePathsList.at(currentFileIndex).c_str());
+
+	for(unsigned parameterIndex = 0; parameterIndex < numberOfParameters; parameterIndex++)
+		{
+		Parameter& parameter = changingParametersList.at(parameterIndex);
+		if (currentFileIndex < parameter.configurationFileIndex)
+			{
+			file.close();
+			currentFileIndex = parameter.configurationFileIndex;
+			file.open(temporaryConfigurationFilePathsList.at(currentFileIndex).c_str());
+			}
+		file << parameter.baseLine;
+		if (parameter.optionsList.at(parameter.currentOption) != "")
+			{
+			file <<": " << parameter.optionsList.at(parameter.currentOption);
+			}
+		file << std::endl;
+		}
+
+	file.close();
+	}
+
+std::string PerformanceTestBase::RemoveStartAndEndSpaces(const std::string& word)
+	{
+	int firstSpaceIndex = word.find_first_not_of(" ");
+	if (firstSpaceIndex == std::string::npos)
+		{
+		return "";
+		}
+
+	int secondSpaceIndex = word.find_last_not_of(" ");
+	int tailSize = word.size()-secondSpaceIndex-1;
+	return word.substr(firstSpaceIndex, word.size()-firstSpaceIndex-tailSize);
 	}
 
 /* --------------------------------------------------------------------------
@@ -270,9 +385,11 @@ void PerformanceTestBase::SaveMeasures(MeasuresMap measuresMap)
 		measuresFile << "Identifier ";
 		for(unsigned parameterIndex = 0; parameterIndex < changingParametersList.size(); parameterIndex++)
 			{
-			measuresFile << changingParametersList.at(parameterIndex).configurationFileIndex << ".";
-			measuresFile << changingParametersList.at(parameterIndex).groupName <<".";
-			measuresFile << changingParametersList.at(parameterIndex).name << " ";
+			if (changingParametersList.at(parameterIndex).optionsNumber > 1)
+				{
+				measuresFile << changingParametersList.at(parameterIndex).configurationFileIndex << ".";
+				measuresFile << changingParametersList.at(parameterIndex).baseLine <<" ";
+				}
 			}
 		for(MeasuresMap::iterator iterator = measuresMap.begin(); iterator != measuresMap.end(); ++iterator)
 			{
@@ -440,7 +557,10 @@ void PerformanceTestBase::SaveParametersAndValueInAggregatorFile(std::ofstream& 
 		{
 		for(std::vector<Parameter>::iterator parameter = changingParametersList.begin(); parameter != changingParametersList.end(); ++parameter)
 			{
-			file << parameter->name << " ";
+			if (parameter->optionsNumber > 1)
+				{
+				file << parameter->baseLine << " ";
+				}
 			}
 		file << "AggregatorResult" << "\n";
 		}

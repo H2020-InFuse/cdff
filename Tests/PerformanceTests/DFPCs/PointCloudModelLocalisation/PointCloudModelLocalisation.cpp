@@ -84,10 +84,11 @@ PointCloudConstPtr PointCloudModelLocalisationTestInterface::LoadPointCloud(cons
 void PointCloudModelLocalisationTestInterface::LoadGroundTruthPose(const std::string& poseFilePath)
 	{
 	std::ifstream containerFile(poseFilePath.c_str());
+	ASSERT(containerFile.good(), "Error opening pose file");
 
 	std::string line;
 	bool lineWasRead = static_cast<bool>(std::getline(containerFile, line));
-	ASSERT(lineWasRead, "Error reading file, bad line");
+	ASSERT(lineWasRead, "Error reading pose file, bad line");
 	containerFile.close();
 
 	std::vector<std::string> stringsList;
