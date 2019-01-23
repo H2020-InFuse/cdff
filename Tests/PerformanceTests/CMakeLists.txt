@@ -125,3 +125,14 @@ target_link_libraries(
 	image_undistortion_performance_test
 	cdff_helpers cdff_logger cdff_types cdff_dfn_image_filtering performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl opencv_imgcodecs
 )
+
+add_executable(
+	features_matching_3d_performance_test
+	DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
+	DFPCs/PointCloudModelLocalisation/PointCloudModelLocalisation.cpp
+	DFPCs/PerformanceTestInterface.cpp
+)
+target_link_libraries(
+	features_matching_3d_performance_test
+	cdff_helpers cdff_logger cdff_types cdff_dfn_image_filtering performance_test_base cdff_dfpc_point_cloud_model_localisation
+)
