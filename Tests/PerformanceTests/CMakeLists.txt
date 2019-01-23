@@ -46,10 +46,11 @@ target_link_libraries(
 add_executable(
     orb_flann_ransac_decomposition
     DFNsIntegration/VisualOdometry/OrbFlannRansacDecomposition.cpp
+    DFNsIntegration/VisualOdometry/VisualOdometry.cpp
 )
 target_link_libraries(
 	orb_flann_ransac_decomposition
-	cdff_helpers cdff_logger cdff_types cdff_dfn_features_extraction_2d cdff_dfn_features_matching_2d cdff_dfn_fundamental_matrix_computation cdff_dfn_cameras_transform_estimation performance_integration_test_interface cdff_visualizers_opencv cdff_visualizers_pcl
+	cdff_helpers cdff_logger cdff_types cdff_dfn_features_extraction_2d cdff_dfn_features_matching_2d cdff_dfn_fundamental_matrix_computation cdff_dfn_cameras_transform_estimation performance_integration_test_interface cdff_dfn_dfnexecutors
 )
 
 add_executable(
