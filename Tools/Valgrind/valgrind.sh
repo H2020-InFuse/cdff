@@ -20,7 +20,7 @@ cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_C_FLAGS_DEBUG:STRING=-ggdb3 -DCMAK
 
 make
 
-mkdir results
+mkdir -p results
 
 # run Valgrind
 # with these parameters, a full check will be performed, outputting the leaks / errors to an xml file that can be used with Valkyrie to parse them in a user-friendly way
@@ -30,15 +30,21 @@ mkdir results
 # -q to be less verbose and only output valgrind errors (not program errors/leaks) in the valgrind.log file. The file should therefore usually be completely empty.
 # --fullpath-after=InFuse/ supposedly cuts the path reference for source files from this reference frame. Though with xml output this does not seem to do anything.
 
+DIR=$PWD
+cd Tests/UnitTests/
+FLAGS="--leak-check=full --show-leak-kinds=all --error-exitcode=1 --child-silent-after-fork=yes --quiet --xml=yes --xml-file=${DIR}/results/error.xml --log-file=${DIR}/results/valgrind.log --fullpath-after=CDFF/ --suppressions=${DIR}/suppression.txt"
 if [[ "$FULL" == true ]]
     then
-        valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 --child-silent-after-fork=yes -q --xml=yes --xml-file=results/error.xml --log-file=results/valgrind.log --fullpath-after=CDFF/ ./Tests/UnitTests/cdff-unit-tests
+        FLAGS+=" --track-origins=yes "
     else
-        valgrind --leak-check=full --show-leak-kinds=all --track-origins=no --undef-value-errors=no --error-exitcode=1 --child-silent-after-fork=yes -q --xml=yes --xml-file=results/error.xml --log-file=results/valgrind.log --fullpath-after=CDFF/ ./Tests/UnitTests/cdff-unit-tests
+        FLAGS+=" --track-origins=no --undef-value-errors=no "
 fi
+
+echo RUNNING valgrind: ${FLAGS}
+valgrind $FLAGS ./cdff-unit-tests
 
 # print summary for a nice view in gitlab
 
-awk '/== HEAP SUMMARY/,/== $/' results/valgrind.log;
-awk '/== LEAK SUMMARY/,/== $/' results/valgrind.log;
-awk '/== ERROR SUMMARY/,/== $/' results/valgrind.log;
+awk '/== HEAP SUMMARY/,/== $/' $DIR/results/valgrind.log;
+awk '/== LEAK SUMMARY/,/== $/' $DIR/results/valgrind.log;
+awk '/== ERROR SUMMARY/,/== $/' $DIR/results/valgrind.log;
