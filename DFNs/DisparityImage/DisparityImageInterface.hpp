@@ -28,11 +28,11 @@ namespace DFN
             virtual void framePairInput(const asn1SccFramePair& data);
 
             /**
-             * Query value from output port "rawDisparity"
-             * @return rawDisparity
+             * Query value from output port "disparity"
+             * @return disparity
              *     The corresponding disparity image
              */
-            virtual const asn1SccFrame& rawDisparityOutput() const;
+            virtual const asn1SccFrame& disparityOutput() const;
 
         protected:
 
