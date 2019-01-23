@@ -183,6 +183,8 @@ StereoReconstructionTestInterface::MeasuresMap StereoReconstructionTestInterface
 	testId++;
 
 	MeasuresMap measuresMap;
+
+	#ifdef TESTING
 	cv::Mat disparity = reconstructor->disparityMatrixOutput(); //Disparity type is CV_16SC1
 	cv::Mat normalizedDisparity;
 	cv::normalize(disparity, normalizedDisparity, 0, 255, cv::NORM_MINMAX, CV_8UC1);
@@ -203,6 +205,7 @@ StereoReconstructionTestInterface::MeasuresMap StereoReconstructionTestInterface
 		{
 		SaveOutputDisparity(normalizedDisparity, testId);
 		}
+	#endif
 
 	PointCloudPtr outputCloud = NewPointCloud();
 	Copy( reconstructor->pointcloudOutput(), *outputCloud);

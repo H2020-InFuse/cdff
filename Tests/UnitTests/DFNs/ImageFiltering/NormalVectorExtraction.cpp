@@ -13,6 +13,7 @@
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <Errors/Assert.hpp>
 
 using namespace CDFF::DFN::ImageFiltering;
 using namespace FrameWrapper;

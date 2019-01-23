@@ -28,7 +28,7 @@
  */
 
 #include "PclPointCloudToVisualPointFeatureVector3DConverter.hpp"
-#include <Errors/Assert.hpp>
+#include <Errors/AssertOnTest.hpp>
 #include <boost/make_shared.hpp>
 
 
