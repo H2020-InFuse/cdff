@@ -9,7 +9,6 @@
 
 #include "CorrespondenceMap2D.hpp"
 #include "Errors/AssertOnTest.hpp"
-#include <Errors/Assert.hpp>
 
 namespace CorrespondenceMap2DWrapper
 {
