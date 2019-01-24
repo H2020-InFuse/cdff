@@ -75,22 +75,45 @@ namespace PoseEstimator
             static const KalmanFilterOptionsSet DEFAULT_KF_PARAMETERS;
 
             std::vector<cv::Vec3f> filterRobotWheels();
-            std::vector<cv::Point> extractRobotCenterAndAxisProjections(std::vector<cv::Vec3f> wheels);
-            cv::Point extractForegroundCentroid(cv::Mat imgWithoutBackground);
-            cv::Point outputPose(cv::Vec3d position, std::vector<double> orientation);
-            cv::Vec3f get3DCoordinates(cv::Point2d point);
-            std::vector<double> extractOrientation(std::vector<cv::Vec3f> robotWheels, std::vector<cv::Point> axisPoints);
-            void visualizeResults(std::vector<cv::Vec3f> wheels, std::vector<cv::Point> axisPoints);
 
-            cv::Point m_last_center;
+            void extractRobotPoints(std::vector<cv::Vec3f> wheels);
+
+            cv::Point extractForegroundCentroid(cv::Mat imgWithoutBackground);
+
+            cv::Point outputPose(cv::Vec3d position, std::vector<double> orientation);
+
+            cv::Vec3f get3DCoordinates(cv::Point point);
+            double getDisparityAroundPoint(cv::Point point, const cv::Mat & disparity);
+
+            std::vector<double> extractOrientation();
+
+            void visualizeResults();
+
+            double m_last_left_wheel_x;
 
             // KF variables
             cv::KalmanFilter KF;
             cv::Mat measurements;
             asn1SccPose prevEstimatedPose;
-            double convergenceIdx, prevConvergenceIdx, prevDeltaCov;
+            double prevCovInnovTrace;
             bool converged;
-    };
+
+            struct WheelPoints {
+                cv::Vec3d center;
+                cv::Point center2D;
+                cv::Vec3d up;
+                cv::Vec3d down;
+            };
+
+            struct RobotPoints {
+                WheelPoints left_wheel;
+                WheelPoints right_wheel;
+                cv::Point robot_center_px;
+                cv::Vec3d robot_center_3D;
+            };
+
+            RobotPoints m_robot_points;
+};
 }
 }
 }

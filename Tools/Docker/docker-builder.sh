@@ -7,7 +7,7 @@
 set -e
 
 if [ $# -lt 2 ]; then
-    echo "incorrect parameters: Usage docker-builder.sh [dockerfile] [imagename] [optional=--force] [optional=environnement variables]"
+    echo "incorrect parameters: Usage docker-builder.sh [dockerfile] [imagename] [optional=--force] [optional=--no-cache] [optional=environnement variables]"
     exit 1
 fi
 
@@ -54,11 +54,15 @@ shift 2 #shift all variables and restart at 1.
 #if we passed more variables we pass them along
 ENV_VAR=""
 FORCE=false
+NOCACHE=""
 for var in "$@"
 do
    if [[ $var == "--force"  ]]
     then
     FORCE=true
+   elif [[ $var == "--no-cache"  ]]
+    then
+    NOCACHE="--no-cache"
    else
     ENV_VAR+=" --build-arg ${var}"
    fi
@@ -70,7 +74,7 @@ REGISTRY_PREFIX=nexus.spaceapplications.com/
 INFUSE_REGISTRY_PREFIX=repository/infuse/
 IMAGE_TAG=${REGISTRY_PREFIX}${INFUSE_REGISTRY_PREFIX}${IMAGE_NAME}
 
-current_tag=$(grep "LABEL version=" $DOCKER_FILE | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')
+current_tag=$(grep -oP 'ARG VERSION="\K[^"]+' $DOCKER_FILE )
 latest_tag=$(curl -d 'hook_private_key=ea9dc697-5bc9-4a43-96aa-6257f2fda70e&key='$IMAGE_NAME https://hook.io/datastore/get | tr -d '"')
 
 if [ -z "$latest_tag" ] || [ $latest_tag == 'null' ] ; then
@@ -88,7 +92,7 @@ vercomp $current_tag $latest_tag
 if [[ $op = '>' ]] || [[ "$FORCE" == true ]]
     then
         docker pull $IMAGE_TAG':'$latest_tag || true
-        docker build -t $IMAGE_TAG':'$current_tag -f $DOCKER_FILE $ENV_VAR .
+        docker build $NOCACHE -t $IMAGE_TAG':'$current_tag -f $DOCKER_FILE $ENV_VAR .
         docker push $IMAGE_TAG':'$current_tag
         docker tag $IMAGE_TAG':'$current_tag $IMAGE_TAG':'latest
         docker push $IMAGE_TAG':'latest

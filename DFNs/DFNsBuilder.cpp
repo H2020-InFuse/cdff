@@ -79,7 +79,6 @@
 #ifdef HAVE_EDRES
 #include <ImageDegradation/ImageDegradationEdres.hpp>
 #include <DisparityImage/DisparityImageEdres.hpp>
-#include <DisparityFiltering/DisparityFilteringEdres.hpp>
 #include <DisparityToPointCloud/DisparityToPointCloudEdres.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.hpp>
 #include <ImageRectification/ImageRectificationEdres.hpp>
@@ -109,10 +108,6 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
         	return CreateColorConversion(dfnImplementation);
 	}
-    	else if (dfnType == "DisparityFiltering")
-    	{
-       		return CreateDisparityFiltering(dfnImplementation);
-    	}
     	else if (dfnType == "DisparityImage")
     	{
         	return CreateDisparityImage(dfnImplementation);
@@ -289,18 +284,6 @@ DisparityImageInterface* DFNsBuilder::CreateDisparityImage(const std::string& df
     }
 #endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityImage implementation");
-    return NULL;
-}
-
-DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::string& dfnImplementation)
-{
-#ifdef HAVE_EDRES
-    if (dfnImplementation == "DisparityFilteringEdres")
-    {
-        return new DisparityFiltering::DisparityFilteringEdres;
-    }
-#endif
-    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityFiltering implementation");
     return NULL;
 }
 

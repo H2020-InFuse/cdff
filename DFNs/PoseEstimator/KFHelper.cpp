@@ -187,7 +187,7 @@ void updateKalmanFilter( cv::KalmanFilter &KF, cv::Mat &measurement,
     rotation_estimated = euler2rot(eulers_estimated);
 }
 
-asn1SccPose estimatePose(cv::KalmanFilter &KF, asn1SccPose &extractedPose, cv::Mat &measurements, bool predictOnly)
+asn1SccPose estimatePose(cv::KalmanFilter &KF, asn1SccPose &extractedPose, cv::Mat &measurements, bool predictOnly, bool positionOnly)
 {
     // Instantiate measured and estimated t & R
     cv::Mat translation_measured(3, 1, CV_64F), translation_estimated(3, 1, CV_64F);
@@ -195,20 +195,29 @@ asn1SccPose estimatePose(cv::KalmanFilter &KF, asn1SccPose &extractedPose, cv::M
     asn1SccPose estimatedPose;
 
     // define position 'measurements' as available (H matrix) or NOT
-    if (predictOnly == false) {
-        KF.measurementMatrix.at<double>(0, 0) = 1;  // x
-        KF.measurementMatrix.at<double>(1, 1) = 1;  // y
-        KF.measurementMatrix.at<double>(2, 2) = 1;  // z
-        KF.measurementMatrix.at<double>(3, 9) = 1;  // roll
-        KF.measurementMatrix.at<double>(4, 10) = 1; // pitch
-        KF.measurementMatrix.at<double>(5, 11) = 1; // yaw
-    } else {
+    if (predictOnly) {
         KF.measurementMatrix.at<double>(0, 0) = 0;  // x
         KF.measurementMatrix.at<double>(1, 1) = 0;  // y
         KF.measurementMatrix.at<double>(2, 2) = 0;  // z
         KF.measurementMatrix.at<double>(3, 9) = 0;  // roll
         KF.measurementMatrix.at<double>(4, 10) = 0; // pitch
         KF.measurementMatrix.at<double>(5, 11) = 0; // yaw
+    } else {
+        if (positionOnly){
+            KF.measurementMatrix.at<double>(0, 0) = 1;  // x
+            KF.measurementMatrix.at<double>(1, 1) = 1;  // y
+            KF.measurementMatrix.at<double>(2, 2) = 1;  // z
+            KF.measurementMatrix.at<double>(3, 9) = 0;  // roll
+            KF.measurementMatrix.at<double>(4, 10) = 0; // pitch
+            KF.measurementMatrix.at<double>(5, 11) = 0; // yaw
+        } else {
+            KF.measurementMatrix.at<double>(0, 0) = 1;  // x
+            KF.measurementMatrix.at<double>(1, 1) = 1;  // y
+            KF.measurementMatrix.at<double>(2, 2) = 1;  // z
+            KF.measurementMatrix.at<double>(3, 9) = 1;  // roll
+            KF.measurementMatrix.at<double>(4, 10) = 1; // pitch
+            KF.measurementMatrix.at<double>(5, 11) = 1; // yaw
+        }
     }
 
     // 2 wheels found -> define standard measurement noise
@@ -221,10 +230,10 @@ asn1SccPose estimatePose(cv::KalmanFilter &KF, asn1SccPose &extractedPose, cv::M
 
     // get 'measured' orientation
     Eigen::Quaternionf q;
-    q.x() = extractedPose.orient.arr[0];
-    q.y() = extractedPose.orient.arr[1];
-    q.z() = extractedPose.orient.arr[2];
-    q.w() = extractedPose.orient.arr[3];
+    q.w() = extractedPose.orient.arr[0];
+    q.x() = extractedPose.orient.arr[1];
+    q.y() = extractedPose.orient.arr[2];
+    q.z() = extractedPose.orient.arr[3];
     Eigen::Matrix3f m1 = q.normalized().toRotationMatrix();
     eigen2cv(m1, rotation_measured);
 
@@ -242,6 +251,7 @@ asn1SccPose estimatePose(cv::KalmanFilter &KF, asn1SccPose &extractedPose, cv::M
     Eigen::Matrix3f R_est;
     cv2eigen(rotation_estimated, R_est);
     Eigen::Quaternionf q_est(R_est);
+    q_est.normalize();
 
     estimatedPose.orient.arr[0] = q_est.w();
     estimatedPose.orient.arr[1] = q_est.x();
@@ -252,7 +262,7 @@ asn1SccPose estimatePose(cv::KalmanFilter &KF, asn1SccPose &extractedPose, cv::M
 }
 
 void checkFilterConvergence(cv::KalmanFilter KF, int nStates, int nMeasurements, int nInputs, double dt, double maxJumpInPosition,
-                            asn1SccPose &prevEstimatedPose, const asn1SccPose estimatedPose, double &prevConvergenceIdx,
+                            const asn1SccPose &prevEstimatedPose, const asn1SccPose estimatedPose, double &prevConvergenceIdx,
                             double &convergenceIdx, double &prevDeltaCov, bool &converged)
 {
 
@@ -271,13 +281,13 @@ void checkFilterConvergence(cv::KalmanFilter KF, int nStates, int nMeasurements,
     }
 
     // check KF convergence
-    auto traceCov = cv::trace(KF.errorCovPost);
+    auto traceCov = cv::trace(KF.errorCovPre);
     double trace;
     trace = sum(traceCov)[0];
     convergenceIdx = convergenceIdx + trace;
-    float deltaCov = convergenceIdx - prevConvergenceIdx;
+    double deltaCov = convergenceIdx - prevConvergenceIdx;
 
-    if (abs(deltaCov - prevDeltaCov) < 1e-6){
+    if (abs(deltaCov - prevDeltaCov) < 1e-6 && prevEstimatedPose.pos.arr[0] !=0 && prevEstimatedPose.pos.arr[1] !=0 ){
         converged = true;
     } else {
         converged = false;
@@ -287,4 +297,30 @@ void checkFilterConvergence(cv::KalmanFilter KF, int nStates, int nMeasurements,
     prevConvergenceIdx = convergenceIdx;
     prevDeltaCov = deltaCov;
 }
+
+bool checkKFConvergence(cv::KalmanFilter KF, double &prevCovInnovTrace, double convergenceThreshold) {
+    bool convergence;
+    cv::Mat Measure = KF.measurementMatrix;
+    cv::Mat Ppred = KF.errorCovPre;
+    cv::Mat Mempty = cv::Mat::zeros(Ppred.rows - Measure.rows, Ppred.cols, CV_64F);
+    cv::Mat R = KF.processNoiseCov;
+    cv::Mat H;
+    vconcat(Measure, Mempty, H);
+    cv::Mat Htr = H.t();
+    cv::Mat CovInnov = R + H + Ppred * Htr;
+
+    auto trCovInnov = cv::trace(CovInnov);
+    double traceCovInnov;
+    traceCovInnov = sum(trCovInnov)[0];
+
+    if (fabs(traceCovInnov - prevCovInnovTrace) < fabs(convergenceThreshold) ) {
+        convergence = true;
+    } else {
+        convergence = false;
+    }
+
+    prevCovInnovTrace = traceCovInnov;
+    return convergence;
+}
+
 // ------------------------------------------- end KF functions ------------------------------------------

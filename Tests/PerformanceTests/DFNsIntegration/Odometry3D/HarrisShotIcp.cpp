@@ -40,46 +40,67 @@ using namespace CDFF::DFN::FeaturesDescription3D;
 using namespace CDFF::DFN::FeaturesMatching3D;
 
 const std::string USAGE =
-" \n \
-This programs requires four parameters: \n \
-(i) the 1st parameter is the scene point cloud path in ply format; \n \
-(ii) the 2nd parameter is the size of the voxel grid used as a preliminary filter. If the value is 0 the filter is disabled.; \n \
-(iii) the file path containing the transform for each model. There is one line for each transform in format 'x y z qx qy qz qw'. \n \
-(iv + ) the following parameters (4th, 5th etc..) are the file paths to the model cloud. \n \n \
-In addition to the four parameters you will need to configure the yaml configuration file for each DFN, they are: HarrisDetector3d_PerformanceTest_1.yaml, \
-ShotDescriptor3d_PerformanceTest_1.yaml, Icp3d_PerformanceTest_1.yaml. They should be located in Tests/ConfigurationFiles/DFNsIntegration/Odometry3D/ folder \n \n \
-The output of the execution will be located in build/Tests/tests/ConfigurationFiles/DFNsIntegration/Odometry3D/Harris_Shot_Icp.txt \n \n \
-Example Usage: ./harris_shot_icp ../tests/Data/PointClouds/bunny0.ply 0.001 ../tests/Data/PointCloud/Transform.txt ../test/Data/PointCloud/bunnyPart1.ply  ../test/Data/PointCloud/bunnyPart2.ply \n \n";
+	" \n \
+	This programs requires four parameters: \n \
+	(i) the folder path containing the configuration files of each DFN \n \
+	(ii) the name of the Harris3D Configuration file \n \
+	(iii) the name of the Shot3D Configuration file \n \
+	(iv) the name of the Icp3D Configuration file \n \
+	(v) the name of the output performance file (that will be containing in the configuration folder) \n \
+	(vi) the scene point cloud path in ply format; \n \
+	(vii) the size of the voxel grid used as a preliminary filter. If the value is 0 the filter is disabled.; \n \
+	(viii) the file path containing the transform for each model. There is one line for each transform in format 'x y z qx qy qz qw'. \n \
+	(ix + ) the following parameters (9th, 10th etc..) are the file paths to the model clouds. \n \n \
+	Example Usage: ./harris_shot_icp ../tests/ConfigurationFiles/DFNsIntegration/Odometry3D HarrisDetector3d_PerformanceTest_1.yaml ShotDescriptor3d_PerformanceTest_1.yaml \
+	Icp3d_PerformanceTest_1.yaml Harris_Shot_Icp.txt ../tests/Data/PointClouds/bunny0.ply 0.001 ../tests/Data/PointCloud/Transform.txt ../test/Data/PointCloud/bunnyPart1.ply  \
+	../test/Data/PointCloud/bunnyPart2.ply \n \n";
 
 int main(int argc, char** argv)
 	{
+	ASSERT(argc >= 10, USAGE)
+	std::string configurationFolderPath, harrisConfigurationFileName, shotConfigurationFileName, ransacConfigurationFileName, outputFileName;
+	std::string sceneCloudFilePath, transformFilePath;
+	float voxelGridFilterSize;
+	configurationFolderPath = argv[1];
+	harrisConfigurationFileName = argv[2];
+	shotConfigurationFileName = argv[3];
+	ransacConfigurationFileName = argv[4];
+	outputFileName = argv[5];
+	sceneCloudFilePath = argv[6];
+	transformFilePath = argv[8];
+	
+	try 
+		{
+		voxelGridFilterSize = std::stof(argv[7]);
+		}
+	catch (...)
+		{
+		ASSERT(false, "7th parameter has to be a float");
+		}
+
+	
 	std::vector<std::string> baseConfigurationFiles =
 		{
-		"HarrisDetector3d_PerformanceTest_1.yaml",
-		"ShotDescriptor3d_PerformanceTest_1.yaml",
-		"Icp3d_PerformanceTest_1.yaml"
+		harrisConfigurationFileName,
+		shotConfigurationFileName,
+		ransacConfigurationFileName
 		};
 
 	DetectionDescriptionMatching3DTestInterface::DFNsSet dfnsSet;
 	dfnsSet.extractor = new HarrisDetector3D();
 	dfnsSet.descriptor = new ShotDescriptor3D();
 	dfnsSet.matcher = new Icp3D();
-	DetectionDescriptionMatching3DTestInterface interface("../tests/ConfigurationFiles/DFNsIntegration/Odometry3D", baseConfigurationFiles, "Harris_Shot_Icp.txt", dfnsSet);
+	DetectionDescriptionMatching3DTestInterface interface(configurationFolderPath, baseConfigurationFiles, outputFileName, dfnsSet);
 
-	ASSERT(argc >= 5, USAGE);
+	interface.SetInputCloud(sceneCloudFilePath, voxelGridFilterSize);
 
-	std::string inputCloudFile = argv[1];
-	float voxelGridFilterSize = std::stof(argv[2]);
-	interface.SetInputCloud(inputCloudFile, voxelGridFilterSize);
-
-	std::string transformsFile = argv[3];
 	std::vector<std::string> modelsFilesList;
-	for(unsigned argvIndex = 4; argvIndex < argc; argvIndex++)
+	for(int argvIndex = 9; argvIndex < argc; argvIndex++)
 		{
 		modelsFilesList.push_back(argv[argvIndex]);
 		}
-	interface.SetModelsCloud(transformsFile, modelsFilesList);
-	
+	interface.SetModelsCloud(transformFilePath, modelsFilesList);
+
 	interface.Run();
 	};
 

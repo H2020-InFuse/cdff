@@ -75,3 +75,16 @@ target_link_libraries(
 	cdff_dfpc_reconstruction_3d
 )
 
+
+add_executable(
+    correctness_features_matching_3d
+    PointCloudModelLocalisation/CorrectLocalizationTester.cpp
+    PointCloudModelLocalisation/FeaturesMatching3D.cpp
+)
+target_compile_definitions(correctness_features_matching_3d PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries(
+	correctness_features_matching_3d
+	cdff_dfpc_point_cloud_model_localisation
+        cdff_visualizers_pcl
+)
+

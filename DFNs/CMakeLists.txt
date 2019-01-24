@@ -27,7 +27,6 @@ target_link_libraries(
   cdff_dfn_cameras_transform_estimation
   cdff_dfn_color_conversion
   cdff_dfn_disparity_image
-  cdff_dfn_disparity_filtering
   cdff_dfn_fundamental_matrix_computation
   cdff_dfn_features_description_2d
   cdff_dfn_image_degradation

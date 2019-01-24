@@ -118,7 +118,6 @@ endif()
 if(Edres-Wrapper_FOUND)
     set(unittest_sources ${unittest_sources}
         DFNs/DisparityImage/DisparityImageEdres.cpp
-        DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
         DFNs/DisparityToPointCloud/DisparityToPointCloudEdres.cpp
         DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.cpp
         DFNs/ImageDegradation/ImageDegradationEdres.cpp

@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install --yes --quiet \
       libv4l-dev \
       libgtk2.0-dev \
       freeglut3-dev && \
-    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv
+    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv_contrib
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d vtk
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pcl
 
@@ -31,11 +31,9 @@ RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pcl
 
 RUN apt-get update && apt-get install --yes --quiet libglew-dev && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pangolin
 
-RUN apt-get update && apt-get install --yes --quiet pkg-config libtinyxml-dev libgoogle-glog-dev && \
+RUN apt-get update && apt-get install --yes --quiet libtinyxml-dev libgoogle-glog-dev && \
     /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d none -e
 
-
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv_contrib
 
 RUN apt-get update && apt-get install --yes --quiet libx11-6 \
 libbz2-1.0 \
@@ -129,6 +127,10 @@ CMD ["bash"]
 
 ## Image information
 
-LABEL version="2"
+ARG VERSION="2.1.7"
+ARG SHA=0000
+ENV IMAGE_VERSION=$VERSION
+ENV IMAGE_SHA=$SHA
+LABEL version=${IMAGE_VERSION}
 LABEL maintainer="Romain Michalec <romain.michalec@strath.ac.uk>, Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="A self-contained environment for building and testing CDFF-core and CDFF-support, and for using CDFF-dev"
