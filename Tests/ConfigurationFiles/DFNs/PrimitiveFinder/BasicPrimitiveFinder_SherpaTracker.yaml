@@ -1,0 +1,13 @@
+- Name: HoughCirclesParameters
+  DP: 1.2
+  MinDist: 200 #150 gets all 4 wheels recognized
+  Param1: 55
+  Param2: 40
+  MinRadius: 10
+  MaxRadius: 30
+- Name: EllipsesParameters
+  MinArea: 500
+  SimilarityRatio: 0.15
+- Name: HoughLinesParameters
+  MinLineLenght: 100
+  MaxLineGap: 10
