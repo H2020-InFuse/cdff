@@ -25,9 +25,9 @@ RUN apt-get update && apt-get install -y \
   python3-pyqt4 \
   libgdal-dev \
   libproj-dev \
-  python3.5-gdal
+  python3-gdal
 RUN pip3 install --upgrade pip
-RUN pip3 install pyyaml jinja2 cython numpy msgpack-python pydot nose nose2 pandas memory_profiler
+RUN pip3 install pyyaml jinja2 cython numpy msgpack-python pydot nose nose2 pandas memory_profiler coverage
 
 RUN mkdir -p -m 700 /root/.ssh/ && \
   ssh-keyscan gitlab.spaceapplications.com >> /root/.ssh/known_hosts
@@ -74,7 +74,10 @@ RUN source env.sh && autoproj build \
 RUN rm /root/.gitconfig
 
 WORKDIR /
-
+ARG VERSION="2.2.5"
+ARG SHA=0000
+ENV IMAGE_VERSION=$VERSION
+ENV IMAGE_SHA=$SHA
+LABEL version=${IMAGE_VERSION}
 LABEL maintainer="Alexander.Fabisch@dfki.de"
-LABEL version="2.0"
 LABEL description="Image providing the dependencies of CDFF-dev for continuous integration"

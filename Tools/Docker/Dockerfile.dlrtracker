@@ -15,6 +15,10 @@ COPY patches/ /tmp/CDFF/Tools/Docker/patches/
 
 RUN wget --user ${USER} --password ${PASS} https://nexus.spaceapplications.com/repository/raw-infuse/DLRtrackerCore-1.0.0.zip -P /tmp/CDFF/External/source/ && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d dlrtracker-core
 
-LABEL version="1.0.1"
+ARG VERSION="1.1.6"
+ARG SHA=0000
+ENV IMAGE_VERSION=$VERSION
+ENV IMAGE_SHA=$SHA
+LABEL version=${IMAGE_VERSION}
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="CI + single dependency"

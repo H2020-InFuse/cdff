@@ -27,7 +27,6 @@ target_link_libraries(
   cdff_dfn_cameras_transform_estimation
   cdff_dfn_color_conversion
   cdff_dfn_disparity_image
-  cdff_dfn_disparity_filtering
   cdff_dfn_fundamental_matrix_computation
   cdff_dfn_features_description_2d
   cdff_dfn_image_degradation
@@ -64,5 +63,3 @@ target_link_libraries(
   cdff_dfn_disparity_to_pointcloud_with_intensity
   cdff_dfn_lidar_based_tracking
 )
-
-target_compile_definitions(dfns_builder PUBLIC WITH_EDRES=$<BOOL:${WITH_EDRES}>)

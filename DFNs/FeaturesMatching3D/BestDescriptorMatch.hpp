@@ -63,25 +63,16 @@ namespace FeaturesMatching3D
 			PoseWrapper::Pose3DConstPtr Convert(Eigen::Matrix4f eigenTransform);
 
 			//Core Computation Methods
-			void ComputeBestMatches(
-				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
-				Converters::SupportTypes::PointCloudWithFeatures sinkCloud,
-				pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSourceCloud,
-				pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSinkCloud);
+			void ComputeBestMatches(pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSourceCloud, pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSinkCloud);
 				
-			PoseWrapper::Pose3DConstPtr ComputeTransform(
-				pcl::PointCloud<pcl::PointXYZ>::Ptr sourceCloud,
-				pcl::PointCloud<pcl::PointXYZ>::Ptr sinkCloud);
+			PoseWrapper::Pose3DConstPtr ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::Ptr sourceCloud, pcl::PointCloud<pcl::PointXYZ>::Ptr sinkCloud);
 
-			float ComputeDistance(const Converters::SupportTypes::FeatureType& feature1, const Converters::SupportTypes::FeatureType& feature2, int numberOfFeatureComponents);
+			float ComputeDistance(int sourceIndex, int sinkIndex);
 
 			//Input Validation Methods
 			void ValidateParameters();
-			void ValidateInputs(
-				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
-				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
-			void ValidateCloud(
-				Converters::SupportTypes::PointCloudWithFeatures cloud);
+			void ValidateInputs();
+			void ValidateCloud(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& features);
 	};
 }
 }

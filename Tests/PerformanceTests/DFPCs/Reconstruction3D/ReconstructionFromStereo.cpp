@@ -32,12 +32,15 @@
 using namespace CDFF::DFPC::Reconstruction3D;
 
 const std::string USAGE =
-	"This method takes two parameters: \n \
-	(i) The folder path to the file containing a list of image files \n \
-	(ii) the name of the file containing the list of image files: it should contain a row for each pair of images \n \n \
+	"This method takes five parameters: \n \
+	(i) the folder path to the file containing the DFPC configuration file \n \
+	(ii) the name of the DFPC configuration file \n \
+	(iii) the name of the output performance file (that will be located in the DFPC configuration file folder) \n \
+	(iv) The folder path to the file containing a list of image files \n \
+	(v) the name of the file containing the list of image files: it should contain a row for each pair of images \n \n \
 	There is one more optional parameter that you should set only if you want to save the output point cloud to file: \n \
 	(iii) the file path to the point cloud without extension\n \n \
-	Example Usage: ./reconstruction_from_stereo_performance_test \
+	Example Usage: ./reconstruction_from_stereo_performance_test ../../test/ConfigurationFiles/DFPCs/Reconstruction3D configuration1.yaml output.txt \
 	/path/DataSetReconstruction/Desk ImagesListSingle.txt Clouds/outputCloud \n \n";
 
 
@@ -45,17 +48,21 @@ int main(int argc, char** argv)
 	{
 	std::string baseFolderPath, imagesListFileName;
 	std::string outputCloudFileBaseName, outputCloudFileExtension;
+	std::string configurationFolderPath, configurationFileName, outputFileName;
 
-	ASSERT(argc >= 3, USAGE)
-	baseFolderPath = argv[1];
-	imagesListFileName = argv[2];
+	ASSERT(argc >= 6, USAGE)
+	configurationFolderPath = argv[1];
+	configurationFileName = argv[2];
+	outputFileName = argv[3];
+	baseFolderPath = argv[4];
+	imagesListFileName = argv[5];
 
 	ReconstructionFromStereo* reconstructionFromStereo = new ReconstructionFromStereo;
 	Reconstruction3DTestInterface interface
 		(
-		"../tests/ConfigurationFiles/DFPCs/Reconstruction3D", 
-		"ReconstructionFromStereo_Performance1.yaml", 
-		"ReconstructonFromStereoOutput.txt",
+		configurationFolderPath, 
+		configurationFileName, 
+		outputFileName,
 		reconstructionFromStereo
 		);
 	interface.SetImageFilesPath(baseFolderPath, imagesListFileName);

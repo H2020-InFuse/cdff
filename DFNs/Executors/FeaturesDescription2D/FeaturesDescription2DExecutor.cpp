@@ -29,7 +29,6 @@ void Execute(FeaturesDescription2DInterface* dfn, FrameConstPtr inputFrame, Visu
 
 void Execute(FeaturesDescription2DInterface* dfn, const Frame& inputFrame, const VisualPointFeatureVector2D& inputVector, VisualPointFeatureVector2DConstPtr& outputVector)
 	{
-	ASSERT( dfn!= NULL, "FeaturesDescription2DExecutor, input dfn is null");
 	ASSERT( outputVector == NULL, "FeaturesDescription2DExecutor, Calling instance creation executor with a non-NULL pointer");
 	if (dfn == NULL)
 		{
@@ -44,7 +43,6 @@ void Execute(FeaturesDescription2DInterface* dfn, const Frame& inputFrame, const
 
 void Execute(FeaturesDescription2DInterface* dfn, const Frame& inputFrame, const VisualPointFeatureVector2D& inputVector, VisualPointFeatureVector2D& outputVector)
 	{
-	ASSERT( dfn!= NULL, "FeaturesDescription2DExecutor, input dfn is null");
 	if (dfn == NULL)
 		{
 		Copy(inputVector, outputVector);

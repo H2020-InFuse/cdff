@@ -33,45 +33,51 @@ using namespace CDFF::DFN;
 using namespace CDFF::DFN::StereoReconstruction;
 
 const std::string USAGE =
-	"This method takes up to eight optional parameters: \n \
-	(i) The name of the configuration file of the DFN (the configuration file should be put in Tests/ConfigurationFiles/DFNs/StereoReconstruction/ folder) \n \
-	(ii) The base folder containing the file list of images to process \n \
-	(iii) the name of the file list of images (each line of the file should contain the path to two or three images from the base folder, two stareo images and \
+	"This method takes up to ten optional parameters: \n \
+	(i) the folder path to the DFN configuration file \n \
+	(ii) The name of the configuration file of the DFN \n \
+	(iii) the name of the output performance report file (that wil be located in the folder of the DFN configuration file) \n \
+	(iv) The base folder containing the file list of images to process \n \
+	(v) the name of the file list of images (each line of the file should contain the path to two or three images from the base folder, two stareo images and \
 	one optional disparity reference)) \n \
-	(iv) whether you are using a disparity image as a reference, this option should be either UseReferenceDisparity or NoReferenceDisparity \n \
-	(v) the path from the base folder representing the first part of the output disparity file name without the extension \n \
-	(vi) the extension of the output disparity images \n \
-	(vii) the path from the base folder representing the first part of the output point cloud file name without the extension \n \
-	(viii) the extension of the output point cloud file, only '.ply' is currently supported \n \n \
-	Example Usage: ./scanline_optimization_performance_test HirschmullerDisparityMapping_Performance_DeskReconstruction.yaml \
+	(vi) whether you are using a disparity image as a reference, this option should be either UseReferenceDisparity or NoReferenceDisparity \n \
+	(vii) the path from the base folder representing the first part of the output disparity file name without the extension \n \
+	(viii) the extension of the output disparity images \n \
+	(ix) the path from the base folder representing the first part of the output point cloud file name without the extension \n \
+	(x) the extension of the output point cloud file, only '.ply' is currently supported \n \n \
+	Example Usage: ./scanline_optimization_performance_test ../../test/ConfigurationFiles/DFNs/StereoReconstruction ScanlineOptimization_Performance.yaml output.txt\
 	/path/DataSetReconstruction/Desk ImagesListSingle.txt noReferenceDisparity Disparities/firstImage .jpg Clouds/outputCloud .ply \n \n \
 	Note: if you do specify the output point cloud file, no point cloud will be saved. Likewise if you do no specify any image save file, no disparity image will be saved. \n";
 
+
 int main(int argc, char** argv)
 	{
-	std::string configurationFileName = "ScanlineOptimization_Performance1.yaml";
-	if (argc >= 2)
-		{
-		configurationFileName = argv[1];
-		}
+	ASSERT(argc >= 7, USAGE)
+	
+	std::string configurationFileFolderPath, configurationFileName, outputFileName;
+	std::string imageListFolderPath, imageListFileName, useReferenceDisparity;
+	configurationFileFolderPath = argv[1];
+	configurationFileName = argv[2];
+	outputFileName = argv[3];
+	imageListFolderPath = argv[4];
+	imageListFileName = argv[5];
+	useReferenceDisparity = argv[6];
 
-	StereoReconstructionInterface* reconstructor = new ScanlineOptimization();
-	StereoReconstructionTestInterface interface("../tests/ConfigurationFiles/DFNs/StereoReconstruction", configurationFileName, "ScanlineOptimization.txt", reconstructor);
+	ScanlineOptimization* reconstructor = new ScanlineOptimization();
+	StereoReconstructionTestInterface interface(configurationFileFolderPath, configurationFileName, outputFileName, reconstructor);
 
-	if (argc >= 5)
-		{
-		std::string useReferenceDisparity = argv[4];
-		interface.SetImageFilesPath(argv[2], argv[3], (useReferenceDisparity == "UseReferenceDisparity") );
-		}
-
-	if (argc >= 7)
-		{
-		interface.SetDisparityOutputFile(argv[5], argv[6]);
-		}
+	ASSERT(useReferenceDisparity == "UseReferenceDisparity" || useReferenceDisparity == "NoReferenceDisparity",
+		"Error: 6th parameter has to be either UseReferenceDisparity or NoReferenceDisparity");
+	interface.SetImageFilesPath(imageListFolderPath, imageListFileName, (useReferenceDisparity == "UseReferenceDisparity") );
 
 	if (argc >= 9)
 		{
-		interface.SetCloudOutputFile(argv[7], argv[8]);
+		interface.SetDisparityOutputFile(argv[7], argv[8]);
+		}
+
+	if (argc >= 11)
+		{
+		interface.SetCloudOutputFile(argv[9], argv[10]);
 		}
 
 	interface.Run();

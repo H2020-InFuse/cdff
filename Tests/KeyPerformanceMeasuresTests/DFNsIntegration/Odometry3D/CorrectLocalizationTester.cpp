@@ -400,9 +400,9 @@ float CorrectLocalizationTester::ComputeModelSize()
 
 void CorrectLocalizationTester::ShowClouds()
 	{
-	Eigen::Quaternion<float> rotation(GetWOrientation(*outputModelPoseInScene), GetXOrientation(*outputModelPoseInScene), 
-		GetYOrientation(*outputModelPoseInScene), GetZOrientation(*outputModelPoseInScene) );
-	Eigen::Translation<float, 3> translation(GetXPosition(*outputModelPoseInScene), GetYPosition(*outputModelPoseInScene), GetZPosition(*outputModelPoseInScene));
+	Eigen::Quaternion<float> rotation(GetWOrientation(*outputModelPoseInScene), -GetXOrientation(*outputModelPoseInScene), 
+		-GetYOrientation(*outputModelPoseInScene), -GetZOrientation(*outputModelPoseInScene) );
+	Eigen::Translation<float, 3> translation(-GetXPosition(*outputModelPoseInScene), -GetYPosition(*outputModelPoseInScene), -GetZPosition(*outputModelPoseInScene));
 	AffineTransform affineTransform = translation * rotation;
 	
 	pcl::PointCloud<pcl::PointXYZ>::Ptr transformedModelCloud(new pcl::PointCloud<pcl::PointXYZ>);

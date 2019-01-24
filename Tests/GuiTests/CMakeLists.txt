@@ -395,56 +395,6 @@ target_link_libraries(
     ${GRAPHICALTEST_OPENCV_LIBRARIES}
 )
 
-if(WITH_EDRES)
-    add_executable(
-        DisparityImageEdresGuiTest
-        DFNs/DisparityImage/DisparityImageEdres.cpp
-        DFNs/DFNTestInterface.cpp
-        ${GRAPHICALTEST_GUI_SOURCES}
-    )
-    set_target_properties(DisparityImageEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-    target_compile_definitions(DisparityImageEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
-    target_link_libraries(
-        DisparityImageEdresGuiTest
-        cdff_dfn_disparity_image
-        ${GRAPHICALTEST_OPENCV_LIBRARIES}
-    )
-endif()
-
-
-if(WITH_EDRES)
-    add_executable(
-        ImageDegradationEdresGuiTest
-        DFNs/ImageDegradation/ImageDegradationEdres.cpp
-        DFNs/DFNTestInterface.cpp
-        ${GRAPHICALTEST_GUI_SOURCES}
-    )
-    set_target_properties(ImageDegradationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-    target_compile_definitions(ImageDegradationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
-    target_link_libraries(
-        ImageDegradationEdresGuiTest
-        cdff_dfn_image_degradation
-        ${GRAPHICALTEST_OPENCV_LIBRARIES}
-        ${VTK_LIBRARIES}
-    )
-
-    add_executable(
-        DisparityFilteringEdresGuiTest
-        DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
-        DFNs/DFNTestInterface.cpp
-        ${GRAPHICALTEST_GUI_SOURCES}
-    )
-    set_target_properties(DisparityFilteringEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-    target_compile_definitions(DisparityFilteringEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
-    target_link_libraries(
-        DisparityFilteringEdresGuiTest
-        cdff_dfn_disparity_filtering
-        ${GRAPHICALTEST_OPENCV_LIBRARIES}
-        ${VTK_LIBRARIES}
-    )
-    
-endif()
-
 add_executable(
     StereoRectificationGuiTest
     DFNs/StereoRectification/StereoRectification.cpp
@@ -475,38 +425,6 @@ target_link_libraries(
     ${VTK_LIBRARIES}
 )
 
-if(WITH_EDRES)
-    add_executable(
-        StereoRectificationEdresGuiTest
-        DFNs/StereoRectification/StereoRectificationEdres.cpp
-        DFNs/DFNTestInterface.cpp
-        ${GRAPHICALTEST_GUI_SOURCES}
-    )
-    set_target_properties(StereoRectificationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-    target_compile_definitions(StereoRectificationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
-    target_link_libraries(
-        StereoRectificationEdresGuiTest
-        cdff_dfn_stereo_rectification
-        ${GRAPHICALTEST_OPENCV_LIBRARIES}
-        ${VTK_LIBRARIES}
-    )
-
-    add_executable(
-        ImageRectificationEdresGuiTest
-        DFNs/ImageRectification/ImageRectificationEdres.cpp
-        DFNs/DFNTestInterface.cpp
-        ${GRAPHICALTEST_GUI_SOURCES}
-    )
-    set_target_properties(ImageRectificationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
-    target_compile_definitions(ImageRectificationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
-    target_link_libraries(
-        ImageRectificationEdresGuiTest
-        cdff_dfn_image_rectification
-        ${GRAPHICALTEST_OPENCV_LIBRARIES}
-        ${VTK_LIBRARIES}
-    )
-endif()
-
 add_executable(
     StereoDegradationGuiTest
     DFNs/StereoDegradation/StereoDegradation.cpp
@@ -522,13 +440,57 @@ target_link_libraries(
     ${VTK_LIBRARIES}
 )
 
-if(WITH_EDRES)
+if(Edres-Wrapper_FOUND)
+    add_executable(
+        DisparityImageEdresGuiTest
+        DFNs/DisparityImage/DisparityImageEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+        )
+    set_target_properties(DisparityImageEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(DisparityImageEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        DisparityImageEdresGuiTest
+        cdff_dfn_disparity_image
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+        )
+
+    add_executable(
+        ImageDegradationEdresGuiTest
+        DFNs/ImageDegradation/ImageDegradationEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+        )
+    set_target_properties(ImageDegradationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(ImageDegradationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        ImageDegradationEdresGuiTest
+        cdff_dfn_image_degradation
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+        ${VTK_LIBRARIES}
+        )
+
+    add_executable(
+        ImageRectificationEdresGuiTest
+        DFNs/ImageRectification/ImageRectificationEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+        )
+    set_target_properties(ImageRectificationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(ImageRectificationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        ImageRectificationEdresGuiTest
+        cdff_dfn_image_rectification
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+        ${VTK_LIBRARIES}
+        )
+
     add_executable(
         StereoDegradationEdresGuiTest
         DFNs/StereoDegradation/StereoDegradationEdres.cpp
         DFNs/DFNTestInterface.cpp
         ${GRAPHICALTEST_GUI_SOURCES}
-    )
+        )
     set_target_properties(StereoDegradationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
     target_compile_definitions(StereoDegradationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
     target_link_libraries(
@@ -536,7 +498,23 @@ if(WITH_EDRES)
         cdff_dfn_stereo_degradation
         ${GRAPHICALTEST_OPENCV_LIBRARIES}
         ${VTK_LIBRARIES}
-    )
+        )
+
+    add_executable(
+        StereoRectificationEdresGuiTest
+        DFNs/StereoRectification/StereoRectificationEdres.cpp
+        DFNs/DFNTestInterface.cpp
+        ${GRAPHICALTEST_GUI_SOURCES}
+        )
+    set_target_properties(StereoRectificationEdresGuiTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY ./tests)
+    target_compile_definitions(StereoRectificationEdresGuiTest PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+    target_link_libraries(
+        StereoRectificationEdresGuiTest
+        cdff_dfn_stereo_rectification
+        ${GRAPHICALTEST_OPENCV_LIBRARIES}
+        ${VTK_LIBRARIES}
+        )
+
 endif()
 
 
