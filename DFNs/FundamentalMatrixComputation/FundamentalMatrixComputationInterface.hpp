@@ -60,8 +60,8 @@ namespace DFN
 
             asn1SccCorrespondenceMap2D inMatches;
             asn1SccMatrix3d outFundamentalMatrix;
-            bool outSuccess;
-	    asn1SccCorrespondenceMap2D outInlierMatches;
+	        asn1SccCorrespondenceMap2D outInlierMatches;
+            bool outSuccess = false;
     };
 }
 }

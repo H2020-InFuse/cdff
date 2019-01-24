@@ -14,6 +14,7 @@
 #include "Validators/Frame.hpp"
 #include "BackgroundExtraction.hpp"
 #include <iostream>
+#include <random>
 using namespace FrameWrapper;
 
 namespace CDFF

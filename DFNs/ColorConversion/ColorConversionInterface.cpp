@@ -11,8 +11,9 @@ namespace DFN
 {
 
 ColorConversionInterface::ColorConversionInterface()
- : inOriginalImage(), outConvertedImage()
 {
+    asn1SccFrame_Initialize(&inOriginalImage);
+    asn1SccFrame_Initialize(&outConvertedImage);
 }
 
 ColorConversionInterface::~ColorConversionInterface()

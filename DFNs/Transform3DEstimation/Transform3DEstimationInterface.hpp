@@ -62,8 +62,8 @@ namespace DFN
 
             asn1SccCorrespondenceMaps3DSequence inMatches;
             asn1SccPosesSequence outTransforms;
-            bool outSuccess;
-            float outError;
+            bool outSuccess = false;
+            float outError = true;
     };
 }
 }

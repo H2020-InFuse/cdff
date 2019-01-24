@@ -11,8 +11,9 @@ namespace DFN
 {
 
 DisparityFilteringInterface::DisparityFilteringInterface()
-: inRawDisparity(), outFilteredDisparity()
 {
+    asn1SccFrame_Initialize(&inRawDisparity);
+    asn1SccFrame_Initialize(&outFilteredDisparity);
 }
 
 DisparityFilteringInterface::~DisparityFilteringInterface()
