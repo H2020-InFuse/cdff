@@ -95,7 +95,7 @@ namespace PoseEstimator
             cv::KalmanFilter KF;
             cv::Mat measurements;
             asn1SccPose prevEstimatedPose;
-            double convergenceIdx, prevConvergenceIdx, prevDeltaCov, prevCovInnovTrace;
+            double prevCovInnovTrace;
             bool converged;
 
             struct WheelPoints {
