@@ -88,8 +88,10 @@ namespace PoseEstimator
             cv::KalmanFilter KF;
             cv::Mat measurements;
             asn1SccPose prevEstimatedPose;
-            double convergenceIdx, prevConvergenceIdx, prevDeltaCov;
-            bool converged;
+            double convergenceIdx = 0;
+            double prevConvergenceIdx = 0;
+            double prevDeltaCov = 0;
+            bool converged = false;
     };
 }
 }

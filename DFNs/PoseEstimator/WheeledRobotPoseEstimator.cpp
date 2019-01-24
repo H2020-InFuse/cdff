@@ -29,8 +29,10 @@ namespace PoseEstimator
 {
 
 WheeledRobotPoseEstimator::WheeledRobotPoseEstimator()
+: parameters(DEFAULT_PARAMETERS),
+  m_last_center (cv::Point(-1, -1))
 {
-    m_last_center = cv::Point(-1, -1);
+
     parametersHelper.AddParameter<std::string>("GeneralParameters", "Robot", parameters.robot, DEFAULT_PARAMETERS.robot);
     parametersHelper.AddParameter<double>("GeneralParameters", "Baseline", parameters.baseline, DEFAULT_PARAMETERS.baseline);
     parametersHelper.AddParameter<double>("GeneralParameters", "MaxStereoDepth", parameters.maxStereoDepth, DEFAULT_PARAMETERS.maxStereoDepth);
@@ -46,8 +48,6 @@ WheeledRobotPoseEstimator::WheeledRobotPoseEstimator()
     // KF init
     measurements = cv::Mat::zeros(KFparameters.nMeasurements,1,CV_64F);
     initKalmanFilter(KF, KFparameters.nStates, KFparameters.nMeasurements, KFparameters.nInputs, KFparameters.dt);
-    converged = false;
-    convergenceIdx = 0;
 
     prevEstimatedPose.pos.arr[0] = 0;
     prevEstimatedPose.pos.arr[1] = 0;

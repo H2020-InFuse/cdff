@@ -252,7 +252,7 @@ asn1SccPose estimatePose(cv::KalmanFilter &KF, asn1SccPose &extractedPose, cv::M
 }
 
 void checkFilterConvergence(cv::KalmanFilter KF, int nStates, int nMeasurements, int nInputs, double dt, double maxJumpInPosition,
-                            asn1SccPose &prevEstimatedPose, const asn1SccPose estimatedPose, double &prevConvergenceIdx,
+                            asn1SccPose &prevEstimatedPose, const asn1SccPose& estimatedPose, double &prevConvergenceIdx,
                             double &convergenceIdx, double &prevDeltaCov, bool &converged)
 {
 

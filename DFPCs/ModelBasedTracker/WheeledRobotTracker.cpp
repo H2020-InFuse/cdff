@@ -21,9 +21,8 @@ namespace DFPC
 {
 
 WheeledRobotTracker::WheeledRobotTracker()
+:     m_robot(robots::MANA)
 {
-    m_robot = robots::MANA;
-
     m_background_subtractor.reset( new CDFF::DFN::ImageFiltering::BackgroundSubtractorMOG2());
     m_circle_finder.reset(new CDFF::DFN::PrimitiveFinder::BasicPrimitiveFinder());
     m_pose_estimator.reset(new CDFF::DFN::PoseEstimator::WheeledRobotPoseEstimator());
