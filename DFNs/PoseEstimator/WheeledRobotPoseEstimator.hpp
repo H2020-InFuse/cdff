@@ -100,6 +100,7 @@ namespace PoseEstimator
 
             struct WheelPoints {
                 cv::Vec3d center;
+                cv::Point center2D;
                 cv::Vec3d up;
                 cv::Vec3d down;
             };

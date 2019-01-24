@@ -179,8 +179,8 @@ void WheeledRobotPoseEstimator::process()
     if (converged)
     {
         outPoses.arr[0].pos = estimatedPose.pos;
-        prevEstimatedPose = outPoses.arr[0];
     }
+    prevEstimatedPose = outPoses.arr[0];
 // ===========================================================================================  END ESTIMATION  ==========================================================
 }
 
@@ -330,7 +330,9 @@ void WheeledRobotPoseEstimator::extractRobotPoints(std::vector<cv::Vec3f> wheels
         bottom_right.y = wheel_center_2.y + sin(beta) * h;
 
         m_robot_points.left_wheel.center = get3DCoordinates(wheel_center_1);
+        m_robot_points.left_wheel.center2D = wheel_center_1;
         m_robot_points.right_wheel.center = get3DCoordinates(wheel_center_2);
+        m_robot_points.right_wheel.center2D = wheel_center_2;
         m_robot_points.left_wheel.up = get3DCoordinates(top_left);
         m_robot_points.right_wheel.up = get3DCoordinates(top_right);
         m_robot_points.left_wheel.down = get3DCoordinates(bottom_left);
@@ -364,7 +366,7 @@ std::vector<cv::Vec3f> WheeledRobotPoseEstimator::filterRobotWheels()
     {
         if(parameters.robot==robots::SHERPA)
         {
-            if (abs(circles[0][1] - circles[1][1]) <= circles[0][2])
+            if ( abs(circles[0][1] - circles[1][1]) <= circles[0][2] )
             {
                 if (circles[0][0] < circles[1][0])
                 {
@@ -418,6 +420,11 @@ cv::Vec3f WheeledRobotPoseEstimator::get3DCoordinates(cv::Point point)
 
         double disparity_value = disparity.at<float>(point);
         double z = fx * parameters.baseline / disparity_value;
+        if( parameters.robot == robots::SHERPA ) //In the case of sherpa, we're using a depth map instead of a disparity image
+        {
+            z = disparity_value;
+        }
+
         double Dmax = parameters.maxStereoDepth;
 
         if(disparity_value != 0 &&  z < Dmax)
@@ -460,6 +467,9 @@ void WheeledRobotPoseEstimator::visualizeResults()
         cv::circle(img, m_robot_points.robot_center_px, 5, red, 5);
 
         cv::line( img, cv::Point(img.cols/2, 0), cv::Point(img.cols/2, img.rows), red, 4); //middle of image
+
+        cv::circle(img, m_robot_points.left_wheel.center2D, 5, red, 5);
+        cv::circle(img, m_robot_points.right_wheel.center2D, 5, red, 5);
 
         cv::namedWindow(parameters.robot+"_TRACKER", CV_WINDOW_NORMAL);
         cv::imshow(parameters.robot+"_TRACKER", img);
