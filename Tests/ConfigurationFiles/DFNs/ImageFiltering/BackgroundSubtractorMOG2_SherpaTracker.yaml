@@ -1,0 +1,6 @@
+- Name: GeneralParameters
+  ErosionSize: 5
+  History: 100
+  NMixtures: 3
+  BackgroundRatio: 0.7
+  DetectShadows: false

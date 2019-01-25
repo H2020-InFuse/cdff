@@ -27,7 +27,7 @@
  * @param UseAssemblerDfn, whether the assembler DFN is used, if this argument is false the assembly is done by simple overlapping and voxel filtering;
  * @param UseRegistratorDfn, whether the registration DFN is used to further refine the pose estimation obtained by FeaturesMatching3D DFN.
  *
- * Notes: no set of DFNs implementation has produced good result for this DFPC during testing.
+ * Notes: no set of DFNs implementation has produced good result for this DFPC implementation during testing.
  * @{
  */
 
