@@ -135,9 +135,11 @@ namespace Reconstruction3D
 		//State tracker variables
 		PoseWrapper::Pose3D rightToLeftCameraPose;
 		PoseWrapper::Pose3D poseToPreviousPose;
+		PoseWrapper::Pose3D zeroPose;
 		BundleHistory* bundleHistory;
 		PointCloudMap pointCloudMap;
 		const std::string LEFT_FEATURE_CATEGORY;
+		bool firstInput;
 
 		//DFN Interfaces
 		CDFF::DFN::ImageFilteringInterface* leftFilter;

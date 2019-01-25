@@ -10,6 +10,9 @@
     OrientationW: 1
   - Name: GeneralParameters
     PointCloudMapResolution: 0.01
+    UseAssemblerDfn: true
+    TrackedHistorySize: 5
+    SearchRadius: 50
 - Name: leftFilter
   Type: ImageFiltering
   Implementation: ImageUndistortion

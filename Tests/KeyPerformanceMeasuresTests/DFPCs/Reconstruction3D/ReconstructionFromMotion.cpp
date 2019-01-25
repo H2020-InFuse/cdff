@@ -298,8 +298,8 @@ int main(int argc, char** argv)
 	std::string mode = argv[1];
 	if (mode == "ComputePointCloud")
 		{
-		ReconstructionFromMotion* registrationFromStereo = new ReconstructionFromMotion();
-		return mainComputePointCloudMode(argc, argv, registrationFromStereo);
+		ReconstructionFromMotion* reconstructionFromMotion = new ReconstructionFromMotion();
+		return mainComputePointCloudMode(argc, argv, reconstructionFromMotion);
 		}
 	else if (mode == "EvaluateOutliers")
 		{

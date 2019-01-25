@@ -79,6 +79,7 @@ ReconstructionFromMotion::ReconstructionFromMotion() :
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
 	parametersHelper.AddParameter<int>("GeneralParameters", "TrackedHistorySize", parameters.trackedHistorySize, DEFAULT_PARAMETERS.trackedHistorySize);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "UseAssemblerDfn", parameters.useAssemblerDfn, DEFAULT_PARAMETERS.useAssemblerDfn);
 
 	leftFilter = NULL;
 	rightFilter = NULL;
@@ -94,6 +95,9 @@ ReconstructionFromMotion::ReconstructionFromMotion() :
 	configurationFilePath = "";
 
 	bundleHistory = NULL;
+	firstInput = true;
+	SetPosition(zeroPose, 0, 0, 0);
+	SetOrientation(zeroPose, 0, 0, 0, 1);
 	}
 
 ReconstructionFromMotion::~ReconstructionFromMotion()
@@ -118,10 +122,11 @@ void ReconstructionFromMotion::run()
 	DEBUG_PRINT_TO_LOG("Structure from motion start", "");
 	outSuccess = ComputeCameraMovement();
 
-	if (outSuccess)
+	if (outSuccess || firstInput)
 		{
 		PointCloudConstPtr pointCloud = ComputePointCloud();
 		UpdateScene(pointCloud);
+		firstInput = false;
 		}
 	}
 
@@ -153,7 +158,8 @@ const ReconstructionFromMotion::ReconstructionFromMotionOptionsSet Reconstructio
 		/*.orientationZ =*/ 0,
 		/*.orientationW =*/ 1
 		},
-	/*.trackedHistorySize =*/ 5
+	/*.trackedHistorySize =*/ 5,
+	/*.useAssemblerDfn =*/ true
 	};
 
 /* --------------------------------------------------------------------------
@@ -195,6 +201,11 @@ bool ReconstructionFromMotion::ComputeCameraMovement()
 	for(int backwardStep = 1; backwardStep <= parameters.trackedHistorySize && !success; backwardStep++)
 		{
 		VisualPointFeatureVector2DConstPtr pastLeftFeatureVector = bundleHistory->GetFeatures(backwardStep, LEFT_FEATURE_CATEGORY);
+		if (pastLeftFeatureVector == NULL)
+			{
+			break;
+			}
+
 		CorrespondenceMap2DConstPtr leftPastCorrespondenceMap = NULL;
 		Execute(featuresMatcher, leftFeatureVector, pastLeftFeatureVector, leftPastCorrespondenceMap);
 
@@ -211,6 +222,11 @@ bool ReconstructionFromMotion::ComputeCameraMovement()
 				}
 			}
 
+		}
+
+	if(!success && !firstInput)
+		{
+		bundleHistory->RemoveEntry(0);
 		}
 	return success;
 	}
@@ -242,16 +258,31 @@ void ReconstructionFromMotion::UpdateScene(PointCloudConstPtr inputCloud)
 	PointCloudWrapper::PointCloudConstPtr outputPointCloud = NULL;
 	if (parameters.useAssemblerDfn)
 		{
-		Pose3D newPose = Sum(outPose, poseToPreviousPose);
-		Copy(newPose, outPose);
+		if(firstInput)
+			{
+			Copy(zeroPose, outPose);
+			}
+		else
+			{
+			Pose3D newPose = Sum(outPose, poseToPreviousPose);
+			Copy(newPose, outPose);
+			}
 
 		PointCloudConstPtr transformedCloud = NULL;
 		Executors::Execute(cloudTransformer, *inputCloud, outPose, transformedCloud);
 		Executors::Execute(cloudAssembler, *transformedCloud, outPose, parameters.searchRadius, outputPointCloud);
 		}
-	else
+	else 
 		{
-		pointCloudMap.AttachPointCloud( inputCloud, EMPTY_FEATURE_VECTOR, &poseToPreviousPose);
+		if (firstInput)
+			{
+			pointCloudMap.AddPointCloud( inputCloud, EMPTY_FEATURE_VECTOR, &zeroPose);
+			}
+		else
+			{
+			pointCloudMap.AttachPointCloud( inputCloud, EMPTY_FEATURE_VECTOR, &poseToPreviousPose);
+			}
+
 		Copy( pointCloudMap.GetLatestPose(), outPose);
 		outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(&outPose, parameters.searchRadius);
 		}
