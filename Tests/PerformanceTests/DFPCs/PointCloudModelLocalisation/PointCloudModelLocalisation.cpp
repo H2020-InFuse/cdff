@@ -144,10 +144,12 @@ void PointCloudModelLocalisationTestInterface::ClearInputs()
 	if (sceneCloud != NULL)
 		{
 		delete(sceneCloud);
+		sceneCloud = NULL;
 		}
 	if (modelCloud != NULL)
 		{
 		delete(modelCloud);
+		modelCloud = NULL;
 		}	
 	}
 

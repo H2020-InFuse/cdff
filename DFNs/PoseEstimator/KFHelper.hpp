@@ -19,8 +19,10 @@ void fillMeasurements(cv::Mat &measurements,
 void updateKalmanFilter(cv::KalmanFilter &KF, cv::Mat &measurement,
                          cv::Mat &translation_estimated, cv::Mat &rotation_estimated );
 
-asn1SccPose estimatePose(cv::KalmanFilter &KF, asn1SccPose &extractedPose, cv::Mat &measurements, bool predictOnly);
+asn1SccPose estimatePose(cv::KalmanFilter &KF, asn1SccPose &extractedPose, cv::Mat &measurements, bool predictOnly, bool positionOnly);
 
 void checkFilterConvergence(cv::KalmanFilter KF, int nStates, int nMeasurements, int nInputs, double dt, double maxJumpInPosition,
-                            asn1SccPose &prevEstimatedPose, const asn1SccPose& estimatedPose, double &prevConvergenceIdx,
+                            const asn1SccPose &prevEstimatedPose, const asn1SccPose& estimatedPose, double &prevConvergenceIdx,
                             double &convergenceIdx, double &prevDeltaCov, bool &converged);
+
+bool checkKFConvergence(cv::KalmanFilter KF, double &prevCovInnovTrace, double convergenceThreshold);
