@@ -36,7 +36,7 @@
 #include <Executors/FeaturesDescription3D/FeaturesDescription3DExecutor.hpp>
 #include <Executors/FeaturesMatching3D/FeaturesMatching3DExecutor.hpp>
 #include <Executors/PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
-#include <Executors/PointCloudTransform/PointCloudTransformExecutor.hpp>
+#include <Executors/PointCloudTransformation/PointCloudTransformationExecutor.hpp>
 #include <Executors/PointCloudFiltering/PointCloudFilteringExecutor.hpp>
 #include <Executors/Registration3D/Registration3DExecutor.hpp>
 
@@ -189,7 +189,7 @@ void RegistrationFromStereo::InstantiateDFNs()
 		}
 	if (parameters.useRegistratorDfn || parameters.useAssemblerDfn)
 		{
-		cloudTransformer = static_cast<PointCloudTransformInterface*>( configurator.GetDfn("cloudTransformer") );
+		cloudTransformer = static_cast<PointCloudTransformationInterface*>( configurator.GetDfn("cloudTransformer") );
 		}
 	}
 

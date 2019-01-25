@@ -30,7 +30,7 @@
  *
  * --------------------------------------------------------------------------
  */
-#include <PointCloudTransform/PointCloudTransformInterface.hpp>
+#include <PointCloudTransformation/PointCloudTransformationInterface.hpp>
 #include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
 #include <Errors/Assert.hpp>
 
@@ -59,7 +59,7 @@ class CorrectAssemblyTester
 	 */
 	public:
 		CorrectAssemblyTester(const std::string& configurationFile, CDFF::DFN::PointCloudAssemblyInterface* assemblyDfn, const std::string& transformerConfigurationFile, 
-			CDFF::DFN::PointCloudTransformInterface* transformDfn);
+			CDFF::DFN::PointCloudTransformationInterface* transformDfn);
 		~CorrectAssemblyTester();
 
 		void SetFiles(const std::string& dataFolderPath, const std::string& inputPointCloudListFile, const std::string& outputPointCloudFile);
@@ -88,7 +88,7 @@ class CorrectAssemblyTester
 		std::string configurationFile, transformerConfigurationFile;
 		std::string dataFolderPath, inputPointCloudListFile, outputPointCloudFile;
 		CDFF::DFN::PointCloudAssemblyInterface* assemblyDfn;
-		CDFF::DFN::PointCloudTransformInterface* transformDfn;
+		CDFF::DFN::PointCloudTransformationInterface* transformDfn;
 
 		PointCloudWrapper::PointCloudConstPtr inputCloud;
 		PointCloudWrapper::PointCloudConstPtr outputCloud;

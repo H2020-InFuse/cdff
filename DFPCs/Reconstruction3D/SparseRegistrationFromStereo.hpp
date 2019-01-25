@@ -27,7 +27,7 @@
  * @param MatchToReconstructedCloud, whether the cloud is matched to the previous reconstruction or is matched to the previous frame;
  * @param UseAssemblerDfn, whether the assembler DFN is used, if this argument is false the assembly is done by simple overlapping and voxel filtering.
  *
- * Notes: no set of DFNs implementation has produced good result for this DFPC during testing.
+ * Notes: no set of DFNs implementation has produced good result for this DFPC implementation during testing.
  * @{
  */
 
@@ -47,7 +47,7 @@
 #include <FeaturesExtraction3D/FeaturesExtraction3DInterface.hpp>
 #include <Registration3D/Registration3DInterface.hpp>
 #include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
-#include <PointCloudTransform/PointCloudTransformInterface.hpp>
+#include <PointCloudTransformation/PointCloudTransformationInterface.hpp>
 #include <PointCloudFiltering/PointCloudFilteringInterface.hpp>
 
 #include "PointCloudMap.hpp"
@@ -124,7 +124,7 @@ namespace Reconstruction3D
 		CDFF::DFN::FeaturesExtraction3DInterface* featuresExtractor3d;
 		CDFF::DFN::Registration3DInterface* registrator3d;
 		CDFF::DFN::PointCloudAssemblyInterface* cloudAssembler;
-		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
+		CDFF::DFN::PointCloudTransformationInterface* cloudTransformer;
 		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
 
 		//State tracker variables
