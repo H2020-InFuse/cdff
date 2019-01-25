@@ -25,8 +25,8 @@
  * @param PointCloudMapResolution, the voxel resolution of the output point cloud, if the cloud is denser it will be filtered by PCL voxel filter;
  * @param RightToLeftCameraPose, pose of the right camera with respect to the left camera.
  *
- * Notes: no set of DFNs implementation has produced good result for this DFPC during testing;
- * Notes: this class has never been refactored to the standards of the other implementation of the Reconstruction3D DFPC.
+ * Notes: no set of DFNs implementation has produced good result for this DFPC implementation during testing.
+ * Notes: this class has never been refactored to the standards of the other implementations of the Reconstruction3D DFPC.
  * @{
  */
 

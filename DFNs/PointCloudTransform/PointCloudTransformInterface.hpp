@@ -15,7 +15,7 @@ namespace CDFF
 namespace DFN
 {
     /**
-     * DFN that combines two point clouds together
+     * DFN that transforms the coordinates of a point cloud from their current reference system to an external system E.
      */
     class PointCloudTransformInterface : public DFNCommonInterface
     {

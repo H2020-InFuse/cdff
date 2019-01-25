@@ -27,7 +27,7 @@
  * @param MatchToReconstructedCloud, whether the cloud is matched to the previous reconstruction or is matched to the previous frame;
  * @param UseAssemblerDfn, whether the assembler DFN is used, if this argument is false the assembly is done by simple overlapping and voxel filtering.
  *
- * Notes: no set of DFNs implementation has produced good result for this DFPC during testing.
+ * Notes: no set of DFNs implementation has produced good result for this DFPC implementation during testing.
  * @{
  */
 
