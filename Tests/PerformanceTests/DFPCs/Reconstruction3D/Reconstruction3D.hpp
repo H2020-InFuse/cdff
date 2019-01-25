@@ -30,7 +30,6 @@
  * --------------------------------------------------------------------------
  */
 #include <Reconstruction3D/Reconstruction3DInterface.hpp>
-#include <Reconstruction3D/ObservedScene.hpp>
 #include <Errors/Assert.hpp>
 
 #include <opencv2/highgui/highgui.hpp>
@@ -78,7 +77,6 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 		bool saveOutputCloud;
 		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 
-		CDFF::DFPC::Reconstruction3D::ObservedScene* map;
 		CDFF::DFPC::Reconstruction3DInterface* reconstructor;
 		void ReadImagesList();
 

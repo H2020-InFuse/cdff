@@ -67,7 +67,6 @@ Reconstruction3DTestInterface::~Reconstruction3DTestInterface()
 	ClearInputs();
 
 	delete(reconstructor);
-	delete(map);
 	}
 
 void Reconstruction3DTestInterface::SetImageFilesPath(std::string baseFolderPath, std::string imagesListFileName)

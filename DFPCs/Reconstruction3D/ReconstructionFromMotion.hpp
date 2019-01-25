@@ -48,15 +48,19 @@
 #include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
 #include <FundamentalMatrixComputation/FundamentalMatrixComputationInterface.hpp>
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
+#include <PointCloudTransformation/PointCloudTransformationInterface.hpp>
+#include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
 
-#include "Map.hpp"
-#include "ObservedScene.hpp"
+#include "PointCloudMap.hpp"
+#include "BundleHistory.hpp"
+
 #include <Helpers/ParametersListHelper.hpp>
 #include <DfpcConfigurator.hpp>
 #include <Types/CPP/Frame.hpp>
 #include <Types/CPP/PointCloud.hpp>
 #include <Types/CPP/Pose.hpp>
 #include <Types/CPP/VisualPointFeatureVector2D.hpp>
+#include <Types/CPP/VisualPointFeatureVector3D.hpp>
 #include <Types/CPP/CorrespondenceMap2D.hpp>
 #include <Types/CPP/Matrix.hpp>
 
@@ -81,7 +85,7 @@ namespace Reconstruction3D
 	 * --------------------------------------------------------------------
 	 */
         public:
-		explicit ReconstructionFromMotion(Map* map = NULL);
+		ReconstructionFromMotion();
 		~ReconstructionFromMotion();
 		void run() override;
 		void setup() override;
@@ -115,6 +119,8 @@ namespace Reconstruction3D
 			float searchRadius;
 			float pointCloudMapResolution;
 			CameraPose rightToLeftCameraPose;
+			int trackedHistorySize;
+			bool useAssemblerDfn;
 			};
 
 		Helpers::ParametersListHelper parametersHelper;
@@ -124,9 +130,15 @@ namespace Reconstruction3D
 		//General configuration helper
 		DfpcConfigurator configurator;
 
+		//Costants
+		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr EMPTY_FEATURE_VECTOR;
+
 		//State tracker variables
-		Map* map;
-		PoseWrapper::Pose3DPtr rightToLeftCameraPose;
+		PoseWrapper::Pose3D rightToLeftCameraPose;
+		PoseWrapper::Pose3D poseToPreviousPose;
+		BundleHistory* bundleHistory;
+		PointCloudMap pointCloudMap;
+		const std::string LEFT_FEATURE_CATEGORY;
 
 		//DFN Interfaces
 		CDFF::DFN::ImageFilteringInterface* leftFilter;
@@ -137,25 +149,8 @@ namespace Reconstruction3D
 		CDFF::DFN::FundamentalMatrixComputationInterface* fundamentalMatrixComputer;	
 		CDFF::DFN::CamerasTransformEstimationInterface* cameraTransformEstimator;
 		CDFF::DFN::PointCloudReconstruction2DTo3DInterface* reconstructor3D;
-
-		//Intermediate output helper variables -- Legacy code --
-		FrameWrapper::FrameConstPtr pastLeftImage;
-		FrameWrapper::FramePtr currentLeftImage;
-		FrameWrapper::FramePtr currentRightImage;
-		FrameWrapper::FramePtr filteredPastLeftImage;
-		FrameWrapper::FramePtr filteredCurrentLeftImage;
-		FrameWrapper::FramePtr filteredCurrentRightImage;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr pastLeftKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentLeftKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentRightKeypointsVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr pastLeftFeaturesVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentLeftFeaturesVector;
-		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr currentRightFeaturesVector;
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr pastToCurrentCorrespondenceMap;
-		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr leftRightCorrespondenceMap;
-		MatrixWrapper::Matrix3dPtr fundamentalMatrix;
-		PoseWrapper::Pose3DPtr pastToCurrentCameraTransform;
-		PointCloudWrapper::PointCloudPtr pointCloud;
+		CDFF::DFN::PointCloudTransformationInterface* cloudTransformer;
+		CDFF::DFN::PointCloudAssemblyInterface* cloudAssembler;
 
 		//Parameters Configuration method
 		void ConfigureExtraParameters();
@@ -165,24 +160,8 @@ namespace Reconstruction3D
 
 		//Core macro computation methods that execute a step of the DFPC pipeline
 		bool ComputeCameraMovement();
-		void ComputePointCloud();
-		void UpdateScene();
-
-		//Core micro computation methods that execute a single DFN -- Legacy code -- made obsolete by executors
-		void FilterCurrentLeftImage();
-		void FilterPastLeftImage();
-		void FilterCurrentRightImage();
-		void ExtractCurrentLeftFeatures();
-		void ExtractPastLeftFeatures();
-		void ExtractCurrentRightFeatures();
-		void DescribeCurrentLeftFeatures();
-		void DescribePastLeftFeatures();
-		void DescribeCurrentRightFeatures();
-		void MatchCurrentAndPastFeatures();
-		void MatchLeftAndRightFeatures();
-		bool ComputeFundamentalMatrix();
-		bool ComputePastToCurrentTransform();
-		void ComputeStereoPointCloud();
+		PointCloudWrapper::PointCloudConstPtr ComputePointCloud();
+		void UpdateScene(PointCloudWrapper::PointCloudConstPtr inputCloud);
 
 		/*
 		* Inline helper Method

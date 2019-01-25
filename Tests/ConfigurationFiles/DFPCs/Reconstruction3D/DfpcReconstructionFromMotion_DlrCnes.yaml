@@ -73,3 +73,17 @@
     FocalLengthY: 869.596
     PrinciplePointX: 519.487
     PrinciplePointY: 385.304
+- Name: cloudAssembler
+  Type: PointCloudAssembly
+  Implementation: NeighbourPointAverage
+  Parameters:
+  - Name: GeneralParameters
+    MaxNeighbourDistance: 0.01
+    UseIncrementalMode: true
+    UseDistanceFilter: true
+- Name: cloudTransformer
+  Type: PointCloudTransformation
+  Implementation: CartesianSystemTransform
+  Parameters:
+  - Name: GeneralParameters
+    Placeholder: false
