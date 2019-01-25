@@ -55,11 +55,11 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		Reconstruction3DTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, CDFF::DFPC::Reconstruction3DInterface* reconstructor);
+		Reconstruction3DTestInterface(const std::string& folderPath, const std::string& baseConfigurationFileName, const std::string& performanceMeasuresFileName, CDFF::DFPC::Reconstruction3DInterface* reconstructor);
 		~Reconstruction3DTestInterface();
 
-		void SetImageFilesPath(std::string baseFolderPath, std::string imagesListFileName);
-		void SetCloudOutputFile(std::string outputCloudFileBaseName);
+		void SetImageFilesPath(const std::string& baseFolderPath, const std::string& imagesListFileName);
+		void SetCloudOutputFile(const std::string& outputCloudFileBaseName);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -78,7 +78,7 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 		bool saveOutputCloud;
 		Converters::PointCloudToPclPointCloudConverter pointCloudConverter;
 
-		CDFF::DFPC::Reconstruction3D::ObservedScene* map;
+		CDFF::DFPC::Reconstruction3D::ObservedScene* map = nullptr;
 		CDFF::DFPC::Reconstruction3DInterface* reconstructor;
 		void ReadImagesList();
 
@@ -88,7 +88,7 @@ class Reconstruction3DTestInterface : public PerformanceTestInterface
 		std::vector<FrameWrapper::FrameConstPtr> rightImagesList;
 		PointCloudWrapper::PointCloudConstPtr pointCloud;
 		PoseWrapper::Pose3DConstPtr pose;
-		bool success;
+		bool success = false;
 
 		void ClearInputs();
 		bool SetNextInputs() override;

@@ -12,6 +12,10 @@ namespace DFPC
 
 ModelBasedTrackerInterface::ModelBasedTrackerInterface()
 {
+    asn1SccFrame_Initialize(& inImage);
+    asn1SccFrame_Initialize(& inDepth);
+    asn1SccT_String_Initialize(& inRobotName);
+    asn1SccPose_Initialize(& outPose);
 }
 
 ModelBasedTrackerInterface::~ModelBasedTrackerInterface()

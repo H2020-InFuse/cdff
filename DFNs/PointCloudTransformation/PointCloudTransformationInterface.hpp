@@ -45,7 +45,7 @@ namespace DFN
         protected:
 
             asn1SccPointcloud inPointCloud;
-	    asn1SccPose inPose;
+	        asn1SccPose inPose;
             asn1SccPointcloud outTransformedPointCloud;
     };
 }

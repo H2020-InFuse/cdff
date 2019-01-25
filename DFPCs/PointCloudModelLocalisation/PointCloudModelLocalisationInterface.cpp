@@ -10,13 +10,11 @@ namespace CDFF
 namespace DFPC
 {
 
-PointCloudModelLocalisationInterface::PointCloudModelLocalisationInterface() :
-inScene(),
-inModel(),
-inComputeModelFeatures(),
-outPose(),
-outSuccess()
+PointCloudModelLocalisationInterface::PointCloudModelLocalisationInterface()
 {
+    asn1SccPointcloud_Initialize(& inScene);
+    asn1SccPointcloud_Initialize(& inModel);
+    asn1SccPose_Initialize(& outPose);
 }
 
 PointCloudModelLocalisationInterface::~PointCloudModelLocalisationInterface()

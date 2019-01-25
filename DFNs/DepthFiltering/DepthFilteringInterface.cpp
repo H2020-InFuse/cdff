@@ -11,10 +11,10 @@ namespace DFN
 {
 
 //=====================================================================================================================
-DepthFilteringInterface::DepthFilteringInterface() :
-inFrame(),
-outFrame()
+DepthFilteringInterface::DepthFilteringInterface()
 {
+    asn1SccFrame_Initialize(&inFrame);
+    asn1SccFrame_Initialize(&outFrame);
 }
 
 //=====================================================================================================================

@@ -10,12 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-FeaturesMatching3DInterface::FeaturesMatching3DInterface() :
-inSourceFeatures(),
-inSinkFeatures(),
-outTransform(),
-outSuccess()
+FeaturesMatching3DInterface::FeaturesMatching3DInterface()
 {
+    asn1SccVisualPointFeatureVector3D_Initialize(&inSourceFeatures);
+    asn1SccVisualPointFeatureVector3D_Initialize(& inSinkFeatures);
+    asn1SccPose_Initialize(& outTransform);
 }
 
 FeaturesMatching3DInterface::~FeaturesMatching3DInterface()

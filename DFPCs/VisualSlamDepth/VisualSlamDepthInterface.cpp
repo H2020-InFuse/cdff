@@ -10,12 +10,12 @@ namespace CDFF
 namespace DFPC
 {
 
-VisualSlamDepthInterface::VisualSlamDepthInterface() :
-inDepthImage(),
-inRgbImage(),
-inRoverPose(),
-outEstimatedPose()
+VisualSlamDepthInterface::VisualSlamDepthInterface()
 {
+    asn1SccFrame_Initialize(& inDepthImage);
+    asn1SccFrame_Initialize(& inRgbImage);
+    asn1SccTransformWithCovariance_Initialize(& inRoverPose);
+    asn1SccTransformWithCovariance_Initialize(& outEstimatedPose)
 }
 
 VisualSlamDepthInterface::~VisualSlamDepthInterface()

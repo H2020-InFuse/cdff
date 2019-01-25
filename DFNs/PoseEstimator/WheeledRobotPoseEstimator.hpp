@@ -80,7 +80,7 @@ namespace PoseEstimator
 
             cv::Point extractForegroundCentroid(cv::Mat imgWithoutBackground);
 
-            cv::Point outputPose(cv::Vec3d position, std::vector<double> orientation);
+            void outputPose(cv::Vec3d position, std::vector<double> orientation);
 
             cv::Vec3f get3DCoordinates(cv::Point point);
             double getDisparityAroundPoint(cv::Point point, const cv::Mat & disparity);
@@ -95,8 +95,8 @@ namespace PoseEstimator
             cv::KalmanFilter KF;
             cv::Mat measurements;
             asn1SccPose prevEstimatedPose;
-            double prevCovInnovTrace;
-            bool converged;
+            double prevCovInnovTrace = 0;
+            bool converged = false;
 
             struct WheelPoints {
                 cv::Vec3d center;

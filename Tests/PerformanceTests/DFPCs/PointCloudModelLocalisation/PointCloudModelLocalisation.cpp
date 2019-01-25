@@ -42,7 +42,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-PointCloudModelLocalisationTestInterface::PointCloudModelLocalisationTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, 
+PointCloudModelLocalisationTestInterface::PointCloudModelLocalisationTestInterface(const std::string& folderPath, const std::string& baseConfigurationFileName, const std::string& performanceMeasuresFileName,
 	CDFF::DFPC::PointCloudModelLocalisationInterface* localizer) : PerformanceTestInterface(folderPath, baseConfigurationFileName, performanceMeasuresFileName)
 	{
 	this->localizer = localizer;
@@ -59,7 +59,7 @@ PointCloudModelLocalisationTestInterface::~PointCloudModelLocalisationTestInterf
 	delete(localizer);
 	}
 
-void PointCloudModelLocalisationTestInterface::SetInputFilesPath(std::string baseFolderPath, std::string inputListFileName)
+void PointCloudModelLocalisationTestInterface::SetInputFilesPath(const std::string& baseFolderPath, const std::string& inputListFileName)
 	{
 	this->baseFolderPath = baseFolderPath;
 	this->inputListFileName = inputListFileName;
@@ -173,8 +173,6 @@ bool PointCloudModelLocalisationTestInterface::SetNextInputs()
 
 PointCloudModelLocalisationTestInterface::MeasuresMap PointCloudModelLocalisationTestInterface::ExtractMeasures()
 	{
-	static unsigned testId = 0;
-	testId++;
 	MeasuresMap measuresMap;
 
 	measuresMap["LocationError"] = ComputeLocationError();

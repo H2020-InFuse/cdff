@@ -10,13 +10,13 @@ namespace CDFF
 namespace DFN
 {
 
-KFCorrectionInterface::KFCorrectionInterface() :
-inPredictedState(),
-inMeasurement(),
-inPredictedStateCovariance(),
-outCorrectedState(),
-outStateCovariance()
+KFCorrectionInterface::KFCorrectionInterface()
 {
+    asn1SccRigidBodyState_Initialize(& inPredictedState);
+    asn1SccRigidBodyState_Initialize(& inMeasurement);
+    asn1SccRigidBodyState_Initialize(& inPredictedStateCovariance);
+    asn1SccRigidBodyState_Initialize(& outCorrectedState);
+    asn1SccRigidBodyState_Initialize(& outStateCovariance);
 }
 
 KFCorrectionInterface::~KFCorrectionInterface()
