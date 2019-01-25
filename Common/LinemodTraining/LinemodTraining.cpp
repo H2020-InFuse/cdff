@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
                             "{lat                | 0:1:40     | Latitude_min:Latitude_step:Latitude_max}"
                             "{angle              | 0:1:0      | Angle_min:Angle_step:Angle_max}"
                             "{radius             | 1.5:0.1:3  | Radius_min:Radius_step:Radius_max}"
-                            "{T_level0           | 5          | Parameter for T_level0 in Linemod}"
-                            "{T_level1           | 8          | Parameter for T_level1 in Linemod}"
+                            "{T_level0           | 5          | Parameter for sampling step T at level 0 of the pyramid in Linemod}"
+                            "{T_level1           | 8          | Parameter for sampling step T at level 1 of the pyramid in Linemod}"
                             "{renderWindowWidth  | 640        | Width of the rendering window}"
                             "{renderWindowHeight | 480        | Height of the rendering window}"
                             "{fx                 | 682.559    | Camera focal length in x in pixel}"
@@ -27,14 +27,19 @@ int main(int argc, char *argv[])
 
     cv::CommandLineParser parser(argc, argv, keys);
 
-    parser.about("Generating training data for Linemod-based pose detection");
+    parser.about("Generate training data for Linemod-based pose detection.\n"
+                 "It implements the Linemod training as proposed in [Hinterstoisser2012].\n"
+                 "The idea is to render multiple views of the object of interest and sampled on a sphere.\n"
+                 "Color and depth modalities are extracted and saved along with the corresponding pose that generated the view.\n"
+                 "For the detection part, a multimodal templates based approach is used to retrieve the closest trained view in the current image.");
     if (parser.has("help") || argc == 1)
     {
         parser.printMessage();
         return 0;
     }
 
-    //Get parameters
+    ///Command line parameters parsing///
+    //CAD model parameters
     std::string CADmodel = parser.get<std::string>("CADmodel");
     bool isPLY = parser.get<bool>("isPLY");
     bool useDepth = parser.get<bool>("useDepth");
@@ -43,6 +48,8 @@ int main(int argc, char *argv[])
     std::cout << "PLY format? " << isPLY << std::endl;
     std::cout << "Use depth modality? " << useDepth << std::endl;
 
+    //Longitude, latitude, angle and radius parameters
+    //Used to sample views on a sphere around the object of interest
     std::string long_param = parser.get<std::string>("long");
     std::string lat_param = parser.get<std::string>("lat");
     std::string angle_param = parser.get<std::string>("angle");
@@ -69,12 +76,14 @@ int main(int argc, char *argv[])
     std::cout << "angleMin: " << angleMin << " ; angleStep: " << angleStep << " ; angleMax: " << angleMax << std::endl;
     std::cout << "radiusMin: " << radiusMin << " ; radiusStep: " << radiusStep << " ; radiusMax: " << radiusMax << std::endl;
 
+    //Linemod parameters (sampling step at level 0 and 1 in the pyramid)
     int T_level0 = parser.get<int>("T_level0");
     int T_level1 = parser.get<int>("T_level1");
 
     std::cout << "Linemod, T_level0: " << T_level0 << std::endl;
     std::cout << "Linemod, T_level1: " << T_level1 << std::endl;
 
+    //Render / camera parameters
     double renderWindowWidth = parser.get<double>("renderWindowWidth");
     double renderWindowHeight = parser.get<double>("renderWindowHeight");
     double fx = parser.get<double>("fx");
@@ -89,11 +98,12 @@ int main(int argc, char *argv[])
     std::cout << "Camera parameters, cx: " << cx << std::endl;
     std::cout << "Camera parameters, cy: " << cy << std::endl;
 
+    //Path to save the rendered views (for debugging or testing) if needed
     std::string saveTrainingImg = parser.get<std::string>("saveTrainingImg");
 
     std::cout << "Path to the directory to save the rendered images: " << saveTrainingImg << std::endl;
 
-    //Linemod
+    ///Linemod training///
     LinemodTraining::LinemodBasedPoseDetector linemodDetector;
     if (useDepth)
     {

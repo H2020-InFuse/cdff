@@ -19,6 +19,11 @@ namespace DFN
 {
 namespace ModelBasedDetection
 {
+    /*!
+     * @brief This class implements the Linemod detection algorithm [Hinterstoisser2012].
+     * The current object is detected and matched to the training set based on a multimodal templates approach.
+     * The corresponding pose used to generate the training view is also retrieved.
+     */
     class Linemod : public ModelBasedDetectionInterface
     {
         public:

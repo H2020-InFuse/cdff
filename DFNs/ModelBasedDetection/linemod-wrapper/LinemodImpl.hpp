@@ -21,7 +21,7 @@ namespace ModelBasedDetection
 {
 
 /*!
- * @brief This class implements the Linemod algorithm [Hinterstoisser2011].
+ * @brief This class implements the Linemod algorithm [Hinterstoisser2012].
  * It is used to detect an object and retrieve its pose w.r.t. to the camera.
  */
 class LinemodBasedPoseDetector
