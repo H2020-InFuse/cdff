@@ -47,13 +47,15 @@ namespace PoseEstimator
             void SortPrimitives();
             void InitializeKalman(cv::Point measPt);
             cv::Point PredictPosition();
-            Eigen::Quaterniond PredictOrientation(const cv::Mat& inputImage, cv::Point point, const cv::Mat& inputDepth);
+            Eigen::Quaternionf ExtractOrientation(const cv::Mat& inputImage, cv::Point centerWheelPx, const cv::Mat& inputDepth);
+            cv::Vec3f get3DCoordinates(cv::Point point);
 
             std::vector<std::vector<double>> m_primitives;
             std::unique_ptr<cv::KalmanFilter> m_kalman_filter;
 
             cv::Point m_last_point;
             int m_count;
+            double m_last_wheel_x;
 
     };
 }
