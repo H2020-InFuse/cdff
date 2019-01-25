@@ -30,7 +30,7 @@
  * @param UseBundleInitialEstimation, this says whether bundle adjustment should be done with an initial estimation (computed by comparing 2 sets of image pairs) or without initial estimation;
  * @param Baseline, the baseline of the stereo camera pair.
  *
- * Notes: no set of DFNs implementation has produced good result for this DFPC during testing.
+ * Notes: no set of DFNs implementation has produced good result for this DFPC implementation during testing.
  * @{
  */
 
