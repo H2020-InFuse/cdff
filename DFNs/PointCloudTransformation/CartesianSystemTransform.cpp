@@ -27,7 +27,7 @@ namespace CDFF
 {
 namespace DFN
 {
-namespace PointCloudTransform
+namespace PointCloudTransformation
 {
 
 CartesianSystemTransform::CartesianSystemTransform()
