@@ -51,7 +51,7 @@ target_link_libraries(
   cdff_dfn_depth_filtering
   cdff_dfn_force_mesh_generator
   cdff_dfn_point_cloud_assembly
-  cdff_dfn_point_cloud_transform
+  cdff_dfn_point_cloud_transformation
   cdff_dfn_point_cloud_filtering
   cdff_dfn_stereo_motion_estimation
   cdff_dfn_stereo_reconstruction

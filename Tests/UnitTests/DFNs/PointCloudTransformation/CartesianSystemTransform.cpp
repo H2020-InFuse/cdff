@@ -8,9 +8,9 @@
  */
 
 #include <catch.hpp>
-#include <PointCloudTransform/CartesianSystemTransform.hpp>
+#include <PointCloudTransformation/CartesianSystemTransform.hpp>
 
-using namespace CDFF::DFN::PointCloudTransform;
+using namespace CDFF::DFN::PointCloudTransformation;
 using namespace PointCloudWrapper;
 using namespace PoseWrapper;
 
@@ -291,7 +291,7 @@ TEST_CASE( "DFN configuration succeeds (CartesianSystemTransform)", "[configure]
 	CartesianSystemTransform* cartesianTransform = new CartesianSystemTransform;
 
 	// Setup DFN
-	cartesianTransform->setConfigurationFile("../tests/ConfigurationFiles/DFNs/PointCloudTransform/CartesianSystemTransform_Conf1.yaml");
+	cartesianTransform->setConfigurationFile("../tests/ConfigurationFiles/DFNs/PointCloudTransformation/CartesianSystemTransform_Conf1.yaml");
 	cartesianTransform->configure();
 
 	// Cleanup
