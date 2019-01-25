@@ -17,7 +17,6 @@ namespace ImageFiltering
 {
 
 BackgroundSubtractorMOG2::BackgroundSubtractorMOG2()
-:pMOG2()
 {
     configurationFilePath = "";
     parametersHelper.AddParameter<int>("GeneralParameters", "ErosionSize", parameters.erosionSize, DEFAULT_PARAMETERS.erosionSize);
@@ -26,6 +25,7 @@ BackgroundSubtractorMOG2::BackgroundSubtractorMOG2()
     parametersHelper.AddParameter<double>("GeneralParameters", "BackgroundRatio", parameters.backgroundRatio, DEFAULT_PARAMETERS.backgroundRatio);
     parametersHelper.AddParameter<bool>("GeneralParameters", "DetectShadows", parameters.detectShadows, DEFAULT_PARAMETERS.detectShadows);
 
+    pMOG2 = cv::createBackgroundSubtractorMOG2();
     pMOG2->setHistory(parameters.history);
     pMOG2->setNMixtures(parameters.nMixtures);
     pMOG2->setBackgroundRatio(parameters.backgroundRatio);
