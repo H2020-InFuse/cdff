@@ -15,7 +15,7 @@ namespace CDFF
 namespace DFN
 {
     /**
-     * DFN that estimates the pose of a joint given different predictions
+     * DFN that estimates the pose of an element given different predictions. This DFN contains a Kalman Filter and hence it considers the current inputs to the DFN as well as the previous ones.
      */
     class WeightingExpertInterface : public DFNCommonInterface
     {
