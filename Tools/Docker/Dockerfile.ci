@@ -79,7 +79,7 @@ libgsl-dev && \
 
 RUN wget --user ${MAGUSER} --password ${MAGPASS} ftp://ftp.magellium.fr/edreswrapper-sdk-1.0.0.tar.gz -P /tmp/CDFF/External/source/ && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d edres-wrapper
 
-ARG VERSION="4.6"
+ARG VERSION="4.6.1"
 ARG SHA=0000
 ENV IMAGE_VERSION=$VERSION
 ENV IMAGE_SHA=$SHA

@@ -34,12 +34,12 @@ if [[ ! -d "${INSTALL_DIR}/include/edres-wrapper" ]]; then
   if [[ ${INSTALL_AS_ROOT} == yes ]]; then
     sudo install -m 0644 -D -t "${INSTALL_DIR}/share/edres-wrapper/" Edres-WrapperConfig.cmake
     sudo install -m 0644 -D -t "${INSTALL_DIR}/include/edres-wrapper/" include/edres-wrapper/*.h
-    sudo install -m 0644 -D -t "${INSTALL_DIR}/lib/edres-wrapper/" lib/libedres-wrapper.so
+    sudo install -m 0644 -D -t "${INSTALL_DIR}/lib/edres-wrapper/" lib/*
     sudo install -m 0644 -D -t "${INSTALL_DIR}/lib/edres-wrapper/" EDRES_License_Signed_SpaceApps.pdf
   else
     install -m 0664 -D -t "${INSTALL_DIR}/share/edres-wrapper/" Edres-WrapperConfig.cmake
     install -m 0664 -D -t "${INSTALL_DIR}/include/edres-wrapper/" include/edres-wrapper/*.h
-    install -m 0664 -D -t "${INSTALL_DIR}/lib/edres-wrapper/" lib/libedres-wrapper.so
+    install -m 0664 -D -t "${INSTALL_DIR}/lib/edres-wrapper/" lib/*
     install -m 0664 -D -t "${INSTALL_DIR}/lib/edres-wrapper/" EDRES_License_Signed_SpaceApps.pdf
   fi
 
