@@ -67,9 +67,9 @@ class FeaturesExtractionDescriptionMatching : public PerformanceTestInterface
 		VisualPointFeatureVector2DWrapper::VisualPointFeatureVector2DPtr leftFeaturesVectorHolder;
 		CorrespondenceMap2DWrapper::CorrespondenceMap2DPtr correspondenceMap;
 
-		CDFF::DFN::FeaturesExtraction2DInterface* extractor;
-		CDFF::DFN::FeaturesDescription2DInterface* descriptor;
-		CDFF::DFN::FeaturesMatching2DInterface* matcher;
+		CDFF::DFN::FeaturesExtraction2DInterface* extractor = nullptr;
+		CDFF::DFN::FeaturesDescription2DInterface* descriptor = nullptr;
+		CDFF::DFN::FeaturesMatching2DInterface* matcher = nullptr;
 
 		bool SetNextInputs() override;
 		void ExecuteDfns() override;

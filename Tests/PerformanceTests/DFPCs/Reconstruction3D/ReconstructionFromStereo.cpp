@@ -47,7 +47,7 @@ const std::string USAGE =
 int main(int argc, char** argv)
 	{
 	std::string baseFolderPath, imagesListFileName;
-	std::string outputCloudFileBaseName, outputCloudFileExtension;
+	std::string outputCloudFileBaseName;//, outputCloudFileExtension;
 	std::string configurationFolderPath, configurationFileName, outputFileName;
 
 	ASSERT(argc >= 6, USAGE)
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 	if (argc == 5)
 		{
 		outputCloudFileBaseName = argv[3];
-		outputCloudFileExtension = argv[4];
+		//outputCloudFileExtension = argv[4]; // not used
 		interface.SetCloudOutputFile(outputCloudFileBaseName);
 		}	
 

@@ -84,7 +84,7 @@ class PerformanceTestInterface : public PerformanceTestBase
 	 * --------------------------------------------------------------------
 	 */
 	protected:	
-		CDFF::DFPC::DFPCCommonInterface* dfpc;
+		CDFF::DFPC::DFPCCommonInterface* dfpc = nullptr;
 
 	/* --------------------------------------------------------------------
 	 * Private
