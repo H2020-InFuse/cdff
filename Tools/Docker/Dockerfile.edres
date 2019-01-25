@@ -2,8 +2,8 @@ FROM nexus.spaceapplications.com/repository/infuse/cdff-base:latest
 
 ## Base + single dependency
 
-ARG USER
-ARG PASS
+ARG MAGUSER
+ARG MAGPASS
 ARG INSTALL_DIR=/usr/local
 ENV INSTALL_CDFF=$INSTALL_DIR
 
@@ -13,9 +13,9 @@ COPY get-cdff-dependencies.sh /tmp/CDFF/Tools/Docker/
 COPY installers/ /tmp/CDFF/Tools/Docker/installers/
 COPY patches/ /tmp/CDFF/Tools/Docker/patches/
 
-RUN wget --user ${USER} --password ${PASS} ftp://ftp.magellium.fr/edreswrapper-sdk-1.0.0.tar.gz -P /tmp/CDFF/External/source/ && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d edres-wrapper
+RUN wget --user ${MAGUSER} --password ${MAGPASS} ftp://ftp.magellium.fr/edreswrapper-sdk-1.0.0.tar.gz -P /tmp/CDFF/External/source/ && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d edres-wrapper
 
-ARG VERSION="1.1.6"
+ARG VERSION="1.1.7"
 ARG SHA=0000
 ENV IMAGE_VERSION=$VERSION
 ENV IMAGE_SHA=$SHA
