@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef LINEMODDETECT_LINEMODDETECTINTERFACE_HPP
-#define LINEMODDETECT_LINEMODDETECTINTERFACE_HPP
+#ifndef MODELBASEDDETECTION_MODELBASEDDETECTIONINTERFACE_HPP
+#define MODELBASEDDETECTION_MODELBASEDDETECTIONINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Types/C/Frame.h>
@@ -15,13 +15,13 @@ namespace DFN
 {
 
 /**
- * DFN that performs Linemod detection for object pose detection
+ * DFN that performs model-based detection and pose detection
  */
-class LinemodDetectInterface : public DFNCommonInterface
+class ModelBasedDetectionInterface : public DFNCommonInterface
 {
 public:
-        LinemodDetectInterface();
-        virtual ~LinemodDetectInterface();
+        ModelBasedDetectionInterface();
+        virtual ~ModelBasedDetectionInterface();
 
         /**
         * Send value to input port image
@@ -58,6 +58,6 @@ protected:
 }
 }
 
-#endif // LINEMODDETECT_LINEMODDETECTINTERFACE_HPP
+#endif // MODELBASEDDETECTION_MODELBASEDDETECTIONINTERFACE_HPP
 
 /** @} */

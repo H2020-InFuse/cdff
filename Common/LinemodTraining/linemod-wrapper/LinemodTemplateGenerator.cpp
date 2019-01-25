@@ -1,5 +1,5 @@
 /**
- * @addtogroup DFNs
+ * @addtogroup LinemodTraining
  * @{
  */
 
@@ -15,11 +15,7 @@ VTK_MODULE_INIT(vtkRenderingOpenGL2);
 
 #include "LinemodTemplateGenerator.hpp"
 
-namespace CDFF
-{
-namespace DFN
-{
-namespace LinemodTrain
+namespace LinemodTraining
 {
 
 LinemodTemplateGenerator::LinemodTemplateGenerator(const std::string &rstr_specificDatasetNameWithMesh, bool mesh_from_ply,
@@ -156,8 +152,6 @@ void LinemodTemplateGenerator::RT_to_matrix4(const cv::Vec3d &R, const cv::Vec3d
     rm4_M = cv::Affine3d(R,T);
 }
 
-}
-}
 }
 
 /** @} */

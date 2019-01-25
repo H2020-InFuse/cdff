@@ -1,5 +1,5 @@
 /**
- * @addtogroup DFNs
+ * @addtogroup LinemodTraining
  * @{
  */
 
@@ -8,11 +8,7 @@
 #include <opencv2/core/eigen.hpp>
 #include "LinemodTemplateGeneratorIteratorSinCos.hpp"
 
-namespace CDFF
-{
-namespace DFN
-{
-namespace LinemodTrain
+namespace LinemodTraining
 {
 
 LinemodTemplateGeneratorIteratorSinCos::LinemodTemplateGeneratorIteratorSinCos(LinemodTemplateGenerator *px_renderer,
@@ -103,8 +99,6 @@ void LinemodTemplateGeneratorIteratorSinCos::render(std::vector<cv::Mat> &source
     mask_out = _px_renderer->_x_maskImage;
 }
 
-}
-}
 }
 
 /** @} */

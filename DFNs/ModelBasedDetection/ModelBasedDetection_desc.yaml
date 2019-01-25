@@ -1,5 +1,5 @@
-name: LinemodDetect
-doc: DFN that performs Linemod detection for object pose detection
+name: ModelBasedDetection
+doc: DFN that performs model-based detection and pose detection
 input_ports:
     - name: image
       type: asn1SccFrame

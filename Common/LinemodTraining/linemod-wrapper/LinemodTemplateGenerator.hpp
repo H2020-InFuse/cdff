@@ -1,10 +1,10 @@
 /**
- * @addtogroup DFNs
+ * @addtogroup LinemodTraining
  * @{
  */
 
-#ifndef LINEMODTRAIN_LINEMODTEMPLATEGENERATOR_HPP
-#define LINEMODTRAIN_LINEMODTEMPLATEGENERATOR_HPP
+#ifndef LINEMODTRAINING_LINEMODTEMPLATEGENERATOR_HPP
+#define LINEMODTRAINING_LINEMODTEMPLATEGENERATOR_HPP
 
 #include <vtkPolyData.h>
 #include <vtkPLYReader.h>
@@ -24,15 +24,11 @@
 
 #include <opencv2/opencv.hpp>
 
-namespace CDFF
-{
-namespace DFN
-{
-namespace LinemodTrain
+namespace LinemodTraining
 {
 
 /*!
- * @brief This class implements a template generator used in training LINEMOD.<br>
+ * @brief This class implements a template generator used in LINEMOD training.<br>
  * This generator use a 3D model and a pose to generate an image suitable for LINEMOD training<br>
  */
 class LinemodTemplateGenerator
@@ -42,7 +38,7 @@ public:
     /*!
      * @brief Constructor from 3D model and camera parameters.
      * @param rstr_specificDatasetNameWithMesh specific dataset name which contains mesh else all datasets renderable are used
-     * @param mesh_from_ply true if .ply format
+     * @param mesh_from_ply true if .ply format, otherwise .obj is assumed
      * @param winW width of the rendering window
      * @param winH height of the rendering window
      * @param fx camera focal length in x (not used, only fy is used to set the camera view angle)
@@ -67,8 +63,8 @@ public:
     void setPose(const cv::Affine3d& campos);
 
     /*!
-        * @brief get the current camera pose as a camera frame to world frame transformation
-        * @return a cv::Affine3d matrix representing the current camera pose
+    * @brief get the current camera pose as a camera frame to world frame transformation
+    * @return a cv::Affine3d matrix representing the current camera pose
     */
     const cv::Affine3d &getPose() const;
 
@@ -135,7 +131,6 @@ public:
     vtkSmartPointer<vtkActor> _px_actor;
     vtkSmartPointer<vtkOBJImporter> _px_obj;
 
-
     /// @brief Camera
     vtkSmartPointer<vtkCamera> _px_camera;
     double near_clipping, far_clipping;
@@ -146,9 +141,7 @@ public:
 };
 
 }
-}
-}
 
-#endif // LINEMODTRAIN_LINEMODTEMPLATEGENERATOR_HPP
+#endif // LINEMODTRAINING_LINEMODTEMPLATEGENERATOR_HPP
 
 /** @} */

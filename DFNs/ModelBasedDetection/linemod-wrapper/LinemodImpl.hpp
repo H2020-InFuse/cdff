@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef LINEMODTRAIN_LINEMODTRAINIMPL_HPP
-#define LINEMODTRAIN_LINEMODTRAINIMPL_HPP
+#ifndef LINEMODDETECT_LINEMODDETECTIMPL_HPP
+#define LINEMODDETECT_LINEMODDETECTIMPL_HPP
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/rgbd/linemod.hpp>
@@ -17,12 +17,12 @@ namespace CDFF
 {
 namespace DFN
 {
-namespace LinemodTrain
+namespace ModelBasedDetection
 {
 
 /*!
- * @brief This class implements a 3D mesh based detector based on LINEMOD.<br>
- * This detector uses template detection in the given image. It can estimate the pose of the object by using the pose used to train the template<br>
+ * @brief This class implements the Linemod algorithm [Hinterstoisser2011].
+ * It is used to detect an object and retrieve its pose w.r.t. to the camera.
  */
 class LinemodBasedPoseDetector
 {
@@ -42,7 +42,6 @@ public:
            template<class Archive>
            void serialize(Archive& ar, const unsigned int version)
            {
-               (void)(version);
                ar & ui_objectId;
                ar & ui_templateId;
                ar & i_bbX;
@@ -79,36 +78,49 @@ public:
     void InitAs3D(int T_level0=5, int T_level1=8);
 
     /*!
-     * @brief Save a training set
-     * generate 2 files: one with "_training.dat" added to the argument and the other
+     * @brief Load a training set
+     * read 2 files: one with "_training.dat" added to the argument and the other
      * with "_poses.dat" added to the argument
-     * @param str_baseFullPathname Full base pathname for the files to be saved
+     * @param str_baseFullPathname Full base pathname for the files to be read
      */
-    void SaveTraining(const std::string& str_baseFullPathname);
+    bool LoadTraining(const std::string& str_baseFullPathname);
 
     /*!
-     * @brief Generate a training set
-     * @param px_object 3D object to recognize
+     * \brief Get sampling step T at pyramid_level.
+     * \param pyramid_level
+     * \return
      */
-    void Train(const std::string& ply_path, bool isPLY,
-               float f_lonMin, float f_lonMax, float f_lonStep,
-               float f_latMin, float f_latMax, float f_latStep,
-               float f_angleMin, float f_angleMax, float f_angleStep,
-               float f_radiusMin, float f_radiusMax, float f_radiusStep);
+    int getT(int pyramid_level) const;
 
     /*!
-     * @brief AddToTemplateBase
-     * @param str_objName
-     * @param ui_objectId
-     * @param cvmat_image
-     * @param cvmat_mask
-     * @param vec_R
-     * @param vec_T
-     * @return
+     * \brief Get the template pyramid identified by class_id and template_id
+     * \param class_id
+     * \param template_id
+     * \return
      */
-    bool AddToTemplateBase(const std::string &str_objName, unsigned int ui_objectId, const std::vector<cv::Mat> &sources,
-                           const cv::Mat& cvmat_mask, const cv::Vec3d &vec_R, const cv::Vec3d &vec_T);
+    const std::vector<cv::linemod::Template>& getTemplates (const cv::String &class_id, int template_id) const;
 
+    /*!
+     * @brief Perform the Linemod detection
+     * @param f_threshold Template similarity threshold in percentage
+     * @param x_match Template match information
+     * @param x_bb Detection bounding box
+     * @param vec_R Rotation vector in the coordinate used during the training (NED coordinate)
+     * @param vec_T Translation vector in the coordinate used during the training (NED coordinate)
+     */
+    bool Detect(const std::vector<cv::Mat>& sources, float f_threshold,
+                cv::linemod::Match& x_match, cv::Rect &x_bb, cv::Vec3d &vec_R, cv::Vec3d &vec_T);
+
+    /*!
+     * \brief getDetector
+     * \return cv::Ptr on an object cv::linemod::Detector
+     */
+    cv::Ptr<cv::linemod::Detector> getDetector() { return _cvptr_detector; }
+
+    void drawResponse(const std::vector<cv::linemod::Template>& templates,
+                      int num_modalities, cv::Mat& dst, const cv::Point& offset, int T);
+
+public:
     int _num_modalities;
     unsigned int _ui_numberOfTemplates;
     cv::Ptr<cv::linemod::Detector> _cvptr_detector;
@@ -119,12 +131,11 @@ public:
     double _fy;
     double _cx;
     double _cy;
-    std::string _saveDir;
 };
 
 }
 }
 }
-#endif // LINEMODTRAIN_LINEMODTRAINIMPL_HPP
+#endif // LINEMODDETECT_LINEMODDETECTIMPL_HPP
 
 /** @} */
