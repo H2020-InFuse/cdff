@@ -16,7 +16,6 @@
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
 #include <ColorConversion/ColorConversion.hpp>
 #include <DisparityImage/DisparityImageInterface.hpp>
-#include <DisparityFiltering/DisparityFilteringInterface.hpp>
 #include <DisparityToPointCloud/DisparityToPointCloudInterface.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityInterface.hpp>
 #include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
@@ -68,7 +67,6 @@ namespace DFN
 			static CamerasTransformEstimationInterface* CreateCamerasTransformEstimation(const std::string& dfnImplementation);
             static ColorConversionInterface* CreateColorConversion(const std::string& dfnImplementation);
             static DisparityImageInterface* CreateDisparityImage(const std::string& dfnImplementation);
-            static DisparityFilteringInterface* CreateDisparityFiltering(const std::string& dfnImplementation);
             static DisparityToPointCloudInterface* CreateDisparityToPointCloud(const std::string& dfnImplementation);
             static DisparityToPointCloudWithIntensityInterface* CreateDisparityToPointCloudWithIntensity(const std::string& dfnImplementation);
 			static FeaturesDescription2DInterface* CreateFeaturesDescription2D(const std::string& dfnImplementation);
