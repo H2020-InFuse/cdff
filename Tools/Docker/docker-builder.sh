@@ -55,6 +55,7 @@ shift 2 #shift all variables and restart at 1.
 ENV_VAR=""
 FORCE=false
 NOCACHE=""
+DOCKERHUB=""
 for var in "$@"
 do
    if [[ $var == "--force"  ]]
@@ -63,6 +64,9 @@ do
    elif [[ $var == "--no-cache"  ]]
     then
     NOCACHE="--no-cache"
+   elif [[ $var == "--push"  ]]
+    then
+    DOCKERHUB=true
    else
     ENV_VAR+=" --build-arg ${var}"
    fi
