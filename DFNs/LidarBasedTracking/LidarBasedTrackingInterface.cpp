@@ -12,6 +12,8 @@ namespace DFN
 
 LidarBasedTrackingInterface::LidarBasedTrackingInterface()
 {
+    asn1SccPointcloud_Initialize(&inSourceCloud);
+    asn1SccRigidBodyState_Initialize(& outState);
 }
 
 LidarBasedTrackingInterface::~LidarBasedTrackingInterface()

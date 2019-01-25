@@ -17,14 +17,6 @@ namespace StereoRectification
 StereoRectification::StereoRectification()
 :parameters(DEFAULT_PARAMETERS)
 {
-    _sensorIdLeft = "";
-    _sensorIdRight = "";
-    _calibrationFilePath = " ";
-    _xratio = 1;
-    _yratio = 1;
-    _scaling = -1;
-    _initialized = false;
-
     parametersHelper.AddParameter<int>("StereoRectificationParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
     parametersHelper.AddParameter<int>("StereoRectificationParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
     parametersHelper.AddParameter<double>("StereoRectificationParams", "scaling", parameters.scaling, DEFAULT_PARAMETERS.scaling);

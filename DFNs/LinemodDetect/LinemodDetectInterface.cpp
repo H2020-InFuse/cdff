@@ -12,6 +12,9 @@ namespace DFN
 
 LinemodDetectInterface::LinemodDetectInterface()
 {
+    asn1SccFrame_Initialize(& inimage);
+    asn1SccFrame_Initialize(& indepth);
+    asn1SccPose_Initialize(& outCamera);
 }
 
 LinemodDetectInterface::~LinemodDetectInterface()

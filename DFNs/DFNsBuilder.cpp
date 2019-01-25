@@ -56,7 +56,7 @@
 #include <FeaturesMatching3D/Icp3D.hpp>
 #include <FeaturesMatching3D/Ransac3D.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
-#include <PointCloudTransform/CartesianSystemTransform.hpp>
+#include <PointCloudTransformation/CartesianSystemTransform.hpp>
 #include <Registration3D/Icp3D.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
 #include <PointCloudAssembly/NeighbourPointAverage.hpp>
@@ -208,9 +208,9 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreatePointCloudAssembly(dfnImplementation);
 	}
-	else if (dfnType == "PointCloudTransform")
+	else if (dfnType == "PointCloudTransformation")
 	{
-		return CreatePointCloudTransform(dfnImplementation);
+		return CreatePointCloudTransformation(dfnImplementation);
 	}
 	else if (dfnType == "Voxelization")
 	{
@@ -700,15 +700,15 @@ PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(const std::st
 	return NULL;
 }
 
-PointCloudTransformInterface* DFNsBuilder::CreatePointCloudTransform(const std::string& dfnImplementation)
+PointCloudTransformationInterface* DFNsBuilder::CreatePointCloudTransformation(const std::string& dfnImplementation)
 {
 #ifdef HAVE_PCL
 	if (dfnImplementation == "CartesianSystemTransform")
 	{
-		return new PointCloudTransform::CartesianSystemTransform;
+		return new PointCloudTransformation::CartesianSystemTransform;
 	}
 #endif
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudTransform implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudTransformation implementation");
 	return NULL;
 }
 

@@ -12,6 +12,8 @@ namespace DFN
 
 ImageFilteringInterface::ImageFilteringInterface()
 {
+    asn1SccFrame_Initialize(& inImage);
+    asn1SccFrame_Initialize(& outImage);
 }
 
 ImageFilteringInterface::~ImageFilteringInterface()

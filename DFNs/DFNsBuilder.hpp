@@ -40,7 +40,7 @@
 #include <DepthFiltering/DepthFilteringInterface.hpp>
 #include <ForceMeshGenerator/ForceMeshGeneratorInterface.hpp>
 #include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
-#include <PointCloudTransform/PointCloudTransformInterface.hpp>
+#include <PointCloudTransformation/PointCloudTransformationInterface.hpp>
 #include <Voxelization/VoxelizationInterface.hpp>
 #include <PointCloudFiltering/PointCloudFilteringInterface.hpp>
 
@@ -91,7 +91,7 @@ namespace DFN
 			static DepthFilteringInterface* CreateDepthFiltering(const std::string& dfnImplementation);
 			static ForceMeshGeneratorInterface* CreateForceMeshGenerator(const std::string& dfnImplementation);
 			static PointCloudAssemblyInterface* CreatePointCloudAssembly(const std::string& dfnImplementation);
-			static PointCloudTransformInterface* CreatePointCloudTransform(const std::string& dfnImplementation);
+			static PointCloudTransformationInterface* CreatePointCloudTransformation(const std::string& dfnImplementation);
 			static VoxelizationInterface* CreateVoxelization(const std::string& dfnImplementation);
 			static PointCloudFilteringInterface* CreatePointCloudFiltering(const std::string& dfnImplementation);
 	};

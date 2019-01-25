@@ -12,6 +12,10 @@ namespace DFN
 
 PoseEstimatorInterface::PoseEstimatorInterface()
 {
+    asn1SccFrame_Initialize(& inImage);
+    asn1SccFrame_Initialize(& inDepth);
+    asn1SccVectorXdSequence_Initialize(& inPrimitives);
+    asn1SccPosesSequence_Initialize(& outPoses);
 }
 
 PoseEstimatorInterface::~PoseEstimatorInterface()
