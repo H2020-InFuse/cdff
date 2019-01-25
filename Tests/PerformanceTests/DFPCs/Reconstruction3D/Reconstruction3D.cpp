@@ -42,7 +42,7 @@ using namespace PoseWrapper;
  *
  * --------------------------------------------------------------------------
  */
-Reconstruction3DTestInterface::Reconstruction3DTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, 
+Reconstruction3DTestInterface::Reconstruction3DTestInterface(const std::string& folderPath, const std::string& baseConfigurationFileName, const std::string& performanceMeasuresFileName,
 	CDFF::DFPC::Reconstruction3DInterface* reconstructor) : PerformanceTestInterface(folderPath, baseConfigurationFileName, performanceMeasuresFileName)
 	{
 	this->reconstructor = reconstructor;
@@ -69,14 +69,14 @@ Reconstruction3DTestInterface::~Reconstruction3DTestInterface()
 	delete(reconstructor);
 	}
 
-void Reconstruction3DTestInterface::SetImageFilesPath(std::string baseFolderPath, std::string imagesListFileName)
+void Reconstruction3DTestInterface::SetImageFilesPath(const std::string& baseFolderPath, const std::string& imagesListFileName)
 	{
 	this->baseFolderPath = baseFolderPath;
 	this->imagesListFileName = imagesListFileName;
 	ReadImagesList();
 	}
 
-void Reconstruction3DTestInterface::SetCloudOutputFile(std::string outputCloudFileBaseName)
+void Reconstruction3DTestInterface::SetCloudOutputFile(const std::string& outputCloudFileBaseName)
 	{
 	saveOutputCloud = true;
 	this->outputCloudFileBaseName = outputCloudFileBaseName;

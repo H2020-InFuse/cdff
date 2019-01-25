@@ -68,7 +68,7 @@ do
    fi
 done
 
-echo ENV_VAR: $ENV_VAR
+#echo ENV_VAR: $ENV_VAR
 
 REGISTRY_PREFIX=nexus.spaceapplications.com/
 INFUSE_REGISTRY_PREFIX=repository/infuse/

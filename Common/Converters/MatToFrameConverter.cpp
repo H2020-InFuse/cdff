@@ -99,7 +99,7 @@ void MatToFrameConverter::ConvertRGB(const cv::Mat& image, Frame& frame)
 		//status valid
 		SetFrameStatus(frame, STATUS_VALID);
 	}
-	catch(std::exception e){
+	catch(const std::exception& e){
 		//status invalid
 		SetFrameStatus(frame, STATUS_INVALID);
 	}
@@ -120,7 +120,7 @@ void MatToFrameConverter::ConvertGrayscale(const cv::Mat& image, Frame& frame)
 		//status valid
 		SetFrameStatus(frame, STATUS_VALID);
 	}
-	catch(std::exception e){
+	catch(const std::exception& e){
 		//status invalid
 		SetFrameStatus(frame, STATUS_INVALID);
 	}
@@ -139,7 +139,7 @@ void MatToFrameConverter::ConvertGrayscale(const cv::Mat& image, Frame& frame)
 			//status valid
 			SetFrameStatus(frame, STATUS_VALID);
 		}
-		catch(std::exception e){
+		catch(const std::exception& e){
 			//status invalid
 			SetFrameStatus(frame, STATUS_INVALID);
 		}

@@ -55,7 +55,7 @@ namespace DFPC
             asn1SccFrame inRightImage;
             asn1SccPointcloud outPointCloud;
             asn1SccPose outPose;
-            bool outSuccess;
+            bool outSuccess = false;
     };
 }
 }
