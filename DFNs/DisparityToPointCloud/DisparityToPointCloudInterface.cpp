@@ -12,6 +12,8 @@ namespace DFN
 
 DisparityToPointCloudInterface::DisparityToPointCloudInterface()
 {
+    asn1SccFrame_Initialize(&inDispImage);
+    asn1SccPointcloud_Initialize(&outPointCloud);
 }
 
 DisparityToPointCloudInterface::~DisparityToPointCloudInterface()

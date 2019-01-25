@@ -25,7 +25,7 @@
  * @param PointCloudMapResolution, the voxel resolution of the output point cloud, if the cloud is denser it will be filtered by PCL voxel filter;
  * @param Baseline, the baseline of the stereo camera pair.
  *
- * Notes: no set of DFNs implementation has produced good result for this DFPC during testing.
+ * Notes: no set of DFNs implementation has produced good result for this DFPC implementation during testing.
  * @{
  */
 

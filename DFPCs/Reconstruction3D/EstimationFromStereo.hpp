@@ -30,7 +30,7 @@
  * @param NumberOfAdjustedStereoPairs, it is the number N of stereo pairs that will be used for bundle adjustment, it can be one of {2, 3, 4};
  * @param Baseline, the baseline of the stereo camera pair.
  *
- * Notes: no set of DFNs implementation has produced good result for this DFPC during testing.
+ * Notes: no set of DFNs implementation has produced good result for this DFPC implementation during testing.
  * @{
  */
 

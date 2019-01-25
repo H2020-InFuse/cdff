@@ -77,15 +77,15 @@ namespace StereoRectification
             void ValidateParameters();
 
         private:
-            std::string _sensorIdLeft;
-            std::string _sensorIdRight;
-            std::string _calibrationFilePath;
-            int _xratio;
-            int _yratio;
-            double _scaling;
-            bool _centerPrincipalPoint;
-            bool _fisheye;
-            bool _initialized;
+            std::string _sensorIdLeft = "";
+            std::string _sensorIdRight = "";
+            std::string _calibrationFilePath= "";
+            int _xratio = 1;
+            int _yratio = 1;
+            double _scaling = -1;
+            bool _centerPrincipalPoint = false;
+            bool _fisheye = false;
+            bool _initialized = false;
 
             cv::Mat _lmapx;
             cv::Mat _lmapy;
@@ -94,7 +94,7 @@ namespace StereoRectification
 
             cv::Mat1d _PLeft;
             cv::Mat1d _PRight;
-            double _baseline;
+            double _baseline = 0;
     };
 }
 }

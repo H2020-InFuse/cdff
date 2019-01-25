@@ -52,7 +52,7 @@ protected:
     asn1SccFrame inimage;
     asn1SccFrame indepth;
     asn1SccPose outCamera;
-    bool outSuccess;
+    bool outSuccess = false;
 };
 
 }

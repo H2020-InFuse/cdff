@@ -83,8 +83,8 @@ namespace DFN
             asn1SccPosesSequence inGuessedPosesSequence;
             asn1SccPointcloud inGuessedPointCloud;
             asn1SccPosesSequence outPosesSequence;
-            bool outSuccess;
-            float outError;
+            bool outSuccess = false;
+            float outError = true;
     };
 }
 }

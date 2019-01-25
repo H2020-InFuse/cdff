@@ -10,11 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-FeaturesDescription2DInterface::FeaturesDescription2DInterface() :
-inFrame(),
-inFeatures(),
-outFeatures()
+FeaturesDescription2DInterface::FeaturesDescription2DInterface()
 {
+    asn1SccFrame_Initialize(&inFrame) ;
+    asn1SccVisualPointFeatureVector2D_Initialize(&inFeatures) ;
+    asn1SccVisualPointFeatureVector2D_Initialize(&outFeatures) ;
 }
 
 FeaturesDescription2DInterface::~FeaturesDescription2DInterface()

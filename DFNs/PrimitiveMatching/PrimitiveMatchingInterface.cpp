@@ -10,12 +10,12 @@ namespace CDFF
 namespace DFN
 {
 
-PrimitiveMatchingInterface::PrimitiveMatchingInterface() :
-inImage(),
-inPrimitives(),
-outImage(),
-outPrimitives()
+PrimitiveMatchingInterface::PrimitiveMatchingInterface()
 {
+    asn1SccFrame_Initialize(& inImage);
+    asn1SccStringSequence_Initialize(& inPrimitives);
+    asn1SccFrame_Initialize(& outImage);
+    asn1SccStringSequence_Initialize(& outPrimitives);
 }
 
 PrimitiveMatchingInterface::~PrimitiveMatchingInterface()

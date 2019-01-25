@@ -174,7 +174,7 @@ void WheeledRobotPoseEstimator::process()
     prevEstimatedPose = outPoses.arr[0];
 }
 
-cv::Point WheeledRobotPoseEstimator::outputPose(cv::Vec3d position, std::vector<double> orientation)
+void WheeledRobotPoseEstimator::outputPose(cv::Vec3d position, std::vector<double> orientation)
 {
     outPoses.nCount = 1;
     outPoses.arr[0].pos.arr[0] = position[0];

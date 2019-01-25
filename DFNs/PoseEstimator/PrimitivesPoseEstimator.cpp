@@ -34,6 +34,7 @@ namespace PoseEstimator
 PrimitivesPoseEstimator::PrimitivesPoseEstimator()
     : m_count(0)
     , m_last_wheel_x(-1)
+    , parameters(DEFAULT_PARAMETERS)
 {
     configurationFilePath = "";
     parametersHelper.AddParameter<int>("GeneralParameters", "NumFrames", parameters.numFrames, DEFAULT_PARAMETERS.numFrames);

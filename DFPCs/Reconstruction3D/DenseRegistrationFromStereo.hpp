@@ -38,7 +38,7 @@
 #include <StereoReconstruction/StereoReconstructionInterface.hpp>
 #include <Registration3D/Registration3DInterface.hpp>
 #include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
-#include <PointCloudTransform/PointCloudTransformInterface.hpp>
+#include <PointCloudTransformation/PointCloudTransformationInterface.hpp>
 #include <PointCloudFiltering/PointCloudFilteringInterface.hpp>
 
 #include "PointCloudMap.hpp"
@@ -154,7 +154,7 @@ namespace Reconstruction3D
 		CDFF::DFN::StereoReconstructionInterface* reconstructor3d;
 		CDFF::DFN::Registration3DInterface* registrator3d;
 		CDFF::DFN::PointCloudAssemblyInterface* cloudAssembler;
-		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
+		CDFF::DFN::PointCloudTransformationInterface* cloudTransformer;
 		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
 
 		//External conversion helpers
