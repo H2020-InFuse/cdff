@@ -11,8 +11,6 @@
  */
 
 #include "BaseTypes.hpp"
-#include <Errors/Assert.hpp>
-#include <cstring>
 
 namespace BaseTypesWrapper
 {

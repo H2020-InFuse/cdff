@@ -20,6 +20,7 @@
 #include <Types/C/Point.h>
 #include <Types/C/CorrespondenceMap3D.h>
 #include "Errors/AssertOnTest.hpp"
+#include <cstring>
 
 #include <memory>
 
