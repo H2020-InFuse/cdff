@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     parser.about("Generate training data for Linemod-based pose detection. The program takes as input the path to a CAD model file and addition parameters specified by command line option. \n"
 		 "All parameteres have a default value, please consult the help section for details on the parameters. \n"
 		 "The program generates detection CAD model templates, that will allow an appropriate detectot to identify the original CAD model object in RGB and depth images. \n"
-                 "It implements the Linemod training as proposed in [Hinterstoisser2012].\n"
+                 "It implements the Linemod training as proposed in 'Model Based Training, Detection and Pose Estimation of Texture-Less 3D Objects in Heavily Cluttered Scenes' by Hinterstoisser et al.\n"
                  "The idea is to render multiple views of the object of interest and sampled on a sphere.\n"
                  "Color and depth modalities are extracted and saved along with the corresponding pose that generated the view.\n"
                  "For the detection part, a multimodal templates based approach is used to retrieve the closest trained view in the current image.");
