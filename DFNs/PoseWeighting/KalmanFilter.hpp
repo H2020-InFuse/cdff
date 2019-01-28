@@ -3,10 +3,10 @@
  * @{
  */
 
-#ifndef WEIGHTINGEXPERT_POSEWEIGHTING_HPP
-#define WEIGHTINGEXPERT_POSEWEIGHTING_HPP
+#ifndef POSEWEIGHTING_KALMANFILTER_HPP
+#define POSEWEIGHTING_KALMANFILTER_HPP
 
-#include "WeightingExpertInterface.hpp"
+#include "PoseWeightingInterface.hpp"
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/video/tracking.hpp>
@@ -16,30 +16,30 @@ namespace CDFF
 {
 namespace DFN
 {
-namespace WeightingExpert
+namespace PoseWeighting
 {
     /**
      *  DFN that estimates the pose of an element given different predictions. This DFN contains a Kalman Filter and hence it considers the current inputs to the DFN as well as the previous ones.
      */
-    class PoseWeighting : public WeightingExpertInterface
+    class KalmanFilter : public PoseWeightingInterface
     {
         public:
 
-            PoseWeighting();
-            virtual ~PoseWeighting();
+            KalmanFilter();
+            virtual ~KalmanFilter();
 
             virtual void configure();
             virtual void process();
 
         private:
-            struct PoseWeightingOptionsSet
+            struct KalmanFilterOptionsSet
             {
                 int numFrames;          //  Number of frames that is waited before estimating a pose to wait for a more stable input
                 double maxDistance;     //  Max distance between sequential poses allowed to correct Kalman filter
             };
             Helpers::ParametersListHelper parametersHelper;
-            PoseWeightingOptionsSet parameters;
-            static const PoseWeightingOptionsSet DEFAULT_PARAMETERS;
+            KalmanFilterOptionsSet parameters;
+            static const KalmanFilterOptionsSet DEFAULT_PARAMETERS;
 
             std::unique_ptr<cv::KalmanFilter> m_kalman_filter;
             std::vector<cv::Point> m_last_centers;
@@ -50,6 +50,6 @@ namespace WeightingExpert
 }
 }
 
-#endif // WEIGHTINGEXPERT_POSEWEIGHTING_HPP
+#endif // POSEWEIGHTING_KALMANFILTER_HPP
 
 /** @} */

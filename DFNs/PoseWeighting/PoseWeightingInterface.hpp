@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef WEIGHTINGEXPERT_WEIGHTINGEXPERTINTERFACE_HPP
-#define WEIGHTINGEXPERT_WEIGHTINGEXPERTINTERFACE_HPP
+#ifndef POSEWEIGHTING_POSEWEIGHTINGINTERFACE_HPP
+#define POSEWEIGHTING_POSEWEIGHTINGINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Types/C/Sequences.h>
@@ -17,12 +17,12 @@ namespace DFN
     /**
      * DFN that estimates the pose of an element given different predictions. This DFN contains a Kalman Filter and hence it considers the current inputs to the DFN as well as the previous ones.
      */
-    class WeightingExpertInterface : public DFNCommonInterface
+    class PoseWeightingInterface : public DFNCommonInterface
     {
         public:
 
-            WeightingExpertInterface();
-            virtual ~WeightingExpertInterface();
+            PoseWeightingInterface();
+            virtual ~PoseWeightingInterface();
 
             /**
              * Send value to input port "poses"
@@ -46,6 +46,6 @@ namespace DFN
 }
 }
 
-#endif // WEIGHTINGEXPERT_WEIGHTINGEXPERTINTERFACE_HPP
+#endif // POSEWEIGHTING_POSEWEIGHTINGINTERFACE_HPP
 
 /** @} */
