@@ -75,16 +75,15 @@ namespace ImageRectification
             void ValidateParameters();
 
         private:
-            std::string _sensorId;
-            int _xratio;
-            int _yratio;
-            double _scaling;
-            bool _centerPrincipalPoint;
-            bool _fisheye;
+            std::string _sensorId = "";
+            int _xratio = 1;
+            int _yratio = 1;
+            double _scaling = -1;
+            bool _centerPrincipalPoint = false;
+            bool _fisheye = false;
 
             cv::Mat _mapx;
             cv::Mat _mapy;
-
             cv::Mat _newCameraMatrix;
     };
 

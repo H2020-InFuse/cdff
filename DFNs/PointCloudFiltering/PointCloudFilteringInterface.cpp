@@ -10,10 +10,10 @@ namespace CDFF
 namespace DFN
 {
 
-PointCloudFilteringInterface::PointCloudFilteringInterface() :
-inPointCloud(),
-outFilteredPointCloud()
+PointCloudFilteringInterface::PointCloudFilteringInterface()
 {
+    asn1SccPointcloud_Initialize(& inPointCloud);
+    asn1SccPointcloud_Initialize(& outFilteredPointCloud);
 }
 
 PointCloudFilteringInterface::~PointCloudFilteringInterface()

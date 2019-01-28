@@ -34,7 +34,7 @@
 #include <Executors/StereoReconstruction/StereoReconstructionExecutor.hpp>
 #include <Executors/Registration3D/Registration3DExecutor.hpp>
 #include <Executors/PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
-#include <Executors/PointCloudTransform/PointCloudTransformExecutor.hpp>
+#include <Executors/PointCloudTransformation/PointCloudTransformationExecutor.hpp>
 #include <Executors/PointCloudFiltering/PointCloudFilteringExecutor.hpp>
 
 #include <Converters/PointCloudToPclPointCloudConverter.hpp>
@@ -245,7 +245,7 @@ void DenseRegistrationFromStereo::InstantiateDFNs()
 	if (parameters.useAssemblerDfn)
 		{
 		cloudAssembler = static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") );
-		cloudTransformer = static_cast<PointCloudTransformInterface*>( configurator.GetDfn("cloudTransformer") );
+		cloudTransformer = static_cast<PointCloudTransformationInterface*>( configurator.GetDfn("cloudTransformer") );
 		}
 	}
 

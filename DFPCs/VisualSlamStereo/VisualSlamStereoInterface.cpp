@@ -10,10 +10,10 @@ namespace CDFF
 namespace DFPC
 {
 
-VisualSlamStereoInterface::VisualSlamStereoInterface() :
-inFramePair(),
-outEstimatedPose()
+VisualSlamStereoInterface::VisualSlamStereoInterface()
 {
+    asn1SccFramePair_Initialize(& inFramePair);
+    asn1SccTransformWithCovariance_Initialize(& outEstimatedPose);
 }
 
 VisualSlamStereoInterface::~VisualSlamStereoInterface()

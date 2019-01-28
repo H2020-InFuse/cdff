@@ -10,14 +10,12 @@ namespace CDFF
 namespace DFN
 {
 
-BundleAdjustmentInterface::BundleAdjustmentInterface() :
-inCorrespondenceMapsSequence(),
-inGuessedPosesSequence(),
-inGuessedPointCloud(),
-outPosesSequence(),
-outSuccess(),
-outError()
+BundleAdjustmentInterface::BundleAdjustmentInterface()
 {
+    asn1SccCorrespondenceMaps2DSequence_Initialize(& inCorrespondenceMapsSequence);
+    asn1SccPosesSequence_Initialize(& inGuessedPosesSequence);
+    asn1SccPointcloud_Initialize(& inGuessedPointCloud);
+    asn1SccPosesSequence_Initialize(& outPosesSequence);
 }
 
 BundleAdjustmentInterface::~BundleAdjustmentInterface()

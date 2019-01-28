@@ -10,12 +10,12 @@ namespace CDFF
 namespace DFPC
 {
 
-PoseFusionInterface::PoseFusionInterface() :
-inWheelOdometry(),
-inVisualOdometry(),
-outEstimatedCurrentPose(),
-outEstimatedPastPoses()
+PoseFusionInterface::PoseFusionInterface()
 {
+    asn1SccTransformWithCovariance_Initialize(& inWheelOdometry);
+    asn1SccTransformWithCovariance_Initialize(& inVisualOdometry);
+    asn1SccTransformWithCovariance_Initialize(& outEstimatedCurrentPose);
+    asn1SccTransformWithCovariance_Initialize(& outEstimatedPastPoses);
 }
 
 PoseFusionInterface::~PoseFusionInterface()

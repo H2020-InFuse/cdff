@@ -82,11 +82,11 @@ class VisualOdometry : public PerformanceTestInterface
 		cv::Mat cvLeftImage;
 		cv::Mat cvRightImage;
 
-		CDFF::DFN::FeaturesExtraction2DInterface* extractor;
-		CDFF::DFN::FeaturesDescription2DInterface* descriptor;
-		CDFF::DFN::FeaturesMatching2DInterface* matcher;
-		CDFF::DFN::FundamentalMatrixComputationInterface* matrixComputer;
-		CDFF::DFN::CamerasTransformEstimationInterface* poseEstimator;
+		CDFF::DFN::FeaturesExtraction2DInterface* extractor = nullptr;
+		CDFF::DFN::FeaturesDescription2DInterface* descriptor = nullptr;
+		CDFF::DFN::FeaturesMatching2DInterface* matcher = nullptr;
+		CDFF::DFN::FundamentalMatrixComputationInterface* matrixComputer = nullptr;
+		CDFF::DFN::CamerasTransformEstimationInterface* poseEstimator = nullptr;
 
 		FrameWrapper::FrameConstPtr leftFrame;
 		FrameWrapper::FrameConstPtr rightFrame;

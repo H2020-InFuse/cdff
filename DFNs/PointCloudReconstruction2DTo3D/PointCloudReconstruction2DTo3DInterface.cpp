@@ -10,11 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-PointCloudReconstruction2DTo3DInterface::PointCloudReconstruction2DTo3DInterface() :
-inMatches(),
-inPose(),
-outPointcloud()
+PointCloudReconstruction2DTo3DInterface::PointCloudReconstruction2DTo3DInterface()
 {
+    asn1SccCorrespondenceMap2D_Initialize(& inMatches);
+    asn1SccPose_Initialize(& inPose);
+    asn1SccPointcloud_Initialize(& outPointcloud);
 }
 
 PointCloudReconstruction2DTo3DInterface::~PointCloudReconstruction2DTo3DInterface()

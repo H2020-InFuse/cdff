@@ -3,8 +3,8 @@
  * @{
  */
 
-#ifndef POINTCLOUDTRANSFORM_POINTCLOUDTRANSFORMINTERFACE_HPP
-#define POINTCLOUDTRANSFORM_POINTCLOUDTRANSFORMINTERFACE_HPP
+#ifndef POINTCLOUDTRANSFORMATION_POINTCLOUDTRANSFORMINTERFACE_HPP
+#define POINTCLOUDTRANSFORMATION_POINTCLOUDTRANSFORMINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
 #include <Types/C/Pointcloud.h>
@@ -17,12 +17,12 @@ namespace DFN
     /**
      * DFN that transforms the coordinates of a point cloud from their current reference system to an external system E.
      */
-    class PointCloudTransformInterface : public DFNCommonInterface
+    class PointCloudTransformationInterface : public DFNCommonInterface
     {
         public:
 
-            PointCloudTransformInterface();
-            virtual ~PointCloudTransformInterface();
+            PointCloudTransformationInterface();
+            virtual ~PointCloudTransformationInterface();
 
             /**
              * Send value to input port "pointCloud"
@@ -45,12 +45,12 @@ namespace DFN
         protected:
 
             asn1SccPointcloud inPointCloud;
-	    asn1SccPose inPose;
+	        asn1SccPose inPose;
             asn1SccPointcloud outTransformedPointCloud;
     };
 }
 }
 
-#endif // POINTCLOUDTRANSFORM_POINTCLOUDTRANSFORMINTERFACE_HPP
+#endif // POINTCLOUDTRANSFORM_POINTCLOUDTRANSFORMATIONINTERFACE_HPP
 
 /** @} */

@@ -14,7 +14,7 @@ namespace LidarBasedTracking
 /////////////////////////////// Public Methods ////////////////////////////////
 // Constructor ****************************************************************
 LidarBasedTracking::LidarBasedTracking() :
-    m_kf(12,6,0), m_isInitialized(false)
+    m_kf(12,6,0), m_isInitialized(false),  m_icp(nullptr)
 {
     m_parametersHelper.AddParameter<float>(
                 "LidarTrackParameters",

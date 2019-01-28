@@ -31,7 +31,7 @@
 #include <pcl/io/ply_io.h>
 #include <ctime>
 
-#include <Executors/PointCloudTransform/PointCloudTransformExecutor.hpp>
+#include <Executors/PointCloudTransformation/PointCloudTransformationExecutor.hpp>
 #include <Executors/PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
 
 //#include <Visualizers/PclVisualizer.hpp> //include for debug code
@@ -48,7 +48,7 @@ using namespace PoseWrapper;
  * --------------------------------------------------------------------------
  */
 CorrectAssemblyTester::CorrectAssemblyTester(const std::string& configurationFile, PointCloudAssemblyInterface* assemblyDfn, const std::string& transformerConfigurationFile, 
-	PointCloudTransformInterface* transformDfn)
+	PointCloudTransformationInterface* transformDfn)
 	{
 	this->transformerConfigurationFile = transformerConfigurationFile;
 	this->configurationFile = configurationFile;

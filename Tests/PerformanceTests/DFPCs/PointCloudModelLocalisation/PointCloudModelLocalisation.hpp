@@ -54,11 +54,11 @@ class PointCloudModelLocalisationTestInterface : public PerformanceTestInterface
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		PointCloudModelLocalisationTestInterface(std::string folderPath, std::string baseConfigurationFileName, std::string performanceMeasuresFileName, 
+		PointCloudModelLocalisationTestInterface(const std::string& folderPath, const std::string& baseConfigurationFileName, const std::string& performanceMeasuresFileName,
 			CDFF::DFPC::PointCloudModelLocalisationInterface* localizer);
 		~PointCloudModelLocalisationTestInterface();
 
-		void SetInputFilesPath(std::string baseFolderPath, std::string inputListFileName);
+		void SetInputFilesPath(const std::string& baseFolderPath, const std::string& inputListFileName);
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -93,7 +93,7 @@ class PointCloudModelLocalisationTestInterface : public PerformanceTestInterface
 		PointCloudWrapper::PointCloudConstPtr modelCloud;
 		PoseWrapper::Pose3D groundTruthPose;
 		PoseWrapper::Pose3D outputPose;
-		bool success;
+		bool success = false;
 
 		void ClearInputs();
 		bool SetNextInputs() override;

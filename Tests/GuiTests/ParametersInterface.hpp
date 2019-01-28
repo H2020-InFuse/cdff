@@ -64,7 +64,7 @@ class ParametersInterface
 		void AddParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double resolution);
 		void AddSignedParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double resolution);
         void AddSignedParameter(const std::string& groupName, const std::string& name, double defaultValue, double maxValue, double minValue, double resolution);
-        void AddStringParameter(const std::string& groupName, const std::string& name, std::string defaultValue);
+        void AddStringParameter(const std::string& groupName, const std::string& name, const std::string& defaultValue);
 		void CreateTrackbars();
 		void SaveToYaml(const std::string& filePath);
 

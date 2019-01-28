@@ -12,12 +12,13 @@ namespace DFN
 {
 
 //=====================================================================================================================
-ForceMeshGeneratorInterface::ForceMeshGeneratorInterface() :
-inArmBasePose(),
-inArmEndEffectorPose(),
-inArmEndEffectorWrench(),
-outPointCloud()
+ForceMeshGeneratorInterface::ForceMeshGeneratorInterface()
 {
+    asn1SccPose_Initialize(& inArmBasePose);
+    asn1SccPose_Initialize(& inArmEndEffectorPose);
+    asn1SccWrench_Initialize(& inArmEndEffectorWrench);
+
+    asn1SccPointcloud_Initialize(& outPointCloud);
 }
 
 //=====================================================================================================================

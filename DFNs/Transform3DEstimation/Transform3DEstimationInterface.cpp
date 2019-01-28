@@ -10,12 +10,10 @@ namespace CDFF
 namespace DFN
 {
 
-Transform3DEstimationInterface::Transform3DEstimationInterface() :
-inMatches(),
-outTransforms(),
-outSuccess(),
-outError()
+Transform3DEstimationInterface::Transform3DEstimationInterface()
 {
+    asn1SccCorrespondenceMaps3DSequence_Initialize(& inMatches);
+    asn1SccPosesSequence_Initialize(& outTransforms);
 }
 
 Transform3DEstimationInterface::~Transform3DEstimationInterface()

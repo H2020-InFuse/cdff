@@ -48,7 +48,7 @@
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
-#include <PointCloudTransform/PointCloudTransformInterface.hpp>
+#include <PointCloudTransformation/PointCloudTransformationInterface.hpp>
 #include <PointCloudFiltering/PointCloudFilteringInterface.hpp>
 #include <Registration3D/Registration3DInterface.hpp>
 
@@ -128,7 +128,7 @@ namespace Reconstruction3D
 		CDFF::DFN::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
 		CDFF::DFN::FeaturesMatching3DInterface* featuresMatcher3d;
 		CDFF::DFN::PointCloudAssemblyInterface* cloudAssembler;
-		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
+		CDFF::DFN::PointCloudTransformationInterface* cloudTransformer;
 		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
 		CDFF::DFN::Registration3DInterface* registrator3d;
 
