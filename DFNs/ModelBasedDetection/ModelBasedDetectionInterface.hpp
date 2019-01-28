@@ -15,7 +15,7 @@ namespace DFN
 {
 
 /**
- * DFN that performs model-based detection and pose detection. A training stage is required to learn some object characteristics, using the CAD model of the object. During the detection, the current object is matched to the training set, allowing to detect the object and to retrieve the corresponding trained pose.
+ * DFN that performs model-based detection and pose detection. The DFN detects an object of interest and computes the 3D pose of a camera with respect to the object model observed by the camera.
  */
 class ModelBasedDetectionInterface : public DFNCommonInterface
 {
