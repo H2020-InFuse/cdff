@@ -15,4 +15,4 @@ output_ports:
     doc: "Pose of the rover estimated from using SLAM"
     connections:
     - dfn: StereoSlamOrb
-      port: Pose
+      port: pose
