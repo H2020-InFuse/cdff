@@ -9,7 +9,7 @@
 #include "ModelBasedTrackerInterface.hpp"
 #include <PrimitiveFinder/BasicPrimitiveFinder.hpp>
 #include <PoseEstimator/PrimitivesPoseEstimator.hpp>
-#include <WeightingExpert/PoseWeighting.hpp>
+#include <PoseWeighting/KalmanFilter.hpp>
 #include <ImageFiltering/BackgroundSubtractorMOG2.hpp>
 
 namespace CDFF
@@ -34,7 +34,7 @@ namespace DFPC
         std::unique_ptr<CDFF::DFN::PrimitiveFinderInterface> m_circle_finder;
         std::unique_ptr<CDFF::DFN::PoseEstimatorInterface> m_circle_pose_estimator;
         std::unique_ptr<CDFF::DFN::PoseEstimatorInterface> m_ellipse_pose_estimator;
-        std::unique_ptr<CDFF::DFN::WeightingExpertInterface> m_weighting_expert;
+        std::unique_ptr<CDFF::DFN::PoseWeightingInterface> m_pose_weighting;
     };
 }
 }
