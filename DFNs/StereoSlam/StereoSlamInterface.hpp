@@ -36,7 +36,7 @@ namespace DFN
              * @return Pose The latest pose estimated by the SLAM system.
              * It is expressed relative to the pose of the first image.
              */
-            virtual const asn1SccTransformWithCovariance& PoseOutput() const;
+            virtual const asn1SccTransformWithCovariance& poseOutput() const;
 
         protected:
             asn1SccFramePair inImagePair;

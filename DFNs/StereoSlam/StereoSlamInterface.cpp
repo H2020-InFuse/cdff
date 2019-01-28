@@ -23,7 +23,7 @@ void StereoSlamInterface::framePairInput(const asn1SccFramePair& data)
     inImagePair = data;
 }
 
-const asn1SccTransformWithCovariance& StereoSlamInterface::PoseOutput() const
+const asn1SccTransformWithCovariance& StereoSlamInterface::poseOutput() const
 {
     return outPose;
 }

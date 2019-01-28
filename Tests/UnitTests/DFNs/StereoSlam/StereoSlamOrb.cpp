@@ -145,7 +145,7 @@ TEST_CASE( "Call to process (StereoSlamOrb)", "[process]" )
     slam->process();
 
     // Query output data from DFN
-    const asn1SccTransformWithCovariance& output = slam->PoseOutput();
+    const asn1SccTransformWithCovariance& output = slam->poseOutput();
 
     REQUIRE( output.metadata.msgVersion == transformWithCovariance_version );
     // Displacement between 2 test images is currently ~12cms
