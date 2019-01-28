@@ -59,9 +59,9 @@ implementations:
     activation:
         type: input_triggered
         value: inPrimitives
-  - dfn_id: weighting_expert
-    name: WeightingExpert
-    implementation: PoseWeighting
+  - dfn_id: pose_weighting
+    name: PoseWeighting
+    implementation: KalmanFilter
     activation:
         type: input_triggered
         value: inPoses
@@ -106,13 +106,13 @@ implementations:
         dfn_id: ellipse_pose_estimator
         port: outPoses
     to:
-        dfn_id: weighting_expert
+        dfn_id: pose_weighting
         port: inPoses
   - from:
         dfn_id: ellipse_pose_estimator
         port: outPoses
     to:
-        dfn_id: weighting_expert
+        dfn_id: pose_weighting
         port: inPoses
   input_connections:
   - dfpc_input: image
@@ -126,7 +126,7 @@ implementations:
     port: depth
   output_connections:
   - dfpc_output: outPose
-    dfn_id: weighting_expert
+    dfn_id: pose_weighting
     port: outPose
 - name: WheeledRobotTracker
   dfns:

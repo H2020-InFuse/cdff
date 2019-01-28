@@ -13,10 +13,10 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include <Converters/MatToFrameConverter.hpp>
-#include <WeightingExpert/PoseWeighting.hpp>
+#include <PoseWeighting/KalmanFilter.hpp>
 
 
-using namespace CDFF::DFN::WeightingExpert;
+using namespace CDFF::DFN::PoseWeighting;
 using namespace FrameWrapper;
 using namespace Converters;
 
@@ -42,7 +42,7 @@ TEST_CASE( "Call to process (PoseWeighting)", "[process]" )
     poses.arr[1].orient.arr[3] = 2;
 
     // Instantiate DFN
-    std::unique_ptr<PoseWeighting> pose_weighting (new PoseWeighting);
+    std::unique_ptr<KalmanFilter> pose_weighting (new KalmanFilter);
 
     // Send input data to DFN
     pose_weighting->posesInput(poses);
@@ -88,10 +88,10 @@ TEST_CASE( "Call to configure (PoseWeighting) ", "[configure]" )
     poses.arr[1].orient.arr[3] = 2;
 
     // Instantiate DFN
-    std::unique_ptr<PoseWeighting> pose_weighting (new PoseWeighting);
+    std::unique_ptr<KalmanFilter> pose_weighting (new KalmanFilter);
 
     // Setup DFN
-    pose_weighting->setConfigurationFile("../tests/ConfigurationFiles/DFNs/WeightingExpert/PoseWeighting.yaml");
+    pose_weighting->setConfigurationFile("../tests/ConfigurationFiles/DFNs/PoseWeighting/KalmanFilter.yaml");
     pose_weighting->configure();
 
     // Send input data to DFN

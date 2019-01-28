@@ -1,5 +1,5 @@
-name: WeightingExpert
-doc: DFN that estimates the pose of a joint given different predictions
+name: PoseWeighting
+doc: DFN that estimates the pose of an element given different predictions. This DFN contains a Kalman Filter and hence it considers the current inputs to the DFN as well as the previous ones.
 input_ports:
     - name: poses
       type: asn1SccPosesSequence
@@ -9,4 +9,4 @@ output_ports:
       type: asn1SccPose
       doc: Estimated pose of the joint
 implementations:
-    - PoseWeighting
+    - KalmanFilter
