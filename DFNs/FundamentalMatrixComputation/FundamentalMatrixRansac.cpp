@@ -51,6 +51,13 @@ void FundamentalMatrixRansac::configure()
 
 void FundamentalMatrixRansac::process()
 {
+	if (GetNumberOfCorrespondences(inMatches) < 8 )
+	{
+		SetZeroMatrix(outFundamentalMatrix);
+		outSuccess = false;
+		return;
+	}
+
 	// Read data from input port
 	std::vector<cv::Point2d> firstImagePointsVector;
 	std::vector<cv::Point2d> secondImagePointsVector;

@@ -10,6 +10,9 @@
     OrientationW: 1
   - Name: GeneralParameters
     PointCloudMapResolution: 0.01
+    UseAssemblerDfn: true
+    TrackedHistorySize: 5
+    SearchRadius: 50
 - Name: featureExtractor
   Type: FeaturesExtraction2D
   Implementation: OrbDetectorDescriptor
@@ -73,3 +76,17 @@
     FocalLengthY: 968.999694824
     PrinciplePointX: 635.139038086
     PrinciplePointY: 463.537109375
+- Name: cloudAssembler
+  Type: PointCloudAssembly
+  Implementation: NeighbourPointAverage
+  Parameters:
+  - Name: GeneralParameters
+    MaxNeighbourDistance: 0.01
+    UseIncrementalMode: true
+    UseDistanceFilter: true
+- Name: cloudTransformer
+  Type: PointCloudTransformation
+  Implementation: CartesianSystemTransform
+  Parameters:
+  - Name: GeneralParameters
+    Placeholder: false
