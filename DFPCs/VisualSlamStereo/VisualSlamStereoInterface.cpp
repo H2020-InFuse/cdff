@@ -11,9 +11,7 @@ namespace DFPC
 {
 
 VisualSlamStereoInterface::VisualSlamStereoInterface() :
-inLeftImage(),
-inRightImage(),
-inRoverPose(),
+inFramePair(),
 outEstimatedPose()
 {
 }
@@ -22,19 +20,9 @@ VisualSlamStereoInterface::~VisualSlamStereoInterface()
 {
 }
 
-void VisualSlamStereoInterface::leftImageInput(const asn1SccFrame& data)
+void VisualSlamStereoInterface::framePairInput(const asn1SccFramePair& data)
 {
-    inLeftImage = data;
-}
-
-void VisualSlamStereoInterface::rightImageInput(const asn1SccFrame& data)
-{
-    inRightImage = data;
-}
-
-void VisualSlamStereoInterface::roverPoseInput(const asn1SccTransformWithCovariance& data)
-{
-    inRoverPose = data;
+    inFramePair = data;
 }
 
 const asn1SccTransformWithCovariance& VisualSlamStereoInterface::estimatedPoseOutput() const
