@@ -8,6 +8,10 @@
 #include <opencv2/core/eigen.hpp>
 #include "LinemodTemplateGeneratorIteratorSinCos.hpp"
 
+namespace CDFF
+{
+namespace Common
+{
 namespace LinemodTraining
 {
 
@@ -100,5 +104,6 @@ void LinemodTemplateGeneratorIteratorSinCos::render(std::vector<cv::Mat> &source
 }
 
 }
-
+}
+}
 /** @} */

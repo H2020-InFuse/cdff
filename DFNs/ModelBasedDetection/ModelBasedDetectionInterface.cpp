@@ -32,6 +32,11 @@ const asn1SccPose& ModelBasedDetectionInterface::cameraOutput() const
     return outCamera;
 }
 
+const asn1SccMatrix2d& ModelBasedDetectionInterface::detectionBoundingBoxOutput() const
+{
+    return outDetectionBoundingBox;
+}
+
 bool ModelBasedDetectionInterface::successOutput() const
 {
     return outSuccess;

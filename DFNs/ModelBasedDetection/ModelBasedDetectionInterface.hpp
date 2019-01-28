@@ -40,11 +40,19 @@ public:
          * @return camera: the pose of the camera
          */
         virtual const asn1SccPose& cameraOutput() const;
+
+        /**
+         * Query value from output port "detectionBoundingBox"
+         * @return detectionBoundingBox: the detection bounding box, indexes (row,col) to access
+         *        the info are x=(0,0), y=(0,1), width=(1,0), height(1,1)
+         */
+        virtual const asn1SccMatrix2d& detectionBoundingBoxOutput() const;
+
         /**
          * Query value from output port "success"
          * @return success: boolean flag indicating successful Linemod
          *        detection. If false, the returned
-         *        pose is meaningless.
+         *        pose and bounding box are meaningless.
          */
         virtual bool successOutput() const;
 
@@ -52,6 +60,7 @@ protected:
     asn1SccFrame inimage;
     asn1SccFrame indepth;
     asn1SccPose outCamera;
+    asn1SccMatrix2d outDetectionBoundingBox;
     bool outSuccess = false;
 };
 

@@ -128,9 +128,16 @@ void Linemod::process()
     outSuccess = retDetection;
     if (outSuccess)
     {
+        //Camera pose
         PoseWrapper::Pose3DConstPtr tmp = matToPose3D.Convert(cameraPose);
         PoseWrapper::Copy(*tmp, outCamera);
         delete tmp;
+
+        //Detection bounding box
+        outDetectionBoundingBox.arr[0].arr[0] = detection.x;
+        outDetectionBoundingBox.arr[0].arr[1] = detection.y;
+        outDetectionBoundingBox.arr[1].arr[0] = detection.width;
+        outDetectionBoundingBox.arr[1].arr[1] = detection.height;
     }
 }
 

@@ -13,6 +13,10 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
+namespace CDFF
+{
+namespace Common
+{
 namespace LinemodTraining
 {
 
@@ -119,6 +123,8 @@ public:
     std::string _saveDir;
 };
 
+}
+}
 }
 #endif // LINEMODTRAINING_LINEMODTRAINIMPL_HPP
 

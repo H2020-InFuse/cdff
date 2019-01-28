@@ -11,6 +11,9 @@ output_ports:
     - name: camera
       type: asn1SccPose
       doc: the pose of the camera
+    - name: detectionBoundingBox
+      type: asn1SccMatrix2d
+      doc: the detection bounding box, indexes (row,col) to access the info are x=(0,0), y=(0,1), width=(1,0), height(1,1)
     - name: success
       type: bool
       doc: boolean flag indicating successful Linemod detection. If false, the returned pose is meaningless.

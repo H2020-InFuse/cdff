@@ -15,6 +15,10 @@ VTK_MODULE_INIT(vtkRenderingOpenGL2);
 
 #include "LinemodTemplateGenerator.hpp"
 
+namespace CDFF
+{
+namespace Common
+{
 namespace LinemodTraining
 {
 
@@ -153,5 +157,6 @@ void LinemodTemplateGenerator::RT_to_matrix4(const cv::Vec3d &R, const cv::Vec3d
 }
 
 }
-
+}
+}
 /** @} */

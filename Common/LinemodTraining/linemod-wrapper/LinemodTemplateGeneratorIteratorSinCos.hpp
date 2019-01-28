@@ -11,6 +11,10 @@
 
 #include "LinemodTemplateGenerator.hpp"
 
+namespace CDFF
+{
+namespace Common
+{
 namespace LinemodTraining
 {
 
@@ -80,7 +84,8 @@ public:
 };
 
 }
-
+}
+}
 #endif //LINEMODTRAINING_LINEMODTEMPLATEGENERATORITERATORSINCOS_HPP
 
 /** @} */

@@ -196,7 +196,7 @@ set(unittest_libraries catch
     cdff_dfpc_model_based_tracker
 )
 
-if(WITH_OPENCV_CONTRIB)
+if(HAVE_OPENCV_CONTRIB)
     set(unittest_libraries ${unittest_libraries}
             cdff_dfn_model_based_detection )
 endif()

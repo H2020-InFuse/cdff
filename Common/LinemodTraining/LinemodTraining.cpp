@@ -19,17 +19,18 @@ int main(int argc, char *argv[])
                             "{T_level1           | 8          | Parameter for sampling step T at level 1 of the pyramid in Linemod}"
                             "{renderWindowWidth  | 640        | Width of the rendering window}"
                             "{renderWindowHeight | 480        | Height of the rendering window}"
-                            "{fx                 | 682.559    | Camera focal length in x in pixel}"
-                            "{fy                 | 682.261    | Camera focal length in y in pixel}"
-                            "{cx                 | 349.218    | Camera principal point in x in pixel}"
-                            "{cy                 | 266.693    | Camera principal point in y in pixel}"
+                            "{fx                 | 682.559    | Camera focal length in x in pixel (for DLR stereo-cameras)}"
+                            "{fy                 | 682.261    | Camera focal length in y in pixel (for DLR stereo-cameras)}"
+                            "{cx                 | 349.218    | Camera principal point in x in pixel (for DLR stereo-cameras)}"
+                            "{cy                 | 266.693    | Camera principal point in y in pixel (for DLR stereo-cameras)}"
                             "{saveTrainingImg    |            | Path to the directory where to save the rendered images, or empty}";
 
     cv::CommandLineParser parser(argc, argv, keys);
 
-    parser.about("Generate training data for Linemod-based pose detection. The program takes as input the path to a CAD model file and addition parameters specified by command line option. \n"
-		 "All parameteres have a default value, please consult the help section for details on the parameters. \n"
-		 "The program generates detection CAD model templates, that will allow an appropriate detectot to identify the original CAD model object in RGB and depth images. \n"
+    parser.about("Generate training data for Linemod-based pose detection.\n"
+                 "The program takes as input the path to a CAD model file (without the extension) and additional parameters specified by command line options.\n"
+                 "All parameteres have a default value, please consult the help section for details on the parameters.\n"
+                 "The program generates detection CAD model templates, that will allow an appropriate detector to identify the original CAD model object in RGB and depth images.\n"
                  "It implements the Linemod training as proposed in 'Model Based Training, Detection and Pose Estimation of Texture-Less 3D Objects in Heavily Cluttered Scenes' by Hinterstoisser et al.\n"
                  "The idea is to render multiple views of the object of interest and sampled on a sphere.\n"
                  "Color and depth modalities are extracted and saved along with the corresponding pose that generated the view.\n"
@@ -106,7 +107,7 @@ int main(int argc, char *argv[])
     std::cout << "Path to the directory to save the rendered images: " << saveTrainingImg << std::endl;
 
     ///Linemod training///
-    LinemodTraining::LinemodBasedPoseDetector linemodDetector;
+    CDFF::Common::LinemodTraining::LinemodBasedPoseDetector linemodDetector;
     if (useDepth)
     {
         linemodDetector.InitAs3D(T_level0, T_level1);

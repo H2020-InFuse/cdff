@@ -95,6 +95,7 @@ TEST_CASE( "Call to process (Linemod detection color image)", "[process]" )
 
     // Query output data from DFN
     const PoseWrapper::Pose3D& camera = linemod->cameraOutput();
+    const asn1SccMatrix2d& boundingBox = linemod->detectionBoundingBoxOutput();
     bool success = linemod->successOutput();
 
     REQUIRE(success);
@@ -108,6 +109,11 @@ TEST_CASE( "Call to process (Linemod detection color image)", "[process]" )
             REQUIRE(R(i,j) == Approx(cameraPose.at<double>(i,j)).epsilon(1e-5));
         }
     }
+
+    REQUIRE(detection.tl().x == Approx(boundingBox.arr[0].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.tl().y == Approx(boundingBox.arr[0].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.width == Approx(boundingBox.arr[1].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.height == Approx(boundingBox.arr[1].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
 
     // Cleanup
     delete colorImage;
@@ -166,6 +172,7 @@ TEST_CASE( "Call to process (Linemod detection color + depth images)", "[process
 
     // Query output data from DFN
     const PoseWrapper::Pose3D& camera = linemod->cameraOutput();
+    const asn1SccMatrix2d& boundingBox = linemod->detectionBoundingBoxOutput();
     bool success = linemod->successOutput();
 
     REQUIRE(success);
@@ -179,6 +186,11 @@ TEST_CASE( "Call to process (Linemod detection color + depth images)", "[process
             REQUIRE(R(i,j) == Approx(cameraPose.at<double>(i,j)).epsilon(1e-5));
         }
     }
+
+    REQUIRE(detection.tl().x == Approx(boundingBox.arr[0].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.tl().y == Approx(boundingBox.arr[0].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.width == Approx(boundingBox.arr[1].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.height == Approx(boundingBox.arr[1].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
 
     // Cleanup
     delete colorImage;
@@ -238,6 +250,7 @@ TEST_CASE( "Call to process (Linemod detection color + depth images Blender)", "
 
     // Query output data from DFN
     const PoseWrapper::Pose3D& camera = linemod->cameraOutput();
+    const asn1SccMatrix2d& boundingBox = linemod->detectionBoundingBoxOutput();
     bool success = linemod->successOutput();
 
     REQUIRE(success);
@@ -251,6 +264,11 @@ TEST_CASE( "Call to process (Linemod detection color + depth images Blender)", "
             REQUIRE(R(i,j) == Approx(cameraPose.at<double>(i,j)).epsilon(1e-5));
         }
     }
+
+    REQUIRE(detection.tl().x == Approx(boundingBox.arr[0].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.tl().y == Approx(boundingBox.arr[0].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.width == Approx(boundingBox.arr[1].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.height == Approx(boundingBox.arr[1].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
 
     // Cleanup
     delete colorImage;

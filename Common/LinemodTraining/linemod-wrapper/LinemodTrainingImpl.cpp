@@ -12,6 +12,10 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/rgbd/linemod.hpp>
 
+namespace CDFF
+{
+namespace Common
+{
 namespace LinemodTraining
 {
 
@@ -162,5 +166,6 @@ void LinemodBasedPoseDetector::Train(const std::string& ply_path, bool isPLY,
 }
 
 }
-
+}
+}
 /** @} */

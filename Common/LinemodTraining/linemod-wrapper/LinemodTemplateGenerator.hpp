@@ -24,6 +24,10 @@
 
 #include <opencv2/opencv.hpp>
 
+namespace CDFF
+{
+namespace Common
+{
 namespace LinemodTraining
 {
 
@@ -141,7 +145,8 @@ public:
 };
 
 }
-
+}
+}
 #endif // LINEMODTRAINING_LINEMODTEMPLATEGENERATOR_HPP
 
 /** @} */
