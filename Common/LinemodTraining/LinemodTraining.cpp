@@ -27,7 +27,9 @@ int main(int argc, char *argv[])
 
     cv::CommandLineParser parser(argc, argv, keys);
 
-    parser.about("Generate training data for Linemod-based pose detection.\n"
+    parser.about("Generate training data for Linemod-based pose detection. The program takes as input the path to a CAD model file and addition parameters specified by command line option. \n"
+		 "All parameteres have a default value, please consult the help section for details on the parameters. \n"
+		 "The program generates detection CAD model templates, that will allow an appropriate detectot to identify the original CAD model object in RGB and depth images. \n"
                  "It implements the Linemod training as proposed in [Hinterstoisser2012].\n"
                  "The idea is to render multiple views of the object of interest and sampled on a sphere.\n"
                  "Color and depth modalities are extracted and saved along with the corresponding pose that generated the view.\n"
