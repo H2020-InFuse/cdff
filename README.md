@@ -1,3 +1,9 @@
+[![build status](
+https://gitlab.spaceapplications.com/InFuse/CDFF/badges/master/build.svg)](
+https://gitlab.spaceapplications.com/InFuse/CDFF)
+
+# CDFF
+
 This is the code repository for the Core and Support components of the Common Data Fusion Framework (CDFF) developed by the InFuse consortium. [Another repository](https://gitlab.spaceapplications.com/InFuse/CDFF_dev), named `CDFF_dev`, contains the Dev component.
 
 * The Core and Support components are those that must be deployed in your final robotic target system.
@@ -34,7 +40,7 @@ There are two ways you can build the CDFF (Core and Support components):
     $ docker pull h2020infuse/cdff:latest
     $ docker run \
       --name=cdff --hostname=cdff \
-      --env=DISPLAY=${DISPLAY} --volume=/tmp/.X11-unix:/tmp/.X11-unix \
+      --env=DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
       --volume=/dev/log:/dev/log \
       --cap-add=SYS_PTRACE --publish=2159:2159 \
       --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \

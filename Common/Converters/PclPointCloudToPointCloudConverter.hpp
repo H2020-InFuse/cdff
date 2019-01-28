@@ -33,6 +33,7 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <Types/CPP/PointCloud.hpp>
+#include <Errors/AssertOnTest.hpp>
 
 namespace Converters {
 

@@ -79,8 +79,8 @@ public:
     m_pointCloudToPclPointCloud;
     cv::KalmanFilter m_kf;
     pcl::PointCloud<targetPoint> m_targetCloud;
-    bool m_isInitialized;
-    long long m_timeOfLastMeasurement;
+    bool m_isInitialized = false;
+    long long m_timeOfLastMeasurement = 0;
     Eigen::Matrix4f m_transformGuess; // Transform guess used by the ICP
     pcl::IterativeClosestPoint<sourcePoint, targetPoint> *m_icp;
 

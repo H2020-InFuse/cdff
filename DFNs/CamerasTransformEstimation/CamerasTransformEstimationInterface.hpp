@@ -69,7 +69,7 @@ namespace DFN
             asn1SccMatrix3d inFundamentalMatrix;
             asn1SccCorrespondenceMap2D inMatches;
             asn1SccPose outTransform;
-            bool outSuccess;
+            bool outSuccess = false;
     };
 }
 }

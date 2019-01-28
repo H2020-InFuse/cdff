@@ -10,12 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-PerspectiveNPointSolvingInterface::PerspectiveNPointSolvingInterface() :
-inPoints(),
-inProjections(),
-outCamera(),
-outSuccess()
+PerspectiveNPointSolvingInterface::PerspectiveNPointSolvingInterface()
 {
+    asn1SccPointcloud_Initialize(& inPoints);
+    asn1SccVisualPointFeatureVector2D_Initialize(& inProjections);
+    asn1SccPose_Initialize(& outCamera);
 }
 
 PerspectiveNPointSolvingInterface::~PerspectiveNPointSolvingInterface()

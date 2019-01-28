@@ -16,7 +16,6 @@
 #include <CamerasTransformEstimation/CamerasTransformEstimationInterface.hpp>
 #include <ColorConversion/ColorConversion.hpp>
 #include <DisparityImage/DisparityImageInterface.hpp>
-#include <DisparityFiltering/DisparityFilteringInterface.hpp>
 #include <DisparityToPointCloud/DisparityToPointCloudInterface.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityInterface.hpp>
 #include <FeaturesDescription2D/FeaturesDescription2DInterface.hpp>
@@ -41,7 +40,7 @@
 #include <DepthFiltering/DepthFilteringInterface.hpp>
 #include <ForceMeshGenerator/ForceMeshGeneratorInterface.hpp>
 #include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
-#include <PointCloudTransform/PointCloudTransformInterface.hpp>
+#include <PointCloudTransformation/PointCloudTransformationInterface.hpp>
 #include <Voxelization/VoxelizationInterface.hpp>
 #include <PointCloudFiltering/PointCloudFilteringInterface.hpp>
 
@@ -68,7 +67,6 @@ namespace DFN
 			static CamerasTransformEstimationInterface* CreateCamerasTransformEstimation(const std::string& dfnImplementation);
             static ColorConversionInterface* CreateColorConversion(const std::string& dfnImplementation);
             static DisparityImageInterface* CreateDisparityImage(const std::string& dfnImplementation);
-            static DisparityFilteringInterface* CreateDisparityFiltering(const std::string& dfnImplementation);
             static DisparityToPointCloudInterface* CreateDisparityToPointCloud(const std::string& dfnImplementation);
             static DisparityToPointCloudWithIntensityInterface* CreateDisparityToPointCloudWithIntensity(const std::string& dfnImplementation);
 			static FeaturesDescription2DInterface* CreateFeaturesDescription2D(const std::string& dfnImplementation);
@@ -93,7 +91,7 @@ namespace DFN
 			static DepthFilteringInterface* CreateDepthFiltering(const std::string& dfnImplementation);
 			static ForceMeshGeneratorInterface* CreateForceMeshGenerator(const std::string& dfnImplementation);
 			static PointCloudAssemblyInterface* CreatePointCloudAssembly(const std::string& dfnImplementation);
-			static PointCloudTransformInterface* CreatePointCloudTransform(const std::string& dfnImplementation);
+			static PointCloudTransformationInterface* CreatePointCloudTransformation(const std::string& dfnImplementation);
 			static VoxelizationInterface* CreateVoxelization(const std::string& dfnImplementation);
 			static PointCloudFilteringInterface* CreatePointCloudFiltering(const std::string& dfnImplementation);
 	};

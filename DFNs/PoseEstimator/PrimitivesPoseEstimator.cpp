@@ -32,7 +32,7 @@ namespace PoseEstimator
 {
 
 PrimitivesPoseEstimator::PrimitivesPoseEstimator()
-    : m_count(0)
+    : m_count(0), parameters(DEFAULT_PARAMETERS)
 {
     configurationFilePath = "";
     parametersHelper.AddParameter<int>("GeneralParameters", "NumFrames", parameters.numFrames, DEFAULT_PARAMETERS.numFrames);

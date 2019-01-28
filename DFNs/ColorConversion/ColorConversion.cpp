@@ -14,6 +14,7 @@ namespace ColorConversion
 {
 
 ColorConversion::ColorConversion()
+: parameters(DEFAULT_PARAMETERS)
 {
     parametersHelper.AddParameter<int>("ColorConversionParams", "targetMode", parameters.targetMode, DEFAULT_PARAMETERS.targetMode);
 

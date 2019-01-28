@@ -92,7 +92,7 @@ if(PCL_FOUND)
     DFNs/FeaturesMatching3D/Icp3D.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
     DFNs/PointCloudFiltering/StatisticalOutlierRemoval.cpp
-    DFNs/PointCloudTransform/CartesianSystemTransform.cpp
+    DFNs/PointCloudTransformation/CartesianSystemTransform.cpp
     DFNs/Registration3D/Icp3D.cpp
     DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
     DFNs/PointCloudAssembly/NeighbourSinglePointAverage.cpp
@@ -118,7 +118,6 @@ endif()
 if(Edres-Wrapper_FOUND)
     set(unittest_sources ${unittest_sources}
         DFNs/DisparityImage/DisparityImageEdres.cpp
-        DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
         DFNs/DisparityToPointCloud/DisparityToPointCloudEdres.cpp
         DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.cpp
         DFNs/ImageDegradation/ImageDegradationEdres.cpp
@@ -146,7 +145,7 @@ set(unittest_libraries catch
     cdff_logger
     cdff_types
     cdff_dfn_dfnexecutors
-    cdff_dfn_point_cloud_transform
+    cdff_dfn_point_cloud_transformation
     cdff_dfn_depth_filtering
     cdff_dfn_cameras_transform_estimation
     cdff_dfn_color_conversion

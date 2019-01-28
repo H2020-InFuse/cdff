@@ -12,6 +12,8 @@ namespace DFN
 
 WeightingExpertInterface::WeightingExpertInterface()
 {
+    asn1SccPosesSequence_Initialize(& inPoses);
+    asn1SccPose_Initialize(& outPose);
 }
 
 WeightingExpertInterface::~WeightingExpertInterface()

@@ -10,12 +10,12 @@ namespace CDFF
 namespace DFN
 {
 
-FeaturesDescription3DInterface::FeaturesDescription3DInterface() :
-inPointcloud(),
-inFeatures(),
-inNormals(),
-outFeatures()
+FeaturesDescription3DInterface::FeaturesDescription3DInterface()
 {
+    asn1SccPointcloud_Initialize(&inPointcloud) ;
+    asn1SccVisualPointFeatureVector3D_Initialize(&inFeatures) ;
+    asn1SccPointcloud_Initialize(&inNormals) ;
+    asn1SccVisualPointFeatureVector3D_Initialize(&outFeatures) ;
 }
 
 FeaturesDescription3DInterface::~FeaturesDescription3DInterface()

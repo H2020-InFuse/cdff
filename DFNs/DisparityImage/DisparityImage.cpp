@@ -175,33 +175,33 @@ void DisparityImage::process()
 #endif
 
     // Convert Mat to ASN.1
-    outRawDisparity.metadata.msgVersion = frame_Version;
-    outRawDisparity.metadata = inFramePair.left.metadata;
-    outRawDisparity.intrinsic = inFramePair.left.intrinsic;
-    outRawDisparity.extrinsic = inFramePair.left.extrinsic;
+    outDisparity.metadata.msgVersion = frame_Version;
+    outDisparity.metadata = inFramePair.left.metadata;
+    outDisparity.intrinsic = inFramePair.left.intrinsic;
+    outDisparity.extrinsic = inFramePair.left.extrinsic;
 
-    outRawDisparity.metadata.mode = asn1Sccmode_UNDEF;
-    outRawDisparity.metadata.pixelModel = asn1Sccpix_DISP;
-    outRawDisparity.metadata.errValues.arr[0].type = asn1Sccerror_UNDEFINED;
-    outRawDisparity.metadata.errValues.arr[0].value = -16.0;
-    outRawDisparity.metadata.errValues.nCount = 1;
+    outDisparity.metadata.mode = asn1Sccmode_UNDEF;
+    outDisparity.metadata.pixelModel = asn1Sccpix_DISP;
+    outDisparity.metadata.errValues.arr[0].type = asn1Sccerror_UNDEFINED;
+    outDisparity.metadata.errValues.arr[0].value = -16.0;
+    outDisparity.metadata.errValues.nCount = 1;
 
     double minDisp, maxDisp;
     cv::minMaxLoc(disparity, &minDisp, &maxDisp);
-    outRawDisparity.metadata.pixelCoeffs.arr[0] = 16.0;
-    outRawDisparity.metadata.pixelCoeffs.arr[1] = 0.0;
-    outRawDisparity.metadata.pixelCoeffs.arr[2] = inFramePair.baseline;
-    outRawDisparity.metadata.pixelCoeffs.arr[3] = maxDisp;
-    outRawDisparity.metadata.pixelCoeffs.arr[4] = minDisp;
+    outDisparity.metadata.pixelCoeffs.arr[0] = 16.0;
+    outDisparity.metadata.pixelCoeffs.arr[1] = 0.0;
+    outDisparity.metadata.pixelCoeffs.arr[2] = inFramePair.baseline;
+    outDisparity.metadata.pixelCoeffs.arr[3] = maxDisp;
+    outDisparity.metadata.pixelCoeffs.arr[4] = minDisp;
 
-    outRawDisparity.data.msgVersion = array3D_Version;
-    outRawDisparity.data.channels = static_cast<asn1SccT_UInt32>(disparity.channels());
-    outRawDisparity.data.rows = static_cast<asn1SccT_UInt32>(inFramePair.left.data.rows);
-    outRawDisparity.data.cols = static_cast<asn1SccT_UInt32>(inFramePair.left.data.cols);
-    outRawDisparity.data.depth = static_cast<asn1SccArray3D_depth_t>(disparity.depth());
-    outRawDisparity.data.rowSize = disparity.step[0];
-    outRawDisparity.data.data.nCount =  static_cast<int>(outRawDisparity.data.rows * outRawDisparity.data.rowSize);
-    memcpy(outRawDisparity.data.data.arr, disparity.data, static_cast<size_t>(outRawDisparity.data.data.nCount));
+    outDisparity.data.msgVersion = array3D_Version;
+    outDisparity.data.channels = static_cast<asn1SccT_UInt32>(disparity.channels());
+    outDisparity.data.rows = static_cast<asn1SccT_UInt32>(inFramePair.left.data.rows);
+    outDisparity.data.cols = static_cast<asn1SccT_UInt32>(inFramePair.left.data.cols);
+    outDisparity.data.depth = static_cast<asn1SccArray3D_depth_t>(disparity.depth());
+    outDisparity.data.rowSize = disparity.step[0];
+    outDisparity.data.data.nCount =  static_cast<int>(outDisparity.data.rows * outDisparity.data.rowSize);
+    memcpy(outDisparity.data.data.arr, disparity.data, static_cast<size_t>(outDisparity.data.data.nCount));
 }
 
 void DisparityImage::ValidateParameters()

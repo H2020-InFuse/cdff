@@ -12,6 +12,8 @@ namespace DFN
 
 ImageDegradationInterface::ImageDegradationInterface()
 {
+    asn1SccFrame_Initialize(& inOriginalImage);
+    asn1SccFrame_Initialize(& outDegradedImage);
 }
 
 ImageDegradationInterface::~ImageDegradationInterface()

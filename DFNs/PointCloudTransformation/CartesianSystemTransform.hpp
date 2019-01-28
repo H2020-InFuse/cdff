@@ -10,7 +10,7 @@
 #ifndef POINTCLOUDTRANSFORM_CARTESIANSYSTEMTRANSFORM_HPP
 #define POINTCLOUDTRANSFORM_CARTESIANSYSTEMTRANSFORM_HPP
 
-#include "PointCloudTransformInterface.hpp"
+#include "PointCloudTransformationInterface.hpp"
 
 #include <Types/CPP/PointCloud.hpp>
 #include <Types/CPP/Pose.hpp>
@@ -29,14 +29,14 @@ namespace CDFF
 {
 namespace DFN
 {
-namespace PointCloudTransform
+namespace PointCloudTransformation
 {
 	/**
 	 * Applying cartesian transform in order to view the point cloud in the external reference system
 	 *
 	 * @param placeholder, no meaning just a placeholder so that it is easier to add parameters later
 	 */
-	class CartesianSystemTransform : public PointCloudTransformInterface
+	class CartesianSystemTransform : public PointCloudTransformationInterface
 	{
 		public:
 

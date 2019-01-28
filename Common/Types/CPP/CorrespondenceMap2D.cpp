@@ -106,10 +106,10 @@ void RemoveCorrespondences(CorrespondenceMap2D& correspondenceMap, std::vector<B
 	static const std::string errorMessage = "Remove Correspondences error, the second input was not an ORDERED list or some index is not within range";
 	for(int listIndex = 1; listIndex < elementsToRemove-1; listIndex++)
 		{
-		ASSERT( correspondenceIndexOrderedList.at(listIndex-1) < correspondenceIndexOrderedList.at(listIndex), errorMessage);
-		ASSERT(	correspondenceIndexOrderedList.at(listIndex) < correspondenceIndexOrderedList.at(listIndex+1), errorMessage);
+		ASSERT_ON_TEST( correspondenceIndexOrderedList.at(listIndex-1) < correspondenceIndexOrderedList.at(listIndex), errorMessage);
+		ASSERT_ON_TEST(	correspondenceIndexOrderedList.at(listIndex) < correspondenceIndexOrderedList.at(listIndex+1), errorMessage);
 		}
-	ASSERT( correspondenceIndexOrderedList.at(elementsToRemove-1) < correspondenceMap.nCount, errorMessage);
+	ASSERT_ON_TEST( correspondenceIndexOrderedList.at(elementsToRemove-1) < correspondenceMap.nCount, errorMessage);
 	BaseTypesWrapper::T_UInt32 firstIndex = correspondenceIndexOrderedList.at(0);
 
 	//Removing elements 

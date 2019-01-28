@@ -10,10 +10,10 @@ namespace CDFF
 namespace DFN
 {
 
-FeaturesExtraction2DInterface::FeaturesExtraction2DInterface() :
-inFrame(),
-outFeatures()
+FeaturesExtraction2DInterface::FeaturesExtraction2DInterface()
 {
+    asn1SccFrame_Initialize(&inFrame) ;
+    asn1SccVisualPointFeatureVector2D_Initialize(&outFeatures) ;
 }
 
 FeaturesExtraction2DInterface::~FeaturesExtraction2DInterface()

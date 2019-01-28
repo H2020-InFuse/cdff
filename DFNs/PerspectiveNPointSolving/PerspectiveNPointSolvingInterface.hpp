@@ -56,7 +56,7 @@ namespace DFN
             asn1SccPointcloud inPoints;
             asn1SccVisualPointFeatureVector2D inProjections;
             asn1SccPose outCamera;
-            bool outSuccess;
+            bool outSuccess = false;
     };
 }
 }

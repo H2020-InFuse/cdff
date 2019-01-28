@@ -56,7 +56,7 @@
 #include <FeaturesMatching3D/Icp3D.hpp>
 #include <FeaturesMatching3D/Ransac3D.hpp>
 #include <PointCloudFiltering/StatisticalOutlierRemoval.hpp>
-#include <PointCloudTransform/CartesianSystemTransform.hpp>
+#include <PointCloudTransformation/CartesianSystemTransform.hpp>
 #include <Registration3D/Icp3D.hpp>
 #include <StereoReconstruction/ScanlineOptimization.hpp>
 #include <PointCloudAssembly/NeighbourPointAverage.hpp>
@@ -79,7 +79,6 @@
 #ifdef HAVE_EDRES
 #include <ImageDegradation/ImageDegradationEdres.hpp>
 #include <DisparityImage/DisparityImageEdres.hpp>
-#include <DisparityFiltering/DisparityFilteringEdres.hpp>
 #include <DisparityToPointCloud/DisparityToPointCloudEdres.hpp>
 #include <DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.hpp>
 #include <ImageRectification/ImageRectificationEdres.hpp>
@@ -109,10 +108,6 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
         	return CreateColorConversion(dfnImplementation);
 	}
-    	else if (dfnType == "DisparityFiltering")
-    	{
-       		return CreateDisparityFiltering(dfnImplementation);
-    	}
     	else if (dfnType == "DisparityImage")
     	{
         	return CreateDisparityImage(dfnImplementation);
@@ -213,9 +208,9 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreatePointCloudAssembly(dfnImplementation);
 	}
-	else if (dfnType == "PointCloudTransform")
+	else if (dfnType == "PointCloudTransformation")
 	{
-		return CreatePointCloudTransform(dfnImplementation);
+		return CreatePointCloudTransformation(dfnImplementation);
 	}
 	else if (dfnType == "Voxelization")
 	{
@@ -289,18 +284,6 @@ DisparityImageInterface* DFNsBuilder::CreateDisparityImage(const std::string& df
     }
 #endif
     ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityImage implementation");
-    return NULL;
-}
-
-DisparityFilteringInterface* DFNsBuilder::CreateDisparityFiltering(const std::string& dfnImplementation)
-{
-#ifdef HAVE_EDRES
-    if (dfnImplementation == "DisparityFilteringEdres")
-    {
-        return new DisparityFiltering::DisparityFilteringEdres;
-    }
-#endif
-    ASSERT(false, "DFNsBuilder Error: unhandled DFN DisparityFiltering implementation");
     return NULL;
 }
 
@@ -717,15 +700,15 @@ PointCloudAssemblyInterface* DFNsBuilder::CreatePointCloudAssembly(const std::st
 	return NULL;
 }
 
-PointCloudTransformInterface* DFNsBuilder::CreatePointCloudTransform(const std::string& dfnImplementation)
+PointCloudTransformationInterface* DFNsBuilder::CreatePointCloudTransformation(const std::string& dfnImplementation)
 {
 #ifdef HAVE_PCL
 	if (dfnImplementation == "CartesianSystemTransform")
 	{
-		return new PointCloudTransform::CartesianSystemTransform;
+		return new PointCloudTransformation::CartesianSystemTransform;
 	}
 #endif
-	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudTransform implementation");
+	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudTransformation implementation");
 	return NULL;
 }
 

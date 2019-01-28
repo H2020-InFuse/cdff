@@ -12,6 +12,8 @@ namespace DFN
 
 ImageRectificationInterface::ImageRectificationInterface()
 {
+    asn1SccFrame_Initialize(& inOriginalImage);
+    asn1SccFrame_Initialize(& outRectifiedImage);
 }
 
 ImageRectificationInterface::~ImageRectificationInterface()

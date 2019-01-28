@@ -34,7 +34,7 @@ docker() {
       shift
       sudo -H /usr/bin/docker run \
         --name=cdff --hostname=cdff \
-        --env=DISPLAY=${DISPLAY} --volume=/tmp/.X11-unix:/tmp/.X11-unix \
+        --env=DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
         --volume=/dev/log:/dev/log \
         --cap-add=SYS_PTRACE --publish=2159:2159 \
         --volume=/etc/passwd:/etc/passwd:ro --volume=/etc/group:/etc/group:ro \
@@ -62,7 +62,7 @@ docker() {
 # --name=cdff --hostname=cdff
 #
 # Optional: if you need graphics display
-# --env=DISPLAY=${DISPLAY} --volume=/tmp/.X11-unix:/tmp/.X11-unix
+# --env=DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix
 #
 # Optional: allow messages from inside the container to be logged outside
 # --volume=/dev/log:/dev/log

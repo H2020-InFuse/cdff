@@ -51,8 +51,17 @@ class PclPointCloudToVisualPointFeatureVector3DConverter
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const SupportTypes::PointCloudWithFeatures& featuresCloud);
-		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DSharedConstPtr ConvertShared(const SupportTypes::PointCloudWithFeatures& featuresCloud);
+		template <class FeatureType>
+		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DSharedConstPtr ConvertShared(const SupportTypes::PointCloudWithFeatures<FeatureType>& featuresCloud)
+			{
+			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr conversion = Convert(featuresCloud);
+			VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DSharedConstPtr sharedConversion(conversion);
+			return sharedConversion;
+			}
+
+		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const SupportTypes::PointCloudWithFeatures<SupportTypes::MaxSizeHistogram >& featuresCloud);
+		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const SupportTypes::PointCloudWithFeatures<pcl::SHOT352 >& featuresCloud);
+		const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr Convert(const SupportTypes::PointCloudWithFeatures<pcl::PFHSignature125 >& featuresCloud);
 
 	/* --------------------------------------------------------------------
 	 * Protected
