@@ -130,6 +130,7 @@ endif()
 
 if(WITH_LIBORBSLAM)
    set(unittest_sources ${unittest_sources} DFNs/StereoSlam/StereoSlamOrb.cpp)
+   set(unittest_sources ${unittest_sources} DFPCs/VisualSlamStereo/VisualSlamStereo.cpp)
 endif()
 
 if(HAVE_OPENCV_CONTRIB)
@@ -190,6 +191,7 @@ set(unittest_libraries catch
     cdff_dfpc_point_cloud_model_localisation
     cdff_dfpc_haptic_scanning
     cdff_dfpc_model_based_tracker
+    cdff_dfpc_visual_slam_stereo
 )
 
 if(WITH_OPENCV_CONTRIB)
