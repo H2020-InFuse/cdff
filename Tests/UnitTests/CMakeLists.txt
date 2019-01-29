@@ -191,7 +191,6 @@ set(unittest_libraries catch
     cdff_dfpc_point_cloud_model_localisation
     cdff_dfpc_haptic_scanning
     cdff_dfpc_model_based_tracker
-    cdff_dfpc_visual_slam_stereo
 )
 
 if(WITH_OPENCV_CONTRIB)
@@ -207,6 +206,11 @@ endif()
 if(OPENCV_FOUND)
     set(unittest_libraries ${unittest_libraries}
             cdff_dfn_primitive_finder opencv_highgui )
+endif()
+
+if(WITH_LIBORBSLAM)
+    set(unittest_libraries ${unittest_libraries}
+            cdff_dfpc_visual_slam_stereo )
 endif()
 
 # Make the Catch executable that runs the unit tests
