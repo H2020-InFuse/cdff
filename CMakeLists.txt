@@ -403,17 +403,17 @@ find_package(Pangolin QUIET)
 
 if(Pangolin_FOUND)
   find_package_mode(Pangolin)
-  if(EXISTS ${CMAKE_SOURCE_DIR}/Core/liborbslam)
-    message(STATUS "Building Core/liborbslam")
-    option(WITH_LIBORBSLAM "Build Core/liborbslam" ON)
+  if(EXISTS ${CMAKE_SOURCE_DIR}/Common/Core/liborbslam)
+    message(STATUS "Building Common/Core/liborbslam")
+    set(WITH_LIBORBSLAM ON)
     add_definitions(-DHAVE_LIBORBSLAM)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/Core/liborbslam)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/Common/Core/liborbslam)
   endif()
 
 else()
 
-  option(WITH_LIBORBSLAM "Build Core/liborbslam" OFF)
-  message(STATUS "Pangolin not found: Core/liborbslam will not be built")
+  set(WITH_LIBORBSLAM OFF)
+  message(STATUS "Pangolin not found: Common/Core/liborbslam will not be built")
 
 endif()
 
