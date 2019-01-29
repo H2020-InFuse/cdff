@@ -73,6 +73,10 @@
 #include <Registration3D/IcpCC.hpp>
 #endif
 
+#ifdef HAVE_LIBORBSLAM
+#include <StereoSlam/StereoSlamOrb.hpp>
+#endif
+
 #include <FeaturesMatching3D/BestDescriptorMatch.hpp>
 #include <ForceMeshGenerator/ThresholdForce.hpp>
 
@@ -220,6 +224,10 @@ DFNCommonInterface* DFNsBuilder::CreateDFN(const std::string& dfnType, const std
 	{
 		return CreatePointCloudFiltering(dfnImplementation);
 	}	
+    else if (dfnType == "StereoSlam")
+    {
+        return CreateStereoSlam(dfnImplementation);
+    }
 
 	PRINT_TO_LOG("DFN: ", dfnType);
 	PRINT_TO_LOG("DFN implementation: ", dfnImplementation);
@@ -734,6 +742,18 @@ PointCloudFilteringInterface* DFNsBuilder::CreatePointCloudFiltering(const std::
 #endif
 	ASSERT(false, "DFNsBuilder Error: unhandled DFN PointCloudFiltering implementation");
 	return NULL;
+}
+
+StereoSlamInterface* DFNsBuilder::CreateStereoSlam(const std::string& dfnImplementation)
+{
+#ifdef HAVE_LIBORBSLAM
+    if (dfnImplementation == "StereoSlamOrb")
+    {
+        return new StereoSlam::StereoSlamOrb;
+    }
+#endif
+    ASSERT(false, "DFNsBuilder Error: unhandled DFN StereoSlam implementation");
+    return NULL;
 }
 
 }
