@@ -40,7 +40,7 @@
   stage: docker.ci
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.ci cdff-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
+   - ./docker-builder.sh Dockerfile.ci cdff-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE MAGUSER=$EDRES_USER MAGPASS=$EDRES_PASSWORD
   only:
    changes:
     - Tools/Docker/Dockerfile.ci
@@ -83,6 +83,19 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.pangolin
+
+ docker:cdff-edres:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.ci
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.edres cdff-edres SHA=$CI_COMMIT_SHA $FORCE $NOCACHE MAGUSER=$EDRES_USER MAGPASS=$EDRES_PASSWORD
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.edres
 
  docker:cdff-opencv-contrib:
   <<: *connect
@@ -225,6 +238,15 @@
   <<: *configure
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-gdalwrap:latest
+  stage: debug-build
+  dependencies:
+   - generate:asn
+  when: manual
+
+ build:cdff-edres:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-edres:latest
   stage: debug-build
   dependencies:
    - generate:asn
