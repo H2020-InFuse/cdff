@@ -12,6 +12,8 @@ namespace DFN
 
 StereoSlamInterface::StereoSlamInterface()
 {
+    asn1SccFramePair_Initialize(&inImagePair);
+    asn1SccTransformWithCovariance_Initialize(&outPose);
 }
 
 StereoSlamInterface::~StereoSlamInterface()
