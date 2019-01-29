@@ -4,14 +4,13 @@ set(VISUAL_SLAM_STEREO_DEPENDENCIES "cdff_dfpc_configurator")
 
 if(OpenCV_FOUND)
   # OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-  set(STEREO_SLAM_DEPENDENCIES ${STEREO_SLAM_DEPENDENCIES} ${OpenCV_LIBS})
+  set(STEREO_SLAM_DEPENDENCIES ${STEREO_SLAM_DEPENDENCIES} opencv_core opencv_features2d opencv_flann opencv_highgui opencv_imgproc opencv_calib3d)
 
   # Look for Core/liborbslam library, build this DFPC if found
   if(WITH_LIBORBSLAM)
     find_package(LIBORBSLAM QUIET)
     if(LIBORBSLAM_FOUND)
       set(VISUAL_SLAM_STEREO_SOURCES ${VISUAL_SLAM_STEREO_SOURCES} "VisualSlamStereo.cpp")
-      set(VISUAL_SLAM_STEREO_INCLUDE_DIRS ${VISUAL_SLAM_STEREO_INCLUDE_DIRS} ${STEREO_SLAM_INCLUDE_DIRS})
       set(VISUAL_SLAM_STEREO_DEPENDENCIES ${VISUAL_SLAM_STEREO_DEPENDENCIES}
 		${STEREO_SLAM_DEPENDENCIES} 
 		"cdff_dfn_dfnexecutors"

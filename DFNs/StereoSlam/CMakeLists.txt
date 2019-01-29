@@ -5,7 +5,7 @@ set(STEREO_SLAM_DEPENDENCIES "cdff_types" "yaml-cpp" "cdff_helpers")
 # Look for OpenCV
 if(OpenCV_FOUND)
   # OpenCV uses imported targets, no need for the INCLUDE_DIRS directory in target_include_directories
-  set(STEREO_SLAM_DEPENDENCIES ${STEREO_SLAM_DEPENDENCIES} ${OpenCV_LIBS})
+  set(STEREO_SLAM_DEPENDENCIES ${STEREO_SLAM_DEPENDENCIES} opencv_core opencv_features2d opencv_flann opencv_highgui opencv_imgproc opencv_calib3d)
 
   # Look for Core/liborbslam library, build this DFN if found
   if(WITH_LIBORBSLAM)
