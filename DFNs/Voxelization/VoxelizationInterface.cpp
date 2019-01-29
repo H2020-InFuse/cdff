@@ -14,6 +14,8 @@ VoxelizationInterface::VoxelizationInterface() :
 inDepth(),
 outOctree()
 {
+    asn1SccFrame_Initialize(& inDepth);
+    asn1SccOctree_Initialize(& outOctree);
 }
 
 VoxelizationInterface::~VoxelizationInterface()

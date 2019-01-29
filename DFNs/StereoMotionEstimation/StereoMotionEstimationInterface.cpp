@@ -12,6 +12,9 @@ namespace DFN
 
 StereoMotionEstimationInterface::StereoMotionEstimationInterface()
 {
+    asn1SccFramePair_Initialize(& inFramePair);
+    asn1SccFrame_Initialize(& inDisparity);
+    asn1SccTransformWithCovariance_Initialize(& outPose);
 }
 
 StereoMotionEstimationInterface::~StereoMotionEstimationInterface()

@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 	ASSERT(argc >= 6, USAGE)
 	
 	std::string configurationFileFolderPath, configurationFileName, outputFileName;
-	std::string imageListFolderPath, imageListFileName, useReferenceDisparity;
+	std::string imageListFolderPath, imageListFileName;
 	configurationFileFolderPath = argv[1];
 	configurationFileName = argv[2];
 	outputFileName = argv[3];

@@ -11,7 +11,11 @@ namespace DFN
 {
 
 StereoRectificationInterface::StereoRectificationInterface()
+:              inOriginalStereoPair(),
+               outRectifiedStereoPair()
 {
+    asn1SccFramePair_Initialize(& inOriginalStereoPair);
+    asn1SccFramePair_Initialize(& outRectifiedStereoPair);
 }
 
 StereoRectificationInterface::~StereoRectificationInterface()

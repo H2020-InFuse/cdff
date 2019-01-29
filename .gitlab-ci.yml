@@ -10,9 +10,10 @@
   - docker.closed
   - docker.external
   - generation
-  - analyse
+  - configure
   - build
-  - debug-build
+  - analyse
+  - report
   - test
   - deploy
 
@@ -67,7 +68,7 @@
   stage: docker.external
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.dev-ci cdff-dev-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
+   - ./docker-builder.sh Dockerfile.dev-ci cdff-dev-ci SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
   only:
    changes:
     - Tools/Docker/Dockerfile.dev-ci
@@ -99,7 +100,7 @@
     - Tools/Docker/Dockerfile.valgrind
 
  generate:asn:
-  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
+  image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage : generation
   script:
     - Tools/ASN.1/GeneratorScript.sh
@@ -108,11 +109,21 @@
     - Common/Types/C/
    expire_in: 4 weeks
 
- .build:configure: &configure
+ .configure:release: &configure_release
   before_script:
    - echo "Docker Image (version:) " $IMAGE_VERSION ", (sha:)" $IMAGE_SHA
    - "mkdir -p build && cd build"
    - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
+   - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
+   - "JOBS=$((CPUS/2))"
+   - "JOBS=$((JOBS > 0 ? JOBS : 1))"
+   - "cd .."
+
+ .configure:debug: &configure_debug
+  before_script:
+   - echo "Docker Image (version:) " $IMAGE_VERSION ", (sha:)" $IMAGE_SHA
+   - "mkdir -p build && cd build"
+   - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_C_FLAGS_DEBUG:STRING=-ggdb3 -DCMAKE_CXX_FLAGS_DEBUG:STRING=-ggdb3 .."
    - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
    - "JOBS=$((CPUS/2))"
    - "JOBS=$((JOBS > 0 ? JOBS : 1))"
@@ -124,95 +135,106 @@
    - "make --jobs=${JOBS} --output-sync=target"
    - "cd .."
 
- build:cdff-base:system:
-  <<: *configure
+ configure:cdff-base:
+  <<: *configure_release
+  image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
+  stage: configure
+  dependencies:
+   - generate:asn
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
+
+ configure:cdff-open:
+  <<: *configure_release
+  image: nexus.spaceapplications.com/repository/infuse/cdff-open:latest
+  stage: configure
+  dependencies:
+   - generate:asn
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
+
+ configure:cdff-closed:
+  <<: *configure_release
+  image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
+  stage: configure
+  dependencies:
+   - generate:asn
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
+
+ configure:cdff-closed:debug:
+  <<: *configure_debug
+  image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
+  stage: configure
+  dependencies:
+   - generate:asn
+  only:
+    - merge_requests
+    - master
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
+
+ build:cdff-base:
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage: build
   dependencies:
    - generate:asn
+   - configure:cdff-base
   artifacts:
    paths:
     - build/
    expire_in: 4 weeks
 
- build:cdff-ci:system:
-  <<: *configure
+ build:cdff-open:
   <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
+  image: nexus.spaceapplications.com/repository/infuse/cdff-open:latest
   stage: build
   dependencies:
    - generate:asn
+   - configure:cdff-open
   artifacts:
    paths:
     - build/
    expire_in: 4 weeks
 
- build:cdff-pangolin:system:
-  <<: *configure
+ build:cdff-closed:
   <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-pangolin:latest
-  stage: debug-build
+  image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
+  stage: build
   dependencies:
    - generate:asn
-  when: manual
+   - configure:cdff-closed
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
 
- build:cdff-gdalwrap:system:
-  <<: *configure
+ build:cdff-closed:debug:
   <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-gdalwrap:latest
-  stage: debug-build
+  image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
+  stage: build
   dependencies:
    - generate:asn
-  when: manual
-
- build:cdff-edres:system:
-  <<: *configure
-  <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-edres:latest
-  stage: debug-build
-  dependencies:
-   - generate:asn
-  when: manual
-
- build:cdff-envire:system:
-  <<: *configure
-  <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-envire:latest
-  stage: debug-build
-  dependencies:
-   - generate:asn
-  when: manual
-
- build:cdff-opencv-contrib:system:
-  <<: *configure
-  <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-opencv-contrib:latest
-  stage: debug-build
-  dependencies:
-   - generate:asn
-  when: manual
-
- build:cdff-dlrtracker:system:
-  <<: *configure
-  <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-dlrtracker:latest
-  stage: debug-build
-  dependencies:
-   - generate:asn
-  when: manual
-
- build:cdff-visp:system:
-  <<: *configure
-  <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-visp:latest
-  stage: debug-build
-  dependencies:
-   - generate:asn
-  when: manual
+   - configure:cdff-closed:debug
+  only:
+    - merge_requests
+    - master
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
 
  build:user:system:
-  <<: *configure
+  <<: *configure_release
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-user:latest
   stage: build
@@ -221,33 +243,46 @@
    - generate:asn
   when: manual
 
- analyse:valgrind:partial:
+ build:dev-ci:system:
+  <<: *configure_release
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-dev-ci:latest
+  stage: build
+  allow_failure: true
+  dependencies:
+   - generate:asn
+  when: manual
+
+ analyse:memcheck:
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/cdff-valgrind:latest
   dependencies:
-    - generate:asn
+    - build:cdff-closed:debug
   script:
-    - Tools/Valgrind/valgrind.sh --full
+    - Tools/Valgrind/valgrind.sh
   only:
     - merge_requests
     - master
   artifacts:
+    when: always
     paths:
-     - valgrind/results
+     - /memcheck
     expire_in: 4 weeks
 
- analyse:cppcheck:full:
-  <<: *configure
+ analyse:cppcheck:
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
+  dependencies:
+    - configure:cdff-closed:release
   script:
-    - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
+    - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json /cppcheck
   only:
     - merge_requests
     - master
   artifacts:
+   when: always
    paths:
-    - cppcheck/
+    - /cppcheck
    expire_in: 4 weeks
 
  analyse:cppcheck:partial:
@@ -258,19 +293,54 @@
   script:
    - Tools/CPPCheck/partial-cppcheck.sh
 
+ report:memcheck:
+  stage: report
+  image: nexus.spaceapplications.com/repository/infuse/cdff-jenkins:latest
+  dependencies:
+   - analyse:memcheck
+  only:
+   - merge_requests
+   - master
+  script:
+   - Valgrind/generate-report.sh
+  allow_failure: true
+  artifacts:
+   when: always
+   paths:
+    - memcheck/
+
+ report:cppcheck:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-cppcheck:1.85
+  stage: report
+  dependencies:
+   - analyse:cppcheck
+  only:
+   - merge_requests
+   - master
+  script:
+   - CPPCHECK/generate-report.sh
+  allow_failure: true
+  artifacts:
+   when: always
+   paths:
+    - cppcheck/
+
  pages:
   stage: deploy
   when: always
   dependencies:
-   - analyse:cppcheck:full
+   - report:memcheck
+   - report:cppcheck
   script:
    - mkdir .public
-   - cp -r cppcheck/public/* .public
+   - cp -r cppcheck/report/* .public/cppcheck
+   - cp -r memcheck/report/* .public/memcheck
    - mv .public public
   artifacts:
    paths:
     - public
   only:
+   - merge_requests
    - master
 
  test:base:unit-tests:

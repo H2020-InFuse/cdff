@@ -1,1 +1,6 @@
 *:*\Common\Types\C\*
+syntaxError:*/DFNs/FeaturesMatching3D/Ransac3D.hpp:122
+internalError
+variableScope
+unusedPrivateFunction
+missingOverride

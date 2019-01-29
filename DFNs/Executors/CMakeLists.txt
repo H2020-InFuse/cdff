@@ -8,7 +8,7 @@ add_library(
     FeaturesMatching3D/FeaturesMatching3DExecutor.cpp
     Registration3D/Registration3DExecutor.cpp
     ImageFiltering/ImageFilteringExecutor.cpp
-    PointCloudTransform/PointCloudTransformExecutor.cpp
+    PointCloudTransformation/PointCloudTransformationExecutor.cpp
     PointCloudFiltering/PointCloudFilteringExecutor.cpp
     PointCloudAssembly/PointCloudAssemblyExecutor.cpp
     StereoReconstruction/StereoReconstructionExecutor.cpp

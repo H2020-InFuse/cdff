@@ -1,4 +1,4 @@
-name: PointCloudTransform
+name: PointCloudTransformation
 doc: DFN that transforms the coordinates of a point cloud from their current reference system to an external system E.
 input_ports:
     - name: pointCloud

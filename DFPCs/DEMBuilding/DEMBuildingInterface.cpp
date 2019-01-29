@@ -10,10 +10,10 @@ namespace CDFF
 namespace DFPC
 {
 
-DEMBuildingInterface::DEMBuildingInterface() :
-inLPC(),
-inEstimatedPose() //, outUpdatedMap()
+DEMBuildingInterface::DEMBuildingInterface()
 {
+    asn1SccPointcloud_Initialize(& inLPC);
+    asn1SccTransformWithCovariance_Initialize(& inEstimatedPose);
 }
 
 DEMBuildingInterface::~DEMBuildingInterface()

@@ -12,6 +12,8 @@ namespace DFN
 
 DisparityImageInterface::DisparityImageInterface()
 {
+    asn1SccFramePair_Initialize(&inFramePair);
+    asn1SccFrame_Initialize(&outDisparity);
 }
 
 DisparityImageInterface::~DisparityImageInterface()

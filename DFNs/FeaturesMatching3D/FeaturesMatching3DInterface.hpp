@@ -60,7 +60,7 @@ namespace DFN
             asn1SccVisualPointFeatureVector3D inSourceFeatures;
             asn1SccVisualPointFeatureVector3D inSinkFeatures;
             asn1SccPose outTransform;
-            bool outSuccess;
+            bool outSuccess = false;
     };
 }
 }
