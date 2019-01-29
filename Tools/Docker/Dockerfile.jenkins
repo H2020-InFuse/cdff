@@ -1,0 +1,37 @@
+FROM jenkins/jenkins:lts
+
+SHELL ["/bin/bash", "-c"]
+
+# disable the setup wizard
+ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
+
+# make an admin account
+COPY jenkins/security.groovy /usr/share/jenkins/ref/init.groovy.d/security.groovy
+
+# install the required plugins for generating the report
+COPY jenkins/plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+
+# open up access to the GUI on 8080 (and also 50000 for status, but not really needed)
+EXPOSE 8080
+EXPOSE 50000
+
+# copy over the jobs definitions
+RUN mkdir -p /var/jenkins_home/jobs/
+
+COPY jenkins/jobs/ /var/jenkins_home/jobs/
+
+# change the ownership of the folder, else jenkins can't use it
+USER root
+RUN chown -R jenkins:jenkins /var/jenkins_home/
+
+# install jq for parsing JSON
+RUN apt-get update && apt-get install -y jq
+
+ARG VERSION="1.0"
+ARG SHA=0000
+ENV IMAGE_VERSION=$VERSION
+ENV IMAGE_SHA=$SHA
+LABEL version=${IMAGE_VERSION}
+LABEL maintainer="Sander Coen <sco@spaceapplications.com>, Xavier Martinez <xma@spaceapplications.com>"
+LABEL description="CI + single dependency"
