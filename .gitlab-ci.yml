@@ -314,7 +314,7 @@
    - merge_requests
   script:
    - mkdir -p jenkins/
-   - Valgrind/generate-report.sh
+   - Tools/Valgrind/generate-report.sh
   allow_failure: true
   artifacts:
    when: always
