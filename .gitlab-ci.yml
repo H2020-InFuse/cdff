@@ -299,6 +299,7 @@
     - Tools/Valgrind/valgrind.sh --full
   only:
     - merge_requests
+    - master
   artifacts:
     when: always
     paths:
@@ -312,6 +313,7 @@
    - analyse:memcheck:full
   only:
    - merge_requests
+   - master
   script:
    - mkdir -p jenkins/
    - Tools/Valgrind/generate-report.sh
@@ -329,6 +331,7 @@
     - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
   only:
     - merge_requests
+    - master
   artifacts:
    when: always
    paths:
@@ -359,6 +362,7 @@
     - public
   only:
    - merge_requests
+   - master
 
  test:base:unit-tests:
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
