@@ -2,10 +2,10 @@ name: StereoSlam
 input_ports:
     - name: imagePair
       type: asn1SccFramePair
-      doc: This is the current acquisition
+      doc: Current image pair captured by the stereo bench. Images are assumed to be rectified. 
 output_ports:
     - name: Pose
       type: asn1SccTransformWithCovariance
-      doc: This is the output transform
+      doc: Pose estimated by the SLAM system. The pose is relative to the reference frame of the first tracked camera frame.
 implementations:
     - StereoSlamOrb
