@@ -301,15 +301,19 @@
     - merge_requests
     - master
   artifacts:
+    when: always
     paths:
      - valgrind_debug/results
     expire_in: 4 weeks
 
- memcheck:report:
+ report:memcheck:
   image: nexus.spaceapplications.com/repository/infuse/cdff-jenkins:latest
   stage: report
   dependencies:
    - analyse:memcheck:full
+  only:
+   - merge_requests
+   - master
   script:
    - mkdir -p jenkins/
    - Valgrind/generate-report.sh
@@ -328,6 +332,7 @@
     - merge_requests
     - master
   artifacts:
+   when: always
    paths:
     - cppcheck/
    expire_in: 4 weeks
@@ -344,7 +349,7 @@
   stage: deploy
   when: always
   dependencies:
-   - memcheck:report
+   - report:memcheck
    - analyse:cppcheck:full
   script:
    - mkdir .public
