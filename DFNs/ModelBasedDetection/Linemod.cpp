@@ -130,7 +130,7 @@ void Linemod::process()
     {
         //Camera pose
         PoseWrapper::Pose3DConstPtr tmp = matToPose3D.Convert(cameraPose);
-        PoseWrapper::Copy(*tmp, outCamera);
+        PoseWrapper::Copy(*tmp, outPose);
         delete tmp;
 
         //Detection bounding box

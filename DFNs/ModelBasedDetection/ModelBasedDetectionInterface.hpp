@@ -15,7 +15,7 @@ namespace DFN
 {
 
 /**
- * DFN that performs model-based detection and pose detection. The DFN detects an object of interest and computes the 3D pose of a camera with respect to the object model observed by the camera.
+ * DFN that performs model-based detection and pose detection. The DFN uses cameras to detect an object of interest and computes the homogeneous transformation that maps a 3D point expressed in the object frame into the camera frame.
  */
 class ModelBasedDetectionInterface : public DFNCommonInterface
 {
@@ -36,10 +36,10 @@ public:
         virtual void depthInput(asn1SccFrame& data);
 
         /**
-         * Query value from output port "camera"
-         * @return camera: the pose of the camera
+         * Query value from output port "pose"
+         * @return pose: the homogeneous transformation that maps a 3D point expressed in the object frame into the camera frame
          */
-        virtual const asn1SccPose& cameraOutput() const;
+        virtual const asn1SccPose& poseOutput() const;
 
         /**
          * Query value from output port "detectionBoundingBox"
@@ -59,7 +59,7 @@ public:
 protected:
     asn1SccFrame inimage;
     asn1SccFrame indepth;
-    asn1SccPose outCamera;
+    asn1SccPose outPose;
     asn1SccMatrix2d outDetectionBoundingBox;
     bool outSuccess = false;
 };

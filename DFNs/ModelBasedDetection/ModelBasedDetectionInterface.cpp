@@ -27,9 +27,9 @@ void ModelBasedDetectionInterface::depthInput(asn1SccFrame& data) {
     indepth = data;
 }
 
-const asn1SccPose& ModelBasedDetectionInterface::cameraOutput() const
+const asn1SccPose& ModelBasedDetectionInterface::poseOutput() const
 {
-    return outCamera;
+    return outPose;
 }
 
 const asn1SccMatrix2d& ModelBasedDetectionInterface::detectionBoundingBoxOutput() const

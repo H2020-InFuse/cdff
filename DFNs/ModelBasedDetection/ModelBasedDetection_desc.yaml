@@ -1,5 +1,5 @@
 name: ModelBasedDetection
-doc: DFN that performs model-based detection and pose detection. The DFN detects an object of interest and computes the 3D pose of a camera with respect to the object model observed by the camera.
+doc: DFN that performs model-based detection and pose detection. The DFN uses cameras to detect an object of interest and computes the homogeneous transformation that maps a 3D point expressed in the object frame into the camera frame.
 input_ports:
     - name: image
       type: asn1SccFrame
@@ -8,9 +8,9 @@ input_ports:
       type: asn1SccFrame
       doc: This is a depth image
 output_ports:
-    - name: camera
+    - name: pose
       type: asn1SccPose
-      doc: the pose of the camera
+      doc: the homogeneous transformation that maps a 3D point expressed in the object frame into the camera frame
     - name: detectionBoundingBox
       type: asn1SccMatrix2d
       doc: the detection bounding box, indexes (row,col) to access the info are x=(0,0), y=(0,1), width=(1,0), height(1,1)
