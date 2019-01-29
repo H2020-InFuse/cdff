@@ -77,7 +77,6 @@ private:
     static const StereoSlamOrbOptionsSet DEFAULT_PARAMETERS;
 
     void ValidateParameters();
-    void ValidateInputs(const asn1SccFramePair& pair);
 
     ORB_SLAM2::System *slam;
 };

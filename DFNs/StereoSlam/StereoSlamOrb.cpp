@@ -112,10 +112,6 @@ void StereoSlamOrb::ValidateParameters()
     }
 }
 
-void StereoSlamOrb::ValidateInputs(const asn1SccFramePair& pair)
-{
-    //TODO
-}
 
 }
 }
