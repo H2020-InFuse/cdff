@@ -10,6 +10,9 @@
     OrientationW: 1
   - Name: GeneralParameters
     PointCloudMapResolution: 0.01
+    UseAssemblerDfn: true
+    TrackedHistorySize: 5
+    SearchRadius: 50
 - Name: leftFilter
   Type: ImageFiltering
   Implementation: ImageUndistortion
@@ -113,3 +116,17 @@
     FocalLengthY: 690.36629049483
     PrinciplePointX: 671.7716154809
     PrinciplePointY: 391.33378485796
+- Name: cloudAssembler
+  Type: PointCloudAssembly
+  Implementation: NeighbourPointAverage
+  Parameters:
+  - Name: GeneralParameters
+    MaxNeighbourDistance: 0.01
+    UseIncrementalMode: true
+    UseDistanceFilter: true
+- Name: cloudTransformer
+  Type: PointCloudTransformation
+  Implementation: CartesianSystemTransform
+  Parameters:
+  - Name: GeneralParameters
+    Placeholder: false

@@ -32,7 +32,9 @@ namespace PoseEstimator
 {
 
 PrimitivesPoseEstimator::PrimitivesPoseEstimator()
-    : m_count(0), parameters(DEFAULT_PARAMETERS)
+    : m_count(0)
+    , m_last_wheel_x(-1)
+    , parameters(DEFAULT_PARAMETERS)
 {
     configurationFilePath = "";
     parametersHelper.AddParameter<int>("GeneralParameters", "NumFrames", parameters.numFrames, DEFAULT_PARAMETERS.numFrames);
@@ -94,12 +96,13 @@ void PrimitivesPoseEstimator::process()
     SortPrimitives();
 
     cv::Point point = PredictPosition();
-    Eigen::Quaterniond quaternion = PredictOrientation(inputImage, point, inputDepth);
+    cv::Vec3f center_wheel = get3DCoordinates(point);
+    Eigen::Quaternionf quaternion = ExtractOrientation(inputImage, point, inputDepth);
 
     outPoses.nCount = 1;
-    outPoses.arr[0].pos.arr[0] = point.x;
-    outPoses.arr[0].pos.arr[1] = point.y;
-    outPoses.arr[0].pos.arr[2] = inputDepth.at<float>(point);
+    outPoses.arr[0].pos.arr[0] = center_wheel[0];
+    outPoses.arr[0].pos.arr[1] = center_wheel[1];
+    outPoses.arr[0].pos.arr[2] = center_wheel[2];
 
     outPoses.arr[0].orient.arr[0] = quaternion.w();
     outPoses.arr[0].orient.arr[1] = quaternion.x();
@@ -185,6 +188,7 @@ cv::Point PrimitivesPoseEstimator::PredictPosition()
         if (cv::norm(m_last_point - cv::Point(measPt.x, measPt.y)) < parameters.maxDistance)
         {
             m_kalman_filter->correct(measurement);
+            m_last_wheel_x = m_last_point.x;
         }
 
         m_last_point.x = measPt.x;
@@ -196,23 +200,80 @@ cv::Point PrimitivesPoseEstimator::PredictPosition()
     return predictPt;
 }
 
-Eigen::Quaterniond PrimitivesPoseEstimator::PredictOrientation(const cv::Mat& inputImage, cv::Point point, const cv::Mat& inputDepth)
+Eigen::Quaternionf PrimitivesPoseEstimator::ExtractOrientation(const cv::Mat& inputImage, cv::Point centerWheelPx, const cv::Mat& inputDepth)
 {
     if( m_primitives.empty() )
     {
-        return Eigen::Quaterniond();
+        return Eigen::Quaternionf();
     }
 
-    Eigen::Vector3d center(point.x, point.y,inputDepth.at<float>(point));
-    Eigen::Vector3d vec1 = Eigen::Vector3d(point.x+1, point.y, inputDepth.at<float>(cv::Point(point.x+1, point.y))) - center;
-    Eigen::Vector3d vec2 = Eigen::Vector3d(point.x, point.y+1, inputDepth.at<float>(cv::Point(point.x, point.y+1))) - center;
+    cv::Vec3f xUnitVec = cv::Vec3f(1,0,0);
+    cv::Vec3f centerWheel = get3DCoordinates(centerWheelPx);
+    cv::Point left_center_px = centerWheelPx;
+    left_center_px.x -=1;
+    cv::Vec3f left_center_wheel = get3DCoordinates(left_center_px);
+    cv::Vec3f rover_heading =  centerWheel - left_center_wheel;
+    cv::Vec3f rover_heading_normalized = cv::normalize(rover_heading);
 
-    Eigen::Vector3d normal = vec1.cross(vec2);
-    normal.normalize();
+    Eigen::Quaternionf qx;
+    cv::Vec3f a = xUnitVec.cross(rover_heading_normalized);
+    qx.x() = a[0];
+    qx.y() = a[1];
+    qx.z() = a[2];
+    qx.w() = xUnitVec.dot(rover_heading_normalized);
 
-    Eigen::Quaterniond quaternion = quaternion.FromTwoVectors(normal, Eigen::Vector3d(1, 0, 0));
-    quaternion.normalize();
-    return quaternion;
+    cv::Vec3f zUnitVec = cv::Vec3f(0,0,1);
+    cv::Point up_center_px = centerWheelPx;
+    up_center_px.y +=1;
+    cv::Vec3f up_center_wheel = get3DCoordinates(up_center_px);
+    up_center_wheel[1] += 0.01;
+
+    cv::Vec3f up_heading = up_center_wheel - centerWheel;
+    cv::Vec3f up_heading_normalized = cv::normalize(up_heading);
+
+    double angle_around_x = acos(zUnitVec.dot(up_heading_normalized));
+
+    Eigen::Quaternionf rotation_around_x = Eigen::AngleAxisf(angle_around_x, Eigen::Vector3f::UnitX())
+                                           * Eigen::AngleAxisf(0, Eigen::Vector3f::UnitY())
+                                           * Eigen::AngleAxisf(0, Eigen::Vector3f::UnitZ());
+
+    Eigen::Quaternionf q = qx * rotation_around_x;
+    if ((m_last_wheel_x - centerWheel[0]) > 0)
+    {
+        Eigen::Quaternionf q_180_z = Eigen::AngleAxisf(0, Eigen::Vector3f::UnitX())
+                                     * Eigen::AngleAxisf(0, Eigen::Vector3f::UnitY())
+                                     * Eigen::AngleAxisf(M_PI, Eigen::Vector3f::UnitZ());
+        q = q * q_180_z;
+    }
+
+    q.normalize();
+    return q;
+}
+
+cv::Vec3f PrimitivesPoseEstimator::get3DCoordinates(cv::Point point)
+{
+    cv::Vec3f point_3d;
+
+    if( point.x > 0 && point.y > 0 )
+    {
+        cv::Mat disparity = cv::Mat::zeros(cv::Size(inDepth.data.cols, inDepth.data.rows), CV_32FC1);
+        disparity.data = inDepth.data.data.arr;
+
+        double fx = inDepth.intrinsic.cameraMatrix.arr[0].arr[0];
+        double cx = inDepth.intrinsic.cameraMatrix.arr[0].arr[2];
+        double fy = inDepth.intrinsic.cameraMatrix.arr[1].arr[1];
+        double cy = inDepth.intrinsic.cameraMatrix.arr[1].arr[2];
+
+        double z = disparity.at<float>(point);
+        if(z != 0 )
+        {
+            point_3d[0] = (z / fx) * (point.x - cx);
+            point_3d[1] = (z / fy) * (point.y - cy);
+            point_3d[2] = z;
+        }
+    }
+
+    return point_3d;
 }
 
 }

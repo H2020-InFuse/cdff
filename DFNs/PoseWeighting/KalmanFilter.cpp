@@ -3,16 +3,16 @@
  * @{
  */
 
-#include "PoseWeighting.hpp"
+#include "KalmanFilter.hpp"
 
 namespace CDFF
 {
 namespace DFN
 {
-namespace WeightingExpert
+namespace PoseWeighting
 {
 
-PoseWeighting::PoseWeighting()
+KalmanFilter::KalmanFilter()
 : parameters(DEFAULT_PARAMETERS)
 {
     m_count = 0;
@@ -48,11 +48,11 @@ PoseWeighting::PoseWeighting()
     cv::setIdentity(m_kalman_filter->measurementNoiseCov, cv::Scalar(1e-1));
 }
 
-PoseWeighting::~PoseWeighting()
+KalmanFilter::~KalmanFilter()
 {
 }
 
-void PoseWeighting::configure()
+void KalmanFilter::configure()
 {
     if( configurationFilePath.empty() == false )
     {
@@ -60,13 +60,13 @@ void PoseWeighting::configure()
     }
 }
 
-const PoseWeighting::PoseWeightingOptionsSet PoseWeighting::DEFAULT_PARAMETERS =
+const KalmanFilter::KalmanFilterOptionsSet KalmanFilter::DEFAULT_PARAMETERS =
 {
     /*numFrames =*/ 4,
     /*maxDistance =*/ 10
 };
 
-void PoseWeighting::process()
+void KalmanFilter::process()
 {
     std::vector<cv::Point> centers;
 

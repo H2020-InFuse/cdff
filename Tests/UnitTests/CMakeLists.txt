@@ -30,7 +30,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/ImageFiltering/BackgroundSubtractorMOG2.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
-    DFNs/WeightingExpert/PoseWeighting.cpp
+    DFNs/PoseWeighting/KalmanFilter.cpp
     DFNs/LidarBasedTracking/LidarBasedTracking.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/HapticScanning/HapticScanning.cpp
@@ -183,7 +183,7 @@ set(unittest_libraries catch
     cdff_dfn_bundle_adjustment
     cdff_dfn_stereo_slam 
     cdff_dfn_voxelization
-    cdff_dfn_weighting_expert
+    cdff_dfn_pose_weighting
     cdff_dfn_lidar_based_tracking
     synthetic_generators
     cdff_dfpc_configurator
