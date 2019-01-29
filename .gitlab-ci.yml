@@ -317,6 +317,7 @@
   script:
    - mkdir -p jenkins/
    - Valgrind/generate-report.sh
+  allow_failure: true
   artifacts:
    when: always
    paths:
