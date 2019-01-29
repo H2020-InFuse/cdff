@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Maintainers: xma@spaceapplications.com
+
 # find changed files between this branch and master
 ChangedFiles=$(git diff --name-only master . )
 SourceFiles=()

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Maintainers: xma@spaceapplications.com
+
 if [ $# -eq 0 ]; then
     echo "No compilation database provided.
     run  cmake with -D CMAKE_EXPORT_COMPILE_COMMANDS=ON to create a database file named compile_commands.json.

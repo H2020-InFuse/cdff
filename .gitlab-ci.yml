@@ -12,6 +12,7 @@
   - analyse
   - build
   - debug-build
+  - report
   - test
   - deploy
 
@@ -162,6 +163,19 @@
    changes:
     - Tools/Docker/Dockerfile.valgrind
 
+ docker:cdff-jenkins:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.external
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.jenkins cdff-jenkins USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.jenkins
+
  generate:asn:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
   stage : generation
@@ -276,7 +290,7 @@
    - generate:asn
   when: manual
 
- analyse:valgrind:full:
+ analyse:memcheck:full:
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/cdff-valgrind:latest
   dependencies:
@@ -290,6 +304,19 @@
     paths:
      - valgrind_debug/results
     expire_in: 4 weeks
+
+ memcheck:report:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-jenkins:latest
+  stage: report
+  dependencies:
+   - analyse:memcheck:full
+  script:
+   - mkdir -p jenkins/
+   - Valgrind/generate-report.sh
+  artifacts:
+   when: always
+   paths:
+    - jenkins/
 
  analyse:cppcheck:full:
   <<: *configure
@@ -317,10 +344,12 @@
   stage: deploy
   when: always
   dependencies:
+   - memcheck:report
    - analyse:cppcheck:full
   script:
    - mkdir .public
-   - cp -r cppcheck/public/* .public
+   - cp -r cppcheck/public/* .public/cppcheck
+   - cp -r jenkins/static_html/* .public/jenkins
    - mv .public public
   artifacts:
    paths:

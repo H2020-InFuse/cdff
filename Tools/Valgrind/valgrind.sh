@@ -43,7 +43,7 @@ mkdir -p results
 
 
 cd Tests/UnitTests/
-FLAGS="--leak-check=full --show-leak-kinds=all --error-exitcode=1 --child-silent-after-fork=yes --xml=yes --xml-file=${DIR}/${VALDIR}/results/error.xml --log-file=${DIR}/${VALDIR}/results/valgrind.log --fullpath-after=CDFF/ --suppressions=${DIR}/Tools/Valgrind/suppression.txt"
+FLAGS="--leak-check=full --show-leak-kinds=all --error-exitcode=1 --child-silent-after-fork=yes --xml=yes --xml-file=${DIR}/${VALDIR}/results/valgrind.xml --fullpath-after=CDFF/ --suppressions=${DIR}/Tools/Valgrind/suppression.txt"
 
 if [[ "$FULL" == true ]]
     then
@@ -55,7 +55,17 @@ fi
 echo RUNNING valgrind: ${FLAGS}
 valgrind ${FLAGS} ./cdff-unit-tests
 
-# print summary for a nice view in gitlab
-awk '/== HEAP SUMMARY/,/== $/' ${DIR}/${VALDIR}/results/valgrind.log;
-awk '/== LEAK SUMMARY/,/== $/' ${DIR}/${VALDIR}/results/valgrind.log;
-awk '/== ERROR SUMMARY/,/== $/' ${DIR}/${VALDIR}/results/valgrind.log;
+ERROR_VALGRIND=$?
+ERROR_COUNT=$(grep -c "<error>" ${DIR}/${VALDIR}/results/valgrind.xml)
+
+if [ $ERROR_VALGRIND -gt 0 ]
+    then
+        echo "=================== END OF LEAK CHECK - FAILURE ==================="
+        echo "There are some problems with the code: $(($ERROR_COUNT)) errors detected!"
+        exit 1
+else
+    echo "=================== END OF LEAK CHECK - SUCCESS ==================="
+    echo "There was no memory leak detected in the code that was run :-)"
+fi
+
+exit 0;
