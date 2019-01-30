@@ -431,6 +431,10 @@ if(BUILD_CENTRALDPM)
     message(STATUS "Envire not found the Data Product Manager will not be built")
   endif()
 
+else()
+
+    message(STATUS "The Data Product Manager will not be built, becase the correspondent flag is OFF")
+
 endif()
 
 ## Setup CDFF installation -----------------------------------------------------
