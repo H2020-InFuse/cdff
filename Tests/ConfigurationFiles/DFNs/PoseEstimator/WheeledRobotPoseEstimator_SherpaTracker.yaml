@@ -1,0 +1,12 @@
+- Name: GeneralParameters
+  Robot: "SHERPA"
+  Baseline: 0.0898885
+  MaxStereoDepth: 20.0
+  Visualize: true
+- Name: KFParameters
+  nStates: 18
+  nMeasurements: 6
+  nInputs: 0
+  dt: 0.077
+  backupMeasurement: true
+  maxJumpInPosition: 2.0

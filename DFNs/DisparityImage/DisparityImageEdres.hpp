@@ -28,8 +28,7 @@ namespace DisparityImage
             virtual void configure();
             virtual void process();
 
-            struct DisparityImageEdresParams
-            {
+            struct DisparityParams{
                 /**
                  * @brief Points minimum distance (disparity of closer points will return errValue)
                  */
@@ -59,6 +58,40 @@ namespace DisparityImage
                  * @brief Pixel depth of the disparity image output
                  */
                 int dispType;
+            };
+
+            struct FilterParams{
+                /**
+                 * @brief Set to true to filter the disparity image
+                 */
+                bool filter;
+
+                /**
+                 * @brief Trimming width in pixels
+                 */
+                int   trimWidth;
+
+                /**
+                 * @brief Connexity threshold
+                 */
+                float connexityThresh;
+
+                /**
+                 * @brief Minimum surface of areas to be kept
+                 */
+                int   surfMin;
+
+                /**
+                 * @brief Maximum surface of areas to be kept
+                 */
+                int   surfMax;
+            };
+
+            struct DisparityImageEdresParams
+            {
+                DisparityParams disparityParams;
+                FilterParams filterParams;
+
             };
 
             Helpers::ParametersListHelper parametersHelper;

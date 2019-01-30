@@ -34,6 +34,8 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include "SupportTypes.hpp"
+#include <boost/make_shared.hpp>
+#include <Errors/AssertOnTest.hpp>
 
 
 namespace Converters {
@@ -51,8 +53,25 @@ class VisualPointFeatureVector3DToPclPointCloudConverter
 	 * --------------------------------------------------------------------
 	 */
 	public:
-		virtual const SupportTypes::PointCloudWithFeatures Convert(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& featuresVector);
-		const SupportTypes::PointCloudWithFeatures ConvertShared(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DSharedConstPtr& featuresVector);
+		template <class FeatureType>
+		const SupportTypes::PointCloudWithFeatures<FeatureType> Convert(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& featuresVector)
+			{
+			SupportTypes::PointCloudWithFeatures<FeatureType> conversion;
+			ASSERT_ON_TEST( VisualPointFeatureVector3DWrapper::GetNumberOfPoints(*featuresVector) == 0 || 
+				VisualPointFeatureVector3DWrapper::GetVectorType(*featuresVector) == VisualPointFeatureVector3DWrapper::ALL_POSITIONS_VECTOR, 
+				"VisualPointFeatureVector3DToPclPointCloudConverter: non empty input feature vector must have all positions-defined points");
+
+			conversion.pointCloud = ExtractPointCloud(featuresVector);
+			ExtractFeaturesCloud(featuresVector, conversion);
+
+			return conversion;
+			}
+
+		template <class FeatureType>
+		const SupportTypes::PointCloudWithFeatures<FeatureType> ConvertShared(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DSharedConstPtr& featuresVector)
+			{
+			return Convert<FeatureType>(featuresVector.get());
+			}
 
 	/* --------------------------------------------------------------------
 	 * Protected
@@ -65,6 +84,15 @@ class VisualPointFeatureVector3DToPclPointCloudConverter
 	 * --------------------------------------------------------------------
 	 */	
 	private:
+
+		pcl::PointCloud<pcl::PointXYZ>::ConstPtr ExtractPointCloud(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& featuresVector);
+
+		void ExtractFeaturesCloud(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& featuresVector, 
+			SupportTypes::PointCloudWithFeatures<SupportTypes::MaxSizeHistogram>& conversion);		
+		void ExtractFeaturesCloud(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& featuresVector, 
+			SupportTypes::PointCloudWithFeatures<pcl::SHOT352>& conversion);
+		void ExtractFeaturesCloud(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3DConstPtr& featuresVector, 
+			SupportTypes::PointCloudWithFeatures<pcl::PFHSignature125>& conversion);
 	};
 
 }

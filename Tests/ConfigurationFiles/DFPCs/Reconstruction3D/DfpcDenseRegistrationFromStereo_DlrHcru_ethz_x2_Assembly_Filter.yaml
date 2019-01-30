@@ -120,7 +120,7 @@
     KeepEigenValues: false
     KeepEigenVectors: false
 - Name: cloudTransformer
-  Type: PointCloudTransform
+  Type: PointCloudTransformation
   Implementation: CartesianSystemTransform
   Parameters:
   - Name: GeneralParameters

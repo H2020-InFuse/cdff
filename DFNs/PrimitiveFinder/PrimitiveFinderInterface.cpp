@@ -12,6 +12,9 @@ namespace DFN
 
 PrimitiveFinderInterface::PrimitiveFinderInterface()
 {
+    asn1SccFrame_Initialize(& inImage);
+    asn1SccT_String_Initialize(& inPrimitive);
+    asn1SccVectorXdSequence_Initialize(& outPrimitives);
 }
 
 PrimitiveFinderInterface::~PrimitiveFinderInterface()

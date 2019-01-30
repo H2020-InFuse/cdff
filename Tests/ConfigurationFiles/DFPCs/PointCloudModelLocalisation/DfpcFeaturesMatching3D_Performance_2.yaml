@@ -1,0 +1,36 @@
+- Name: featuresExtractor3d
+  Type: FeaturesExtraction3D
+  Implementation: HarrisDetector3D
+  Parameters:
+  - Name: GeneralParameters
+    Radius: 0.01 0.001
+    SearchRadius: 0.01 0.001
+    NonMaxSuppression: true
+    DetectionThreshold: 0.001 0.01
+    EnableRefinement: false
+    NumberOfThreads: 0
+    HarrisMethod: Harris
+    OutputFormat: References
+- Name: featuresDescriptor3d
+  Type: FeaturesDescription3D
+  Implementation: PfhDescriptor3D
+  Parameters:
+  - Name: GeneralParameters
+    SearchRadius: 0.02 0.01
+    OutputFormat: Positions
+    EnableNormalsEstimation: true
+    ForceNormalsEstimation: true
+  - Name: NormalEstimationParameters
+    SearchRadius: 0.02 0.01
+    NeighboursSetSize: 0
+- Name: featuresMatcher3d
+  Type: FeaturesMatching3D
+  Implementation: Ransac3D
+  Parameters:
+  - Name: GeneralParameters
+    SimilarityThreshold: 0.82 0.72
+    InlierFraction: 0.75 0.85
+    CorrespondenceRandomness: 25 10
+    NumberOfSamples: 3
+    MaximumIterations: 95000
+    MaxCorrespondenceDistance: 0.1 0.05

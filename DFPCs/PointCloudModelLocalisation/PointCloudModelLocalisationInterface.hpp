@@ -53,9 +53,9 @@ namespace DFPC
 
             asn1SccPointcloud inScene;
             asn1SccPointcloud inModel;
-            bool inComputeModelFeatures;
+            bool inComputeModelFeatures = false;
             asn1SccPose outPose;
-            bool outSuccess;
+            bool outSuccess = false;
 
     };
 }

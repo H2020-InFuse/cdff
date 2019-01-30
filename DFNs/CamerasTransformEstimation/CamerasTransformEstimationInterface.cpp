@@ -10,12 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-CamerasTransformEstimationInterface::CamerasTransformEstimationInterface() :
-inFundamentalMatrix(),
-inMatches(),
-outTransform(),
-outSuccess()
+CamerasTransformEstimationInterface::CamerasTransformEstimationInterface()
 {
+    asn1SccMatrix3d_Initialize(&inFundamentalMatrix);
+    asn1SccCorrespondenceMap2D_Initialize(&inMatches);
+    asn1SccPose_Initialize(&outTransform);
 }
 
 CamerasTransformEstimationInterface::~CamerasTransformEstimationInterface()

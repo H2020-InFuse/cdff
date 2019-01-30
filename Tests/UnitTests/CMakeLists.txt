@@ -30,7 +30,7 @@ set(unittest_sources UnitTests.cpp
     DFNs/ImageFiltering/BackgroundSubtractorMOG2.cpp
     DFNs/KFCorrection/KalmanCorrector.cpp
     DFNs/KFPrediction/KalmanPredictor.cpp
-    DFNs/WeightingExpert/PoseWeighting.cpp
+    DFNs/PoseWeighting/KalmanFilter.cpp
     DFNs/LidarBasedTracking/LidarBasedTracking.cpp
     DFPCs/DfpcConfigurator.cpp
     DFPCs/HapticScanning/HapticScanning.cpp
@@ -92,7 +92,7 @@ if(PCL_FOUND)
     DFNs/FeaturesMatching3D/Icp3D.cpp
     DFNs/FeaturesMatching3D/Ransac3D.cpp
     DFNs/PointCloudFiltering/StatisticalOutlierRemoval.cpp
-    DFNs/PointCloudTransform/CartesianSystemTransform.cpp
+    DFNs/PointCloudTransformation/CartesianSystemTransform.cpp
     DFNs/Registration3D/Icp3D.cpp
     DFNs/PointCloudAssembly/NeighbourPointAverage.cpp
     DFNs/PointCloudAssembly/NeighbourSinglePointAverage.cpp
@@ -118,7 +118,6 @@ endif()
 if(Edres-Wrapper_FOUND)
     set(unittest_sources ${unittest_sources}
         DFNs/DisparityImage/DisparityImageEdres.cpp
-        DFNs/DisparityFiltering/DisparityFilteringEdres.cpp
         DFNs/DisparityToPointCloud/DisparityToPointCloudEdres.cpp
         DFNs/DisparityToPointCloudWithIntensity/DisparityToPointCloudWithIntensityEdres.cpp
         DFNs/ImageDegradation/ImageDegradationEdres.cpp
@@ -127,6 +126,11 @@ if(Edres-Wrapper_FOUND)
         DFNs/StereoMotionEstimation/StereoMotionEstimationEdres.cpp
         DFNs/StereoRectification/StereoRectificationEdres.cpp
     )
+endif()
+
+if(WITH_LIBORBSLAM)
+   set(unittest_sources ${unittest_sources} DFNs/StereoSlam/StereoSlamOrb.cpp)
+   set(unittest_sources ${unittest_sources} DFPCs/VisualSlamStereo/VisualSlamStereo.cpp)
 endif()
 
 if(HAVE_OPENCV_CONTRIB)
@@ -149,7 +153,7 @@ set(unittest_libraries catch
     cdff_logger
     cdff_types
     cdff_dfn_dfnexecutors
-    cdff_dfn_point_cloud_transform
+    cdff_dfn_point_cloud_transformation
     cdff_dfn_depth_filtering
     cdff_dfn_cameras_transform_estimation
     cdff_dfn_color_conversion
@@ -182,7 +186,7 @@ set(unittest_libraries catch
     cdff_dfn_features_matching_3d
     cdff_dfn_bundle_adjustment
     cdff_dfn_voxelization
-    cdff_dfn_weighting_expert
+    cdff_dfn_pose_weighting
     cdff_dfn_lidar_based_tracking
     synthetic_generators
     cdff_dfpc_configurator
@@ -205,6 +209,12 @@ endif()
 if(OPENCV_FOUND)
     set(unittest_libraries ${unittest_libraries}
             cdff_dfn_primitive_finder opencv_highgui )
+endif()
+
+if(WITH_LIBORBSLAM)
+    set(unittest_libraries ${unittest_libraries}
+        cdff_dfn_stereo_slam
+        cdff_dfpc_visual_slam_stereo )
 endif()
 
 if(BUILD_CENTRALDPM)

@@ -113,7 +113,7 @@
     UseIncrementalMode: true
     UseDistanceFilter: true
 - Name: cloudTransformer
-  Type: PointCloudTransform
+  Type: PointCloudTransformation
   Implementation: CartesianSystemTransform
   Parameters:
   - Name: GeneralParameters

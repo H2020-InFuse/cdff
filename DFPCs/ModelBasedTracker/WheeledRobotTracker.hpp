@@ -9,7 +9,7 @@
 #include "ModelBasedTrackerInterface.hpp"
 #include <PrimitiveFinder/BasicPrimitiveFinder.hpp>
 #include <PoseEstimator/PrimitivesPoseEstimator.hpp>
-#include <WeightingExpert/PoseWeighting.hpp>
+#include <PoseWeighting/KalmanFilter.hpp>
 #include <ImageFiltering/BackgroundSubtractorMOG2.hpp>
 #include <PoseEstimator/WheeledRobotPoseEstimator.hpp>
 

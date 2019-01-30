@@ -79,9 +79,9 @@ namespace DFN
             asn1SccPointcloud inSourceCloud;
             asn1SccPointcloud inSinkCloud;
             asn1SccPose inTransformGuess;
-            bool inUseGuess;
+            bool inUseGuess = false;
             asn1SccPose outTransform;
-            bool outSuccess;
+            bool outSuccess = false;
     };
 }
 }

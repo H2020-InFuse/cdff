@@ -10,11 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-FeaturesMatching2DInterface::FeaturesMatching2DInterface() :
-inSourceFeatures(),
-inSinkFeatures(),
-outMatches()
+FeaturesMatching2DInterface::FeaturesMatching2DInterface()
 {
+    asn1SccVisualPointFeatureVector2D_Initialize(&inSourceFeatures) ;
+    asn1SccVisualPointFeatureVector2D_Initialize(&inSinkFeatures) ;
+    asn1SccCorrespondenceMap2D_Initialize(&outMatches) ;
 }
 
 FeaturesMatching2DInterface::~FeaturesMatching2DInterface()

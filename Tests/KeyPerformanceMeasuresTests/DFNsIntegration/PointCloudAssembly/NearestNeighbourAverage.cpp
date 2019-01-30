@@ -27,11 +27,11 @@
  */
 #include "CorrectAssemblyTester.hpp"
 #include <PointCloudAssembly/NeighbourPointAverage.hpp>
-#include <PointCloudTransform/CartesianSystemTransform.hpp>
+#include <PointCloudTransformation/CartesianSystemTransform.hpp>
 #include <Errors/Assert.hpp>
 
 using namespace CDFF::DFN::PointCloudAssembly;
-using namespace CDFF::DFN::PointCloudTransform;
+using namespace CDFF::DFN::PointCloudTransformation;
 
 /* --------------------------------------------------------------------------
  *

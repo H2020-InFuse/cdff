@@ -112,7 +112,7 @@ void StereoDegradation::ValidateParameters()
 {
     ASSERT(parameters.xratio >= 1 && parameters.xratio <= 25, "xratio has to be within [1..25]");
     ASSERT(parameters.yratio >= 1 && parameters.yratio <= 25, "yratio has to be within [1..25]");
-    ASSERT(parameters.method >= 0 || parameters.method <= 5, "method has to be within [0..5]");
+    ASSERT(parameters.method >= 0 && parameters.method <= 5, "method has to be within [0..5]");
 }
 
 const StereoDegradation::StereoDegradationParams StereoDegradation::DEFAULT_PARAMETERS = {

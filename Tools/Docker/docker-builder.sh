@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+# Maintainers: xma@spaceapplications.com
+
 # will use the Dockerfile provided, check it against current last version of it
 # Will push it to Nexus if the dockerfile contains a new label with imagename::LABEL
 # eg Usage docker-builder.sh Dockerfile.base cdff-ci
@@ -68,7 +71,7 @@ do
    fi
 done
 
-echo ENV_VAR: $ENV_VAR
+#echo ENV_VAR: $ENV_VAR
 
 REGISTRY_PREFIX=nexus.spaceapplications.com/
 INFUSE_REGISTRY_PREFIX=repository/infuse/

@@ -16,12 +16,6 @@ namespace ImageRectification
 ImageRectification::ImageRectification()
 :parameters(DEFAULT_PARAMETERS)
 {
-    _sensorId = "";
-    _xratio = 1;
-    _yratio = 1;
-    _scaling = -1;
-    _centerPrincipalPoint = false;
-
     parametersHelper.AddParameter<int>("ImageRectificationParams", "xratio", parameters.xratio, DEFAULT_PARAMETERS.xratio);
     parametersHelper.AddParameter<int>("ImageRectificationParams", "yratio", parameters.yratio, DEFAULT_PARAMETERS.yratio);
     parametersHelper.AddParameter<double>("ImageRectificationParams", "scaling", parameters.scaling, DEFAULT_PARAMETERS.scaling);

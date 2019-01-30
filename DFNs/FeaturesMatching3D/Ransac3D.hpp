@@ -18,6 +18,15 @@
 #include <Converters/SupportTypes.hpp>
 #include <Helpers/ParametersListHelper.hpp>
 
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/search/search.h>
+#include <pcl/sample_consensus/ransac.h>
+#include <pcl/sample_consensus/sac_model_registration.h>
+#include <pcl/sample_consensus/sac_model_plane.h>
+#include <pcl/registration/sample_consensus_prerejective.h>
+#include <pcl/kdtree/impl/kdtree_flann.hpp>
+
 namespace CDFF
 {
 namespace DFN
@@ -84,21 +93,83 @@ namespace FeaturesMatching3D
 				visualPointFeatureVector3DToPclPointCloud;
 
 			//Type conversion methods
-			PoseWrapper::Pose3DConstPtr Convert(
-				Eigen::Matrix4f eigenTransform);
-
-			//Core computation methods
-			PoseWrapper::Pose3DConstPtr ComputeTransform(
-				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
-				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
+			PoseWrapper::Pose3DConstPtr InverseConvert(Eigen::Matrix4f eigenTransformSceneInModel);
 
 			//Input Validation methods
 			void ValidateParameters();
-			void ValidateInputs(
-				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
-				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
-			void ValidateCloud(
-				Converters::SupportTypes::PointCloudWithFeatures cloud);
+			void ValidateInputs();
+			void ValidateCloud(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& features);
+
+
+			// Core processing methods:
+			void ProcessOnShotDescriptors();
+			void ProcessOnPfhDescriptors();
+
+			/**
+ 			* This function detects if the source pointcloud is within the sink pointcloud,
+ 			* and computes the geometric transformation that turns the source cloud into
+ 			* its position in the sink cloud.
+ 			*
+ 			* Observe that in PCL terminology, the sink cloud is called target cloud.
+ 			*
+ 			* Note: a few more parameters used to be given for SampleConsensusPrerejective:
+ 			* RANSACOutlierRejectionThreshold, RANSACIterations, TransformationEpsilon,
+ 			* EuclideanFitnessEpislon, SearchMethodTarget, and SearchMethodSource. However,
+ 			* besides the search method, those parameters don't seem to be used by the
+ 			* algorithm. The set method is set in a standard way in the algorithm.
+ 			*/
+			template <class FeatureType>
+			PoseWrapper::Pose3DConstPtr ComputeTransform(
+				Converters::SupportTypes::PointCloudWithFeatures<FeatureType> sourceCloud,
+				Converters::SupportTypes::PointCloudWithFeatures<FeatureType> sinkCloud)
+				{
+				// Setup PCL's RANSAC algorithm
+				typename pcl::SampleConsensusPrerejective<pcl::PointXYZ, pcl::PointXYZ, FeatureType>::Ptr ransac(
+					new pcl::SampleConsensusPrerejective<pcl::PointXYZ, pcl::PointXYZ, FeatureType>
+					);
+
+				ransac->setSourceFeatures(sourceCloud.featureCloud);
+				ransac->setTargetFeatures(sinkCloud.featureCloud);
+				ransac->setInputSource(sourceCloud.pointCloud);
+				ransac->setInputTarget(sinkCloud.pointCloud);
+
+				ransac->setSimilarityThreshold(parameters.similarityThreshold);
+				ransac->setInlierFraction(parameters.inlierFraction);
+				ransac->setCorrespondenceRandomness(parameters.correspondenceRandomness);
+				ransac->setNumberOfSamples(parameters.numberOfSamples);
+				ransac->setMaximumIterations(parameters.maximumIterations);
+				ransac->setMaxCorrespondenceDistance(parameters.maxCorrespondenceDistance);
+
+				// Setup output
+				pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud(new pcl::PointCloud<pcl::PointXYZ>);
+
+				try 
+					{
+					// Run RANSAC
+					ransac->align(*outputCloud);
+
+					// Check convergence
+					outSuccess = ransac->hasConverged();
+					}
+				catch ( ... )
+					{
+					VERIFY(false, "Ransac failed with exception!");
+					outSuccess = false;
+					}
+
+				if (outSuccess)
+					{
+					Eigen::Matrix4f eigenTransformSceneInModel = ransac->getFinalTransformation();
+					return InverseConvert(eigenTransformSceneInModel);
+					}
+				else
+					{
+					PoseWrapper::Pose3DPtr transform = new PoseWrapper::Pose3D;
+					PoseWrapper::Reset(*transform);
+					return transform;
+					}
+				}
+
 	};
 }
 }

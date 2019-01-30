@@ -53,6 +53,7 @@ enable_testing()
 # Flags passed to the compiler
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -397,6 +398,25 @@ else()
 
 endif()
 
+## Try to compile Core/liborbslam ------------------------------
+find_package(Pangolin QUIET)
+
+if(Pangolin_FOUND)
+  find_package_mode(Pangolin)
+  if(EXISTS ${CMAKE_SOURCE_DIR}/Common/Core/liborbslam)
+    message(STATUS "Building Common/Core/liborbslam")
+    set(WITH_LIBORBSLAM ON)
+    add_definitions(-DHAVE_LIBORBSLAM)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/Common/Core/liborbslam)
+  endif()
+
+else()
+
+  set(WITH_LIBORBSLAM OFF)
+  message(STATUS "Pangolin not found: Common/Core/liborbslam will not be built")
+
+endif()
+
 option(BUILD_CENTRALDPM "Build the central data product manager" OFF)
 if(BUILD_CENTRALDPM)
   message(STATUS "Central Data Product Manager will be built if Envire is found")
@@ -488,11 +508,6 @@ include_directories(
 add_subdirectory(Common)
 add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
-
-if(BUILD_CENTRALDPM)
-  include_directories(CentralDPM)
-  add_subdirectory(CentralDPM)
-endif()
 
 # Optionally compile the tests (unit tests, interactive tests, performance
 # tests, etc)

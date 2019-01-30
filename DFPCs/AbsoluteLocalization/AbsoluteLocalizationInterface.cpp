@@ -10,13 +10,13 @@ namespace CDFF
 namespace DFPC
 {
 
-AbsoluteLocalizationInterface::AbsoluteLocalizationInterface() :
-inLidarPC(),
-inEstimatedPose(),
-inOrthoImage(),
-inOrbitalImage(),
-outFinalPose()
+AbsoluteLocalizationInterface::AbsoluteLocalizationInterface()
 {
+    asn1SccPointcloud_Initialize(& inLidarPC);
+    asn1SccTransformWithCovariance_Initialize(& inEstimatedPose);
+    asn1SccFrame_Initialize(& inOrthoImage);
+    asn1SccFrame_Initialize(& inOrbitalImage);
+    asn1SccTransformWithCovariance_Initialize(& outFinalPose);
 }
 
 AbsoluteLocalizationInterface::~AbsoluteLocalizationInterface()

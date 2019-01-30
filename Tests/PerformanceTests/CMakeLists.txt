@@ -36,19 +36,21 @@ target_link_libraries(
 add_executable(
     orb_detector_descriptor_flann_matcher_performance_test
     DFNsIntegration/FeaturesExtractionDescriptionMatching/OrbDetectorDescriptorFlannMatcher.cpp
+    DFNsIntegration/FeaturesExtractionDescriptionMatching/FeaturesExtractionDescriptionMatching.cpp
 )
 target_link_libraries(
 	orb_detector_descriptor_flann_matcher_performance_test
-	cdff_helpers cdff_logger cdff_types cdff_dfn_features_extraction_2d cdff_dfn_features_matching_2d performance_integration_test_interface cdff_visualizers_opencv cdff_visualizers_pcl
+	cdff_helpers cdff_logger cdff_types cdff_dfn_features_extraction_2d cdff_dfn_features_matching_2d performance_integration_test_interface cdff_dfn_dfnexecutors cdff_dfn_features_description_2d
 )
 
 add_executable(
     orb_flann_ransac_decomposition
     DFNsIntegration/VisualOdometry/OrbFlannRansacDecomposition.cpp
+    DFNsIntegration/VisualOdometry/VisualOdometry.cpp
 )
 target_link_libraries(
 	orb_flann_ransac_decomposition
-	cdff_helpers cdff_logger cdff_types cdff_dfn_features_extraction_2d cdff_dfn_features_matching_2d cdff_dfn_fundamental_matrix_computation cdff_dfn_cameras_transform_estimation performance_integration_test_interface cdff_visualizers_opencv cdff_visualizers_pcl
+	cdff_helpers cdff_logger cdff_types cdff_dfn_features_extraction_2d cdff_dfn_features_matching_2d cdff_dfn_fundamental_matrix_computation cdff_dfn_cameras_transform_estimation performance_integration_test_interface cdff_dfn_dfnexecutors
 )
 
 add_executable(
@@ -124,4 +126,29 @@ add_executable(
 target_link_libraries(
 	image_undistortion_performance_test
 	cdff_helpers cdff_logger cdff_types cdff_dfn_image_filtering performance_dfn_test_interface cdff_visualizers_opencv cdff_visualizers_pcl opencv_imgcodecs
+)
+
+
+#DFPC Performance Tests
+
+add_executable(
+	features_matching_3d_performance_test
+	DFPCs/PointCloudModelLocalisation/FeaturesMatching3D.cpp
+	DFPCs/PointCloudModelLocalisation/PointCloudModelLocalisation.cpp
+	DFPCs/PerformanceTestInterface.cpp
+)
+target_link_libraries(
+	features_matching_3d_performance_test
+	cdff_helpers cdff_logger cdff_types cdff_dfn_image_filtering performance_test_base cdff_dfpc_point_cloud_model_localisation
+)
+
+add_executable(
+	reconstruction_from_stereo_performance_test
+	DFPCs/Reconstruction3D/ReconstructionFromStereo.cpp
+	DFPCs/Reconstruction3D/Reconstruction3D.cpp
+	DFPCs/PerformanceTestInterface.cpp
+)
+target_link_libraries(
+	reconstruction_from_stereo_performance_test
+	cdff_helpers cdff_logger cdff_types cdff_dfn_image_filtering performance_test_base cdff_dfpc_reconstruction_3d
 )

@@ -12,6 +12,7 @@
   - analyse
   - build
   - debug-build
+  - report
   - test
   - deploy
 
@@ -40,7 +41,7 @@
   stage: docker.ci
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.ci cdff-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
+   - ./docker-builder.sh Dockerfile.ci cdff-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE MAGUSER=$EDRES_USER MAGPASS=$EDRES_PASSWORD
   only:
    changes:
     - Tools/Docker/Dockerfile.ci
@@ -83,6 +84,19 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.pangolin
+
+ docker:cdff-edres:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.ci
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.edres cdff-edres SHA=$CI_COMMIT_SHA $FORCE $NOCACHE MAGUSER=$EDRES_USER MAGPASS=$EDRES_PASSWORD
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.edres
 
  docker:cdff-opencv-contrib:
   <<: *connect
@@ -148,6 +162,32 @@
   only:
    changes:
     - Tools/Docker/Dockerfile.user
+
+ docker:cdff-valgrind:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.external
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.valgrind cdff-valgrind USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.valgrind
+
+ docker:cdff-jenkins:
+  <<: *connect
+  services:
+   - docker:dind
+  image: nexus.spaceapplications.com/repository/infuse/docker-builder
+  stage: docker.external
+  script:
+   - cd Tools/Docker/
+   - ./docker-builder.sh Dockerfile.jenkins cdff-jenkins USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
+  only:
+   changes:
+    - Tools/Docker/Dockerfile.jenkins
 
  generate:asn:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
@@ -217,6 +257,15 @@
    - generate:asn
   when: manual
 
+ build:cdff-edres:system:
+  <<: *configure
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-edres:latest
+  stage: debug-build
+  dependencies:
+   - generate:asn
+  when: manual
+
  build:cdff-envire:system:
   <<: *configure
   <<: *make
@@ -263,6 +312,40 @@
    - generate:asn
   when: manual
 
+ analyse:memcheck:full:
+  stage: analyse
+  image: nexus.spaceapplications.com/repository/infuse/cdff-valgrind:latest
+  dependencies:
+    - generate:asn
+  script:
+    - Tools/Valgrind/valgrind.sh --full
+  only:
+    - merge_requests
+    - master
+  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+     - valgrind_debug/results
+    expire_in: 4 weeks
+
+ report:memcheck:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-jenkins:latest
+  stage: report
+  dependencies:
+   - analyse:memcheck:full
+  only:
+   - merge_requests
+   - master
+  script:
+   - mkdir -p jenkins/
+   - Tools/Valgrind/generate-report.sh
+  allow_failure: true
+  artifacts:
+   when: always
+   paths:
+    - jenkins/
+
  analyse:cppcheck:full:
   <<: *configure
   stage: analyse
@@ -272,7 +355,9 @@
   only:
     - merge_requests
     - master
+  allow_failure: true
   artifacts:
+   when: always
    paths:
     - cppcheck/
    expire_in: 4 weeks
@@ -289,15 +374,18 @@
   stage: deploy
   when: always
   dependencies:
+   - report:memcheck
    - analyse:cppcheck:full
   script:
    - mkdir .public
-   - cp -r cppcheck/public/* .public
+   - cp -r cppcheck/public/* .public/cppcheck
+   - cp -r jenkins/static_html/* .public/jenkins
    - mv .public public
   artifacts:
    paths:
     - public
   only:
+   - merge_requests
    - master
 
  test:base:unit-tests:

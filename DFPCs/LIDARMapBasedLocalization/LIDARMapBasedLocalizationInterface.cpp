@@ -10,11 +10,11 @@ namespace CDFF
 namespace DFPC
 {
 
-LIDARMapBasedLocalizationInterface::LIDARMapBasedLocalizationInterface() :
-inLPC(),
-inOdoPose(),
-outLidarPose()
+LIDARMapBasedLocalizationInterface::LIDARMapBasedLocalizationInterface()
 {
+    asn1SccPointcloud_Initialize(& inLPC);
+    asn1SccTransformWithCovariance_Initialize(& inOdoPose);
+    asn1SccTransformWithCovariance_Initialize(& outLidarPose);
 }
 
 LIDARMapBasedLocalizationInterface::~LIDARMapBasedLocalizationInterface()

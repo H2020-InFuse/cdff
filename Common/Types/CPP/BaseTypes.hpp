@@ -20,6 +20,7 @@
 #include <Types/C/Point.h>
 #include <Types/C/CorrespondenceMap3D.h>
 #include "Errors/AssertOnTest.hpp"
+#include <cstring>
 
 #include <memory>
 
@@ -43,17 +44,17 @@ const int MAX_STRING_SIZE = maxSize_T_String;
 
 // Point Types
 struct Point3D
-	{
-	T_Double x;
-	T_Double y;
-	T_Double z;	
-	};
+    {
+    T_Double x;
+    T_Double y;
+    T_Double z;
+    };
 
 struct Point2D
-	{
-	T_Double x;
-	T_Double y;
-	};
+    {
+    T_Double x;
+    T_Double y;
+    };
 
 // Pointer types
 
@@ -93,9 +94,17 @@ void ConvertFromBitStream(BitStream& inputBitStream, long bitStreamSize, T& outp
 // String manipulation helper functions
 
 void CopyString(const asn1SccT_String& source, asn1SccT_String& destination);
+/**
+* Copy the content of a std::string to an asn1SccT_String.
+* Assume null terminating string in the buffer.
+*/
+void CopyString(const std::string& source, asn1SccT_String& destination);
+/**
+ * Copy the content of a asn1SccT_String to an std::string.
+ * Assume null terminating string in the buffer.
+ */
+void CopyString(const asn1SccT_String& source, std::string& destination);
 }
-
-
 #endif // BASE_TYPES_HPP
 
 /** @} */

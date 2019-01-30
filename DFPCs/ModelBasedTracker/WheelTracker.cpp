@@ -24,7 +24,7 @@ WheelTracker::WheelTracker()
     m_circle_finder.reset(new CDFF::DFN::PrimitiveFinder::BasicPrimitiveFinder());
     m_ellipse_pose_estimator.reset(new CDFF::DFN::PoseEstimator::PrimitivesPoseEstimator());
     m_circle_pose_estimator.reset(new CDFF::DFN::PoseEstimator::PrimitivesPoseEstimator());
-    m_weighting_expert.reset( new CDFF::DFN::WeightingExpert::PoseWeighting());
+    m_pose_weighting.reset( new CDFF::DFN::PoseWeighting::KalmanFilter);
 }
 
 void WheelTracker::setup()
@@ -69,8 +69,8 @@ void WheelTracker::setup()
     m_circle_pose_estimator->setConfigurationFile(path_to_cdff+pose_estimator_config_file);
     m_circle_pose_estimator->configure();
 
-    m_weighting_expert->setConfigurationFile(path_to_cdff+pose_weighting_config_file);
-    m_weighting_expert->configure();
+    m_pose_weighting->setConfigurationFile(path_to_cdff+pose_weighting_config_file);
+    m_pose_weighting->configure();
 }
 
 void WheelTracker::run()
@@ -118,10 +118,10 @@ void WheelTracker::run()
     poses.arr[0] = m_circle_pose_estimator->posesOutput().arr[0];
     poses.arr[1] = m_ellipse_pose_estimator->posesOutput().arr[0];
 
-    m_weighting_expert->posesInput(poses);
-    m_weighting_expert->process();
+    m_pose_weighting->posesInput(poses);
+    m_pose_weighting->process();
 
-    outPose = m_weighting_expert->poseOutput();
+    outPose = m_pose_weighting->poseOutput();
 }
 
 }

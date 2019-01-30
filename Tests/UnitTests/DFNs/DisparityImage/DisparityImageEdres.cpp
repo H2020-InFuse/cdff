@@ -120,7 +120,7 @@ TEST_CASE( "Call to process (Disparity Image Edres)", "[process]" )
 	disparityImageEdres->process();
 
 	// Query output data from DFN
-	const asn1SccFrame &output = disparityImageEdres->rawDisparityOutput();
+    const asn1SccFrame &output = disparityImageEdres->disparityOutput();
 
     REQUIRE( output.metadata.pixelModel == asn1Sccpix_DISP );
     REQUIRE( output.metadata.pixelCoeffs.arr[2] == framePair->baseline );

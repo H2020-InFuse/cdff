@@ -15,7 +15,7 @@ namespace CDFF
 namespace DFPC
 {
     /**
-     * Simultaneous Localization and Mapping which relies on odometry, stereo images and depths images.
+     * Simultaneous Localization and Mapping which relies on stereo images.
      */
     class VisualSlamStereoInterface : public DFPCCommonInterface
     {
@@ -25,21 +25,10 @@ namespace DFPC
             virtual ~VisualSlamStereoInterface();
 
             /**
-             * Send value to input port "leftImage"
-             * @param leftImage: 
+             * Send value to input port "framePair"
+             * @param framePair: 
              */
-            virtual void leftImageInput(const asn1SccFrame& data);
-            /**
-             * Send value to input port "rightImage"
-             * @param rightImage: 
-             */
-            virtual void rightImageInput(const asn1SccFrame& data);
-            /**
-             * Send value to input port "roverPose"
-             * @param roverPose: Estimated pose of the rover from Odometry
-             */
-            virtual void roverPoseInput(const asn1SccTransformWithCovariance& data);
-
+            virtual void framePairInput(const asn1SccFramePair& data);
             /**
              * Query value from output port "estimatedPose"
              * @return estimatedPose: Pose estimated from the SLAM DFPC
@@ -49,9 +38,7 @@ namespace DFPC
 
         protected:
 
-            asn1SccFrame inLeftImage;
-            asn1SccFrame inRightImage;
-            asn1SccTransformWithCovariance inRoverPose;
+            asn1SccFramePair inFramePair;
             asn1SccTransformWithCovariance outEstimatedPose;
 
     };

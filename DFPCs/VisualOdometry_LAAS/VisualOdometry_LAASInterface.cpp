@@ -15,6 +15,9 @@ inLeftImage(),
 inRightImage(),
 outEstimatedMotion()
 {
+    asn1SccFrame_Initialize(& inLeftImage);
+    asn1SccFrame_Initialize(& inRightImage);
+    asn1SccTransformWithCovariance_Initialize(& outEstimatedMotion);
 }
 
 VisualOdometry_LAASInterface::~VisualOdometry_LAASInterface()

@@ -107,7 +107,7 @@ We have documentation about [using Docker and the InFuse Docker image](https://d
       --name=container-name --hostname=container-hostname \
 
       # Optional: if you need graphics display
-      --env=DISPLAY=${DISPLAY} --volume=/tmp/.X11-unix:/tmp/.X11-unix \
+      --env=DISPLAY --volume=/tmp/.X11-unix:/tmp/.X11-unix \
 
       # Optional: allow messages from inside the container to be logged outside
       --volume=/dev/log:/dev/log \

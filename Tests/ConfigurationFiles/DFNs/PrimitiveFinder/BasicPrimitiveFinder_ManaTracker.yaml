@@ -1,0 +1,13 @@
+- Name: HoughCirclesParameters
+  DP: 1.2
+  MinDist: 20
+  Param1: 55
+  Param2: 40
+  MinRadius: 10
+  MaxRadius: 40
+- Name: EllipsesParameters
+  MinArea: 500
+  SimilarityRatio: 0.15
+- Name: HoughLinesParameters
+  MinLineLenght: 100
+  MaxLineGap: 10
