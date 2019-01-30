@@ -23,10 +23,14 @@ if [[ "$FULL" == true ]]
 fi
 
 echo RUNNING valgrind: ${FLAGS}
-valgrind ${FLAGS} ${EXECUTABLE}
+PATH=$(dirname "${EXECUTABLE}")
+FILE=$(basename "${EXECUTABLE}")
+
+cd ${PATH}
+valgrind ${FLAGS} ${FILE}
 
 ERROR_VALGRIND=$?
-ERROR_COUNT=$(grep -c "<error>" ${OUTPUT_FOLDER}/results/valgrind.xml)
+ERROR_COUNT=$(grep -c "<error>" ${OUTPUT_FOLDER}/valgrind.xml)
 
 if [ $ERROR_VALGRIND -gt 0 ]
     then
