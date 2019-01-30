@@ -397,12 +397,19 @@ else()
 
 endif()
 
-option(BUILD_CENTRALDPM "Build the central data product manager" ON)
+option(BUILD_CENTRALDPM "Build the central data product manager" OFF)
 if(BUILD_CENTRALDPM)
-  message("Data Product Manager will be built")
-  ## Look for Envire ---------------------------------------------------
+  message(STATUS "Central Data Product Manager will be built if Envire is found")
+
   find_package(PkgConfig REQUIRED)
-  pkg_check_modules(ENVIRE_CORE REQUIRED envire_core)
+  pkg_check_modules(ENVIRE_CORE envire_core)
+
+  if (ENVIRE_CORE_FOUND)
+    message(STATUS "Envire found, Data Product Manager will be built")
+  else()
+    set(BUILD_CENTRALDPM OFF)
+    message(STATUS "Envire not found the Data Product Manager will not be built")
+  endif()
 
 endif()
 
