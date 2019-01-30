@@ -181,7 +181,6 @@ set(unittest_libraries catch
     cdff_dfn_features_description_3d
     cdff_dfn_features_matching_3d
     cdff_dfn_bundle_adjustment
-    cdff_dfn_stereo_slam 
     cdff_dfn_voxelization
     cdff_dfn_pose_weighting
     cdff_dfn_lidar_based_tracking
@@ -210,7 +209,8 @@ endif()
 
 if(WITH_LIBORBSLAM)
     set(unittest_libraries ${unittest_libraries}
-            cdff_dfpc_visual_slam_stereo )
+        cdff_dfn_stereo_slam
+        cdff_dfpc_visual_slam_stereo )
 endif()
 
 # Make the Catch executable that runs the unit tests
