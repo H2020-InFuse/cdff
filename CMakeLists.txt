@@ -398,6 +398,25 @@ else()
 
 endif()
 
+## Try to compile Core/liborbslam ------------------------------
+find_package(Pangolin QUIET)
+
+if(Pangolin_FOUND)
+  find_package_mode(Pangolin)
+  if(EXISTS ${CMAKE_SOURCE_DIR}/Common/Core/liborbslam)
+    message(STATUS "Building Common/Core/liborbslam")
+    set(WITH_LIBORBSLAM ON)
+    add_definitions(-DHAVE_LIBORBSLAM)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/Common/Core/liborbslam)
+  endif()
+
+else()
+
+  set(WITH_LIBORBSLAM OFF)
+  message(STATUS "Pangolin not found: Common/Core/liborbslam will not be built")
+
+endif()
+
 ## Setup CDFF installation -----------------------------------------------------
 
 # Standard installation directories, as defined by the GNU Coding Standards:

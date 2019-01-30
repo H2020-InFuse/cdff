@@ -128,12 +128,16 @@ if(Edres-Wrapper_FOUND)
     )
 endif()
 
+if(WITH_LIBORBSLAM)
+   set(unittest_sources ${unittest_sources} DFNs/StereoSlam/StereoSlamOrb.cpp)
+   set(unittest_sources ${unittest_sources} DFPCs/VisualSlamStereo/VisualSlamStereo.cpp)
+endif()
+
 if(HAVE_OPENCV_CONTRIB)
     set(unittest_sources ${unittest_sources}
         DFNs/LinemodDetect/LinemodDetect.cpp
     )
 endif()
-
 
 
 # Libraries used by the aforementioned source files. They will be linked in the
@@ -201,6 +205,12 @@ endif()
 if(OPENCV_FOUND)
     set(unittest_libraries ${unittest_libraries}
             cdff_dfn_primitive_finder opencv_highgui )
+endif()
+
+if(WITH_LIBORBSLAM)
+    set(unittest_libraries ${unittest_libraries}
+        cdff_dfn_stereo_slam
+        cdff_dfpc_visual_slam_stereo )
 endif()
 
 # Make the Catch executable that runs the unit tests
