@@ -27,7 +27,7 @@
  * @param UseAssemblerDfn, whether the assembler DFN is used, if this argument is false the assembly is done by simple overlapping and voxel filtering;
  * @param UseRegistratorDfn, whether the registration DFN is used to further refine the pose estimation obtained by FeaturesMatching3D DFN.
  *
- * Notes: no set of DFNs implementation has produced good result for this DFPC during testing.
+ * Notes: no set of DFNs implementation has produced good result for this DFPC implementation during testing.
  * @{
  */
 
@@ -48,7 +48,7 @@
 #include <FeaturesDescription3D/FeaturesDescription3DInterface.hpp>
 #include <FeaturesMatching3D/FeaturesMatching3DInterface.hpp>
 #include <PointCloudAssembly/PointCloudAssemblyInterface.hpp>
-#include <PointCloudTransform/PointCloudTransformInterface.hpp>
+#include <PointCloudTransformation/PointCloudTransformationInterface.hpp>
 #include <PointCloudFiltering/PointCloudFilteringInterface.hpp>
 #include <Registration3D/Registration3DInterface.hpp>
 
@@ -128,7 +128,7 @@ namespace Reconstruction3D
 		CDFF::DFN::FeaturesDescription3DInterface* optionalFeaturesDescriptor3d;
 		CDFF::DFN::FeaturesMatching3DInterface* featuresMatcher3d;
 		CDFF::DFN::PointCloudAssemblyInterface* cloudAssembler;
-		CDFF::DFN::PointCloudTransformInterface* cloudTransformer;
+		CDFF::DFN::PointCloudTransformationInterface* cloudTransformer;
 		CDFF::DFN::PointCloudFilteringInterface* cloudFilter;
 		CDFF::DFN::Registration3DInterface* registrator3d;
 

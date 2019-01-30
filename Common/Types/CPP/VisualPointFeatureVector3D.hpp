@@ -30,6 +30,7 @@ typedef asn1SccVisualPointFeatureVector3D VisualPointFeatureVector3D;
 typedef asn1SccVisualPointFeature3D_point VisualPoint;
 typedef asn1SccVisualPointFeatureVector3DType VisualPointFeatureVector3DType;
 typedef asn1SccVisualPointFeatureVector3D_list VisualPointFeatureVector3DList;
+typedef asn1SccVisualPointFeature3DType VisualPointFeature3DType;
 
 // Enumerated types
 
@@ -44,10 +45,16 @@ const VisualPointFeatureVector3DType ALL_POSITIONS_VECTOR = asn1Sccall_positions
 const VisualPointFeatureVector3DType ALL_REFERENCES_VECTOR = asn1Sccall_references;
 const VisualPointFeatureVector3DType HYBRID_VECTOR = asn1Scchybrid_vector;
 
+const VisualPointFeature3DType HISTOGRAM_DESCRIPTOR = asn1Scchistogram;
+const VisualPointFeature3DType SHOT_DESCRIPTOR = asn1Sccshot;
+const VisualPointFeature3DType PFH_DESCRIPTOR = asn1Sccpfh;
+
 // Global constant variables
 
 const int MAX_FEATURE_3D_POINTS = static_cast<int>(features3DElementsMax);
 const int MAX_DESCRIPTOR_3D_LENGTH = static_cast<int>(descriptor3DNameLength);
+const int SHOT_DESCRIPTOR_LENGTH = static_cast<int>(shotDescriptorLength);
+const int PFH_DESCRIPTOR_LENGTH = static_cast<int>(pfhDescriptorLength);
 
 // Pointer types
 
@@ -63,10 +70,11 @@ VisualPointFeatureVector3DPtr NewVisualPointFeatureVector3D();
 VisualPointFeatureVector3DSharedPtr NewSharedVisualPointFeatureVector3D();
 void Initialize(VisualPointFeatureVector3D& featuresVector);
 
-void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, float z);
-void AddPoint(VisualPointFeatureVector3D& featuresVector, BaseTypesWrapper::T_UInt64 index, BaseTypesWrapper::T_UInt16 pointCloudIdentifier = 0);
+void AddPoint(VisualPointFeatureVector3D& featuresVector, float x, float y, float z, VisualPointFeature3DType featureType = HISTOGRAM_DESCRIPTOR);
+void AddPoint(VisualPointFeatureVector3D& featuresVector, BaseTypesWrapper::T_UInt64 index, BaseTypesWrapper::T_UInt16 pointCloudIdentifier = 0,VisualPointFeature3DType featureType = HISTOGRAM_DESCRIPTOR);
 void ClearPoints(VisualPointFeatureVector3D& featuresVector);
 VisualPointFeatureVector3DType GetVectorType(const VisualPointFeatureVector3D& featuresVector);
+VisualPointFeature3DType GetFeatureType(const VisualPointFeatureVector3D& featuresVector);
 int GetNumberOfPoints(const VisualPointFeatureVector3D& featuresVector);
 float GetXCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex);
 float GetYCoordinate(const VisualPointFeatureVector3D& featuresVector, int pointIndex);

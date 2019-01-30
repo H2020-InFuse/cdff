@@ -1,0 +1,7 @@
+- Name: GeneralParameters
+  SettingsPath: "../tests/ConfigurationFiles/DFNs/StereoSlam/StereoSlamOrbSettings.yaml"
+  VocabularyPath: "../tests/Data/StereoSlamOrb/ORBvoc.bin"
+  EnableViewer: false
+  SaveMap: false
+  MapFile: ""
+

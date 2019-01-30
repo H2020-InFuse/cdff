@@ -1,10 +1,12 @@
 #!/bin/bash
 
+# Maintainers: xma@spaceapplications.com
+
 # find changed files between this branch and master
 ChangedFiles=$(git diff --name-only master . )
 SourceFiles=()
 for f in $ChangedFiles; do
-  if [[ $f =~ \.(c|cpp|h|cc)$ ]]; then
+  if [[ $f =~ \.(c|cc|cpp|h|hpp)$ ]]; then
    SourceFiles+=" $f" 
   fi
 done

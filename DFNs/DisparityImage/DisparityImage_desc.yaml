@@ -4,11 +4,9 @@ input_ports:
       type: asn1SccFramePair
       doc: A stereo pair of images
 output_ports:
-    - name: rawDisparity
+    - name: disparity
       type: asn1SccFrame
       doc: The corresponding disparity image
 implementations:
     - DisparityImage
     - DisparityImageEdres
-
-

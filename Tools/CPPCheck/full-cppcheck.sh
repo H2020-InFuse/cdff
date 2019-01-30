@@ -1,5 +1,6 @@
 #!/bin/bash
-set -eax
+
+# Maintainers: xma@spaceapplications.com
 
 if [ $# -eq 0 ]; then
     echo "No compilation database provided.

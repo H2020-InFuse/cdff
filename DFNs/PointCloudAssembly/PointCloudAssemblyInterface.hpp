@@ -59,9 +59,10 @@ namespace DFN
 
             asn1SccPointcloud inFirstPointCloud;
             asn1SccPointcloud inSecondPointCloud;
-	    asn1SccPose inViewCenter;
-	    float inViewRadius;
+	        asn1SccPose inViewCenter;
+
             asn1SccPointcloud outAssembledPointCloud;
+            float inViewRadius = 0.0f;
     };
 }
 }

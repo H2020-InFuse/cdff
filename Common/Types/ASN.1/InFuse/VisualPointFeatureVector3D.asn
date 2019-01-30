@@ -53,9 +53,20 @@ VisualPointFeatureVector3DType ::= ENUMERATED
 	hybrid-vector	(2)
 	}
 
+VisualPointFeature3DType ::= ENUMERATED
+	{
+	histogram 	(0),
+	shot		(1),
+	pfh		(2)
+	}
+
+shotDescriptorLength T-UInt32 ::= 352
+pfhDescriptorLength T-UInt32 ::= 125
+
 VisualPointFeatureVector3D ::= SEQUENCE
 	{
 	list		SEQUENCE (SIZE(0..features3DElementsMax)) OF VisualPointFeature3D,
-	list-type	VisualPointFeatureVector3DType
+	list-type	VisualPointFeatureVector3DType,
+	feature-type	VisualPointFeature3DType
 	}
 END

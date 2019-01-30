@@ -1,4 +1,4 @@
 /Tests/ConfigurationFiles/DFNs/ImageFiltering/BackgroundSubtractorMOG2.yaml
 /Tests/ConfigurationFiles/DFNs/PrimitiveFinder/BasicPrimitiveFinder.yaml
 /Tests/ConfigurationFiles/DFNs/PoseEstimator/PrimitivesPoseEstimator.yaml
-/Tests/ConfigurationFiles/DFNs/WeightingExpert/PoseWeighting.yaml
+/Tests/ConfigurationFiles/DFNs/PoseWeighting/KalmanFilter.yaml

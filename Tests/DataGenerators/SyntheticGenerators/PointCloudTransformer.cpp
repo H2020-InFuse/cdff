@@ -33,6 +33,10 @@
 #include <Visualizers/PCLVisualizer.hpp>
 #include <pcl/kdtree/kdtree_flann.h>
 
+#include <pcl/sample_consensus/method_types.h>
+#include <pcl/sample_consensus/model_types.h>
+#include <pcl/segmentation/sac_segmentation.h>
+
 namespace DataGenerators
 {
 
@@ -253,6 +257,37 @@ void PointCloudTransformer::Reduce(int targetNumberOfPoints)
 		newTransformedCloud->points.push_back(newPoint);
 		}
 	transformedCloud = newTransformedCloud;
+	}
+
+void PointCloudTransformer::RemoveDominantPlane(float inlierDistance)
+	{
+	InitTransformedCloud();
+	
+	pcl::SACSegmentation<pcl::PointXYZ> ransacSegmentation;
+	ransacSegmentation.setOptimizeCoefficients (true);
+	ransacSegmentation.setModelType (pcl::SACMODEL_PLANE);
+	ransacSegmentation.setMethodType (pcl::SAC_RANSAC);
+	ransacSegmentation.setDistanceThreshold (inlierDistance);
+
+	pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
+	pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
+	ransacSegmentation.setInputCloud (transformedCloud);
+	ransacSegmentation.segment (*inliers, *coefficients);
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr leftoverCloud( new pcl::PointCloud<pcl::PointXYZ>() );
+	int leftoverIndex = 0;	
+	for(int indexIndex = 0; indexIndex < inliers->indices.size(); indexIndex++)
+		{
+		int pointIndex = inliers->indices.at(indexIndex);
+		while (leftoverIndex < pointIndex)
+			{
+			pcl::PointXYZ leftoverPoint= transformedCloud->points.at(leftoverIndex);
+			leftoverCloud->points.push_back(leftoverPoint);
+			leftoverIndex++;
+			}
+		leftoverIndex++;
+		}
+	transformedCloud = leftoverCloud;
 	}
 
 /* --------------------------------------------------------------------------

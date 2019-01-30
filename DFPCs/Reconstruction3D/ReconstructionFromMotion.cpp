@@ -30,6 +30,16 @@
 #include <Errors/Assert.hpp>
 #include <Errors/AssertOnTest.hpp>
 
+#include <Executors/ImageFiltering/ImageFilteringExecutor.hpp>
+#include <Executors/PointCloudReconstruction2DTo3D/PointCloudReconstruction2DTo3DExecutor.hpp>
+#include <Executors/FeaturesExtraction2D/FeaturesExtraction2DExecutor.hpp>
+#include <Executors/FeaturesDescription2D/FeaturesDescription2DExecutor.hpp>
+#include <Executors/FeaturesMatching2D/FeaturesMatching2DExecutor.hpp>
+#include <Executors/FundamentalMatrixComputation/FundamentalMatrixComputationExecutor.hpp>
+#include <Executors/CamerasTransformEstimation/CamerasTransformEstimationExecutor.hpp>
+#include <Executors/PointCloudAssembly/PointCloudAssemblyExecutor.hpp>
+#include <Executors/PointCloudTransformation/PointCloudTransformationExecutor.hpp>
+
 namespace CDFF
 {
 namespace DFPC
@@ -39,11 +49,13 @@ namespace Reconstruction3D
 
 using namespace CDFF::DFN;
 using namespace VisualPointFeatureVector2DWrapper;
+using namespace VisualPointFeatureVector3DWrapper;
 using namespace FrameWrapper;
 using namespace CorrespondenceMap2DWrapper;
 using namespace MatrixWrapper;
 using namespace PoseWrapper;
 using namespace PointCloudWrapper;
+using namespace Executors;
 
 /* --------------------------------------------------------------------------
  *
@@ -51,18 +63,10 @@ using namespace PointCloudWrapper;
  *
  * --------------------------------------------------------------------------
  */
-ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
+ReconstructionFromMotion::ReconstructionFromMotion() :
+	EMPTY_FEATURE_VECTOR( NewVisualPointFeatureVector3D() ),
+	LEFT_FEATURE_CATEGORY ( "left_features" )
 	{
-	if (map == NULL)
-		{
-		this->map = new ObservedScene();
-		}
-	else
-		{
-		this->map = map;
-		}
-	parameters = DEFAULT_PARAMETERS;
-
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "PositionX", parameters.rightToLeftCameraPose.positionX, DEFAULT_PARAMETERS.rightToLeftCameraPose.positionX);
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "PositionY", parameters.rightToLeftCameraPose.positionY, DEFAULT_PARAMETERS.rightToLeftCameraPose.positionY);
 	parametersHelper.AddParameter<float>("RightToLeftCameraPose", "PositionZ", parameters.rightToLeftCameraPose.positionZ, DEFAULT_PARAMETERS.rightToLeftCameraPose.positionZ);
@@ -74,24 +78,8 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
 
 	parametersHelper.AddParameter<float>("GeneralParameters", "PointCloudMapResolution", parameters.pointCloudMapResolution, DEFAULT_PARAMETERS.pointCloudMapResolution);
 	parametersHelper.AddParameter<float>("GeneralParameters", "SearchRadius", parameters.searchRadius, DEFAULT_PARAMETERS.searchRadius);
-
-	currentLeftImage = NewFrame();
-	currentRightImage = NewFrame();
-	pastLeftImage = NULL;
-	filteredCurrentLeftImage = NULL;
-	filteredPastLeftImage = NewFrame();
-	filteredCurrentRightImage = NULL;
-	currentLeftKeypointsVector = NewVisualPointFeatureVector2D();
-	pastLeftKeypointsVector = NewVisualPointFeatureVector2D();
-	currentRightKeypointsVector = NewVisualPointFeatureVector2D();
-	currentLeftFeaturesVector = NULL;
-	pastLeftFeaturesVector = NULL;
-	currentRightFeaturesVector = NULL;
-	pastToCurrentCorrespondenceMap = NewCorrespondenceMap2D();
-	leftRightCorrespondenceMap = NewCorrespondenceMap2D();
-	fundamentalMatrix = NewMatrix3d();
-	pastToCurrentCameraTransform = NewPose3D();
-	pointCloud = NewPointCloud();
+	parametersHelper.AddParameter<int>("GeneralParameters", "TrackedHistorySize", parameters.trackedHistorySize, DEFAULT_PARAMETERS.trackedHistorySize);
+	parametersHelper.AddParameter<bool>("GeneralParameters", "UseAssemblerDfn", parameters.useAssemblerDfn, DEFAULT_PARAMETERS.useAssemblerDfn);
 
 	leftFilter = NULL;
 	rightFilter = NULL;
@@ -101,43 +89,32 @@ ReconstructionFromMotion::ReconstructionFromMotion(Map* map)
 	cameraTransformEstimator = NULL;
 	reconstructor3D = NULL;
 	optionalFeaturesDescriptor = NULL;
+	cloudAssembler = NULL;
+	cloudTransformer = NULL;
 
 	configurationFilePath = "";
 
-	rightToLeftCameraPose = new Pose3D();
+	bundleHistory = NULL;
+	firstInput = true;
+	SetPosition(zeroPose, 0, 0, 0);
+	SetOrientation(zeroPose, 0, 0, 0, 1);
 	}
 
 ReconstructionFromMotion::~ReconstructionFromMotion()
 	{
-	if (leftFilter != NULL)
-		{
-		DeleteIfNotNull(filteredCurrentLeftImage);
-		}
-	if (rightFilter != NULL)
-		{
-		DeleteIfNotNull(filteredCurrentRightImage);
-		}
-	delete(filteredPastLeftImage);
+	DeleteIfNotNull(leftFilter);
+	DeleteIfNotNull(rightFilter);
+	DeleteIfNotNull(featuresExtractor);
+	DeleteIfNotNull(featuresMatcher);
+	DeleteIfNotNull(fundamentalMatrixComputer);
+	DeleteIfNotNull(cameraTransformEstimator);
+	DeleteIfNotNull(reconstructor3D);
+	DeleteIfNotNull(optionalFeaturesDescriptor);
+	DeleteIfNotNull(cloudAssembler);
+	DeleteIfNotNull(cloudTransformer);
+	DeleteIfNotNull(bundleHistory);
 
-	if (optionalFeaturesDescriptor != NULL)
-		{
-		DeleteIfNotNull(currentLeftFeaturesVector);
-		DeleteIfNotNull(pastLeftFeaturesVector);
-		DeleteIfNotNull(currentRightFeaturesVector);
-		}
-
-	delete(currentLeftImage);
-	delete(currentRightImage);
-	delete(currentLeftKeypointsVector);
-	delete(pastLeftKeypointsVector);
-	delete(currentRightKeypointsVector);
-
-	delete(pastToCurrentCorrespondenceMap);
-	delete(leftRightCorrespondenceMap);
-	delete(fundamentalMatrix);
-	delete(pastToCurrentCameraTransform);
-	delete(pointCloud);
-	delete(rightToLeftCameraPose);
+	delete(EMPTY_FEATURE_VECTOR);
 	}
 
 void ReconstructionFromMotion::run() 
@@ -145,10 +122,11 @@ void ReconstructionFromMotion::run()
 	DEBUG_PRINT_TO_LOG("Structure from motion start", "");
 	outSuccess = ComputeCameraMovement();
 
-	if (outSuccess)
+	if (outSuccess || firstInput)
 		{
-		ComputePointCloud();
-		UpdateScene();
+		PointCloudConstPtr pointCloud = ComputePointCloud();
+		UpdateScene(pointCloud);
+		firstInput = false;
 		}
 	}
 
@@ -179,7 +157,9 @@ const ReconstructionFromMotion::ReconstructionFromMotionOptionsSet Reconstructio
 		/*.orientationY =*/ 0,
 		/*.orientationZ =*/ 0,
 		/*.orientationW =*/ 1
-		}
+		},
+	/*.trackedHistorySize =*/ 5,
+	/*.useAssemblerDfn =*/ true
 	};
 
 /* --------------------------------------------------------------------------
@@ -190,67 +170,124 @@ const ReconstructionFromMotion::ReconstructionFromMotionOptionsSet Reconstructio
  */
 void ReconstructionFromMotion::ConfigureExtraParameters()
 	{
-	
 	parametersHelper.ReadFile( configurator.GetExtraParametersConfigurationFilePath() );
 
-	SetPosition(*rightToLeftCameraPose, parameters.rightToLeftCameraPose.positionX, parameters.rightToLeftCameraPose.positionY, parameters.rightToLeftCameraPose.positionZ);
-	SetOrientation(*rightToLeftCameraPose, parameters.rightToLeftCameraPose.orientationX, parameters.rightToLeftCameraPose.orientationY, 
+	SetPosition(rightToLeftCameraPose, parameters.rightToLeftCameraPose.positionX, parameters.rightToLeftCameraPose.positionY, parameters.rightToLeftCameraPose.positionZ);
+	SetOrientation(rightToLeftCameraPose, parameters.rightToLeftCameraPose.orientationX, parameters.rightToLeftCameraPose.orientationY, 
 			parameters.rightToLeftCameraPose.orientationZ, parameters.rightToLeftCameraPose.orientationW);
 
+	DeleteIfNotNull(bundleHistory);
+	bundleHistory = new BundleHistory(parameters.trackedHistorySize + 1);
+
 	ASSERT(parameters.pointCloudMapResolution > 0, "RegistrationFromStereo Error, Point Cloud Map resolution is not positive");
-	map->SetPointCloudMapResolution(parameters.pointCloudMapResolution);
+	pointCloudMap.SetResolution(parameters.pointCloudMapResolution);
 	}
 
 bool ReconstructionFromMotion::ComputeCameraMovement()
-	{ 
-	Copy(inLeftImage, *currentLeftImage);
-	Copy(inRightImage, *currentRightImage);
+	{
+	bundleHistory->AddImages(inLeftImage, inRightImage);
 
-	map->AddFrames(currentLeftImage, currentRightImage);
-	FilterCurrentLeftImage();
-	ExtractCurrentLeftFeatures();
-	DescribeCurrentLeftFeatures();
+	FrameConstPtr filteredLeftImage = NULL;
+	Execute(leftFilter, inLeftImage, filteredLeftImage);
+
+	VisualPointFeatureVector2DConstPtr leftKeypointVector = NULL;
+	VisualPointFeatureVector2DConstPtr leftFeatureVector = NULL;
+
+	Execute(featuresExtractor, filteredLeftImage, leftKeypointVector);
+	Execute(optionalFeaturesDescriptor, filteredLeftImage, leftKeypointVector, leftFeatureVector);
+	bundleHistory->AddFeatures(*leftFeatureVector, LEFT_FEATURE_CATEGORY);
 
 	bool success = false;
-	for(pastLeftImage = map->GetNextReferenceLeftFrame(); !success && pastLeftImage != NULL; pastLeftImage = map->GetNextReferenceLeftFrame())
+	for(int backwardStep = 1; backwardStep <= parameters.trackedHistorySize && !success; backwardStep++)
 		{
-		DEBUG_PRINT_TO_LOG("Selected Past Frame", success);
-		FilterPastLeftImage();
-		ExtractPastLeftFeatures();
-		DescribePastLeftFeatures();
-
-		MatchCurrentAndPastFeatures();
-		success = ComputeFundamentalMatrix();
-		if (success)
+		VisualPointFeatureVector2DConstPtr pastLeftFeatureVector = bundleHistory->GetFeatures(backwardStep, LEFT_FEATURE_CATEGORY);
+		if (pastLeftFeatureVector == NULL)
 			{
-			success = ComputePastToCurrentTransform();
+			break;
 			}
+
+		CorrespondenceMap2DConstPtr leftPastCorrespondenceMap = NULL;
+		Execute(featuresMatcher, leftFeatureVector, pastLeftFeatureVector, leftPastCorrespondenceMap);
+
+		Matrix3dConstPtr fundamentalMatrix = NULL;
+		Execute(fundamentalMatrixComputer, leftPastCorrespondenceMap, fundamentalMatrix, success);
+
+		if(success)
+			{
+			Pose3DConstPtr newPose = NULL;
+			Execute(cameraTransformEstimator, fundamentalMatrix, leftPastCorrespondenceMap, newPose, success);
+			if(success)
+				{
+				Copy(*newPose, poseToPreviousPose);
+				}
+			}
+
 		}
 
+	if(!success && !firstInput)
+		{
+		bundleHistory->RemoveEntry(0);
+		}
 	return success;
 	}
 
-void ReconstructionFromMotion::ComputePointCloud()
+PointCloudConstPtr ReconstructionFromMotion::ComputePointCloud()
 	{
-	ASSERT(currentLeftFeaturesVector != NULL, "ReconstructionFromMotion error, ComputePointCloud() called before left feature vector was computed");
-	FilterCurrentRightImage();
-	ExtractCurrentRightFeatures();
-	DescribeCurrentRightFeatures();
-	MatchLeftAndRightFeatures();
-	ComputeStereoPointCloud();
+	VisualPointFeatureVector2DConstPtr leftFeatureVector = bundleHistory->GetFeatures(0, LEFT_FEATURE_CATEGORY);
+	ASSERT(leftFeatureVector != NULL, "ReconstructionFromMotion error, ComputePointCloud() called before left feature vector was computed");
+
+	FrameConstPtr filteredRightImage = NULL;
+	Execute(leftFilter, inLeftImage, filteredRightImage);
+
+	VisualPointFeatureVector2DConstPtr rightKeypointVector = NULL;
+	VisualPointFeatureVector2DConstPtr rightFeatureVector = NULL;
+	Execute(featuresExtractor, filteredRightImage, rightKeypointVector);
+	Execute(optionalFeaturesDescriptor, filteredRightImage, rightKeypointVector, rightFeatureVector);
+
+	CorrespondenceMap2DConstPtr leftRightCorrespondenceMap = NULL;
+	Execute(featuresMatcher, leftFeatureVector, rightFeatureVector, leftRightCorrespondenceMap);
+
+	PointCloudConstPtr pointCloud = NULL;
+	Execute(reconstructor3D, *leftRightCorrespondenceMap, rightToLeftCameraPose, pointCloud);
+
+	return pointCloud;
 	}
 
-void ReconstructionFromMotion::UpdateScene()
+void ReconstructionFromMotion::UpdateScene(PointCloudConstPtr inputCloud)
 	{
-	map->AddFramePoseInReference(pastToCurrentCameraTransform);
-	map->AddPointCloudInLastReference(pointCloud);
+	PointCloudWrapper::PointCloudConstPtr outputPointCloud = NULL;
+	if (parameters.useAssemblerDfn)
+		{
+		if(firstInput)
+			{
+			Copy(zeroPose, outPose);
+			}
+		else
+			{
+			Pose3D newPose = Sum(outPose, poseToPreviousPose);
+			Copy(newPose, outPose);
+			}
 
-	Pose3DConstPtr outputPose = map->GetCurrentFramePoseInOrigin();
-	PointCloudConstPtr outputPointCloud = map->GetPartialScene(parameters.searchRadius);
+		PointCloudConstPtr transformedCloud = NULL;
+		Executors::Execute(cloudTransformer, *inputCloud, outPose, transformedCloud);
+		Executors::Execute(cloudAssembler, *transformedCloud, outPose, parameters.searchRadius, outputPointCloud);
+		}
+	else 
+		{
+		if (firstInput)
+			{
+			pointCloudMap.AddPointCloud( inputCloud, EMPTY_FEATURE_VECTOR, &zeroPose);
+			}
+		else
+			{
+			pointCloudMap.AttachPointCloud( inputCloud, EMPTY_FEATURE_VECTOR, &poseToPreviousPose);
+			}
 
-	Copy(*outputPose, outPose);
+		Copy( pointCloudMap.GetLatestPose(), outPose);
+		outputPointCloud = pointCloudMap.GetScenePointCloudInOrigin(&outPose, parameters.searchRadius);
+		}
+
 	Copy(*outputPointCloud, outPointCloud);
-	DEBUG_PRINT_TO_LOG("Scene Cloud", GetNumberOfPoints(*outputPointCloud));
 	}
 
 void ReconstructionFromMotion::AssignDfnsAlias()
@@ -264,196 +301,11 @@ void ReconstructionFromMotion::AssignDfnsAlias()
 	reconstructor3D = static_cast<PointCloudReconstruction2DTo3DInterface*>( configurator.GetDfn("reconstructor3D") );
 	optionalFeaturesDescriptor = static_cast<FeaturesDescription2DInterface*>( configurator.GetDfn("featuresDescriptor", true) );
 
-	ASSERT(featuresExtractor != NULL, "DFPC Structure from motion error: featuresExtractor DFN configured incorrectly");
-	ASSERT(featuresMatcher != NULL, "DFPC Structure from motion error: featuresMatcher DFN configured incorrectly");
-	ASSERT(fundamentalMatrixComputer != NULL, "DFPC Structure from motion error: fundamentalMatrixComputer DFN configured incorrectly");
-	ASSERT(cameraTransformEstimator != NULL, "DFPC Structure from motion error: cameraTransformEstimator DFN configured incorrectly");
-	ASSERT(reconstructor3D != NULL, "DFPC Structure from motion error: reconstructor3D DFN configured incorrectly");
-
-	//This data should be initialized only if the relative DFN is used.
-	if (leftFilter != NULL)
+	if (parameters.useAssemblerDfn)
 		{
-		filteredCurrentLeftImage = NewFrame();
+		cloudAssembler = static_cast<PointCloudAssemblyInterface*>( configurator.GetDfn("cloudAssembler") );
+		cloudTransformer = static_cast<PointCloudTransformationInterface*>( configurator.GetDfn("cloudTransformer") );
 		}
-	if (rightFilter != NULL)
-		{
-		filteredCurrentRightImage = NewFrame();
-		}
-	if (optionalFeaturesDescriptor != NULL)
-		{
-		currentLeftFeaturesVector = NewVisualPointFeatureVector2D();
-		pastLeftFeaturesVector = NewVisualPointFeatureVector2D();
-		currentRightFeaturesVector = NewVisualPointFeatureVector2D();
-		}
-	}
-
-void ReconstructionFromMotion::FilterCurrentLeftImage()
-	{
-	if (leftFilter != NULL)
-		{
-		leftFilter->imageInput(*currentLeftImage);
-		leftFilter->process();
-		Copy( leftFilter->imageOutput(), *filteredCurrentLeftImage);
-		DEBUG_PRINT_TO_LOG("Filtered Current Frame", "");
-		}
-	else
-		{
-		filteredCurrentLeftImage = currentLeftImage;
-		}
-	}
-
-void ReconstructionFromMotion::FilterPastLeftImage()
-	{
-	if (leftFilter != NULL)
-		{
-		leftFilter->imageInput(*pastLeftImage);
-		leftFilter->process();
-		Copy( leftFilter->imageOutput(), *filteredPastLeftImage);
-		DEBUG_PRINT_TO_LOG("Filtered Past Frame", "");
-		}
-	else
-		{
-		Copy(*pastLeftImage, *filteredPastLeftImage);
-		}
-	}
-
-void ReconstructionFromMotion::FilterCurrentRightImage()
-	{
-	if (rightFilter != NULL)
-		{
-		rightFilter->imageInput(*currentRightImage);
-		rightFilter->process();
-		Copy( rightFilter->imageOutput(), *filteredCurrentRightImage);
-		DEBUG_PRINT_TO_LOG("Filtered Current Right Frame", "");
-		}
-	else
-		{
-		filteredCurrentRightImage = currentRightImage;
-		}
-	}
-
-void ReconstructionFromMotion::ExtractCurrentLeftFeatures()
-	{
-	featuresExtractor->frameInput(*filteredCurrentLeftImage);
-	featuresExtractor->process();
-	Copy( featuresExtractor->featuresOutput(), *currentLeftKeypointsVector);
-	DEBUG_PRINT_TO_LOG("Extracted Current Features", GetNumberOfPoints(*currentLeftKeypointsVector) );
-	}
-
-void ReconstructionFromMotion::ExtractPastLeftFeatures()
-	{
-	featuresExtractor->frameInput(*filteredPastLeftImage);
-	featuresExtractor->process();
-	Copy( featuresExtractor->featuresOutput(), *pastLeftKeypointsVector);
-	DEBUG_PRINT_TO_LOG("Extracted Past Features", GetNumberOfPoints(*pastLeftKeypointsVector) );
-	}
-
-void ReconstructionFromMotion::ExtractCurrentRightFeatures()
-	{
-	featuresExtractor->frameInput(*filteredCurrentRightImage);
-	featuresExtractor->process();
-	Copy( featuresExtractor->featuresOutput(), *currentRightKeypointsVector);
-	DEBUG_PRINT_TO_LOG("Extracted Current Right Features", GetNumberOfPoints(*currentRightKeypointsVector) );
-	}
-
-void ReconstructionFromMotion::DescribeCurrentLeftFeatures()
-	{
-	if (optionalFeaturesDescriptor != NULL)
-		{
-		optionalFeaturesDescriptor->frameInput(*filteredCurrentLeftImage);
-		optionalFeaturesDescriptor->featuresInput(*currentLeftKeypointsVector);
-		optionalFeaturesDescriptor->process();
-		Copy( optionalFeaturesDescriptor->featuresOutput(), *currentLeftFeaturesVector);
-		DEBUG_PRINT_TO_LOG("Described Current Features", GetNumberOfPoints(*currentLeftFeaturesVector) );
-		}
-	else
-		{
-		currentLeftFeaturesVector = currentLeftKeypointsVector;
-		}
-	}
-
-void ReconstructionFromMotion::DescribePastLeftFeatures()
-	{
-	if (optionalFeaturesDescriptor != NULL)
-		{
-		optionalFeaturesDescriptor->frameInput(*filteredPastLeftImage);
-		optionalFeaturesDescriptor->featuresInput(*pastLeftKeypointsVector);
-		optionalFeaturesDescriptor->process();
-		Copy(optionalFeaturesDescriptor->featuresOutput(), *pastLeftFeaturesVector);
-		DEBUG_PRINT_TO_LOG("Described Past Features", GetNumberOfPoints(*pastLeftFeaturesVector) );
-		}
-	else
-		{
-		pastLeftFeaturesVector = pastLeftKeypointsVector;
-		}
-	}
-
-void ReconstructionFromMotion::DescribeCurrentRightFeatures()
-	{
-	if (optionalFeaturesDescriptor != NULL)
-		{
-		optionalFeaturesDescriptor->frameInput(*filteredCurrentRightImage);
-		optionalFeaturesDescriptor->featuresInput(*currentRightKeypointsVector);
-		optionalFeaturesDescriptor->process();
-		Copy( optionalFeaturesDescriptor->featuresOutput(), *currentRightFeaturesVector);
-		DEBUG_PRINT_TO_LOG("Described Current Right Features", GetNumberOfPoints(*currentRightFeaturesVector) );
-		}
-	else
-		{
-		currentRightFeaturesVector = currentRightKeypointsVector;
-		}
-	}
-
-void ReconstructionFromMotion::MatchCurrentAndPastFeatures()
-	{
-	featuresMatcher->sourceFeaturesInput(*currentLeftFeaturesVector);
-	featuresMatcher->sinkFeaturesInput(*pastLeftFeaturesVector);
-	featuresMatcher->process();
-	Copy( featuresMatcher->matchesOutput(), *pastToCurrentCorrespondenceMap);	
-	DEBUG_PRINT_TO_LOG("Correspondences", GetNumberOfCorrespondences(*pastToCurrentCorrespondenceMap) );
-	}
-
-void ReconstructionFromMotion::MatchLeftAndRightFeatures()
-	{
-	featuresMatcher->sourceFeaturesInput(*currentRightFeaturesVector);
-	featuresMatcher->sinkFeaturesInput(*currentLeftFeaturesVector);
-	featuresMatcher->process();
-	Copy( featuresMatcher->matchesOutput(), *leftRightCorrespondenceMap);	
-	DEBUG_PRINT_TO_LOG("Left Right Correspondences", GetNumberOfCorrespondences(*leftRightCorrespondenceMap) );
-	}
-
-bool ReconstructionFromMotion::ComputeFundamentalMatrix()
-	{
-	if (GetNumberOfCorrespondences(*pastToCurrentCorrespondenceMap) < 8 )
-		{
-		return false;
-		}
-	fundamentalMatrixComputer->matchesInput(*pastToCurrentCorrespondenceMap);
-	fundamentalMatrixComputer->process();
-	Copy( fundamentalMatrixComputer->fundamentalMatrixOutput(), *fundamentalMatrix);	
-	bool fundamentalMatrixSuccess =  fundamentalMatrixComputer->successOutput();
-	DEBUG_PRINT_TO_LOG("Fundamental Matrix", fundamentalMatrixSuccess);
-	return fundamentalMatrixSuccess;
-	}
-
-bool ReconstructionFromMotion::ComputePastToCurrentTransform()
-	{
-	cameraTransformEstimator->fundamentalMatrixInput(*fundamentalMatrix);
-	cameraTransformEstimator->matchesInput(*pastToCurrentCorrespondenceMap);
-	cameraTransformEstimator->process();
-	Copy( cameraTransformEstimator->transformOutput(), *pastToCurrentCameraTransform);
-	bool essentialMatrixSuccess = cameraTransformEstimator->successOutput();
-	DEBUG_PRINT_TO_LOG("Essential Matrix", essentialMatrixSuccess);
-	return essentialMatrixSuccess;
-	}
-
-void ReconstructionFromMotion::ComputeStereoPointCloud()
-	{
-	reconstructor3D->poseInput(*rightToLeftCameraPose);
-	reconstructor3D->matchesInput(*leftRightCorrespondenceMap);
-	reconstructor3D->process();
-	Copy( reconstructor3D->pointcloudOutput(), *pointCloud);
-	DEBUG_PRINT_TO_LOG("Point Cloud", GetNumberOfPoints(*pointCloud));
 	}
 
 }

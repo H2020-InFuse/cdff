@@ -4,6 +4,8 @@ FROM nexus.spaceapplications.com/repository/infuse/cdff-base:latest
 
 ARG USER
 ARG PASS
+ARG MAGUSER
+ARG MAGPASS
 ARG INSTALL_DIR=/usr/local
 ENV INSTALL_CDFF=$INSTALL_DIR
 
@@ -70,7 +72,17 @@ libqhull-dev && \
 
 RUN wget --user ${USER} --password ${PASS} https://nexus.spaceapplications.com/repository/raw-infuse/DLRtrackerCore-1.0.0.zip -P /tmp/CDFF/External/source/ && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d dlrtracker-core
 
+RUN apt-get update && apt-get install --yes --quiet \
+libgdal1-dev \ 
+libgsl-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d gdalwrap
 
-LABEL version="4.3.1"
+RUN wget --user ${MAGUSER} --password ${MAGPASS} ftp://ftp.magellium.fr/edreswrapper-sdk-1.0.0.tar.gz -P /tmp/CDFF/External/source/ && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d edres-wrapper
+
+ARG VERSION="4.6.3"
+ARG SHA=0000
+ENV IMAGE_VERSION=$VERSION
+ENV IMAGE_SHA=$SHA
+LABEL version=${IMAGE_VERSION}
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="CI + all extra dependencies"

@@ -1,0 +1,15 @@
+name: PointCloudTransformation
+doc: DFN that transforms the coordinates of a point cloud from their current reference system to an external system E.
+input_ports:
+    - name: pointCloud
+      type: asn1SccPointcloud
+      doc: input point cloud
+    - name: pose
+      type: asn1SccPose
+      doc: pose of the reference system of the point cloud, as viewed from an external system E
+output_ports:
+    - name: transformedPointCloud
+      type: asn1SccPointcloud
+      doc: input cloud as viewed from the external system E
+implementations:
+    - CartesianSystemTransform

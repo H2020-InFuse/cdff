@@ -10,11 +10,11 @@ namespace CDFF
 namespace DFN
 {
 
-StereoReconstructionInterface::StereoReconstructionInterface() :
-inLeft(),
-inRight(),
-outPointcloud()
+StereoReconstructionInterface::StereoReconstructionInterface()
 {
+    asn1SccFrame_Initialize(& inLeft);
+    asn1SccFrame_Initialize(& inRight);
+    asn1SccPointcloud_Initialize(& outPointcloud);
 }
 
 StereoReconstructionInterface::~StereoReconstructionInterface()

@@ -10,12 +10,12 @@ namespace CDFF
 namespace DFN
 {
 
-KFPredictionInterface::KFPredictionInterface() :
-inPreviousState(),
-inCurrentTime(),
-outPredictedState(),
-outPredictedStateCovariance()
+KFPredictionInterface::KFPredictionInterface()
 {
+    asn1SccRigidBodyState_Initialize(& inPreviousState);
+    asn1SccTime_Initialize(& inCurrentTime);
+    asn1SccRigidBodyState_Initialize(& outPredictedState);
+    asn1SccRigidBodyState_Initialize(& outPredictedStateCovariance);
 }
 
 KFPredictionInterface::~KFPredictionInterface()

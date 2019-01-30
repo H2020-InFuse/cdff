@@ -27,7 +27,6 @@ target_link_libraries(
   cdff_dfn_cameras_transform_estimation
   cdff_dfn_color_conversion
   cdff_dfn_disparity_image
-  cdff_dfn_disparity_filtering
   cdff_dfn_fundamental_matrix_computation
   cdff_dfn_features_description_2d
   cdff_dfn_image_degradation
@@ -52,7 +51,7 @@ target_link_libraries(
   cdff_dfn_depth_filtering
   cdff_dfn_force_mesh_generator
   cdff_dfn_point_cloud_assembly
-  cdff_dfn_point_cloud_transform
+  cdff_dfn_point_cloud_transformation
   cdff_dfn_point_cloud_filtering
   cdff_dfn_stereo_motion_estimation
   cdff_dfn_stereo_reconstruction
@@ -60,9 +59,8 @@ target_link_libraries(
   cdff_dfn_features_description_3d
   cdff_dfn_features_matching_3d
   cdff_dfn_bundle_adjustment
+  cdff_dfn_stereo_slam
   cdff_dfn_disparity_to_pointcloud
   cdff_dfn_disparity_to_pointcloud_with_intensity
   cdff_dfn_lidar_based_tracking
 )
-
-target_compile_definitions(dfns_builder PUBLIC WITH_EDRES=$<BOOL:${WITH_EDRES}>)

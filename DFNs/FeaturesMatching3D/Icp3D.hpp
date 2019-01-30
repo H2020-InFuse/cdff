@@ -72,21 +72,18 @@ namespace FeaturesMatching3D
 				visualPointFeatureVector3DToPclPointCloud;
 
 			//Type conversion methods
-			PoseWrapper::Pose3DConstPtr Convert(
-				Eigen::Matrix4f eigenTransform);
+			pcl::PointCloud<pcl::PointXYZ>::Ptr Convert(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& features);
+			PoseWrapper::Pose3DConstPtr InverseConvert(Eigen::Matrix4f eigenTransformSceneInModel);
 
 			//Core computation methods
 			PoseWrapper::Pose3DConstPtr ComputeTransform(
-				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
-				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
+				pcl::PointCloud<pcl::PointXYZ>::Ptr sourceCloud,
+				pcl::PointCloud<pcl::PointXYZ>::Ptr sinkCloud);
 
 			//Input Validation methods
 			void ValidateParameters();
-			void ValidateInputs(
-				Converters::SupportTypes::PointCloudWithFeatures sourceCloud,
-				Converters::SupportTypes::PointCloudWithFeatures sinkCloud);
-			void ValidateCloud(
-				Converters::SupportTypes::PointCloudWithFeatures cloud);
+			void ValidateInputs();
+			void ValidateCloud(const VisualPointFeatureVector3DWrapper::VisualPointFeatureVector3D& features);
 	};
 }
 }

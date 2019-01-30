@@ -1,0 +1,15 @@
+jquery-detached
+jdk-tool
+bouncycastle-api
+workflow-api
+structs
+valgrind
+workflow-job
+workflow-scm-step
+scm-api
+command-launcher
+ace-editor
+workflow-cps
+workflow-support
+workflow-step-api
+script-security

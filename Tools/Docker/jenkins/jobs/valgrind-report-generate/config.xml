@@ -1,0 +1,52 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>14</daysToKeep>
+        <numToKeep>-1</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.FileParameterDefinition>
+          <name>valgrind.xml</name>
+          <description></description>
+        </hudson.model.FileParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <authToken>valgrind</authToken>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders/>
+  <publishers>
+    <org.jenkinsci.plugins.valgrind.ValgrindPublisher plugin="valgrind@0.28">
+      <valgrindPublisherConfig>
+        <pattern>valgrind.xml</pattern>
+        <failThresholdInvalidReadWrite></failThresholdInvalidReadWrite>
+        <failThresholdDefinitelyLost></failThresholdDefinitelyLost>
+        <failThresholdTotal></failThresholdTotal>
+        <unstableThresholdInvalidReadWrite></unstableThresholdInvalidReadWrite>
+        <unstableThresholdDefinitelyLost></unstableThresholdDefinitelyLost>
+        <unstableThresholdTotal></unstableThresholdTotal>
+        <sourceSubstitutionPaths>/:/</sourceSubstitutionPaths>
+        <publishResultsForAbortedBuilds>true</publishResultsForAbortedBuilds>
+        <publishResultsForFailedBuilds>true</publishResultsForFailedBuilds>
+        <failBuildOnMissingReports>true</failBuildOnMissingReports>
+        <failBuildOnInvalidReports>true</failBuildOnInvalidReports>
+      </valgrindPublisherConfig>
+    </org.jenkinsci.plugins.valgrind.ValgrindPublisher>
+  </publishers>
+  <buildWrappers/>
+</project>

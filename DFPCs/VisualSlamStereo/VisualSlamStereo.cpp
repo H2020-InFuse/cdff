@@ -12,6 +12,8 @@ namespace DFPC
 
 VisualSlamStereo::VisualSlamStereo()
 {
+    slam = nullptr;
+    configurationFilePath = "";
 }
 
 VisualSlamStereo::~VisualSlamStereo()
@@ -20,13 +22,25 @@ VisualSlamStereo::~VisualSlamStereo()
 
 void VisualSlamStereo::setup()
 {
-    // TODO DFPC setup steps
+    configurator.configure(configurationFilePath);
+
+    // Create and configure DFNs
+    InstantiateDFNs();
 }
 
 void VisualSlamStereo::run()
 {
-    // TODO DFPC running steps
+    ASSERT( slam!= nullptr, "VisualSlamStereo, Slam DFN is null");
+    slam->framePairInput(inFramePair);
+    slam->process();
+    outEstimatedPose = slam->poseOutput();
 }
+
+
+void VisualSlamStereo::InstantiateDFNs()
+    {
+    slam = static_cast<CDFF::DFN::StereoSlamInterface*>(configurator.GetDfn("stereoSlamOrb"));
+    }
 
 }
 }

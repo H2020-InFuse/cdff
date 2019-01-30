@@ -7,16 +7,15 @@
 #define POSEESTIMATOR_POSEESTIMATORINTERFACE_HPP
 
 #include "DFNCommonInterface.hpp"
-#include <Types/C/Sequences.h>
 #include <Types/C/Frame.h>
-
+#include <Types/C/Sequences.h>
 
 namespace CDFF
 {
 namespace DFN
 {
     /**
-     * DFN that estimates the pose of a robot given the primitives found in the image
+     * DFN that estimates the pose of a robot given the primitives found in the image. This DFN contains a Kalman Filter and hence it considers the current inputs to the DFN as well as the previous ones.
      */
     class PoseEstimatorInterface : public DFNCommonInterface
     {

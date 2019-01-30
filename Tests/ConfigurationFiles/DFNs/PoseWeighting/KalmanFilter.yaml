@@ -1,0 +1,3 @@
+- Name: GeneralParameters
+  NumFrames:  4
+  MaxDistance: 0.01

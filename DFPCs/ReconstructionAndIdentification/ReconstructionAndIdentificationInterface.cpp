@@ -10,15 +10,14 @@ namespace CDFF
 namespace DFPC
 {
 
-ReconstructionAndIdentificationInterface::ReconstructionAndIdentificationInterface() :
-inLeftImage(),
-inRightImage(),
-inModel(),
-inComputeModelFeatures(),
-outPointCloud(),
-outPose(),
-outSuccess()
+ReconstructionAndIdentificationInterface::ReconstructionAndIdentificationInterface()
 {
+    asn1SccFrame_Initialize(& inLeftImage);
+    asn1SccFrame_Initialize(& inRightImage);
+    asn1SccPointcloud_Initialize(& inModel);
+
+    asn1SccPointcloud_Initialize(& outPointCloud);
+    asn1SccPose_Initialize(& outPose);
 }
 
 ReconstructionAndIdentificationInterface::~ReconstructionAndIdentificationInterface()
