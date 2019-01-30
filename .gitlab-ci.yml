@@ -322,6 +322,7 @@
   only:
     - merge_requests
     - master
+  allow_failure: true
   artifacts:
     when: always
     paths:
@@ -354,6 +355,7 @@
   only:
     - merge_requests
     - master
+  allow_failure: true
   artifacts:
    when: always
    paths:
