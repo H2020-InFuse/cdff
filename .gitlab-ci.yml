@@ -60,7 +60,7 @@
    changes:
     - Tools/Docker/Dockerfile.closed
 
-  docker:cdff-dev-ci:
+ docker:cdff-dev-ci:
   <<: *connect
   services:
    - docker:dind
@@ -141,6 +141,7 @@
   stage: configure
   dependencies:
    - generate:asn
+  script: echo ok
   artifacts:
    paths:
     - build/
@@ -150,6 +151,7 @@
   <<: *configure_release
   image: nexus.spaceapplications.com/repository/infuse/cdff-open:latest
   stage: configure
+  script: echo ok
   dependencies:
    - generate:asn
   artifacts:
@@ -161,6 +163,7 @@
   <<: *configure_release
   image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
   stage: configure
+  script: echo ok
   dependencies:
    - generate:asn
   artifacts:
@@ -172,6 +175,7 @@
   <<: *configure_debug
   image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
   stage: configure
+  script: echo ok
   dependencies:
    - generate:asn
   only:
@@ -273,7 +277,7 @@
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
   dependencies:
-    - configure:cdff-closed:release
+    - configure:cdff-closed
   script:
     - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json /cppcheck
   only:
@@ -343,24 +347,23 @@
    - merge_requests
    - master
 
- test:base:unit-tests:
+ test:base:
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage: test
   dependencies:
-   - build:cdff-base:system
+   - build:cdff-base
   script:
    - cd build/Tests/UnitTests
    - ./cdff-unit-tests
 
- test:full:unit-tests:
-  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
+ test:full:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
   stage: test
   dependencies:
-   - build:cdff-ci:system
+   - build:cdff-closed
   script:
    - cd build/Tests/UnitTests
    - ./cdff-unit-tests
-
 
  test:dependencies:local:
   image: ubuntu:latest
