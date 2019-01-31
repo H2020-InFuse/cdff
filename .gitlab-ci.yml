@@ -131,7 +131,7 @@
 
  .build:make: &make
   script:
-    - echo "Docker Image (version:) " $IMAGE_VERSION ", (sha:)" $IMAGE_SHA
+   - echo "Docker Image (version:) " $IMAGE_VERSION ", (sha:)" $IMAGE_SHA
    - "cd build"
    - "JOBS=$((CPUS/2))"
    - "JOBS=$((JOBS > 0 ? JOBS : 1))"
