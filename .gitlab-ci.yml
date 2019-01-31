@@ -203,7 +203,7 @@
   before_script:
    - echo "Docker Image (version:) " $IMAGE_VERSION ", (sha:)" $IMAGE_SHA
    - "mkdir -p build && cd build"
-   - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
+   - "cmake -DBUILD_CENTRALDPM=ON -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
    - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
    - "JOBS=$((CPUS/2))"
    - "JOBS=$((JOBS > 0 ? JOBS : 1))"
@@ -395,7 +395,7 @@
    - build:cdff-base:system
   script:
    - cd build/Tests/UnitTests
-   - ./cdff-unit-tests
+   - LD_LIBRARY_PATH=../../CentralDPM/EnvireAsn1 ./cdff-unit-tests
 
  test:full:unit-tests:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
@@ -404,7 +404,7 @@
    - build:cdff-ci:system
   script:
    - cd build/Tests/UnitTests
-   - ./cdff-unit-tests
+   - LD_LIBRARY_PATH=../../CentralDPM/EnvireAsn1 ./cdff-unit-tests
 
 
  test:dependencies:local:
