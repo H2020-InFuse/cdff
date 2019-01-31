@@ -513,6 +513,10 @@ add_subdirectory(Common)
 add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
 
+if(BUILD_CENTRALDPM)
+  add_subdirectory(Support)
+endif()
+
 # Optionally compile the tests (unit tests, interactive tests, performance
 # tests, etc)
 
