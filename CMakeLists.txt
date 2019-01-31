@@ -507,6 +507,10 @@ include_directories(
   DFPCs
 )
 
+if(BUILD_CENTRALDPM)
+  include_directories(Support)
+endif()
+
 # Process all subdirectories containing a CMakeLists file
 
 add_subdirectory(Common)
