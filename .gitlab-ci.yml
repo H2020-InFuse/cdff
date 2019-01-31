@@ -132,6 +132,8 @@
  .build:make: &make
   script:
    - "cd build"
+   - "JOBS=$((CPUS/2))"
+   - "JOBS=$((JOBS > 0 ? JOBS : 1))"
    - "make --jobs=${JOBS} --output-sync=target"
    - "cd .."
 
