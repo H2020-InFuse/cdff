@@ -413,7 +413,7 @@
   script:
    - External/get-cdff-dependencies.sh -e
    - mkdir -p build && cd build
-   - cmake -D USE_BUNDLED_DEPENDENCIES=ON ..
+   - cmake -D USE_BUNDLED_DEPENDENCIES=ON -D BUILD_CENTRALDPM=ON ..
    - make
    - make install
   only:
@@ -425,7 +425,7 @@
    script:
     - External/get-cdff-dependencies.sh -e -i /usr/local
     - mkdir -p build && cd build
-    - cmake ..
+    - cmake -D BUILD_CENTRALDPM=ON ..
     - make
     - make install
    only:
