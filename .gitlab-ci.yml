@@ -395,7 +395,7 @@
    - build:cdff-base:system
   script:
    - cd build/Tests/UnitTests
-   - LD_LIBRARY_PATH=../../CentralDPM/EnvireAsn1 ./cdff-unit-tests
+   - LD_LIBRARY_PATH=../../Support/CentralDPM/EnvireASN1 ./cdff-unit-tests
 
  test:full:unit-tests:
   image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
@@ -404,7 +404,7 @@
    - build:cdff-ci:system
   script:
    - cd build/Tests/UnitTests
-   - LD_LIBRARY_PATH=../../CentralDPM/EnvireAsn1 ./cdff-unit-tests
+   - LD_LIBRARY_PATH=../../Support/CentralDPM/EnvireASN1 ./cdff-unit-tests
 
 
  test:dependencies:local:

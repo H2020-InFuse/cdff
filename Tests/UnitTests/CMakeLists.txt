@@ -141,7 +141,7 @@ endif()
 
 
 if(BUILD_CENTRALDPM)
-    list(APPEND unittest_sources CentralDPM/CentralDPM.cpp)
+    list(APPEND unittest_sources Support/CentralDPM/CentralDPM.cpp)
 endif()
 
 # Libraries used by the aforementioned source files. They will be linked in the
@@ -225,10 +225,6 @@ endif()
 add_executable(cdff-unit-tests ${unittest_sources})
 target_compile_definitions(cdff-unit-tests PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(cdff-unit-tests ${unittest_libraries})
-
-if(BUILD_CENTRALDPM)
-    target_include_directories(cdff-unit-tests PRIVATE ${CMAKE_SOURCE_DIR})
-endif()
 
 # Register the Catch executable as a CTest test
 #
