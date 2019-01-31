@@ -59,6 +59,7 @@ target_link_libraries(
   cdff_dfn_features_description_3d
   cdff_dfn_features_matching_3d
   cdff_dfn_bundle_adjustment
+  cdff_dfn_stereo_slam
   cdff_dfn_disparity_to_pointcloud
   cdff_dfn_disparity_to_pointcloud_with_intensity
   cdff_dfn_lidar_based_tracking

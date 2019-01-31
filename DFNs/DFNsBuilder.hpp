@@ -43,6 +43,7 @@
 #include <PointCloudTransformation/PointCloudTransformationInterface.hpp>
 #include <Voxelization/VoxelizationInterface.hpp>
 #include <PointCloudFiltering/PointCloudFilteringInterface.hpp>
+#include <StereoSlam/StereoSlamInterface.hpp>
 
 #include <stdlib.h>
 #include <string>
@@ -94,6 +95,7 @@ namespace DFN
 			static PointCloudTransformationInterface* CreatePointCloudTransformation(const std::string& dfnImplementation);
 			static VoxelizationInterface* CreateVoxelization(const std::string& dfnImplementation);
 			static PointCloudFilteringInterface* CreatePointCloudFiltering(const std::string& dfnImplementation);
+            static StereoSlamInterface* CreateStereoSlam(const std::string& dfnImplementation);
 	};
 }
 }

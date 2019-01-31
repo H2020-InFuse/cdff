@@ -1,0 +1,16 @@
+# - Config file for the FooBar package
+# It defines the following variables
+#  FOOBAR_INCLUDE_DIRS - include directories for FooBar
+#  FOOBAR_LIBRARIES    - libraries to link against
+#  FOOBAR_EXECUTABLE   - the bar executable
+ 
+set(@PRJNAME@_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+set(@PRJNAME@_LIBRARIES    "@CONF_LIBRARIES@")
+set(@PRJNAME@_FOUND        "@CONF_FOUND@")
+
+# add current directory, but it is not enough for dependencies.
+link_directories(@CMAKE_CURRENT_BINARY_DIR@)
+
+# the module is loaded and should not be loaded again (avoid multiple add_subdirectory and allow to disable a module).
+set(@PRJNAME@_DONOTLOAD       TRUE) 
+

@@ -13,7 +13,6 @@ if(PCL_FOUND)
 		"EstimationFromStereo.cpp"
 		"RegistrationFromStereo.cpp"
 		"ReconstructionFromStereo.cpp"
-		"ObservedScene.cpp"
 		"MultipleCorrespondences2DRecorder.cpp"
 		"MultipleCorrespondences3DRecorder.cpp"
 		)
