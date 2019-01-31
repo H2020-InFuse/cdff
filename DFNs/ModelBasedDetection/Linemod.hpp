@@ -23,6 +23,12 @@ namespace ModelBasedDetection
      * @brief This class implements the Linemod detection algorithm [Hinterstoisser2012].
      * The current object is detected and matched to the training set based on a multimodal templates approach.
      * The corresponding pose used to generate the training view is also retrieved.
+     * Two modes are possibles:
+     *   - color modality
+     *   - color + depth modalities (depth map in mm and in unsigned short data type)
+     * There are some constraints about the input image size with respect to the sampling steps.
+     * With default sampling steps (5 and 8), VGA resolution is suitable and it is possible to configure
+     * to resize the input image in VGA resolution.
      */
     class Linemod : public ModelBasedDetectionInterface
     {
