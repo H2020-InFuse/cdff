@@ -417,6 +417,26 @@ else()
 
 endif()
 
+option(BUILD_CENTRALDPM "Build the central data product manager" OFF)
+if(BUILD_CENTRALDPM)
+  message(STATUS "Central Data Product Manager will be built if Envire is found")
+
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(ENVIRE_CORE envire_core)
+
+  if (ENVIRE_CORE_FOUND)
+    message(STATUS "Envire found, Data Product Manager will be built")
+  else()
+    set(BUILD_CENTRALDPM OFF)
+    message(STATUS "Envire not found the Data Product Manager will not be built")
+  endif()
+
+else()
+
+    message(STATUS "The Data Product Manager will not be built, becase the correspondent flag is OFF")
+
+endif()
+
 ## Setup CDFF installation -----------------------------------------------------
 
 # Standard installation directories, as defined by the GNU Coding Standards:
@@ -487,11 +507,19 @@ include_directories(
   DFPCs
 )
 
+if(BUILD_CENTRALDPM)
+  include_directories(Support)
+endif()
+
 # Process all subdirectories containing a CMakeLists file
 
 add_subdirectory(Common)
 add_subdirectory(DFNs)
 add_subdirectory(DFPCs)
+
+if(BUILD_CENTRALDPM)
+  add_subdirectory(Support)
+endif()
 
 # Optionally compile the tests (unit tests, interactive tests, performance
 # tests, etc)

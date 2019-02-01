@@ -140,6 +140,10 @@ if(HAVE_OPENCV_CONTRIB)
 endif()
 
 
+if(BUILD_CENTRALDPM)
+    list(APPEND unittest_sources Support/CentralDPM/CentralDPM.cpp)
+endif()
+
 # Libraries used by the aforementioned source files. They will be linked in the
 # test executable. Add any additional library in ALPHABETICAL ORDER, and ONLY
 # list the necessary ones.
@@ -215,6 +219,10 @@ if(WITH_LIBORBSLAM)
     set(unittest_libraries ${unittest_libraries}
         cdff_dfn_stereo_slam
         cdff_dfpc_visual_slam_stereo )
+endif()
+
+if(BUILD_CENTRALDPM)
+    list(APPEND unittest_libraries cdff_support_centraldpm)
 endif()
 
 # Make the Catch executable that runs the unit tests
