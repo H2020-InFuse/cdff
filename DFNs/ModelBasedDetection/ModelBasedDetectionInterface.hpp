@@ -61,7 +61,7 @@ protected:
     asn1SccFrame indepth;
     asn1SccPose outPose;
     asn1SccMatrix2d outDetectionBoundingBox;
-    bool outSuccess = false;
+    bool outSuccess;
 };
 
 }

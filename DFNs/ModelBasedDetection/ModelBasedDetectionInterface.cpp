@@ -10,8 +10,12 @@ namespace CDFF
 namespace DFN
 {
 
-ModelBasedDetectionInterface::ModelBasedDetectionInterface()
+ModelBasedDetectionInterface::ModelBasedDetectionInterface() : outSuccess(false)
 {
+    asn1SccFrame_Initialize(&inimage);
+    asn1SccFrame_Initialize(&indepth);
+    asn1SccPose_Initialize(&outPose);
+    asn1SccMatrix2d_Initialize(&outDetectionBoundingBox);
 }
 
 ModelBasedDetectionInterface::~ModelBasedDetectionInterface()
