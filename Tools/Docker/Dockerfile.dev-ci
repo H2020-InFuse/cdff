@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y \
   libproj-dev \
   python3-gdal
 RUN pip3 install --upgrade pip
-RUN pip3 install pyyaml jinja2 cython numpy msgpack-python pydot nose nose2 pandas memory_profiler coverage
+RUN pip3 install --upgrade pyyaml jinja2 cython numpy msgpack-python pydot nose nose2 pandas memory_profiler coverage
 
 RUN mkdir -p -m 700 /root/.ssh/ && \
   ssh-keyscan gitlab.spaceapplications.com >> /root/.ssh/known_hosts
