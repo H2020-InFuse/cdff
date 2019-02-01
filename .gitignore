@@ -1,19 +1,17 @@
 # CDFF-specific exclude patterns
-*~
 cmake_uninstall.cmake
 cmake_purge.cmake
 /build/
+*~
 
 # Prerequisites
 *.d
 
-# Compiled Object files
-#C++
+# Compiled object files
 *.slo
 *.lo
 *.o
 *.obj
-#C
 *.ko
 *.elf
 
@@ -22,26 +20,21 @@ cmake_purge.cmake
 *.map
 *.exp
 
-# Precompiled Headers
+# Precompiled headers
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
+# Compiled dynamic libraries
 *.dll
 *.so
 *.so.*
 *.dylib
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
+# Compiled static libraries
 *.lai
 *.la
 *.a
 *.lib
-*.lo
 
 # Executables
 *.exe
@@ -56,15 +49,6 @@ cmake_purge.cmake
 *.su
 *.idb
 *.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
 
 # CMake
 CMakeCache.txt
