@@ -1,67 +1,33 @@
 name: ModelBasedVisualTracking
-doc: "Model based tracking based on image edges and contour matching"
+doc: "DFPC that performs model-based tracking based on edge and contour matching in stereo images"
 input_ports:
   - name: imageLeft
     type: asn1SccFrame
-    doc: " a gray image from left camera"
- connections:
-    - dfn: ImageFiltering
-      port: image
+    doc: "grayscale image from left camera"
   - name: imageRight
     type: asn1SccFrame
-    doc: " a gray image from right camera"
- connections:
-    - dfn: ImageFiltering
-      port: image
+    doc: "grayscale image from right camera"
   - name: imageTime
     type: asn1SccTime
-    doc: " Image Acquisition time"
- connections:
-    - dfn: KFPrediction
-      port: rigidBodyState
-  - name:  init
+    doc: "image acquisition time (frame counter x frame rate)"
+  - name: init
     type: asn1SccRigidBodyState
-    doc: " the initial velocity and pose  "
- connections:
-    - dfn: KFPrediction
-      port: rigidBodyState
-    - dfn: PoseEstimator
-      port: rigidBodyState
+    doc: "initial velocity and pose"
   - name: initTime
     type: asn1SccTime
-    doc: " initialization time " 
- connections:
-    - dfn: KFPrediction
-      port: rigidBodyState	
+    doc: "initial time when tracker is initialized (synchronize pose initializer and tracker)"
   - name: doInit
     type: bool
-    doc: " determines whether the tracker dfpc need initialization"
- connections:
-    - dfn: KFPrediction
-      port: rigidBodyState	
-  - name:  egoMotion
+    doc: "whether to initialize the tracker pose and velocity, or not"
+  - name: egoMotion
     type: asn1SccRigidBodyState
-    doc: " the ego motion (position and orientation) of a manipulator with respect to its base  "
- connections:
-    - dfn: KFPrediction
-      port: rigidBodyState	
+    doc: "egomotion (position and orientation) of a manipulator with respect to its base"
 output_ports:
   - name: state
     type: asn1SccRigidBodyState
-    doc: " the rigid body state, pose and local velocity of the target "
- connections:
-    - dfn: PoseEstimator
-      port: rigidBodyState
-    - dfn: KFCorrection
-      port: rigidBodyState
+    doc: "pose and body velocity of the target"
   - name: success
     type: bool
-    doc: " determines whether the dfpc could track the target model"
- connections:
-    - dfn: PoseEstimator
-      port: success
-    - dfn: KFCorrection
-      port: success
-
-    
-
+    doc: "indicates whether the DFPC was successful in tracking the target"
+implementations:
+  - name: EdgeModelContourMatching
