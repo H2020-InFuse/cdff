@@ -71,7 +71,7 @@ void DfpcConfigurator::configure(std::string configurationFilePath)
 		{
     		ASSERT(false, e.what() );
 		}
-	}
+	} 
 
 std::string DfpcConfigurator::GetExtraParametersConfigurationFilePath()
 	{
