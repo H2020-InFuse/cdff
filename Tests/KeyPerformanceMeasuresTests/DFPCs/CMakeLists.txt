@@ -1,4 +1,4 @@
-if(WITH_DLRTRACKER AND OpenCV_FOUND )
+if(DLRTRACKER-CORE_FOUND AND OpenCV_FOUND )
 	add_executable(
 		validation_DLR_model_tracker
 		ModelBasedVisualTracking/EdgeModelContourMatching.cpp
@@ -99,5 +99,3 @@ target_link_libraries(
 	cdff_dfpc_point_cloud_model_localisation
         cdff_visualizers_pcl
 )
-
-

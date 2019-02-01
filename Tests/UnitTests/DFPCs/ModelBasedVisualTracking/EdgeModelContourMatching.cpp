@@ -14,6 +14,8 @@
 #include <Types/C/Time.h>
 #include <Converters/MatToFrameConverter.hpp>
 
+#include <iostream>
+
 using namespace CDFF::DFPC::ModelBasedVisualTracking;
 using namespace Converters;
 using namespace FrameWrapper;
@@ -66,6 +68,8 @@ TEST_CASE( "Call to Setup (EdgeModelContourMatching)", "[configureDLRTracker]" )
 
 TEST_CASE( "Call to Run (EdgeModelContourMatching)", "[processDLRTracker]" )
 {
+	std::cout << "Unit test for CDFF::DFPC::ModelBasedVisualTracking::EdgeModelContourMatching" << std::endl;
+
 	// image type: ASN frame, cv::Mat --> ASN Frame
 	// cv:Mat image type
 	cv::Mat inputImageLeft = cv::imread("../tests/Data/Images/DLR_OOS_camL0000.pgm",0);
@@ -145,6 +149,8 @@ TEST_CASE( "Call to Run (EdgeModelContourMatching)", "[processDLRTracker]" )
 	REQUIRE(estimatedState.pos.arr[2] == 0);
 
 	delete contourMatching;
+
+	std::cout << "Unit test for CDFF::DFPC::ModelBasedVisualTracking::EdgeModelContourMatching: done" << std::endl;
 }
 
 /** @} */

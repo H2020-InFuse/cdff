@@ -139,7 +139,7 @@ if(HAVE_OPENCV_CONTRIB)
     )
 endif()
 
-if(WITH_DLRTRACKER AND OpenCV_FOUND)
+if(DLRTRACKER-CORE_FOUND AND OpenCV_FOUND)
     list(APPEND unittest_sources DFPCs/ModelBasedVisualTracking/EdgeModelContourMatching.cpp) # memory-intensive
 endif()
 
@@ -220,7 +220,7 @@ if(WITH_LIBORBSLAM)
         cdff_dfpc_visual_slam_stereo )
 endif()
 
-if(WITH_DLRTRACKER AND OpenCV_FOUND)
+if(DLRTRACKER-CORE_FOUND AND OpenCV_FOUND)
     list(APPEND unittest_libraries cdff_dfpc_model_based_visual_tracking)
 endif()
 
