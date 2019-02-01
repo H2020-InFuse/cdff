@@ -66,6 +66,7 @@
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
   stage: docker.external
+  allow_failure: true
   script:
    - cd Tools/Docker/
    - ./docker-builder.sh Dockerfile.dev-ci cdff-dev-ci SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
@@ -79,6 +80,7 @@
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
   stage: docker.external
+  allow_failure: true
   script:
    - cd Tools/Docker/
    - ./docker-builder.sh Dockerfile.user cdff-user USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
