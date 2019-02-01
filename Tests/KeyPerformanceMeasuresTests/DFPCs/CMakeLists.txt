@@ -1,4 +1,4 @@
-if(DLRTRACKER-CORE_FOUND AND OpenCV_FOUND )
+if(DLRTRACKER-CORE_FOUND AND OpenCV_FOUND)
 	add_executable(
 		validation_DLR_model_tracker
 		ModelBasedVisualTracking/EdgeModelContourMatching.cpp
@@ -6,8 +6,8 @@ if(DLRTRACKER-CORE_FOUND AND OpenCV_FOUND )
 	)
 	target_link_libraries(
 		validation_DLR_model_tracker
-		PRIVATE  cdff_dfpc_model_based_visual_tracking
-		PUBLIC  cdff_converters cdff_logger opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system cdff_dfpc_configurator
+		PRIVATE cdff_dfpc_model_based_visual_tracking
+		PUBLIC cdff_converters cdff_logger opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system
 	)
 endif()
 
@@ -87,6 +87,7 @@ target_link_libraries(
 	quality_reconstruction_from_motion
 	cdff_dfpc_reconstruction_3d
 )
+
 
 add_executable(
     correctness_features_matching_3d
