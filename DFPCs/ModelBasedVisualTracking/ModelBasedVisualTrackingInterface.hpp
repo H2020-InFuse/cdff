@@ -94,7 +94,7 @@ namespace DFPC
             * Receive value from output port pose
             * @param pose, the rigid body state pose, velocity of the target.
             */
-            virtual asn1SccRigidBodyState stateOutput() const ;
+            virtual const asn1SccRigidBodyState stateOutput() const ;
 
             /**
             * Receive value from output port success

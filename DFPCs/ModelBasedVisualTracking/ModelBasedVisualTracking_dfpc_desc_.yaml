@@ -4,30 +4,64 @@ input_ports:
   - name: imageLeft
     type: asn1SccFrame
     doc: " a gray image from left camera"
+ connections:
+    - dfn: ImageFiltering
+      port: image
   - name: imageRight
     type: asn1SccFrame
     doc: " a gray image from right camera"
+ connections:
+    - dfn: ImageFiltering
+      port: image
   - name: imageTime
     type: asn1SccTime
     doc: " Image Acquisition time"
+ connections:
+    - dfn: KFPrediction
+      port: rigidBodyState
   - name:  init
     type: asn1SccRigidBodyState
     doc: " the initial velocity and pose  "
+ connections:
+    - dfn: KFPrediction
+      port: rigidBodyState
+    - dfn: PoseEstimator
+      port: rigidBodyState
   - name: initTime
     type: asn1SccTime
-    doc: " initialization time " 	
+    doc: " initialization time " 
+ connections:
+    - dfn: KFPrediction
+      port: rigidBodyState	
   - name: doInit
     type: bool
-    doc: " determines whether the tracker dfpc need initialization"	
+    doc: " determines whether the tracker dfpc need initialization"
+ connections:
+    - dfn: KFPrediction
+      port: rigidBodyState	
   - name:  egoMotion
     type: asn1SccRigidBodyState
-    doc: " the ego motion (position and orientation) of a manipulator with respect to its base  "	
+    doc: " the ego motion (position and orientation) of a manipulator with respect to its base  "
+ connections:
+    - dfn: KFPrediction
+      port: rigidBodyState	
 output_ports:
   - name: state
     type: asn1SccRigidBodyState
     doc: " the rigid body state, pose and local velocity of the target "
+ connections:
+    - dfn: PoseEstimator
+      port: rigidBodyState
+    - dfn: KFCorrection
+      port: rigidBodyState
   - name: success
     type: bool
     doc: " determines whether the dfpc could track the target model"
+ connections:
+    - dfn: PoseEstimator
+      port: success
+    - dfn: KFCorrection
+      port: success
+
     
 

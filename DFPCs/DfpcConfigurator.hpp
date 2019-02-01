@@ -38,27 +38,22 @@ namespace DFPC
 		DfpcConfigurator();
 		~DfpcConfigurator();
 
-		/*
-		* @brief this method instantiates the DFNs and configures them according to the information available in the configuration file. It also creates an extra file for the 				DFPC extra parameters.
+	       /*
+		* @brief this method instantiates the DFNs and configures them according to the information available in the configuration file. It also creates an extra file for the 			*	DFPC extra parameters.
 		*
 		* @param configurationFilePath, this is the path to the configuration file.
 		*/
 		void configure(std::string configurationFilePath);
-	
-
-		/*
+	       /*
 		* @brief allows you to retrieve the extra configuration file for the extra DFPC configuration parameters
 		*
 		* @output extraFilePath, this is the path to the extra configuration file.
 		*/
 		std::string GetExtraParametersConfigurationFilePath();
-
-		/*
+	       /*
 		* @brief this method allows you to get the DFN instance instantiated by the configure method.
-		*
 		* @param dfnName, the name of the DFN as mentioned in the original configuration file.
-		* @param optional, if this parameter is false, an error will be generated if the dfn was not successfully instantiated, if the parameter is true the method will return NULL if the dfn was not
-		*		previously generated.
+		* @param optional, if this parameter is false, an error will be generated if the dfn was not successfully instantiated, if the parameter is true the method will 			* return NULL if the dfn was not previously generated.
 		*/
 		CDFF::DFN::DFNCommonInterface* GetDfn(std::string dfnName, bool optional = false);
 

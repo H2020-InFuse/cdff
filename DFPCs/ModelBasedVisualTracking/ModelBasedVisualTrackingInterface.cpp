@@ -40,18 +40,17 @@ namespace DFPC
  *
  * --------------------------------------------------------------------------
  */
-ModelBasedVisualTrackingInterface::ModelBasedVisualTrackingInterface():
-
-	 inImageLeft(),
-	 inImageRight(),
-	 inInit(),
-	 inImageTime(),
-	 inInitTime(),
-	 inDoInit(),
-	 inEgoMotion(),
-         outState(),
-	 outSuccess()
+ModelBasedVisualTrackingInterface::ModelBasedVisualTrackingInterface()
 	{
+	asn1SccFrame_Initialize(&inImageLeft);
+	asn1SccFrame_Initialize(&inImageRight);
+	asn1SccRigidBodyState_Initialize(&inInit);
+	asn1SccTime_Initialize(&inImageTime);
+	asn1SccTime_Initialize(&inInitTime);
+	inDoInit = false;
+	asn1SccRigidBodyState_Initialize(&inEgoMotion);
+	asn1SccRigidBodyState_Initialize(&outState);
+	outSuccess =false;
 	
 	}
 
@@ -90,7 +89,7 @@ void ModelBasedVisualTrackingInterface::egoMotionInput(const asn1SccRigidBodySta
          inEgoMotion = data;
 	}
 
-asn1SccRigidBodyState ModelBasedVisualTrackingInterface::stateOutput() const 
+const asn1SccRigidBodyState ModelBasedVisualTrackingInterface::stateOutput() const 
 	{
     	return outState;
 	}
