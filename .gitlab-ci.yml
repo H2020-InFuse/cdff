@@ -6,12 +6,13 @@
 
  stages:
   - docker.base
-  - docker.ci
+  - docker.open
+  - docker.closed
   - docker.external
   - generation
-  - analyse
+  - configure
   - build
-  - debug-build
+  - analyse
   - report
   - test
   - deploy
@@ -33,109 +34,31 @@
    changes:
     - Tools/Docker/Dockerfile.base
 
- docker:cdff-ci:
+ docker:cdff-open:
   <<: *connect
   services:
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: docker.ci
+  stage: docker.open
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.ci cdff-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE MAGUSER=$EDRES_USER MAGPASS=$EDRES_PASSWORD
+   - ./docker-builder.sh Dockerfile.open cdff-open SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
   only:
    changes:
-    - Tools/Docker/Dockerfile.ci
+    - Tools/Docker/Dockerfile.open
 
- docker:cdff-visp:
+ docker:cdff-closed:
   <<: *connect
   services:
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: docker.ci
+  stage: docker.closed
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.visp cdff-visp SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
+   - ./docker-builder.sh Dockerfile.closed cdff-closed USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE MAGUSER=$EDRES_USER MAGPASS=$EDRES_PASSWORD
   only:
    changes:
-    - Tools/Docker/Dockerfile.visp
-
- docker:cdff-gdalwrap:
-  <<: *connect
-  services:
-   - docker:dind
-  image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: docker.ci
-  script:
-   - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.gdalwrap cdff-gdalwrap SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
-  only:
-   changes:
-    - Tools/Docker/Dockerfile.gdalwrap
-
- docker:cdff-pangolin:
-  <<: *connect
-  services:
-   - docker:dind
-  image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: docker.ci
-  script:
-   - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.pangolin cdff-pangolin SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
-  only:
-   changes:
-    - Tools/Docker/Dockerfile.pangolin
-
- docker:cdff-edres:
-  <<: *connect
-  services:
-   - docker:dind
-  image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: docker.ci
-  script:
-   - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.edres cdff-edres SHA=$CI_COMMIT_SHA $FORCE $NOCACHE MAGUSER=$EDRES_USER MAGPASS=$EDRES_PASSWORD
-  only:
-   changes:
-    - Tools/Docker/Dockerfile.edres
-
- docker:cdff-opencv-contrib:
-  <<: *connect
-  services:
-   - docker:dind
-  image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: docker.ci
-  script:
-   - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.opencv-contrib cdff-opencv-contrib SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
-  only:
-   changes:
-    - Tools/Docker/Dockerfile.opencv-contrib
-
- docker:cdff-dlrtracker:
-  <<: *connect
-  services:
-   - docker:dind
-  image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: docker.ci
-  script:
-   - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.dlrtracker cdff-dlrtracker USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
-  only:
-   changes:
-    - Tools/Docker/Dockerfile.dlrtracker
-
- docker:cdff-envire:
-  <<: *connect
-  services:
-   - docker:dind
-  image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: docker.ci
-  script:
-   - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.envire cdff-envire USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
-  only:
-   changes:
-    - Tools/Docker/Dockerfile.envire
+    - Tools/Docker/Dockerfile.closed
 
  docker:cdff-dev-ci:
   <<: *connect
@@ -143,9 +66,10 @@
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
   stage: docker.external
+  allow_failure: true
   script:
    - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.dev-ci cdff-dev-ci USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
+   - ./docker-builder.sh Dockerfile.dev-ci cdff-dev-ci SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
   only:
    changes:
     - Tools/Docker/Dockerfile.dev-ci
@@ -156,6 +80,7 @@
    - docker:dind
   image: nexus.spaceapplications.com/repository/infuse/docker-builder
   stage: docker.external
+  allow_failure: true
   script:
    - cd Tools/Docker/
    - ./docker-builder.sh Dockerfile.user cdff-user USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
@@ -176,21 +101,8 @@
    changes:
     - Tools/Docker/Dockerfile.valgrind
 
- docker:cdff-jenkins:
-  <<: *connect
-  services:
-   - docker:dind
-  image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: docker.external
-  script:
-   - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.jenkins cdff-jenkins USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
-  only:
-   changes:
-    - Tools/Docker/Dockerfile.jenkins
-
  generate:asn:
-  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
+  image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage : generation
   script:
     - Tools/ASN.1/GeneratorScript.sh
@@ -199,7 +111,7 @@
     - Common/Types/C/
    expire_in: 4 weeks
 
- .build:configure: &configure
+ .configure:release: &configure_release
   before_script:
    - echo "Docker Image (version:) " $IMAGE_VERSION ", (sha:)" $IMAGE_SHA
    - "mkdir -p build && cd build"
@@ -209,101 +121,129 @@
    - "JOBS=$((JOBS > 0 ? JOBS : 1))"
    - "cd .."
 
+ .configure:debug: &configure_debug
+  before_script:
+   - echo "Docker Image (version:) " $IMAGE_VERSION ", (sha:)" $IMAGE_SHA
+   - "mkdir -p build && cd build"
+   - "cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_C_FLAGS_DEBUG:STRING=-ggdb3 -DCMAKE_CXX_FLAGS_DEBUG:STRING=-ggdb3 .."
+   - "CPUS=$(grep --count --regexp=^processor /proc/cpuinfo)"
+   - "JOBS=$((CPUS/2))"
+   - "JOBS=$((JOBS > 0 ? JOBS : 1))"
+   - "cd .."
+
  .build:make: &make
   script:
+   - echo "Docker Image (version:) " $IMAGE_VERSION ", (sha:)" $IMAGE_SHA
    - "cd build"
+   - "JOBS=$((CPUS/2))"
+   - "JOBS=$((JOBS > 0 ? JOBS : 1))"
    - "make --jobs=${JOBS} --output-sync=target"
    - "cd .."
 
- build:cdff-base:system:
-  <<: *configure
+ configure:cdff-base:
+  <<: *configure_release
+  image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
+  stage: configure
+  dependencies:
+   - generate:asn
+  script: echo ok
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
+
+ configure:cdff-open:
+  <<: *configure_release
+  image: nexus.spaceapplications.com/repository/infuse/cdff-open:latest
+  stage: configure
+  script: echo ok
+  dependencies:
+   - generate:asn
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
+
+ configure:cdff-closed:
+  <<: *configure_release
+  image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
+  stage: configure
+  script: echo ok
+  dependencies:
+   - generate:asn
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
+
+ configure:cdff-closed:debug:
+  <<: *configure_debug
+  image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
+  stage: configure
+  script: echo ok
+  dependencies:
+   - generate:asn
+  only:
+    - merge_requests
+    - master
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
+
+ build:cdff-base:
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage: build
   dependencies:
    - generate:asn
+   - configure:cdff-base
   artifacts:
    paths:
     - build/
    expire_in: 4 weeks
 
- build:cdff-ci:system:
-  <<: *configure
+ build:cdff-open:
   <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
+  image: nexus.spaceapplications.com/repository/infuse/cdff-open:latest
   stage: build
   dependencies:
    - generate:asn
+   - configure:cdff-open
   artifacts:
    paths:
     - build/
    expire_in: 4 weeks
 
- build:cdff-pangolin:system:
-  <<: *configure
+ build:cdff-closed:
   <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-pangolin:latest
-  stage: debug-build
+  image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
+  stage: build
   dependencies:
    - generate:asn
-  when: manual
+   - configure:cdff-closed
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
 
- build:cdff-gdalwrap:system:
-  <<: *configure
+ build:cdff-closed:debug:
   <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-gdalwrap:latest
-  stage: debug-build
+  image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
+  stage: build
   dependencies:
    - generate:asn
-  when: manual
-
- build:cdff-edres:system:
-  <<: *configure
-  <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-edres:latest
-  stage: debug-build
-  dependencies:
-   - generate:asn
-  when: manual
-
- build:cdff-envire:system:
-  <<: *configure
-  <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-envire:latest
-  stage: debug-build
-  dependencies:
-   - generate:asn
-  when: manual
-
- build:cdff-opencv-contrib:system:
-  <<: *configure
-  <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-opencv-contrib:latest
-  stage: debug-build
-  dependencies:
-   - generate:asn
-  when: manual
-
- build:cdff-dlrtracker:system:
-  <<: *configure
-  <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-dlrtracker:latest
-  stage: debug-build
-  dependencies:
-   - generate:asn
-  when: manual
-
- build:cdff-visp:system:
-  <<: *configure
-  <<: *make
-  image: nexus.spaceapplications.com/repository/infuse/cdff-visp:latest
-  stage: debug-build
-  dependencies:
-   - generate:asn
-  when: manual
+   - configure:cdff-closed:debug
+  only:
+    - merge_requests
+    - master
+  artifacts:
+   paths:
+    - build/
+   expire_in: 4 weeks
 
  build:user:system:
-  <<: *configure
+  <<: *configure_release
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-user:latest
   stage: build
@@ -312,13 +252,23 @@
    - generate:asn
   when: manual
 
- analyse:memcheck:full:
+ build:dev-ci:system:
+  <<: *configure_release
+  <<: *make
+  image: nexus.spaceapplications.com/repository/infuse/cdff-dev-ci:latest
+  stage: build
+  allow_failure: true
+  dependencies:
+   - generate:asn
+  when: manual
+
+ analyse:memcheck:
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/cdff-valgrind:latest
   dependencies:
-    - generate:asn
+    - build:cdff-closed:debug
   script:
-    - Tools/Valgrind/valgrind.sh --full
+    - Tools/Valgrind/valgrind.sh
   only:
     - merge_requests
     - master
@@ -326,32 +276,16 @@
   artifacts:
     when: always
     paths:
-     - valgrind_debug/results
+     - /memcheck
     expire_in: 4 weeks
 
- report:memcheck:
-  image: nexus.spaceapplications.com/repository/infuse/cdff-jenkins:latest
-  stage: report
-  dependencies:
-   - analyse:memcheck:full
-  only:
-   - merge_requests
-   - master
-  script:
-   - mkdir -p jenkins/
-   - Tools/Valgrind/generate-report.sh
-  allow_failure: true
-  artifacts:
-   when: always
-   paths:
-    - jenkins/
-
- analyse:cppcheck:full:
-  <<: *configure
+ analyse:cppcheck:
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
+  dependencies:
+    - configure:cdff-closed
   script:
-    - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
+    - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json /cppcheck
   only:
     - merge_requests
     - master
@@ -359,7 +293,7 @@
   artifacts:
    when: always
    paths:
-    - cppcheck/
+    - /cppcheck
    expire_in: 4 weeks
 
  analyse:cppcheck:partial:
@@ -370,16 +304,48 @@
   script:
    - Tools/CPPCheck/partial-cppcheck.sh
 
+ report:memcheck:
+  stage: report
+  image: nexus.spaceapplications.com/repository/infuse/cdff-jenkins:latest
+  dependencies:
+   - analyse:memcheck
+  only:
+   - merge_requests
+   - master
+  script:
+   - Valgrind/generate-report.sh
+  allow_failure: true
+  artifacts:
+   when: always
+   paths:
+    - memcheck/
+
+ report:cppcheck:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-cppcheck:1.85
+  stage: report
+  dependencies:
+   - analyse:cppcheck
+  only:
+   - merge_requests
+   - master
+  script:
+   - CPPCHECK/generate-report.sh
+  allow_failure: true
+  artifacts:
+   when: always
+   paths:
+    - cppcheck/
+
  pages:
   stage: deploy
   when: always
   dependencies:
    - report:memcheck
-   - analyse:cppcheck:full
+   - report:cppcheck
   script:
    - mkdir .public
-   - cp -r cppcheck/public/* .public/cppcheck
-   - cp -r jenkins/static_html/* .public/jenkins
+   - cp -r cppcheck/report/* .public/cppcheck
+   - cp -r memcheck/report/* .public/memcheck
    - mv .public public
   artifacts:
    paths:
@@ -388,24 +354,23 @@
    - merge_requests
    - master
 
- test:base:unit-tests:
+ test:base:
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage: test
   dependencies:
-   - build:cdff-base:system
+   - build:cdff-base
   script:
    - cd build/Tests/UnitTests
    - LD_LIBRARY_PATH=../../Support/CentralDPM/EnvireASN1 ./cdff-unit-tests
 
- test:full:unit-tests:
-  image: nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
+ test:full:
+  image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
   stage: test
   dependencies:
-   - build:cdff-ci:system
+   - build:cdff-closed
   script:
    - cd build/Tests/UnitTests
    - LD_LIBRARY_PATH=../../Support/CentralDPM/EnvireASN1 ./cdff-unit-tests
-
 
  test:dependencies:local:
   image: ubuntu:latest
