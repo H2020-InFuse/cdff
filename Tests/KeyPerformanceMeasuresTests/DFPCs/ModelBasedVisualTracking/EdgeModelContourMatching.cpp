@@ -30,7 +30,7 @@ Example: ./validation_DLR_model_tracker ../../tests/ConfigurationFiles/DFPCs/Mod
     (1f) 6th parameter  is the output pose file path; \n \n \
 Example: ./validation_DLR_model_tracker ../../tests/ConfigurationFiles/DFPCs/ModelBasedVisualTracking ../../tests/Data/Images/Sequences ImagesList.txt ../../tests/Data/\n  Images/Sequences  PosesList.txt ../../tests/Data/Images/Sequences/pose.txt \n";
 
-int maindfpcTest(int argc, char* argv[], ModelBasedVisualTrackingInterface* dfpc)
+int maindfpcTest(int argc, char* argv[], CDFF::DFPC::ModelBasedVisualTrackingInterface* dfpc)
 {
 	std::string configurationFilePath;
 	std::string inputImagesFolder;
