@@ -1,6 +1,12 @@
 #include "EdgeTrackerExecutor.hpp"
 #include "EdgeTrackerUtility.hpp"
 using namespace EdgeTrackerHelper;
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgcodecs/imgcodecs.hpp>
+#include <Errors/Assert.hpp>
+
+
+
 
 
 
@@ -10,11 +16,9 @@ using namespace EdgeTrackerHelper;
 
 #include <ModelBasedVisualTracking/ModelBasedVisualTrackingInterface.hpp>
 
-#include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include <Errors/Assert.hpp>
 #include <Types/C/Time.h>
 #include <stdlib.h>
 #include <boost/make_shared.hpp>
@@ -362,14 +366,19 @@ void EdgeTrackerExecutor::ConfigureDfpc()
 	dfpc->setup();
 }
 
-void EdgeTrackerExecutor::LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame )
+void EdgeTrackerExecutor::LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame)
 {
+	// Read image
 	cv::Mat src_image = cv::imread(filePath, 0);
-	assert(src_image.cols > 0 && src_image.rows >0 && "Error: Loaded input image is empty");
-	cv::Mat image(src_image.rows, src_image.cols,CV_8UC1);
-	filterMedian(src_image, image, 5);
+	ASSERT(src_image.cols > 0 && src_image.rows > 0, "Error: input image is empty");
+
+	// Filter it (median blur of aperture size 5 px)
+	cv::Mat filtered_image(src_image.rows, src_image.cols, CV_8UC1);
+	cv::medianBlur(src_image, filtered_image, 5)
+
+	// Convert it to frame
 	DELETE_IF_NOT_NULL(frame);
-	frame= frameConverter.Convert(image);
+	frame = frameConverter.Convert(filtered_image);
 }
 
 void EdgeTrackerExecutor::LoadInputImagesList()
@@ -440,11 +449,6 @@ void EdgeTrackerExecutor::LoadInputPosesList()
 			break;
 	}
 	posesListFile.close();
-}
-
-void EdgeTrackerExecutor::filterMedian(cv::Mat& image, cv::Mat& filteredImage, int apertureSize)
-{
-	cv::medianBlur(image, filteredImage, apertureSize);
 }
 
 inline bool EdgeTrackerExecutor::isFileExist(const std::string& name)

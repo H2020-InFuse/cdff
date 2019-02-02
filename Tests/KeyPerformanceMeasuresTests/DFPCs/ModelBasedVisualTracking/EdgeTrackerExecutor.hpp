@@ -81,9 +81,6 @@ class EdgeTrackerExecutor
 		void LoadInputPose(std::string filePath, double* groundTruthT);
 		void LoadInputPosesList();
 
-		void LoadOutputPose(); // !! Neither implemented nor used !!
-
-		void filterMedian(cv::Mat& image, cv::Mat& filteredImage, int apertureSize);
 		bool isFileExist(const std::string& name);
 		void setState(asn1SccRigidBodyState& state, const double value);
 
