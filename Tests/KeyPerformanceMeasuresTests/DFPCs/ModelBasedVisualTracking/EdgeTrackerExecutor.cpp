@@ -3,7 +3,7 @@
 #include <ctime>
 #include <typeinfo>
 
-using namespace CDFF::DFPC::ModelBasedVisualTracking;
+#include <ModelBasedVisualTracking/ModelBasedVisualTrackingInterface.hpp>
 
 using namespace Converters;
 using namespace FrameWrapper;
