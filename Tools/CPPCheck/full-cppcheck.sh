@@ -6,7 +6,7 @@
 # Uses GNU readlink from GNU coreutils
 DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 IGNORE_FILE=${3:-"${DIR}/cppcheck_ignores.txt"}
-OUTPUT_FOLDER=${2:-"/cppcheck"}
+OUTPUT_FOLDER=${2:-"cppcheck"}
 DATABASE_FILE=${1:-"compile_commands.json"}
 
 cppcheck --version

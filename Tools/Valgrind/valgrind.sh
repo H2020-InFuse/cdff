@@ -8,7 +8,7 @@ FULL=false
 DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 EXECUTABLE=${1:-"Tests/UnitTests/cdff-unit-tests"}
-OUTPUT_FOLDER=${2:-"/memcheck"}
+OUTPUT_FOLDER=${2:-"memcheck"}
 IGNORE_FILE=${3:-"${DIR}/Tools/Valgrind/suppression.txt"}
 FULL=${4:-true}
 
