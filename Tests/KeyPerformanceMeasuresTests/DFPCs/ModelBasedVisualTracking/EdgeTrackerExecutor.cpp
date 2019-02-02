@@ -1,35 +1,48 @@
 #include "EdgeTrackerExecutor.hpp"
 #include "EdgeTrackerUtility.hpp"
+using namespace EdgeTrackerHelper;
+
+
+
+
 #include <ctime>
 #include <typeinfo>
 
 #include <ModelBasedVisualTracking/ModelBasedVisualTrackingInterface.hpp>
 
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+
+#include <Errors/Assert.hpp>
+#include <Types/C/Time.h>
+#include <stdlib.h>
+#include <boost/make_shared.hpp>
+#include <boost/algorithm/string.hpp>
+
 using namespace Converters;
 using namespace FrameWrapper;
-using namespace EdgeTrackerHelper;
 
 #define DELETE_IF_NOT_NULL(pointer) \
 	if (pointer != NULL) \
-		{ \
+	{ \
 		delete(pointer); \
-		}
+	}
 
 EdgeTrackerExecutor::EdgeTrackerExecutor() :
 	dtImages(1.0),
 	logGroundTruthError(false),
 	frameConverter(),
-	outputPose()
+	outputPose(),
+	inputImagesWereLoaded(false),
+	outputPoseWasLoaded(false),
+	dfpcWasLoaded(false),
+	dfpcExecuted(false),
+	outputSuccess(false)
 {
 	inputLeftFrame = NULL;
 	inputRightFrame = NULL;
 	dfpc = NULL;
-
-	inputImagesWereLoaded = false;
-	outputPoseWasLoaded = false;
-	dfpcExecuted = false;
-	dfpcWasLoaded = false;
-	outputSuccess =false;
 }
 
 EdgeTrackerExecutor::~EdgeTrackerExecutor()
@@ -38,7 +51,8 @@ EdgeTrackerExecutor::~EdgeTrackerExecutor()
 	DELETE_IF_NOT_NULL(inputRightFrame);
 }
 
-void EdgeTrackerExecutor::SetDfpc(std::string configurationFilePath, CDFF::DFPC::ModelBasedVisualTrackingInterface* dfpc)
+void EdgeTrackerExecutor::SetDfpc(
+	std::string configurationFilePath, CDFF::DFPC::ModelBasedVisualTrackingInterface* dfpc)
 {
 	this->configurationFilePath = configurationFilePath;
 	this->dfpc = dfpc;
@@ -47,11 +61,13 @@ void EdgeTrackerExecutor::SetDfpc(std::string configurationFilePath, CDFF::DFPC:
 	dfpcWasLoaded = true;
 }
 
-void EdgeTrackerExecutor::SetInputFilesPaths(std::string inputImagesFolder, std::string inputImagesListFileName, std::string inputPosesFolder, std::string inputPosesListFileName)
+void EdgeTrackerExecutor::SetInputFilesPaths(
+	std::string inputImagesFolder, std::string inputImagesListFileName,
+	std::string inputPosesFolder, std::string inputPosesListFileName)
 {
 	this->inputImagesFolder = inputImagesFolder;
 	this->inputImagesListFileName = inputImagesListFileName;
-	this->inputPosesFolder = inputPosesFolder ;
+	this->inputPosesFolder = inputPosesFolder;
 	this->inputPosesListFileName = inputPosesListFileName;
 
 	LoadInputImagesList();
@@ -70,7 +86,8 @@ void EdgeTrackerExecutor::SetOutputFilePath(std::string outputPoseFilePath)
 
 void EdgeTrackerExecutor::initPose(double* guessT0)
 {
-	// Add initial transf. matrix for your sequence if you dont use from file, e.g initial pose for InFuse sequence 20180913_163111
+	// Add initial transformation matrix for your sequence if you dont use from
+	// file, e.g. initial pose for InFuse sequence 20180913_163111
 	double guessT00[16]= {
 		0.014369, -0.997374, 0.070982, 1207.778952,
 		0.433550, 0.070184, 0.898392, 296.516388,
@@ -86,19 +103,22 @@ void EdgeTrackerExecutor::initPose(double* guessT0)
 
 void EdgeTrackerExecutor::initVelocity(double* velocity0)
 {
-	//  starts at  Rest
+	// starts at rest
 	double startVelocity[6] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
-	double unitToradPerSecond=1;
-	double unitTomillimeterPerSecond=1;
+	double unitToradPerSecond = 1;
+	double unitTomillimeterPerSecond = 1;
 	for (int i = 0; i < 6; i++)
 	{
-		if(i < 3)
+		if (i < 3)
+		{
 			velocity0[i] = startVelocity[i]*unitToradPerSecond;
+		}
 		else
+		{
 			velocity0[i] = startVelocity[i]*unitTomillimeterPerSecond;
+		}
 	}
-
-	}
+}
 
 void EdgeTrackerExecutor::ExecuteDfpc()
 {
@@ -336,6 +356,12 @@ void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* guessT0)
 	}
 }
 
+void EdgeTrackerExecutor::ConfigureDfpc()
+{
+	dfpc->setConfigurationFile(configurationFilePath);
+	dfpc->setup();
+}
+
 void EdgeTrackerExecutor::LoadInputImage(std::string filePath, FrameWrapper::FrameConstPtr& frame )
 {
 	cv::Mat src_image = cv::imread(filePath, 0);
@@ -344,6 +370,33 @@ void EdgeTrackerExecutor::LoadInputImage(std::string filePath, FrameWrapper::Fra
 	filterMedian(src_image, image, 5);
 	DELETE_IF_NOT_NULL(frame);
 	frame= frameConverter.Convert(image);
+}
+
+void EdgeTrackerExecutor::LoadInputImagesList()
+{
+	std::stringstream imagesListFilePath;
+	imagesListFilePath << inputImagesFolder << "/" << inputImagesListFileName;
+	std::ifstream imagesListFile(imagesListFilePath.str().c_str());
+	assert(imagesListFile.good() && "Error it was not possible to open the images list file");
+	std::string line;
+	std::getline(imagesListFile, line);
+	std::getline(imagesListFile, line);
+	std::getline(imagesListFile, line);
+	while (std::getline(imagesListFile, line))
+	{
+		std::vector<std::string> stringsList;
+		boost::split(stringsList, line, boost::is_any_of(" "));
+
+		if(line.size()>0)
+		{
+			leftImageFileNamesList.push_back( std::string(stringsList.at(1)) );
+			rightImageFileNamesList.push_back( std::string(stringsList.at(2)) );
+		}
+		else
+			break;
+	}
+
+	imagesListFile.close();
 }
 
 void EdgeTrackerExecutor::LoadInputPose(std::string filePath, double* groundTruthT)
@@ -387,40 +440,6 @@ void EdgeTrackerExecutor::LoadInputPosesList()
 			break;
 	}
 	posesListFile.close();
-}
-
-
-void EdgeTrackerExecutor::LoadInputImagesList()
-{
-	std::stringstream imagesListFilePath;
-	imagesListFilePath << inputImagesFolder << "/" << inputImagesListFileName;
-	std::ifstream imagesListFile(imagesListFilePath.str().c_str());
-	assert(imagesListFile.good() && "Error it was not possible to open the images list file");
-	std::string line;
-	std::getline(imagesListFile, line);
-	std::getline(imagesListFile, line);
-	std::getline(imagesListFile, line);
-	while (std::getline(imagesListFile, line))
-	{
-		std::vector<std::string> stringsList;
-		boost::split(stringsList, line, boost::is_any_of(" "));
-
-		if(line.size()>0)
-		{
-			leftImageFileNamesList.push_back( std::string(stringsList.at(1)) );
-			rightImageFileNamesList.push_back( std::string(stringsList.at(2)) );
-		}
-		else
-			break;
-	}
-
-	imagesListFile.close();
-}
-
-void EdgeTrackerExecutor::ConfigureDfpc()
-{
-	dfpc->setConfigurationFile(configurationFilePath);
-	dfpc->setup();
 }
 
 void EdgeTrackerExecutor::filterMedian(cv::Mat& image, cv::Mat& filteredImage, int apertureSize)

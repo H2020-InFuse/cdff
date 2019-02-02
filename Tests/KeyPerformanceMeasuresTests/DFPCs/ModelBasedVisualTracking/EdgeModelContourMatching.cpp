@@ -10,6 +10,13 @@
 
 #include <ModelBasedVisualTracking/EdgeModelContourMatching.hpp>
 #include <Errors/Assert.hpp>
+#include <Types/C/Time.h>
+#include <stdlib.h>
+#include <boost/make_shared.hpp>
+#include <boost/algorithm/string.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 using namespace CDFF::DFPC::ModelBasedVisualTracking;
 

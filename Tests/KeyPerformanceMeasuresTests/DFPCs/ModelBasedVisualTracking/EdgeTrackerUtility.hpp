@@ -1,13 +1,52 @@
+#ifndef EDGETRACKERHELPER_HPP
+#define EDGETRACKERHELPER_HPP
+
 #include <Errors/Assert.hpp>
-#include <stdlib.h>
-#include <iostream>
+
+#include <cmath>   // std::sqrt std::cos std::sin std::acos std::fmax std::fabs
+#include <cstring> // std::memset std::memcpy
+#include <ostream> // std::cout std::endl
 
 namespace EdgeTrackerHelper
 {
 
+void matrixTranspose(const double * A, double * AT, const int m, const int n)
+{
+	ASSERT(A != AT,
+		"ERROR: matrixTranspose not implemented for in-place operation!");
+
+	int i, j;
+	for (i = 0; i < n; ++i)
+	{
+		for (j = 0; j < m; ++j)
+		{
+			AT[m*i+j] = A[n*j+i];
+		}
+	}
+}
+
+void matrixProduct333(const double * A, const double * B, double * C)
+{
+	ASSERT((B != C) || (A != C),
+		"ERROR: matrixProduct333 not implemented for in-place operation!");
+
+	C[0] = A[0]*B[0]+A[1]*B[3]+A[2]*B[6];
+	C[1] = A[0]*B[1]+A[1]*B[4]+A[2]*B[7];
+	C[2] = A[0]*B[2]+A[1]*B[5]+A[2]*B[8];
+
+	C[3] = A[3]*B[0]+A[4]*B[3]+A[5]*B[6];
+	C[4] = A[3]*B[1]+A[4]*B[4]+A[5]*B[7];
+	C[5] = A[3]*B[2]+A[4]*B[5]+A[5]*B[8];
+
+	C[6] = A[6]*B[0]+A[7]*B[3]+A[8]*B[6];
+	C[7] = A[6]*B[1]+A[7]*B[4]+A[8]*B[7];
+	C[8] = A[6]*B[2]+A[7]*B[5]+A[8]*B[8];
+}
+
 void matrixProduct444(const double * A, const double * B, double * C)
 {
-	ASSERT((B!=C) || (A!=C), "ERROR: matrixProduct444 not implemented for in-place operation!");
+	ASSERT((B != C) || (A != C),
+		"ERROR: matrixProduct444 not implemented for in-place operation!");
 
 	C[0] = A[0]*B[0]+A[1]*B[4]+A[2]*B[8]+A[3]*B[12];
 	C[1] = A[0]*B[1]+A[1]*B[5]+A[2]*B[9]+A[3]*B[13];
@@ -51,16 +90,16 @@ int matrixRmatToRvec(const double * Rmat, double * rvec)
 	double R[9], rx, ry, rz;
 	double theta, s, c;
 
-	memcpy(R,Rmat,9*sizeof(double));
+	std::memcpy(R, Rmat, 9*sizeof(double));
 
 	rx = R[7] - R[5];
 	ry = R[2] - R[6];
 	rz = R[3] - R[1];
 
-	s = sqrt((rx*rx + ry*ry + rz*rz)*0.25);
+	s = std::sqrt((rx*rx + ry*ry + rz*rz)*0.25);
 	c = (R[0] + R[4] + R[8] - 1)*0.5;
 	c = c > 1.0 ? 1.0 : c < -1.0 ? -1.0 : c;
-	theta = acos(c);
+	theta = std::acos(c);
 
 	if (s < 1e-5)
 	{
@@ -73,16 +112,17 @@ int matrixRmatToRvec(const double * Rmat, double * rvec)
 		else
 		{
 			t = (R[0] + 1)*0.5;
-			rx = sqrt(MAX(t,0.0));
+			rx = std::sqrt(std::fmax(t,0.0));
 			t = (R[4] + 1)*0.5;
-			ry = sqrt(MAX(t,0.0))*(R[1] < 0 ? -1.0 : 1.0);
+			ry = std::sqrt(std::fmax(t,0.0))*(R[1] < 0 ? -1.0 : 1.0);
 			t = (R[8] + 1)*0.5;
-			rz = sqrt(MAX(t,0.0))*(R[2] < 0 ? -1.0 : 1.0);
-			if (fabs(rx) < fabs(ry) && fabs(rx) < fabs(rz) && (R[5] > 0) != (ry*rz > 0))
+			rz = std::sqrt(std::fmax(t,0.0))*(R[2] < 0 ? -1.0 : 1.0);
+			if (std::fabs(rx) < std::fabs(ry) && std::fabs(rx) < std::fabs(rz)
+				&& (R[5] > 0) != (ry*rz > 0))
 			{
 				rz = -rz;
 			}
-			theta /= sqrt(rx*rx + ry*ry + rz*rz);
+			theta /= std::sqrt(rx*rx + ry*ry + rz*rz);
 			rx *= theta;
 			ry *= theta;
 			rz *= theta;
@@ -114,7 +154,9 @@ int AngleAxisFromT(const double * T, double * rotTrasl)
 	// Rodrigues -> rho
 	int err_code = matrixRmatToRvec(R, rho);
 	if (err_code != 0)
+	{
 		return err_code;
+	}
 
 	// Convert output to degrees
 	rotTrasl[0] = rho[0]*180.0/M_PI;
@@ -130,10 +172,12 @@ int AngleAxisFromT(const double * T, double * rotTrasl)
 
 void matrixIdentity(double * A, int m)
 {
-	memset(A,0,m*m*sizeof(double));
+	std::memset(A, 0, m*m*sizeof(double));
 
 	for (int i = 0; i < m; i++)
+	{
 		A[i*(m+1)] = 1;
+	}
 }
 
 void matrixRvecToRmat(const double * rvec, double * Rmat)
@@ -144,56 +188,33 @@ void matrixRvecToRmat(const double * rvec, double * Rmat)
 	ry = rvec[1];
 	rz = rvec[2];
 
-	theta = sqrt(rx*rx + ry*ry + rz*rz);
+	theta = std::sqrt(rx*rx + ry*ry + rz*rz);
 
-	if( theta < DBL_EPSILON )
+	if (theta < DBL_EPSILON)
 	{
-		matrixIdentity( Rmat, 3 );
+		matrixIdentity(Rmat, 3);
 	}
 	else
 	{
-		const double I[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
+		const double I[] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
 
-		double c = cos(theta);
-		double s = sin(theta);
+		double c = std::cos(theta);
+		double s = std::sin(theta);
 		double c1 = 1.0 - c;
 		double itheta = theta ? 1.0/theta : 0.0;
 
 		rx *= itheta; ry *= itheta; rz *= itheta;
 
-		double rrt[] = { rx*rx, rx*ry, rx*rz, rx*ry, ry*ry, ry*rz, rx*rz, ry*rz, rz*rz };
-		double _r_x_[] = { 0, -rz, ry, rz, 0, -rx, -ry, rx, 0 };
+		double rrt[] =
+			{rx*rx, rx*ry, rx*rz, rx*ry, ry*ry, ry*rz, rx*rz, ry*rz, rz*rz};
+		double _r_x_[] =
+			{0, -rz, ry, rz, 0, -rx, -ry, rx, 0};
 
 		for (int k = 0; k < 9; k++)
-		Rmat[k] = c*I[k] + c1*rrt[k] + s*_r_x_[k];
+		{
+			Rmat[k] = c*I[k] + c1*rrt[k] + s*_r_x_[k];
+		}
 	}
-}
-
-void matrixTranspose(const double * A, double * AT, const int m, const int n)
-{
-	ASSERT(A!=AT, "ERROR: matrixTranspose not implemented for in-place operation!");
-
-	int i,j;
-	for (i = 0; i < n; ++i)
-		for (j = 0; j < m; ++j)
-			AT[m*i+j] = A[n*j+i];
-}
-
-void matrixProduct333(const double * A, const double * B, double * C)
-{
-	ASSERT((B!=C) || (A!=C), "ERROR: matrixProduct333 not implemented for in-place operation!");
-
-	C[0] = A[0]*B[0]+A[1]*B[3]+A[2]*B[6];
-	C[1] = A[0]*B[1]+A[1]*B[4]+A[2]*B[7];
-	C[2] = A[0]*B[2]+A[1]*B[5]+A[2]*B[8];
-
-	C[3] = A[3]*B[0]+A[4]*B[3]+A[5]*B[6];
-	C[4] = A[3]*B[1]+A[4]*B[4]+A[5]*B[7];
-	C[5] = A[3]*B[2]+A[4]*B[5]+A[5]*B[8];
-
-	C[6] = A[6]*B[0]+A[7]*B[3]+A[8]*B[6];
-	C[7] = A[6]*B[1]+A[7]*B[4]+A[8]*B[7];
-	C[8] = A[6]*B[2]+A[7]*B[5]+A[8]*B[8];
 }
 
 void printMatrix(const char * title, const double * mat, const int m, const int n)
@@ -206,10 +227,16 @@ void printMatrix(const char * title, const double * mat, const int m, const int 
 			std::cout << mat[n*i+j] << " ";
 		}
 		if (i < m-1)
-			std::cout << ";..." << std::endl;
+		{
+			std::cout << ";...\n";
+		}
 		else
+		{
 			std::cout << "];" << std::endl;
+		}
 	}
 }
 
 };
+
+#endif // EDGETRACKERHELPER_HPP
