@@ -82,8 +82,8 @@ class EdgeTrackerExecutor
 		void LoadInputPosesList();
 
 		bool isFileExist(const std::string& name);
-		void setState(asn1SccRigidBodyState& state, const double value);
 
+		void setState(asn1SccRigidBodyState& state, const double value);
 		void ConvertAsnStateToState(asn1SccRigidBodyState& poseState, double* pose, double* velocity = NULL);
 		asn1SccRigidBodyState ConvertStateToAsnState(double* pose, double* velocity = NULL);
 };
