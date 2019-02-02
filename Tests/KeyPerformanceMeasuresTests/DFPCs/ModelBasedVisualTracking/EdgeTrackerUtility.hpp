@@ -1,5 +1,6 @@
 #include <Errors/Assert.hpp>
 #include <stdlib.h>
+#include <iostream>
 
 namespace EdgeTrackerHelper
 {

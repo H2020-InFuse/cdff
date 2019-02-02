@@ -11,15 +11,11 @@
 #define MODELBASEDVISUALTRACKING_EDGEMODELCONTOURMATCHING_HPP
 
 #include <ModelBasedVisualTracking/ModelBasedVisualTrackingInterface.hpp>
-
+#include <Types/C/RigidBodyState.h>
 #include <Converters/FrameToMatConverter.hpp>
 
 #include <DLRtracker_core/FileParser.h>
 #include <DLRtracker_core/GenericObjectTracker.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/imgcodecs/imgcodecs.hpp>
-#include <opencv2/highgui/highgui.hpp>
 
 #include <stdlib.h>
 
