@@ -239,7 +239,7 @@
     - master
   artifacts:
    paths:
-    - build/
+    - build/Tests/UnitTests
    expire_in: 4 weeks
 
  build:user:system:
@@ -285,7 +285,7 @@
   dependencies:
     - configure:cdff-closed
   script:
-    - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json /cppcheck
+    - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json cppcheck
   only:
     - merge_requests
     - master
@@ -293,7 +293,7 @@
   artifacts:
    when: always
    paths:
-    - /cppcheck
+    - cppcheck
    expire_in: 4 weeks
 
  analyse:cppcheck:partial:
