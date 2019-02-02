@@ -6,7 +6,7 @@ if(DLRTRACKER-CORE_FOUND AND OpenCV_FOUND)
 	)
 	target_link_libraries(
 		validation_DLR_model_tracker
-		cdff_dfpc_model_based_visual_tracking cdff_converters cdff_logger opencv_core opencv_imgproc opencv_imgcodecs opencv_highgui boost_system
+		cdff_dfpc_model_based_visual_tracking cdff_types cdff_converters cdff_logger m opencv_core opencv_imgcodecs opencv_imgproc
 	)
 endif()
 
