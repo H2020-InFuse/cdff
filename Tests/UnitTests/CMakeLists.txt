@@ -221,7 +221,7 @@ if(WITH_LIBORBSLAM)
 endif()
 
 if(DLRTRACKER-CORE_FOUND AND OpenCV_FOUND)
-    list(APPEND unittest_libraries cdff_dfpc_model_based_visual_tracking)
+    list(APPEND unittest_libraries cdff_dfpc_model_based_visual_tracking cdff_types cdff_converters opencv_core opencv_imgcodecs)
 endif()
 
 if(BUILD_CENTRALDPM)

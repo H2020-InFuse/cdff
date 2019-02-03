@@ -10,7 +10,7 @@
 #include <Types/C/RigidBodyState.h>
 #include <Converters/MatToFrameConverter.hpp>
 
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 
 #include <string>
 #include <vector>
