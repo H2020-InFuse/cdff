@@ -108,16 +108,15 @@ void EdgeTrackerExecutor::initVelocity(double* velocity0)
 	double startVelocity[6] = {0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
 	double unitToradPerSecond = 1;
 	double unitTomillimeterPerSecond = 1;
-	for (int i = 0; i < 6; i++)
+	int i = 0;
+	while (i < 3)
 	{
-		if (i < 3)
-		{
-			velocity0[i] = startVelocity[i]*unitToradPerSecond;
-		}
-		else
-		{
-			velocity0[i] = startVelocity[i]*unitTomillimeterPerSecond;
-		}
+		velocity0[i] = startVelocity[i]*unitToradPerSecond;
+		i++;
+	}
+	while (i < 6)
+	{
+		velocity0[i] = startVelocity[i]*unitTomillimeterPerSecond;
 	}
 }
 
@@ -300,7 +299,7 @@ void EdgeTrackerExecutor::SaveOutputPose(std::ofstream& writer, double* guessT0)
 	{
 		std::cout << velocity[i] << " ";
 	}
-	std::cout<<std::endl;
+	std::cout << std::endl;
 
 	if (logGroundTruthError)
 	{
