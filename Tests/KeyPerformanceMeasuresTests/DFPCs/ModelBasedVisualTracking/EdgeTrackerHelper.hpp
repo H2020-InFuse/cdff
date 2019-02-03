@@ -1,18 +1,17 @@
 #ifndef EDGETRACKERHELPER_HPP
 #define EDGETRACKERHELPER_HPP
 
-#include <Errors/Assert.hpp>
-
 #include <cmath>    // std::sqrt std::cos std::sin std::acos std::fmax std::fabs
 #include <cstring>  // std::memset std::memcpy
 #include <iostream> // std::cout std::endl
+#include <cassert>  // std::assert
 
 namespace EdgeTrackerHelper
 {
 
 void matrixTranspose(const double * A, double * AT, const int m, const int n)
 {
-	ASSERT(A != AT,
+	assert(A != AT &&
 		"ERROR: matrixTranspose not implemented for in-place operation!");
 
 	int i, j;
@@ -27,7 +26,7 @@ void matrixTranspose(const double * A, double * AT, const int m, const int n)
 
 void matrixProduct333(const double * A, const double * B, double * C)
 {
-	ASSERT((B != C) || (A != C),
+	assert(((B != C) || (A != C)) &&
 		"ERROR: matrixProduct333 not implemented for in-place operation!");
 
 	C[0] = A[0]*B[0]+A[1]*B[3]+A[2]*B[6];
@@ -45,7 +44,7 @@ void matrixProduct333(const double * A, const double * B, double * C)
 
 void matrixProduct444(const double * A, const double * B, double * C)
 {
-	ASSERT((B != C) || (A != C),
+	assert(((B != C) || (A != C)) &&
 		"ERROR: matrixProduct444 not implemented for in-place operation!");
 
 	C[0] = A[0]*B[0]+A[1]*B[4]+A[2]*B[8]+A[3]*B[12];

@@ -3,7 +3,7 @@
  */
 
 #include "EdgeTrackerExecutor.hpp"
-#include "EdgeTrackerUtility.hpp"
+#include "EdgeTrackerHelper.hpp"
 #include <Types/C/RigidBodyState.h>
 #include <Types/C/Time.h>
 #include <Errors/Assert.hpp>
