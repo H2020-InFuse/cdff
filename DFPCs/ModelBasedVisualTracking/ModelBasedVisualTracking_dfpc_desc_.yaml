@@ -1,0 +1,33 @@
+name: ModelBasedVisualTracking
+doc: "DFPC that performs model-based tracking based on edge and contour matching in stereo images"
+input_ports:
+  - name: imageLeft
+    type: asn1SccFrame
+    doc: "grayscale image from left camera"
+  - name: imageRight
+    type: asn1SccFrame
+    doc: "grayscale image from right camera"
+  - name: imageTime
+    type: asn1SccTime
+    doc: "image acquisition time (frame counter x frame rate)"
+  - name: init
+    type: asn1SccRigidBodyState
+    doc: "initial velocity and pose"
+  - name: initTime
+    type: asn1SccTime
+    doc: "initial time when tracker is initialized (synchronize pose initializer and tracker)"
+  - name: doInit
+    type: bool
+    doc: "whether to initialize the tracker pose and velocity, or not"
+  - name: egoMotion
+    type: asn1SccRigidBodyState
+    doc: "ego-motion (position and orientation) of a manipulator with respect to its base"
+output_ports:
+  - name: state
+    type: asn1SccRigidBodyState
+    doc: "pose and body velocity of the target"
+  - name: success
+    type: bool
+    doc: "indicates whether the DFPC was successful in tracking the target"
+implementations:
+  - name: EdgeModelContourMatching

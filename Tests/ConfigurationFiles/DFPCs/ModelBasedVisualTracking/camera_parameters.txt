@@ -1,0 +1,44 @@
+############################
+# !!! Do not write more than 200 characters per line in this file !!!
+#
+# CONTENTS (row-wise, excluding comments):
+# - How many cameras
+# - For each camera:
+#   - Resolution (x,y)
+#   - Min./max. depth (field of view)
+#   - Linear projection matrix parameters (fx,fy,px,py,skew), so that K = [fx skew px; 0 fy py; 0 0 1]
+#   - Nonlinear distortion parameters (5), if unknown set to 0
+#   - World-to-camera transformation matrix (12 elements row-wise, the last row is [0,0,0,1])
+############################
+# Number of cameras
+1
+############################
+# Camera 1
+#   Resolution (x,y)
+528 406
+#   Min./max. depth (field of view)
+100 10000
+# Linear projection matrix parameters (fx,fy,px,py,skew), so that K = [fx skew px; 0 fy py; 0 0 1]
+682.479 682.606 284.026 219.941 0.000192512
+#  Nonlinear distortion parameters (5), if unknown set to 0
+-0.185871  0.231580 0.00000 0.00000 0.00000 
+# World-to-camera transformation matrix (12 elements row-wise, the last row is [0,0,0,1])
+0.00568823 0.784533 0.620060 -140.529 -0.999973 0.00152633 0.00724222 50.5191 0.00473534 -0.620085 0.784521 -99.5012
+# Number of Occlusion ROIs
+0
+############################
+# Camera 2
+#   Resolution (x,y)
+528 406
+#   Min./max. depth (field of view)
+100 10000
+#   Linear projection matrix parameters (fx,fy,px,py,skew), so that K = [fx skew px; 0 fy py; 0 0 1]
+683.218 682.758  268.276 227.224 0.104730
+#  Nonlinear distortion parameters (5), if unknown set to 0
+-0.187921 0.222672 0.00000 0.00000 0.00000 
+#   World-to-camera transformation matrix (12 elements row-wise, the last row is [0,0,0,1])
+0.00670854 0.788926 0.614452 -139.973 -0.999971 0.00301243 0.00704978 -22.3552 0.00371076 -0.614481 0.788923 -98.9645
+# Number of Occlusion ROIs
+0
+
+
