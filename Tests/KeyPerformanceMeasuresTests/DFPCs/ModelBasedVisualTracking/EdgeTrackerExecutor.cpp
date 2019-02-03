@@ -166,7 +166,7 @@ void EdgeTrackerExecutor::ExecuteDfpc()
 	dfpc->egoMotionInput(egoMotion);
 
 	// Prepare loop on images
-	double timeImages
+	double timeImages;
 	asn1SccTime imageAcquisitionTime;
 
 	int successCounter = 0;
@@ -382,7 +382,7 @@ void EdgeTrackerExecutor::LoadInputImage(std::string filePath, FrameWrapper::Fra
 
 	// Filter it (median blur of aperture size 5 px)
 	cv::Mat filtered_image(src_image.rows, src_image.cols, CV_8UC1);
-	cv::medianBlur(src_image, filtered_image, 5)
+	cv::medianBlur(src_image, filtered_image, 5);
 
 	// Convert it to frame
 	DELETE_IF_NOT_NULL(frame);
