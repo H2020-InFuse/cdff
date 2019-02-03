@@ -37,7 +37,7 @@ void initPose(double* guessT0, double* velocity0)
 		0.0, 1.0, 0.0, 0.0,
 		0.0, 0.0, 1.0, 0.0,
 		0.0, 0.0, 0.0, 1.0};
-	matrixProduct444(guessT00, TAdapt, guessT0);
+	EdgeTrackerHelper::matrixProduct444(guessT00, TAdapt, guessT0);
 
 	// Write initial velocity in velocity0
 	double startVelocity[6] =
@@ -112,7 +112,7 @@ TEST_CASE( "Run DFPC ModelBasedVisualTracking::EdgeModelContourMatching", "[DLRT
 	initPose(guessT0, velocity0);
 
 	double rotationTranslation[6];
-	AngleAxisFromT(guessT0, rotationTranslation);
+	EdgeTrackerHelper::AngleAxisFromT(guessT0, rotationTranslation);
 
 	asn1SccRigidBodyState initState;
 	initState.orient.arr[0] = rotationTranslation[0];
