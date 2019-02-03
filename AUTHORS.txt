@@ -1,0 +1,62 @@
+-*- coding: utf-8-unix -*-
+
+The InFuse Consortium
+---------------------
+
+The InFuse Consortium is made up of the following institutions:
+
+Space Application Services (SPACEAPPS)
+Sint-Stevens-Woluwe, Zaventem, Belgium
+
+University of Strathclyde (STRATHCLYDE)
+Space Mechatronic Systems Technology Laboratory
+Glasgow, Scotland, United Kingdom
+
+Deutsches Zentrum für Luft- und Raumfahrt (DLR)
+Institut für Robotik und Mechatronik
+Oberpfaffenhofen, Weßling, Germany
+
+Deutsches Forschungszentrum für Künstliche Intelligenz (DFKI)
+Robotics Innovation Center
+Bremen, Germany
+
+Centre national de la recherche scientifique (LAAS-CNRS)
+Laboratoire d'analyse et d'architecture des systèmes
+Toulouse, France
+
+Magellium (MAGELLIUM)
+Ramonville Saint-Agne, France
+
+Original authors
+----------------
+
+Alessandro Bianco (STRATHCLYDE)
+Alexander Fabisch (DFKI)
+Andrea De Maio (LAAS)
+Bilal Wehbe (DFKI)
+Clément Bazerque (MAGELLIUM)
+Ellon Paiva Mendes (LAAS)
+Fabrice Souvannavong (MAGELLIUM)
+Irene Sanz Nieto (SPACEAPPS)
+Iyas Dalati (SPACEAPPS)
+Jérémi Gancet (SPACEAPPS)
+Mark Post (STRATHCLYDE)
+Michal Smíšek (DLR)
+Nassir Oumer (DLR)
+Pierre Narvor (LAAS)
+Quentin Labourey (LAAS)
+Raphaël Viards (MAGELLIUM)
+Raúl Domínguez (DFKI)
+Romain Michalec (STRATHCLYDE)
+Shashank Govindaraj (SPACEAPPS)
+Simon Lacroix (LAAS)
+Souriya Trinh (MAGELLIUM)
+Steffen Planthaber (DFKI)
+Thibaud Chupin (SPACEAPPS)
+Vincent Bissonnette (MAGELLIUM)
+Xavier Martinez-Gonzalez (SPACEAPPS)
+
+More authors
+------------
+
+Write your name below if you have contributed to the CDFF.

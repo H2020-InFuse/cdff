@@ -1,6 +1,6 @@
-FROM nexus.spaceapplications.com/repository/infuse/cdff-pangolin:latest
+FROM nexus.spaceapplications.com/repository/infuse/cdff-base:latest
 
-## Base + single dependency
+## Base + All extra dependencies
 
 ARG INSTALL_DIR=/usr/local
 ENV INSTALL_CDFF=$INSTALL_DIR
@@ -10,6 +10,14 @@ SHELL ["/bin/bash", "-c"]
 COPY get-cdff-dependencies.sh /tmp/CDFF/Tools/Docker/
 COPY installers/ /tmp/CDFF/Tools/Docker/installers/
 COPY patches/ /tmp/CDFF/Tools/Docker/patches/
+
+RUN apt-get update && apt-get install --yes --quiet libglew-dev && /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pangolin
+
+RUN apt-get update && apt-get install --yes --quiet pkg-config libtinyxml-dev libgoogle-glog-dev && \
+    /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d none -e
+
+
+RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d opencv_contrib
 
 RUN apt-get update && apt-get install --yes --quiet libx11-6 \
 libbz2-1.0 \
@@ -58,10 +66,15 @@ libois-dev \
 libqhull-dev && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d visp
 
-ARG VERSION="1.1.8"
+RUN apt-get update && apt-get install --yes --quiet \
+libgdal1-dev \ 
+libgsl-dev && \
+/tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d gdalwrap
+
+ARG VERSION="1.1"
 ARG SHA=0000
 ENV IMAGE_VERSION=$VERSION
 ENV IMAGE_SHA=$SHA
 LABEL version=${IMAGE_VERSION}
 LABEL maintainer="Xavier Martinez <xma@spaceapplications.com>"
-LABEL description="CI + single dependency"
+LABEL description="CI + all extra dependencies"
