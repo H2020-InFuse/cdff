@@ -389,7 +389,6 @@ if(DLRTRACKER-CORE_FOUND)
   message(STATUS "Found DLRTracker-core headers in: ${DLRTRACKER-CORE_INCLUDE_DIRS}")
   message(STATUS "Found DLRTracker-core libraries, and their dependencies: ${DLRTRACKER-CORE_LIBRARIES}")
 
-  add_definitions(-DHAVE_DLRTRACKER)
   include_directories(SYSTEM ${DLRTRACKER-CORE_INCLUDE_DIRS})
 
 else()

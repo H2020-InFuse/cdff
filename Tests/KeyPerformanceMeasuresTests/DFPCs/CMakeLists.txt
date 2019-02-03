@@ -1,3 +1,15 @@
+if(DLRTRACKER-CORE_FOUND AND OpenCV_FOUND)
+	add_executable(
+		validation_DLR_model_tracker
+		ModelBasedVisualTracking/EdgeModelContourMatching.cpp
+		ModelBasedVisualTracking/EdgeTrackerExecutor.cpp
+	)
+	target_link_libraries(
+		validation_DLR_model_tracker
+		cdff_dfpc_model_based_visual_tracking cdff_types cdff_converters cdff_logger m opencv_core opencv_imgcodecs opencv_imgproc
+	)
+endif()
+
 add_executable(
     quality_registration_from_stereo
     Reconstruction3D/RegistrationFromStereo.cpp
@@ -87,4 +99,3 @@ target_link_libraries(
 	cdff_dfpc_point_cloud_model_localisation
         cdff_visualizers_pcl
 )
-

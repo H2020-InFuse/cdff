@@ -8,9 +8,9 @@
 # curl --silent --show-error --connect-timeout 1 -I ${JENKINS_SERVER}/job/valgrind-report-generate/api/xml
 #set -eax
 
-JENKINS_SERVER=http://0.0.0.0:8080
-VALGRIND_FOLDER=/valgrind_debug/results
-OUTPUT_FOLDER=/valgrind_debug/report
+JENKINS_SERVER=http://localhost:8080
+INPUT_FILE=${1:-"/memcheck/valgrind.xml"}
+OUTPUT_FOLDER=${2:-"/memcheck/report"}
 mkdir -p ${OUTPUT_FOLDER}
 
 counter=0
@@ -35,7 +35,7 @@ echo "Jenkins is now fully up and running!"
 echo "===================================="
 
 mkdir -p /var/jenkins_home/jobs/valgrind-report-generate/workspace/
-cp ${VALGRIND_FOLDER}/valgrind.xml /var/jenkins_home/jobs/valgrind-report-generate/workspace/valgrind.xml
+cp ${INPUT_FILE} /var/jenkins_home/jobs/valgrind-report-generate/workspace/valgrind.xml
 
 sleep 5
 echo "Executing the html generation job"
@@ -145,7 +145,7 @@ fi
 wget -nv -L ${JENKINS_SERVER}/job/generate-static-html/lastSuccessfulBuild/artifact/*zip*/html.zip
 mkdir unzip_html
 unzip html.zip -d unzip_html
-mv unzip_html/archive/static_html/ ${OUTPUT_FOLDER}/static_html/
+mv unzip_html/archive/static_html/ ${OUTPUT_FOLDER}
 rm -r unzip_html/
 echo "========= FINISHED THE SCRIPT ========="
 

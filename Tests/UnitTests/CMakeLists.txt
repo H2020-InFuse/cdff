@@ -139,6 +139,9 @@ if(HAVE_OPENCV_CONTRIB)
     )
 endif()
 
+if(DLRTRACKER-CORE_FOUND AND OpenCV_FOUND)
+    list(APPEND unittest_sources DFPCs/ModelBasedVisualTracking/EdgeModelContourMatching.cpp) # memory-intensive
+endif()
 
 if(BUILD_CENTRALDPM)
     list(APPEND unittest_sources Support/CentralDPM/CentralDPM.cpp)
@@ -215,6 +218,10 @@ if(WITH_LIBORBSLAM)
     set(unittest_libraries ${unittest_libraries}
         cdff_dfn_stereo_slam
         cdff_dfpc_visual_slam_stereo )
+endif()
+
+if(DLRTRACKER-CORE_FOUND AND OpenCV_FOUND)
+    list(APPEND unittest_libraries cdff_dfpc_model_based_visual_tracking cdff_types cdff_converters opencv_core opencv_imgcodecs)
 endif()
 
 if(BUILD_CENTRALDPM)
