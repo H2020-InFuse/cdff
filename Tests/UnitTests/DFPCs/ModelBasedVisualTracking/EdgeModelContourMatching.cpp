@@ -44,13 +44,16 @@ void initPose(double* guessT0, double* velocity0)
 		{0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000};
 	double unitToRadPerSecond = 1;
 	double unitToMillimeterPerSecond = 1;
-	for (int i = 0; i < 3; i++)
+	int i = 0;
+	while (i < 3)
 	{
 		velocity0[i] = startVelocity[i]*unitToRadPerSecond;
+		i++;
 	}
-	for (i = 3; i < 6; i++)
+	while (i < 6)
 	{
 		velocity0[i] = startVelocity[i]*unitToMillimeterPerSecond;
+		i++;
 	}
 }
 
