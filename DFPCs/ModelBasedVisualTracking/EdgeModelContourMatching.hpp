@@ -17,8 +17,6 @@
 #include <DLRtracker_core/FileParser.h>
 #include <DLRtracker_core/GenericObjectTracker.h>
 
-#include <stdlib.h>
-
 namespace CDFF
 {
 namespace DFPC
@@ -27,9 +25,10 @@ namespace ModelBasedVisualTracking
 {
     /**
      * The EdgeModelContourMatching class implements a ModelBasedVisualTracking
-     * DFPC by wrapping up functions of the DLRTracker-core proprietary library
+     * DFPC by wrapping up functions of the DLRTracker-core proprietary library,
      * instead of being composed of DFNs. For that reason, it is an exception to
-     * DFPCs being made up of DFNs.
+     * DFPCs being made up of DFNs, and therefore not an actual DFPC
+     * implementation.
      */
     class EdgeModelContourMatching : public ModelBasedVisualTrackingInterface
     {
@@ -54,7 +53,8 @@ namespace ModelBasedVisualTracking
             Converters::FrameToMatConverter frameToMat;
 
             void ConvertASN1StateToState(
-                asn1SccRigidBodyState& poseState, double* pose, double* velocity = NULL);
+                asn1SccRigidBodyState& poseState,
+                double* pose, double* velocity = NULL);
             asn1SccRigidBodyState ConvertStateToASN1State(
                 double* pose, double* velocity);
 

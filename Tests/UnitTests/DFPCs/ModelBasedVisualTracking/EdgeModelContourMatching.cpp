@@ -21,7 +21,6 @@
 #include <iostream>
 
 using namespace CDFF::DFPC::ModelBasedVisualTracking;
-using namespace DLRtracker; // probably useless and shouldn't be used besides in the implementation of the DFPC anyway
 
 // Initial pose and initial velocity
 void initPose(double* guessT0, double* velocity0)
@@ -74,7 +73,7 @@ TEST_CASE( "Setup DFPC ModelBasedVisualTracking::EdgeModelContourMatching", "[DL
 
 TEST_CASE( "Run DFPC ModelBasedVisualTracking::EdgeModelContourMatching", "[DLRTrackerRun]" )
 {
-	std::cout << "Unit test for CDFF::DFPC::ModelBasedVisualTracking::EdgeModelContourMatching" << std::endl;
+	std::cout << "Unit test for CDFF::DFPC::ModelBasedVisualTracking::EdgeModelContourMatching: start" << std::endl;
 
 	// Create DFPC instance
 	EdgeModelContourMatching* contourMatching = new EdgeModelContourMatching();

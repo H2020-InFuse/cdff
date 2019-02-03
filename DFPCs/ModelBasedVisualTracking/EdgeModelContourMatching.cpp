@@ -9,6 +9,7 @@
 
 #include "EdgeModelContourMatching.hpp"
 #include <Errors/Assert.hpp>
+#include <Types/C/RigidBodyState.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -16,11 +17,12 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include <iostream>  // std::cout std::endl
-#include <string>    // std::string
+#include <string>    // std::string std::memcpy
 #include <algorithm> // std::max
+#include <cstdio>    // std::sprintf
+#include <cstdlib>   // EXIT_SUCCESS EXIT_FAILURE
 
 using namespace DLRtracker;
-using namespace Converters;
 
 namespace CDFF
 {
@@ -72,31 +74,26 @@ void EdgeModelContourMatching::run()
             cv::Mat inputLeftImage = frameToMat.Convert(&inImageLeft);
             ASSERT(inputLeftImage.channels() == 1, "Unsupported image type: tracker input must be a grayscale image");
             ASSERT(inputLeftImage.rows > 0 && inputLeftImage.cols > 0,"Empty image: tracker input must be a grayscale image");
-            memcpy(images[c], inputLeftImage.data, DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char));
+            std::memcpy(images[c], inputLeftImage.data, DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char));
         }
         if (numberOfCameras > 1 && c == 1)
         {
             cv::Mat inputRightImage = frameToMat.Convert(&inImageRight);
             ASSERT(inputRightImage.channels() == 1, "Unsupported image type: tracker input must be a grayscale image");
             ASSERT(inputRightImage.rows > 0 && inputRightImage.cols > 0, "Unsupported image type: tracker input must be a grayscale image");
-            memcpy(images[c], inputRightImage.data, DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char));
+            std::memcpy(images[c], inputRightImage.data, DLRTracker.getXres(c)*DLRTracker.getYres(c)*sizeof(unsigned char));
         }
     }
 
-    double timeImages;
-    // asn1Sccseconds in sec
-    timeImages = inImageTime.microseconds * 0.000001;
+    double timeImages = inImageTime.microseconds * 0.000001; // timeImages in seconds
 
     double guessT0[16];
     double velocity0[6];
     double rotTrasl[6];
 
-    double time0;
-    // in sec
-    time0 = inInitTime.microseconds * 0.000001;
+    double time0 = inInitTime.microseconds * 0.000001; // time0 in seconds
 
-    bool useInitialGuess;
-    useInitialGuess = inDoInit;
+    bool useInitialGuess = inDoInit;
 
     ConvertASN1StateToState(inInit, rotTrasl, velocity0);
     TfromAngleAxis(rotTrasl, guessT0);
@@ -125,18 +122,17 @@ void EdgeModelContourMatching::run()
     int xres = DLRTracker.getXres(0);
     int yres = DLRTracker.getYres(0);
     cv::Mat imageOutputColorCV(xres, yres, CV_8UC3);
-    memcpy(imageOutputColor, imageOutputColorCV.data, xres*yres);
+    std::memcpy(imageOutputColor, imageOutputColorCV.data, xres*yres);
 
     for (int c = 0; c < numberOfCameras; c++)
     {
         DLRTracker.drawResult(estimatedT, imageOutputColor, c, true, 100);
-        sprintf((char*)wname.c_str(), "result%d", c);
+        std::sprintf((char*)wname.c_str(), "result%d", c);
         createWindow(wname, 1);
         showImage(wname, imageOutputColor, xres, yres, 3);
     }
 
-    char c;
-    c = waitKey(10);
+    char c = waitKey(10);
     if (c == 27)
     {
         exit(EXIT_SUCCESS);
@@ -156,12 +152,12 @@ void EdgeModelContourMatching::setup()
             pathToSpecifications, "camera_parameters.txt", "tracker_parameters.txt", "theModel_client.txt",
             setup_global_array_counter, setup_global_array) != 0)
     {
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
 
     if (DLRTracker.setupFromGlobalArray(setup_global_array_counter, setup_global_array) != 0)
     {
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
 
     DLRTracker.getObjectModel().changeLocalFrame(0);
@@ -175,24 +171,13 @@ bool EdgeModelContourMatching::edgeMatching(
     double* velocity0, double time0, bool useInitialGuess, double* estimatedT,
     double* estimatedVelocity, double* ErrorCovariance)
 {
-    bool success;
-
-    double degreesOfFreedom[6] = {1,1,1,1,1,1};
+    double degreesOfFreedom[6] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
     status = DLRTracker.poseEstimation(
         images, timeImages, egomotion, guessT0, velocity0, time0, estimatedT,
         estimatedVelocity, ErrorCovariance, degreesOfFreedom, useInitialGuess,
         false, false, false);
 
-    if (status == 0)
-    {
-        success = true;
-    }
-    else
-    {
-        success = false;
-    }
-
-    return success;
+    return status == 0; // success if status == 0
 }
 
 void EdgeModelContourMatching::ConvertASN1StateToState(
