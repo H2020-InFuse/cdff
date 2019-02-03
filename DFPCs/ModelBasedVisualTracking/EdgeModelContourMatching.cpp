@@ -15,7 +15,9 @@
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include <iostream>
+#include <iostream>  // std::cout std::endl
+#include <string>    // std::string
+#include <algorithm> // std::max
 
 using namespace DLRtracker;
 using namespace Converters;
@@ -54,8 +56,8 @@ void EdgeModelContourMatching::allocateImageMemory()
     for (int c = 0; c < numberOfCameras; c++)
     {
         images[c] = myMallocUchar(DLRTracker.getXres(c) * DLRTracker.getYres(c) * sizeof(unsigned char));
-        xResolutionMax = MAX(DLRTracker.getXres(c), xResolutionMax);
-        yResolutionMax = MAX(DLRTracker.getYres(c), yResolutionMax);
+        xResolutionMax = std::max(DLRTracker.getXres(c), xResolutionMax);
+        yResolutionMax = std::max(DLRTracker.getYres(c), yResolutionMax);
     }
     imageOutputColor = myMallocUchar(3 * xResolutionMax * yResolutionMax * sizeof(unsigned char));
 }
@@ -209,6 +211,7 @@ void EdgeModelContourMatching::ConvertASN1StateToState(
         velocity[0] = state.angular_velocity.arr[0];
         velocity[1] = state.angular_velocity.arr[1];
         velocity[2] = state.angular_velocity.arr[2];
+
         velocity[3] = state.velocity.arr[3];
         velocity[4] = state.velocity.arr[4];
         velocity[5] = state.velocity.arr[5];

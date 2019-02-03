@@ -25,10 +25,10 @@
 using namespace EdgeTrackerHelper;
 
 #define DELETE_IF_NOT_NULL(pointer) \
-	if(pointer != NULL) \
-		{ \
+	if (pointer != NULL) \
+	{ \
 		delete(pointer); \
-		}
+	}
 
 EdgeTrackerExecutor::EdgeTrackerExecutor() :
 	dtImages(1.0),
@@ -485,6 +485,7 @@ void EdgeTrackerExecutor::setState(asn1SccRigidBodyState& state, const double va
 	state.angular_velocity.arr[0] = value;
 	state.angular_velocity.arr[1] = value;
 	state.angular_velocity.arr[2] = value;
+
 	state.velocity.arr[0] = value;
 	state.velocity.arr[1] = value;
 	state.velocity.arr[2] = value;
@@ -505,6 +506,7 @@ void EdgeTrackerExecutor::ConvertAsnStateToState(asn1SccRigidBodyState& state, d
 		velocity[0] = state.angular_velocity.arr[0];
 		velocity[1] = state.angular_velocity.arr[1];
 		velocity[2] = state.angular_velocity.arr[2];
+
 		velocity[3] = state.velocity.arr[0];
 		velocity[4] = state.velocity.arr[1];
 		velocity[5] = state.velocity.arr[2];

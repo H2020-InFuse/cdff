@@ -58,7 +58,7 @@ namespace DFPC
             virtual void doInitInput(bool data);
             /**
              * Send value to input port "egoMotion"
-             * @param egoMotion: egomotion (position and orientation) of a manipulator with respect to its base
+             * @param egoMotion: ego-motion (position and orientation) of a manipulator with respect to its base
              */
             virtual void egoMotionInput(const asn1SccRigidBodyState& data);
 
@@ -84,7 +84,6 @@ namespace DFPC
             asn1SccRigidBodyState inEgoMotion;
             asn1SccRigidBodyState outState;
             bool outSuccess;
-
     };
 }
 }

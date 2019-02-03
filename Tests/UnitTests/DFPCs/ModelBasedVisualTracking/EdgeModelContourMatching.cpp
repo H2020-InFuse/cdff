@@ -87,7 +87,7 @@ TEST_CASE( "Run DFPC ModelBasedVisualTracking::EdgeModelContourMatching", "[DLRT
 	cv::Mat inputImageLeft = cv::imread("../tests/Data/Images/DLR_OOS_camL0000.pgm", 0);
 	cv::Mat inputImageRight = cv::imread("../tests/Data/Images/DLR_OOS_camR0000.pgm", 0);
 
-	CDFF::Converters::MatToFrameConverter matToFrame;
+	Converters::MatToFrameConverter matToFrame;
 	FrameWrapper::FrameConstPtr inputFrameLeft = matToFrame.Convert(inputImageLeft);
 	FrameWrapper::FrameConstPtr inputFrameRight = matToFrame.Convert(inputImageRight);
 

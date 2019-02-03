@@ -26,38 +26,43 @@ namespace DFPC
 namespace ModelBasedVisualTracking
 {
     /**
-     * TODO: doc
+     * The EdgeModelContourMatching class implements a ModelBasedVisualTracking
+     * DFPC by wrapping up functions of the DLRTracker-core proprietary library
+     * instead of being composed of DFNs. For that reason, it is an exception to
+     * DFPCs being made up of DFNs.
      */
     class EdgeModelContourMatching : public ModelBasedVisualTrackingInterface
     {
-    public:
-        EdgeModelContourMatching();
-        ~EdgeModelContourMatching();
-        void run();
-        void setup();
+        public:
 
-    private:
-        DLRtracker::FileParser parser;
-        DLRtracker::GenericObjectTracker DLRTracker;
-        int status;
-        int numberOfCameras;
-        unsigned char* images[];
-        unsigned char* imageOutputColor;
-        int xResolutionMax;
-        int yResolutionMax;
+            EdgeModelContourMatching();
+            ~EdgeModelContourMatching();
+            void run();
+            void setup();
 
-        Converters::FrameToMatConverter frameToMat;
+        private:
 
-        void ConvertASN1StateToState(
-            asn1SccRigidBodyState& poseState, double* pose, double* velocity = NULL);
-        asn1SccRigidBodyState ConvertStateToASN1State(
-            double* pose, double* velocity);
+            DLRtracker::FileParser parser;
+            DLRtracker::GenericObjectTracker DLRTracker;
+            int status;
+            int numberOfCameras;
+            unsigned char* images[];
+            unsigned char* imageOutputColor;
+            int xResolutionMax;
+            int yResolutionMax;
 
-        void allocateImageMemory();
-        bool edgeMatching(
-            unsigned char** images, double timeImages, double* egomotion,
-            double* guessT0, double* velocity0, double time0, bool useInitialGuess,
-            double* estimatedT, double* estimatedVelocity, double* ErrorCovariance);
+            Converters::FrameToMatConverter frameToMat;
+
+            void ConvertASN1StateToState(
+                asn1SccRigidBodyState& poseState, double* pose, double* velocity = NULL);
+            asn1SccRigidBodyState ConvertStateToASN1State(
+                double* pose, double* velocity);
+
+            void allocateImageMemory();
+            bool edgeMatching(
+                unsigned char** images, double timeImages, double* egomotion,
+                double* guessT0, double* velocity0, double time0, bool useInitialGuess,
+                double* estimatedT, double* estimatedVelocity, double* ErrorCovariance);
     };
 }
 }
