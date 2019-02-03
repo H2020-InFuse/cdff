@@ -14,6 +14,7 @@
 #include <Types/C/RigidBodyState.h>
 #include <Types/CPP/Frame.hpp>
 #include <Converters/MatToFrameConverter.hpp>
+#include <KeyPerformanceMeasuresTests/DFPCs/ModelBasedVisualTracking/EdgeTrackerHelper.hpp>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
