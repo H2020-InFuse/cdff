@@ -1,9 +1,9 @@
 /**
- * @addtogroup DFNs
+ * @addtogroup LinemodTraining
  * @{
  */
 
-#include "LinemodTrainImpl.hpp"
+#include "LinemodTrainingImpl.hpp"
 #include "LinemodTemplateGenerator.hpp"
 #include "LinemodTemplateGeneratorIteratorSinCos.hpp"
 
@@ -14,9 +14,9 @@
 
 namespace CDFF
 {
-namespace DFN
+namespace Common
 {
-namespace LinemodTrain
+namespace LinemodTraining
 {
 
 static void progress_bar(float progress)
@@ -168,5 +168,4 @@ void LinemodBasedPoseDetector::Train(const std::string& ply_path, bool isPLY,
 }
 }
 }
-
 /** @} */

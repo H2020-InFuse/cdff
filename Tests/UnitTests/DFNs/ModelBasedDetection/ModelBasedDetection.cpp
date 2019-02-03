@@ -6,7 +6,7 @@
 */
 
 /*!
- * @file LinemodDetect.cpp
+ * @file ModelBasedDetection.cpp
  * @date 08/01/2019
  * @author Souriya Trinh
  */
@@ -14,7 +14,7 @@
 /*!
  * @addtogroup DFNsTest
  *
- * Unit Test for the DFN Linemod detection.
+ * Unit Test for the DFN Model-based detection.
  *
  * @{
  */
@@ -28,7 +28,7 @@
 #include <catch.hpp>
 #include <Types/CPP/Pose.hpp>
 #include <Eigen/Geometry>
-#include <LinemodDetect/LinemodDetect.hpp>
+#include <ModelBasedDetection/Linemod.hpp>
 #include <opencv2/imgcodecs.hpp>
 
 static void cvMat2ASN1(const cv::Mat& mat, asn1SccFrame * asn)
@@ -67,18 +67,18 @@ TEST_CASE( "Call to process (Linemod detection color image)", "[process]" )
     cvMat2ASN1(cvColorImage, colorImage);
 
     // Instantiate DFN
-    CDFF::DFN::LinemodDetect::LinemodDetect *linemodDetect = new CDFF::DFN::LinemodDetect::LinemodDetect;
+    CDFF::DFN::ModelBasedDetection::Linemod *linemod = new CDFF::DFN::ModelBasedDetection::Linemod;
 
     // Configure
-    linemodDetect->parameters.useDepthModality = false;
-    linemodDetect->parameters.cadObjectName = "../tests/Data/Images/Linemod/mod1/oos";
-    linemodDetect->configure();
+    linemod->parameters.useDepthModality = false;
+    linemod->parameters.cadObjectName = "../tests/Data/Images/Linemod/mod1/oos";
+    linemod->configure();
 
     // Send input data to DFN
-    linemodDetect->imageInput(*colorImage);
+    linemod->imageInput(*colorImage);
 
     // Run DFN
-    linemodDetect->process();
+    linemod->process();
 
     // Get results
     float similarity = 0.0;
@@ -87,15 +87,16 @@ TEST_CASE( "Call to process (Linemod detection color image)", "[process]" )
     int template_id = -1;
     cv::Vec3d vec_R, vec_T;
     cv::Mat cameraPose;
-    bool retDetection = linemodDetect->getDetection(similarity, detection, class_id, template_id, vec_R, vec_T, cameraPose);
+    bool retDetection = linemod->getDetection(similarity, detection, class_id, template_id, vec_R, vec_T, cameraPose);
 
     REQUIRE(retDetection);
     REQUIRE(similarity == 100.0f);
     REQUIRE(template_id == index);
 
     // Query output data from DFN
-    const PoseWrapper::Pose3D& camera = linemodDetect->cameraOutput();
-    bool success = linemodDetect->successOutput();
+    const PoseWrapper::Pose3D& camera = linemod->cameraOutput();
+    const asn1SccMatrix2d& boundingBox = linemod->detectionBoundingBoxOutput();
+    bool success = linemod->successOutput();
 
     REQUIRE(success);
     Eigen::Quaternionf q(camera.orient.arr[3], camera.orient.arr[0], camera.orient.arr[1], camera.orient.arr[2]);
@@ -109,9 +110,14 @@ TEST_CASE( "Call to process (Linemod detection color image)", "[process]" )
         }
     }
 
+    REQUIRE(detection.tl().x == Approx(boundingBox.arr[0].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.tl().y == Approx(boundingBox.arr[0].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.width == Approx(boundingBox.arr[1].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.height == Approx(boundingBox.arr[1].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
+
     // Cleanup
     delete colorImage;
-    delete linemodDetect;
+    delete linemod;
 }
 
 TEST_CASE( "Call to process (Linemod detection color + depth images)", "[process]" )
@@ -137,19 +143,19 @@ TEST_CASE( "Call to process (Linemod detection color + depth images)", "[process
     cvMat2ASN1(cvDepthImage, depthImage);
 
     // Instantiate DFN
-    CDFF::DFN::LinemodDetect::LinemodDetect *linemodDetect = new CDFF::DFN::LinemodDetect::LinemodDetect;
+    CDFF::DFN::ModelBasedDetection::Linemod *linemod = new CDFF::DFN::ModelBasedDetection::Linemod;
 
     // Configure
-    linemodDetect->parameters.useDepthModality = true;
-    linemodDetect->parameters.cadObjectName = "../tests/Data/Images/Linemod/mod2/oos";
-    linemodDetect->configure();
+    linemod->parameters.useDepthModality = true;
+    linemod->parameters.cadObjectName = "../tests/Data/Images/Linemod/mod2/oos";
+    linemod->configure();
 
     // Send input data to DFN
-    linemodDetect->imageInput(*colorImage);
-    linemodDetect->depthInput(*depthImage);
+    linemod->imageInput(*colorImage);
+    linemod->depthInput(*depthImage);
 
     // Run DFN
-    linemodDetect->process();
+    linemod->process();
 
     // Get results
     float similarity = 0.0;
@@ -158,15 +164,16 @@ TEST_CASE( "Call to process (Linemod detection color + depth images)", "[process
     int template_id = -1;
     cv::Vec3d vec_R, vec_T;
     cv::Mat cameraPose;
-    bool retDetection = linemodDetect->getDetection(similarity, detection, class_id, template_id, vec_R, vec_T, cameraPose);
+    bool retDetection = linemod->getDetection(similarity, detection, class_id, template_id, vec_R, vec_T, cameraPose);
 
     REQUIRE(retDetection);
     REQUIRE(similarity == 100.0f);
     REQUIRE(template_id == index);
 
     // Query output data from DFN
-    const PoseWrapper::Pose3D& camera = linemodDetect->cameraOutput();
-    bool success = linemodDetect->successOutput();
+    const PoseWrapper::Pose3D& camera = linemod->cameraOutput();
+    const asn1SccMatrix2d& boundingBox = linemod->detectionBoundingBoxOutput();
+    bool success = linemod->successOutput();
 
     REQUIRE(success);
     Eigen::Quaternionf q(camera.orient.arr[3], camera.orient.arr[0], camera.orient.arr[1], camera.orient.arr[2]);
@@ -180,10 +187,15 @@ TEST_CASE( "Call to process (Linemod detection color + depth images)", "[process
         }
     }
 
+    REQUIRE(detection.tl().x == Approx(boundingBox.arr[0].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.tl().y == Approx(boundingBox.arr[0].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.width == Approx(boundingBox.arr[1].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.height == Approx(boundingBox.arr[1].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
+
     // Cleanup
     delete colorImage;
     delete depthImage;
-    delete linemodDetect;
+    delete linemod;
 }
 
 TEST_CASE( "Call to process (Linemod detection color + depth images Blender)", "[process]" )
@@ -209,19 +221,19 @@ TEST_CASE( "Call to process (Linemod detection color + depth images Blender)", "
     cvMat2ASN1(cvDepthImage, depthImage);
 
     // Instantiate DFN
-    CDFF::DFN::LinemodDetect::LinemodDetect *linemodDetect = new CDFF::DFN::LinemodDetect::LinemodDetect;
+    CDFF::DFN::ModelBasedDetection::Linemod *linemod = new CDFF::DFN::ModelBasedDetection::Linemod;
 
     // Configure
-    linemodDetect->parameters.useDepthModality = true;
-    linemodDetect->parameters.cadObjectName = "../tests/Data/Images/Linemod/mod2_Blender/oos";
-    linemodDetect->configure();
+    linemod->parameters.useDepthModality = true;
+    linemod->parameters.cadObjectName = "../tests/Data/Images/Linemod/mod2_Blender/oos";
+    linemod->configure();
 
     // Send input data to DFN
-    linemodDetect->imageInput(*colorImage);
-    linemodDetect->depthInput(*depthImage);
+    linemod->imageInput(*colorImage);
+    linemod->depthInput(*depthImage);
 
     // Run DFN
-    linemodDetect->process();
+    linemod->process();
 
     // Get results
     float similarity = 0.0;
@@ -230,15 +242,16 @@ TEST_CASE( "Call to process (Linemod detection color + depth images Blender)", "
     int template_id = -1;
     cv::Vec3d vec_R, vec_T;
     cv::Mat cameraPose;
-    bool retDetection = linemodDetect->getDetection(similarity, detection, class_id, template_id, vec_R, vec_T, cameraPose);
+    bool retDetection = linemod->getDetection(similarity, detection, class_id, template_id, vec_R, vec_T, cameraPose);
 
     REQUIRE(retDetection);
     REQUIRE(similarity >= 99.0f);
     REQUIRE(template_id == index);
 
     // Query output data from DFN
-    const PoseWrapper::Pose3D& camera = linemodDetect->cameraOutput();
-    bool success = linemodDetect->successOutput();
+    const PoseWrapper::Pose3D& camera = linemod->cameraOutput();
+    const asn1SccMatrix2d& boundingBox = linemod->detectionBoundingBoxOutput();
+    bool success = linemod->successOutput();
 
     REQUIRE(success);
     Eigen::Quaternionf q(camera.orient.arr[3], camera.orient.arr[0], camera.orient.arr[1], camera.orient.arr[2]);
@@ -252,10 +265,15 @@ TEST_CASE( "Call to process (Linemod detection color + depth images Blender)", "
         }
     }
 
+    REQUIRE(detection.tl().x == Approx(boundingBox.arr[0].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.tl().y == Approx(boundingBox.arr[0].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.width == Approx(boundingBox.arr[1].arr[0]).epsilon(std::numeric_limits<double>::epsilon()));
+    REQUIRE(detection.height == Approx(boundingBox.arr[1].arr[1]).epsilon(std::numeric_limits<double>::epsilon()));
+
     // Cleanup
     delete colorImage;
     delete depthImage;
-    delete linemodDetect;
+    delete linemod;
 }
 
 /** @} */

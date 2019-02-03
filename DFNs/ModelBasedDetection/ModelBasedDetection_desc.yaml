@@ -1,0 +1,21 @@
+name: ModelBasedDetection
+doc: DFN that performs model-based detection and pose detection. The DFN uses cameras to detect an object of interest and computes the homogeneous transformation that maps a 3D point expressed in the object frame into the camera frame.
+input_ports:
+    - name: image
+      type: asn1SccFrame
+      doc: This is a colored image
+    - name: depth
+      type: asn1SccFrame
+      doc: This is a depth image
+output_ports:
+    - name: pose
+      type: asn1SccPose
+      doc: the homogeneous transformation that maps a 3D point expressed in the object frame into the camera frame
+    - name: detectionBoundingBox
+      type: asn1SccMatrix2d
+      doc: the detection bounding box, indexes (row,col) to access the info are x=(0,0), y=(0,1), width=(1,0), height(1,1)
+    - name: success
+      type: bool
+      doc: boolean flag indicating successful Linemod detection. If false, the returned pose is meaningless.
+implementations:
+    - LinemodDetect

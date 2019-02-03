@@ -135,7 +135,7 @@ endif()
 
 if(HAVE_OPENCV_CONTRIB)
     set(unittest_sources ${unittest_sources}
-        DFNs/LinemodDetect/LinemodDetect.cpp
+        DFNs/ModelBasedDetection/ModelBasedDetection.cpp
     )
 endif()
 
@@ -170,7 +170,7 @@ set(unittest_libraries catch
     cdff_dfn_perspective_n_point_solving
     cdff_dfn_kf_correction
     cdff_dfn_kf_prediction
-    cdff_dfn_linemod_detect
+    cdff_dfn_model_based_detection
     cdff_dfn_point_cloud_assembly
     cdff_dfn_features_description_2d
     cdff_dfn_features_extraction_2d
@@ -199,9 +199,9 @@ set(unittest_libraries catch
     cdff_dfpc_model_based_tracker
 )
 
-if(WITH_OPENCV_CONTRIB)
+if(HAVE_OPENCV_CONTRIB)
     set(unittest_libraries ${unittest_libraries}
-            cdff_dfn_linemod_detect )
+            cdff_dfn_model_based_detection )
 endif()
 
 if(PCL_FOUND)

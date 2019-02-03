@@ -3,7 +3,7 @@
  * @{
  */
 
-#include "LinemodDetectImpl.hpp"
+#include "LinemodImpl.hpp"
 
 #include <sys/time.h>
 #include <iterator>
@@ -14,7 +14,7 @@ namespace CDFF
 {
 namespace DFN
 {
-namespace LinemodDetect
+namespace ModelBasedDetection
 {
 
 LinemodBasedPoseDetector::LinemodBasedPoseDetector() :
@@ -62,11 +62,15 @@ bool LinemodBasedPoseDetector::LoadTraining(const std::string& str_baseFullPathn
             _cvptr_detector->readClass(*i);
 
         std::vector<cv::String> ids = _cvptr_detector->classIds();
+#ifdef TESTING
         int num_classes = _cvptr_detector->numClasses();
         printf("Loaded %d classes and %d templates\n", num_classes, _cvptr_detector->numTemplates());
+#endif
         if (!ids.empty())
         {
+#ifdef TESTING
             printf("Class ids:\n");
+#endif
             std::copy(ids.begin(), ids.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
         }
     }

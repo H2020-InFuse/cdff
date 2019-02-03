@@ -1,10 +1,10 @@
 /**
- * @addtogroup DFNs
+ * @addtogroup LinemodTraining
  * @{
  */
 
-#ifndef LINEMODTRAIN_LINEMODTEMPLATEGENERATORITERATORSINCOS_HPP
-#define LINEMODTRAIN_LINEMODTEMPLATEGENERATORITERATORSINCOS_HPP
+#ifndef LINEMODTRAINING_LINEMODTEMPLATEGENERATORITERATORSINCOS_HPP
+#define LINEMODTRAINING_LINEMODTEMPLATEGENERATORITERATORSINCOS_HPP
 
 #include <string>
 #include <opencv2/core/core.hpp>
@@ -13,9 +13,9 @@
 
 namespace CDFF
 {
-namespace DFN
+namespace Common
 {
-namespace LinemodTrain
+namespace LinemodTraining
 {
 
 /*!
@@ -86,7 +86,6 @@ public:
 }
 }
 }
-
-#endif //LINEMODTRAIN_LINEMODTEMPLATEGENERATORITERATORSINCOS_HPP
+#endif //LINEMODTRAINING_LINEMODTEMPLATEGENERATORITERATORSINCOS_HPP
 
 /** @} */

@@ -1,5 +1,5 @@
 /**
- * @addtogroup DFNs
+ * @addtogroup LinemodTraining
  * @{
  */
 
@@ -10,9 +10,9 @@
 
 namespace CDFF
 {
-namespace DFN
+namespace Common
 {
-namespace LinemodTrain
+namespace LinemodTraining
 {
 
 LinemodTemplateGeneratorIteratorSinCos::LinemodTemplateGeneratorIteratorSinCos(LinemodTemplateGenerator *px_renderer,
@@ -106,5 +106,4 @@ void LinemodTemplateGeneratorIteratorSinCos::render(std::vector<cv::Mat> &source
 }
 }
 }
-
 /** @} */
