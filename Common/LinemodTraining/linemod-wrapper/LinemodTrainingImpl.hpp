@@ -6,7 +6,7 @@
 #ifndef LINEMODTRAINING_LINEMODTRAINIMPL_HPP
 #define LINEMODTRAINING_LINEMODTRAINIMPL_HPP
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
 #include <opencv2/rgbd/linemod.hpp>
 
 #include <boost/serialization/map.hpp>

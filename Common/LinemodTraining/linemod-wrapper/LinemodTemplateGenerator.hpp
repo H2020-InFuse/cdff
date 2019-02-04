@@ -22,7 +22,8 @@
 #include <vtkImageShiftScale.h>
 #include <vtkOBJImporter.h>
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/core/affine.hpp>
 
 namespace CDFF
 {
