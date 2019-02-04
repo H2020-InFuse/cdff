@@ -28,7 +28,7 @@ function install4infuse_coin3d {
 if [[ ! -d "${INSTALL_DIR}/include/coin3d" ]]; then
 
   # Download library, extract, and change to resulting directory
-  wget -q https://bitbucket.org/Coin3D/coin/get/default.tar.gz -O coin3d.tar.gz
+  wget -q https://bitbucket.org/Coin3D/coin/get/9383a01.tar.gz -O coin3d.tar.gz
   mkdir coin3d
   tar xf coin3d.tar.gz -C coin3d --strip-components=1
   mkdir build
