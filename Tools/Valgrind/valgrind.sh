@@ -7,9 +7,9 @@ FULL=false
 
 DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
-EXECUTABLE=${1:-"Tests/UnitTests/cdff-unit-tests"}
-OUTPUT_FOLDER=${2:-"memcheck"}
-IGNORE_FILE=${3:-"${DIR}/Tools/Valgrind/suppression.txt"}
+EXECUTABLE=${1:-"${DIR}/../../build/Tests/UnitTests/cdff-unit-tests"}
+OUTPUT_FOLDER=${2:-"${DIR}/report"}
+IGNORE_FILE=${3:-"${DIR}/suppression.txt"}
 FULL=${4:-true}
 
 mkdir -p ${OUTPUT_FOLDER} && cd ${OUTPUT_FOLDER}
@@ -23,11 +23,13 @@ if [[ "$FULL" == true ]]
 fi
 
 echo RUNNING valgrind: ${FLAGS}
-PATH=$(dirname "${EXECUTABLE}")
-FILE=$(basename "${EXECUTABLE}")
 
-cd ${PATH}
-valgrind ${FLAGS} ${FILE}
+EXEC_PATH=$( dirname "${EXECUTABLE}" )
+
+EXEC_FILE=$( basename "${EXECUTABLE}" )
+
+cd ${EXEC_PATH}
+valgrind ${FLAGS} ./${EXEC_FILE}
 
 ERROR_VALGRIND=$?
 ERROR_COUNT=$(grep -c "<error>" ${OUTPUT_FOLDER}/valgrind.xml)

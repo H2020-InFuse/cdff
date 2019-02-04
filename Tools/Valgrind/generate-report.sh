@@ -6,12 +6,12 @@
 #echo "This is a message from the Jenkins Docker!"
 
 # curl --silent --show-error --connect-timeout 1 -I ${JENKINS_SERVER}/job/valgrind-report-generate/api/xml
-#set -eax
+set -eax
 
-JENKINS_SERVER=http://localhost:8080
-INPUT_FILE=${1:-"/memcheck/valgrind.xml"}
-OUTPUT_FOLDER=${2:-"/memcheck/report"}
-mkdir -p ${OUTPUT_FOLDER}
+DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+JENKINS_SERVER="http://docker:8080"
+INPUT_FILE=${1:-"${DIR}/report/valgrind.xml"}
+OUTPUT_FOLDER=${2:-"${DIR}/report"}
 
 counter=0
 MAX_RETRIES=20
@@ -44,7 +44,7 @@ curl --silent --show-error --connect-timeout 1 -I ${JENKINS_SERVER}/job/valgrind
 
 
 counter=0
-sleep 5 
+sleep 5
 echo "Pinging for result of Valgrind report generation"
 until [ "`curl --silent --show-error --connect-timeout 1 -I ${JENKINS_SERVER}/job/valgrind-report-generate/lastBuild/api/json | grep 'HTTP/1.1 200 OK'`" != "" ];
 do
@@ -53,7 +53,7 @@ do
   echo "Took too long to find a lastBuild -- assuming something went wrong! ABORTING"
   exit 1
   fi
-  
+
   echo    --- No lastBuild JSON available yet - sleeping for 5 second
   sleep 5
   counter=$((counter+1))
@@ -70,7 +70,7 @@ do
   echo "Took too long for build to finish -- assuming something went wrong! ABORTING"
   exit 1
   fi
-  
+
   echo    --- Not finished building yet - sleeping for 20 seconds
   sleep 20
   counter=$((counter+1))
@@ -106,7 +106,7 @@ do
   echo "Took too long to find a lastBuild -- assuming something went wrong! ABORTING"
   exit 1
   fi
-  
+
   echo    --- No lastBuild JSON available yet - sleeping for 5 second
   sleep 5
   counter=$((counter+1))
@@ -122,7 +122,7 @@ do
   echo "Took too long for build to finish -- assuming something went wrong! ABORTING"
   exit 1
   fi
-  
+
   echo    --- Not finished building yet - sleeping for 20 seconds
   sleep 20
   counter=$((counter+1))
@@ -148,5 +148,3 @@ unzip html.zip -d unzip_html
 mv unzip_html/archive/static_html/ ${OUTPUT_FOLDER}
 rm -r unzip_html/
 echo "========= FINISHED THE SCRIPT ========="
-
-
