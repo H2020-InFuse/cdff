@@ -3,6 +3,7 @@
  * @{
  */
 
+#include <iostream>
 #include "linemod-wrapper/LinemodTrainingImpl.hpp"
 
 int main(int argc, char *argv[])

@@ -7,8 +7,9 @@
 
 #include <sys/time.h>
 #include <iterator>
-#include <opencv2/opencv.hpp>
-#include <opencv2/rgbd/linemod.hpp>
+#include <iostream>
+#include <fstream>
+#include <opencv2/imgproc.hpp>
 
 namespace CDFF
 {

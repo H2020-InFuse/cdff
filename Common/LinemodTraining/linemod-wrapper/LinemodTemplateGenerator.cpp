@@ -10,7 +10,7 @@ VTK_MODULE_INIT(vtkRenderingOpenGL2);
 
 #include <vtksys/SystemTools.hxx>
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/imgproc.hpp>
 #include <sys/time.h>
 
 #include "LinemodTemplateGenerator.hpp"
