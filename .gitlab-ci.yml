@@ -17,6 +17,9 @@
   - test
   - deploy
 
+ .after_script: &prune
+  - docker system prune --all --force --volumes
+
  .docker:connect: &connect
   before_script:
    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $REGISTRY_PREFIX
@@ -140,7 +143,7 @@
    - "make --jobs=${JOBS} --output-sync=target"
    - "cd .."
 
- configure:cdff-base:
+ .configure:cdff-base:
   <<: *configure_release
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage: configure
@@ -152,7 +155,7 @@
     - build/
    expire_in: 4 weeks
 
- configure:cdff-open:
+ .configure:cdff-open:
   <<: *configure_release
   image: nexus.spaceapplications.com/repository/infuse/cdff-open:latest
   stage: configure
@@ -164,7 +167,7 @@
     - build/
    expire_in: 4 weeks
 
- configure:cdff-closed:
+ .configure:cdff-closed:
   <<: *configure_release
   image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
   stage: configure
@@ -183,15 +186,12 @@
   script: echo ok
   dependencies:
    - generate:asn
-  only:
-    - merge_requests
-    - master
   artifacts:
    paths:
     - build/
    expire_in: 4 weeks
 
- build:cdff-base:
+ .build:cdff-base:
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage: build
@@ -203,7 +203,7 @@
     - build/
    expire_in: 4 weeks
 
- build:cdff-open:
+ .build:cdff-open:
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-open:latest
   stage: build
@@ -215,7 +215,7 @@
     - build/
    expire_in: 4 weeks
 
- build:cdff-closed:
+ .build:cdff-closed:
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
   stage: build
@@ -234,9 +234,6 @@
   dependencies:
    - generate:asn
    - configure:cdff-closed:debug
-  only:
-    - merge_requests
-    - master
   artifacts:
    paths:
     - build/Tests/UnitTests
@@ -269,34 +266,28 @@
     - build:cdff-closed:debug
   script:
     - Tools/Valgrind/valgrind.sh
-  only:
-    - merge_requests
-    - master
   allow_failure: true
   artifacts:
     when: always
     paths:
-     - /memcheck
+     - Tools/Valgrind/report
     expire_in: 4 weeks
 
  analyse:cppcheck:
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
   dependencies:
-    - configure:cdff-closed
+    - configure:cdff-closed:debug
   script:
-    - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json cppcheck
-  only:
-    - merge_requests
-    - master
+    - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
   allow_failure: true
   artifacts:
    when: always
    paths:
-    - cppcheck
+    - Tools/CPPCheck/report
    expire_in: 4 weeks
 
- analyse:cppcheck:partial:
+ .analyse:cppcheck:partial:
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
   except:
@@ -309,32 +300,28 @@
   image: nexus.spaceapplications.com/repository/infuse/cdff-jenkins:latest
   dependencies:
    - analyse:memcheck
-  only:
-   - merge_requests
-   - master
+  services:
+   - docker:dind
   script:
-   - Valgrind/generate-report.sh
+   - Tools/Valgrind/generate-report.sh
   allow_failure: true
   artifacts:
    when: always
    paths:
-    - memcheck/
+    - Tools/Valgrind/report
 
  report:cppcheck:
-  image: nexus.spaceapplications.com/repository/infuse/cdff-cppcheck:1.85
+  image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
   stage: report
   dependencies:
    - analyse:cppcheck
-  only:
-   - merge_requests
-   - master
   script:
-   - CPPCHECK/generate-report.sh
+   - Tools/CPPCheck/generate-report.sh
   allow_failure: true
   artifacts:
    when: always
    paths:
-    - cppcheck/
+    - Tools/CPPCheck/report
 
  pages:
   stage: deploy
@@ -343,18 +330,15 @@
    - report:memcheck
    - report:cppcheck
   script:
-   - mkdir .public
-   - cp -r cppcheck/report/* .public/cppcheck
-   - cp -r memcheck/report/* .public/memcheck
+   - mkdir -p .public/cppcheck && mkdir -p .public/memcheck
+   - cp -r Tools/CPPCheck/report/* .public/cppcheck
+   - cp -r Tools/Valgrind/report/* .public/memcheck
    - mv .public public
   artifacts:
    paths:
     - public
-  only:
-   - merge_requests
-   - master
 
- test:base:
+ .test:base:
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage: test
   dependencies:
@@ -363,7 +347,7 @@
    - cd build/Tests/UnitTests
    - LD_LIBRARY_PATH=../../Support/CentralDPM/EnvireASN1 ./cdff-unit-tests
 
- test:full:
+ .test:full:
   image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
   stage: test
   dependencies:
@@ -372,7 +356,7 @@
    - cd build/Tests/UnitTests
    - LD_LIBRARY_PATH=../../Support/CentralDPM/EnvireASN1 ./cdff-unit-tests
 
- test:dependencies:local:
+ .test:dependencies:local:
   image: ubuntu:latest
   stage: deploy
   script:
@@ -384,7 +368,7 @@
   only:
    - manual
 
- test:dependencies:system:
+ .test:dependencies:system:
    image: ubuntu:latest
    stage: deploy
    script:
