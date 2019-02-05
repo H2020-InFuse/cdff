@@ -6,10 +6,10 @@
 #echo "This is a message from the Jenkins Docker!"
 
 # curl --silent --show-error --connect-timeout 1 -I ${JENKINS_SERVER}/job/valgrind-report-generate/api/xml
-set -eax
 
 DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
-JENKINS_SERVER="http://docker:8080"
+JENKINS_SERVER="http://localhost:8080"
+#JENKINS_SERVER="http://nexus.spaceapplications.com-repository-infuse-cdff-jenkins:8080"
 INPUT_FILE=${1:-"${DIR}/report/valgrind.xml"}
 OUTPUT_FOLDER=${2:-"${DIR}/report"}
 
@@ -24,7 +24,6 @@ do
   echo "Took too long to connect to localhost -- assuming something went wrong! ABORTING"
   exit 1
   fi
-
   echo    --- sleeping for 5 second
   sleep 5
   counter=$((counter+1))
@@ -36,12 +35,15 @@ echo "===================================="
 
 mkdir -p /var/jenkins_home/jobs/valgrind-report-generate/workspace/
 cp ${INPUT_FILE} /var/jenkins_home/jobs/valgrind-report-generate/workspace/valgrind.xml
-
 sleep 5
-echo "Executing the html generation job"
+echo "Executing job/valgrind-report-generate"
+
+#curl -X POST ${JENKINS_SERVER}/job/valgrind-report-generate/buildWithParameters?token=valgrind \
+#  --show-error --user admin:admin \
+#  --form file0=@${INPUT_FILE} \
+#  --form json='{"parameter": [{"name":"valgrind.xml", "file":"file0"}]}'
 
 curl --silent --show-error --connect-timeout 1 -I ${JENKINS_SERVER}/job/valgrind-report-generate/buildWithParameters?token=valgrind
-
 
 counter=0
 sleep 5

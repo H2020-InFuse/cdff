@@ -91,19 +91,6 @@
    changes:
     - Tools/Docker/Dockerfile.user
 
- docker:cdff-valgrind:
-  <<: *connect
-  services:
-   - docker:dind
-  image: nexus.spaceapplications.com/repository/infuse/docker-builder
-  stage: docker.external
-  script:
-   - cd Tools/Docker/
-   - ./docker-builder.sh Dockerfile.valgrind cdff-valgrind USER=$DOCKER_USER PASS=$DOCKER_PASSWORD SHA=$CI_COMMIT_SHA $FORCE $NOCACHE
-  only:
-   changes:
-    - Tools/Docker/Dockerfile.valgrind
-
  generate:asn:
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage : generation
@@ -308,20 +295,23 @@
    - Tools/CPPCheck/partial-cppcheck.sh
 
  report:memcheck:
+  <<: *connect
   stage: report
-  image: nexus.spaceapplications.com/repository/infuse/cdff-jenkins:latest
-  dependencies:
-   - analyse:memcheck
+  image : nexus.spaceapplications.com/repository/infuse/docker-builder
   services:
    - docker:dind
+  variables:
+   MOUNT_POINT: /builds/$CI_PROJECT_PATH
+  dependencies:
+   - analyse:memcheck
   script:
-   - ps -ef
-   - docker ps
-   - Tools/Valgrind/generate-report.sh
+   - docker run -d -v "$MOUNT_POINT:$MOUNT_POINT" --name=report-memcheck --rm nexus.spaceapplications.com/repository/infuse/cdff-jenkins:latest
+   - docker exec report-memcheck /$MOUNT_POINT/Tools/Valgrind/generate-report.sh
+   - docker stop report-memcheck
   allow_failure: true
   only:
-    - merge_requests
-    - master
+   - merge_requests
+   - master
   artifacts:
    when: always
    paths:
