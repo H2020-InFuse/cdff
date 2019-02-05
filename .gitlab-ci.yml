@@ -143,7 +143,7 @@
    - "make --jobs=${JOBS} --output-sync=target"
    - "cd .."
 
- .configure:cdff-base:
+ configure:cdff-base:
   <<: *configure_release
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage: configure
@@ -155,7 +155,7 @@
     - build/
    expire_in: 4 weeks
 
- .configure:cdff-open:
+ configure:cdff-open:
   <<: *configure_release
   image: nexus.spaceapplications.com/repository/infuse/cdff-open:latest
   stage: configure
@@ -167,7 +167,7 @@
     - build/
    expire_in: 4 weeks
 
- .configure:cdff-closed:
+ configure:cdff-closed:
   <<: *configure_release
   image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
   stage: configure
@@ -186,12 +186,15 @@
   script: echo ok
   dependencies:
    - generate:asn
+  only:
+   - merge_requests
+   - master
   artifacts:
    paths:
     - build/
    expire_in: 4 weeks
 
- .build:cdff-base:
+ build:cdff-base:
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage: build
@@ -203,7 +206,7 @@
     - build/
    expire_in: 4 weeks
 
- .build:cdff-open:
+ build:cdff-open:
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-open:latest
   stage: build
@@ -215,7 +218,7 @@
     - build/
    expire_in: 4 weeks
 
- .build:cdff-closed:
+ build:cdff-closed:
   <<: *make
   image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
   stage: build
@@ -234,6 +237,9 @@
   dependencies:
    - generate:asn
    - configure:cdff-closed:debug
+  only:
+   - merge_requests
+   - master
   artifacts:
    paths:
     - build/Tests/UnitTests
@@ -267,6 +273,9 @@
   script:
     - Tools/Valgrind/valgrind.sh
   allow_failure: true
+  only:
+    - merge_requests
+    - master
   artifacts:
     when: always
     paths:
@@ -281,6 +290,9 @@
   script:
     - Tools/CPPCheck/full-cppcheck.sh build/compile_commands.json
   allow_failure: true
+  only:
+    - merge_requests
+    - master
   artifacts:
    when: always
    paths:
@@ -303,8 +315,13 @@
   services:
    - docker:dind
   script:
+   - ps -ef
+   - docker ps
    - Tools/Valgrind/generate-report.sh
   allow_failure: true
+  only:
+    - merge_requests
+    - master
   artifacts:
    when: always
    paths:
@@ -318,6 +335,9 @@
   script:
    - Tools/CPPCheck/generate-report.sh
   allow_failure: true
+  only:
+   - merge_requests
+   - master
   artifacts:
    when: always
    paths:
@@ -326,6 +346,9 @@
  pages:
   stage: deploy
   when: always
+  only:
+    - merge_requests
+    - master
   dependencies:
    - report:memcheck
    - report:cppcheck
@@ -338,7 +361,7 @@
    paths:
     - public
 
- .test:base:
+ test:base:
   image: nexus.spaceapplications.com/repository/infuse/cdff-base:latest
   stage: test
   dependencies:
@@ -347,7 +370,7 @@
    - cd build/Tests/UnitTests
    - LD_LIBRARY_PATH=../../Support/CentralDPM/EnvireASN1 ./cdff-unit-tests
 
- .test:full:
+ test:full:
   image: nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
   stage: test
   dependencies:
@@ -356,7 +379,7 @@
    - cd build/Tests/UnitTests
    - LD_LIBRARY_PATH=../../Support/CentralDPM/EnvireASN1 ./cdff-unit-tests
 
- .test:dependencies:local:
+ test:dependencies:local:
   image: ubuntu:latest
   stage: deploy
   script:
@@ -368,7 +391,7 @@
   only:
    - manual
 
- .test:dependencies:system:
+ test:dependencies:system:
    image: ubuntu:latest
    stage: deploy
    script:
