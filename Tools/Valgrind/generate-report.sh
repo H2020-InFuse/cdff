@@ -14,7 +14,7 @@ INPUT_FILE=${1:-"${DIR}/report/valgrind.xml"}
 OUTPUT_FOLDER=${2:-"${DIR}/report"}
 
 counter=0
-MAX_RETRIES=20
+MAX_RETRIES=200
 
 echo "Trying to connect to the local Jenkins instance..."
 until [ "`curl --silent --show-error --connect-timeout 1 -I ${JENKINS_SERVER}/job/valgrind-report-generate/api/xml | grep 'HTTP/1.1 200 OK'`" != "" ];
