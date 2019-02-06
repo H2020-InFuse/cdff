@@ -4,6 +4,7 @@ FROM nexus.spaceapplications.com/repository/infuse/cdff-base:latest
 
 ARG INSTALL_DIR=/usr/local
 ENV INSTALL_CDFF=$INSTALL_DIR
+ARG DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-c"]
 
@@ -67,7 +68,7 @@ libqhull-dev && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d visp
 
 RUN apt-get update && apt-get install --yes --quiet \
-libgdal1-dev \ 
+libgdal1-dev \
 libgsl-dev && \
 /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d gdalwrap
 
