@@ -1,5 +1,5 @@
 name: ColorConversion
-doc: DFN that convert an image from a colorspace to another (i.e. RGB to Grayscale or HSV to BGR)
+doc: DFN that converts an image from a colorspace to another (i.e. RGB to Grayscale or HSV to BGR)
 input_ports:
     - name: originalImage
       type: asn1SccFrame
