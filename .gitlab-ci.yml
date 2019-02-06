@@ -344,6 +344,7 @@
    - report:cppcheck
   script:
    - mkdir -p .public/cppcheck && mkdir -p .public/memcheck
+   - cp -r Tools/Reports/* .public/
    - cp -r Tools/CPPCheck/report/* .public/cppcheck
    - cp -r Tools/Valgrind/report/* .public/memcheck
    - mv .public public
