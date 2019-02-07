@@ -27,8 +27,8 @@ Toulouse, France
 Magellium (MAGELLIUM)
 Ramonville Saint-Agne, France
 
-Original authors
-----------------
+Original authors (from the InFuse Consortium)
+---------------------------------------------
 
 Alessandro Bianco (STRATHCLYDE)
 Alexander Fabisch (DFKI)
@@ -48,6 +48,7 @@ Quentin Labourey (LAAS)
 Raphaël Viards (MAGELLIUM)
 Raúl Domínguez (DFKI)
 Romain Michalec (STRATHCLYDE)
+Sander Coene (SPACEAPPS)
 Shashank Govindaraj (SPACEAPPS)
 Simon Lacroix (LAAS)
 Souriya Trinh (MAGELLIUM)
@@ -56,7 +57,7 @@ Thibaud Chupin (SPACEAPPS)
 Vincent Bissonnette (MAGELLIUM)
 Xavier Martinez-Gonzalez (SPACEAPPS)
 
-More authors
-------------
+More authors (external to the InFuse Consortium)
+------------------------------------------------
 
 Write your name below if you have contributed to the CDFF.

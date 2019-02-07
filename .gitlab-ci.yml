@@ -229,7 +229,7 @@
    - master
   artifacts:
    paths:
-    - build/Tests/UnitTests
+    - build/Tests
    expire_in: 4 weeks
 
  build:user:system:
@@ -286,7 +286,7 @@
     - Tools/CPPCheck/report
    expire_in: 4 weeks
 
- .analyse:cppcheck:partial:
+ analyse:cppcheck:partial:
   stage: analyse
   image: nexus.spaceapplications.com/repository/infuse/docker-cppcheck:1.85
   except:

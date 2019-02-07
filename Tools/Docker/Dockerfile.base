@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install --yes --quiet apt-utils && \
       curl \
       git \
       mono-runtime libmono-system-core4.0-cil libmono-system-numerics4.0-cil \
+      pkg-config \
       unzip \
       wget
 
@@ -31,8 +32,7 @@ RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d eigen
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d cloudcompare-core
 RUN apt-get update && apt-get install --yes --quiet libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev && \
     /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d ceres
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d nabo
-RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pointmatcher
+RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d nabo -d pointmatcher
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d flann
 RUN apt-get update && apt-get install --yes --quiet \
       libavcodec-dev libavformat-dev libswscale-dev \
@@ -43,10 +43,8 @@ RUN apt-get update && apt-get install --yes --quiet \
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d vtk
 RUN /tmp/CDFF/Tools/Docker/get-cdff-dependencies.sh -i ${INSTALL_CDFF} -d pcl
 
-RUN apt-get update && apt-get install --yes --quiet pkg-config
-
 ## Image information
-ARG VERSION="1.3.4"
+ARG VERSION="1.3.5"
 ARG SHA=0000
 ENV IMAGE_VERSION=$VERSION
 ENV IMAGE_SHA=$SHA

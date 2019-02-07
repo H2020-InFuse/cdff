@@ -74,10 +74,10 @@ RUN source env.sh && autoproj build \
 RUN rm /root/.gitconfig
 
 WORKDIR /
-ARG VERSION="2.4.2"
+ARG VERSION="2.4.3"
 ARG SHA=0000
 ENV IMAGE_VERSION=$VERSION
 ENV IMAGE_SHA=$SHA
 LABEL version=${IMAGE_VERSION}
-LABEL maintainer="Alexander.Fabisch@dfki.de"
+LABEL maintainer="Alexander Fabisch <alexander.fabisch@dfki.de>"
 LABEL description="Image providing the dependencies of CDFF-dev for continuous integration"

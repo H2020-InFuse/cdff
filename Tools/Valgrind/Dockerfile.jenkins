@@ -33,5 +33,5 @@ ARG SHA=0000
 ENV IMAGE_VERSION=$VERSION
 ENV IMAGE_SHA=$SHA
 LABEL version=${IMAGE_VERSION}
-LABEL maintainer="Sander Coen <sco@spaceapplications.com>, Xavier Martinez <xma@spaceapplications.com>"
+LABEL maintainer="Sander Coene <sco@spaceapplications.com>, Xavier Martinez <xma@spaceapplications.com>"
 LABEL description="CI + single dependency"

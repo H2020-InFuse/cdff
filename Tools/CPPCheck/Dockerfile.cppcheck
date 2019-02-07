@@ -1,6 +1,6 @@
 # Used for cpp check on top of CI.
 
-FROM nexus.spaceapplications.com/repository/infuse/cdff-ci:latest
+FROM nexus.spaceapplications.com/repository/infuse/cdff-closed:latest
 
 ENV CPPCHECK_VERSION=1.86
 
@@ -13,5 +13,5 @@ RUN wget -q --no-check-certificate -O /tmp/cppcheck-${CPPCHECK_VERSION}.tar.gz h
     make install CFGDIR=/usr/share/cppcheck/ && \ 
     rm -rf /tmp/cppcheck
 
-LABEL MAINTAINER="Xavier Martinez <xsmarty@gmail.com>"
+LABEL MAINTAINER="Xavier Martinez <xma@spaceapplications.com>"
 
