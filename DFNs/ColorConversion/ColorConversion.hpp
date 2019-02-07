@@ -17,7 +17,9 @@ namespace DFN
 namespace ColorConversion
 {
     /**
-     * TODO Class documentation
+     * Implementation of the color conversion function provided by OpenCV
+     * See OpenCV's documentation on cv::cvtColor for more information
+     * https://docs.opencv.org/3.4.0/d7/d1b/group__imgproc__misc.html#ga397ae87e1288a81d2363b61574eb8cab
      */
     class ColorConversion : public ColorConversionInterface
     {
