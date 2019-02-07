@@ -229,7 +229,7 @@
    - master
   artifacts:
    paths:
-    - build/Tests/UnitTests
+    - build/Tests
    expire_in: 4 weeks
 
  build:user:system:
