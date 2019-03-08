@@ -17,6 +17,9 @@ namespace CDFF
 {
 namespace DFPC
 {
+namespace ModelBasedTracker
+{
+
     /**
      * WheeledRobotTracker, DFPC implementation that tracks wheeled robots using the 2D image and depth information.
      */
@@ -40,7 +43,7 @@ namespace DFPC
     };
 }
 }
-
+}
 #endif // WHEELEDROBOT_TRACKER_HPP
 
 /** @} */

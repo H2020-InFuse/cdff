@@ -16,6 +16,9 @@ namespace CDFF
 {
 namespace DFPC
 {
+namespace ModelBasedTracker
+{
+
     /**
      * WheelTracker, DFPC implementation that tracks a wheel using the 2D image and depth information.
      */
@@ -36,6 +39,7 @@ namespace DFPC
         std::unique_ptr<CDFF::DFN::PoseEstimatorInterface> m_ellipse_pose_estimator;
         std::unique_ptr<CDFF::DFN::PoseWeightingInterface> m_pose_weighting;
     };
+}
 }
 }
 

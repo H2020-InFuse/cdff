@@ -13,7 +13,7 @@
 #include <Converters/MatToFrameConverter.hpp>
 #include <Types/CPP/Frame.hpp>
 
-using namespace CDFF::DFPC;
+using namespace CDFF::DFPC::ModelBasedTracker;
 using namespace FrameWrapper;
 using namespace BaseTypesWrapper;
 using namespace Array3DWrapper;

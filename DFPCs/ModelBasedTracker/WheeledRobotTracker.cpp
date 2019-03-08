@@ -19,6 +19,8 @@ namespace CDFF
 {
 namespace DFPC
 {
+namespace ModelBasedTracker
+{
 
 WheeledRobotTracker::WheeledRobotTracker()
 {
@@ -119,6 +121,7 @@ void WheeledRobotTracker::run()
     {
         outPose = in_poses.arr[0];
     }
+}
 }
 }
 }

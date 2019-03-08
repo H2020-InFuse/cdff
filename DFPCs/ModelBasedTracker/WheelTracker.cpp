@@ -16,6 +16,8 @@ namespace CDFF
 {
 namespace DFPC
 {
+namespace ModelBasedTracker
+{
 
 WheelTracker::WheelTracker()
 {
@@ -124,6 +126,7 @@ void WheelTracker::run()
     outPose = m_pose_weighting->poseOutput();
 }
 
+}
 }
 }
 
