@@ -31,6 +31,7 @@ if(NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/C")
     message(STATUS "${action} ASN.1 data types with: ${script}")
 
     execute_process(COMMAND "${script}"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/Tools/ASN.1"
         RESULT_VARIABLE error OUTPUT_VARIABLE stdout ERROR_VARIABLE stderr)
 
     message(STATUS "${action} ASN.1 data types: return code: ${error}")
