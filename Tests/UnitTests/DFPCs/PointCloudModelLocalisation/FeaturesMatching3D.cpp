@@ -36,7 +36,7 @@
 #include <Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Converters/SupportTypes.hpp>
 
-#include <boost/make_shared.hpp>
+#include <memory>
 
 
 using namespace CDFF::DFPC::PointCloudModelLocalisation;
@@ -68,8 +68,8 @@ TEST_CASE( "Success Call to Process (3D feature registration)", "[processSuccess
 	featuresMatching3d->setConfigurationFile("../tests/ConfigurationFiles/DFPCs/PointCloudModelLocalisation/DfpcFeaturesMatching3D_conf01.yaml");
 	featuresMatching3d->setup();
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pclModelCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclModelCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile("../tests/Data/PointClouds/bunny0.ply", *pclCloud);
 	const unsigned SELECTION_RATIO = 1000;
 	unsigned selectionCounter = 0;
@@ -89,7 +89,7 @@ TEST_CASE( "Success Call to Process (3D feature registration)", "[processSuccess
 	PointCloudConstPtr modelCloud = pclConverter.Convert(pclModelCloud);
 	featuresMatching3d->modelInput(*modelCloud);
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pclSceneCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclSceneCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(unsigned pointIndex = 0; pointIndex < pclModelCloud->points.size(); pointIndex++)
 		{
 		pcl::PointXYZ point = pclModelCloud->points.at(pointIndex);

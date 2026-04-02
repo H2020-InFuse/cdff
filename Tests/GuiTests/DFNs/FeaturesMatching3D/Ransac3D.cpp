@@ -107,9 +107,9 @@ void Ransac3DTestInterface::SegmentationFaultHandler(int sig)
 
 void Ransac3DTestInterface::LoadInputClouds()
 	{
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pclInputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pclSourceCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pclSinkCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclInputCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pclSourceCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pclSinkCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile("../../tests/Data/PointClouds/bunny0.ply", *pclInputCloud);
 
 	unsigned selectionCounter = 0;
@@ -146,8 +146,8 @@ void Ransac3DTestInterface::LoadInputClouds()
 
 void Ransac3DTestInterface::ComputeFeatures()
 	{
-	pcl::PointCloud<pcl::Normal>::Ptr pclSourceCloudNormal = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
-	pcl::PointCloud<pcl::Normal>::Ptr pclSinkCloudNormal = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
+	pcl::PointCloud<pcl::Normal>::Ptr pclSourceCloudNormal = std::make_shared<pcl::PointCloud<pcl::Normal> >();
+	pcl::PointCloud<pcl::Normal>::Ptr pclSinkCloudNormal = std::make_shared<pcl::PointCloud<pcl::Normal> >();
 	pcl::NormalEstimationOMP<pcl::PointXYZ,pcl::Normal> normalsEstimation;
 	normalsEstimation.setRadiusSearch (0.01);
 	normalsEstimation.setInputCloud (pclSinkCloud);
@@ -155,8 +155,8 @@ void Ransac3DTestInterface::ComputeFeatures()
 	normalsEstimation.setInputCloud (pclSourceCloud);
 	normalsEstimation.compute (*pclSourceCloudNormal);
 
-	sourceFeaturesCloud = boost::make_shared<pcl::PointCloud<FeatureT> >();
-	sinkFeaturesCloud = boost::make_shared<pcl::PointCloud<FeatureT> >();
+	sourceFeaturesCloud = std::make_shared<pcl::PointCloud<FeatureT> >();
+	sinkFeaturesCloud = std::make_shared<pcl::PointCloud<FeatureT> >();
 	FeatureEstimationT featureEstimation;
 	featureEstimation.setRadiusSearch (0.025);
 	featureEstimation.setInputCloud (pclSinkCloud);
@@ -233,7 +233,7 @@ pcl::PointCloud<pcl::PointXYZ>::ConstPtr Ransac3DTestInterface::PrepareOutputClo
 	Eigen::Quaternionf eigenRotation( GetWOrientation(*transform), GetXOrientation(*transform), GetYOrientation(*transform), GetZOrientation(*transform));
 	Eigen::Translation<float, 3> eigenTranslation( GetXPosition(*transform), GetYPosition(*transform), GetZPosition(*transform));
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr correspondenceCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr correspondenceCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(unsigned pointIndex = 0; pointIndex < pclSourceCloud->points.size(); pointIndex++)
 		{
 		pcl::PointXYZ sourcePoint = pclSourceCloud->points.at(pointIndex);

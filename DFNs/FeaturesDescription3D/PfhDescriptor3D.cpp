@@ -139,7 +139,7 @@ const PfhDescriptor3D::PfhOptionsSet PfhDescriptor3D::DEFAULT_PARAMETERS
 pcl::IndicesConstPtr PfhDescriptor3D::Convert( const VisualPointFeatureVector3DConstPtr featuresVector)
 {
 	ASSERT(GetNumberOfPoints(*featuresVector) == 0 || GetVectorType(*featuresVector) == ALL_REFERENCES_VECTOR, "PfhDescriptor3D: input features set does not contain all reference-defined points");
-	pcl::IndicesPtr indicesList = boost::make_shared<std::vector<int> >();
+	pcl::IndicesPtr indicesList = std::make_shared<std::vector<int> >();
 
 	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
 	{
@@ -195,7 +195,7 @@ pcl::PointCloud<pcl::PFHSignature125>::ConstPtr PfhDescriptor3D::ComputePfhDescr
 	pcl::PointCloud<pcl::Normal>::ConstPtr optionalNormalsCloud)
 {
 	// Setup k-d tree
-	pcl::search::KdTree<pcl::PointXYZ>::Ptr kdTree = boost::make_shared<pcl::search::KdTree<pcl::PointXYZ> >();
+	pcl::search::KdTree<pcl::PointXYZ>::Ptr kdTree = std::make_shared<pcl::search::KdTree<pcl::PointXYZ> >();
 
 	// Estimate surface normals, or use provided estimates
 	pcl::PointCloud<pcl::Normal>::ConstPtr normalsCloud;
@@ -243,7 +243,7 @@ pcl::PointCloud<pcl::PFHSignature125>::ConstPtr PfhDescriptor3D::ComputePfhDescr
 	pfh.setRadiusSearch(parameters.baseOptions.searchRadius);
 
 	// Setup output
-	pcl::PointCloud<pcl::PFHSignature125>::Ptr featuresCloud = boost::make_shared<pcl::PointCloud<pcl::PFHSignature125> >();
+	pcl::PointCloud<pcl::PFHSignature125>::Ptr featuresCloud = std::make_shared<pcl::PointCloud<pcl::PFHSignature125> >();
 
 	// Compute PFH descriptors
 	pfh.compute(*featuresCloud);

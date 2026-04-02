@@ -46,7 +46,7 @@ using namespace PointCloudWrapper;
  */
  pcl::PointCloud<pcl::PointXYZ>::ConstPtr PointCloudToPclPointCloudConverter::Convert(const  PointCloudConstPtr& pointCloud)
 	{
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*pointCloud); pointIndex++)
 		{
 		pcl::PointXYZ point;

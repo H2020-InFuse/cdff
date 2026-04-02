@@ -34,7 +34,7 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include "SupportTypes.hpp"
-#include <boost/make_shared.hpp>
+#include <memory>
 #include <Errors/AssertOnTest.hpp>
 
 

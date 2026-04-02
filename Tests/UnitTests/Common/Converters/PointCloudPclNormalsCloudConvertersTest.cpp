@@ -41,7 +41,7 @@ TEST_CASE( "PclNormalsCloud to PointCloud and Back", "[PclNormalsCloudToPointClo
 	PclNormalsCloudToPointCloudConverter firstConverter;
 	PointCloudToPclNormalsCloudConverter secondConverter;
 
-	pcl::PointCloud<pcl::Normal>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
+	pcl::PointCloud<pcl::Normal>::Ptr inputCloud = std::make_shared<pcl::PointCloud<pcl::Normal> >();
 	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		inputCloud->points.push_back( pcl::Normal(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
@@ -75,7 +75,7 @@ TEST_CASE( "PointCloud to PclPointCloud and Back (Normals)", "[PointCloud3DToPcl
 	PclNormalsCloudToPointCloudConverter firstConverter;
 	PointCloudToPclNormalsCloudConverter secondConverter;
 
-	pcl::PointCloud<pcl::Normal>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
+	pcl::PointCloud<pcl::Normal>::Ptr inputCloud = std::make_shared<pcl::PointCloud<pcl::Normal> >();
 	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		inputCloud->points.push_back( pcl::Normal(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
@@ -103,7 +103,7 @@ TEST_CASE("Empty Point Cloud conversion (Normals)", "[EmptyPointCloud]")
 	PclNormalsCloudToPointCloudConverter firstConverter;
 	PointCloudToPclNormalsCloudConverter secondConverter;
 
-	pcl::PointCloud<pcl::Normal>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
+	pcl::PointCloud<pcl::Normal>::Ptr inputCloud = std::make_shared<pcl::PointCloud<pcl::Normal> >();
 	PointCloudSharedConstPtr asnPointCloud = firstConverter.ConvertShared(inputCloud);
 	pcl::PointCloud<pcl::Normal>::ConstPtr intermediateCloud = secondConverter.ConvertShared(asnPointCloud);
 	PointCloudSharedConstPtr outputCloud = firstConverter.ConvertShared(intermediateCloud);

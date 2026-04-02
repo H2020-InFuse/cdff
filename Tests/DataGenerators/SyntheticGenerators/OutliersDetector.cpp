@@ -31,7 +31,7 @@
 #include <time.h>
 #include <ctime>
 #include <Errors/Assert.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>
 
 #define DELETE_IF_NOT_NULL(pointer) \
 	if (pointer != NULL) \
@@ -63,7 +63,7 @@ OutliersDetector::OutliersDetector(std::string inputCloudFilePath, std::string o
 	visualizer->registerKeyboardCallback(OutliersDetector::KeyboardButtonCallback, this);
 	visualizer->registerPointPickingCallback(OutliersDetector::PointPickingCallback, this);
 
-	pointCloudColorHandler = boost::make_shared<pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> >(outliersCloud);
+	pointCloudColorHandler = std::make_shared<pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> >(outliersCloud);
 	visualizer->addPointCloud< pcl::PointXYZRGB >(outliersCloud, *pointCloudColorHandler, "outliersCloud");
 
 	detectorIsActive = true;
@@ -372,7 +372,7 @@ void OutliersDetector::DrawOutliers()
 			}
 		}
 
-	pointCloudColorHandler = boost::make_shared<pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> >(outliersCloud);
+	pointCloudColorHandler = std::make_shared<pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> >(outliersCloud);
 	visualizer->updatePointCloud< pcl::PointXYZRGB >(outliersCloud, *pointCloudColorHandler, "outliersCloud");
 	}
 

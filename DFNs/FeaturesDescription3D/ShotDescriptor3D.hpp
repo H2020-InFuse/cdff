@@ -21,7 +21,7 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/features/shot.h>
-#include <boost/make_shared.hpp>
+#include <memory>
 #include <yaml-cpp/yaml.h>
 
 #include <stdlib.h>

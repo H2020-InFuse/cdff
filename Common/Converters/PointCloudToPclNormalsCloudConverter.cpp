@@ -46,7 +46,7 @@ using namespace PointCloudWrapper;
  */
  pcl::PointCloud<pcl::Normal>::ConstPtr PointCloudToPclNormalsCloudConverter::Convert(const  PointCloudConstPtr& pointCloud)
 	{
-	pcl::PointCloud<pcl::Normal>::Ptr pclNormalsCloud = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
+	pcl::PointCloud<pcl::Normal>::Ptr pclNormalsCloud = std::make_shared<pcl::PointCloud<pcl::Normal> >();
 	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*pointCloud); pointIndex++)
 		{
 		pcl::Normal point;

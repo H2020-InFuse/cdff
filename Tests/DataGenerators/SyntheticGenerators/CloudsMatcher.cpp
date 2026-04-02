@@ -64,7 +64,7 @@ CloudsMatcher::CloudsMatcher(std::string inputSourceCloudFilePath, std::string i
 	visualizer->registerKeyboardCallback(CloudsMatcher::KeyboardButtonCallback, this);
 	visualizer->registerPointPickingCallback(CloudsMatcher::PointPickingCallback, this);
 
-	//pointCloudColorHandler = boost::make_shared< pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> >(correspondencesCloud);
+	//pointCloudColorHandler = std::make_shared< pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> >(correspondencesCloud);
 	visualizer->addPointCloud< pcl::PointXYZRGB >(correspondencesCloud, "correspondencesCloud");
 
 	matcherIsActive = true;

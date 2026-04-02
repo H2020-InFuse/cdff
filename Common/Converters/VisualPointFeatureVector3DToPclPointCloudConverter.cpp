@@ -29,7 +29,7 @@
 
 #include "VisualPointFeatureVector3DToPclPointCloudConverter.hpp"
 #include <Errors/AssertOnTest.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>
 
 
 namespace Converters {
@@ -45,7 +45,7 @@ using namespace SupportTypes;
  */
 pcl::PointCloud<pcl::PointXYZ>::ConstPtr VisualPointFeatureVector3DToPclPointCloudConverter::ExtractPointCloud(const VisualPointFeatureVector3DConstPtr& featuresVector)
 	{
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 
 	for(int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
 		{
@@ -61,7 +61,7 @@ pcl::PointCloud<pcl::PointXYZ>::ConstPtr VisualPointFeatureVector3DToPclPointClo
 
 void VisualPointFeatureVector3DToPclPointCloudConverter::ExtractFeaturesCloud(const VisualPointFeatureVector3DConstPtr& featuresVector, PointCloudWithFeatures<MaxSizeHistogram>& conversion)
 	{
-	pcl::PointCloud<MaxSizeHistogram >::Ptr featureCloud = boost::make_shared<pcl::PointCloud<MaxSizeHistogram > >();
+	pcl::PointCloud<MaxSizeHistogram >::Ptr featureCloud = std::make_shared<pcl::PointCloud<MaxSizeHistogram > >();
 	conversion.featureCloud = featureCloud;	
 
 	unsigned numberOfPoints = GetNumberOfPoints(*featuresVector);
@@ -87,7 +87,7 @@ void VisualPointFeatureVector3DToPclPointCloudConverter::ExtractFeaturesCloud(co
 
 void VisualPointFeatureVector3DToPclPointCloudConverter::ExtractFeaturesCloud(const VisualPointFeatureVector3DConstPtr& featuresVector, PointCloudWithFeatures<pcl::SHOT352>& conversion)
 	{
-	pcl::PointCloud<pcl::SHOT352>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<pcl::SHOT352> >();
+	pcl::PointCloud<pcl::SHOT352>::Ptr featureCloud = std::make_shared<pcl::PointCloud<pcl::SHOT352> >();
 
 	conversion.featureCloud = featureCloud;	
 	conversion.descriptorSize = SHOT_DESCRIPTOR_LENGTH;
@@ -110,7 +110,7 @@ void VisualPointFeatureVector3DToPclPointCloudConverter::ExtractFeaturesCloud(co
 
 void VisualPointFeatureVector3DToPclPointCloudConverter::ExtractFeaturesCloud(const VisualPointFeatureVector3DConstPtr& featuresVector, PointCloudWithFeatures<pcl::PFHSignature125>& conversion)
 	{
-	pcl::PointCloud<pcl::PFHSignature125>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<pcl::PFHSignature125> >();
+	pcl::PointCloud<pcl::PFHSignature125>::Ptr featureCloud = std::make_shared<pcl::PointCloud<pcl::PFHSignature125> >();
 
 	conversion.featureCloud = featureCloud;	
 	conversion.descriptorSize = PFH_DESCRIPTOR_LENGTH;

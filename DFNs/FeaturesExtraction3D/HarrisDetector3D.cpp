@@ -172,7 +172,7 @@ pcl::PointIndicesConstPtr HarrisDetector3D::ComputeHarrisPoints(pcl::PointCloud<
 	//detector.setSearchSurface(pointCloud);
 	detector.setInputCloud(pointCloud);
 
-	pcl::PointCloud<pcl::PointXYZI>::Ptr keypoints = boost::make_shared<pcl::PointCloud<pcl::PointXYZI> >();
+	pcl::PointCloud<pcl::PointXYZI>::Ptr keypoints = std::make_shared<pcl::PointCloud<pcl::PointXYZI> >();
 	detector.compute(*keypoints);
 	pcl::PointIndicesConstPtr harrisPoints = detector.getKeypointsIndices();
 

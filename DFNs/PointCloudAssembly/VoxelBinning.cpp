@@ -34,7 +34,7 @@ namespace PointCloudAssembly
 
 VoxelBinning::VoxelBinning() :
 storedCloud(NULL),
-assembledCloud( boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> )) )
+assembledCloud( std::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> )) )
 {
         parameters = DEFAULT_PARAMETERS;
 
@@ -59,7 +59,7 @@ void VoxelBinning::configure()
 
 	if (parameters.useIncrementalMode && storedCloud == NULL)
 		{
-		storedCloud = boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> ));
+		storedCloud = std::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> ));
 		}
 }
 

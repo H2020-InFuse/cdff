@@ -55,8 +55,8 @@ HarrisDetector3DTestInterface::HarrisDetector3DTestInterface(const std::string& 
 {
 	SetDFN(&harris);
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pclCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(inputFile, *basePclCloud);
 	for (unsigned pointIndex = 0; pointIndex < basePclCloud->points.size(); pointIndex++)
 	{

@@ -40,7 +40,7 @@
 #include <Visualizers/OpenCVVisualizer.hpp>
 #include <Visualizers/PCLVisualizer.hpp>
 
-#include <boost/make_shared.hpp>
+#include <memory>
 
 using namespace CDFF::DFPC::PointCloudModelLocalisation;
 using namespace Converters;

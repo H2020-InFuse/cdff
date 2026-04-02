@@ -31,7 +31,7 @@ namespace PointCloudAssembly
 
 NeighbourSinglePointAverage::NeighbourSinglePointAverage() :
 	storedCloud(NULL),
-	assembledCloud( boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> )) )
+	assembledCloud( std::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> )) )
 {
         parameters = DEFAULT_PARAMETERS;
 
@@ -58,7 +58,7 @@ void NeighbourSinglePointAverage::configure()
 
 	if (parameters.useIncrementalMode && storedCloud == NULL)
 		{
-		storedCloud = boost::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> ));
+		storedCloud = std::make_shared< pcl::PointCloud<pcl::PointXYZ> >(*( new pcl::PointCloud<pcl::PointXYZ> ));
 		}
 }
 

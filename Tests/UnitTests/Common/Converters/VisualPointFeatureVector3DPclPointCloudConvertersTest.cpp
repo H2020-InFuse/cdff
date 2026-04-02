@@ -163,12 +163,12 @@ PointCloudWithFeatures< MaxSizeHistogram > GetPointCloudWithHistogramFeatures()
 	{
 	typedef MaxSizeHistogram FeatureType;
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		pointCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
 		}
-	pcl::PointCloud<FeatureType>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<FeatureType> >();
+	pcl::PointCloud<FeatureType>::Ptr featureCloud = std::make_shared<pcl::PointCloud<FeatureType> >();
 	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		FeatureType feature;
@@ -192,12 +192,12 @@ PointCloudWithFeatures< pcl::SHOT352 > GetPointCloudWithShotFeatures()
 	{
 	typedef pcl::SHOT352 FeatureType;
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		pointCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
 		}
-	pcl::PointCloud<FeatureType>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<FeatureType> >();
+	pcl::PointCloud<FeatureType>::Ptr featureCloud = std::make_shared<pcl::PointCloud<FeatureType> >();
 	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		FeatureType feature;
@@ -221,12 +221,12 @@ PointCloudWithFeatures< pcl::PFHSignature125 > GetPointCloudWithPfhFeatures()
 	{
 	typedef pcl::PFHSignature125 FeatureType;
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		pointCloud->points.push_back( pcl::PointXYZ(pointIndex, (float)pointIndex/3, std::sqrt(pointIndex)) );
 		}
-	pcl::PointCloud<FeatureType>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<FeatureType> >();
+	pcl::PointCloud<FeatureType>::Ptr featureCloud = std::make_shared<pcl::PointCloud<FeatureType> >();
 	for(int pointIndex = 0; pointIndex < 5; pointIndex++)
 		{
 		FeatureType feature;
@@ -317,8 +317,8 @@ TEST_CASE("Empty Point Cloud conversion", "[EmptyPointCloud]")
 	PclPointCloudToVisualPointFeatureVector3DConverter firstConverter;
 	VisualPointFeatureVector3DToPclPointCloudConverter secondConverter;
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::PointCloud<pcl::SHOT352>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<pcl::SHOT352> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::SHOT352>::Ptr featureCloud = std::make_shared<pcl::PointCloud<pcl::SHOT352> >();
 	PointCloudWithFeatures<pcl::SHOT352> inputCloud;
 	inputCloud.pointCloud = pointCloud;
 	inputCloud.featureCloud = featureCloud;

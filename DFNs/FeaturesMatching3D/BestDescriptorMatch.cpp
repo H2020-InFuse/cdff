@@ -66,8 +66,8 @@ void BestDescriptorMatch::process()
 	}
 
 	// Process data
-	pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSourceCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSinkCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSourceCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr bestMatchSinkCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	ComputeBestMatches(bestMatchSourceCloud, bestMatchSinkCloud);
 
 	if (bestMatchSourceCloud->points.size() == 0)

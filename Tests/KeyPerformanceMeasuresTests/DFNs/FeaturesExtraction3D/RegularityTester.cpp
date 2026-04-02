@@ -117,7 +117,7 @@ bool RegularityTester::IsOutputRegular(float regularity)
  */
 void RegularityTester::LoadPointCloud()
 	{
-	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(pointCloudFilePath, *basePclCloud);
 
 	DELETE_IF_NOT_NULL(inputCloud);

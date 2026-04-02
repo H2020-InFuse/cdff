@@ -174,13 +174,13 @@ bool CorrectLocalizationTester::IsOutputCorrect(float relativeLocationError, flo
  */
 void CorrectLocalizationTester::LoadPointClouds()
 	{
-	pcl::PointCloud<pcl::PointXYZ>::Ptr baseScenePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr baseScenePclCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(sceneCloudFilePath, *baseScenePclCloud);
 
 	DELETE_IF_NOT_NULL(inputSceneCloud);
 	inputSceneCloud = pointCloudConverter.Convert(baseScenePclCloud);
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr baseModelPclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr baseModelPclCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(modelCloudFilePath, *baseModelPclCloud);
 
 	DELETE_IF_NOT_NULL(inputModelCloud);

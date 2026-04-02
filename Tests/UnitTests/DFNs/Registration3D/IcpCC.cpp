@@ -16,7 +16,7 @@
 #include <Converters/PclPointCloudToPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 
-#include <boost/make_shared.hpp>
+#include <memory>
 
 using namespace CDFF::DFN::Registration3D;
 using namespace Converters;
@@ -26,7 +26,7 @@ using namespace PoseWrapper;
 TEST_CASE( "Call to process (Registration 3D Icp CC)", "[process]" )
 {
 	// Prepare input data (a sphere)
-	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for (float alpha = 0; alpha < 2 * M_PI; alpha += 0.1)
 	{
 		for (float beta = 0; beta < 2 * M_PI; beta += 0.1)

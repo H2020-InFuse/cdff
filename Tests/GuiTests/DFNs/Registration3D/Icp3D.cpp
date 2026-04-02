@@ -111,9 +111,9 @@ void Icp3DTestInterface::SegmentationFaultHandler(int sig)
 
 void Icp3DTestInterface::LoadInputClouds()
 	{
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pclInputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pclSourceCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pclSinkCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclInputCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pclSourceCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pclSinkCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile("../../tests/Data/PointClouds/bunny0.ply", *pclInputCloud);
 
 	unsigned selectionCounter = 0;
@@ -194,7 +194,7 @@ pcl::PointCloud<pcl::PointXYZ>::ConstPtr Icp3DTestInterface::PrepareOutputCloud(
 	Eigen::Quaternionf eigenRotation( GetWOrientation(*transform), GetXOrientation(*transform), GetYOrientation(*transform), GetZOrientation(*transform));
 	Eigen::Translation<float, 3> eigenTranslation( GetXPosition(*transform), GetYPosition(*transform), GetZPosition(*transform));
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr correspondenceCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr correspondenceCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(unsigned pointIndex = 0; pointIndex < pclSourceCloud->points.size(); pointIndex++)
 		{
 		pcl::PointXYZ sourcePoint = pclSourceCloud->points.at(pointIndex);

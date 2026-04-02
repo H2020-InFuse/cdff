@@ -142,7 +142,7 @@ pcl::PointIndicesConstPtr IssDetector3D::ComputeIssPoints(pcl::PointCloud<pcl::P
 	detector.setNumberOfThreads(parameters.numberOfThreads);
 	detector.setInputCloud(pointCloud);
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr keypoints = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr keypoints = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	detector.compute(*keypoints);
 	pcl::PointIndicesConstPtr issPoints = detector.getKeypointsIndices();
 

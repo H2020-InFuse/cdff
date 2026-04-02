@@ -140,7 +140,7 @@ VisualPointFeatureVector3DConstPtr CornerDetector3D::Convert(const pcl::PointClo
 pcl::PointIndicesConstPtr CornerDetector3D::DetectCorners(pcl::PointCloud<pcl::PointXYZ>::ConstPtr pointCloud)
 {
 	//Initialization of Core PCL computation objects
-	pcl::search::Search<pcl::PointXYZ>::Ptr tree = boost::shared_ptr<pcl::search::Search<pcl::PointXYZ> > (new pcl::search::KdTree<pcl::PointXYZ>);
+	pcl::search::Search<pcl::PointXYZ>::Ptr tree = std::shared_ptr<pcl::search::Search<pcl::PointXYZ> > (new pcl::search::KdTree<pcl::PointXYZ>);
 	pcl::PointCloud <pcl::Normal>::Ptr normals (new pcl::PointCloud <pcl::Normal>);
 
 	//Estimating normals for the point cloud
@@ -167,7 +167,7 @@ pcl::PointIndicesConstPtr CornerDetector3D::DetectCorners(pcl::PointCloud<pcl::P
 	int numberOfClusters = clusters.size();
 
 	//Creating the set of all points belonging to some cluster
-	boost::shared_ptr<std::vector<int> > fullClusterIndices = boost::shared_ptr<std::vector<int> >( new std::vector<int> );
+	std::shared_ptr<std::vector<int> > fullClusterIndices = std::shared_ptr<std::vector<int> >( new std::vector<int> );
 	for(int clusterIndex = 0; clusterIndex < numberOfClusters; clusterIndex++)
 		{
 		const pcl::PointIndices& cluster = clusters.at(clusterIndex);
@@ -191,7 +191,7 @@ pcl::PointIndicesConstPtr CornerDetector3D::DetectCorners(pcl::PointCloud<pcl::P
 	for(int clusterIndex = 0; clusterIndex < numberOfClusters; clusterIndex++)
 		{
 		const pcl::PointIndices& cluster = clusters.at(clusterIndex);
-		boost::shared_ptr< const std::vector<int> > indices = boost::shared_ptr<const std::vector<int> >( new std::vector<int>(cluster.indices) );
+		std::shared_ptr< const std::vector<int> > indices = std::shared_ptr<const std::vector<int> >( new std::vector<int>(cluster.indices) );
 	
 		//Creating a KD tree parse structure for the single cluster
 		pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;

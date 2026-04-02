@@ -142,10 +142,10 @@ void DetectionDescriptionMatching3DTestInterface::SetModelsCloud(std::string gro
 void DetectionDescriptionMatching3DTestInterface::LoadCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string cloudFile)
 	{
 	const float EPSILON = 0.00001;
-	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr basePclCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(cloudFile, *basePclCloud);
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr finitePointsPclCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr finitePointsPclCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for(unsigned pointIndex = 0; pointIndex < basePclCloud->points.size() && finitePointsPclCloud->points.size() <= MAX_CLOUD_SIZE; pointIndex++)
 		{
 		pcl::PointXYZ point = basePclCloud->points.at(pointIndex);
@@ -178,7 +178,7 @@ void DetectionDescriptionMatching3DTestInterface::LoadCloud(pcl::PointCloud<pcl:
 
 void DetectionDescriptionMatching3DTestInterface::LoadSceneCloud()
 	{
-	sceneCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();	
+	sceneCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();	
 	LoadCloud(sceneCloud, this->inputCloudFile);
 	scenePointCloud = pointCloudConverter.Convert(sceneCloud);
 	}
@@ -190,7 +190,7 @@ void DetectionDescriptionMatching3DTestInterface::LoadModelCloud(int long inputI
 		delete(modelPointCloud);
 		}
 
-	modelCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	modelCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	LoadCloud(modelCloud, modelsCloudFilesList.at(inputId));
 	modelPointCloud = pointCloudConverter.Convert(modelCloud);
 

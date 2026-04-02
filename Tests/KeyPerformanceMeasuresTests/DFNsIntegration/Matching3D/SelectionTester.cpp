@@ -201,7 +201,7 @@ bool SelectionTester::AreCorrespondencesValid(float percentageThreshold)
  */
 void SelectionTester::LoadInputCloud(const std::string& cloudFilePath, PointCloudWrapper::PointCloudConstPtr& cloud)
 	{
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile(cloudFilePath, *pclPointCloud);
 
 	DELETE_IF_NOT_NULL(cloud);

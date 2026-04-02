@@ -16,7 +16,7 @@
 #include <Converters/VisualPointFeatureVector3DToPclPointCloudConverter.hpp>
 #include <Errors/Assert.hpp>
 
-#include <boost/make_shared.hpp>
+#include <memory>
 
 using namespace CDFF::DFN::FeaturesMatching3D;
 using namespace Converters;
@@ -28,8 +28,8 @@ TEST_CASE( "DFN processing step succeeds (3D RANSAC)", "[process]" )
 {
 	// Prepare input data
 	/*
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
-	pcl::PointCloud<FeatureType>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<FeatureType> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pointCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<FeatureType>::Ptr featureCloud = std::make_shared<pcl::PointCloud<FeatureType> >();
 	for (unsigned pointIndex = 0; pointIndex < 10; pointIndex++)
 	{
 		pointCloud->points.push_back(pcl::PointXYZ(0.1*pointIndex, -0.1*pointIndex, 0));

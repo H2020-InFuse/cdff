@@ -20,7 +20,7 @@ TEST_CASE( "DFN processing step succeeds (3D SHOT descriptor)", "[process]" )
 {
 	// Prepare input data (a sphere)
 	/*
-	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr inputCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for (float alpha = 0; alpha < 2 * M_PI; alpha += 0.01)
 	{
 		for (float beta = 0; beta < 2 * M_PI; beta += 0.01)
@@ -36,7 +36,7 @@ TEST_CASE( "DFN processing step succeeds (3D SHOT descriptor)", "[process]" )
 
 	// Prepare input data (surface normals)
 	/*
-	pcl::PointCloud<pcl::Normal>::Ptr inputNormals = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
+	pcl::PointCloud<pcl::Normal>::Ptr inputNormals = std::make_shared<pcl::PointCloud<pcl::Normal> >();
 	*/
 
 	// Prepare simpler input data (pointcloud and surface normals)

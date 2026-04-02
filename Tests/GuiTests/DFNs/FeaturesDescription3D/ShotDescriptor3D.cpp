@@ -80,7 +80,7 @@ ShotDescriptor3DTestInterface::ShotDescriptor3DTestInterface(const std::string& 
 	inputFeatures = features;
 	shot.featuresInput(*inputFeatures);
 
-	pclNormals = boost::make_shared<pcl::PointCloud<pcl::Normal> >();
+	pclNormals = std::make_shared<pcl::PointCloud<pcl::Normal> >();
 	inputNormals = PclNormalsCloudToPointCloudConverter().Convert(pclNormals);
 	shot.normalsInput(*inputNormals);
 
@@ -96,10 +96,10 @@ ShotDescriptor3DTestInterface::~ShotDescriptor3DTestInterface()
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr ShotDescriptor3DTestInterface::PreparePointCloudInput()
 {
-	pcl::PointCloud<pcl::PointXYZ>::Ptr baseCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr baseCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	pcl::io::loadPLYFile("../../tests/Data/PointClouds/bunny0.ply", *baseCloud);
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	unsigned selectionCounter = 0;
 	unsigned const SELECTION_RATIO = 5;
 	for (unsigned pointIndex = 0; pointIndex < baseCloud->points.size(); pointIndex++)
@@ -164,7 +164,7 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr ShotDescriptor3DTestInterface::PrepareOut
 	GetComponentRange(features, featureIndexForGreenColor, minG, maxG);
 	GetComponentRange(features, featureIndexForBlueColor, minB, maxB);
 
-	pcl::PointCloud<pcl::PointXYZRGB>::Ptr featureCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGB> >();
+	pcl::PointCloud<pcl::PointXYZRGB>::Ptr featureCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZRGB> >();
 	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(*features); pointIndex++)
 	{
 		pcl::PointXYZRGB newPoint;

@@ -146,7 +146,7 @@ void TriangulationTestInterface::DisplayResult()
 	PRINT_TO_LOG("Virtual memory used (kb): ", GetTotalVirtualMemoryUsedKB());
 	PRINT_TO_LOG("Number of points: ", GetNumberOfPoints(pointCloud));
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
+	pcl::PointCloud<pcl::PointXYZ>::Ptr pclPointCloud = std::make_shared<pcl::PointCloud<pcl::PointXYZ> >();
 	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(pointCloud); pointIndex++)
 	{
 		pcl::PointXYZ newPoint(

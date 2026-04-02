@@ -144,7 +144,7 @@ const ShotDescriptor3D::ShotOptionsSet ShotDescriptor3D::DEFAULT_PARAMETERS
 pcl::IndicesConstPtr ShotDescriptor3D::Convert( const VisualPointFeatureVector3DConstPtr featuresVector)
 {
 	ASSERT(GetNumberOfPoints(*featuresVector) == 0 || GetVectorType(*featuresVector) == ALL_REFERENCES_VECTOR, "ShotDescriptor3D: input features set does not contain all reference-defined points");
-	pcl::IndicesPtr indicesList = boost::make_shared<std::vector<int> >();
+	pcl::IndicesPtr indicesList = std::make_shared<std::vector<int> >();
 
 	for (int pointIndex = 0; pointIndex < GetNumberOfPoints(*featuresVector); pointIndex++)
 	{
@@ -200,7 +200,7 @@ pcl::PointCloud<pcl::SHOT352>::ConstPtr ShotDescriptor3D::ComputeShotDescriptors
 	pcl::PointCloud<pcl::Normal>::ConstPtr optionalNormalsCloud)
 {
 	// Setup k-d tree
-	pcl::search::KdTree<pcl::PointXYZ>::Ptr kdTree = boost::make_shared<pcl::search::KdTree<pcl::PointXYZ> >();
+	pcl::search::KdTree<pcl::PointXYZ>::Ptr kdTree = std::make_shared<pcl::search::KdTree<pcl::PointXYZ> >();
 	kdTree->setInputCloud(pointCloud);
 
 	// Estimate surface normals, or use provided estimates
@@ -252,7 +252,7 @@ pcl::PointCloud<pcl::SHOT352>::ConstPtr ShotDescriptor3D::ComputeShotDescriptors
 	shot.setRadiusSearch(parameters.baseOptions.searchRadius);
 
 	// Setup output
-	pcl::PointCloud<pcl::SHOT352>::Ptr featuresCloud = boost::make_shared<pcl::PointCloud<pcl::SHOT352> >();
+	pcl::PointCloud<pcl::SHOT352>::Ptr featuresCloud = std::make_shared<pcl::PointCloud<pcl::SHOT352> >();
 
 	// Compute SHOT descriptors
 	shot.compute(*featuresCloud);

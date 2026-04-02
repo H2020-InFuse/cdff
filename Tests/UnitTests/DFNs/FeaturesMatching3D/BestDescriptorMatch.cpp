@@ -19,7 +19,7 @@
 #include <Errors/Assert.hpp>
 #include <Types/CPP/Pose.hpp>
 
-#include <boost/make_shared.hpp>
+#include <memory>
 
 using namespace CDFF::DFN::FeaturesMatching3D;
 using namespace CDFF::DFN::FeaturesDescription3D;

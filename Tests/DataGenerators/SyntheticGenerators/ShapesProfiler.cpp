@@ -31,7 +31,7 @@
 #include <time.h>
 #include <ctime>
 #include <Errors/Assert.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>
 
 #define DELETE_IF_NOT_NULL(pointer) \
 	if (pointer != NULL) \
@@ -66,7 +66,7 @@ ShapesProfiler::ShapesProfiler(std::string inputCloudFilePath, std::string shape
 	visualizer->registerKeyboardCallback(ShapesProfiler::KeyboardButtonCallback, this);
 	visualizer->registerPointPickingCallback(ShapesProfiler::PointPickingCallback, this);
 
-	pointCloudColorHandler = boost::make_shared<pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> >(shapesCloud);
+	pointCloudColorHandler = std::make_shared<pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> >(shapesCloud);
 	visualizer->addPointCloud< pcl::PointXYZRGB >(shapesCloud, *pointCloudColorHandler, "shapesCloud");
 
 	profilerIsActive = true;
@@ -619,7 +619,7 @@ pcl::PointXYZRGB& ShapesProfiler::GetVisualizedPoint(int32_t originalPointIndex,
 
 void ShapesProfiler::VisualizeCloud()
 	{
-	pointCloudColorHandler = boost::make_shared<pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> >(shapesCloud);
+	pointCloudColorHandler = std::make_shared<pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> >(shapesCloud);
 	visualizer->updatePointCloud< pcl::PointXYZRGB >(shapesCloud, *pointCloudColorHandler, "shapesCloud");
 	}
 
