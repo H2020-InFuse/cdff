@@ -313,6 +313,12 @@ link_directories(
 
 find_package(VTK 9.0 REQUIRED)
 find_package_mode(VTK)
+# VTK 9.x no longer sets VTK_LIBRARIES automatically; populate it for
+# downstream CMakeLists.txt files that link ${VTK_LIBRARIES} directly.
+if(VTK_FOUND AND NOT VTK_LIBRARIES)
+    set(VTK_LIBRARIES ${VTK_AVAILABLE_COMPONENTS})
+    list(TRANSFORM VTK_LIBRARIES PREPEND "VTK::")
+endif()
 
 find_package(PCL 1.14.0 REQUIRED NAMES PCL PCL-1.14 CONFIGS PCLConfig.cmake)
 find_package_mode(PCL)
@@ -352,6 +358,8 @@ endif()
 
 find_package(libpointmatcher 1.3.0 REQUIRED)
 set(POINTMATCHER_FOUND true)
+set(POINTMATCHER_INCLUDE_DIRS ${libpointmatcher_INCLUDE_DIRS})
+set(POINTMATCHER_LIBRARIES ${libpointmatcher_LIBRARIES})
 if(POINTMATCHER_FOUND)
 add_definitions(-DHAVE_POINTMATCHER)
 endif()

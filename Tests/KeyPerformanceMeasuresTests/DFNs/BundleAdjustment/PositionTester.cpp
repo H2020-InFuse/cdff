@@ -27,6 +27,7 @@
  *
  * --------------------------------------------------------------------------
  */
+#include <fstream>
 #include "PositionTester.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <Eigen/Dense>

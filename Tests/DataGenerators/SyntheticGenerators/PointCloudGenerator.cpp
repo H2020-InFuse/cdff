@@ -26,6 +26,7 @@
  *
  * --------------------------------------------------------------------------
  */
+#include <fstream>
 #include "PointCloudGenerator.hpp"
 #include <pcl/io/ply_io.h>
 #include <opencv2/highgui/highgui.hpp>

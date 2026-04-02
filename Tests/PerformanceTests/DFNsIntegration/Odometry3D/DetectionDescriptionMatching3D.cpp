@@ -26,6 +26,7 @@
  *
  * --------------------------------------------------------------------------
  */
+#include <fstream>
 #include "DetectionDescriptionMatching3D.hpp"
 
 #include <Executors/FeaturesExtraction3D/FeaturesExtraction3DExecutor.hpp>

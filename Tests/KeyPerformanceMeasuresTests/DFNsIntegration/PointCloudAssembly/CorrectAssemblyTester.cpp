@@ -27,6 +27,7 @@
  *
  * --------------------------------------------------------------------------
  */
+#include <fstream>
 #include "CorrectAssemblyTester.hpp"
 #include <pcl/io/ply_io.h>
 #include <ctime>

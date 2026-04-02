@@ -27,6 +27,7 @@
  *
  * --------------------------------------------------------------------------
  */
+#include <fstream>
 #include "CorrectLocalizationTester.hpp"
 #include<pcl/io/ply_io.h>
 #include <ctime>

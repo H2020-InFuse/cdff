@@ -27,10 +27,12 @@
  *
  * --------------------------------------------------------------------------
  */
+#include <fstream>
 #include "ReconstructionExecutor.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <pcl/io/ply_io.h>
 #include <ctime>
+#include <boost/algorithm/string.hpp>
 
 using namespace CDFF::DFPC;
 using namespace Converters;

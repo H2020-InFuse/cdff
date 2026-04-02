@@ -26,7 +26,9 @@
  *
  * --------------------------------------------------------------------------
  */
+#include <fstream>
 #include "VisualOdometry.hpp"
+#include <boost/algorithm/string.hpp>
 
 #include <Executors/FeaturesExtraction2D/FeaturesExtraction2DExecutor.hpp>
 #include <Executors/FeaturesDescription2D/FeaturesDescription2DExecutor.hpp>

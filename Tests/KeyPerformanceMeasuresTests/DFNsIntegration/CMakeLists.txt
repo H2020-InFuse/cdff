@@ -6,7 +6,7 @@ add_executable(
 target_compile_definitions(harris_icp_cc PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	harris_icp_cc
-	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_extraction_3d cdff_dfn_registration_3d opencv_core opencv_imgproc opencv_highgui pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_extraction_3d cdff_dfn_registration_3d opencv_core opencv_imgproc opencv_highgui pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -37,7 +37,7 @@ add_executable(
 target_compile_definitions(validity_shot_icp PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	validity_shot_icp
-	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_description_3d cdff_dfn_features_matching_3d  pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_description_3d cdff_dfn_features_matching_3d  pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -48,7 +48,7 @@ add_executable(
 target_compile_definitions(validity_shot_ransac PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	validity_shot_ransac
-	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_description_3d cdff_dfn_features_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_description_3d cdff_dfn_features_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -59,7 +59,7 @@ add_executable(
 target_compile_definitions(correctness_harris_shot_icp PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	correctness_harris_shot_icp
-	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_extraction_3d cdff_dfn_features_description_3d cdff_dfn_features_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters cdff_visualizers_pcl
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_extraction_3d cdff_dfn_features_description_3d cdff_dfn_features_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters cdff_visualizers_pcl ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -70,7 +70,7 @@ add_executable(
 target_compile_definitions(correctness_harris_shot_ransac PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	correctness_harris_shot_ransac
-	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_extraction_3d cdff_dfn_features_description_3d cdff_dfn_features_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters cdff_visualizers_pcl
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_features_extraction_3d cdff_dfn_features_description_3d cdff_dfn_features_matching_3d pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters cdff_visualizers_pcl ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -81,7 +81,7 @@ add_executable(
 target_compile_definitions(correctness_nearest_neighbour_average PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	correctness_nearest_neighbour_average
-	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_point_cloud_assembly cdff_dfn_point_cloud_transformation pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters pcl_kdtree cdff_dfn_dfnexecutors
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_point_cloud_assembly cdff_dfn_point_cloud_transformation pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters pcl_kdtree cdff_dfn_dfnexecutors ${VTK_LIBRARIES}
 )
 
 add_executable(
@@ -92,7 +92,7 @@ add_executable(
 target_compile_definitions(correctness_voxel_binning PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
 target_link_libraries(
 	correctness_voxel_binning
-	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_point_cloud_assembly cdff_dfn_point_cloud_transformation pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters pcl_kdtree cdff_dfn_dfnexecutors
+	cdff_helpers cdff_logger cdff_types cdff_converters cdff_dfn_point_cloud_assembly cdff_dfn_point_cloud_transformation pcl_common pcl_io pcl_io_ply pcl_search pcl_keypoints pcl_features pcl_filters pcl_kdtree cdff_dfn_dfnexecutors ${VTK_LIBRARIES}
 )
 
 

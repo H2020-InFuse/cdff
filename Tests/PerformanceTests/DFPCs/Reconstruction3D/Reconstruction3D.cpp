@@ -26,7 +26,9 @@
  *
  * --------------------------------------------------------------------------
  */
+#include <fstream>
 #include "Reconstruction3D.hpp"
+#include <boost/algorithm/string.hpp>
 
 using namespace CDFF::DFN;
 using namespace Converters;

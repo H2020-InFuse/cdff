@@ -131,7 +131,7 @@ Pose3DConstPtr Icp3D::ComputeTransform(pcl::PointCloud<pcl::PointXYZ>::Ptr sourc
 {
 	// Setup PCL's ICP algorithm
 	pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
-	icp.setInputCloud(sourceCloud);
+	icp.setInputSource(sourceCloud);
 	icp.setInputTarget(sinkCloud);
 
 	icp.setMaxCorrespondenceDistance(parameters.maxCorrespondenceDistance);

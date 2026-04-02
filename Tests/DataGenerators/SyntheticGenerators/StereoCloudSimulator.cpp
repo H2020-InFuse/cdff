@@ -26,7 +26,10 @@
  *
  * --------------------------------------------------------------------------
  */
+#include <fstream>
 #include "StereoCloudSimulator.hpp"
+#include <iomanip>
+#include <set>
 #include <pcl/io/ply_io.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/kdtree/kdtree_flann.h>
