@@ -311,10 +311,10 @@ link_directories(
 
 # TODO: rework this section
 
-find_package(VTK 8.1.0 REQUIRED NAMES VTK VTK-8.1 CONFIGS VTKConfig.cmake)
+find_package(VTK 9.0 REQUIRED)
 find_package_mode(VTK)
 
-find_package(PCL 1.8.1 REQUIRED NAMES PCL PCL-1.8 CONFIGS PCLConfig.cmake)
+find_package(PCL 1.14.0 REQUIRED NAMES PCL PCL-1.14 CONFIGS PCLConfig.cmake)
 find_package_mode(PCL)
 add_definitions(${PCL_DEFINITIONS})
 include_directories(SYSTEM ${PCL_INCLUDE_DIRS})
