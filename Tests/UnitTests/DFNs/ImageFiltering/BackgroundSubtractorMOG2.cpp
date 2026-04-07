@@ -8,6 +8,7 @@
  */
 
 #include <catch.hpp>
+#include <boost/assert.hpp>
 #include <ImageFiltering/BackgroundSubtractorMOG2.hpp>
 #include <Converters/MatToFrameConverter.hpp>
 
